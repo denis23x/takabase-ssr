@@ -1,0 +1,36 @@
+.form-control {
+  @apply block
+  w-full
+  text-color-5
+  bg-color-4
+  border-color-3
+  disabled:bg-color-1
+  disabled:cursor-not-allowed
+  placeholder-color-3
+  focus:ring
+  focus:ring-blue-400
+  focus:ring-opacity-30
+  focus:border-color-6
+  rounded-md;
+
+  &.ng-touched.ng-invalid {
+    @apply border-red-400
+    focus:ring-red-400
+    focus:ring-opacity-30
+    focus:border-red-400;
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--color-5) !important;
+    -webkit-box-shadow: 0 0 0 30px var(--color-4) inset !important;
+  }
+}
+
+.form-control-toggle {
+  input[type="checkbox"]:checked ~ .dot {
+    @apply translate-x-full bg-color-6 opacity-100;
+  }
+}

@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+@charset "utf-8";
+
+/* https://tailwindcss.com/ */
+
+@import "styles/vendors/_tailwind.css";
+
+/* https://sass-guidelin.es */
+
+@import "styles/abstracts/variables";
+
+@import "styles/components/buttons";
+@import "styles/components/inputs";
+@import "styles/components/markdown";
+
+@import "styles/layout/scrollbars";
+@import "styles/layout/utilities";
+
+@import "styles/pages/posts-create";
+@import "styles/pages/users-profile";

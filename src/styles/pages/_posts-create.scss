@@ -1,0 +1,44 @@
+$h-header: 60px;
+$h-control: 72px;
+$h-border: 6px;
+$h-padding: 90px;
+$h-full: calc(100vh - #{$h-control} - #{$h-border} - #{$h-padding});
+
+.posts-create {
+  grid-template-areas:
+    "header"
+    "content";
+
+  .header {
+    grid-area: header;
+  }
+
+  .content {
+    grid-area: content;
+    grid-template-areas:
+      "editor"
+      "preview";
+
+    @screen lg {
+      grid-template-areas: "editor preview";
+    }
+
+    .editor {
+      grid-area: editor;
+
+      textarea {
+        height: $h-full;
+      }
+    }
+
+    .preview {
+      grid-area: preview;
+
+      height: calc(#{$h-full} + #{$h-header} + 1px);
+
+      @screen lg {
+        height: $h-full;
+      }
+    }
+  }
+}

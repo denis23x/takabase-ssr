@@ -1,0 +1,206 @@
+@use "../abstracts/variables";
+@use "../layout/scrollbars";
+
+body {
+  &.light {
+    @include variables.theme-light;
+  }
+
+  &.dark {
+    @include variables.theme-dark;
+  }
+
+  @apply m-0;
+
+  .gist {
+    .gist-file {
+      @apply border-color-3 m-0 #{'!important'};
+
+      .gist-data {
+        @apply border-color-3 bg-color-4 #{'!important'};
+
+        .highlight {
+          background: var(--gist-color-1) !important;
+
+          .js-line-number {
+            @apply cursor-default
+            border-0
+            border-r
+            border-solid
+            border-color-3
+            text-color-5
+            opacity-50
+            #{'!important'};
+          }
+
+          .js-file-line {
+            @apply pl-0 #{'!important'};
+            color: var(--gist-color-2) !important;
+          }
+        }
+      }
+
+      .gist-meta {
+        @apply bg-color-1 #{'!important'};
+      }
+    }
+  }
+
+  /* tokenize */
+
+  .blob-num,
+  .blob-code-inner,
+  .pl-s2,
+  .pl-stj,
+  .pl-vo,
+  .pl-id,
+  .pl-ii {
+    color: var(--gist-color-2) !important;
+  }
+
+  .pl-enti,
+  .pl-mb,
+  .pl-pdb {
+    @apply font-bold;
+  }
+
+  .pl-c,
+  .pl-c span,
+  .pl-pdc {
+    @apply italic;
+    color: var(--gist-color-3) !important;
+  }
+
+  .pl-c1,
+  .pl-pdc1,
+  .pl-scp {
+    color: var(--gist-color-4) !important;
+  }
+
+  .pl-ent,
+  .pl-eoa,
+  .pl-eoai,
+  .pl-eoai .pl-pde,
+  .pl-ko,
+  .pl-kolp,
+  .pl-mc,
+  .pl-mr,
+  .pl-ms,
+  .pl-s3,
+  .pl-sok {
+    color: var(--gist-color-5) !important;
+  }
+
+  .pl-mdh,
+  .pl-mdi,
+  .pl-mdr {
+    @apply font-normal;
+  }
+
+  .pl-mi,
+  .pl-pdi {
+    @apply italic;
+    color: var(--gist-color-5) !important;
+  }
+
+  .pl-sra,
+  .pl-src,
+  .pl-sre {
+    color: var(--gist-color-6) !important;
+  }
+
+  .pl-mdht,
+  .pl-mi1 {
+    color: var(--gist-color-7) !important;
+    background: var(--gist-color-8) !important;
+  }
+
+  .pl-md,
+  .pl-mdhf {
+    color: var(--gist-color-9) !important;
+    background: var(--gist-color-10) !important;
+  }
+
+  .pl-ib,
+  .pl-id,
+  .pl-ii,
+  .pl-iu {
+    color: var(--gist-color-9) !important;
+  }
+
+  .pl-ms1 {
+    background: var(--gist-color-11) !important;
+  }
+
+  .highlight-text-html-basic .pl-ent,
+  .pl-cce,
+  .pl-cn,
+  .pl-coc,
+  .pl-enc,
+  .pl-ens,
+  .pl-k,
+  .pl-kos,
+  .pl-kou,
+  .pl-mh .pl-pdh,
+  .pl-mp,
+  .pl-mp .pl-s3,
+  .pl-mp1 .pl-sf,
+  .pl-mq,
+  .pl-mri,
+  .pl-pde,
+  .pl-pse,
+  .pl-pse .pl-s2,
+  .pl-s,
+  .pl-st,
+  .pl-stp,
+  .pl-sv,
+  .pl-v,
+  .pl-va,
+  .pl-vi,
+  .pl-vpf,
+  .pl-vpu,
+  .pl-mdr {
+    color: var(--gist-color-12) !important;
+  }
+
+  .pl-cos,
+  .pl-ml,
+  .pl-pds,
+  .pl-s1,
+  .pl-sol,
+  .pl-mb,
+  .pl-pdb {
+    color: var(--gist-color-7) !important;
+  }
+
+  .pl-e,
+  .pl-en,
+  .pl-entl,
+  .pl-mo,
+  .pl-sc,
+  .pl-sf,
+  .pl-smi,
+  .pl-smp,
+  .pl-mdh,
+  .pl-mdi {
+    color: var(--gist-color-11) !important;
+  }
+
+  .pl-ef,
+  .pl-enf,
+  .pl-enm,
+  .pl-entc,
+  .pl-entm,
+  .pl-eoac,
+  .pl-eoac .pl-pde,
+  .pl-eoi,
+  .pl-mai .pl-sf,
+  .pl-mm,
+  .pl-pdv,
+  .pl-smc,
+  .pl-som,
+  .pl-sr,
+  .pl-enti {
+    color: var(--gist-color-9) !important;
+  }
+}

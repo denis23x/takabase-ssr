@@ -1,0 +1,20 @@
+* {
+  @screen mouse {
+    $color-track: transparent;
+    $color-thumb: var(--color-3);
+
+    scrollbar-color: $color-thumb $color-track;
+
+    &::-webkit-scrollbar {
+      @apply w-1.5 h-1.5 cursor-default;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: $color-track;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $color-thumb;
+    }
+  }
+}

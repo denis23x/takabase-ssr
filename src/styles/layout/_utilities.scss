@@ -1,0 +1,35 @@
+@use "../abstracts/variables";
+
+body {
+  &.light {
+    @include variables.theme-light;
+  }
+
+  &.dark {
+    @include variables.theme-dark;
+  }
+
+  &.overlay {
+    @apply overflow-hidden;
+
+    @screen mouse {
+      @apply pr-1.5;
+
+      @-moz-document url-prefix() {
+        @apply pr-3;
+      }
+    }
+  }
+}
+
+details {
+  summary {
+    &::-webkit-details-marker {
+      @apply hidden;
+    }
+
+    &::before {
+      content: "";
+    }
+  }
+}
