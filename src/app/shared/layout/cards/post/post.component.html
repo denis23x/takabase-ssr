@@ -1,0 +1,45 @@
+<article class="relative bg-color-2 border border-color-3 rounded-md overflow-hidden w-full h-full">
+  <figure class="absolute inset-0 z-10 hover:pointer-events-none" *ngIf="post.image">
+    <img
+      class="block object-cover object-center w-full h-full"
+      loading="lazy"
+      [src]="post.image"
+      [alt]="post.title">
+  </figure>
+  <div
+    class="flex flex-col items-start bg-color-2 hover:relative hover:z-10 w-full h-full p-4"
+    [ngClass]="{ 'opacity-0 hover:opacity-100 transition-opacity': post.image }"
+    *ngIf="!post.image">
+    <div class="flex justify-between items-center group w-full mb-2">
+      <a
+        class="flex border border-color-3 overflow-hidden rounded-md pointer-events-none group-hover:pointer-events-auto w-10 h-10"
+        [routerLink]="['/users/' + post.user.id]"
+        [attr.aria-label]="post.user.name"
+        [appUser]="post.user"
+        [appSize]="40"
+        appAvatar>
+      </a>
+      <span
+        class="block fill-current text-color-5 hover:text-color-6 opacity-10 hover:opacity-100 cursor-pointer p-2"
+        appSvgIcon
+        [appIcon]="'pin-angle'"
+        [slot]="'toggle'">
+      </span>
+    </div>
+    <div class="flex flex-col overflow-hidden group mb-4">
+      <a
+        class="text-color-6 hover:underline whitespace-nowrap overflow-ellipsis overflow-hidden pointer-events-none group-hover:pointer-events-auto"
+        [routerLink]="['/users/' + post.user.id]"
+        [attr.aria-label]="post.user.name">{{post.user.name}}
+      </a>
+      <time
+        class="text-color-5 opacity-50 text-sm"
+        [attr.datetime]="post.updatedAt">{{post.updatedAt | dayjs : 'fromX'}}
+      </time>
+    </div>
+    <a
+      class="text-color-5 hover:text-color-6 hover:underline line-clamp-3 mb-0"
+      [routerLink]="['posts/' + post.id]">{{post.title}}
+    </a>
+  </div>
+</article>

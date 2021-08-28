@@ -1,4 +1,7 @@
-<h1 class="my-8 text-center text-6xl font-bold">
-  <span class="text-green-600">TailwindCSS</span> and
-  <span class="text-red-600">Angular </span> is cool to use!
-</h1>
+<ng-container>
+  <app-snackbar></app-snackbar>
+  <header class="bg-color-2 flex justify-between items-center space-x-4 border-b border-color-3 py-3 px-4" appHeader></header>
+  <main [@fadeRouting]="outlet && outlet.activatedRouteData">
+    <router-outlet #outlet="outlet"></router-outlet>
+  </main>
+</ng-container>

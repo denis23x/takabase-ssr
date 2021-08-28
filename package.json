@@ -12,7 +12,8 @@
     "ssr:build:dev": "ng run draft-ssr:build:development && ng run draft-ssr:server:development",
     "ssr:build:prod": "ng run draft-ssr:build:production && ng run draft-ssr:server:production",
     "ssr:prerender:dev": "ng run draft-ssr:prerender:development",
-    "ssr:prerender:prod": "ng run draft-ssr:prerender:production"
+    "ssr:prerender:prod": "ng run draft-ssr:prerender:production",
+    "spite:build": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --stripAttrs class --stripAttrs fill"
   },
   "private": true,
   "dependencies": {
@@ -26,8 +27,13 @@
     "@angular/platform-server": "~12.2.0",
     "@angular/router": "~12.2.0",
     "@nguniversal/express-engine": "^12.1.0",
+    "@tailwindcss/forms": "^0.3.3",
+    "@tailwindcss/line-clamp": "^0.2.1",
     "autoprefixer": "^10.3.3",
+    "dayjs": "^1.10.6",
+    "dompurify": "^2.3.1",
     "express": "^4.15.2",
+    "jdenticon": "^3.1.1",
     "postcss": "^8.3.6",
     "rxjs": "~6.6.0",
     "tslib": "^2.3.0",
@@ -39,6 +45,7 @@
     "@angular/compiler-cli": "~12.2.0",
     "@nguniversal/builders": "^12.1.0",
     "@types/compression": "^1.7.1",
+    "@types/dompurify": "^2.2.3",
     "@types/express": "^4.17.0",
     "@types/jasmine": "~3.8.0",
     "@types/node": "^12.11.1",
@@ -50,6 +57,7 @@
     "karma-jasmine-html-reporter": "~1.7.0",
     "prettier": "2.3.2",
     "tailwindcss": "^2.2.8",
-    "typescript": "~4.3.5"
+    "typescript": "~4.3.5",
+    "svg2sprite-cli": "^2.0.1"
   }
 }

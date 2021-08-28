@@ -1,0 +1,9 @@
+<div class="snackbar d-flex fd-column">
+  <div class="snack rounded-sm p-1 mt-1" [ngClass]="[snack.class]" *ngFor="let snack of snackbar">
+    <div class="close cursor-p" (click)="onClose(snack)">
+      <app-svg-icon [appIcon]="'x'" [appSquare]="'1.5em'"></app-svg-icon>
+    </div>
+    <h4 class="text-bold text-letter-uppercase" [class.mb-0]="!snack.message">{{snack.title}}</h4>
+    <span class="d-block text-letter-uppercase">{{snack.message}}</span>
+  </div>
+</div>

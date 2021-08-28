@@ -1,0 +1,33 @@
+/** @format */
+
+import { Pipe, PipeTransform } from '@angular/core';
+import { DomSanitizer, SafeValue } from '@angular/platform-browser';
+import DOMPurify from 'dompurify';
+
+@Pipe({
+  name: 'sanitizer'
+})
+export class SanitizerPipe implements PipeTransform {
+  constructor(protected sanitizer: DomSanitizer) {}
+
+  transform(value: string, context: string = 'html'): SafeValue | null {
+    return this.bypassSecurityTrust(context, DOMPurify.sanitize(value));
+  }
+
+  private bypassSecurityTrust(context: string, value: string): SafeValue | null {
+    switch (context) {
+      case 'html':
+        return this.sanitizer.bypassSecurityTrustHtml(value);
+      case 'style':
+        return this.sanitizer.bypassSecurityTrustStyle(value);
+      case 'script':
+        return this.sanitizer.bypassSecurityTrustScript(value);
+      case 'url':
+        return this.sanitizer.bypassSecurityTrustUrl(value);
+      case 'resource-url':
+        return this.sanitizer.bypassSecurityTrustResourceUrl(value);
+      default:
+        throw new Error('Invalid security context specified: ' + context);
+    }
+  }
+}

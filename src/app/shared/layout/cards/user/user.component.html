@@ -1,0 +1,18 @@
+<div class="flex items-center justify-start space-x-4 bg-color-2 border border-color-3 rounded-md p-4">
+  <a
+    class="flex border border-color-3 overflow-hidden rounded-md w-16 h-16"
+    [routerLink]="['/users/' + user.id]"
+    [attr.aria-label]="user.name"
+    [appSize]="62"
+    [appUser]="user"
+    appAvatar>
+  </a>
+  <div class="flex flex-1 flex-col overflow-hidden">
+    <a
+      class="block text-color-6 hover:underline truncate"
+      [routerLink]="['/users/' + user.id]"
+      [attr.aria-label]="user.name">{{user.name}}
+    </a>
+    <span class="block text-color-5 opacity-50 text-sm line-clamp-2">{{user.biography || (user.createdAt | dayjs : 'fromX')}}</span>
+  </div>
+</div>
