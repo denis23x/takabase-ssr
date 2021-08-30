@@ -6,7 +6,7 @@
   }
 
   p {
-    @apply text-color-5 overflow-hidden overflow-ellipsis mb-4;
+    @apply text-secondary-1 overflow-hidden overflow-ellipsis mb-4;
   }
 
   h1 {
@@ -27,11 +27,11 @@
   h4,
   h5,
   h6 {
-    @apply text-color-5 font-bold mb-4;
+    @apply text-secondary-1 font-bold mb-4;
   }
 
   a {
-    @apply text-color-6 hover:brightness-125 underline;
+    @apply text-info-1 hover:brightness-125 underline;
 
     &[href*='//']
     {
@@ -44,15 +44,15 @@
   }
 
   blockquote {
-    @apply bg-color-1 rounded-md p-4 mb-4;
+    @apply bg-primary-1 rounded-md p-4 mb-4;
 
     p {
-      @apply text-color-5 m-0;
+      @apply text-secondary-1 m-0;
     }
   }
 
   pre {
-    @apply flex rounded-md overflow-auto bg-color-4 border border-color-3 rounded-md px-4 mb-4;
+    @apply flex rounded-md overflow-auto bg-primary-1 border border-primary-4 rounded-md px-4 mb-4;
   }
 
   hr {

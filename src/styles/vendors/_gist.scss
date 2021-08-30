@@ -14,10 +14,10 @@ body {
 
   .gist {
     .gist-file {
-      @apply border-color-3 m-0 #{'!important'};
+      @apply border-primary-4 m-0 #{'!important'};
 
       .gist-data {
-        @apply border-color-3 bg-color-4 #{'!important'};
+        @apply border-primary-4 bg-primary #{'!important'};
 
         .highlight {
           background: var(--gist-color-1) !important;
@@ -27,8 +27,8 @@ body {
             border-0
             border-r
             border-solid
-            border-color-3
-            text-color-5
+            border-primary-4
+            text-secondary-1
             opacity-50
             #{'!important'};
           }
@@ -41,7 +41,7 @@ body {
       }
 
       .gist-meta {
-        @apply bg-color-1 #{'!important'};
+        @apply bg-primary #{'!important'};
       }
     }
   }

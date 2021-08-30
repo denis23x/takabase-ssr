@@ -7,6 +7,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent, SharedModule, SnackbarComponent } from './shared';
 import { CoreModule } from './core';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent, SnackbarComponent],
@@ -16,7 +18,10 @@ import { CoreModule } from './core';
     CoreModule,
     SharedModule,
     AppRoutingModule,
-    AppRoutingModule
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

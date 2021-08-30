@@ -1,0 +1,61 @@
+@mixin theme-light {
+  --prismjs-color-1: #b83426;
+  --prismjs-color-2: #31353a;
+  --prismjs-color-3: #6e56be;
+  --prismjs-color-4: #067d17;
+  --prismjs-color-5: #8c8c8c;
+  --prismjs-color-6: #174ad4;
+  --prismjs-color-7: #871094;
+  --prismjs-color-8: #174ad4;
+  --prismjs-color-9: #0033b3;
+  --prismjs-color-10: #067d17;
+
+  --gist-color-1: #fafafa;
+  --gist-color-2: #31353a;
+  --gist-color-3: #bc9458; // same color in comparison with dark theme (judging by typescript)
+  --gist-color-4: #2570c5;
+  --gist-color-5: #ffe5bb; // same
+  --gist-color-6: #cc3; // same
+  --gist-color-7: #1a3f6a;
+  --gist-color-8: #004000; // same
+  --gist-color-9: #b83426; // same
+  --gist-color-10: #400000; // same
+  --gist-color-11: #6e56be;
+  --gist-color-12: #ce5a5e;
+}
+
+@mixin theme-dark {
+  --prismjs-color-1: #cc7832;
+  --prismjs-color-2: #a9b7c6;
+  --prismjs-color-3: #ffc66d;
+  --prismjs-color-4: #6a8759;
+  --prismjs-color-5: #808080;
+  --prismjs-color-6: #6897bb;
+  --prismjs-color-7: #6d9cbe;
+  --prismjs-color-8: #bababa;
+  --prismjs-color-9: #e8bf6a;
+  --prismjs-color-10: #a5c261;
+
+  --gist-color-1: #3e3e3e;
+  --gist-color-2: #fff;
+  --gist-color-3: #bc9458;
+  --gist-color-4: #6c99bb;
+  --gist-color-5: #ffe5bb;
+  --gist-color-6: #cc3;
+  --gist-color-7: #a9b7c6;
+  --gist-color-8: #004000;
+  --gist-color-9: #b83426;
+  --gist-color-10: #400000;
+  --gist-color-11: #ffc66d;
+  --gist-color-12: #cc7833;
+}
+
+:root {
+  @media (prefers-color-scheme: light) {
+    @include theme-light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    @include theme-dark;
+  }
+}

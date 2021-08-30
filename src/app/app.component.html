@@ -1,6 +1,6 @@
 <ng-container>
   <app-snackbar></app-snackbar>
-  <header class="bg-color-2 flex justify-between items-center space-x-4 border-b border-color-3 py-3 px-4" appHeader></header>
+  <header class="bg-primary-3 flex justify-between items-center space-x-4 border-b border-primary-4 py-3 px-4" appHeader></header>
   <main [@fadeRouting]="outlet && outlet.activatedRouteData">
     <router-outlet #outlet="outlet"></router-outlet>
   </main>

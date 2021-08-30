@@ -9,16 +9,16 @@
   disabled:cursor-not-allowed;
 
   &.btn-light {
-    @apply border-color-3
-    text-color-5
-    bg-color-4
-    hover:bg-color-1
-    disabled:hover:bg-color-4;
+    @apply border-primary-4
+    text-secondary-1
+    bg-primary-1
+    hover:bg-primary-1
+    disabled:hover:bg-primary-1;
   }
 
   &.btn-success {
     @apply text-white
-    bg-color-7
+    bg-success-1
     saturate-75
     hover:brightness-110
     disabled:hover:brightness-100;
@@ -26,14 +26,14 @@
 
   &.btn-warning {
     @apply text-black
-    bg-color-8
+    bg-warning-1
     hover:brightness-110
     disabled:hover:brightness-100;
   }
 
   &.btn-info {
     @apply text-white
-    bg-color-6
+    bg-info-2
     saturate-75
     hover:brightness-110
     disabled:hover:brightness-100;
@@ -41,7 +41,7 @@
 
   &.btn-danger {
     @apply text-white
-    bg-color-9
+    bg-danger-1
     hover:brightness-110
     disabled:hover:brightness-100;
   }

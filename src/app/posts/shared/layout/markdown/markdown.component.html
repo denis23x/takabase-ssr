@@ -1,0 +1,106 @@
+<ng-container>
+  <div class="flex justify-between items-center border border-primary-4 bg-primary-3 rounded-md">
+    <ul class="flex justify-start items-center overflow-auto">
+      <li class="inline-block">
+        <button
+          class="fill-current text-secondary-1 hover:text-info-1 cursor-pointer p-2.5"
+          type="button"
+          [attr.aria-label]="'Back'"
+          [disabled]="!history$.getValue().length"
+          (click)="onBack()"
+          appSvgIcon
+          [appIcon]="'arrow-left'">
+        </button>
+      </li>
+      <li class="inline-block" *ngFor="let control of controlList">
+        <button
+          class="fill-current text-secondary-1 hover:text-info-1 cursor-pointer p-2.5"
+          type="button"
+          [attr.aria-label]="control.label"
+          (click)="onControl(control)"
+          appSvgIcon
+          [appIcon]="control.icon">
+        </button>
+      </li>
+    </ul>
+    <app-dropdown
+      class="flex relative"
+      *ngIf="{ value: false } as active"
+      (toggle)="active.value = $event">
+      <button
+        class="block fill-current text-secondary-1 hover:text-info-1 cursor-pointer p-2"
+        [ngClass]="{ 'text-info-1': active.value }"
+        type="button"
+        [attr.aria-label]="'Menu'"
+        appSvgIcon
+        [appIcon]="'list'"
+        [appSquare]="'1.5rem'"
+        slot="toggle">
+      </button>
+      <div class="flex flex-col items-end -mt-2" slot="content">
+        <div class="w-3 overflow-hidden inline-block mx-3.5">
+          <div class="h-2 w-2 bg-primary-2 rotate-45 transform origin-bottom-left"></div>
+        </div>
+        <ul class="flex flex-col bg-primary-2 rounded-md shadow-lg py-2" slot="content">
+          <li class="block">
+            <a
+              class="block text-info-1 hover:underline hover:bg-primary-1 w-full py-2 px-4"
+              target="_blank"
+              href="https://github.com/markdown-it"
+              rel="noopener"
+              aria-label="markdown-it">markdown-it
+            </a>
+          </li>
+        </ul>
+      </div>
+    </app-dropdown>
+  </div>
+  <app-overlay (clicked)="onCloseUrlForm()" *ngIf="urlModal">
+    <form
+      class="flex flex-col space-y-4 bg-primary-3 rounded-md shadow-lg md:w-96 w-full p-4 m-4"
+      [formGroup]="urlForm"
+      (ngSubmit)="onSubmitUrlForm()"
+      slot="content">
+      <div class="flex justify-between align-center -mb-2">
+        <span class="block text-xl text-secondary-1 font-medium leading-9">Provide <span class="text-info-1">{{urlFormControl.label}}</span> URL</span>
+        <button
+          class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 cursor-pointer py-2 px-2.5 -mr-2.5"
+          type="button"
+          [attr.aria-label]="'Close'"
+          (click)="onCloseUrlForm()"
+          appSvgIcon
+          [appIcon]="'x-lg'"
+          [appSquare]="'1rem'">
+        </button>
+      </div>
+      <fieldset [disabled]="urlFormIsSubmitting">
+        <fieldset *ngIf="urlForm.get('url') as url">
+          <label class="block text-secondary-1 opacity-50 text-sm hidden" for="url">URL</label>
+          <input
+            id="url"
+            type="text"
+            class="form-control bg-primary-2 my-2"
+            formControlName="url"
+            placeholder="https://..."
+            aria-label="Url" />
+          <span class="block text-sm text-red-400" *ngIf="url.touched && url.errors" [ngSwitch]="true">
+            <ng-container *ngSwitchCase="url.errors.required">Required</ng-container>
+            <ng-container *ngSwitchCase="url.errors.minlength">Min length {{url.errors.minlength['requiredLength']}} characters</ng-container>
+            <ng-container *ngSwitchCase="url.errors.maxlength">Max length {{url.errors.maxlength['requiredLength']}} characters</ng-container>
+          </span>
+        </fieldset>
+      </fieldset>
+      <div class="flex flex-col space-y-2">
+        <button class="btn btn-success w-full" type="submit" [disabled]="urlForm.invalid">Insert</button>
+        <ng-container *ngIf="urlFormControl.key === 'url-image'">
+          <div class="flex justify-center items-center">
+            <hr class="border-primary-4 w-full">
+            <span class="block text-secondary-1 text-sm opacity-50 whitespace-nowrap mx-2">OR</span>
+            <hr class="border-primary-4 w-full">
+          </div>
+          <button class="btn btn-info w-full" type="button">Upload</button>
+        </ng-container>
+      </div>
+    </form>
+  </app-overlay>
+</ng-container>

@@ -1,7 +1,7 @@
 * {
   @screen mouse {
     $color-track: transparent;
-    $color-thumb: var(--color-3);
+    $color-thumb: var(--primary-1);
 
     scrollbar-color: $color-thumb $color-track;
 
