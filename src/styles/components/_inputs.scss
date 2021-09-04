@@ -4,7 +4,8 @@
   text-secondary-1
   border-primary-4
   disabled:cursor-not-allowed
-  placeholder-secondary-1
+  disabled:opacity-50
+  placeholder-secondary-2
   focus:ring
   focus:ring-blue-400
   focus:ring-opacity-30
@@ -12,7 +13,8 @@
   rounded-md;
 
   &.ng-touched.ng-invalid {
-    @apply border-red-400
+    @apply
+    border-red-400
     focus:ring-red-400
     focus:ring-opacity-30
     focus:border-red-400;
@@ -29,6 +31,6 @@
 
 .form-control-toggle {
   input[type="checkbox"]:checked ~ .dot {
-    @apply translate-x-full bg-info-2 opacity-100;
+    @apply translate-x-full;
   }
 }

@@ -1,0 +1,74 @@
+<section>
+  <form
+    class="bg-primary-3 border border-primary-4 rounded-md w-full p-4"
+    [formGroup]="settingsForm"
+    (ngSubmit)="onSubmitForm()"
+    autocomplete="off">
+    <fieldset [disabled]="isSubmitting">
+      <div class="flex flex-wrap items-center justify-between border-b border-primary-4 py-4">
+        <div class="flex flex-col">
+          <div class="text-secondary-1">UI Theme</div>
+          <div class="text-secondary-1 opacity-50 text-sm">Auto detect by OS or browser settings</div>
+        </div>
+        <ul
+          class="flex items-center border border-primary-4 rounded-md divide-x divide-primary-4 overflow-hidden"
+          *ngIf="settingsForm.get('theme') as theme">
+          <li class="block">
+            <fieldset
+              class="text-secondary-1 hover:bg-primary-2"
+              [ngClass]="{ 'bg-primary-2': theme.value === 'auto' }">
+              <label class="block cursor-pointer whitespace-nowrap py-2 px-3">Auto detect
+                <input type="radio" class="hidden" formControlName="theme" value="auto" aria-label="Theme auto" />
+              </label>
+            </fieldset>
+          </li>
+          <li class="block">
+            <fieldset
+              class="text-secondary-1 hover:bg-primary-2"
+              [ngClass]="{ 'bg-primary-2': theme.value === 'dark' }">
+              <label class="block cursor-pointer">
+                <app-svg-icon class="block fill-current py-2.5 px-3" [appIcon]="'moon'"></app-svg-icon>
+                <input type="radio" class="hidden" formControlName="theme" value="dark" aria-label="Theme dark" />
+              </label>
+            </fieldset>
+          </li>
+          <li class="block">
+            <fieldset
+              class="text-secondary-1 hover:bg-primary-2"
+              [ngClass]="{ 'bg-primary-2': theme.value === 'light' }">
+              <label class="block cursor-pointer">
+                <app-svg-icon class="block fill-current py-2.5 px-3" [appIcon]="'sun'"></app-svg-icon>
+                <input type="radio" class="hidden" formControlName="theme" value="light" aria-label="Theme light" />
+              </label>
+            </fieldset>
+          </li>
+        </ul>
+      </div>
+      <div class="flex items-center justify-between border-b border-primary-4 py-4">
+        <div class="flex flex-col">
+          <div class="text-secondary-1">Password</div>
+          <div class="text-secondary-1 opacity-50 text-sm">Change your password</div>
+          <div class="text-secondary-2 text-sm">Change your password</div>
+        </div>
+        <a class="block text-info-1 hover:underline cursor-pointer py-2">Change</a>
+      </div>
+      <div class="flex items-center justify-between border-b border-primary-4 py-4">
+        <div class="flex flex-col">
+          <div class="text-secondary-1">Advanced search</div>
+          <div class="text-secondary-1 opacity-50 text-sm">Allows you to search by users and categories</div>
+        </div>
+        <fieldset class="form-control-toggle" *ngIf="settingsForm.get('enableSearchCategoryList') as enableSearchCategoryList">
+          <label for="searchCategoryList" class="relative flex items-center justify-between cursor-pointer w-full py-3">
+            <input id="searchCategoryList" type="checkbox" class="sr-only" formControlName="enableSearchCategoryList" aria-label="searchCategoryList" />
+            <ng-container *ngIf="(enableSearchCategoryList.value ? 'bg-success-1' : 'bg-primary-4') as classList">
+              <div class="block w-12 h-6 rounded-full" [ngClass]="classList"></div>
+            </ng-container>
+            <ng-container *ngIf="(enableSearchCategoryList.value ? 'border-success-1' : 'border-primary-4') as classList">
+              <div class="dot absolute left-0 top-3 border border-2 w-6 h-6 bg-primary-3 rounded-full" [ngClass]="classList"></div>
+            </ng-container>
+          </label>
+        </fieldset>
+      </div>
+    </fieldset>
+  </form>
+</section>

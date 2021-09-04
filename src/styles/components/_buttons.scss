@@ -1,5 +1,6 @@
 .btn {
-  @apply border
+  @apply
+  border
   border-transparent
   py-2
   px-4
@@ -9,7 +10,8 @@
   disabled:cursor-not-allowed;
 
   &.btn-light {
-    @apply border-primary-4
+    @apply
+    border-primary-4
     text-secondary-1
     bg-primary-1
     hover:bg-primary-1
@@ -17,7 +19,8 @@
   }
 
   &.btn-success {
-    @apply text-white
+    @apply
+    text-white
     bg-success-1
     saturate-75
     hover:brightness-110
@@ -25,14 +28,16 @@
   }
 
   &.btn-warning {
-    @apply text-black
+    @apply
+    text-black
     bg-warning-1
     hover:brightness-110
     disabled:hover:brightness-100;
   }
 
   &.btn-info {
-    @apply text-white
+    @apply
+    text-white
     bg-info-2
     saturate-75
     hover:brightness-110
@@ -40,7 +45,8 @@
   }
 
   &.btn-danger {
-    @apply text-white
+    @apply
+    text-white
     bg-danger-1
     hover:brightness-110
     disabled:hover:brightness-100;

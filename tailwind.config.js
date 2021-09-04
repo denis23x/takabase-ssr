@@ -21,6 +21,7 @@ module.exports = {
       ["primary-3"]: "var(--primary-3)",
       ["primary-4"]: "var(--primary-4)",
       ["secondary-1"]: "var(--secondary-1)",
+      ["secondary-2"]: "var(--secondary-2)",
       ["info-1"]: "var(--info-1)",
       ["info-2"]: "var(--info-2)",
       ["success-1"]: "var(--success-1)",

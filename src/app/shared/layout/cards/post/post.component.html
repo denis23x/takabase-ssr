@@ -1,12 +1,10 @@
 <article class="relative bg-primary-3 border border-primary-4 rounded-md overflow-hidden w-full h-full">
   <a [routerLink]="['posts/' + post.id]" *ngIf="post.image">
-    <figure class="absolute inset-0 z-10">
-      <img
-        class="block object-cover object-center w-full h-full"
-        loading="lazy"
-        [src]="post.image"
-        [alt]="post.title">
-    </figure>
+    <img
+      class="block object-cover object-center w-full h-full"
+      loading="lazy"
+      [src]="post.image"
+      [alt]="post.title">
   </a>
   <div class="flex flex-col items-start w-full h-full p-4" *ngIf="!post.image">
     <div class="flex justify-between items-center w-full mb-2">

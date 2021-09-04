@@ -1,0 +1,55 @@
+<section>
+  <form
+    class="bg-primary-3 border border-primary-4 rounded-md w-full p-4"
+    [formGroup]="accountForm"
+    (ngSubmit)="onSubmitForm()"
+    autocomplete="off">
+    <fieldset class="flex">
+<!--      <div class="flex border border-primary-4 overflow-hidden rounded-md h-16 w-16 md:h-44 md:w-44" [appUser]="user" appAvatar></div>-->
+    </fieldset>
+    <fieldset class="flex flex-col space-y-4" [disabled]="isSubmitting">
+      <fieldset *ngIf="accountForm.get('name') as name">
+        <label class="block text-secondary-1 opacity-50 text-sm" for="name">Name</label>
+        <input
+          id="name"
+          type="text"
+          class="form-control bg-primary-2 my-2"
+          formControlName="name"
+          placeholder="Name"
+          aria-label="Name" />
+        <span class="block text-sm text-red-400" *ngIf="name.touched && name.errors" [ngSwitch]="true">
+          <ng-container *ngSwitchCase="name.errors.required">Required</ng-container>
+        </span>
+      </fieldset>
+      <fieldset *ngIf="accountForm.get('email') as email">
+        <label class="block text-secondary-1 opacity-50 text-sm" for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          class="form-control bg-primary-2 my-2"
+          formControlName="email"
+          placeholder="Email"
+          aria-label="Email" />
+        <span class="block text-sm text-red-400" *ngIf="email.touched && email.errors" [ngSwitch]="true">
+          <ng-container *ngSwitchCase="email.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="email.errors.email">Email must be a real email address</ng-container>
+        </span>
+      </fieldset>
+      <fieldset *ngIf="accountForm.get('biography') as biography">
+        <label class="block text-secondary-1 opacity-50 text-sm" for="biography">Biography</label>
+        <textarea
+          id="biography"
+          type="text"
+          class="form-control bg-primary-2 my-2"
+          formControlName="biography"
+          placeholder="Biography"
+          aria-label="Biography">
+        </textarea>
+        <span class="block text-sm text-red-400" *ngIf="biography.touched && biography.errors" [ngSwitch]="true">
+          <ng-container *ngSwitchCase="biography.errors.required">Required</ng-container>
+        </span>
+      </fieldset>
+      <button class="btn btn-success w-full" type="submit" [disabled]="accountForm.invalid">Submit</button>
+    </fieldset>
+  </form>
+</section>

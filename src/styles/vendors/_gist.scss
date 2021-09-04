@@ -23,7 +23,8 @@ body {
           background: var(--gist-color-1) !important;
 
           .js-line-number {
-            @apply cursor-default
+            @apply
+            cursor-default
             border-0
             border-r
             border-solid
