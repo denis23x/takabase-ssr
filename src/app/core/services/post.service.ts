@@ -9,8 +9,6 @@ import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class PostService {
-  private uploadUrl: string = environment.upload_url;
-
   constructor(private apiService: ApiService) {}
 
   getAll(params?: any): Observable<Post[]> {
@@ -18,10 +16,10 @@ export class PostService {
       map((postList: Post[]) =>
         postList.map((post: Post) => ({
           ...post,
-          image: post.image ? `${this.uploadUrl}/${post.image}` : null,
+          image: post.image ? `${environment.UPLOAD_URL}/${post.image}` : null,
           user: {
             ...post.user,
-            avatar: post.user.avatar ? `${this.uploadUrl}/${post.user.avatar}` : null
+            avatar: post.user.avatar ? `${environment.UPLOAD_URL}/${post.user.avatar}` : null
           }
         }))
       )

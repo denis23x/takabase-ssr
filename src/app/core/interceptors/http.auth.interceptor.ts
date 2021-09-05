@@ -11,6 +11,7 @@ import {
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { LocalStorageService, UserService } from '../services';
 import { catchError, switchMap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class HttpAuthInterceptor implements HttpInterceptor {
@@ -22,7 +23,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
       ['Accept']: 'application/json'
     };
 
-    const token = this.localStorageService.getItem('accessToken');
+    const token = this.localStorageService.getItem(environment.TOKEN_LOCALSTORAGE);
 
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;

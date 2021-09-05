@@ -8,7 +8,7 @@ import { environment } from '../../../../../environments/environment';
   templateUrl: './oauth.component.html'
 })
 export class OauthComponent implements OnInit {
-  apiUrl: string = environment.api_url;
+  apiUrl: string = environment.API_URL;
 
   constructor() {}
 

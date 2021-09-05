@@ -1,9 +1,9 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { first, tap } from 'rxjs/operators';
 import { UserService } from './user.service';
 import { SnackbarService } from './snackbar.service';
 
@@ -15,13 +15,14 @@ export class AuthGuard implements CanActivate {
     private notificationService: SnackbarService
   ) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+  canActivate(): Observable<boolean> {
     return this.userService.isAuthenticated.pipe(
-      take(1),
+      first(),
       tap(isAuthenticated => {
         if (!isAuthenticated) {
-          this.notificationService.warning('Unauthorized', 'Login to continue');
-          this.router.navigate(['/login']).then();
+          this.router
+            .navigate(['/login'])
+            .then(() => this.notificationService.warning('Unauthorized', 'Login to continue'));
         }
       })
     );

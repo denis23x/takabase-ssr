@@ -9,7 +9,7 @@
     </nav>
   </ng-container>
   <ng-container *appAuthed="true">
-    <nav class="flex justify-end items-center" *ngIf="currentUser$ | async as user">
+    <nav class="flex justify-end items-center" *ngIf="user$ | async as user">
       <a
         class="fill-current text-secondary-1 hover:text-info-1 p-2"
         [routerLink]="['/posts/create']"

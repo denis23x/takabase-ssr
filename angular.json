@@ -20,6 +20,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "markdown-it-incremental-dom"
+            ],
             "outputPath": "dist/draft-ssr/browser",
             "index": "src/index.html",
             "main": "src/main.browser.ts",

@@ -10,6 +10,7 @@ export interface User {
   avatar: string | null;
   email?: string;
   accessToken?: string;
+  interfaceConfig?: UserInterface;
   createdAt: string;
   updatedAt: string;
 }
@@ -18,4 +19,10 @@ export interface UserProfile {
   user: User;
   categoryList: Category[];
   postList: Post[];
+}
+
+export interface UserInterface {
+  colorTheme: string;
+  additionalSearchUsers: string;
+  additionalSearchCategories: string;
 }

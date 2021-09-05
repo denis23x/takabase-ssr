@@ -10,12 +10,12 @@ import { User, UserService } from '../../../core';
   templateUrl: './header.component.html'
 })
 export class HeaderComponent implements OnInit {
-  currentUser$: Observable<User>;
+  user$: Observable<User>;
 
   constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
-    this.currentUser$ = this.userService.currentUser;
+    this.user$ = this.userService.user;
   }
 
   onLogout(): void {

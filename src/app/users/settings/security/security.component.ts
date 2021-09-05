@@ -9,7 +9,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 export class UsersSettingsSecurityComponent implements OnInit, OnDestroy {
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit(): void {}
 
-  ngOnDestroy() {}
+  ngOnDestroy(): void {}
 }

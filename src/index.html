@@ -37,89 +37,8 @@
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="preload" href="assets/icons/sprite.svg" as="image">
 
-    <style>
-      @media (prefers-color-scheme: light) {
-        :root {
-          --primary-2: #f7f7f7;
-          --secondary-1: #3d3d3d;
-        }
-      }
-
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --primary-2: #3e3e3e;
-          --secondary-1: #f7f7f3;
-        }
-      }
-
-      body.light {
-        --primary-2: #f7f7f7;
-        --secondary-1: #050910;
-      }
-
-      body.dark {
-        --primary-2: #343434;
-        --secondary-1: #e5e5e5;
-      }
-
-      .pre-loader {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        background: var(--primary-2);
-        z-index: 100;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      /*  https://loading.io/css/ */
-
-      .pre-loader figure {
-        display: inline-block;
-        position: relative;
-        width: 80px;
-        height: 80px;
-      }
-
-      .pre-loader figure div {
-        position: absolute;
-        border: 4px solid var(--secondary-1);
-        opacity: 0.5;
-        border-radius: 50%;
-        animation: ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-      }
-
-      .pre-loader figure div:nth-child(2) {
-        animation-delay: -0.5s;
-      }
-
-      .pre-loader span {
-        font-size: 0.75rem;
-        color: var(--secondary-1);
-        margin: 0 0 1rem 0;
-        text-transform: uppercase;
-        opacity: 0.5;
-      }
-
-      @keyframes ripple {
-        0% {
-          top: 36px;
-          left: 36px;
-          width: 0;
-          height: 0;
-          opacity: 0.5;
-        }
-
-        100% {
-          top: 0;
-          left: 0;
-          width: 72px;
-          height: 72px;
-          opacity: 0;
-        }
-      }
+    <style type="text/css">
+      @media (prefers-color-scheme:light){:root{--primary-2:#f7f7f7;--secondary-1:#3d3d3d}}@media (prefers-color-scheme:dark){:root{--primary-2:#3e3e3e;--secondary-1:#f7f7f3}}body.light{--primary-2:#f7f7f7;--secondary-1:#050910}body.dark{--primary-2:#343434;--secondary-1:#e5e5e5}.pre-loader{position:fixed;width:100%;height:100%;background:var(--primary-2);z-index:100;display:flex;flex-direction:column;justify-content:center;align-items:center}.pre-loader figure{display:inline-block;position:relative;width:80px;height:80px}.pre-loader figure div{position:absolute;border:4px solid var(--secondary-1);opacity:.5;border-radius:50%;animation:ripple 1s cubic-bezier(0,.2,.8,1) infinite}.pre-loader figure div:nth-child(2){animation-delay:-.5s}.pre-loader span{font-size:.75rem;color:var(--secondary-1);margin:0 0 1rem 0;text-transform:uppercase;opacity:.5}@keyframes ripple{0%{top:36px;left:36px;width:0;height:0;opacity:.5}100%{top:0;left:0;width:72px;height:72px;opacity:0}}
     </style>
 </head>
 <body class="bg-primary-2">
@@ -131,6 +50,9 @@
     </figure>
     <span>Loading</span>
   </div>
+  <script type="text/javascript">
+    (()=>{if(window){const o=window.localStorage.getItem("draftUserConfig");if(o){const e=JSON.parse(o);"colorTheme"in e&&window.document.body.classList.add(e.colorTheme)}}})();
+  </script>
   <app-root></app-root>
 </body>
 </html>

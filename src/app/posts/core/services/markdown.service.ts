@@ -41,8 +41,7 @@ export class MarkdownService {
     .use(MarkdownItIncrementalDOM, IncrementalDOM);
 
   constructor(
-    @Inject(DOCUMENT)
-    private document: Document,
+    @Inject(DOCUMENT) private document: Document,
     private markdownPlugin: MarkdownPluginService
   ) {}
 

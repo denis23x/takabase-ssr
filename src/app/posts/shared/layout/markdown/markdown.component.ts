@@ -1,15 +1,6 @@
 /** @format */
 
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+import { AfterViewInit, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MarkdownControlList, MarkdownControl, MarkdownService } from '../../../core';
 import { HelperService, PlatformService } from '../../../../core';
 import { BehaviorSubject, fromEvent, Subscription } from 'rxjs';
@@ -32,8 +23,6 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     this.previewId = previewId;
   }
 
-  @Output() update = new EventEmitter<string>();
-
   controlList: MarkdownControl[] = MarkdownControlList();
 
   textareaInput$: Subscription;
@@ -52,8 +41,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   urlModal: boolean;
 
   constructor(
-    @Inject(DOCUMENT)
-    private document: Document,
+    @Inject(DOCUMENT) private document: Document,
     private markdownService: MarkdownService,
     private platformService: PlatformService,
     private fb: FormBuilder,

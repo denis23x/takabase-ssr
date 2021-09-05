@@ -10,8 +10,6 @@ import { ApiError } from '../models';
 
 @Injectable()
 export class ApiService {
-  private api = environment.api_url;
-
   constructor(private http: HttpClient, private notificationService: SnackbarService) {}
 
   getErrorNotification(response: HttpErrorResponse) {
@@ -41,25 +39,25 @@ export class ApiService {
 
   get(path: string, params: HttpParams = new HttpParams()): Observable<any> {
     return this.http
-      .get(this.api + path, { params })
+      .get(environment.API_URL + path, { params })
       .pipe(catchError(error => this.getErrorNotification(error)));
   }
 
   put(path: string, body: object): Observable<any> {
     return this.http
-      .put(this.api + path, JSON.stringify(body))
+      .put(environment.API_URL + path, JSON.stringify(body))
       .pipe(catchError(error => this.getErrorNotification(error)));
   }
 
   post(path: string, body: object): Observable<any> {
     return this.http
-      .post(this.api + path, JSON.stringify(body))
+      .post(environment.API_URL + path, JSON.stringify(body))
       .pipe(catchError(error => this.getErrorNotification(error)));
   }
 
   delete(path: string): Observable<any> {
     return this.http
-      .delete(this.api + path)
+      .delete(environment.API_URL + path)
       .pipe(catchError(error => this.getErrorNotification(error)));
   }
 }

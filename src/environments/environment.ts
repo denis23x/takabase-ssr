@@ -6,8 +6,10 @@
 
 export const environment = {
   production: false,
-  api_url: 'http://localhost:3323/api',
-  upload_url: 'http://localhost:3323/images'
+  TOKEN_LOCALSTORAGE: 'draftAccessToken',
+  CONFIG_LOCALSTORAGE: 'draftUserConfig',
+  API_URL: 'http://localhost:3323/api',
+  UPLOAD_URL: 'http://localhost:3323/images'
 };
 
 /*

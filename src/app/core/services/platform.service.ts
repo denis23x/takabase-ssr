@@ -4,6 +4,7 @@ import { Inject, Injectable, PLATFORM_ID, Renderer2, RendererFactory2 } from '@a
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { EMPTY, fromEvent, Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { UserInterface } from '../models';
 
 /**
  * Window provider is based on
@@ -17,10 +18,8 @@ export class PlatformService {
   private readonly renderer2: Renderer2;
 
   constructor(
-    @Inject(PLATFORM_ID)
-    private platformId: string,
-    @Inject(DOCUMENT)
-    private document: Document,
+    @Inject(PLATFORM_ID) private platformId: string,
+    @Inject(DOCUMENT) private document: Document,
     private rendererFactory2: RendererFactory2
   ) {
     this.renderer2 = rendererFactory2.createRenderer(null, null);
@@ -101,5 +100,13 @@ export class PlatformService {
         this.renderer2.removeClass(this.document.body, className);
       }
     }
+  }
+
+  setColorTheme(interfaceConfig: UserInterface): void {
+    this.renderer2.setAttribute(
+      this.document.body,
+      'class',
+      'bg-primary-2 ' + interfaceConfig.colorTheme
+    );
   }
 }

@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
-import { map, distinctUntilChanged, tap, pluck } from 'rxjs/operators';
+import { map, distinctUntilChanged, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { LocalStorageService } from './local-storage.service';
 import { User } from '../models';
@@ -11,12 +11,10 @@ import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class UserService {
-  private uploadUrl: string = environment.upload_url;
+  public userSubject = new BehaviorSubject<User>({} as User);
+  public user = this.userSubject.asObservable().pipe(distinctUntilChanged());
 
-  private currentUserSubject = new BehaviorSubject<User>({} as User);
-  public currentUser = this.currentUserSubject.asObservable().pipe(distinctUntilChanged());
-
-  private isAuthenticatedSubject = new ReplaySubject<boolean>(1);
+  public isAuthenticatedSubject = new ReplaySubject<boolean>(1);
   public isAuthenticated = this.isAuthenticatedSubject.asObservable();
 
   constructor(
@@ -24,14 +22,6 @@ export class UserService {
     private http: HttpClient,
     private localStorageService: LocalStorageService
   ) {}
-
-  getAuthorization() {
-    if (this.localStorageService.getItem('accessToken')) {
-      this.apiService.get('/users/me').subscribe(user => this.setAuthorization(user));
-    } else {
-      this.removeAuthorization();
-    }
-  }
 
   getAuthentication(path: string, body: any, set: boolean = true): Observable<User> {
     return this.apiService.post(path, body).pipe(
@@ -41,28 +31,38 @@ export class UserService {
         }
 
         // @ts-ignore
-        this.localStorageService.setItem('accessToken', user.accessToken);
+        this.localStorageService.setItem(environment.TOKEN_LOCALSTORAGE, user.accessToken);
       })
     );
   }
 
+  getAuthorization() {
+    if (this.localStorageService.getItem(environment.TOKEN_LOCALSTORAGE)) {
+      this.apiService.get('/users/me').subscribe(user => this.setAuthorization(user));
+    } else {
+      this.removeAuthorization();
+    }
+  }
+
   setAuthorization(user: User) {
-    this.currentUserSubject.next(user);
+    const config = this.localStorageService.getItem(environment.CONFIG_LOCALSTORAGE);
+
+    if (config) {
+      user = {
+        ...user,
+        interfaceConfig: JSON.parse(config)
+      };
+    }
+
+    this.userSubject.next(user);
     this.isAuthenticatedSubject.next(true);
   }
 
   removeAuthorization() {
-    this.currentUserSubject.next({} as User);
+    this.userSubject.next({} as User);
     this.isAuthenticatedSubject.next(false);
 
-    this.localStorageService.removeItem('accessToken');
-  }
-
-  update(user: any): Observable<User> {
-    return this.apiService.put('/user', { user }).pipe(
-      pluck('data'),
-      tap((user: User) => this.currentUserSubject.next(user))
-    );
+    this.localStorageService.removeItem(environment.TOKEN_LOCALSTORAGE);
   }
 
   getAll(params?: any): Observable<User[]> {
@@ -70,17 +70,18 @@ export class UserService {
       map((userList: User[]) =>
         userList.map((user: User) => ({
           ...user,
-          avatar: user.avatar ? `${this.uploadUrl}/${user.avatar}` : null
+          avatar: user.avatar ? `${environment.UPLOAD_URL}/${user.avatar}` : null
         }))
       )
     );
   }
 
   getById(id: number): Observable<User> {
-    return this.apiService
-      .get('/users/' + id)
-      .pipe(
-        map(user => ({ ...user, avatar: user.avatar ? `${this.uploadUrl}/${user.avatar}` : null }))
-      );
+    return this.apiService.get('/users/' + id).pipe(
+      map(user => ({
+        ...user,
+        avatar: user.avatar ? `${environment.UPLOAD_URL}/${user.avatar}` : null
+      }))
+    );
   }
 }

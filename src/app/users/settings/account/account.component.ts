@@ -32,7 +32,7 @@ export class UsersSettingsAccountComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     // @ts-ignore
     this.routeData$ = this.route.parent?.data.pipe(pluck('data')).subscribe((user: User) => {
       this.user = user;
@@ -45,7 +45,7 @@ export class UsersSettingsAccountComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.accountForm$?.unsubscribe();
   }
 
