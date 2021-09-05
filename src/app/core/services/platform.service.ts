@@ -14,14 +14,16 @@ const getWindow = (): Window => window;
 
 @Injectable()
 export class PlatformService {
-  renderer: Renderer2;
+  private readonly renderer2: Renderer2;
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: string,
-    @Inject(DOCUMENT) private document: Document,
-    private rendererFactory: RendererFactory2
+    @Inject(PLATFORM_ID)
+    private platformId: string,
+    @Inject(DOCUMENT)
+    private document: Document,
+    private rendererFactory2: RendererFactory2
   ) {
-    this.renderer = rendererFactory.createRenderer(null, null);
+    this.renderer2 = rendererFactory2.createRenderer(null, null);
   }
 
   isBrowser(): boolean {
@@ -94,9 +96,9 @@ export class PlatformService {
       const className = 'overlay';
 
       if (this.document.body.clientHeight > window.innerHeight) {
-        this.renderer[toggle ? 'addClass' : 'removeClass'](this.document.body, className);
+        this.renderer2[toggle ? 'addClass' : 'removeClass'](this.document.body, className);
       } else {
-        this.renderer.removeClass(this.document.body, className);
+        this.renderer2.removeClass(this.document.body, className);
       }
     }
   }

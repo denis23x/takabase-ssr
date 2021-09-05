@@ -61,7 +61,7 @@
       [formGroup]="urlForm"
       (ngSubmit)="onSubmitUrlForm()"
       slot="content">
-      <div class="flex justify-between align-center -mb-2">
+      <div class="flex justify-between items-center -mb-2">
         <span class="block text-xl text-secondary-1 font-medium leading-9">Provide <span class="text-info-1">{{urlFormControl.label}}</span> URL</span>
         <button
           class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 cursor-pointer py-2 px-2.5 -mr-2.5"
@@ -75,7 +75,7 @@
       </div>
       <fieldset [disabled]="urlFormIsSubmitting">
         <fieldset *ngIf="urlForm.get('url') as url">
-          <label class="block text-secondary-1 opacity-50 text-sm hidden" for="url">URL</label>
+          <label class="block text-secondary-2 text-sm hidden" for="url">URL</label>
           <input
             id="url"
             type="text"
@@ -95,7 +95,7 @@
         <ng-container *ngIf="urlFormControl.key === 'url-image'">
           <div class="flex justify-center items-center">
             <hr class="border-primary-4 w-full">
-            <span class="block text-secondary-1 text-sm opacity-50 whitespace-nowrap mx-2">OR</span>
+            <span class="block text-secondary-2 text-sm whitespace-nowrap mx-2">OR</span>
             <hr class="border-primary-4 w-full">
           </div>
           <button class="btn btn-info w-full" type="button">Upload</button>

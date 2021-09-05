@@ -69,9 +69,9 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     if (this.platformService.isBrowser()) {
       // @ts-ignore
-      this.textarea = this.document.querySelector('#' + this.textareaId);
+      this.textarea = this.document.getElementById(this.textareaId);
       // @ts-ignore
-      this.preview = this.document.querySelector('#' + this.previewId);
+      this.preview = this.document.getElementById(this.previewId);
 
       this.textareaInput$ = fromEvent(this.textarea, 'input')
         .pipe(startWith(1), debounceTime(200))

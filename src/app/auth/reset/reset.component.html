@@ -6,7 +6,7 @@
     autocomplete="off">
     <h1 class="text-2xl text-secondary-1 font-medium">Password reset</h1>
     <div class="flex space-x-1 text-base mb-4">
-      <span class="block text-secondary-1 opacity-50">Remembered account?</span>
+      <span class="block text-secondary-2">Remembered account?</span>
       <a
         class="text-info-1 hover:underline"
         [routerLink]="'/auth/login'"
@@ -15,7 +15,7 @@
     </div>
     <fieldset class="flex flex-col space-y-4" [disabled]="isSubmitting">
       <fieldset *ngIf="resetForm.get('email') as email">
-        <label class="block text-secondary-1 opacity-50 text-sm" for="email">Email</label>
+        <label class="block text-secondary-2 text-sm" for="email">Email</label>
         <input
           id="email"
           type="email"
@@ -27,7 +27,7 @@
           <ng-container *ngSwitchCase="email.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="email.errors.email">Email must be a real email address</ng-container>
         </span>
-        <label class="block text-secondary-1 opacity-50 text-sm" for="email">We will send an email with further instructions</label>
+        <label class="block text-secondary-2 text-sm" for="email">We will send an email with further instructions</label>
       </fieldset>
       <button class="btn btn-success w-full" type="submit" [disabled]="resetForm.invalid">Reset</button>
     </fieldset>

@@ -2,7 +2,6 @@
 
 import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { PlatformService } from '../../../core';
-import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-dropdown, [appDropdown]',
@@ -19,10 +18,7 @@ export class DropdownComponent {
   state = false;
   close = true;
 
-  constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private platformService: PlatformService
-  ) {}
+  constructor(private platformService: PlatformService) {}
 
   onToggle(target: string = 'toggle'): void {
     this.state = target === 'content' && !this.close ? true : !this.state;

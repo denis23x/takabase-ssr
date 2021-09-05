@@ -13,6 +13,6 @@
       [routerLink]="['/users/' + user.id]"
       [attr.aria-label]="user.name">{{user.name}}
     </a>
-    <span class="block text-secondary-1 opacity-50 text-sm line-clamp-2">{{user.biography || (user.createdAt | dayjs : 'fromX')}}</span>
+    <span class="block text-secondary-2 text-sm line-clamp-2">{{user.biography || (user.createdAt | dayjs : 'fromX')}}</span>
   </div>
 </div>

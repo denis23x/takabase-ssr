@@ -3,29 +3,43 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { HelperService } from '../../../core';
+import { HelperService, User } from '../../../core';
+import { pluck } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-users-settings-account',
   templateUrl: './account.component.html'
 })
 export class UsersSettingsAccountComponent implements OnInit, OnDestroy {
-  queryParams$: Subscription;
+  routeData$: Subscription;
+
+  user: User;
 
   accountForm: FormGroup;
   accountForm$: Subscription;
 
   isSubmitting = false;
 
-  constructor(private fb: FormBuilder, private helperService: HelperService) {
+  constructor(
+    private fb: FormBuilder,
+    private helperService: HelperService,
+    private route: ActivatedRoute
+  ) {
     this.accountForm = this.fb.group({
       name: ['', [Validators.required]],
-      biography: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]]
+      biography: ['', [Validators.required]]
     });
   }
 
   ngOnInit() {
+    // @ts-ignore
+    this.routeData$ = this.route.parent?.data.pipe(pluck('data')).subscribe((user: User) => {
+      this.user = user;
+
+      this.accountForm.patchValue(this.user);
+    });
+
     this.accountForm$ = this.accountForm.valueChanges.subscribe(value => {
       console.log(value);
     });
@@ -37,7 +51,7 @@ export class UsersSettingsAccountComponent implements OnInit, OnDestroy {
 
   onSubmitForm(): void {
     if (this.helperService.getFormValidation(this.accountForm)) {
-      console.log('all good!');
+      console.log('All good!', this.accountForm.value);
     }
   }
 }

@@ -1,68 +1,58 @@
 /** @format */
 
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { HelperService, LocalStorageService } from '../../../core';
 import { DOCUMENT } from '@angular/common';
+import { pairwise, pluck, startWith } from 'rxjs/operators';
+import { PlatformService } from '../../../core';
 
 @Component({
   selector: 'app-users-settings-interface',
   templateUrl: './interface.component.html'
 })
 export class UsersSettingsInterfaceComponent implements OnInit, OnDestroy {
-  queryParams$: Subscription;
+  colorThemeForm: FormGroup;
+  colorThemeForm$: Subscription;
 
-  settingsForm: FormGroup;
-  settingsForm$: Subscription;
+  additionalSearchForm: FormGroup;
+  additionalSearchForm$: Subscription;
 
   isSubmitting = false;
 
   constructor(
     @Inject(DOCUMENT)
     private document: Document,
+    private renderer2: Renderer2,
     private fb: FormBuilder,
-    private helperService: HelperService,
-    private localStorageService: LocalStorageService
+    private platformService: PlatformService
   ) {
-    this.settingsForm = this.fb.group({
-      theme: ['', [Validators.required]],
-      enableSearchPostList: [false, [Validators.required]],
-      enableSearchCategoryList: [false, [Validators.required]],
-      enableSearchUserList: [false, [Validators.required]]
+    this.colorThemeForm = this.fb.group({
+      theme: ['auto', [Validators.required]]
+    });
+
+    this.additionalSearchForm = this.fb.group({
+      users: [false, [Validators.required]],
+      categories: [false, [Validators.required]]
     });
   }
 
   ngOnInit() {
-    const test$ = this.settingsForm.get('theme')?.valueChanges.subscribe(value => {
-      this.document.body.classList.remove('auto');
-      this.document.body.classList.remove('dark');
-      this.document.body.classList.remove('light');
+    this.colorThemeForm$ = this.colorThemeForm.valueChanges
+      .pipe(pluck('theme'), startWith(this.colorThemeForm.get('theme')?.value), pairwise())
+      .subscribe(([previousClassName, currentClassName]) => {
+        if (this.platformService.isBrowser()) {
+          this.renderer2.removeClass(this.document.body, previousClassName);
+          this.renderer2.addClass(this.document.body, currentClassName);
+        }
+      });
 
-      // const hasClass = this.document.body.classList.value.includes(value);
-
-      this.document.body.classList.add(value);
+    this.additionalSearchForm$ = this.additionalSearchForm.valueChanges.subscribe(value => {
+      console.log('Handle config', value);
     });
-
-    // this.settingsForm$ = this.settingsForm.valueChanges.subscribe(value => {
-    //   console.log(value);
-    //   // this.localStorageService.setItem('config', JSON.stringify(value));
-    // });
-
-    // const config = JSON.parse(this.localStorageService.getItem('config') || '{}');
-    //
-    // if (config && Object.keys(config).length) {
-    //   this.settingsForm.setValue(config);
-    // }
   }
 
   ngOnDestroy() {
-    this.settingsForm$?.unsubscribe();
-  }
-
-  onSubmitForm(): void {
-    if (this.helperService.getFormValidation(this.settingsForm)) {
-      console.log('all good!');
-    }
+    [this.colorThemeForm$, this.additionalSearchForm$].forEach($ => $?.unsubscribe());
   }
 }

@@ -1,74 +1,59 @@
-<section>
+<section class="bg-primary-3 flex flex-col space-y-4 border border-primary-4 rounded-md w-full p-4">
   <form
-    class="bg-primary-3 border border-primary-4 rounded-md w-full p-4"
-    [formGroup]="settingsForm"
-    (ngSubmit)="onSubmitForm()"
+    class="flex flex-col space-y-4 space-y-reverse border-b border-primary-4"
+    [formGroup]="colorThemeForm"
     autocomplete="off">
-    <fieldset [disabled]="isSubmitting">
-      <div class="flex flex-wrap items-center justify-between border-b border-primary-4 py-4">
-        <div class="flex flex-col">
-          <div class="text-secondary-1">UI Theme</div>
-          <div class="text-secondary-1 opacity-50 text-sm">Auto detect by OS or browser settings</div>
-        </div>
-        <ul
-          class="flex items-center border border-primary-4 rounded-md divide-x divide-primary-4 overflow-hidden"
-          *ngIf="settingsForm.get('theme') as theme">
-          <li class="block">
-            <fieldset
-              class="text-secondary-1 hover:bg-primary-2"
-              [ngClass]="{ 'bg-primary-2': theme.value === 'auto' }">
-              <label class="block cursor-pointer whitespace-nowrap py-2 px-3">Auto detect
-                <input type="radio" class="hidden" formControlName="theme" value="auto" aria-label="Theme auto" />
-              </label>
-            </fieldset>
-          </li>
-          <li class="block">
-            <fieldset
-              class="text-secondary-1 hover:bg-primary-2"
-              [ngClass]="{ 'bg-primary-2': theme.value === 'dark' }">
-              <label class="block cursor-pointer">
-                <app-svg-icon class="block fill-current py-2.5 px-3" [appIcon]="'moon'"></app-svg-icon>
-                <input type="radio" class="hidden" formControlName="theme" value="dark" aria-label="Theme dark" />
-              </label>
-            </fieldset>
-          </li>
-          <li class="block">
-            <fieldset
-              class="text-secondary-1 hover:bg-primary-2"
-              [ngClass]="{ 'bg-primary-2': theme.value === 'light' }">
-              <label class="block cursor-pointer">
-                <app-svg-icon class="block fill-current py-2.5 px-3" [appIcon]="'sun'"></app-svg-icon>
-                <input type="radio" class="hidden" formControlName="theme" value="light" aria-label="Theme light" />
-              </label>
-            </fieldset>
-          </li>
-        </ul>
-      </div>
-      <div class="flex items-center justify-between border-b border-primary-4 py-4">
-        <div class="flex flex-col">
-          <div class="text-secondary-1">Password</div>
-          <div class="text-secondary-1 opacity-50 text-sm">Change your password</div>
-          <div class="text-secondary-2 text-sm">Change your password</div>
-        </div>
-        <a class="block text-info-1 hover:underline cursor-pointer py-2">Change</a>
-      </div>
-      <div class="flex items-center justify-between border-b border-primary-4 py-4">
-        <div class="flex flex-col">
-          <div class="text-secondary-1">Advanced search</div>
-          <div class="text-secondary-1 opacity-50 text-sm">Allows you to search by users and categories</div>
-        </div>
-        <fieldset class="form-control-toggle" *ngIf="settingsForm.get('enableSearchCategoryList') as enableSearchCategoryList">
-          <label for="searchCategoryList" class="relative flex items-center justify-between cursor-pointer w-full py-3">
-            <input id="searchCategoryList" type="checkbox" class="sr-only" formControlName="enableSearchCategoryList" aria-label="searchCategoryList" />
-            <ng-container *ngIf="(enableSearchCategoryList.value ? 'bg-success-1' : 'bg-primary-4') as classList">
-              <div class="block w-12 h-6 rounded-full" [ngClass]="classList"></div>
-            </ng-container>
-            <ng-container *ngIf="(enableSearchCategoryList.value ? 'border-success-1' : 'border-primary-4') as classList">
-              <div class="dot absolute left-0 top-3 border border-2 w-6 h-6 bg-primary-3 rounded-full" [ngClass]="classList"></div>
+    <div class="text-secondary-1">Color theme</div>
+    <div class="text-secondary-2 text-sm">The user might indicate this preference through an operating system setting (e.g. light or dark mode) or a browser settings</div>
+    <ul
+      class="flex items-center border border-primary-4 rounded-md divide-x divide-primary-4 overflow-hidden"
+      *ngIf="colorThemeForm.get('theme') as themeControl">
+      <li class="block w-full" *ngFor="let theme of ['auto', 'dark', 'light']; let odd = odd">
+        <fieldset class="text-secondary-1 group">
+          <label
+            class="flex justify-center cursor-pointer relative py-2 px-3"
+            *ngIf="{ value: themeControl.value === theme } as active">
+            <app-svg-icon
+              class="relative z-50 flex items-center justify-center fill-current"
+              [class.text-warning-1]="active.value"
+              [appIcon]="(theme === 'dark' ? 'moon' : 'sun').concat(active.value ? '-fill' : '')"
+              *ngIf="theme !== 'auto'">
+            </app-svg-icon>
+            <input type="radio" class="hidden" formControlName="theme" [value]="theme" [attr.aria-label]="theme" />
+            <span
+              class="text-sm z-10"
+              [class.text-info-1]="active.value"
+              *ngIf="theme === 'auto'">Auto detect
+            </span>
+            <ng-container *ngIf="(active.value ? 'opacity-25' : 'opacity-0') as classList">
+              <div class="absolute inset-0 bg-primary-4 group-hover:opacity-25" [ngClass]="classList"></div>
             </ng-container>
           </label>
         </fieldset>
-      </div>
-    </fieldset>
+      </li>
+    </ul>
+  </form>
+  <form
+    class="flex flex-col "
+    [formGroup]="additionalSearchForm"
+    autocomplete="off">
+    <div class="text-secondary-1">Additional search</div>
+    <div class="text-secondary-2 text-sm mb-4">Adds extra search on the search page in a separate spoiler at the bottom of the page</div>
+    <div class="border border-primary-4 rounded-md px-4">
+      <ng-container *ngFor="let search of ['users', 'categories']; let odd = odd">
+        <div class="flex items-center justify-between py-4" [ngClass]="{ 'border-b border-primary-4': !odd }">
+          <div class="text-secondary-1 capitalize">{{search}}</div>
+          <fieldset class="form-control-toggle" *ngIf="additionalSearchForm.get(search) as searchControl">
+            <label [for]="search" class="relative flex items-center justify-between cursor-pointer w-full">
+              <input [id]="search" type="checkbox" class="hidden" [formControlName]="search" [attr.aria-label]="search" />
+              <ng-container *ngIf="(searchControl.value ? 'bg-success-1' : 'bg-primary-4 opacity-50') as classList">
+                <div class="block w-11 h-6 rounded-full" [ngClass]="classList"></div>
+              </ng-container>
+              <div class="dot absolute left-0.5 top-0.5 w-5 h-5 bg-primary-3 rounded-full"></div>
+            </label>
+          </fieldset>
+        </div>
+      </ng-container>
+    </div>
   </form>
 </section>

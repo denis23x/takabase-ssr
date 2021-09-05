@@ -23,7 +23,6 @@ module.exports = {
       ["secondary-1"]: "var(--secondary-1)",
       ["secondary-2"]: "var(--secondary-2)",
       ["info-1"]: "var(--info-1)",
-      ["info-2"]: "var(--info-2)",
       ["success-1"]: "var(--success-1)",
       ["warning-1"]: "var(--warning-1)",
       ["danger-1"]: "var(--danger-1)",
@@ -45,6 +44,9 @@ module.exports = {
           raw: "(hover: none) and (pointer: coarse)",
         },
         ["2xl"]: "1920px",
+      },
+      spacing: {
+        128: "32rem",
       },
     },
   },

@@ -1,16 +1,11 @@
 /** @format */
 
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HelperService, PlatformService } from '../../../core';
-import { DOCUMENT } from '@angular/common';
 
 @Injectable()
 export class MarkdownPluginService {
-  constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private helperService: HelperService,
-    private platformService: PlatformService
-  ) {}
+  constructor(private helperService: HelperService, private platformService: PlatformService) {}
 
   getYoutubeParser(url: string): string {
     const regex = this.helperService.getRegex('url-youtube');

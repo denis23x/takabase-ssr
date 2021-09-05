@@ -6,6 +6,7 @@ import { UsersDetailComponent } from './detail/detail.component';
 import { UsersSettingsComponent } from './settings/settings.component';
 import { UsersSettingsAccountComponent } from './settings/account/account.component';
 import { UsersSettingsInterfaceComponent } from './settings/interface/interface.component';
+import { UsersSettingsSecurityComponent } from './settings/security/security.component';
 import { UsersRoutingModule } from './users-routing.module';
 
 @NgModule({
@@ -14,7 +15,8 @@ import { UsersRoutingModule } from './users-routing.module';
     UsersDetailComponent,
     UsersSettingsComponent,
     UsersSettingsAccountComponent,
-    UsersSettingsInterfaceComponent
+    UsersSettingsInterfaceComponent,
+    UsersSettingsSecurityComponent
   ]
 })
 export class UsersModule {}

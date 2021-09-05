@@ -6,7 +6,7 @@
     autocomplete="off">
     <h1 class="text-2xl text-secondary-1 font-medium">Login to Draft</h1>
     <div class="flex space-x-1 text-base">
-      <span class="block text-secondary-1 opacity-50">Don't have account?</span>
+      <span class="block text-secondary-2">Don't have account?</span>
       <a
         class="text-info-1 hover:underline"
         [routerLink]="'/auth/registration'"
@@ -16,7 +16,7 @@
     <app-oauth class="block my-4"></app-oauth>
     <fieldset class="flex flex-col space-y-4" [disabled]="isSubmitting">
       <fieldset *ngIf="loginForm.get('email') as email">
-        <label class="block text-secondary-1 opacity-50 text-sm" for="email">Email</label>
+        <label class="block text-secondary-2 text-sm" for="email">Email</label>
         <input
           id="email"
           type="email"
@@ -31,7 +31,7 @@
       </fieldset>
       <fieldset *ngIf="loginForm.get('password') as password">
         <label class="flex justify-between text-sm" for="password">
-          <span class="block text-secondary-1 opacity-50">Password</span>
+          <span class="block text-secondary-2 text-sm">Password</span>
           <a
             class="text-info-1 hover:underline"
             [routerLink]="'/auth/reset'"
@@ -47,7 +47,7 @@
             placeholder="Password"
             aria-label="Password" />
           <div
-            class="absolute top-0 right-0 fill-current text-secondary-1 opacity-30 cursor-pointer p-2.5"
+            class="absolute top-0 right-0 fill-current text-secondary-2 opacity-50 cursor-pointer p-2.5"
             *ngIf="password.value.length"
             [@fade]="password.value.length"
             (touchstart)="isVisible.value = !isVisible.value"

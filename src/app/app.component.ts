@@ -15,7 +15,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(
     private userService: UserService,
     private platformService: PlatformService,
-    private renderer: Renderer2
+    private renderer2: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -24,7 +24,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.platformService.isBrowser()) {
-      this.renderer.selectRootElement('.pre-loader').remove();
+      this.renderer2.selectRootElement('.pre-loader').remove();
     }
   }
 }

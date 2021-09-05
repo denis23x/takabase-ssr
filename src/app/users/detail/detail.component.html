@@ -9,15 +9,16 @@
               <span class="block text-secondary-1 truncate">{{user.name}}</span>
             </div>
             <time
-              class="text-secondary-1 opacity-50 text-sm"
+              class="text-secondary-2 text-sm"
               [attr.datetime]="user.createdAt | dayjs : 'format' : 'YYYY-M-D'">registered
               {{user.createdAt | dayjs : 'fromX'}}
             </time>
           </div>
         </div>
         <p
-          class="text-secondary-1 border-t border-primary-4 pt-4"
-          [class.opacity-50]="!user.biography"
+          class="border-t border-primary-4 pt-4"
+          *ngIf="(user.biography ? 'text-secondary-1' : 'text-secondary-2') as classList"
+          [ngClass]="classList"
           [innerHTML]="user.biography || 'User does not have biography'"></p>
       </div>
     </div>
