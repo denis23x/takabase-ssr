@@ -1,10 +1,10 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { debounceTime, filter, pluck, tap } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { debounceTime, filter, pluck, skip, tap } from 'rxjs/operators';
+import { merge, Subscription } from 'rxjs';
 import {
   CategoriesService,
   Category,
@@ -14,6 +14,7 @@ import {
   UserService,
   SearchDto
 } from '../core';
+import { SearchService } from './core';
 
 @Component({
   selector: 'app-search',
@@ -21,100 +22,145 @@ import {
 })
 export class SearchComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
+  routeQueryParams$: Subscription;
 
   searchForm: FormGroup;
   searchForm$: Subscription;
 
   page = 1;
-  size = 100;
+  size = 10;
 
-  advancedSearch = true;
+  searchList: any[] = [];
+  searchListHasMore = false;
+  searchListLoading: boolean;
 
-  postList: Post[] = [];
-  postListHasMore = true;
-
-  userList: User[] = [];
-  categoryList: Category[] = [];
+  searchMap: any = {};
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private categoriesService: CategoriesService,
     private postService: PostService,
     private userService: UserService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private searchService: SearchService,
+    private elementRef: ElementRef
   ) {
     this.searchForm = this.fb.group({
-      search: ['', [Validators.minLength(4), Validators.pattern(new RegExp(/\S/))]]
+      query: ['', [searchService.getControlValidateQuery()]],
+      tab: ['', [searchService.getControlValidateTab()]]
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.searchMap = this.searchService.searchMap;
+
     this.routeData$ = this.route.data
       .pipe(pluck('data'))
-      .subscribe((postList: Post[]) => (this.postList = postList));
+      .subscribe((searchList: Category[] | User[] | Post[]) => {
+        this.searchList = searchList;
+        this.searchListHasMore = searchList.length === this.size;
 
-    this.searchForm$ = this.searchForm.valueChanges
+        const { query = '', tab = 'posts' } = this.route.snapshot.queryParams;
+
+        this.searchForm.setValue({
+          query,
+          tab
+        });
+
+        const t = setTimeout(() => {
+          const ul = this.elementRef.nativeElement.querySelector('nav ul');
+          const li = ul.querySelector('li a.text-info-1');
+
+          li.scrollIntoView({
+            block: 'nearest'
+          });
+
+          ul.scrollLeft && (ul.scrollLeft += 16);
+
+          clearTimeout(t);
+        }, 50);
+      });
+
+    this.routeQueryParams$ = this.route.queryParams
       .pipe(
-        filter(() => this.searchForm.valid),
-        debounceTime(400),
+        skip(1),
+        pluck('tab'),
+        filter((tab: string) => this.searchForm.get('tab').value !== tab),
         tap(() => {
-          this.page = 1;
-          this.size = 10;
+          this.searchListLoading = true;
 
-          this.postList = [];
+          this.searchList = [];
+          this.searchListHasMore = false;
         })
       )
-      .subscribe(() => this.getSearchResults());
+      .subscribe((tab: string) => this.searchForm.get('tab').patchValue(tab));
+
+    this.searchForm$ = merge(
+      this.searchForm.get('query').valueChanges.pipe(debounceTime(1000)),
+      this.searchForm.get('tab').valueChanges.pipe(debounceTime(100))
+    )
+      .pipe(
+        tap(() => {
+          this.searchListLoading = true;
+
+          this.page = 1;
+          this.size = 10;
+        })
+      )
+      .subscribe(() => {
+        let { query = null, tab = 'posts' } = this.searchForm.value;
+
+        !query && (query = null);
+
+        this.router
+          .navigate(['.'], {
+            relativeTo: this.route,
+            queryParams: { query, tab },
+            queryParamsHandling: 'merge'
+          })
+          .then(() => this.getSearchList(false));
+      });
   }
 
   ngOnDestroy(): void {
-    [this.routeData$, this.searchForm$].forEach($ => $?.unsubscribe());
+    [this.routeData$, this.routeQueryParams$, this.searchForm$]
+      .filter($ => $)
+      .forEach($ => $.unsubscribe());
   }
 
-  getSearchDto(key: string): SearchDto {
-    const search = this.searchForm.get('search')?.value?.trim() || '';
-    const searchKeys = {
-      categories: 'title',
-      users: 'name',
-      posts: 'title'
-    };
-
-    const searchDto: SearchDto = {
+  getSearchDto(): SearchDto {
+    let searchMap: any = this.searchMap.get(this.searchForm.get('tab').value);
+    let searchDto: SearchDto = {
       page: this.page,
       size: this.size
     };
 
-    if (search.length) {
+    const query = this.searchForm.get('query').value;
+
+    if (query.length) {
       return {
         ...searchDto,
-        // @ts-ignore
-        [searchKeys[key]]: search
+        [searchMap.query]: query
       };
     }
 
     return searchDto;
   }
 
-  getSearchResults(): void {
-    this.postService.getAll(this.getSearchDto('posts')).subscribe((postList: Post[]) => {
-      this.postList = this.postList.concat(postList);
-      this.postListHasMore = postList.length === this.size;
-
-      if (this.advancedSearch) {
-        this.userService
-          .getAll(this.getSearchDto('users'))
-          .subscribe((userList: User[]) => (this.userList = userList));
-
-        this.categoriesService
-          .getAll(this.getSearchDto('categories'))
-          .subscribe((categoryList: Category[]) => (this.categoryList = categoryList));
-      }
-    });
+  getSearchList(concat: boolean): void {
+    this[this.searchMap.get(this.searchForm.get('tab').value).service]
+      .getAll(this.getSearchDto())
+      .subscribe((searchList: Category[] | User[] | Post[]) => {
+        this.searchList = concat ? this.searchList.concat(searchList) : searchList;
+        this.searchListHasMore = searchList.length === this.size;
+        this.searchListLoading = false;
+      });
   }
 
   onLoadMore(): void {
     this.page++;
 
-    this.getSearchResults();
+    this.getSearchList(true);
   }
 }

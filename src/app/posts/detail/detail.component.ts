@@ -26,6 +26,8 @@ export class PostsDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   navigateToParent() {
-    this.router.navigate(['.'], { relativeTo: this.route.parent }).then();
+    this.router
+      .navigate(['.'], { relativeTo: this.route.parent })
+      .then(() => console.debug('Route was changed'));
   }
 }

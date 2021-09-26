@@ -23,6 +23,4 @@ export interface UserProfile {
 
 export interface UserInterface {
   colorTheme: string;
-  additionalSearchUsers: string;
-  additionalSearchCategories: string;
 }

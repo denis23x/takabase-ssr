@@ -1,76 +1,63 @@
 <section class="grid grid-cols-1 grid-rows-1 px-4">
+  <nav class="bg-primary-2 border-b border-primary-4 overflow-hidden py-4">
+    <ul class="flex space-x-4 text-secondary-1 bg-primary-3 border border-primary-4 rounded-md overflow-auto py-2 px-3">
+      <li *ngFor="let search of searchMap | keyvalue">
+        <a
+          class="text-secondary-1 hover:text-info-1 hover:underline capitalize"
+          *ngIf="searchForm.get('tab') as tab"
+          [class.text-info-1]="tab.value === search.key"
+          [routerLink]="'.'"
+          [queryParams]="{ tab: search.key }"
+          [queryParamsHandling]="'merge'">{{search.key}}</a>
+      </li>
+    </ul>
+  </nav>
   <form class="bg-primary-2 z-20 sticky top-0 border-b border-primary-4 w-full py-4" [formGroup]="searchForm">
-    <fieldset *ngIf="searchForm.get('search') as search">
+    <fieldset *ngIf="searchForm.get('query') as query">
       <label class="block relative" for="search">
         <input
           id="search"
           type="text"
           class="form-control bg-primary-3 pr-10"
-          formControlName="search"
+          formControlName="query"
           autocomplete="off"
           placeholder="Search"
           aria-label="Search" />
       </label>
-      <span class="block text-sm text-red-400" *ngIf="search.touched && search.errors" [ngSwitch]="true">
-        <ng-container *ngSwitchCase="search.errors.minlength">Min length {{search.errors.minlength['requiredLength']}} characters</ng-container>
+      <span class="block text-sm text-red-400" *ngIf="query.touched && query.errors" [ngSwitch]="true">
+        <ng-container *ngSwitchCase="query.errors.minlength">Min length {{query.errors.minlength['requiredLength']}} characters</ng-container>
       </span>
     </fieldset>
   </form>
-  <div class="results">
-    <ng-container *ngIf="postList.length; else postListEmpty;">
-      <ul class="grid gap-4 grid-cols-posts grid-flow-row-dense py-4">
-        <li *ngFor="let post of postList" [appPost]="post" appCardPost></li>
-      </ul>
-      <button
-        class="btn btn-success block w-full mb-4"
-        type="button"
-        (click)="onLoadMore()"
-        [disabled]="!postListHasMore">Load more
-      </button>
-    </ng-container>
-    <ng-container *ngIf="advancedSearch">
-      <span class="flex items-center text-secondary-1 my-4">
-        <app-svg-icon class="fill-current mr-2" [appIcon]="'gear'"></app-svg-icon>
-        Advanced search
-      </span>
-      <ng-container *ngIf="userList.length">
-        <details *ngIf="{ value: true } as toggle" (toggle)="toggle.value = !toggle.value">
-          <summary
-            class="bg-primary-2 list-none z-20 sticky -top-px border-t border-primary-4 -mt-px py-4"
-            [class.border-b]="!toggle.value">
-              <span class="flex items-center space-x-2 bg-primary-3 text-secondary-1 border border-primary-4 rounded-md cursor-pointer px-2 py-2">
-                <app-svg-icon class="fill-current text-secondary-1" [appIcon]="toggle.value ? 'plus' : 'dash'"></app-svg-icon>
-                <span>Found {{userList.length}} users</span>
-              </span>
-          </summary>
-          <ul class="grid gap-4 grid-cols-users grid-flow-row-dense py-4">
-            <li *ngFor="let user of userList" [appUser]="user" appCardUser></li>
-          </ul>
-        </details>
-      </ng-container>
-      <ng-container *ngIf="categoryList.length">
-        <details *ngIf="{ value: true } as toggle" (toggle)="toggle.value = !toggle.value">
-          <summary
-            class="bg-primary-2 list-none z-20 sticky -top-px border-t border-primary-4 -mt-px py-4"
-            [class.border-b]="!toggle.value">
-              <span class="flex items-center space-x-2 bg-primary-3 text-secondary-1 border border-primary-4 rounded-md cursor-pointer px-2 py-2">
-                <app-svg-icon class="fill-current text-secondary-1" [appIcon]="toggle.value ? 'plus' : 'dash'"></app-svg-icon>
-                <span>Found {{categoryList.length}} categories</span>
-              </span>
-          </summary>
-          <ul class="flex flex-wrap -m-2 pt-4 pb-2">
-            <li class="flex p-2" *ngFor="let category of categoryList" [appCategory]="category" appCardCategory></li>
-          </ul>
-        </details>
+  <div class="content">
+    <ng-container *ngIf="searchForm.get('tab') as tab" [ngSwitch]="tab.value">
+      <ng-container *ngIf="searchList && searchList.length; else searchListEmpty;">
+        <ul *ngSwitchCase="'posts'" class="grid gap-4 grid-cols-posts grid-flow-row-dense py-4">
+          <li class="block" *ngFor="let post of searchList" [appPost]="post" appCardPost></li>
+        </ul>
+        <ul *ngSwitchCase="'users'" class="grid gap-4 grid-cols-users grid-flow-row-dense py-4">
+          <li class="block" *ngFor="let user of searchList" [appUser]="user" appCardUser></li>
+        </ul>
+        <ul *ngSwitchCase="'categories'" class="flex flex-wrap -m-2 py-4">
+          <li class="flex p-2" *ngFor="let category of searchList" [appCategory]="category" appCardCategory></li>
+        </ul>
+        <button
+          class="btn btn-success block w-full mb-4"
+          type="button"
+          *ngIf="searchList.length >= size"
+          (click)="onLoadMore()"
+          [disabled]="!searchListHasMore">Load more
+        </button>
       </ng-container>
     </ng-container>
   </div>
-  <ng-template #postListEmpty>
-    <div class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-4 py-2 my-4">
-      <span class="block mb-4">No posts were found for your request</span>
-      <span class="block">You can turn on the &laquo;Advanced search&#187; in
-        <a [routerLink]="['/users/settings']" [attr.aria-label]="'Settings'" class="inline text-info-1 hover:underline">profile settings</a>
-      </span>
+  <ng-template #searchListEmpty>
+    <div
+      class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-4 py-2 my-4"
+      *ngIf="searchForm.get('tab') as tab"
+      [ngSwitch]="searchListLoading">
+      <span class="block" *ngSwitchDefault>No {{tab.value}} were found for your request</span>
+      <span class="block" *ngSwitchCase="true">Loading</span>
     </div>
   </ng-template>
   <router-outlet></router-outlet>
