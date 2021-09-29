@@ -49,13 +49,13 @@
           <div
             class="absolute top-0 right-0 fill-current text-secondary-2 opacity-50 cursor-pointer p-2.5"
             *ngIf="password.value.length"
-            [@fade]="password.value.length"
             (touchstart)="isVisible.value = !isVisible.value"
             (mouseenter)="isVisible.value = true"
             (mouseleave)="isVisible.value = false"
             appSvgIcon
             [appIcon]="isVisible.value ? 'eye' : 'eye-slash'"
-            [appSquare]="'1.35rem'">
+            [appSquare]="'1.35rem'"
+            [@fade]>
           </div>
         </div>
         <span class="block text-sm text-red-400" *ngIf="password.touched && password.errors" [ngSwitch]="true">

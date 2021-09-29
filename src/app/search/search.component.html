@@ -21,6 +21,15 @@
           autocomplete="off"
           placeholder="Search"
           aria-label="Search" />
+        <span
+          class="block absolute top-0 right-0 fill-current opacity-50 hover:opacity-100 text-secondary-2 opacity-50 cursor-pointer p-2 hover:text-danger-1"
+          *ngIf="query.value.length"
+          appSvgIcon
+          [appIcon]="'x'"
+          [appSquare]="'1.6rem'"
+          (click)="query.setValue('')"
+          [@fade]>
+        </span>
       </label>
       <span class="block text-sm text-red-400" *ngIf="query.touched && query.errors" [ngSwitch]="true">
         <ng-container *ngSwitchCase="query.errors.minlength">Min length {{query.errors.minlength['requiredLength']}} characters</ng-container>

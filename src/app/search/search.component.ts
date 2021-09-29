@@ -5,10 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, filter, pluck } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { fade } from '../app.animation';
 
 @Component({
   selector: 'app-search',
-  templateUrl: './search.component.html'
+  templateUrl: './search.component.html',
+  animations: [fade]
 })
 export class SearchComponent implements OnInit, OnDestroy {
   routeQueryParams$: Subscription;
