@@ -1,0 +1,22 @@
+<ng-container>
+  <ng-container *ngIf="userList.length; else userListEmpty;">
+    <ul class="grid gap-4 grid-cols-users grid-flow-row-dense py-4">
+      <li class="block" *ngFor="let user of userList" [appUser]="user" appCardUser></li>
+    </ul>
+    <button
+      class="btn btn-success block w-full mb-4"
+      type="button"
+      *ngIf="userListHasMore"
+      (click)="onUserListLoadMore()">Load more
+    </button>
+  </ng-container>
+  <ng-template #userListEmpty>
+    <div
+      class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-4 py-2 my-4"
+      [ngSwitch]="userListLoading">
+      <span class="block" *ngSwitchDefault>No users were found for your request</span>
+      <span class="block" *ngSwitchCase="true">Loading</span>
+    </div>
+  </ng-template>
+  <router-outlet></router-outlet>
+</ng-container>

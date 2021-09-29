@@ -1,6 +1,7 @@
 /** @format */
 
 import { NgModule } from '@angular/core';
+import { AuthGuard } from '../core';
 import { Routes, RouterModule } from '@angular/router';
 import { UsersDetailComponent } from './detail/detail.component';
 import { UsersDetailResolverService } from './detail/detail-resolver.service';
@@ -9,7 +10,6 @@ import { UsersSettingsResolverService } from './settings/settings-resolver.servi
 import { UsersSettingsAccountComponent } from './settings/account/account.component';
 import { UsersSettingsInterfaceComponent } from './settings/interface/interface.component';
 import { UsersSettingsSecurityComponent } from './settings/security/security.component';
-import { AuthGuard } from '../core';
 import { PostsDetailComponent } from '../posts/detail/detail.component';
 import { PostsDetailResolverService } from '../posts/detail/detail-resolver.service';
 

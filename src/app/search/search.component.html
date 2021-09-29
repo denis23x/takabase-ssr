@@ -1,14 +1,12 @@
 <section class="grid grid-cols-1 grid-rows-1 px-4">
   <nav class="bg-primary-2 border-b border-primary-4 overflow-hidden py-4">
     <ul class="flex space-x-4 text-secondary-1 bg-primary-3 border border-primary-4 rounded-md overflow-auto py-2 px-3">
-      <li *ngFor="let search of searchMap | keyvalue">
+      <li *ngFor="let link of ['posts', 'categories', 'users']">
         <a
           class="text-secondary-1 hover:text-info-1 hover:underline capitalize"
-          *ngIf="searchForm.get('tab') as tab"
-          [class.text-info-1]="tab.value === search.key"
-          [routerLink]="'.'"
-          [queryParams]="{ tab: search.key }"
-          [queryParamsHandling]="'merge'">{{search.key}}</a>
+          [routerLink]="link"
+          [routerLinkActive]="'text-info-1'"
+          [queryParamsHandling]="'preserve'">{{link}}</a>
       </li>
     </ul>
   </nav>
@@ -30,35 +28,6 @@
     </fieldset>
   </form>
   <div class="content">
-    <ng-container *ngIf="searchForm.get('tab') as tab" [ngSwitch]="tab.value">
-      <ng-container *ngIf="searchList && searchList.length; else searchListEmpty;">
-        <ul *ngSwitchCase="'posts'" class="grid gap-4 grid-cols-posts grid-flow-row-dense py-4">
-          <li class="block" *ngFor="let post of searchList" [appPost]="post" appCardPost></li>
-        </ul>
-        <ul *ngSwitchCase="'users'" class="grid gap-4 grid-cols-users grid-flow-row-dense py-4">
-          <li class="block" *ngFor="let user of searchList" [appUser]="user" appCardUser></li>
-        </ul>
-        <ul *ngSwitchCase="'categories'" class="flex flex-wrap -m-2 py-4">
-          <li class="flex p-2" *ngFor="let category of searchList" [appCategory]="category" appCardCategory></li>
-        </ul>
-        <button
-          class="btn btn-success block w-full mb-4"
-          type="button"
-          *ngIf="searchList.length >= size"
-          (click)="onLoadMore()"
-          [disabled]="!searchListHasMore">Load more
-        </button>
-      </ng-container>
-    </ng-container>
+    <router-outlet></router-outlet>
   </div>
-  <ng-template #searchListEmpty>
-    <div
-      class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-4 py-2 my-4"
-      *ngIf="searchForm.get('tab') as tab"
-      [ngSwitch]="searchListLoading">
-      <span class="block" *ngSwitchDefault>No {{tab.value}} were found for your request</span>
-      <span class="block" *ngSwitchCase="true">Loading</span>
-    </div>
-  </ng-template>
-  <router-outlet></router-outlet>
 </section>

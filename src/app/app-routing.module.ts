@@ -25,8 +25,13 @@ const routes: Routes = [
     loadChildren: () => import('./search/search.module').then(m => m.SearchModule)
   },
   {
+    path: 'exception',
+    loadChildren: () => import('./exception/exception.module').then(m => m.ExceptionModule)
+  },
+  {
     path: '**',
-    redirectTo: '/'
+    pathMatch: 'full',
+    redirectTo: '/exception/404'
   }
 ];
 

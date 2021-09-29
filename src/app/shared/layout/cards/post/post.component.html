@@ -1,5 +1,8 @@
 <article class="relative bg-primary-3 border border-primary-4 rounded-md overflow-hidden w-full h-full">
-  <a [routerLink]="['posts/' + post.id]" *ngIf="post.image">
+  <a
+    [routerLink]="[post.id]"
+    [queryParamsHandling]="'preserve'"
+    *ngIf="post.image">
     <img
       class="block object-cover object-center w-full h-full"
       loading="lazy"
@@ -36,7 +39,8 @@
     </div>
     <a
       class="text-secondary-1 hover:text-info-1 hover:underline line-clamp-3 mb-0"
-      [routerLink]="['posts/' + post.id]">{{post.title}}
+      [routerLink]="[post.id]"
+      [queryParamsHandling]="'preserve'">{{post.title}}
     </a>
   </div>
 </article>
