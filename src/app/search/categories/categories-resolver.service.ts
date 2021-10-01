@@ -2,8 +2,8 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { SearchDto, CategoriesService, Category } from '../../core';
-import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { CategoryGetAllDto, CategoriesService, Category } from '../../core';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -14,28 +14,24 @@ export class SearchCategoriesResolverService {
   page = 1;
   size = 10;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private categoriesService: CategoriesService
-  ) {}
+  constructor(private router: Router, private categoriesService: CategoriesService) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<Category[]> {
-    let searchDto: SearchDto = {
+    let categoryGetAllDto: CategoryGetAllDto = {
       page: this.page,
       size: this.size
     };
 
-    const { query = null } = route.parent.queryParams;
+    const { query: title = null } = route.parent.queryParams;
 
-    if (query) {
-      searchDto = {
-        ...searchDto,
-        title: query
+    if (title) {
+      categoryGetAllDto = {
+        ...categoryGetAllDto,
+        title
       };
     }
 
-    return this.categoriesService.getAll(searchDto).pipe(
+    return this.categoriesService.getAll(categoryGetAllDto).pipe(
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

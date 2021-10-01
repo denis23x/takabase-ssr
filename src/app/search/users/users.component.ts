@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { pluck, skip, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { SearchDto, User, UserService } from '../../core';
+import { UserGetAllDto, User, UserService } from '../../core';
 
 @Component({
   selector: 'app-search-users',
@@ -53,21 +53,21 @@ export class SearchUsersComponent implements OnInit, OnDestroy {
   }
 
   getUserList(concat: boolean): void {
-    const { query = null } = this.route.parent.snapshot.queryParams;
-
-    let searchDto: SearchDto = {
+    let userGetAllDto: UserGetAllDto = {
       page: this.page,
       size: this.size
     };
 
-    if (query) {
-      searchDto = {
-        ...searchDto,
-        name: query
+    const { query: name = null } = this.route.parent.snapshot.queryParams;
+
+    if (name) {
+      userGetAllDto = {
+        ...userGetAllDto,
+        name
       };
     }
 
-    this.userService.getAll(searchDto).subscribe((userList: User[]) => {
+    this.userService.getAll(userGetAllDto).subscribe((userList: User[]) => {
       this.userList = concat ? this.userList.concat(userList) : userList;
       this.userListLoading = false;
       this.userListHasMore = userList.length === this.size;

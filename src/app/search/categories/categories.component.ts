@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { pluck, skip, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { CategoriesService, Category, SearchDto } from '../../core';
+import { CategoriesService, Category, CategoryGetAllDto } from '../../core';
 
 @Component({
   selector: 'app-search-categories',
@@ -53,21 +53,21 @@ export class SearchCategoriesComponent implements OnInit, OnDestroy {
   }
 
   getCategoryList(concat: boolean): void {
-    const { query = null } = this.route.parent.snapshot.queryParams;
-
-    let searchDto: SearchDto = {
+    let categoryGetAllDto: CategoryGetAllDto = {
       page: this.page,
       size: this.size
     };
 
-    if (query) {
-      searchDto = {
-        ...searchDto,
-        title: query
+    const { query: title = null } = this.route.parent.snapshot.queryParams;
+
+    if (title) {
+      categoryGetAllDto = {
+        ...categoryGetAllDto,
+        title
       };
     }
 
-    this.categoriesService.getAll(searchDto).subscribe((categoryList: Category[]) => {
+    this.categoriesService.getAll(categoryGetAllDto).subscribe((categoryList: Category[]) => {
       this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
       this.categoryListLoading = false;
       this.categoryListHasMore = categoryList.length === this.size;

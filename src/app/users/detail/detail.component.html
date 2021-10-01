@@ -10,15 +10,13 @@
             </div>
             <time
               class="text-secondary-2 text-sm"
-              [attr.datetime]="user.createdAt | dayjs : 'format' : 'YYYY-M-D'">registered
-              {{user.createdAt | dayjs : 'fromX'}}
+              [attr.datetime]="user.createdAt | dayjs : 'format' : 'YYYY-M-D'">registered {{user.createdAt | dayjs : 'fromX'}}
             </time>
           </div>
         </div>
         <p
           class="border-t border-primary-4 pt-4"
-          *ngIf="(user.biography ? 'text-secondary-1' : 'text-secondary-2') as classList"
-          [ngClass]="classList"
+          [ngClass]="user.biography ? 'text-secondary-1' : 'text-secondary-2'"
           [innerHTML]="user.biography || 'User does not have biography'"></p>
       </div>
     </div>
@@ -33,7 +31,7 @@
               [routerLink]="[]"
               [routerLinkActive]="'text-info-1'"
               [routerLinkActiveOptions]="{ exact: true }"
-              [queryParams]="{ category: null }"
+              [queryParams]="{ categoryId: null }"
               [queryParamsHandling]="'merge'">All</a>
           </li>
           <li class="inline-block" *ngFor="let category of categoryList">
@@ -41,7 +39,7 @@
               class="block text-secondary-1 hover:text-info-1 hover:underline capitalize p-2"
               [routerLink]="[]"
               [routerLinkActive]="'text-info-1'"
-              [queryParams]="{ category: category.title.toLowerCase() }"
+              [queryParams]="{ categoryId: category.id }"
               [queryParamsHandling]="'merge'">{{category.title}}</a>
           </li>
         </ul>
@@ -83,18 +81,23 @@
     <div class="content">
       <ng-container *ngIf="postList.length; else postListEmpty;">
         <ul class="grid gap-4 grid-cols-posts grid-flow-row-dense py-4">
-          <li *ngFor="let post of postList" [appPost]="post" appCardPost></li>
+          <li class="block" *ngFor="let post of postList" [appPost]="post" appCardPost></li>
         </ul>
         <button
           class="btn btn-success block w-full mb-4"
-          type="button">Load more
+          type="button"
+          *ngIf="postListHasMore"
+          (click)="onPostListLoadMore()">Load more
         </button>
       </ng-container>
     </div>
   </div>
   <ng-template #postListEmpty>
-    <div class="py-4">
-      <h2 class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md p-2">No posts</h2>
+    <div
+      class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-4 py-2 my-4"
+      [ngSwitch]="postListLoading">
+      <span class="block" *ngSwitchDefault>No posts were found for your request</span>
+      <span class="block" *ngSwitchCase="true">Loading</span>
     </div>
   </ng-template>
   <router-outlet></router-outlet>

@@ -2,8 +2,8 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { SearchDto, UserService, User } from '../../core';
-import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { UserGetAllDto, UserService, User } from '../../core';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -14,28 +14,24 @@ export class SearchUsersResolverService {
   page = 1;
   size = 10;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private userService: UserService
-  ) {}
+  constructor(private router: Router, private userService: UserService) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
-    let searchDto: SearchDto = {
+    let userGetAllDto: UserGetAllDto = {
       page: this.page,
       size: this.size
     };
 
-    const { query = null } = route.parent.queryParams;
+    const { query: name = null } = route.parent.queryParams;
 
-    if (query) {
-      searchDto = {
-        ...searchDto,
-        name: query
+    if (name) {
+      userGetAllDto = {
+        ...userGetAllDto,
+        name
       };
     }
 
-    return this.userService.getAll(searchDto).pipe(
+    return this.userService.getAll(userGetAllDto).pipe(
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

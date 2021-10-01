@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { pluck, skip, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { Post, PostService, SearchDto } from '../../core';
+import { Post, PostService, PostGetAllDto } from '../../core';
 
 @Component({
   selector: 'app-search-posts',
@@ -53,21 +53,21 @@ export class SearchPostsComponent implements OnInit, OnDestroy {
   }
 
   getPostList(concat: boolean): void {
-    const { query = null } = this.route.parent.snapshot.queryParams;
-
-    let searchDto: SearchDto = {
+    let postGetAllDto: PostGetAllDto = {
       page: this.page,
       size: this.size
     };
 
-    if (query) {
-      searchDto = {
-        ...searchDto,
-        title: query
+    const { query: title = null } = this.route.parent.snapshot.queryParams;
+
+    if (title) {
+      postGetAllDto = {
+        ...postGetAllDto,
+        title
       };
     }
 
-    this.postService.getAll(searchDto).subscribe((postList: Post[]) => {
+    this.postService.getAll(postGetAllDto).subscribe((postList: Post[]) => {
       this.postList = concat ? this.postList.concat(postList) : postList;
       this.postListLoading = false;
       this.postListHasMore = postList.length === this.size;

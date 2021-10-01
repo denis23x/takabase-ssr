@@ -1,36 +1,67 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot } from '@angular/router';
-import { forkJoin, Observable } from 'rxjs';
-import { first, map, switchMap } from 'rxjs/operators';
-import { UserService, PostService, CategoriesService, UserProfile } from '../../core';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { defer, Observable, of, throwError, zip } from 'rxjs';
+import { catchError, first, map, pluck, switchMap } from 'rxjs/operators';
+import {
+  UserService,
+  PostService,
+  CategoriesService,
+  UserProfile,
+  PostGetAllDto
+} from '../../core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersDetailResolverService {
+  page = 1;
+  size = 10;
+
   constructor(
     private userService: UserService,
     private categoriesService: CategoriesService,
-    private postService: PostService
+    private postService: PostService,
+    private router: Router
   ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<UserProfile> {
-    return this.userService.user.pipe(
-      first(),
-      switchMap(user => {
-        const userId = route.data.isProfile ? user.id : route.paramMap.get('id');
-        const body = {
-          userId
+    return defer(() => {
+      return route.data.isProfile
+        ? this.userService.user.pipe(first(), pluck('id'))
+        : of(Number(route.paramMap.get('id')));
+    }).pipe(
+      switchMap((userId: number) =>
+        zip(this.userService.getById(userId), this.categoriesService.getAll({ userId }))
+      ),
+      switchMap(([user, categoryList]) => {
+        let postGetAllDto: PostGetAllDto = {
+          userId: user.id,
+          page: this.page,
+          size: this.size
         };
 
-        return forkJoin([
-          this.userService.getById(Number(userId)),
-          this.categoriesService.getAll(body),
-          this.postService.getAll(body)
-        ]).pipe(map(([user, categoryList, postList]) => ({ user, categoryList, postList })));
-      })
+        const { categoryId = null } = route.parent.queryParams;
+
+        if (categoryId) {
+          postGetAllDto = {
+            ...postGetAllDto,
+            categoryId
+          };
+        }
+
+        return zip(of(user), of(categoryList), this.postService.getAll(postGetAllDto));
+      }),
+      catchError((error: HttpErrorResponse) => {
+        this.router
+          .navigate(['/exception', error.status])
+          .then(() => console.debug('Route was changed'));
+
+        return throwError(error);
+      }),
+      map(([user, categoryList, postList]) => ({ user, categoryList, postList }))
     );
   }
 }

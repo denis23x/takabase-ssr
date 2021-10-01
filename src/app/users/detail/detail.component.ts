@@ -1,10 +1,10 @@
 /** @format */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { User, Category, Post, PostService, UserProfile } from '../../core';
-import { pluck, tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { User, Category, Post, PostService, UserProfile, PostGetAllDto } from '../../core';
+import { pluck, skip, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-users-detail',
@@ -12,54 +12,99 @@ import { pluck, tap } from 'rxjs/operators';
 })
 export class UsersDetailComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
-  categoriesSwitch$ = new BehaviorSubject<Category>({} as Category);
+  routeQueryParams$: Subscription;
+
+  page = 1;
+  size = 10;
 
   user: User;
   categoryList: Category[] = [];
+
   postList: Post[] = [];
+  postListHasMore: boolean;
+  postListLoading: boolean;
 
   isProfile: boolean;
 
-  constructor(private route: ActivatedRoute, private postService: PostService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private postService: PostService,
+    private elementRef: ElementRef
+  ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.routeData$ = this.route.data
       .pipe(
-        tap(({ isProfile }) => (this.isProfile = isProfile)),
+        tap((routerData: any) => (this.isProfile = routerData.isProfile)),
         pluck('data')
       )
       .subscribe((userProfile: UserProfile) => {
         this.user = userProfile.user;
         this.categoryList = userProfile.categoryList;
+
         this.postList = userProfile.postList;
+        this.postListHasMore = userProfile.postList.length === this.size;
+
+        const t = setTimeout(() => {
+          const ul = this.elementRef.nativeElement.querySelector('nav ul');
+          const li = ul.querySelector('li a.text-info-1');
+
+          li.scrollIntoView({
+            block: 'nearest'
+          });
+
+          // ul.scrollLeft && (ul.scrollLeft += 16);
+
+          clearTimeout(t);
+        }, 50);
       });
 
-    // this.categoriesSwitch$
-    //   .pipe(
-    //     tap(category => {
-    //       // this.posts$.next([]);
-    //     }),
-    //     switchMap(({ id: categoryId }) => {
-    //       const { id: userId } = this.user$.getValue();
-    //       return this.postService.getAll({
-    //         userId,
-    //         ...(categoryId ? { categoryId } : null)
-    //       });
-    //     })
-    //   )
-    //   .subscribe(posts => {
-    //     this.posts$.next([]);
-    //     setTimeout(() => {
-    //       this.posts$.next(posts);
-    //     }, 0);
-    //   });
+    this.routeQueryParams$ = this.route.queryParams
+      .pipe(
+        skip(1),
+        tap(() => {
+          this.page = 1;
+          this.size = 10;
+
+          // It calls scroll top
+          // this.postList = [];
+          this.postListLoading = true;
+          this.postListHasMore = false;
+        })
+      )
+      .subscribe(() => this.getPostList(false));
   }
 
-  ngOnDestroy() {
-    [this.routeData$, this.categoriesSwitch$].forEach($ => $?.unsubscribe());
+  ngOnDestroy(): void {
+    [this.routeData$, this.routeQueryParams$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
-  onResetCategory() {
-    // this.categoriesSwitch$.next({ ...[...this.categories$.getValue()].shift(), id: null });
+  getPostList(concat: boolean): void {
+    let postGetAllDto: PostGetAllDto = {
+      userId: this.user.id,
+      page: this.page,
+      size: this.size
+    };
+
+    const { categoryId = null } = this.route.snapshot.queryParams;
+
+    if (categoryId) {
+      postGetAllDto = {
+        ...postGetAllDto,
+        categoryId
+      };
+    }
+
+    this.postService.getAll(postGetAllDto).subscribe((postList: Post[]) => {
+      this.postList = concat ? this.postList.concat(postList) : postList;
+      this.postListLoading = false;
+      this.postListHasMore = postList.length === this.size;
+    });
+  }
+
+  onPostListLoadMore(): void {
+    this.page++;
+
+    this.getPostList(true);
   }
 }
