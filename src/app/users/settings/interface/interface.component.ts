@@ -33,16 +33,16 @@ export class UsersSettingsInterfaceComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private platformService: PlatformService,
     private userService: UserService,
     private localStorageService: LocalStorageService
   ) {
-    this.colorThemeForm = this.fb.group({
+    this.colorThemeForm = this.formBuilder.group({
       colorTheme: ['auto', [Validators.required]]
     });
 
-    this.additionalSearchForm = this.fb.group({
+    this.additionalSearchForm = this.formBuilder.group({
       users: [false, [Validators.required]],
       categories: [false, [Validators.required]]
     });
@@ -82,7 +82,9 @@ export class UsersSettingsInterfaceComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.user$, this.colorThemeForm$, this.additionalSearchForm$].forEach($ => $?.unsubscribe());
+    [this.user$, this.colorThemeForm$, this.additionalSearchForm$]
+      .filter($ => $)
+      .forEach($ => $.unsubscribe());
   }
 
   setConfig(interfaceConfig: any): void {

@@ -33,6 +33,6 @@ export class AppAuthedDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.isAuthenticated$?.unsubscribe();
+    [this.isAuthenticated$].filter($ => $).forEach($ => $.unsubscribe());
   }
 }

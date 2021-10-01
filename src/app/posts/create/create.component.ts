@@ -1,7 +1,6 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { MarkdownService } from '../core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -15,11 +14,7 @@ export class PostsCreateComponent implements OnInit, OnDestroy {
   postForm: FormGroup;
   postForm$: Subscription;
 
-  constructor(
-    private route: ActivatedRoute,
-    private markdownService: MarkdownService,
-    private fb: FormBuilder
-  ) {
+  constructor(private markdownService: MarkdownService, private fb: FormBuilder) {
     this.postForm = this.fb.group({
       // body: ['', [Validators.required, Validators.minLength(32), Validators.maxLength(6400)]]
       body: [
@@ -70,7 +65,6 @@ export class PostsCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // @ts-ignore
     this.postForm$ = this.postForm
       .get('body')
       .valueChanges.pipe(debounceTime(400))
@@ -80,7 +74,7 @@ export class PostsCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.postForm$?.unsubscribe();
+    [this.postForm$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
   onSubmitForm(): void {

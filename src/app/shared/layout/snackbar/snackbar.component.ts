@@ -21,7 +21,7 @@ export class SnackbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.snackbarService$?.unsubscribe();
+    [this.snackbarService$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
   onNotification(snack: Snack) {

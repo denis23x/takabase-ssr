@@ -30,7 +30,6 @@ export class UserService {
           this.setAuthorization(user);
         }
 
-        // @ts-ignore
         this.localStorageService.setItem(environment.TOKEN_LOCALSTORAGE, user.accessToken);
       })
     );

@@ -2,7 +2,7 @@
 
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { HelperService, UserService, AuthRegistrationDto } from '../../core';
 import { fade } from '../../app.animation';
@@ -19,13 +19,12 @@ export class AuthRegistrationComponent implements OnDestroy {
   isSubmitting = false;
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
     private userService: UserService,
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private helperService: HelperService
   ) {
-    this.registrationForm = this.fb.group({
+    this.registrationForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]],
       email: ['', [Validators.required, Validators.email]],
       password: [
@@ -36,7 +35,7 @@ export class AuthRegistrationComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.registrationForm$?.unsubscribe();
+    [this.registrationForm$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
   getAuthentication(authRegistrationDto: AuthRegistrationDto = this.registrationForm.value): void {

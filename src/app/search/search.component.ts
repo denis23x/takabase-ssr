@@ -19,18 +19,18 @@ export class SearchComponent implements OnInit, OnDestroy {
   searchForm$: Subscription;
 
   constructor(
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private elementRef: ElementRef
   ) {
-    this.searchForm = this.fb.group({
+    this.searchForm = this.formBuilder.group({
       query: ['', [Validators.minLength(4), Validators.maxLength(24)]]
     });
   }
 
   ngOnInit(): void {
-    this.routeQueryParams$ = this.route.queryParams
+    this.routeQueryParams$ = this.activatedRoute.queryParams
       .pipe(
         pluck('query'),
         filter((query: string | undefined) => !!query)
@@ -64,7 +64,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
         this.router
           .navigate([], {
-            relativeTo: this.route,
+            relativeTo: this.activatedRoute,
             queryParams: { query },
             queryParamsHandling: 'merge'
           })

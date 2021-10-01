@@ -22,18 +22,18 @@ export class SearchUsersComponent implements OnInit, OnDestroy {
   userListLoading: boolean;
 
   constructor(
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private userService: UserService
   ) {}
 
   ngOnInit(): void {
-    this.routeData$ = this.route.data.pipe(pluck('data')).subscribe((userList: User[]) => {
+    this.routeData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe((userList: User[]) => {
       this.userList = userList;
       this.userListHasMore = userList.length === this.size;
     });
 
-    this.routeQueryParams$ = this.route.parent.queryParams
+    this.routeQueryParams$ = this.activatedRoute.parent.queryParams
       .pipe(
         skip(1),
         tap(() => {
@@ -58,7 +58,7 @@ export class SearchUsersComponent implements OnInit, OnDestroy {
       size: this.size
     };
 
-    const { query: name = null } = this.route.parent.snapshot.queryParams;
+    const { query: name = null } = this.activatedRoute.parent.snapshot.queryParams;
 
     if (name) {
       userGetAllDto = {

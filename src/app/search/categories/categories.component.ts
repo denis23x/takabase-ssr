@@ -22,18 +22,20 @@ export class SearchCategoriesComponent implements OnInit, OnDestroy {
   categoryListLoading: boolean;
 
   constructor(
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private categoriesService: CategoriesService
   ) {}
 
   ngOnInit(): void {
-    this.routeData$ = this.route.data.pipe(pluck('data')).subscribe((categoryList: Category[]) => {
-      this.categoryList = categoryList;
-      this.categoryListHasMore = categoryList.length === this.size;
-    });
+    this.routeData$ = this.activatedRoute.data
+      .pipe(pluck('data'))
+      .subscribe((categoryList: Category[]) => {
+        this.categoryList = categoryList;
+        this.categoryListHasMore = categoryList.length === this.size;
+      });
 
-    this.routeQueryParams$ = this.route.parent.queryParams
+    this.routeQueryParams$ = this.activatedRoute.parent.queryParams
       .pipe(
         skip(1),
         tap(() => {
@@ -58,7 +60,7 @@ export class SearchCategoriesComponent implements OnInit, OnDestroy {
       size: this.size
     };
 
-    const { query: title = null } = this.route.parent.snapshot.queryParams;
+    const { query: title = null } = this.activatedRoute.parent.snapshot.queryParams;
 
     if (title) {
       categoryGetAllDto = {

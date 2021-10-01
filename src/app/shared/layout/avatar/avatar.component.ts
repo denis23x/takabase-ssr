@@ -49,7 +49,7 @@ export class AvatarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.windowResize$?.unsubscribe();
+    [this.windowResize$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
   getAvatar(): void {

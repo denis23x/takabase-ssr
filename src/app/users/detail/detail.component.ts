@@ -27,13 +27,13 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
   isProfile: boolean;
 
   constructor(
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private postService: PostService,
     private elementRef: ElementRef
   ) {}
 
   ngOnInit(): void {
-    this.routeData$ = this.route.data
+    this.routeData$ = this.activatedRoute.data
       .pipe(
         tap((routerData: any) => (this.isProfile = routerData.isProfile)),
         pluck('data')
@@ -59,7 +59,7 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
         }, 50);
       });
 
-    this.routeQueryParams$ = this.route.queryParams
+    this.routeQueryParams$ = this.activatedRoute.queryParams
       .pipe(
         skip(1),
         tap(() => {
@@ -86,7 +86,7 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
       size: this.size
     };
 
-    const { categoryId = null } = this.route.snapshot.queryParams;
+    const { categoryId = null } = this.activatedRoute.snapshot.queryParams;
 
     if (categoryId) {
       postGetAllDto = {

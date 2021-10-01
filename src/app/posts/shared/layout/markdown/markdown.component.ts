@@ -44,10 +44,10 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     private markdownService: MarkdownService,
     private platformService: PlatformService,
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private helperService: HelperService
   ) {
-    this.urlForm = this.fb.group({
+    this.urlForm = this.formBuilder.group({
       url: ['']
     });
   }
@@ -58,7 +58,6 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.platformService.isBrowser()) {
       // @ts-ignore
       this.textarea = this.document.getElementById(this.textareaId);
-      // @ts-ignore
       this.preview = this.document.getElementById(this.previewId);
 
       this.textareaInput$ = fromEvent(this.textarea, 'input')
@@ -78,7 +77,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.textareaInput$, this.history$].forEach($ => $?.unsubscribe());
+    [this.textareaInput$, this.history$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
   setValue(value: string): void {
@@ -101,7 +100,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
         Validators.required
       ]);
 
-      this.urlForm.get('url')?.setValue(selection);
+      this.urlForm.get('url').setValue(selection);
       this.urlFormControl = control;
       this.urlModal = true;
     } else {
@@ -124,7 +123,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const valueHandler = () => {
-      const url = this.urlForm.get('url')?.value;
+      const url = this.urlForm.get('url').value;
 
       if (url) {
         this.urlFormControl = {} as MarkdownControl;

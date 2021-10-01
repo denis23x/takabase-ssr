@@ -22,20 +22,20 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
   isSubmitting = false;
 
   constructor(
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private userService: UserService,
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private helperService: HelperService
   ) {
-    this.loginForm = this.fb.group({
+    this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(32)]]
     });
   }
 
   ngOnInit(): void {
-    this.queryParams$ = this.route.queryParams
+    this.queryParams$ = this.activatedRoute.queryParams
       .pipe(
         filter(params => {
           const email = params.email;
@@ -52,7 +52,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.queryParams$, this.loginForm$].forEach($ => $?.unsubscribe());
+    [this.queryParams$, this.loginForm$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
   getAuthentication(authLoginDto: AuthLoginDto = this.loginForm.value): void {

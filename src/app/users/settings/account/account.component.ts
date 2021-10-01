@@ -22,19 +22,18 @@ export class UsersSettingsAccountComponent implements OnInit, OnDestroy {
   isSubmitting = false;
 
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private helperService: HelperService,
     private route: ActivatedRoute
   ) {
-    this.accountForm = this.fb.group({
+    this.accountForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       biography: ['', [Validators.required]]
     });
   }
 
   ngOnInit(): void {
-    // @ts-ignore
-    this.routeData$ = this.route.parent?.data.pipe(pluck('data')).subscribe((user: User) => {
+    this.routeData$ = this.route.parent.data.pipe(pluck('data')).subscribe((user: User) => {
       this.user = user;
 
       this.accountForm.patchValue(this.user);
@@ -46,7 +45,7 @@ export class UsersSettingsAccountComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.accountForm$?.unsubscribe();
+    [this.accountForm$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
   onSubmitForm(): void {

@@ -49,7 +49,6 @@ export class PlatformService {
       const window = this.getWindow();
 
       for (const [browser, agent] of browserList) {
-        // @ts-ignore
         if (window.navigator['brave']) {
           return 'brave';
         }

@@ -24,6 +24,6 @@ export class UsersSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.routeData$?.unsubscribe();
+    [this.routeData$].filter($ => $).forEach($ => $.unsubscribe());
   }
 }

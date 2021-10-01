@@ -45,7 +45,7 @@ export class HelperService {
   getFormValidation(formGroup: FormGroup): boolean {
     if (formGroup.invalid) {
       Object.keys(formGroup.controls).forEach(control =>
-        formGroup.get(control)?.markAsTouched({ onlySelf: true })
+        formGroup.get(control).markAsTouched({ onlySelf: true })
       );
 
       return false;
