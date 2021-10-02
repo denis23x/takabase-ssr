@@ -2,16 +2,21 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeValue } from '@angular/platform-browser';
+import { PlatformService } from '../../core';
 import DOMPurify from 'dompurify';
 
 @Pipe({
   name: 'sanitizer'
 })
 export class SanitizerPipe implements PipeTransform {
-  constructor(protected sanitizer: DomSanitizer) {}
+  constructor(protected sanitizer: DomSanitizer, private platformService: PlatformService) {}
 
   transform(value: string, context: string = 'html'): SafeValue | null {
-    return this.bypassSecurityTrust(context, DOMPurify.sanitize(value));
+    if (this.platformService.isBrowser()) {
+      return this.bypassSecurityTrust(context, DOMPurify.sanitize(value));
+    }
+
+    return null;
   }
 
   private bypassSecurityTrust(context: string, value: string): SafeValue | null {
