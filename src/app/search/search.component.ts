@@ -3,7 +3,7 @@
 import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { debounceTime, filter, pluck } from 'rxjs/operators';
+import { debounceTime, filter, pluck, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { fade } from '../app.animation';
 
@@ -33,24 +33,20 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.routeQueryParams$ = this.activatedRoute.queryParams
       .pipe(
         pluck('query'),
-        filter((query: string | undefined) => !!query)
-      )
-      .subscribe(query => {
-        this.searchForm.setValue({ query });
+        tap(() => {
+          const timeout = setTimeout(() => {
+            const ul = this.elementRef.nativeElement.querySelector('nav ul');
+            const li = ul.querySelector('li a.text-info-1');
 
-        const t = setTimeout(() => {
-          const ul = this.elementRef.nativeElement.querySelector('nav ul');
-          const li = ul.querySelector('li a.text-info-1');
+            li.scrollIntoView({
+              block: 'nearest'
+            });
 
-          li.scrollIntoView({
-            block: 'nearest'
+            clearTimeout(timeout);
           });
-
-          ul.scrollLeft && (ul.scrollLeft += 16);
-
-          clearTimeout(t);
-        }, 50);
-      });
+        })
+      )
+      .subscribe((query: string = '') => this.searchForm.setValue({ query }));
 
     this.searchForm$ = this.searchForm.valueChanges
       .pipe(

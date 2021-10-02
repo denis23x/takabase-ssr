@@ -44,30 +44,28 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
 
         this.postList = userProfile.postList;
         this.postListHasMore = userProfile.postList.length === this.size;
-
-        const t = setTimeout(() => {
-          const ul = this.elementRef.nativeElement.querySelector('nav ul');
-          const li = ul.querySelector('li a.text-info-1');
-
-          li.scrollIntoView({
-            block: 'nearest'
-          });
-
-          // ul.scrollLeft && (ul.scrollLeft += 16);
-
-          clearTimeout(t);
-        }, 50);
       });
 
     this.routeQueryParams$ = this.activatedRoute.queryParams
       .pipe(
+        tap(() => {
+          const timeout = setTimeout(() => {
+            const ul = this.elementRef.nativeElement.querySelector('nav ul');
+            const li = ul.querySelector('li a.text-info-1');
+
+            li.scrollIntoView({
+              block: 'nearest'
+            });
+
+            clearTimeout(timeout);
+          });
+        }),
         skip(1),
         tap(() => {
           this.page = 1;
           this.size = 10;
 
-          // It calls scroll top
-          // this.postList = [];
+          this.postList = [];
           this.postListLoading = true;
           this.postListHasMore = false;
         })
