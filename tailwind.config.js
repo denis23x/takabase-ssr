@@ -8,7 +8,6 @@ module.exports = {
     enabled: true,
     content: ["./src/**/*.html"],
     options: {
-      safelist: ["dark"],
       keyframes: true,
       fontFace: true,
     },

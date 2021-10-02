@@ -1,11 +1,16 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { HelperService, PlatformService } from '../../../core';
+import { HelperService, LocalStorageService, PlatformService } from '../../../core';
+import { environment } from '../../../../environments/environment';
 
 @Injectable()
 export class MarkdownPluginService {
-  constructor(private helperService: HelperService, private platformService: PlatformService) {}
+  constructor(
+    private helperService: HelperService,
+    private platformService: PlatformService,
+    private localStorageService: LocalStorageService
+  ) {}
 
   getYoutubeParser(url: string): string {
     const regex = this.helperService.getRegex('url-youtube');
@@ -51,6 +56,13 @@ export class MarkdownPluginService {
   getGithubTemplate(service: string, id: string, url: string, options: any): string {
     const parameter = id.indexOf('?');
     const src = 'https://gist.github.com/';
+    const config = this.localStorageService.getItem(environment.CONFIG_LOCALSTORAGE);
+
+    let colorTheme = 'auto';
+
+    if (config) {
+      colorTheme = JSON.parse(config).colorTheme;
+    }
 
     const srcdoc = `
       <html lang='en' translate='no'>
@@ -58,13 +70,16 @@ export class MarkdownPluginService {
           <base target='_parent'>
           <title>Gist</title>
         </head>
-        <body class=''>
+        <body class='${colorTheme}'>
           <script src='${src + (parameter > -1 ? id.substr(0, parameter) : id)}.js'></script>
         </body>
       </html>
     `;
 
-    const scrollbarExtraPx = this.platformService.getBrowserAgent() === 'chrome' ? 8 : 0;
+    const isChrome = this.platformService.getBrowserAgent() === 'chrome';
+    const isDesktop = !this.platformService.isMobile();
+
+    const scrollbarFix = isChrome && isDesktop ? 6 : 0;
 
     const onload = `
       (function(){
@@ -77,7 +92,7 @@ export class MarkdownPluginService {
 
         head.appendChild(style);
 
-        if (iframe) iframe.height = (iframe.contentWindow.document.body.scrollHeight - ${scrollbarExtraPx}) + 'px'
+        iframe && (iframe.height = (iframe.contentWindow.document.body.scrollHeight - ${scrollbarFix}) + 'px')
       }).call(this)
     `;
 

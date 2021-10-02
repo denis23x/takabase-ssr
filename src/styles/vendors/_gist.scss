@@ -17,7 +17,7 @@ body {
       @apply border-primary-4 m-0 #{'!important'};
 
       .gist-data {
-        @apply border-primary-4 bg-primary #{'!important'};
+        @apply border-primary-4 bg-primary-2 #{'!important'};
 
         .highlight {
           background: var(--gist-color-1) !important;
@@ -42,7 +42,7 @@ body {
       }
 
       .gist-meta {
-        @apply bg-primary #{'!important'};
+        @apply bg-primary-2 #{'!important'};
       }
     }
   }

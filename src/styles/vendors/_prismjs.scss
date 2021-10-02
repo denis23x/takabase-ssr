@@ -61,54 +61,69 @@ code[class*="language-"] {
   &.keyword {
     color: var(--prismjs-color-1);
   }
+
   &.class-name,
   &.operator {
     color: var(--prismjs-color-2);
   }
+
   &.function,
   &.punctuation {
     color: var(--prismjs-color-3);
   }
+
   &.number {
     color: var(--prismjs-color-6);
   }
+
   &.property {
     color: var(--prismjs-color-8);
+
     .token {
       &.variable {
         color: var(--prismjs-color-7);
       }
     }
   }
+
   &.selector {
     color: var(--prismjs-color-3);
+
     .token {
       &.variable {
         color: var(--prismjs-color-7);
       }
     }
   }
+
   &.string {
     color: var(--prismjs-color-4);
   }
+
   &.variable {
     color: var(--prismjs-color-7);
   }
+
   &.tag {
     color: var(--prismjs-color-9);
+
     .token {
       &.punctuation {
         color: var(--prismjs-color-9);
       }
+
       &.attr-name {
         color: var(--prismjs-color-8);
       }
+
       &.attr-value {
         color: var(--prismjs-color-10);
+
         .token {
           &.attr-equals {
             color: var(--prismjs-color-8);
           }
+
           &.punctuation:not(.attr-equals) {
             color: var(--prismjs-color-10);
           }
@@ -116,6 +131,7 @@ code[class*="language-"] {
       }
     }
   }
+
   &.comment {
     color: var(--prismjs-color-5);
   }
