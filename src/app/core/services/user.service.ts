@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
-import { map, distinctUntilChanged, tap } from 'rxjs/operators';
+import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { LocalStorageService } from './local-storage.service';
 import { User } from '../models';
@@ -65,22 +65,10 @@ export class UserService {
   }
 
   getAll(params?: any): Observable<User[]> {
-    return this.apiService.get('/users', params).pipe(
-      map((userList: User[]) =>
-        userList.map((user: User) => ({
-          ...user,
-          avatar: user.avatar ? `${environment.UPLOAD_URL}/${user.avatar}` : null
-        }))
-      )
-    );
+    return this.apiService.get('/users', params);
   }
 
   getById(id: number): Observable<User> {
-    return this.apiService.get('/users/' + id).pipe(
-      map(user => ({
-        ...user,
-        avatar: user.avatar ? `${environment.UPLOAD_URL}/${user.avatar}` : null
-      }))
-    );
+    return this.apiService.get('/users/' + id);
   }
 }
