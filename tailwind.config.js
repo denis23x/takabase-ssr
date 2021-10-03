@@ -13,6 +13,9 @@ module.exports = {
     },
   },
   theme: {
+    fontFamily: {
+      sans: ["Ubuntu", "sans-serif"],
+    },
     colors: {
       ...colors,
       ["primary-1"]: "var(--primary-1)",
