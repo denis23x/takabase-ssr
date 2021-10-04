@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { pluck, skip, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { CategoriesService, Category, CategoryGetAllDto } from '../../core';
+import { CategoryService, Category, CategoryGetAllDto } from '../../core';
 
 @Component({
   selector: 'app-search-categories',
@@ -24,7 +24,7 @@ export class SearchCategoriesComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private categoriesService: CategoriesService
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
@@ -69,7 +69,7 @@ export class SearchCategoriesComponent implements OnInit, OnDestroy {
       };
     }
 
-    this.categoriesService.getAll(categoryGetAllDto).subscribe((categoryList: Category[]) => {
+    this.categoryService.getAll(categoryGetAllDto).subscribe((categoryList: Category[]) => {
       this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
       this.categoryListLoading = false;
       this.categoryListHasMore = categoryList.length === this.size;

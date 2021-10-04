@@ -8,7 +8,7 @@ import { HttpAuthInterceptor } from './interceptors';
 import {
   ApiService,
   AuthGuard,
-  CategoriesService,
+  CategoryService,
   HelperService,
   LocalStorageService,
   PlatformService,
@@ -23,7 +23,7 @@ import {
     { provide: HTTP_INTERCEPTORS, useClass: HttpAuthInterceptor, multi: true },
     ApiService,
     AuthGuard,
-    CategoriesService,
+    CategoryService,
     HelperService,
     LocalStorageService,
     PlatformService,

@@ -4,13 +4,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { defer, Observable, of, throwError, zip } from 'rxjs';
 import { catchError, first, map, pluck, switchMap } from 'rxjs/operators';
-import {
-  UserService,
-  PostService,
-  CategoriesService,
-  UserProfile,
-  PostGetAllDto
-} from '../../core';
+import { UserService, PostService, CategoryService, UserProfile, PostGetAllDto } from '../../core';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
@@ -22,7 +16,7 @@ export class UsersDetailResolverService {
 
   constructor(
     private userService: UserService,
-    private categoriesService: CategoriesService,
+    private categoryService: CategoryService,
     private postService: PostService,
     private router: Router
   ) {}
@@ -34,7 +28,7 @@ export class UsersDetailResolverService {
         : of(Number(route.paramMap.get('id')));
     }).pipe(
       switchMap((userId: number) =>
-        zip(this.userService.getById(userId), this.categoriesService.getAll({ userId }))
+        zip(this.userService.getById(userId), this.categoryService.getAll({ userId }))
       ),
       switchMap(([user, categoryList]) => {
         let postGetAllDto: PostGetAllDto = {

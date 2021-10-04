@@ -2,7 +2,7 @@
 
 export * from './api.service';
 export * from './auth-guard.service';
-export * from './categories.service';
+export * from './category.service';
 export * from './helper.service';
 export * from './local-storage.service';
 export * from './platform.service';

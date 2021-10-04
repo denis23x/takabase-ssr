@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { CategoryGetAllDto, CategoriesService, Category } from '../../core';
+import { CategoryGetAllDto, CategoryService, Category } from '../../core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -14,7 +14,7 @@ export class SearchCategoriesResolverService {
   page = 1;
   size = 10;
 
-  constructor(private router: Router, private categoriesService: CategoriesService) {}
+  constructor(private router: Router, private categoryService: CategoryService) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<Category[]> {
     let categoryGetAllDto: CategoryGetAllDto = {
@@ -31,7 +31,7 @@ export class SearchCategoriesResolverService {
       };
     }
 
-    return this.categoriesService.getAll(categoryGetAllDto).pipe(
+    return this.categoryService.getAll(categoryGetAllDto).pipe(
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 import { Category } from '../models';
 
 @Injectable()
-export class CategoriesService {
+export class CategoryService {
   constructor(private apiService: ApiService) {}
 
   getAll(params?: any): Observable<Category[]> {

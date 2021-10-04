@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { HelperService, UserService, AuthLoginDto } from '../../core';
 import { fade } from '../../app.animation';
 import { filter } from 'rxjs/operators';
+import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-auth-login',
@@ -26,7 +27,9 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
     private router: Router,
     private userService: UserService,
     private formBuilder: FormBuilder,
-    private helperService: HelperService
+    private helperService: HelperService,
+    private meta: Meta,
+    private title: Title
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -35,6 +38,11 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.title.setTitle('Draftnow - Login');
+
+    this.meta.addTag({ name: 'title', content: 'my login title' });
+    this.meta.addTag({ name: 'description', content: 'my login description' });
+
     this.queryParams$ = this.activatedRoute.queryParams
       .pipe(
         filter(params => {
