@@ -27,21 +27,23 @@
         <ul class="flex justify-start items-center overflow-auto px-1">
           <li class="inline-block">
             <a
-              class="block text-secondary-1 hover:text-info-1 hover:underline capitalize p-2"
+              class="block text-secondary-1 hover:text-info-1 hover:underline p-2"
               [routerLink]="[]"
               [routerLinkActive]="'text-info-1'"
               [routerLinkActiveOptions]="{ exact: true }"
               [queryParams]="{ categoryId: null }"
-              [queryParamsHandling]="'merge'">All
+              [queryParamsHandling]="'merge'"
+              [attr.aria-label]="'All'">All
             </a>
           </li>
           <li class="inline-block" *ngFor="let category of categoryList">
             <a
-              class="block text-secondary-1 hover:text-info-1 hover:underline capitalize p-2"
+              class="block text-secondary-1 hover:text-info-1 hover:underline p-2"
               [routerLink]="[]"
               [routerLinkActive]="'text-info-1'"
               [queryParams]="{ categoryId: category.id }"
-              [queryParamsHandling]="'merge'">{{category.title}}
+              [queryParamsHandling]="'merge'"
+              [attr.aria-label]="category.title">{{category.title}}
             </a>
           </li>
         </ul>
@@ -69,7 +71,8 @@
                   <li class="block">
                     <a
                       class="block hover:text-info-1 hover:underline hover:bg-primary-1 w-full py-2 px-4"
-                      [routerLink]="['.']"
+                      [routerLink]="['category/create']"
+                      [routerLinkActive]="'text-info-1'"
                       aria-label="Create category">Create category
                     </a>
                   </li>

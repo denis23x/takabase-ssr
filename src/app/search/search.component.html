@@ -1,12 +1,13 @@
 <section class="grid grid-cols-1 grid-rows-1 px-4">
   <nav class="bg-primary-2 border-b border-primary-4 overflow-hidden py-4">
     <ul class="flex justify-start items-center bg-primary-3 border border-primary-4 rounded-md overflow-auto px-1">
-      <li class="inline-block" *ngFor="let link of ['posts', 'categories', 'users']">
+      <li class="inline-block" *ngFor="let link of ['Posts', 'Categories', 'Users']">
         <a
-          class="block text-secondary-1 hover:text-info-1 hover:underline capitalize p-2"
-          [routerLink]="link"
+          class="block text-secondary-1 hover:text-info-1 hover:underline p-2"
+          [routerLink]="link.toLowerCase()"
           [routerLinkActive]="'text-info-1'"
-          [queryParamsHandling]="'preserve'">{{link}}
+          [queryParamsHandling]="'preserve'"
+          [attr.aria-label]="link">{{link}}
         </a>
       </li>
     </ul>

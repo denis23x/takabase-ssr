@@ -29,6 +29,10 @@ const routes: Routes = [
     loadChildren: () => import('./exception/exception.module').then(m => m.ExceptionModule)
   },
   {
+    path: 'categories',
+    loadChildren: () => import('./category/category.module').then(m => m.CategoryModule)
+  },
+  {
     path: '**',
     pathMatch: 'full',
     redirectTo: '/exception/404'

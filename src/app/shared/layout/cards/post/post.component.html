@@ -2,6 +2,7 @@
   <a
     [routerLink]="[post.id]"
     [queryParamsHandling]="'preserve'"
+    [attr.aria-label]="post.title"
     *ngIf="post.image">
     <img
       class="block object-cover object-center w-full h-full"
@@ -40,7 +41,8 @@
     <a
       class="text-secondary-1 hover:text-info-1 hover:underline line-clamp-3 mb-0"
       [routerLink]="[post.id]"
-      [queryParamsHandling]="'preserve'">{{post.title}}
+      [queryParamsHandling]="'preserve'"
+      [attr.aria-label]="post.title">{{post.title}}
     </a>
   </div>
 </article>

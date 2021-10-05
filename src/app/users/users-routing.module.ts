@@ -12,6 +12,7 @@ import { UsersSettingsInterfaceComponent } from './settings/interface/interface.
 import { UsersSettingsSecurityComponent } from './settings/security/security.component';
 import { PostsDetailComponent } from '../posts/detail/detail.component';
 import { PostsDetailResolverService } from '../posts/detail/detail-resolver.service';
+import { CategoryCreateComponent } from '../category/create/create.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,10 @@ const routes: Routes = [
       isProfile: true
     },
     children: [
+      {
+        path: 'category/create',
+        component: CategoryCreateComponent
+      },
       {
         path: 'posts/:id',
         component: PostsDetailComponent,
