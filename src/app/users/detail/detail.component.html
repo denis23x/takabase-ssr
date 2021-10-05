@@ -70,7 +70,7 @@
                 <ng-container *ngIf="isProfile">
                   <li class="block">
                     <a
-                      class="block hover:text-info-1 hover:underline hover:bg-primary-1 w-full py-2 px-4"
+                      class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 w-full py-2 px-4"
                       [routerLink]="['category/create']"
                       [routerLinkActive]="'text-info-1'"
                       aria-label="Create category">Create category
@@ -80,7 +80,7 @@
                 <ng-container *ngIf="!isProfile">
                   <li class="block">
                     <a
-                      class="block text-info-1 hover:underline hover:bg-primary-1 w-full py-2 px-4"
+                      class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 w-full py-2 px-4"
                       [routerLink]="['.']"
                       aria-label="Inappropriate content">Inappropriate content
                     </a>

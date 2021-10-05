@@ -12,7 +12,10 @@
       </li>
     </ul>
   </nav>
-  <form class="bg-primary-2 z-20 sticky top-0 border-b border-primary-4 w-full py-2" [formGroup]="searchForm">
+  <form
+    class="bg-primary-2 z-20 sticky top-0 border-b border-primary-4 w-full py-2"
+    [formGroup]="searchForm"
+    autocomplete="off">
     <fieldset *ngIf="searchForm.get('query') as query">
       <label class="block relative" for="search">
         <input
@@ -20,7 +23,6 @@
           type="text"
           class="form-control bg-primary-3 my-2 pr-10"
           formControlName="query"
-          autocomplete="off"
           placeholder="Search"
           aria-label="Search" />
         <span

@@ -1,6 +1,52 @@
-<app-overlay (clicked)="navigateToParent()">
-  <section class="bg-primary-2 w-9/12 overflow-auto" slot="content">
-    <h1>Hi!</h1>
-    <pre>{{categoryList|json}}</pre>
-  </section>
+<app-overlay (clicked)="onClose()">
+  <form
+    class="flex flex-col space-y-4 bg-primary-3 rounded-md shadow-lg md:w-128 w-full p-4 m-4"
+    [formGroup]="createForm"
+    (ngSubmit)="onSubmit()"
+    autocomplete="off"
+    slot="content">
+    <div class="flex justify-between items-center border-b border-primary-4 pb-2">
+      <span class="block text-xl text-secondary-1 font-medium leading-9">Create category</span>
+      <button
+        class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-red-400 cursor-pointer p-2"
+        type="button"
+        [attr.aria-label]="'Close'"
+        (click)="onClose()"
+        appSvgIcon
+        [appIcon]="'x-lg'"
+        [appSquare]="'1rem'">
+      </button>
+    </div>
+    <fieldset class="flex flex-col space-y-4" [disabled]="createFormIsSubmitting">
+      <fieldset *ngIf="createForm.get('title') as title">
+        <label class="block text-secondary-2 text-sm hidden" for="title">Title</label>
+        <input
+          id="title"
+          type="text"
+          class="form-control bg-primary-2"
+          formControlName="title"
+          placeholder="Title"
+          aria-label="Title"/>
+        <span class="block text-sm text-red-400 mt-2" *ngIf="title.touched && title.errors" [ngSwitch]="true">
+          <ng-container *ngSwitchCase="!!title.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="!!title.errors.minlength">Min length {{title.errors.minlength['requiredLength']}} characters</ng-container>
+          <ng-container *ngSwitchCase="!!title.errors.maxlength">Max length {{title.errors.maxlength['requiredLength']}} characters</ng-container>
+        </span>
+      </fieldset>
+      <div class="flex items-center justify-between bg-primary-2 border border-primary-4 rounded-md space-x-4 py-2.5 px-3">
+        <div class="flex flex-col">
+          <span class="text-secondary-1">Private</span>
+          <p class="text-secondary-2 text-sm">The category will be unavailable to everyone except you</p>
+        </div>
+        <fieldset class="form-control-toggle" *ngIf="createForm.get('private') as private">
+          <label for="private" class="relative flex items-center justify-between cursor-pointer w-full">
+            <input id="private" type="checkbox" class="hidden" formControlName="private" aria-label="Private" />
+            <span class="block w-11 h-6 rounded-full" [ngClass]="private.value ? 'bg-success-1' : 'bg-primary-4 opacity-50'"></span>
+            <span class="block dot absolute left-0.5 top-0.5 w-5 h-5 bg-primary-2 rounded-full"></span>
+          </label>
+        </fieldset>
+      </div>
+    </fieldset>
+    <button class="btn btn-danger w-full" type="submit" [disabled]="createForm.invalid">Submit</button>
+  </form>
 </app-overlay>

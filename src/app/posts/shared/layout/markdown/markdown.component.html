@@ -60,6 +60,7 @@
       class="flex flex-col space-y-4 bg-primary-3 rounded-md shadow-lg md:w-96 w-full p-4 m-4"
       [formGroup]="urlForm"
       (ngSubmit)="onSubmitUrlForm()"
+      autocomplete="off"
       slot="content">
       <div class="flex justify-between items-center -mb-2">
         <span class="block text-xl text-secondary-1 font-medium leading-9">Provide <span class="text-info-1">{{urlFormControl.label}}</span> URL</span>
@@ -82,8 +83,7 @@
             class="form-control bg-primary-2 my-2"
             formControlName="url"
             placeholder="https://..."
-            aria-label="Url"
-            autocomplete="off" />
+            aria-label="Url"/>
           <span class="block text-sm text-red-400" *ngIf="url.touched && url.errors" [ngSwitch]="true">
             <ng-container *ngSwitchCase="!!url.errors.required">Required</ng-container>
             <ng-container *ngSwitchCase="!!url.errors.customValidator">Url does not match pattern</ng-container>
