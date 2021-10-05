@@ -24,7 +24,7 @@
           formControlName="name"
           placeholder="Name"
           aria-label="Name" />
-        <span class="block text-sm text-red-400" *ngIf="name.touched && name.errors" [ngSwitch]="true">
+        <span class="block text-sm text-danger-1" *ngIf="name.touched && name.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
         </span>
       </fieldset>
@@ -38,7 +38,7 @@
           placeholder="Biography"
           aria-label="Biography">
         </textarea>
-        <span class="block text-sm text-red-400" *ngIf="biography.touched && biography.errors" [ngSwitch]="true">
+        <span class="block text-sm text-danger-1" *ngIf="biography.touched && biography.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!biography.errors.required">Required</ng-container>
         </span>
       </fieldset>

@@ -8,7 +8,7 @@
     <div class="flex justify-between items-center border-b border-primary-4 pb-2">
       <span class="block text-xl text-secondary-1 font-medium leading-9">Create category</span>
       <button
-        class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-red-400 cursor-pointer p-2"
+        class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 cursor-pointer p-2"
         type="button"
         [attr.aria-label]="'Close'"
         (click)="onClose()"
@@ -27,7 +27,7 @@
           formControlName="title"
           placeholder="Title"
           aria-label="Title"/>
-        <span class="block text-sm text-red-400 mt-2" *ngIf="title.touched && title.errors" [ngSwitch]="true">
+        <span class="block text-sm text-danger-1 mt-2" *ngIf="title.touched && title.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!title.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!title.errors.minlength">Min length {{title.errors.minlength['requiredLength']}} characters</ng-container>
           <ng-container *ngSwitchCase="!!title.errors.maxlength">Max length {{title.errors.maxlength['requiredLength']}} characters</ng-container>
@@ -47,6 +47,6 @@
         </fieldset>
       </div>
     </fieldset>
-    <button class="btn btn-danger w-full" type="submit" [disabled]="createForm.invalid">Submit</button>
+    <button class="btn btn-success w-full" type="submit" [disabled]="createForm.invalid">Submit</button>
   </form>
 </app-overlay>

@@ -35,7 +35,7 @@
           [@fade]>
         </span>
       </label>
-      <span class="block text-sm text-red-400" *ngIf="query.touched && query.errors" [ngSwitch]="true">
+      <span class="block text-sm text-danger-1" *ngIf="query.touched && query.errors" [ngSwitch]="true">
         <ng-container *ngSwitchCase="!!query.errors.minlength">Min length {{query.errors.minlength['requiredLength']}} characters</ng-container>
       </span>
     </fieldset>

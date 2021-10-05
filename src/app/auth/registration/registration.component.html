@@ -24,7 +24,7 @@
           formControlName="name"
           placeholder="Username"
           aria-label="Username" />
-        <span class="block text-sm text-red-400" *ngIf="name.touched && name.errors" [ngSwitch]="true">
+        <span class="block text-sm text-danger-1" *ngIf="name.touched && name.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!name.errors.minlength">Min length {{name.errors.minlength['requiredLength']}} characters</ng-container>
           <ng-container *ngSwitchCase="!!name.errors.maxlength">Max length {{name.errors.maxlength['requiredLength']}} characters</ng-container>
@@ -39,7 +39,7 @@
           formControlName="email"
           placeholder="Email"
           aria-label="Email" />
-        <span class="block text-sm text-red-400" *ngIf="email.touched && email.errors" [ngSwitch]="true">
+        <span class="block text-sm text-danger-1" *ngIf="email.touched && email.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!email.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!email.errors.email">Email must be a real email address</ng-container>
         </span>
@@ -66,7 +66,7 @@
             [@fade]>
           </div>
         </div>
-        <span class="block text-sm text-red-400 mb-2" *ngIf="password.touched && password.errors" [ngSwitch]="true">
+        <span class="block text-sm text-danger-1 mb-2" *ngIf="password.touched && password.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!password.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!password.errors.pattern">Password does not match pattern</ng-container>
         </span>

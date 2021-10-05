@@ -14,10 +14,9 @@
 
   &.ng-touched.ng-invalid {
     @apply
-    border-red-400
+    border-danger-1
     focus:ring-red-400
-    focus:ring-opacity-30
-    focus:border-red-400;
+    focus:ring-opacity-30;
   }
 
   &:-webkit-autofill,

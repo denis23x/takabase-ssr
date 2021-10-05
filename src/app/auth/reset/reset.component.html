@@ -22,7 +22,7 @@
           formControlName="email"
           placeholder="Email"
           aria-label="Email" />
-        <span class="block text-sm text-red-400" *ngIf="email.touched && email.errors" [ngSwitch]="true">
+        <span class="block text-sm text-danger-1" *ngIf="email.touched && email.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!email.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!email.errors.email">Email must be a real email address</ng-container>
         </span>
