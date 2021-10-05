@@ -25,8 +25,8 @@
           placeholder="Email"
           aria-label="Email" />
         <span class="block text-sm text-red-400" *ngIf="email.touched && email.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="email.errors.required">Required</ng-container>
-          <ng-container *ngSwitchCase="email.errors.email">Email must be a real email address</ng-container>
+          <ng-container *ngSwitchCase="!!email.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="!!email.errors.email">Email must be a real email address</ng-container>
         </span>
       </fieldset>
       <fieldset *ngIf="loginForm.get('password') as password">
@@ -59,9 +59,9 @@
           </div>
         </div>
         <span class="block text-sm text-red-400" *ngIf="password.touched && password.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="password.errors.required">Required</ng-container>
-          <ng-container *ngSwitchCase="password.errors.minlength">Min length {{password.errors.minlength['requiredLength']}} characters</ng-container>
-          <ng-container *ngSwitchCase="password.errors.maxlength">Max length {{password.errors.maxlength['requiredLength']}} characters</ng-container>
+          <ng-container *ngSwitchCase="!!password.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="!!password.errors.minlength">Min length {{password.errors.minlength['requiredLength']}} characters</ng-container>
+          <ng-container *ngSwitchCase="!!password.errors.maxlength">Max length {{password.errors.maxlength['requiredLength']}} characters</ng-container>
         </span>
       </fieldset>
       <button class="btn btn-success w-full" type="submit" [disabled]="loginForm.invalid">Login</button>

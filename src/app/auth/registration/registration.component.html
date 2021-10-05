@@ -25,9 +25,9 @@
           placeholder="Username"
           aria-label="Username" />
         <span class="block text-sm text-red-400" *ngIf="name.touched && name.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="name.errors.required">Required</ng-container>
-          <ng-container *ngSwitchCase="name.errors.minlength">Min length {{name.errors.minlength['requiredLength']}} characters</ng-container>
-          <ng-container *ngSwitchCase="name.errors.maxlength">Max length {{name.errors.maxlength['requiredLength']}} characters</ng-container>
+          <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="!!name.errors.minlength">Min length {{name.errors.minlength['requiredLength']}} characters</ng-container>
+          <ng-container *ngSwitchCase="!!name.errors.maxlength">Max length {{name.errors.maxlength['requiredLength']}} characters</ng-container>
         </span>
       </fieldset>
       <fieldset *ngIf="registrationForm.get('email') as email">
@@ -40,8 +40,8 @@
           placeholder="Email"
           aria-label="Email" />
         <span class="block text-sm text-red-400" *ngIf="email.touched && email.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="email.errors.required">Required</ng-container>
-          <ng-container *ngSwitchCase="email.errors.email">Email must be a real email address</ng-container>
+          <ng-container *ngSwitchCase="!!email.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="!!email.errors.email">Email must be a real email address</ng-container>
         </span>
       </fieldset>
       <fieldset *ngIf="registrationForm.get('password') as password">
@@ -67,7 +67,8 @@
           </div>
         </div>
         <span class="block text-sm text-red-400 mb-2" *ngIf="password.touched && password.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="password.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="!!password.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="!!password.errors.pattern">Password does not match pattern</ng-container>
         </span>
         <label class="block text-secondary-2 text-sm" for="password">The password must be 6-32 characters long, must contain at least one number, one special character and uppercase and lowercase letters with no space</label>
       </fieldset>

@@ -26,19 +26,24 @@ export class HelperService {
 
   getCustomValidator(validator: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      const valid = (): boolean => {
+      const value = control.value;
+      const valid = (value: string): boolean => {
         switch (validator) {
           case 'url-youtube':
           case 'url-gist':
           case 'url-image':
           case 'url-link':
-            return !this.getRegex(validator).test(control.value);
+            return this.getRegex(validator).test(value);
           default:
             return true;
         }
       };
 
-      return valid() ? { invalidCustomValidator: { value: control.value } } : null;
+      if (value) {
+        return valid(value) ? null : { customValidator: { value } };
+      }
+
+      return null;
     };
   }
 

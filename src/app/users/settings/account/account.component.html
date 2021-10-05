@@ -25,7 +25,7 @@
           placeholder="Name"
           aria-label="Name" />
         <span class="block text-sm text-red-400" *ngIf="name.touched && name.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="name.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
         </span>
       </fieldset>
       <fieldset *ngIf="accountForm.get('biography') as biography">
@@ -39,7 +39,7 @@
           aria-label="Biography">
         </textarea>
         <span class="block text-sm text-red-400" *ngIf="biography.touched && biography.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="biography.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="!!biography.errors.required">Required</ng-container>
         </span>
       </fieldset>
       <button class="btn btn-success w-full" type="submit" [disabled]="accountForm.invalid">Submit</button>

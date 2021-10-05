@@ -24,8 +24,8 @@
           placeholder="Email"
           aria-label="Email" />
         <span class="block text-sm text-red-400" *ngIf="email.touched && email.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="email.errors.required">Required</ng-container>
-          <ng-container *ngSwitchCase="email.errors.email">Email must be a real email address</ng-container>
+          <ng-container *ngSwitchCase="!!email.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="!!email.errors.email">Email must be a real email address</ng-container>
         </span>
         <label class="block text-secondary-2 text-sm" for="email">We will send an email with further instructions</label>
       </fieldset>
