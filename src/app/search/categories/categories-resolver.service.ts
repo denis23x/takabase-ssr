@@ -22,12 +22,12 @@ export class SearchCategoriesResolverService {
       size: this.size
     };
 
-    const { query: title = null } = route.parent.queryParams;
+    const { query: name = null } = route.parent.queryParams;
 
-    if (title) {
+    if (name) {
       categoryGetAllDto = {
         ...categoryGetAllDto,
-        title
+        name
       };
     }
 

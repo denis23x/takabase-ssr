@@ -20,7 +20,7 @@ export class CategoryCreateComponent implements OnInit, OnDestroy {
     private helperService: HelperService
   ) {
     this.createForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]],
+      name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]],
       private: [false]
     });
   }

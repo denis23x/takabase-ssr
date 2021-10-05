@@ -18,19 +18,19 @@
       </button>
     </div>
     <fieldset class="flex flex-col space-y-4" [disabled]="createFormIsSubmitting">
-      <fieldset *ngIf="createForm.get('title') as title">
-        <label class="block text-secondary-2 text-sm hidden" for="title">Title</label>
+      <fieldset *ngIf="createForm.get('name') as name">
+        <label class="block text-secondary-2 text-sm hidden" for="name">Name</label>
         <input
-          id="title"
+          id="name"
           type="text"
           class="form-control bg-primary-2"
-          formControlName="title"
-          placeholder="Title"
-          aria-label="Title"/>
-        <span class="block text-sm text-danger-1 mt-2" *ngIf="title.touched && title.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="!!title.errors.required">Required</ng-container>
-          <ng-container *ngSwitchCase="!!title.errors.minlength">Min length {{title.errors.minlength['requiredLength']}} characters</ng-container>
-          <ng-container *ngSwitchCase="!!title.errors.maxlength">Max length {{title.errors.maxlength['requiredLength']}} characters</ng-container>
+          formControlName="name"
+          placeholder="Name"
+          aria-label="Name"/>
+        <span class="block text-sm text-danger-1 mt-2" *ngIf="name.touched && name.errors" [ngSwitch]="true">
+          <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="!!name.errors.minlength">Min length {{name.errors.minlength['requiredLength']}} characters</ng-container>
+          <ng-container *ngSwitchCase="!!name.errors.maxlength">Max length {{name.errors.maxlength['requiredLength']}} characters</ng-container>
         </span>
       </fieldset>
       <div class="flex items-center justify-between bg-primary-2 border border-primary-4 rounded-md space-x-4 py-2.5 px-3">

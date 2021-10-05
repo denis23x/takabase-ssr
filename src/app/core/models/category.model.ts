@@ -4,7 +4,7 @@ import { User } from './user.model';
 
 export interface Category {
   id: number;
-  title: string;
+  name: string;
   createdAt: string;
   updatedAt: string;
   user: User;

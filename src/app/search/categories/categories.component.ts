@@ -60,12 +60,12 @@ export class SearchCategoriesComponent implements OnInit, OnDestroy {
       size: this.size
     };
 
-    const { query: title = null } = this.activatedRoute.parent.snapshot.queryParams;
+    const { query: name = null } = this.activatedRoute.parent.snapshot.queryParams;
 
-    if (title) {
+    if (name) {
       categoryGetAllDto = {
         ...categoryGetAllDto,
-        title
+        name
       };
     }
 

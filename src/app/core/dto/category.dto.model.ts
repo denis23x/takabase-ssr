@@ -1,7 +1,7 @@
 /** @format */
 
 export interface CategoryGetAllDto {
-  title?: string;
+  name?: string;
   userId?: number;
   page: number;
   size: number;
