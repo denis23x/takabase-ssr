@@ -64,11 +64,11 @@ export class UserService {
     this.localStorageService.removeItem(environment.TOKEN_LOCALSTORAGE);
   }
 
-  getAll(params?: any): Observable<User[]> {
+  findAll(params?: any): Observable<User[]> {
     return this.apiService.get('/users', params);
   }
 
-  getById(id: number): Observable<User> {
+  findOneById(id: number): Observable<User> {
     return this.apiService.get('/users/' + id);
   }
 }

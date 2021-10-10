@@ -7,10 +7,10 @@ import { UsersSettingsComponent } from './settings/settings.component';
 import { UsersSettingsAccountComponent } from './settings/account/account.component';
 import { UsersSettingsInterfaceComponent } from './settings/interface/interface.component';
 import { UsersSettingsSecurityComponent } from './settings/security/security.component';
-import { UsersRoutingModule } from './users-routing.module';
+import { UserRoutingModule } from './user-routing.module';
 
 @NgModule({
-  imports: [SharedModule, UsersRoutingModule],
+  imports: [SharedModule, UserRoutingModule],
   declarations: [
     UsersDetailComponent,
     UsersSettingsComponent,
@@ -19,4 +19,4 @@ import { UsersRoutingModule } from './users-routing.module';
     UsersSettingsSecurityComponent
   ]
 })
-export class UsersModule {}
+export class UserModule {}

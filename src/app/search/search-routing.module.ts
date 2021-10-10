@@ -3,14 +3,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SearchComponent } from './search.component';
-import { SearchPostsComponent } from './posts/posts.component';
-import { SearchPostsResolverService } from './posts/posts-resolver.service';
-import { SearchCategoriesComponent } from './categories/categories.component';
-import { SearchCategoriesResolverService } from './categories/categories-resolver.service';
-import { SearchUsersComponent } from './users/users.component';
-import { SearchUsersResolverService } from './users/users-resolver.service';
-import { PostsDetailComponent } from '../posts/detail/detail.component';
-import { PostsDetailResolverService } from '../posts/detail/detail-resolver.service';
+import { SearchPostsComponent } from './post/post.component';
+import { SearchPostsResolverService } from './post/post-resolver.service';
+import { SearchCategoriesComponent } from './category/category.component';
+import { SearchCategoriesResolverService } from './category/category-resolver.service';
+import { SearchUsersComponent } from './user/user.component';
+import { SearchUsersResolverService } from './user/user-resolver.service';
+import { PostsDetailComponent } from '../post/detail/detail.component';
+import { PostsDetailResolverService } from '../post/detail/detail-resolver.service';
 
 const routes: Routes = [
   {

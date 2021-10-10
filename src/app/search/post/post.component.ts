@@ -8,7 +8,7 @@ import { Post, PostService, PostGetAllDto } from '../../core';
 
 @Component({
   selector: 'app-search-posts',
-  templateUrl: './posts.component.html'
+  templateUrl: './post.component.html'
 })
 export class SearchPostsComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
@@ -67,7 +67,7 @@ export class SearchPostsComponent implements OnInit, OnDestroy {
       };
     }
 
-    this.postService.getAll(postGetAllDto).subscribe((postList: Post[]) => {
+    this.postService.findAll(postGetAllDto).subscribe((postList: Post[]) => {
       this.postList = concat ? this.postList.concat(postList) : postList;
       this.postListLoading = false;
       this.postListHasMore = postList.length === this.size;

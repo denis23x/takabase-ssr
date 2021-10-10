@@ -10,8 +10,8 @@ import { UsersSettingsResolverService } from './settings/settings-resolver.servi
 import { UsersSettingsAccountComponent } from './settings/account/account.component';
 import { UsersSettingsInterfaceComponent } from './settings/interface/interface.component';
 import { UsersSettingsSecurityComponent } from './settings/security/security.component';
-import { PostsDetailComponent } from '../posts/detail/detail.component';
-import { PostsDetailResolverService } from '../posts/detail/detail-resolver.service';
+import { PostsDetailComponent } from '../post/detail/detail.component';
+import { PostsDetailResolverService } from '../post/detail/detail-resolver.service';
 import { CategoryCreateComponent } from '../category/create/create.component';
 
 const routes: Routes = [
@@ -93,4 +93,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class UsersRoutingModule {}
+export class UserRoutingModule {}

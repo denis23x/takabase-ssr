@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { UserGetAllDto, UserService, User } from '../../core';
+import { PostGetAllDto, PostService, Post } from '../../core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -10,28 +10,28 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class SearchUsersResolverService {
+export class SearchPostsResolverService {
   page = 1;
   size = 10;
 
-  constructor(private router: Router, private userService: UserService) {}
+  constructor(private router: Router, private postService: PostService) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
-    let userGetAllDto: UserGetAllDto = {
+  resolve(route: ActivatedRouteSnapshot): Observable<Post[]> {
+    let postGetAllDto: PostGetAllDto = {
       page: this.page,
       size: this.size
     };
 
-    const { query: name = null } = route.parent.queryParams;
+    const { query: title = null } = route.parent.queryParams;
 
-    if (name) {
-      userGetAllDto = {
-        ...userGetAllDto,
-        name
+    if (title) {
+      postGetAllDto = {
+        ...postGetAllDto,
+        title
       };
     }
 
-    return this.userService.getAll(userGetAllDto).pipe(
+    return this.postService.findAll(postGetAllDto).pipe(
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

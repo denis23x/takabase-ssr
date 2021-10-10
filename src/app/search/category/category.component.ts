@@ -8,7 +8,7 @@ import { CategoryService, Category, CategoryGetAllDto } from '../../core';
 
 @Component({
   selector: 'app-search-categories',
-  templateUrl: './categories.component.html'
+  templateUrl: './category.component.html'
 })
 export class SearchCategoriesComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
@@ -69,7 +69,7 @@ export class SearchCategoriesComponent implements OnInit, OnDestroy {
       };
     }
 
-    this.categoryService.getAll(categoryGetAllDto).subscribe((categoryList: Category[]) => {
+    this.categoryService.findAll(categoryGetAllDto).subscribe((categoryList: Category[]) => {
       this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
       this.categoryListLoading = false;
       this.categoryListHasMore = categoryList.length === this.size;

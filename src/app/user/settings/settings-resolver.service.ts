@@ -1,20 +1,22 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
-import { PostService, Post } from '../../core';
-import { catchError } from 'rxjs/operators';
+import { catchError, first, switchMap } from 'rxjs/operators';
+import { UserService, User } from '../../core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PostsDetailResolverService {
-  constructor(private router: Router, private postService: PostService) {}
+export class UsersSettingsResolverService {
+  constructor(private router: Router, private userService: UserService) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<Post> {
-    return this.postService.getById(Number(route.paramMap.get('id'))).pipe(
+  resolve(): Observable<User> {
+    return this.userService.user.pipe(
+      first(),
+      switchMap((user: User) => this.userService.findOneById(Number(user.id))),
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

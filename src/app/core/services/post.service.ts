@@ -9,11 +9,11 @@ import { Post } from '../models';
 export class PostService {
   constructor(private apiService: ApiService) {}
 
-  getAll(params?: any): Observable<Post[]> {
+  findAll(params?: any): Observable<Post[]> {
     return this.apiService.get('/posts', params);
   }
 
-  getById(id: number): Observable<Post> {
+  findOneById(id: number): Observable<Post> {
     return this.apiService.get('/posts/' + id);
   }
 }

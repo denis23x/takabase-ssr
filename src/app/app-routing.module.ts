@@ -14,11 +14,11 @@ const routes: Routes = [
   },
   {
     path: 'users',
-    loadChildren: () => import('./users/users.module').then(m => m.UsersModule)
+    loadChildren: () => import('./user/user.module').then(m => m.UserModule)
   },
   {
     path: 'posts',
-    loadChildren: () => import('./posts/posts.module').then(m => m.PostsModule)
+    loadChildren: () => import('./post/post.module').then(m => m.PostModule)
   },
   {
     path: 'search',
