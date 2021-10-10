@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { CategoryGetAllDto, CategoryService, Category } from '../../core';
+import { CategoryService, Category, CategoryGetAllDto } from '../../category/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';

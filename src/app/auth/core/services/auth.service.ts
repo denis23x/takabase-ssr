@@ -4,13 +4,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
-import { ApiService } from './api.service';
-import { LocalStorageService } from './local-storage.service';
-import { User } from '../models';
-import { environment } from '../../../environments/environment';
+import { ApiService, LocalStorageService } from '../../../core';
+import { User } from '../../../user/core';
+import { environment } from '../../../../environments/environment';
 
-@Injectable()
-export class UserService {
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
   public userSubject = new BehaviorSubject<User>({} as User);
   public user = this.userSubject.asObservable().pipe(distinctUntilChanged());
 
@@ -62,13 +63,5 @@ export class UserService {
     this.isAuthenticatedSubject.next(false);
 
     this.localStorageService.removeItem(environment.TOKEN_LOCALSTORAGE);
-  }
-
-  findAll(params?: any): Observable<User[]> {
-    return this.apiService.get('/users', params);
-  }
-
-  findOneById(id: number): Observable<User> {
-    return this.apiService.get('/users/' + id);
   }
 }

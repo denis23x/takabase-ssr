@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { PostGetAllDto, PostService, Post } from '../../core';
+import { PostService, Post, PostGetAllDto } from '../../post/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';

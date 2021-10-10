@@ -8,6 +8,7 @@ import { UsersSettingsAccountComponent } from './settings/account/account.compon
 import { UsersSettingsInterfaceComponent } from './settings/interface/interface.component';
 import { UsersSettingsSecurityComponent } from './settings/security/security.component';
 import { UserRoutingModule } from './user-routing.module';
+import { UserService } from './core';
 
 @NgModule({
   imports: [SharedModule, UserRoutingModule],
@@ -17,6 +18,7 @@ import { UserRoutingModule } from './user-routing.module';
     UsersSettingsAccountComponent,
     UsersSettingsInterfaceComponent,
     UsersSettingsSecurityComponent
-  ]
+  ],
+  providers: [UserService]
 })
 export class UserModule {}

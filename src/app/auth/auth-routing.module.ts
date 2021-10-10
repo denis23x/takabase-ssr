@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthLoginComponent } from './login/login.component';
 import { AuthRegistrationComponent } from './registration/registration.component';
 import { AuthResetComponent } from './reset/reset.component';
-import { NoAuthGuard } from './no-auth-guard.service';
+import { NoAuthGuard } from './guards/no-auth-guard.service';
 
 const routes: Routes = [
   {

@@ -2,7 +2,7 @@
 
 import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { UserService } from '../../core';
+import { AuthService } from '../../auth/core';
 
 @Directive({
   selector: '[appAuthed]'
@@ -18,12 +18,12 @@ export class AppAuthedDirective implements OnInit, OnDestroy {
 
   constructor(
     private templateRef: TemplateRef<any>,
-    private userService: UserService,
+    private authService: AuthService,
     private viewContainer: ViewContainerRef
   ) {}
 
   ngOnInit() {
-    this.isAuthenticated$ = this.userService.isAuthenticated.subscribe(isAuthenticated => {
+    this.isAuthenticated$ = this.authService.isAuthenticated.subscribe(isAuthenticated => {
       if ((isAuthenticated && this.condition) || (!isAuthenticated && !this.condition)) {
         this.viewContainer.createEmbeddedView(this.templateRef);
       } else {

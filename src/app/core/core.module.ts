@@ -7,14 +7,10 @@ import { HttpAuthInterceptor } from './interceptors';
 
 import {
   ApiService,
-  AuthGuard,
-  CategoryService,
   HelperService,
   LocalStorageService,
   PlatformService,
-  PostService,
-  SnackbarService,
-  UserService
+  SnackbarService
 } from './services';
 
 @NgModule({
@@ -22,14 +18,10 @@ import {
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpAuthInterceptor, multi: true },
     ApiService,
-    AuthGuard,
-    CategoryService,
     HelperService,
     LocalStorageService,
     PlatformService,
-    PostService,
-    SnackbarService,
-    UserService
+    SnackbarService
   ],
   declarations: []
 })

@@ -5,13 +5,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { first, pairwise, startWith } from 'rxjs/operators';
-import {
-  LocalStorageService,
-  PlatformService,
-  User,
-  UserInterface,
-  UserService
-} from '../../../core';
+import { LocalStorageService, PlatformService } from '../../../core';
+import { User, UserInterface, UserService } from '../../core';
+import { AuthService } from '../../../auth/core';
 import { environment } from '../../../../environments/environment';
 
 @Component({
@@ -36,7 +32,8 @@ export class UsersSettingsInterfaceComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private platformService: PlatformService,
     private userService: UserService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private authService: AuthService
   ) {
     this.colorThemeForm = this.formBuilder.group({
       colorTheme: ['auto', [Validators.required]]
@@ -49,7 +46,7 @@ export class UsersSettingsInterfaceComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.user$ = this.userService.user.pipe(first()).subscribe((user: User) => {
+    this.user$ = this.authService.user.pipe(first()).subscribe((user: User) => {
       this.user = user;
 
       if ('interfaceConfig' in this.user) {
@@ -88,7 +85,7 @@ export class UsersSettingsInterfaceComponent implements OnInit, OnDestroy {
   }
 
   setConfig(interfaceConfig: any): void {
-    this.userService.userSubject.next({
+    this.authService.userSubject.next({
       ...this.user,
       interfaceConfig: {
         ...this.user.interfaceConfig,
@@ -98,7 +95,7 @@ export class UsersSettingsInterfaceComponent implements OnInit, OnDestroy {
 
     this.localStorageService.setItem(
       environment.CONFIG_LOCALSTORAGE,
-      JSON.stringify(this.userService.userSubject.getValue().interfaceConfig)
+      JSON.stringify(this.authService.userSubject.getValue().interfaceConfig)
     );
   }
 }

@@ -1,6 +1,6 @@
 /** @format */
 
-import { User } from './user.model';
+import { User } from '../../../user/core';
 
 export interface Category {
   id: number;

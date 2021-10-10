@@ -3,7 +3,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Category, CategoryService, HelperService, SnackbarService } from '../../core';
+import { HelperService, SnackbarService } from '../../core';
+import { Category, CategoryService } from '../core';
 
 @Component({
   selector: 'app-category-create',

@@ -1,7 +1,6 @@
 /** @format */
 
 import { NgModule } from '@angular/core';
-import { AuthGuard } from '../core';
 import { Routes, RouterModule } from '@angular/router';
 import { UsersDetailComponent } from './detail/detail.component';
 import { UsersDetailResolverService } from './detail/detail-resolver.service';
@@ -13,6 +12,7 @@ import { UsersSettingsSecurityComponent } from './settings/security/security.com
 import { PostsDetailComponent } from '../post/detail/detail.component';
 import { PostsDetailResolverService } from '../post/detail/detail-resolver.service';
 import { CategoryCreateComponent } from '../category/create/create.component';
+import { AuthGuard } from '../auth/guards';
 
 const routes: Routes = [
   {

@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, filter, pluck, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { fade } from '../app.animation';
+import { PlatformService } from '../core';
 
 @Component({
   selector: 'app-search',
@@ -22,7 +23,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private platformService: PlatformService
   ) {
     this.searchForm = this.formBuilder.group({
       query: ['', [Validators.minLength(4), Validators.maxLength(24)]]
@@ -34,16 +36,16 @@ export class SearchComponent implements OnInit, OnDestroy {
       .pipe(
         pluck('query'),
         tap(() => {
-          const timeout = setTimeout(() => {
-            const ul = this.elementRef.nativeElement.querySelector('nav ul');
-            const li = ul.querySelector('li a.text-info-1');
+          if (this.platformService.isBrowser()) {
+            const timeout = setTimeout(() => {
+              const ul = this.elementRef.nativeElement.querySelector('nav ul');
+              const li = ul.querySelector('li a.text-info-1');
 
-            li.scrollIntoView({
-              block: 'nearest'
+              li.scrollIntoView({ block: 'nearest' });
+
+              clearTimeout(timeout);
             });
-
-            clearTimeout(timeout);
-          });
+          }
         })
       )
       .subscribe((query: string = '') => this.searchForm.setValue({ query }));

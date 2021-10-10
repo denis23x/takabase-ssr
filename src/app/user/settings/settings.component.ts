@@ -2,7 +2,7 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { User } from '../../core';
+import { User } from '../core';
 import { pluck } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 

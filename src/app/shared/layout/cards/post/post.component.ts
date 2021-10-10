@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Post } from '../../../../core';
+import { Post } from '../../../../post/core';
 
 @Component({
   selector: 'app-card-post, [appCardPost]',

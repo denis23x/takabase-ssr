@@ -3,7 +3,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, first, switchMap } from 'rxjs/operators';
-import { UserService, User } from '../../core';
+import { AuthService } from '../../auth/core';
+import { User, UserService } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -11,10 +12,14 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class UsersSettingsResolverService {
-  constructor(private router: Router, private userService: UserService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private userService: UserService
+  ) {}
 
   resolve(): Observable<User> {
-    return this.userService.user.pipe(
+    return this.authService.user.pipe(
       first(),
       switchMap((user: User) => this.userService.findOneById(Number(user.id))),
       catchError((error: HttpErrorResponse) => {

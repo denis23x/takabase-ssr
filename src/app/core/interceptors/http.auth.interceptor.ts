@@ -9,13 +9,14 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { EMPTY, Observable, throwError } from 'rxjs';
-import { LocalStorageService, UserService } from '../services';
+import { LocalStorageService } from '../services';
+import { AuthService } from '../../auth/core';
 import { catchError, switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class HttpAuthInterceptor implements HttpInterceptor {
-  constructor(private localStorageService: LocalStorageService, private userService: UserService) {}
+  constructor(private localStorageService: LocalStorageService, private authService: AuthService) {}
 
   private getRequestHeaders(request: HttpRequest<any>): HttpRequest<any> {
     const headers: any = {
@@ -42,13 +43,13 @@ export class HttpAuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     switch (error.status) {
       case 401:
-        return this.userService.getAuthentication('/auth/refresh', {}, false).pipe(
+        return this.authService.getAuthentication('/auth/refresh', {}, false).pipe(
           switchMap(() => {
             return next.handle(this.getRequestHeaders(request));
           })
         );
       case 403:
-        this.userService.removeAuthorization();
+        this.authService.removeAuthorization();
 
         return EMPTY;
       default:

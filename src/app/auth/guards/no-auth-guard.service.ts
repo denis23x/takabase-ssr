@@ -4,14 +4,16 @@ import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { UserService } from '../core';
+import { AuthService } from '../core';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class NoAuthGuard implements CanActivate {
-  constructor(private userService: UserService) {}
+  constructor(private authService: AuthService) {}
 
   canActivate(): Observable<boolean> {
-    return this.userService.isAuthenticated.pipe(
+    return this.authService.isAuthenticated.pipe(
       first(),
       map((isAuthenticated: boolean) => !isAuthenticated)
     );

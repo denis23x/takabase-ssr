@@ -2,7 +2,8 @@
 
 import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { toSvg } from 'jdenticon';
-import { PlatformService, User } from '../../../core';
+import { PlatformService } from '../../../core';
+import { User } from '../../../user/core';
 import { filter, startWith } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 

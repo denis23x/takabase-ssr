@@ -2,10 +2,12 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService } from './api.service';
+import { ApiService } from '../../../core';
 import { Post } from '../models';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PostService {
   constructor(private apiService: ApiService) {}
 

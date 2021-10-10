@@ -3,7 +3,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { User, UserService } from '../../../core';
+import { User } from '../../../user/core';
+import { AuthService } from '../../../auth/core';
 
 @Component({
   selector: 'app-header, [appHeader]',
@@ -12,13 +13,13 @@ import { User, UserService } from '../../../core';
 export class HeaderComponent implements OnInit {
   user$: Observable<User>;
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.user$ = this.userService.user;
+    this.user$ = this.authService.user;
   }
 
   onLogout(): void {
-    this.router.navigateByUrl('/').then(() => this.userService.removeAuthorization());
+    this.router.navigateByUrl('/').then(() => this.authService.removeAuthorization());
   }
 }

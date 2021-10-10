@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
-import { PostService, Post } from '../../core';
+import { PostService, Post } from '../core';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 

@@ -7,6 +7,7 @@ import { SearchRoutingModule } from './search-routing.module';
 import { SearchPostsComponent } from './post/post.component';
 import { SearchCategoriesComponent } from './category/category.component';
 import { SearchUsersComponent } from './user/user.component';
+import { PostService } from '../post/core';
 
 @NgModule({
   imports: [SharedModule, SearchRoutingModule],
@@ -15,6 +16,7 @@ import { SearchUsersComponent } from './user/user.component';
     SearchPostsComponent,
     SearchCategoriesComponent,
     SearchUsersComponent
-  ]
+  ],
+  providers: [PostService]
 })
 export class SearchModule {}

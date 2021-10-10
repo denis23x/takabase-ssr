@@ -2,9 +2,9 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { pluck } from 'rxjs/operators';
-import { Post } from '../../core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Post } from '../core';
 
 @Component({
   selector: 'app-posts-detail',

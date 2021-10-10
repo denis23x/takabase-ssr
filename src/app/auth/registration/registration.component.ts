@@ -4,7 +4,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { HelperService, UserService, AuthRegistrationDto } from '../../core';
+import { HelperService } from '../../core';
+import { AuthService, AuthRegistrationDto } from '../core';
 import { fade } from '../../app.animation';
 
 @Component({
@@ -20,7 +21,7 @@ export class AuthRegistrationComponent implements OnDestroy {
 
   constructor(
     private router: Router,
-    private userService: UserService,
+    private authService: AuthService,
     private formBuilder: FormBuilder,
     private helperService: HelperService
   ) {
@@ -41,7 +42,7 @@ export class AuthRegistrationComponent implements OnDestroy {
   getAuthentication(authRegistrationDto: AuthRegistrationDto = this.registrationForm.value): void {
     this.isSubmitting = true;
 
-    this.registrationForm$ = this.userService
+    this.registrationForm$ = this.authService
       .getAuthentication('/users', authRegistrationDto)
       .subscribe(
         () => this.router.navigateByUrl('/'),

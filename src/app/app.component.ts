@@ -2,7 +2,8 @@
 
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { fadeRouting } from './app.animation';
-import { PlatformService, UserService } from './core';
+import { PlatformService } from './core';
+import { AuthService } from './auth/core';
 
 @Component({
   selector: 'app-root',
@@ -13,13 +14,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   title = 'draft-ssr';
 
   constructor(
-    private userService: UserService,
+    private authService: AuthService,
     private platformService: PlatformService,
     private renderer2: Renderer2
   ) {}
 
   ngOnInit(): void {
-    this.userService.getAuthorization();
+    this.authService.getAuthorization();
   }
 
   ngAfterViewInit(): void {

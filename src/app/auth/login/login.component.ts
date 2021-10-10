@@ -4,7 +4,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { HelperService, UserService, AuthLoginDto } from '../../core';
+import { HelperService } from '../../core';
+import { AuthService, AuthLoginDto } from '../core';
 import { fade } from '../../app.animation';
 import { filter } from 'rxjs/operators';
 import { Meta, Title } from '@angular/platform-browser';
@@ -25,7 +26,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private userService: UserService,
+    private authService: AuthService,
     private formBuilder: FormBuilder,
     private helperService: HelperService,
     private meta: Meta,
@@ -66,7 +67,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
   getAuthentication(authLoginDto: AuthLoginDto = this.loginForm.value): void {
     this.isSubmitting = true;
 
-    this.loginForm$ = this.userService.getAuthentication('/auth/login', authLoginDto).subscribe(
+    this.loginForm$ = this.authService.getAuthentication('/auth/login', authLoginDto).subscribe(
       () => this.router.navigateByUrl('/'),
       () => (this.isSubmitting = false)
     );

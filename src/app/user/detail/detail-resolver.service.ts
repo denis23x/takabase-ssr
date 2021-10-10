@@ -4,8 +4,11 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { defer, Observable, of, throwError, zip } from 'rxjs';
 import { catchError, first, map, pluck, switchMap } from 'rxjs/operators';
-import { UserService, PostService, CategoryService, UserProfile, PostGetAllDto } from '../../core';
+import { UserService, UserProfile } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { PostService, PostGetAllDto } from '../../post/core';
+import { AuthService } from '../../auth/core';
+import { CategoryService } from '../../category/core';
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +21,14 @@ export class UsersDetailResolverService {
     private userService: UserService,
     private categoryService: CategoryService,
     private postService: PostService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<UserProfile> {
     return defer(() => {
       return route.data.isProfile
-        ? this.userService.user.pipe(first(), pluck('id'))
+        ? this.authService.user.pipe(first(), pluck('id'))
         : of(Number(route.paramMap.get('id')));
     }).pipe(
       switchMap((userId: number) =>

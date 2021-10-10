@@ -5,12 +5,12 @@ import { SharedModule } from '../shared';
 import { PostsCreateComponent } from './create/create.component';
 import { PostsDetailComponent } from './detail/detail.component';
 import { PostRoutingModule } from './post-routing.module';
-import { MarkdownService, MarkdownPluginService } from './core';
 import { MarkdownComponent } from './shared';
+import { MarkdownService, MarkdownPluginService, PostService } from './core';
 
 @NgModule({
   imports: [SharedModule, PostRoutingModule],
   declarations: [PostsCreateComponent, PostsDetailComponent, MarkdownComponent],
-  providers: [MarkdownService, MarkdownPluginService]
+  providers: [MarkdownService, MarkdownPluginService, PostService]
 })
 export class PostModule {}
