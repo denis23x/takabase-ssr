@@ -1,10 +1,10 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, Navigation, NavigationEnd, Router } from '@angular/router';
+import { of, Subscription } from 'rxjs';
 import { User, Category, Post, PostService, UserProfile, PostGetAllDto } from '../../core';
-import { pluck, skip, tap } from 'rxjs/operators';
+import { filter, pluck, skip, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-users-detail',
@@ -13,6 +13,7 @@ import { pluck, skip, tap } from 'rxjs/operators';
 export class UsersDetailComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
   routeQueryParams$: Subscription;
+  routeState$: Subscription;
 
   page = 1;
   size = 10;
@@ -29,7 +30,8 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private postService: PostService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -71,10 +73,25 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(() => this.getPostList(false));
+
+    this.routeState$ = this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        switchMap(() => of(this.router.getCurrentNavigation()))
+      )
+      .subscribe((navigation: Navigation) => {
+        const state = navigation.extras.state;
+
+        if (state) {
+          this.categoryList = this.categoryList.concat([state as Category]).sort();
+        }
+      });
   }
 
   ngOnDestroy(): void {
-    [this.routeData$, this.routeQueryParams$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.routeData$, this.routeQueryParams$, this.routeState$]
+      .filter($ => $)
+      .forEach($ => $.unsubscribe());
   }
 
   getPostList(concat: boolean): void {

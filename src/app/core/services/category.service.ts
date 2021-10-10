@@ -9,11 +9,11 @@ import { Category } from '../models';
 export class CategoryService {
   constructor(private apiService: ApiService) {}
 
-  getAll(params?: any): Observable<Category[]> {
-    return this.apiService.get('/categories', params);
+  postCreate(body: any): Observable<Category> {
+    return this.apiService.post('/categories', body);
   }
 
-  getById(id: number): Observable<Category> {
-    return this.apiService.get('/categories/' + id);
+  getAll(params?: any): Observable<Category[]> {
+    return this.apiService.get('/categories', params);
   }
 }

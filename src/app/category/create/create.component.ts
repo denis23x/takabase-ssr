@@ -1,43 +1,56 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HelperService } from '../../core';
+import { Category, CategoryService, HelperService, SnackbarService } from '../../core';
 
 @Component({
   selector: 'app-category-create',
   templateUrl: './create.component.html'
 })
-export class CategoryCreateComponent implements OnInit, OnDestroy {
+export class CategoryCreateComponent {
   createForm: FormGroup;
-  createFormIsSubmitting: boolean;
+
+  isSubmitting: boolean;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
-    private helperService: HelperService
+    private helperService: HelperService,
+    private categoryService: CategoryService,
+    private snackbarService: SnackbarService
   ) {
     this.createForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]],
-      private: [false]
+      isPrivate: [false]
     });
   }
 
-  ngOnInit(): void {}
-
-  ngOnDestroy(): void {}
-
   onSubmit(): void {
     if (this.helperService.getFormValidation(this.createForm)) {
-      console.log('all good!');
+      this.isSubmitting = true;
+
+      this.categoryService.postCreate(this.createForm.value).subscribe(
+        (category: Category) => {
+          this.snackbarService.success('Success', 'Category created!');
+          this.onClose(category);
+        },
+        () => (this.isSubmitting = false)
+      );
     }
   }
 
-  onClose(): void {
+  onClose(category?: Category): void {
     this.router
-      .navigate(['.'], { relativeTo: this.route.parent, queryParamsHandling: 'preserve' })
+      .navigate(['.'], {
+        relativeTo: this.route.parent,
+        queryParamsHandling: 'preserve',
+        state: {
+          ...category
+        }
+      })
       .then(() => this.createForm.reset());
   }
 }

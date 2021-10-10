@@ -17,7 +17,7 @@
         [appSquare]="'1rem'">
       </button>
     </div>
-    <fieldset class="flex flex-col space-y-4" [disabled]="createFormIsSubmitting">
+    <fieldset class="flex flex-col space-y-4" [disabled]="isSubmitting">
       <fieldset *ngIf="createForm.get('name') as name">
         <label class="block text-secondary-2 text-sm hidden" for="name">Name</label>
         <input
@@ -33,20 +33,22 @@
           <ng-container *ngSwitchCase="!!name.errors.maxlength">Max length {{name.errors.maxlength['requiredLength']}} characters</ng-container>
         </span>
       </fieldset>
-      <div class="flex items-center justify-between bg-primary-2 border border-primary-4 rounded-md space-x-4 py-2.5 px-3">
+      <div
+        class="flex items-center justify-between bg-primary-2 border border-primary-4 rounded-md space-x-4 py-2.5 px-3"
+        [ngClass]="{ 'opacity-50 cursor-not-allowed' : isSubmitting }">
         <div class="flex flex-col">
           <span class="text-secondary-1">Private</span>
           <p class="text-secondary-2 text-sm">The category will be unavailable to everyone except you</p>
         </div>
-        <fieldset class="form-control-toggle" *ngIf="createForm.get('private') as private">
-          <label for="private" class="relative flex items-center justify-between cursor-pointer w-full">
-            <input id="private" type="checkbox" class="hidden" formControlName="private" aria-label="Private" />
-            <span class="block w-11 h-6 rounded-full" [ngClass]="private.value ? 'bg-success-1' : 'bg-primary-4 opacity-50'"></span>
+        <fieldset class="form-control-toggle" *ngIf="createForm.get('isPrivate') as isPrivate">
+          <label for="isPrivate" class="relative flex items-center justify-between cursor-pointer w-full">
+            <input id="isPrivate" type="checkbox" class="hidden" formControlName="isPrivate" aria-label="Private" />
+            <span class="block w-11 h-6 rounded-full" [ngClass]="isPrivate.value ? 'bg-success-1' : 'bg-primary-4 opacity-50'"></span>
             <span class="block dot absolute left-0.5 top-0.5 w-5 h-5 bg-primary-2 rounded-full"></span>
           </label>
         </fieldset>
       </div>
     </fieldset>
-    <button class="btn btn-success w-full" type="submit" [disabled]="createForm.invalid">Submit</button>
+    <button class="btn btn-success w-full" type="submit" [disabled]="createForm.invalid || isSubmitting">Submit</button>
   </form>
 </app-overlay>
