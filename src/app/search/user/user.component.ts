@@ -67,7 +67,7 @@ export class SearchUsersComponent implements OnInit, OnDestroy {
       };
     }
 
-    this.userService.findAll(userGetAllDto).subscribe((userList: User[]) => {
+    this.userService.getAll(userGetAllDto).subscribe((userList: User[]) => {
       this.userList = concat ? this.userList.concat(userList) : userList;
       this.userListLoading = false;
       this.userListHasMore = userList.length === this.size;

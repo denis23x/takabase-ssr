@@ -32,7 +32,7 @@ export class UsersDetailResolverService {
         : of(Number(route.paramMap.get('id')));
     }).pipe(
       switchMap((userId: number) =>
-        zip(this.userService.findOneById(userId), this.categoryService.findAll({ userId }))
+        zip(this.userService.getOne(userId), this.categoryService.getAll({ userId }))
       ),
       switchMap(([user, categoryList]) => {
         let postGetAllDto: PostGetAllDto = {
@@ -50,7 +50,7 @@ export class UsersDetailResolverService {
           };
         }
 
-        return zip(of(user), of(categoryList), this.postService.findAll(postGetAllDto));
+        return zip(of(user), of(categoryList), this.postService.getAll(postGetAllDto));
       }),
       catchError((error: HttpErrorResponse) => {
         this.router

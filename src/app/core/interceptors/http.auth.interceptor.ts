@@ -43,11 +43,9 @@ export class HttpAuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     switch (error.status) {
       case 401:
-        return this.authService.getAuthentication('/auth/refresh', {}, false).pipe(
-          switchMap(() => {
-            return next.handle(this.getRequestHeaders(request));
-          })
-        );
+        return this.authService
+          .getAuthentication('/auth/refresh', {}, false)
+          .pipe(switchMap(() => next.handle(this.getRequestHeaders(request))));
       case 403:
         this.authService.removeAuthorization();
 

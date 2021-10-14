@@ -19,8 +19,7 @@ export class UsersSettingsAccountComponent implements OnInit, OnDestroy {
 
   accountForm: FormGroup;
   accountForm$: Subscription;
-
-  isSubmitting = false;
+  accountFormSubmitted: boolean;
 
   constructor(
     private formBuilder: FormBuilder,

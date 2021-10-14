@@ -24,8 +24,6 @@ export class UsersSettingsInterfaceComponent implements OnInit, OnDestroy {
   additionalSearchForm: FormGroup;
   additionalSearchForm$: Subscription;
 
-  isSubmitting = false;
-
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer2: Renderer2,

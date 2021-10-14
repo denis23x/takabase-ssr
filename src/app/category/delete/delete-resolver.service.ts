@@ -14,7 +14,7 @@ export class CategoryDeleteResolverService {
   constructor(private router: Router, private categoryService: CategoryService) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<Category> {
-    return this.categoryService.findOneById(Number(route.paramMap.get('id'))).pipe(
+    return this.categoryService.getOne(Number(route.paramMap.get('id'))).pipe(
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

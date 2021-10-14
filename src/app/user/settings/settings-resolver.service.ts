@@ -21,7 +21,7 @@ export class UsersSettingsResolverService {
   resolve(): Observable<User> {
     return this.authService.user.pipe(
       first(),
-      switchMap((user: User) => this.userService.findOneById(Number(user.id))),
+      switchMap((user: User) => this.userService.getOne(Number(user.id))),
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

@@ -31,7 +31,7 @@ export class SearchPostsResolverService {
       };
     }
 
-    return this.postService.findAll(postGetAllDto).pipe(
+    return this.postService.getAll(postGetAllDto).pipe(
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

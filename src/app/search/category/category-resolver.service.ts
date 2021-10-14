@@ -31,7 +31,7 @@ export class SearchCategoriesResolverService {
       };
     }
 
-    return this.categoryService.findAll(categoryGetAllDto).pipe(
+    return this.categoryService.getAll(categoryGetAllDto).pipe(
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

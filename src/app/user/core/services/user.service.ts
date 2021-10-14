@@ -11,11 +11,11 @@ import { User } from '../models';
 export class UserService {
   constructor(private apiService: ApiService) {}
 
-  findAll(params?: any): Observable<User[]> {
+  getAll(params?: any): Observable<User[]> {
     return this.apiService.get('/users', params);
   }
 
-  findOneById(id: number): Observable<User> {
+  getOne(id: number): Observable<User> {
     return this.apiService.get('/users/' + id);
   }
 }

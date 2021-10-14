@@ -37,7 +37,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
   urlForm: FormGroup;
   urlFormControl = {} as MarkdownControl;
-  urlFormIsSubmitting: boolean;
+  urlFormSubmitted: boolean;
   urlModal: boolean;
 
   constructor(

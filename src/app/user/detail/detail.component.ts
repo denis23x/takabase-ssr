@@ -98,30 +98,27 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
           let categoryList: Category[] = this.categoryList;
 
           switch (categoryState.action) {
-            case 'create': {
+            case 'create':
               categoryList = categoryList.concat([categoryState.category as Category]).sort();
 
-              break;
-            }
-            case 'update': {
+              return of(categoryList);
+            case 'update':
               const i = categoryList.findIndex((category: Category) => {
                 return category.id === categoryState.category.id;
               });
 
               categoryList[i] = categoryState.category;
 
-              break;
-            }
-            case 'delete': {
+              return of(categoryList);
+            case 'delete':
               categoryList = categoryList.filter((category: Category) => {
                 return category.id !== categoryState.category.id;
               });
 
-              break;
-            }
+              return of(categoryList);
+            default:
+              return of(categoryList);
           }
-
-          return of(categoryList);
         })
       )
       .subscribe((categoryList: Category[]) => (this.categoryList = categoryList));
@@ -149,7 +146,7 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
       };
     }
 
-    this.postService.findAll(postGetAllDto).subscribe((postList: Post[]) => {
+    this.postService.getAll(postGetAllDto).subscribe((postList: Post[]) => {
       this.postList = concat ? this.postList.concat(postList) : postList;
       this.postListLoading = false;
       this.postListHasMore = postList.length === this.size;

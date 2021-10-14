@@ -17,7 +17,7 @@
       </button>
     </div>
     <p class="text-secondary-1 border border-danger-1 rounded-md space-x-4 py-2.5 px-3">This action cannot be undone. This will permanently delete the <span class="font-bold">{{category.name}}</span> category and remove all posts in it</p>
-    <fieldset class="flex flex-col space-y-4" [disabled]="isSubmitting">
+    <fieldset class="flex flex-col space-y-4" [disabled]="deleteFormSubmitted">
       <fieldset *ngIf="deleteForm.get('name') as name">
         <label class="block text-secondary-2 text-sm hidden" for="name">Name</label>
         <input
@@ -35,6 +35,6 @@
         <span class="block text-sm text-secondary-2 mt-2">Please type <span class="font-bold">{{category.name}}</span> to confirm</span>
       </fieldset>
     </fieldset>
-    <button class="btn btn-danger w-full" type="submit" [disabled]="deleteForm.invalid || isSubmitting">Submit</button>
+    <button class="btn btn-danger w-full" type="submit" [disabled]="deleteForm.invalid || deleteFormSubmitted">Submit</button>
   </form>
 </ng-container>

@@ -67,7 +67,7 @@ export class SearchPostsComponent implements OnInit, OnDestroy {
       };
     }
 
-    this.postService.findAll(postGetAllDto).subscribe((postList: Post[]) => {
+    this.postService.getAll(postGetAllDto).subscribe((postList: Post[]) => {
       this.postList = concat ? this.postList.concat(postList) : postList;
       this.postListLoading = false;
       this.postListHasMore = postList.length === this.size;

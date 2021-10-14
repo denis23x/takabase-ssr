@@ -13,7 +13,7 @@
       </a>
     </div>
     <app-oauth class="block my-4"></app-oauth>
-    <fieldset class="flex flex-col space-y-4" [disabled]="isSubmitting">
+    <fieldset class="flex flex-col space-y-4" [disabled]="loginFormSubmitted">
       <fieldset *ngIf="loginForm.get('email') as email">
         <label class="block text-secondary-2 text-sm" for="email">Email</label>
         <input

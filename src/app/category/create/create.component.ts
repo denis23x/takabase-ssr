@@ -12,8 +12,7 @@ import { Category, CategoryService } from '../core';
 })
 export class CategoryCreateComponent {
   createForm: FormGroup;
-
-  isSubmitting: boolean;
+  createFormSubmitted: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -31,14 +30,14 @@ export class CategoryCreateComponent {
 
   onSubmit(): void {
     if (this.helperService.getFormValidation(this.createForm)) {
-      this.isSubmitting = true;
+      this.createFormSubmitted = true;
 
       this.categoryService.create(this.createForm.value).subscribe(
         (category: Category) => {
           this.onClose(category);
           this.snackbarService.success('Success', 'Category created');
         },
-        () => (this.isSubmitting = false)
+        () => (this.createFormSubmitted = false)
       );
     }
   }

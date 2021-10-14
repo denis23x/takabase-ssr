@@ -16,10 +16,9 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
 
   deleteForm: FormGroup;
+  deleteFormSubmitted: boolean;
 
   category: Category;
-
-  isSubmitting: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -37,7 +36,17 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.routeData$ = this.activatedRoute.data
       .pipe(pluck('data'))
-      .subscribe((category: Category) => (this.category = category));
+      .subscribe((category: Category) => {
+        this.category = category;
+
+        this.deleteForm.get('name').clearValidators();
+        this.deleteForm
+          .get('name')
+          .setValidators([
+            Validators.required,
+            Validators.pattern(new RegExp('^' + this.category.name + '$'))
+          ]);
+      });
   }
 
   ngOnDestroy(): void {
@@ -46,7 +55,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.helperService.getFormValidation(this.deleteForm)) {
-      this.isSubmitting = true;
+      this.deleteFormSubmitted = true;
 
       const id = Number(this.activatedRoute.snapshot.queryParams.categoryId);
 
@@ -55,7 +64,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
           this.onClose(category);
           this.snackbarService.success('Success', 'Category deleted!');
         },
-        () => (this.isSubmitting = false)
+        () => (this.deleteFormSubmitted = false)
       );
     }
   }

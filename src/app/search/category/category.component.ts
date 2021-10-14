@@ -69,7 +69,7 @@ export class SearchCategoriesComponent implements OnInit, OnDestroy {
       };
     }
 
-    this.categoryService.findAll(categoryGetAllDto).subscribe((categoryList: Category[]) => {
+    this.categoryService.getAll(categoryGetAllDto).subscribe((categoryList: Category[]) => {
       this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
       this.categoryListLoading = false;
       this.categoryListHasMore = categoryList.length === this.size;

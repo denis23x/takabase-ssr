@@ -12,7 +12,7 @@
         aria-label="Try login">Try login
       </a>
     </div>
-    <fieldset class="flex flex-col space-y-4" [disabled]="isSubmitting">
+    <fieldset class="flex flex-col space-y-4" [disabled]="resetFormSubmitted">
       <fieldset *ngIf="resetForm.get('email') as email">
         <label class="block text-secondary-2 text-sm" for="email">Email</label>
         <input

@@ -31,7 +31,7 @@ export class SearchUsersResolverService {
       };
     }
 
-    return this.userService.findAll(userGetAllDto).pipe(
+    return this.userService.getAll(userGetAllDto).pipe(
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

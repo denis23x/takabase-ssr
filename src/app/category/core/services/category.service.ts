@@ -15,15 +15,15 @@ export class CategoryService {
     return this.apiService.post('/categories', body);
   }
 
-  findAll(params?: any): Observable<Category[]> {
+  getAll(params?: any): Observable<Category[]> {
     return this.apiService.get('/categories', params);
   }
 
-  findOneById(id: number): Observable<Category> {
+  getOne(id: number): Observable<Category> {
     return this.apiService.get('/categories/' + id);
   }
 
-  update(id: number, body: any): Observable<Category> {
+  edit(id: number, body: any): Observable<Category> {
     return this.apiService.put('/categories/' + id, body);
   }
 

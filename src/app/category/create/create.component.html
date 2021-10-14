@@ -16,7 +16,7 @@
         [appSquare]="'1rem'">
       </button>
     </div>
-    <fieldset class="flex flex-col space-y-4" [disabled]="isSubmitting">
+    <fieldset class="flex flex-col space-y-4" [disabled]="createFormSubmitted">
       <fieldset *ngIf="createForm.get('name') as name">
         <label class="block text-secondary-2 text-sm hidden" for="name">Name</label>
         <input
@@ -34,7 +34,7 @@
       </fieldset>
       <div
         class="flex items-center justify-between bg-primary-2 border border-primary-4 rounded-md space-x-4 py-2.5 px-3"
-        [ngClass]="{ 'opacity-50 cursor-not-allowed' : isSubmitting }">
+        [ngClass]="{ 'opacity-50 cursor-not-allowed' : createFormSubmitted }">
         <div class="flex flex-col">
           <span class="text-secondary-1">Private</span>
           <p class="text-secondary-2 text-sm">The category will be unavailable to everyone except you</p>
@@ -48,6 +48,6 @@
         </fieldset>
       </div>
     </fieldset>
-    <button class="btn btn-success w-full" type="submit" [disabled]="createForm.invalid || isSubmitting">Submit</button>
+    <button class="btn btn-success w-full" type="submit" [disabled]="createForm.invalid || createFormSubmitted">Submit</button>
   </form>
 </ng-container>
