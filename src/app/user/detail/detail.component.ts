@@ -1,12 +1,12 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
-import { ActivatedRoute, Navigation, NavigationEnd, Router } from '@angular/router';
-import { of, Subscription } from 'rxjs';
+import { ActivatedRoute, Navigation, NavigationEnd, Params, Router } from '@angular/router';
+import { EMPTY, of, Subscription } from 'rxjs';
 import { User, UserProfile } from '../core';
 import { filter, pluck, skip, switchMap, tap } from 'rxjs/operators';
 import { Post, PostService, PostGetAllDto } from '../../post/core';
-import { Category } from '../../category/core';
+import { Category, CategoryState } from '../../category/core';
 import { PlatformService } from '../../core';
 
 @Component({
@@ -16,6 +16,7 @@ import { PlatformService } from '../../core';
 export class UsersDetailComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
   routeQueryParams$: Subscription;
+  routeQueryParams: Params;
   routeState$: Subscription;
 
   page = 1;
@@ -54,13 +55,17 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
 
     this.routeQueryParams$ = this.activatedRoute.queryParams
       .pipe(
-        tap(() => {
+        tap((queryParams: Params) => {
+          this.routeQueryParams = queryParams;
+
           if (this.platformService.isBrowser()) {
             const timeout = setTimeout(() => {
               const ul = this.elementRef.nativeElement.querySelector('nav ul');
               const li = ul.querySelector('li a.text-info-1');
 
-              li.scrollIntoView({ block: 'nearest' });
+              if (li) {
+                li.scrollIntoView({ block: 'nearest' });
+              }
 
               clearTimeout(timeout);
             });
@@ -81,15 +86,45 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
     this.routeState$ = this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),
-        switchMap(() => of(this.router.getCurrentNavigation()))
-      )
-      .subscribe((navigation: Navigation) => {
-        const state = navigation.extras.state;
+        switchMap(() => {
+          const navigation: Navigation = this.router.getCurrentNavigation();
 
-        if (state) {
-          this.categoryList = this.categoryList.concat([state as Category]).sort();
-        }
-      });
+          return !!Object.keys(navigation.extras.state || {}).length
+            ? of(navigation.extras.state)
+            : EMPTY;
+        }),
+        filter((state: any) => state.category),
+        switchMap((categoryState: CategoryState) => {
+          let categoryList: Category[] = this.categoryList;
+
+          switch (categoryState.action) {
+            case 'create': {
+              categoryList = categoryList.concat([categoryState.category as Category]).sort();
+
+              break;
+            }
+            case 'update': {
+              const i = categoryList.findIndex((category: Category) => {
+                return category.id === categoryState.category.id;
+              });
+
+              categoryList[i] = categoryState.category;
+
+              break;
+            }
+            case 'delete': {
+              categoryList = categoryList.filter((category: Category) => {
+                return category.id !== categoryState.category.id;
+              });
+
+              break;
+            }
+          }
+
+          return of(categoryList);
+        })
+      )
+      .subscribe((categoryList: Category[]) => (this.categoryList = categoryList));
   }
 
   ngOnDestroy(): void {

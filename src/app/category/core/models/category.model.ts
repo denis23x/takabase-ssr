@@ -9,3 +9,8 @@ export interface Category {
   updatedAt: string;
   user: User;
 }
+
+export interface CategoryState {
+  action: string;
+  category: Category;
+}

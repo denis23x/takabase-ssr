@@ -1,17 +1,21 @@
 /** @format */
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HelperService, SnackbarService } from '../../core';
 import { Category, CategoryService } from '../core';
+import { Subscription } from 'rxjs';
+import { pluck } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-category-create',
-  templateUrl: './create.component.html'
+  selector: 'app-category-edit',
+  templateUrl: './edit.component.html'
 })
-export class CategoryCreateComponent {
-  createForm: FormGroup;
+export class CategoryEditComponent implements OnInit, OnDestroy {
+  routeData$: Subscription;
+
+  editForm: FormGroup;
 
   isSubmitting: boolean;
 
@@ -23,20 +27,32 @@ export class CategoryCreateComponent {
     private categoryService: CategoryService,
     private snackbarService: SnackbarService
   ) {
-    this.createForm = this.formBuilder.group({
+    this.editForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]],
       isPrivate: [false]
     });
   }
 
+  ngOnInit(): void {
+    this.routeData$ = this.activatedRoute.data
+      .pipe(pluck('data'))
+      .subscribe((category: Category) => this.editForm.patchValue(category));
+  }
+
+  ngOnDestroy(): void {
+    [this.routeData$].filter($ => $).forEach($ => $.unsubscribe());
+  }
+
   onSubmit(): void {
-    if (this.helperService.getFormValidation(this.createForm)) {
+    if (this.helperService.getFormValidation(this.editForm)) {
       this.isSubmitting = true;
 
-      this.categoryService.create(this.createForm.value).subscribe(
+      const id = Number(this.activatedRoute.snapshot.queryParams.categoryId);
+
+      this.categoryService.update(id, this.editForm.value).subscribe(
         (category: Category) => {
           this.onClose(category);
-          this.snackbarService.success('Success', 'Category created');
+          this.snackbarService.success('Success', 'Category updated!');
         },
         () => (this.isSubmitting = false)
       );
@@ -49,7 +65,7 @@ export class CategoryCreateComponent {
         relativeTo: this.activatedRoute.parent,
         queryParamsHandling: 'preserve',
         state: {
-          action: 'create',
+          action: 'update',
           category
         }
       })

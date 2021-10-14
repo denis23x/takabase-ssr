@@ -1,11 +1,11 @@
 <ng-container>
   <form
     class="flex flex-col space-y-4 bg-primary-3 rounded-md shadow-lg md:w-128 w-full p-4 m-4"
-    [formGroup]="createForm"
+    [formGroup]="editForm"
     (ngSubmit)="onSubmit()"
     autocomplete="off">
     <div class="flex justify-between items-center border-b border-primary-4 pb-2">
-      <span class="block text-xl text-secondary-1 font-medium leading-9">Create category</span>
+      <span class="block text-xl text-secondary-1 font-medium leading-9">Edit category</span>
       <button
         class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 cursor-pointer p-2"
         type="button"
@@ -17,7 +17,7 @@
       </button>
     </div>
     <fieldset class="flex flex-col space-y-4" [disabled]="isSubmitting">
-      <fieldset *ngIf="createForm.get('name') as name">
+      <fieldset *ngIf="editForm.get('name') as name">
         <label class="block text-secondary-2 text-sm hidden" for="name">Name</label>
         <input
           id="name"
@@ -39,7 +39,7 @@
           <span class="text-secondary-1">Private</span>
           <p class="text-secondary-2 text-sm">The category will be unavailable to everyone except you</p>
         </div>
-        <fieldset class="form-control-toggle" *ngIf="createForm.get('isPrivate') as isPrivate">
+        <fieldset class="form-control-toggle" *ngIf="editForm.get('isPrivate') as isPrivate">
           <label for="isPrivate" class="relative flex items-center justify-between cursor-pointer w-full">
             <input id="isPrivate" type="checkbox" class="hidden" formControlName="isPrivate" aria-label="Private" />
             <span class="block w-11 h-6 rounded-full" [ngClass]="isPrivate.value ? 'bg-success-1' : 'bg-primary-4 opacity-50'"></span>
@@ -48,6 +48,6 @@
         </fieldset>
       </div>
     </fieldset>
-    <button class="btn btn-success w-full" type="submit" [disabled]="createForm.invalid || isSubmitting">Submit</button>
+    <button class="btn btn-success w-full" type="submit" [disabled]="editForm.invalid || isSubmitting">Submit</button>
   </form>
 </ng-container>

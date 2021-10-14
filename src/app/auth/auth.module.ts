@@ -7,12 +7,11 @@ import { AuthLoginComponent } from './login/login.component';
 import { AuthRegistrationComponent } from './registration/registration.component';
 import { AuthResetComponent } from './reset/reset.component';
 import { AuthService } from './core';
-import { AuthGuard, NoAuthGuard } from './guards';
 import { OauthComponent } from './shared';
 
 @NgModule({
   imports: [SharedModule, AuthRoutingModule],
   declarations: [AuthLoginComponent, AuthRegistrationComponent, AuthResetComponent, OauthComponent],
-  providers: [AuthGuard, NoAuthGuard, AuthService]
+  providers: [AuthService]
 })
 export class AuthModule {}

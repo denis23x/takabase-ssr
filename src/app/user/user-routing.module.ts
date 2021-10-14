@@ -11,7 +11,11 @@ import { UsersSettingsInterfaceComponent } from './settings/interface/interface.
 import { UsersSettingsSecurityComponent } from './settings/security/security.component';
 import { PostsDetailComponent } from '../post/detail/detail.component';
 import { PostsDetailResolverService } from '../post/detail/detail-resolver.service';
+import { CategoryComponent } from '../category/category.component';
 import { CategoryCreateComponent } from '../category/create/create.component';
+import { CategoryDeleteComponent } from '../category/delete/delete.component';
+import { CategoryEditComponent } from '../category/edit/edit.component';
+import { CategoryEditResolverService } from '../category/edit/edit-resolver.service';
 import { AuthGuard } from '../auth/guards';
 
 const routes: Routes = [
@@ -32,8 +36,33 @@ const routes: Routes = [
     },
     children: [
       {
-        path: 'category/create',
-        component: CategoryCreateComponent
+        path: 'category',
+        component: CategoryComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'create',
+            pathMatch: 'full'
+          },
+          {
+            path: 'create',
+            component: CategoryCreateComponent
+          },
+          {
+            path: 'edit/:id',
+            component: CategoryEditComponent,
+            resolve: {
+              data: CategoryEditResolverService
+            }
+          },
+          {
+            path: 'delete/:id',
+            component: CategoryDeleteComponent,
+            resolve: {
+              data: CategoryEditResolverService
+            }
+          }
+        ]
       },
       {
         path: 'posts/:id',
