@@ -4,7 +4,9 @@ import { Injectable } from '@angular/core';
 import { HelperService, LocalStorageService, PlatformService } from '../../../core';
 import { environment } from '../../../../environments/environment';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class MarkdownPluginService {
   constructor(
     private helperService: HelperService,

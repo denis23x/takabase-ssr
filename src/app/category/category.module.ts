@@ -7,7 +7,6 @@ import { CategoryCreateComponent } from './create/create.component';
 import { CategoryDeleteComponent } from './delete/delete.component';
 import { CategoryEditComponent } from './edit/edit.component';
 import { CategoryRoutingModule } from './category-routing.module';
-import { CategoryService } from './core';
 
 @NgModule({
   imports: [SharedModule, CategoryRoutingModule],
@@ -16,7 +15,6 @@ import { CategoryService } from './core';
     CategoryCreateComponent,
     CategoryDeleteComponent,
     CategoryEditComponent
-  ],
-  providers: [CategoryService]
+  ]
 })
 export class CategoryModule {}

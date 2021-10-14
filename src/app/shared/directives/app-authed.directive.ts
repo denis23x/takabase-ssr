@@ -19,20 +19,20 @@ export class AppAuthedDirective implements OnInit, OnDestroy {
   constructor(
     private templateRef: TemplateRef<any>,
     private authService: AuthService,
-    private viewContainer: ViewContainerRef
+    private viewContainerRef: ViewContainerRef
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.isAuthenticated$ = this.authService.isAuthenticated.subscribe(isAuthenticated => {
       if ((isAuthenticated && this.condition) || (!isAuthenticated && !this.condition)) {
-        this.viewContainer.createEmbeddedView(this.templateRef);
+        this.viewContainerRef.createEmbeddedView(this.templateRef);
       } else {
-        this.viewContainer.clear();
+        this.viewContainerRef.clear();
       }
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     [this.isAuthenticated$].filter($ => $).forEach($ => $.unsubscribe());
   }
 }

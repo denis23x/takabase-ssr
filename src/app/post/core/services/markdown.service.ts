@@ -12,7 +12,9 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers.min';
 import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-scss';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class MarkdownService {
   private markdown = new MarkdownIt({
     linkify: true,

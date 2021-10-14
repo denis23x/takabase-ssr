@@ -2,7 +2,7 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { HelperService } from '../../core';
 import { AuthService, AuthLoginDto } from '../core';
@@ -45,11 +45,11 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
     this.queryParams$ = this.activatedRoute.queryParams
       .pipe(
-        filter(params => {
-          const email = params.email;
+        filter((queryParams: Params) => {
+          const email = queryParams.email;
           const social = ['googleId', 'facebookId']
-            .filter(i => params[i])
-            .map(n => ({ [n]: params[n] }))
+            .filter(i => queryParams[i])
+            .map(n => ({ [n]: queryParams[n] }))
             .shift();
 
           return !!email && !!social;
