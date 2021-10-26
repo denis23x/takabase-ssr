@@ -2,6 +2,8 @@
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { UsersProfileComponent } from './profile/profile.component';
+import { UsersProfileResolverService } from './profile/profile-resolver.service';
 import { UsersDetailComponent } from './detail/detail.component';
 import { UsersDetailResolverService } from './detail/detail-resolver.service';
 import { UsersSettingsComponent } from './settings/settings.component';
@@ -26,13 +28,10 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    component: UsersDetailComponent,
+    component: UsersProfileComponent,
     canActivate: [AuthGuard],
     resolve: {
-      data: UsersDetailResolverService
-    },
-    data: {
-      isProfile: true
+      data: UsersProfileResolverService
     },
     children: [
       {
@@ -49,14 +48,14 @@ const routes: Routes = [
             component: CategoryCreateComponent
           },
           {
-            path: 'edit/:id',
+            path: ':id/edit',
             component: CategoryEditComponent,
             resolve: {
               data: CategoryEditResolverService
             }
           },
           {
-            path: 'delete/:id',
+            path: ':id/delete',
             component: CategoryDeleteComponent,
             resolve: {
               data: CategoryEditResolverService

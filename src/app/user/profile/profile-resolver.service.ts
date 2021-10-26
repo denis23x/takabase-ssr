@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of, throwError, zip } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, first, map, pluck, switchMap } from 'rxjs/operators';
 import { UserService, UserProfile } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PostService, PostGetAllDto } from '../../post/core';
@@ -13,7 +13,7 @@ import { CategoryService } from '../../category/core';
 @Injectable({
   providedIn: 'root'
 })
-export class UsersDetailResolverService {
+export class UsersProfileResolverService {
   page = 1;
   size = 10;
 
@@ -26,7 +26,9 @@ export class UsersDetailResolverService {
   ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<UserProfile> {
-    return of(Number(route.paramMap.get('id'))).pipe(
+    return this.authService.user.pipe(
+      first(),
+      pluck('id'),
       switchMap((userId: number) =>
         zip(this.userService.getOne(userId), this.categoryService.getAll({ userId }))
       ),

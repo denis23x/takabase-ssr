@@ -73,10 +73,23 @@
               <li class="block">
                 <a
                   class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 w-full py-2 px-4"
-                  [routerLink]="['.']"
-                  aria-label="Bad content">Bad content
+                  [routerLink]="['category/create']"
+                  [routerLinkActive]="'text-info-1'"
+                  [queryParamsHandling]="'preserve'"
+                  aria-label="Create">Create
                 </a>
               </li>
+              <ng-container *ngIf="routeQueryParams && routeQueryParams.categoryId">
+                <li class="block">
+                  <a
+                    class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 w-full py-2 px-4"
+                    [routerLink]="['category', routeQueryParams.categoryId, 'edit']"
+                    [routerLinkActive]="'text-info-1'"
+                    [queryParamsHandling]="'preserve'"
+                    aria-label="Edit category">Edit category
+                  </a>
+                </li>
+              </ng-container>
             </ul>
           </div>
         </app-dropdown>
@@ -100,7 +113,10 @@
     <div
       class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-4 py-2 my-4"
       [ngSwitch]="postListLoading">
-      <span class="block" *ngSwitchDefault>No posts were found for your request</span>
+      <div class="flex space-x-1" *ngSwitchDefault>
+        <span class="block">No posts were found for your request,</span>
+        <a class="block text-info-1 hover:underline" [routerLink]="['/posts/create']">try to create one</a>
+      </div>
       <span class="block" *ngSwitchCase="true">Loading</span>
     </div>
   </ng-template>

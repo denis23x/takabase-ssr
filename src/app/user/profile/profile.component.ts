@@ -9,13 +9,14 @@ import { Post, PostService, PostGetAllDto } from '../../post/core';
 import { Category, CategoryState } from '../../category/core';
 
 @Component({
-  selector: 'app-users-detail',
-  templateUrl: './detail.component.html'
+  selector: 'app-users-profile',
+  templateUrl: './profile.component.html'
 })
-export class UsersDetailComponent implements OnInit, OnDestroy {
+export class UsersProfileComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
   routeQueryParams$: Subscription;
   routeQueryParams: Params;
+  routeState$: Subscription;
 
   page = 1;
   size = 10;
@@ -27,7 +28,11 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
   postListHasMore: boolean;
   postListLoading: boolean;
 
-  constructor(private activatedRoute: ActivatedRoute, private postService: PostService) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private postService: PostService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.routeData$ = this.activatedRoute.data
@@ -54,10 +59,52 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(() => this.getPostList(false));
+
+    this.routeState$ = this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        switchMap(() => {
+          const navigation: Navigation = this.router.getCurrentNavigation();
+
+          return !!Object.keys(navigation.extras.state || {}).length
+            ? of(navigation.extras.state)
+            : EMPTY;
+        }),
+        filter((state: any) => state.category),
+        switchMap((categoryState: CategoryState) => {
+          let categoryList: Category[] = this.categoryList;
+
+          switch (categoryState.action) {
+            case 'create':
+              categoryList = categoryList.concat([categoryState.category as Category]).sort();
+
+              return of(categoryList);
+            case 'update':
+              const i = categoryList.findIndex((category: Category) => {
+                return category.id === categoryState.category.id;
+              });
+
+              categoryList[i] = categoryState.category;
+
+              return of(categoryList);
+            case 'delete':
+              categoryList = categoryList.filter((category: Category) => {
+                return category.id !== categoryState.category.id;
+              });
+
+              return of(categoryList);
+            default:
+              return of(categoryList);
+          }
+        })
+      )
+      .subscribe((categoryList: Category[]) => (this.categoryList = categoryList));
   }
 
   ngOnDestroy(): void {
-    [this.routeData$, this.routeQueryParams$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.routeData$, this.routeQueryParams$, this.routeState$]
+      .filter($ => $)
+      .forEach($ => $.unsubscribe());
   }
 
   getPostList(concat: boolean): void {
