@@ -5,7 +5,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { AppAuthedDirective } from './directives';
+import { AppAuthedDirective, AppScrollIntoViewDirective } from './directives';
 import { DayjsPipe, SanitizerPipe } from './pipes';
 import {
   AvatarComponent,
@@ -21,6 +21,7 @@ import {
   imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, RouterModule],
   declarations: [
     AppAuthedDirective,
+    AppScrollIntoViewDirective,
     AvatarComponent,
     CardCategoryComponent,
     CardPostComponent,
@@ -38,6 +39,7 @@ import {
     HttpClientModule,
     RouterModule,
     AppAuthedDirective,
+    AppScrollIntoViewDirective,
     AvatarComponent,
     CardCategoryComponent,
     CardPostComponent,

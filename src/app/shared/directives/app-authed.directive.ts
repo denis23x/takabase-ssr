@@ -9,12 +9,13 @@ import { AuthService } from '../../auth/core';
 })
 export class AppAuthedDirective implements OnInit, OnDestroy {
   @Input()
-  set appAuthed(condition: boolean) {
-    this.condition = condition;
+  set appAuthed(authed: boolean) {
+    this.authed = authed;
   }
 
   isAuthenticated$: Subscription;
-  condition: boolean;
+
+  authed: boolean;
 
   constructor(
     private templateRef: TemplateRef<any>,
@@ -24,7 +25,7 @@ export class AppAuthedDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isAuthenticated$ = this.authService.isAuthenticated.subscribe(isAuthenticated => {
-      if ((isAuthenticated && this.condition) || (!isAuthenticated && !this.condition)) {
+      if ((isAuthenticated && this.authed) || (!isAuthenticated && !this.authed)) {
         this.viewContainerRef.createEmbeddedView(this.templateRef);
       } else {
         this.viewContainerRef.clear();

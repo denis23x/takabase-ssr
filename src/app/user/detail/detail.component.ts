@@ -1,13 +1,12 @@
 /** @format */
 
-import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Navigation, NavigationEnd, Params, Router } from '@angular/router';
 import { EMPTY, of, Subscription } from 'rxjs';
 import { User, UserProfile } from '../core';
 import { filter, pluck, skip, switchMap, tap } from 'rxjs/operators';
 import { Post, PostService, PostGetAllDto } from '../../post/core';
 import { Category, CategoryState } from '../../category/core';
-import { PlatformService } from '../../core';
 
 @Component({
   selector: 'app-users-detail',
@@ -34,8 +33,6 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private postService: PostService,
-    private elementRef: ElementRef,
-    private platformService: PlatformService,
     private router: Router
   ) {}
 
@@ -55,22 +52,7 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
 
     this.routeQueryParams$ = this.activatedRoute.queryParams
       .pipe(
-        tap((queryParams: Params) => {
-          this.routeQueryParams = queryParams;
-
-          if (this.platformService.isBrowser()) {
-            const timeout = setTimeout(() => {
-              const ul = this.elementRef.nativeElement.querySelector('nav ul');
-              const li = ul.querySelector('li a.text-info-1');
-
-              if (li) {
-                li.scrollIntoView({ block: 'nearest' });
-              }
-
-              clearTimeout(timeout);
-            });
-          }
-        }),
+        tap((queryParams: Params) => (this.routeQueryParams = queryParams)),
         skip(1),
         tap(() => {
           this.page = 1;

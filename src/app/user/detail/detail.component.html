@@ -24,7 +24,7 @@
   <div class="view grid grid-cols-1 grid-rows-1 self-start">
     <header class="header bg-primary-2 border-b border-t md:border-t-0 border-primary-4 z-20 sticky -top-px py-4">
       <nav class="flex justify-between items-center border border-primary-4 bg-primary-3 rounded-md">
-        <ul class="flex justify-start items-center overflow-auto px-1">
+        <ul class="flex justify-start items-center overflow-auto px-1" #scrollRoot>
           <li class="inline-block">
             <a
               class="block text-secondary-1 hover:text-info-1 hover:underline p-2"
@@ -39,11 +39,15 @@
           <li class="inline-block" *ngFor="let category of categoryList">
             <a
               class="block text-secondary-1 hover:text-info-1 hover:underline p-2"
-              [routerLink]="[]"
+              appScrollIntoView
+              [appRoot]="scrollRoot"
+              [appActive]="rla.isActive"
+              [routerLink]="['.']"
               [routerLinkActive]="'text-info-1'"
               [queryParams]="{ categoryId: category.id }"
               [queryParamsHandling]="'merge'"
-              [attr.aria-label]="category.name">{{category.name}}
+              [attr.aria-label]="category.name"
+              #rla="routerLinkActive">{{category.name}}
             </a>
           </li>
         </ul>

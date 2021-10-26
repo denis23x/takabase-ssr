@@ -1,12 +1,11 @@
 /** @format */
 
-import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { debounceTime, filter, pluck, tap } from 'rxjs/operators';
+import { debounceTime, filter, pluck } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { fade } from '../app.animation';
-import { PlatformService } from '../core';
 
 @Component({
   selector: 'app-search',
@@ -22,9 +21,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder,
-    private elementRef: ElementRef,
-    private platformService: PlatformService
+    private formBuilder: FormBuilder
   ) {
     this.searchForm = this.formBuilder.group({
       query: ['', [Validators.minLength(4), Validators.maxLength(24)]]
@@ -33,21 +30,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.routeQueryParams$ = this.activatedRoute.queryParams
-      .pipe(
-        pluck('query'),
-        tap(() => {
-          if (this.platformService.isBrowser()) {
-            const timeout = setTimeout(() => {
-              const ul = this.elementRef.nativeElement.querySelector('nav ul');
-              const li = ul.querySelector('li a.text-info-1');
-
-              li.scrollIntoView({ block: 'nearest' });
-
-              clearTimeout(timeout);
-            });
-          }
-        })
-      )
+      .pipe(pluck('query'))
       .subscribe((query: string = '') => this.searchForm.setValue({ query }));
 
     this.searchForm$ = this.searchForm.valueChanges
