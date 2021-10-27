@@ -46,7 +46,10 @@ export class CategoryCreateComponent {
     this.router
       .navigate(['../'], {
         relativeTo: this.activatedRoute.parent,
-        queryParamsHandling: 'preserve',
+        queryParams: {
+          categoryId: category ? category.id : this.activatedRoute.snapshot.queryParams.categoryId
+        },
+        queryParamsHandling: 'merge',
         state: {
           action: 'create',
           category
