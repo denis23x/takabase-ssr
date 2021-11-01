@@ -19,7 +19,8 @@ export class SearchPostsResolverService {
   resolve(route: ActivatedRouteSnapshot): Observable<Post[]> {
     let postGetAllDto: PostGetAllDto = {
       page: this.page,
-      size: this.size
+      size: this.size,
+      scope: ['user']
     };
 
     const { query: title = null } = route.parent.queryParams;

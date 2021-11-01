@@ -48,7 +48,7 @@ export class CategoryEditComponent implements OnInit, OnDestroy {
 
       const id = Number(this.activatedRoute.snapshot.queryParams.categoryId);
 
-      this.categoryService.edit(id, this.editForm.value).subscribe(
+      this.categoryService.updateOne(id, this.editForm.value).subscribe(
         (category: Category) => {
           this.onClose(category);
           this.snackbarService.success('Success', 'Category updated!');

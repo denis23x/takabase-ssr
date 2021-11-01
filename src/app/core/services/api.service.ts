@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { SnackbarService } from './snackbar.service';
@@ -37,21 +37,21 @@ export class ApiService {
     return throwError(response);
   }
 
-  get(path: string, params: HttpParams = new HttpParams()): Observable<any> {
+  get(path: string, params?: any): Observable<any> {
     return this.http
       .get(environment.API_URL + path, { params })
       .pipe(catchError(error => this.getErrorNotification(error)));
   }
 
-  put(path: string, body: object): Observable<any> {
+  put(path: string, body?: any): Observable<any> {
     return this.http
-      .put(environment.API_URL + path, JSON.stringify(body))
+      .put(environment.API_URL + path, JSON.stringify(body || {}))
       .pipe(catchError(error => this.getErrorNotification(error)));
   }
 
-  post(path: string, body: object): Observable<any> {
+  post(path: string, body?: any): Observable<any> {
     return this.http
-      .post(environment.API_URL + path, JSON.stringify(body))
+      .post(environment.API_URL + path, JSON.stringify(body || {}))
       .pipe(catchError(error => this.getErrorNotification(error)));
   }
 

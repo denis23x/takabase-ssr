@@ -11,11 +11,11 @@ import { Category } from '../models';
 export class CategoryService {
   constructor(private apiService: ApiService) {}
 
-  create(body: any): Observable<Category> {
+  createOne(body: any): Observable<Category> {
     return this.apiService.post('/categories', body);
   }
 
-  getAll(params?: any): Observable<Category[]> {
+  getAll(params: any): Observable<Category[]> {
     return this.apiService.get('/categories', params);
   }
 
@@ -23,11 +23,11 @@ export class CategoryService {
     return this.apiService.get('/categories/' + id);
   }
 
-  edit(id: number, body: any): Observable<Category> {
+  updateOne(id: number, body: any): Observable<Category> {
     return this.apiService.put('/categories/' + id, body);
   }
 
-  delete(id: number): Observable<Category> {
+  deleteOne(id: number): Observable<Category> {
     return this.apiService.delete('/categories/' + id);
   }
 }

@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of, throwError, zip } from 'rxjs';
 import { catchError, first, map, pluck, switchMap } from 'rxjs/operators';
-import { UserService, UserProfile } from '../core';
+import { UserService, UserProfile, User } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PostService, PostGetAllDto } from '../../post/core';
 import { AuthService } from '../../auth/core';
@@ -26,17 +26,14 @@ export class UsersProfileResolverService {
   ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<UserProfile> {
-    return this.authService.user.pipe(
-      first(),
-      pluck('id'),
-      switchMap((userId: number) =>
-        zip(this.userService.getOne(userId), this.categoryService.getAll({ userId }))
-      ),
+    return this.userService.getProfile().pipe(
+      switchMap((user: User) => zip(of(user), this.categoryService.getAll({ userId: user.id }))),
       switchMap(([user, categoryList]) => {
         let postGetAllDto: PostGetAllDto = {
           userId: user.id,
           page: this.page,
-          size: this.size
+          size: this.size,
+          scope: ['user']
         };
 
         const { categoryId = null } = route.parent.queryParams;

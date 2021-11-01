@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 import { ApiService, LocalStorageService } from '../../../core';
-import { User } from '../../../user/core';
+import { User, UserService } from '../../../user/core';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
@@ -20,6 +20,7 @@ export class AuthService {
 
   constructor(
     private apiService: ApiService,
+    private userService: UserService,
     private http: HttpClient,
     private localStorageService: LocalStorageService
   ) {}
@@ -38,7 +39,7 @@ export class AuthService {
 
   getAuthorization() {
     if (this.localStorageService.getItem(environment.TOKEN_LOCALSTORAGE)) {
-      this.apiService.get('/users/me').subscribe(user => this.setAuthorization(user));
+      this.userService.getProfile().subscribe((user: User) => this.setAuthorization(user));
     } else {
       this.removeAuthorization();
     }

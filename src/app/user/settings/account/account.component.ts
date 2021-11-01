@@ -3,10 +3,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { HelperService } from '../../../core';
-import { User } from '../../core';
-import { pluck } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { HelperService, SnackbarService } from '../../../core';
+import { User, UserService } from '../../core';
+import { debounceTime, pluck } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../../auth/core';
 
 @Component({
   selector: 'app-users-settings-account',
@@ -24,20 +25,26 @@ export class UsersSettingsAccountComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private helperService: HelperService,
-    private route: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private userService: UserService,
+    private authService: AuthService,
+    private snackbarService: SnackbarService,
+    private router: Router
   ) {
     this.accountForm = this.formBuilder.group({
       name: ['', [Validators.required]],
-      biography: ['', [Validators.required]]
+      biography: ['']
     });
   }
 
   ngOnInit(): void {
-    this.routeData$ = this.route.parent.data.pipe(pluck('data')).subscribe((user: User) => {
-      this.user = user;
+    this.routeData$ = this.activatedRoute.parent.data
+      .pipe(pluck('data'))
+      .subscribe((user: User) => {
+        this.user = user;
 
-      this.accountForm.patchValue(this.user);
-    });
+        this.accountForm.patchValue(this.user);
+      });
 
     this.accountForm$ = this.accountForm.valueChanges.subscribe(value => {
       console.log(value);
@@ -50,7 +57,20 @@ export class UsersSettingsAccountComponent implements OnInit, OnDestroy {
 
   onSubmitForm(): void {
     if (this.helperService.getFormValidation(this.accountForm)) {
-      console.log('All good!', this.accountForm.value);
+      this.userService.updateProfile(this.accountForm.value).subscribe((user: User) => {
+        this.authService.userSubject.next(user);
+        this.snackbarService.info('Success', 'Information updated');
+      });
     }
+  }
+
+  onDeleteUser(): void {
+    this.userService.deleteProfile().subscribe(() => {
+      this.authService.removeAuthorization();
+
+      this.router
+        .navigate(['.'])
+        .then(() => this.snackbarService.info('Success', 'Account deleted'));
+    });
   }
 }

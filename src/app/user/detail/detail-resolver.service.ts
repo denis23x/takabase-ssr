@@ -34,7 +34,8 @@ export class UsersDetailResolverService {
         let postGetAllDto: PostGetAllDto = {
           userId: user.id,
           page: this.page,
-          size: this.size
+          size: this.size,
+          scope: ['user']
         };
 
         const { categoryId = null } = route.parent.queryParams;

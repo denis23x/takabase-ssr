@@ -19,7 +19,8 @@ export class SearchCategoriesResolverService {
   resolve(route: ActivatedRouteSnapshot): Observable<Category[]> {
     let categoryGetAllDto: CategoryGetAllDto = {
       page: this.page,
-      size: this.size
+      size: this.size,
+      scope: ['user']
     };
 
     const { query: name = null } = route.parent.queryParams;

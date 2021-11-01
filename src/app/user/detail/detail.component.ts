@@ -64,7 +64,8 @@ export class UsersDetailComponent implements OnInit, OnDestroy {
     let postGetAllDto: PostGetAllDto = {
       userId: this.user.id,
       page: this.page,
-      size: this.size
+      size: this.size,
+      scope: ['user']
     };
 
     const { categoryId = null } = this.activatedRoute.snapshot.queryParams;

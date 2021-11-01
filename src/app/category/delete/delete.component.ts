@@ -59,7 +59,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 
       const id = Number(this.activatedRoute.snapshot.queryParams.categoryId);
 
-      this.categoryService.delete(id).subscribe(
+      this.categoryService.deleteOne(id).subscribe(
         (category: Category) => {
           this.onClose(category);
           this.snackbarService.success('Success', 'Category deleted!');
