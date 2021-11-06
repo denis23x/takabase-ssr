@@ -55,7 +55,8 @@ export class SearchPostsComponent implements OnInit, OnDestroy {
   getPostList(concat: boolean): void {
     let postGetAllDto: PostGetAllDto = {
       page: this.page,
-      size: this.size
+      size: this.size,
+      scope: ['user']
     };
 
     const { query: title = null } = this.activatedRoute.parent.snapshot.queryParams;

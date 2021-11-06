@@ -1,20 +1,43 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { MarkdownService } from '../core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { PlatformService } from '../../core';
+import { DOCUMENT } from '@angular/common';
+import Split from 'split-grid';
 
 @Component({
   selector: 'app-posts-create',
   templateUrl: './create.component.html'
 })
-export class PostsCreateComponent implements OnInit, OnDestroy {
+export class PostsCreateComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('gutterLg') gutterLg: ElementRef;
+
   postForm: FormGroup;
   postForm$: Subscription;
 
-  constructor(private markdownService: MarkdownService, private fb: FormBuilder) {
+  editorMinSize = 425;
+  editorControls = true;
+  editorWhitespace: boolean;
+  editorScrollSync: boolean;
+
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private markdownService: MarkdownService,
+    private fb: FormBuilder,
+    private platformService: PlatformService
+  ) {
     this.postForm = this.fb.group({
       // body: ['', [Validators.required, Validators.minLength(32), Validators.maxLength(6400)]]
       body: [
@@ -71,6 +94,20 @@ export class PostsCreateComponent implements OnInit, OnDestroy {
       .subscribe(body => {
         // console.log('subscribe', body);
       });
+  }
+
+  ngAfterViewInit(): void {
+    if (this.platformService.isBrowser()) {
+      Split({
+        minSize: this.editorMinSize,
+        columnGutters: [
+          {
+            track: 1,
+            element: this.gutterLg.nativeElement
+          }
+        ]
+      });
+    }
   }
 
   ngOnDestroy(): void {

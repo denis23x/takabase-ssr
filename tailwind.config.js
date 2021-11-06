@@ -30,6 +30,13 @@ module.exports = {
       ["danger-1"]: "var(--danger-1)",
       ["transparent"]: "transparent",
     },
+    cursor: {
+      ["default"]: "default",
+      ["pointer"]: "pointer",
+      ["not-allowed"]: "not-allowed",
+      ["col-resize"]: "col-resize",
+      ["row-resize"]: "row-resize",
+    },
     extend: {
       saturate: {
         75: ".75",

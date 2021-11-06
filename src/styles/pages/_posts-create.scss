@@ -1,8 +1,9 @@
-$h-header: 60px;
-$h-control: 72px;
-$h-border: 6px;
-$h-padding: 90px;
-$h-full: calc(100vh - #{$h-control} - #{$h-border} - #{$h-padding});
+$h-header: 61px;
+$h-controls: 75px;
+$h-gap: calc(1rem * 3);
+$h-layout: 42px;
+$h-button: 42px;
+$h-full: calc(100vh - (#{$h-header} + #{$h-controls} + #{$h-gap} + #{$h-button}));
 
 .posts-create {
   grid-template-areas:
@@ -15,29 +16,45 @@ $h-full: calc(100vh - #{$h-control} - #{$h-border} - #{$h-padding});
 
   .content {
     grid-area: content;
-    grid-template-areas:
-      "editor"
-      "preview";
 
-    @screen lg {
-      grid-template-areas: "editor preview";
-    }
+    .splitter {
+      grid-template-columns: 1fr auto 1fr;
+      grid-template-rows: 1fr;
 
-    .editor {
-      grid-area: editor;
-
-      textarea {
-        height: $h-full;
+      @media (max-width: calc(theme('screens.lg') - 1px)) {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: repeat(3, auto) !important;
       }
-    }
 
-    .preview {
-      grid-area: preview;
+      .editor {
+        #textarea {
+          height: calc(#{$h-full} + #{$h-layout} - 0.5rem);
 
-      height: calc(#{$h-full} + #{$h-header} + 1px);
+          @screen lg {
+            height: $h-full;
+          }
+        }
 
-      @screen lg {
-        height: $h-full;
+        .layout {
+          @apply
+          absolute
+          top-full
+          left-0
+          w-full
+          lg:top-0
+          lg:left-full
+          lg:h-full
+          lg:w-auto
+          lg:flex-col;
+        }
+      }
+
+      .preview {
+        height: calc(#{$h-full} + #{$h-layout} - 0.25rem);
+
+        @screen lg {
+          height: $h-full;
+        }
       }
     }
   }

@@ -57,7 +57,8 @@ export class SearchCategoriesComponent implements OnInit, OnDestroy {
   getCategoryList(concat: boolean): void {
     let categoryGetAllDto: CategoryGetAllDto = {
       page: this.page,
-      size: this.size
+      size: this.size,
+      scope: ['user']
     };
 
     const { query: name = null } = this.activatedRoute.parent.snapshot.queryParams;
