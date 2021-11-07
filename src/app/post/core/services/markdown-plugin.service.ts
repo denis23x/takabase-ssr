@@ -81,21 +81,38 @@ export class MarkdownPluginService {
 
     const onload = `
       (function(){
-        const iframe = document.getElementById(id);
-        const head = iframe.contentWindow.document.getElementsByTagName('head')[0];
-        const style = iframe.contentWindow.document.createElement('link');
+        /******************/
+        /*** ADD STYLES ***/
+        /******************/
+
+        const head = this.contentWindow.document.getElementsByTagName('head')[0];
+        const style = this.contentWindow.document.createElement('link');
 
         style.rel = 'stylesheet';
         style.href = 'gist.css';
 
         head.appendChild(style);
 
-        const setHeight = () => iframe.height = iframe.contentWindow.document.body.scrollHeight;
+        /*********************/
+        /*** UPDATE LINKS ***/
+        /*********************/
+
+        const linkList = this.contentWindow.document.getElementsByTagName('a');
+
+        for (var i = 0; i < linkList.length; i++) {
+          linkList[i].setAttribute('target', '_blank');
+        }
+
+        /*********************/
+        /*** HANDLE HEIGHT ***/
+        /*********************/
+
+        const setHeight = () => this.height = this.contentWindow.document.body.scrollHeight;
 
         const timeout = setTimeout(() => {
           setHeight();
 
-          iframe.contentWindow.addEventListener('resize', () => setHeight());
+          this.contentWindow.addEventListener('resize', () => setHeight());
 
           clearTimeout(timeout);
         }, 200);
