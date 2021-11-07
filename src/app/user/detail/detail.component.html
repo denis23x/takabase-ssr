@@ -33,7 +33,7 @@
               [routerLinkActiveOptions]="{ exact: true }"
               [queryParams]="{ categoryId: null }"
               [queryParamsHandling]="'merge'"
-              [attr.aria-label]="'All'">All
+              aria-label="All">All
             </a>
           </li>
           <li class="inline-block" *ngFor="let category of categoryList">
@@ -59,7 +59,7 @@
             class="block fill-current text-secondary-1 hover:text-info-1 cursor-pointer p-2"
             [ngClass]="{ 'text-info-1': active.value }"
             type="button"
-            [attr.aria-label]="'Menu'"
+            aria-label="Menu"
             appSvgIcon
             [appIcon]="'list'"
             [appSquare]="'1.5rem'"

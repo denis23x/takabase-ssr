@@ -16,14 +16,14 @@ export class SearchPostsResolverService {
 
   constructor(private router: Router, private postService: PostService) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<Post[]> {
+  resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Post[]> {
     let postGetAllDto: PostGetAllDto = {
       page: this.page,
       size: this.size,
       scope: ['user']
     };
 
-    const { query: title = null } = route.parent.queryParams;
+    const { query: title = null } = activatedRouteSnapshot.parent.queryParams;
 
     if (title) {
       postGetAllDto = {

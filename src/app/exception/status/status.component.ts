@@ -30,20 +30,22 @@ export class ExceptionStatusComponent implements OnInit, OnDestroy {
     'Server error'
   ];
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.routeParams$ = this.route.params.pipe(pluck('status')).subscribe((status: string) => {
-      const statusCode = Number(status);
-      const message = this.getMessageMap(statusCode);
+    this.routeParams$ = this.activatedRoute.params
+      .pipe(pluck('status'))
+      .subscribe((status: string) => {
+        const statusCode = Number(status);
+        const message = this.getMessageMap(statusCode);
 
-      if (!statusCode || !message) {
-        this.router.navigate([[], 404]).then(() => console.debug('Route was changed'));
-      }
+        if (!statusCode || !message) {
+          this.router.navigate([[], 404]).then(() => console.debug('Route was changed'));
+        }
 
-      this.statusCode = statusCode;
-      this.message = message;
-    });
+        this.statusCode = statusCode;
+        this.message = message;
+      });
   }
 
   ngOnDestroy(): void {

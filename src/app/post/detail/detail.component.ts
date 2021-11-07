@@ -15,10 +15,10 @@ export class PostsDetailComponent implements OnInit, OnDestroy {
 
   post: Post;
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.routeData$ = this.route.data
+    this.routeData$ = this.activatedRoute.data
       .pipe(pluck('data'))
       .subscribe((post: Post) => (this.post = post));
   }
@@ -29,7 +29,7 @@ export class PostsDetailComponent implements OnInit, OnDestroy {
 
   navigateToParent(): void {
     this.router
-      .navigate(['.'], { relativeTo: this.route.parent, queryParamsHandling: 'preserve' })
+      .navigate(['.'], { relativeTo: this.activatedRoute.parent, queryParamsHandling: 'preserve' })
       .then(() => console.debug('Route was changed'));
   }
 }

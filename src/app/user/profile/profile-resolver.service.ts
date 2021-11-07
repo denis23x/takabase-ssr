@@ -25,7 +25,7 @@ export class UsersProfileResolverService {
     private router: Router
   ) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<UserProfile> {
+  resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<UserProfile> {
     return this.userService.getProfile().pipe(
       switchMap((user: User) => zip(of(user), this.categoryService.getAll({ userId: user.id }))),
       switchMap(([user, categoryList]) => {
@@ -36,7 +36,7 @@ export class UsersProfileResolverService {
           scope: ['user']
         };
 
-        const { categoryId = null } = route.parent.queryParams;
+        const { categoryId = null } = activatedRouteSnapshot.parent.queryParams;
 
         if (categoryId) {
           postGetAllDto = {

@@ -15,10 +15,10 @@ export class UsersSettingsComponent implements OnInit, OnDestroy {
 
   user: User;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this.routeData$ = this.route.data
+    this.routeData$ = this.activatedRoute.data
       .pipe(pluck('data'))
       .subscribe((user: User) => (this.user = user));
   }

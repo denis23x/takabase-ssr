@@ -25,8 +25,8 @@ export class UsersDetailResolverService {
     private router: Router
   ) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<UserProfile> {
-    return of(Number(route.paramMap.get('id'))).pipe(
+  resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<UserProfile> {
+    return of(Number(activatedRouteSnapshot.paramMap.get('id'))).pipe(
       switchMap((userId: number) =>
         zip(this.userService.getOne(userId), this.categoryService.getAll({ userId }))
       ),
@@ -38,7 +38,7 @@ export class UsersDetailResolverService {
           scope: ['user']
         };
 
-        const { categoryId = null } = route.parent.queryParams;
+        const { categoryId = null } = activatedRouteSnapshot.parent.queryParams;
 
         if (categoryId) {
           postGetAllDto = {

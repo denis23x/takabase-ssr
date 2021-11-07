@@ -94,16 +94,22 @@ export class MarkdownPluginService {
 
         head.appendChild(style);
 
-        iframe && (iframe.height = (iframe.contentWindow.document.body.scrollHeight - ${scrollbarFix}) + 'px')
+        setTimeout(() => {
+          if (iframe) {
+            iframe.height = 0;
+            iframe.height = iframe.contentWindow.document.body.scrollHeight - ${scrollbarFix};
+          }
+        });
       }).call(this)
     `;
 
     return `
       <div class="github-iframe">
         <iframe
-          id="${id}"
+          id="${id}-${Date.now()}"
           onload="${onload}"
           srcdoc="${srcdoc}"
+          scrolling="no"
           frameborder="0">
         </iframe>
       </div>

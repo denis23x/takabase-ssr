@@ -5,7 +5,7 @@
         <button
           class="fill-current text-secondary-1 hover:text-info-1 cursor-pointer p-2.5"
           type="button"
-          [attr.aria-label]="'Back'"
+          aria-label="Back"
           [disabled]="!history$.getValue().length"
           (click)="onBack()"
           appSvgIcon
@@ -31,7 +31,7 @@
         class="block fill-current text-secondary-1 hover:text-info-1 cursor-pointer p-2"
         [ngClass]="{ 'text-info-1': active.value }"
         type="button"
-        [attr.aria-label]="'Menu'"
+        aria-label="Menu"
         appSvgIcon
         [appIcon]="'list'"
         [appSquare]="'1.5rem'"
@@ -67,7 +67,7 @@
         <button
           class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 cursor-pointer py-2 px-2.5 -mr-2.5"
           type="button"
-          [attr.aria-label]="'Close'"
+          aria-label="Close"
           (click)="onCloseUrlForm()"
           appSvgIcon
           [appIcon]="'x-lg'"
@@ -83,7 +83,7 @@
             class="form-control bg-primary-2 my-2"
             formControlName="url"
             placeholder="https://..."
-            aria-label="Url"/>
+            aria-label="Url" />
           <span class="block text-sm text-danger-1" *ngIf="url.touched && url.errors" [ngSwitch]="true">
             <ng-container *ngSwitchCase="!!url.errors.required">Required</ng-container>
             <ng-container *ngSwitchCase="!!url.errors.customValidator">Url does not match pattern</ng-container>

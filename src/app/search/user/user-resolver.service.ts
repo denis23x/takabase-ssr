@@ -16,13 +16,13 @@ export class SearchUsersResolverService {
 
   constructor(private router: Router, private userService: UserService) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
+  resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<User[]> {
     let userGetAllDto: UserGetAllDto = {
       page: this.page,
       size: this.size
     };
 
-    const { query: name = null } = route.parent.queryParams;
+    const { query: name = null } = activatedRouteSnapshot.parent.queryParams;
 
     if (name) {
       userGetAllDto = {

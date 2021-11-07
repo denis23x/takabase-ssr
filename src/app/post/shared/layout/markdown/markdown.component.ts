@@ -3,8 +3,8 @@
 import { AfterViewInit, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MarkdownControlList, MarkdownControl, MarkdownService } from '../../../core';
 import { HelperService, PlatformService } from '../../../../core';
-import { BehaviorSubject, fromEvent, Subscription } from 'rxjs';
-import { debounceTime, startWith } from 'rxjs/operators';
+import { BehaviorSubject, fromEvent, merge, Subscription, of } from 'rxjs';
+import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DOCUMENT } from '@angular/common';
 
@@ -13,6 +13,11 @@ import { DOCUMENT } from '@angular/common';
   templateUrl: './markdown.component.html'
 })
 export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
+  @Input()
+  set appScrollSync(scrollSync: boolean) {
+    this.scrollSync = scrollSync;
+  }
+
   @Input()
   set appTextareaId(markdownId: string) {
     this.textareaId = markdownId;
@@ -24,6 +29,10 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   controlList: MarkdownControl[] = MarkdownControlList();
+
+  scrollSync: boolean;
+  scrollSync$: Subscription;
+  scrollSyncIsBusy: boolean;
 
   textareaInput$: Subscription;
   textareaId: string;
@@ -73,11 +82,38 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
             this.historyRemember = true;
           }
         });
+
+      this.scrollSync$ = merge(
+        fromEvent(this.textarea, 'scroll'),
+        fromEvent(this.preview, 'scroll')
+      )
+        .pipe(
+          filter(() => this.scrollSync),
+          debounceTime(10),
+          switchMap((event: Event) => {
+            const { id } = event.target as Element;
+            const elementList = ['textarea', 'preview'];
+
+            return of([
+              this[elementList[+(id === 'preview')]],
+              this[elementList[+(id === 'textarea')]]
+            ]);
+          })
+        )
+        .subscribe(([element, target]: HTMLTextAreaElement[] | HTMLElement[]) => {
+          if (!this.scrollSyncIsBusy) {
+            target.scrollTop = this.getScroll(element, target);
+          }
+
+          this.scrollSyncIsBusy = !this.scrollSyncIsBusy;
+        });
     }
   }
 
   ngOnDestroy(): void {
-    [this.textareaInput$, this.history$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.textareaInput$, this.history$, this.scrollSync$]
+      .filter($ => $)
+      .forEach($ => $.unsubscribe());
   }
 
   setValue(value: string): void {
@@ -152,6 +188,17 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     this.history$.next(this.history$.getValue().slice(0, -1));
 
     this.setValue(String(this.history$.getValue().slice(-2).pop() || ''));
+  }
+
+  getScroll(a: HTMLTextAreaElement | HTMLElement, b: HTMLTextAreaElement | HTMLElement): number {
+    const aScrollTop = a.scrollTop;
+    const aMaxHeight = a.scrollHeight - a.clientHeight;
+    const aScrollPosition = Math.round((aScrollTop / aMaxHeight) * 100);
+
+    const bMaxHeight = b.scrollHeight - b.clientHeight;
+    const bScrollPosition = Math.round(bMaxHeight * (aScrollPosition / 100));
+
+    return bScrollPosition;
   }
 
   onSubmitUrlForm(): void {

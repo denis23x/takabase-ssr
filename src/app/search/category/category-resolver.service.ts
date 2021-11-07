@@ -16,14 +16,14 @@ export class SearchCategoriesResolverService {
 
   constructor(private router: Router, private categoryService: CategoryService) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<Category[]> {
+  resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Category[]> {
     let categoryGetAllDto: CategoryGetAllDto = {
       page: this.page,
       size: this.size,
       scope: ['user']
     };
 
-    const { query: name = null } = route.parent.queryParams;
+    const { query: name = null } = activatedRouteSnapshot.parent.queryParams;
 
     if (name) {
       categoryGetAllDto = {

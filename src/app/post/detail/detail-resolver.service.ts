@@ -13,8 +13,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class PostsDetailResolverService {
   constructor(private router: Router, private postService: PostService) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<Post> {
-    return this.postService.getOne(Number(route.paramMap.get('id'))).pipe(
+  resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Post> {
+    return this.postService.getOne(Number(activatedRouteSnapshot.paramMap.get('id'))).pipe(
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])
