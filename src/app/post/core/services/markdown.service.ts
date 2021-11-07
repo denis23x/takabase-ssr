@@ -101,11 +101,17 @@ export class MarkdownService {
   }
 
   getTemplate(value: string, language: string = 'none'): string {
-    return `<pre class="line-numbers language-${language}"><code class="language-${language}">${value}</code></pre>`;
+    const template = `
+      <pre class="line-numbers language-${language}">
+        <code class="language-${language}">${value}</code>
+      </pre>
+    `;
+
+    return template.trim();
   }
 
-  getRender(value: string, el: HTMLElement): void {
+  getRender(value: string, element: HTMLElement): void {
     // @ts-ignore
-    IncrementalDOM.patch(el, this.markdown.renderToIncrementalDOM(value));
+    IncrementalDOM.patch(element, this.markdown.renderToIncrementalDOM(value));
   }
 }

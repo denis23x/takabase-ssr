@@ -2,6 +2,8 @@
 @use "../layout/scrollbars";
 
 body {
+  @apply m-0;
+
   &.light {
     @include variables.theme-light;
   }
@@ -10,11 +12,9 @@ body {
     @include variables.theme-dark;
   }
 
-  @apply m-0;
-
   .gist {
     .gist-file {
-      @apply border-primary-4 m-0 #{'!important'};
+      @apply border-0 m-0 #{'!important'};
 
       .gist-data {
         @apply border-primary-4 bg-primary-2 #{'!important'};
@@ -42,8 +42,46 @@ body {
       }
 
       .gist-meta {
-        @apply bg-primary-2 #{'!important'};
+        @apply text-secondary-1 bg-primary-2 font-sans #{'!important'};
+
+        a {
+          @apply text-info-1;
+
+          &:first-child {
+            @apply text-secondary-1 #{'!important'};
+          }
+        }
       }
+    }
+  }
+
+  /* markdown */
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  ul,
+  ol,
+  p {
+    @apply text-secondary-1 font-sans;
+  }
+
+  a {
+    @apply text-info-1;
+  }
+
+  code {
+    @apply border border-solid border-primary-4 text-secondary-1 bg-primary-3 #{'!important'};
+  }
+
+  pre {
+    @extend code;
+
+    code {
+      @apply border-0 text-secondary-1 bg-primary-3 #{'!important'};
     }
   }
 

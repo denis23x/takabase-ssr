@@ -59,6 +59,7 @@ export class MarkdownPluginService {
     const parameter = id.indexOf('?');
     const src = 'https://gist.github.com/';
     const config = this.localStorageService.getItem(environment.CONFIG_LOCALSTORAGE);
+    const randomId = id + '-' + Date.now() + Math.floor(Math.random() * Date.now());
 
     let colorTheme = 'auto';
 
@@ -78,11 +79,6 @@ export class MarkdownPluginService {
       </html>
     `;
 
-    const isChrome = this.platformService.getBrowserAgent() === 'chrome';
-    const isDesktop = !this.platformService.isMobile();
-
-    const scrollbarFix = isChrome && isDesktop ? 6 : 0;
-
     const onload = `
       (function(){
         const iframe = document.getElementById(id);
@@ -94,19 +90,22 @@ export class MarkdownPluginService {
 
         head.appendChild(style);
 
-        setTimeout(() => {
-          if (iframe) {
-            iframe.height = 0;
-            iframe.height = iframe.contentWindow.document.body.scrollHeight - ${scrollbarFix};
-          }
-        });
+        const setHeight = () => iframe.height = iframe.contentWindow.document.body.scrollHeight;
+
+        const timeout = setTimeout(() => {
+          setHeight();
+
+          iframe.contentWindow.addEventListener('resize', () => setHeight());
+
+          clearTimeout(timeout);
+        }, 200);
       }).call(this)
     `;
 
     return `
       <div class="github-iframe">
         <iframe
-          id="${id}-${Date.now()}"
+          id="${randomId}"
           onload="${onload}"
           srcdoc="${srcdoc}"
           scrolling="no"
