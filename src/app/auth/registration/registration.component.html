@@ -14,7 +14,7 @@
       </a>
     </div>
     <app-oauth class="block my-4"></app-oauth>
-    <fieldset class="flex flex-col space-y-4" [disabled]="registrationFormSubmitted">
+    <fieldset class="flex flex-col space-y-4" [disabled]="registrationFormIsSubmitted">
       <fieldset *ngIf="registrationForm.get('name') as name">
         <label class="block text-secondary-2 text-sm" for="name">Username</label>
         <input

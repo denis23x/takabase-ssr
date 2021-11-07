@@ -12,7 +12,7 @@ import { HelperService } from '../../core';
 export class AuthResetComponent implements OnInit, OnDestroy {
   resetForm: FormGroup;
   resetForm$: Subscription;
-  resetFormSubmitted: boolean;
+  resetFormIsSubmitted: boolean;
 
   constructor(private fb: FormBuilder, private helperService: HelperService) {
     this.resetForm = this.fb.group({
@@ -26,7 +26,7 @@ export class AuthResetComponent implements OnInit, OnDestroy {
 
   onSubmitForm(): void {
     if (this.helperService.getFormValidation(this.resetForm)) {
-      this.resetFormSubmitted = true;
+      this.resetFormIsSubmitted = true;
     }
   }
 }

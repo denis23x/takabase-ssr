@@ -14,7 +14,7 @@
         <p class="text-secondary-2 text-sm">Specify a file, you may able to use only *.png, *.jpg files</p>
       </div>
     </fieldset>
-    <fieldset class="flex flex-col space-y-4" [disabled]="accountFormSubmitted">
+    <fieldset class="flex flex-col space-y-4" [disabled]="accountFormIsSubmitted">
       <fieldset *ngIf="accountForm.get('name') as name">
         <label class="block text-secondary-2 text-sm" for="name">Name</label>
         <input

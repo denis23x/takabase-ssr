@@ -74,7 +74,7 @@
           [appSquare]="'1rem'">
         </button>
       </div>
-      <fieldset [disabled]="urlFormSubmitted">
+      <fieldset [disabled]="urlFormIsSubmitted">
         <fieldset *ngIf="urlForm.get('url') as url">
           <label class="block text-secondary-2 text-sm hidden" for="url">URL</label>
           <input

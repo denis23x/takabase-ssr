@@ -20,7 +20,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
   loginForm: FormGroup;
   loginForm$: Subscription;
-  loginFormSubmitted: boolean;
+  loginFormIsSubmitted: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -64,11 +64,11 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
   }
 
   getAuthentication(authLoginDto: AuthLoginDto = this.loginForm.value): void {
-    this.loginFormSubmitted = true;
+    this.loginFormIsSubmitted = true;
 
     this.loginForm$ = this.authService.getAuthentication('/auth/login', authLoginDto).subscribe(
       () => this.router.navigateByUrl('/'),
-      () => (this.loginFormSubmitted = false)
+      () => (this.loginFormIsSubmitted = false)
     );
   }
 

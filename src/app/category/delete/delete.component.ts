@@ -16,7 +16,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
 
   deleteForm: FormGroup;
-  deleteFormSubmitted: boolean;
+  deleteFormIsSubmitted: boolean;
 
   category: Category;
 
@@ -55,7 +55,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.helperService.getFormValidation(this.deleteForm)) {
-      this.deleteFormSubmitted = true;
+      this.deleteFormIsSubmitted = true;
 
       const id = Number(this.activatedRoute.snapshot.queryParams.categoryId);
 
@@ -64,7 +64,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
           this.onClose(category);
           this.snackbarService.success('Success', 'Category deleted!');
         },
-        () => (this.deleteFormSubmitted = false)
+        () => (this.deleteFormIsSubmitted = false)
       );
     }
   }

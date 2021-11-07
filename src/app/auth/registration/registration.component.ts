@@ -16,7 +16,7 @@ import { fade } from '../../app.animation';
 export class AuthRegistrationComponent implements OnDestroy {
   registrationForm: FormGroup;
   registrationForm$: Subscription;
-  registrationFormSubmitted: boolean;
+  registrationFormIsSubmitted: boolean;
 
   constructor(
     private router: Router,
@@ -39,13 +39,13 @@ export class AuthRegistrationComponent implements OnDestroy {
   }
 
   getAuthentication(authRegistrationDto: AuthRegistrationDto = this.registrationForm.value): void {
-    this.registrationFormSubmitted = true;
+    this.registrationFormIsSubmitted = true;
 
     this.registrationForm$ = this.authService
       .getAuthentication('/users', authRegistrationDto)
       .subscribe(
         () => this.router.navigateByUrl('/'),
-        () => (this.registrationFormSubmitted = false)
+        () => (this.registrationFormIsSubmitted = false)
       );
   }
 

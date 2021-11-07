@@ -16,7 +16,7 @@ export class CategoryEditComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
 
   editForm: FormGroup;
-  editFormSubmitted: boolean;
+  editFormIsSubmitted: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -44,7 +44,7 @@ export class CategoryEditComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.helperService.getFormValidation(this.editForm)) {
-      this.editFormSubmitted = true;
+      this.editFormIsSubmitted = true;
 
       const id = Number(this.activatedRoute.snapshot.queryParams.categoryId);
 
@@ -53,7 +53,7 @@ export class CategoryEditComponent implements OnInit, OnDestroy {
           this.onClose(category);
           this.snackbarService.success('Success', 'Category updated!');
         },
-        () => (this.editFormSubmitted = false)
+        () => (this.editFormIsSubmitted = false)
       );
     }
   }
