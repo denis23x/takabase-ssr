@@ -35,6 +35,11 @@
         <span class="block text-sm text-secondary-2 mt-2">Please type <span class="font-bold">{{category.name}}</span> to confirm</span>
       </fieldset>
     </fieldset>
-    <button class="btn btn-danger w-full" type="submit" [disabled]="deleteForm.invalid || deleteFormIsSubmitted">Submit</button>
+    <button
+      class="btn btn-danger w-full"
+      type="submit"
+      aria-label="Submit"
+      [disabled]="deleteForm.invalid || deleteFormIsSubmitted">Submit
+    </button>
   </form>
 </ng-container>

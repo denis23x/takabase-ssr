@@ -48,6 +48,11 @@
         </fieldset>
       </div>
     </fieldset>
-    <button class="btn btn-success w-full" type="submit" [disabled]="createForm.invalid || createFormIsSubmitted">Submit</button>
+    <button
+      class="btn btn-success w-full"
+      type="submit"
+      aria-label="Submit"
+      [disabled]="createForm.invalid || createFormIsSubmitted">Submit
+    </button>
   </form>
 </ng-container>

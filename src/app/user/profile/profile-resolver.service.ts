@@ -3,11 +3,10 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of, throwError, zip } from 'rxjs';
-import { catchError, first, map, pluck, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { UserService, UserProfile, User } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PostService, PostGetAllDto } from '../../post/core';
-import { AuthService } from '../../auth/core';
 import { CategoryService } from '../../category/core';
 
 @Injectable({
@@ -21,7 +20,6 @@ export class UsersProfileResolverService {
     private userService: UserService,
     private categoryService: CategoryService,
     private postService: PostService,
-    private authService: AuthService,
     private router: Router
   ) {}
 

@@ -4,8 +4,9 @@
       <li class="block" *ngFor="let user of userList" [appUser]="user" appCardUser></li>
     </ul>
     <button
-      class="btn btn-success block w-full mb-4"
+      class="btn btn-success w-full mb-4"
       type="button"
+      aria-label="Load more"
       *ngIf="userListHasMore"
       (click)="onUserListLoadMore()">Load more
     </button>

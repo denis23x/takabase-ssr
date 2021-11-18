@@ -63,7 +63,12 @@
           <ng-container *ngSwitchCase="!!password.errors.maxlength">Max length {{password.errors.maxlength['requiredLength']}} characters</ng-container>
         </span>
       </fieldset>
-      <button class="btn btn-success w-full" type="submit" [disabled]="loginForm.invalid">Login</button>
+      <button
+        class="btn btn-success w-full"
+        type="submit"
+        aria-label="Login"
+        [disabled]="loginForm.invalid">Login
+      </button>
     </fieldset>
   </form>
 </section>

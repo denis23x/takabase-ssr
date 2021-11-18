@@ -28,7 +28,12 @@
         </span>
         <label class="block text-secondary-2 text-sm" for="email">We will send an email with further instructions</label>
       </fieldset>
-      <button class="btn btn-success w-full" type="submit" [disabled]="resetForm.invalid">Reset</button>
+      <button
+        class="btn btn-success w-full"
+        type="submit"
+        aria-label="Reset"
+        [disabled]="resetForm.invalid">Reset
+      </button>
     </fieldset>
   </form>
 </section>

@@ -59,6 +59,11 @@
         </div>
       </div>
     </fieldset>
-    <button class="btn btn-success w-full" type="submit" [disabled]="editForm.invalid || editFormIsSubmitted">Update</button>
+    <button
+      class="btn btn-success w-full"
+      type="submit"
+      aria-label="Update"
+      [disabled]="editForm.invalid || editFormIsSubmitted">Update
+    </button>
   </form>
 </ng-container>

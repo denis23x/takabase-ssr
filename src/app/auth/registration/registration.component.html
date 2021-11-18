@@ -72,7 +72,12 @@
         </span>
         <label class="block text-secondary-2 text-sm" for="password">The password must be 6-32 characters long, must contain at least one number, one special character and uppercase and lowercase letters with no space</label>
       </fieldset>
-      <button class="btn btn-success w-full" type="submit" [disabled]="registrationForm.invalid">Create account</button>
+      <button
+        class="btn btn-success w-full"
+        type="submit"
+        aria-label="Create account"
+        [disabled]="registrationForm.invalid">Create account
+      </button>
     </fieldset>
   </form>
 </section>

@@ -8,8 +8,18 @@
       <figure class="flex border border-primary-4 overflow-hidden rounded-md h-16 w-16 md:h-20 md:w-20" [appUser]="user" appAvatar></figure>
       <div class="flex flex-col">
         <div class="flex items-center justify-start space-x-4 mb-4">
-          <button class="btn btn-success" type="button" [disabled]="accountForm.invalid">Change</button>
-          <button class="btn btn-danger" type="button" [disabled]="accountForm.invalid">Remove</button>
+          <button
+            class="btn btn-success"
+            type="button"
+            aria-label="Change"
+            [disabled]="accountForm.invalid">Change
+          </button>
+          <button
+            class="btn btn-danger"
+            type="button"
+            aria-label="Remove"
+            [disabled]="accountForm.invalid">Remove
+          </button>
         </div>
         <p class="text-secondary-2 text-sm">Specify a file, you may able to use only *.png, *.jpg files</p>
       </div>
@@ -42,8 +52,18 @@
           <ng-container *ngSwitchCase="!!biography.errors.required">Required</ng-container>
         </span>
       </fieldset>
-      <button class="btn btn-success w-full" type="submit" [disabled]="accountForm.invalid">Submit</button>
-      <button class="btn btn-danger w-full" type="button" (click)="onDeleteUser()">Delete me!!!</button>
+      <button
+        class="btn btn-success w-full"
+        type="submit"
+        aria-label="Submit"
+        [disabled]="accountForm.invalid">Submit
+      </button>
+      <button
+        class="btn btn-danger w-full"
+        type="button"
+        aria-label="Delete"
+        (click)="onDeleteUser()">Delete me!!!
+      </button>
     </fieldset>
   </form>
 </section>

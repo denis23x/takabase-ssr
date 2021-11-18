@@ -1,21 +1,14 @@
 /** @format */
 
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Inject,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
-import { MarkdownService } from '../core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
-import { HelperService, PlatformService } from '../../core';
-import { DOCUMENT } from '@angular/common';
+import { pluck } from 'rxjs/operators';
+import { HelperService, PlatformService, SnackbarService } from '../../core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Category } from '../../category/core';
 import Split from 'split-grid';
+import { Post, PostService } from '../core';
 
 @Component({
   selector: 'app-posts-create',
@@ -24,21 +17,28 @@ import Split from 'split-grid';
 export class PostsCreateComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('gutter') gutter: ElementRef;
 
-  postForm: FormGroup;
-  postForm$: Subscription;
+  routeData$: Subscription;
+
+  bodyForm: FormGroup;
+  bodyForm$: Subscription;
+  bodyFormIsSubmitted: boolean;
 
   editorMinSize = 425;
   editorWhitespace: boolean;
   editorScrollSync: boolean;
 
+  categoryList: Category[];
+
   constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private markdownService: MarkdownService,
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private platformService: PlatformService,
-    private helperService: HelperService
+    private helperService: HelperService,
+    private activatedRoute: ActivatedRoute,
+    private postService: PostService,
+    private router: Router,
+    private snackbarService: SnackbarService
   ) {
-    this.postForm = this.fb.group({
+    this.bodyForm = this.formBuilder.group({
       // body: [
       //   '',
       //   [Validators.required, Validators.minLength(32), Validators.maxLength(6400)]
@@ -59,7 +59,6 @@ export class PostsCreateComponent implements OnInit, AfterViewInit, OnDestroy {
           '1. Ordered List \n' +
           '\n' +
           '\n' +
-          '@[Github](https://gist.github.com/zmts/802dc9c3510d79fd40f9dc38a12bccfc)\n' +
           '\n' +
           '```typescript\n' +
           '  isMobile(): boolean {\n' +
@@ -104,12 +103,16 @@ export class PostsCreateComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.postForm$ = this.postForm
-      .get('body')
-      .valueChanges.pipe(debounceTime(400))
-      .subscribe(body => {
-        // console.log('subscribe', body);
-      });
+    this.routeData$ = this.activatedRoute.data
+      .pipe(pluck('data'))
+      .subscribe((categoryList: Category[]) => (this.categoryList = categoryList));
+
+    // this.bodyForm$ = this.bodyForm
+    //   .get('body')
+    //   .valueChanges.pipe(debounceTime(400))
+    //   .subscribe(body => {
+    //     // console.log('subscribe', body);
+    //   });
   }
 
   ngAfterViewInit(): void {
@@ -127,12 +130,30 @@ export class PostsCreateComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.postForm$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.routeData$, this.bodyForm$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
-  onSubmitForm(): void {
-    if (this.helperService.getFormValidation(this.postForm)) {
-      console.log('onSubmitForm', this.postForm.value);
+  onSubmitBodyForm(): void {
+    if (this.helperService.getFormValidation(this.bodyForm)) {
+      this.bodyFormIsSubmitted = true;
     }
+  }
+
+  onSubmitPostForm(postForm: any): void {
+    this.postService
+      .createOne({
+        ...this.bodyForm.value,
+        ...postForm
+      })
+      .subscribe((post: Post) =>
+        this.router
+          .navigate(['/users/profile/posts', post.id], {
+            queryParams: {
+              categoryId: postForm.categoryId
+            },
+            queryParamsHandling: 'merge'
+          })
+          .then(() => this.snackbarService.success('Success', 'Post created'))
+      );
   }
 }

@@ -14,8 +14,8 @@ export class AuthResetComponent implements OnInit, OnDestroy {
   resetForm$: Subscription;
   resetFormIsSubmitted: boolean;
 
-  constructor(private fb: FormBuilder, private helperService: HelperService) {
-    this.resetForm = this.fb.group({
+  constructor(private formBuilder: FormBuilder, private helperService: HelperService) {
+    this.resetForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]]
     });
   }

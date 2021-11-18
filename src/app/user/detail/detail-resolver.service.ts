@@ -7,7 +7,6 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { UserService, UserProfile } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PostService, PostGetAllDto } from '../../post/core';
-import { AuthService } from '../../auth/core';
 import { CategoryService } from '../../category/core';
 
 @Injectable({
@@ -21,7 +20,6 @@ export class UsersDetailResolverService {
     private userService: UserService,
     private categoryService: CategoryService,
     private postService: PostService,
-    private authService: AuthService,
     private router: Router
   ) {}
 

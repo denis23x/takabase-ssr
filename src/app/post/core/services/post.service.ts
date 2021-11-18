@@ -11,6 +11,10 @@ import { Post } from '../models';
 export class PostService {
   constructor(private apiService: ApiService) {}
 
+  createOne(body: any): Observable<Post> {
+    return this.apiService.post('/posts', body);
+  }
+
   getAll(params: any): Observable<Post[]> {
     return this.apiService.get('/posts', params);
   }

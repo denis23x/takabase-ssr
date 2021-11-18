@@ -1,10 +1,10 @@
 <ng-container>
-  <div class="flex" (click)="onToggle()">
+  <div class="flex w-full" #target>
     <ng-content select="[slot=toggle]"></ng-content>
   </div>
   <ng-container *ngIf="state">
-    <app-overlay (click)="onToggle()"></app-overlay>
-    <div class="absolute z-30 top-full right-0 flex justify-center items-center w-max" (click)="onToggle('content')">
+    <app-overlay (click)="setState(false)"></app-overlay>
+    <div class="absolute w-full h-full" #content>
       <ng-content select="[slot=content]"></ng-content>
     </div>
   </ng-container>

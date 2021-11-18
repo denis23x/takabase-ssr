@@ -38,7 +38,7 @@
           </li>
           <li class="inline-block" *ngFor="let category of categoryList">
             <a
-              class="block text-secondary-1 hover:text-info-1 hover:underline p-2"
+              class="block text-secondary-1 hover:text-info-1 hover:underline whitespace-nowrap p-2"
               appScrollIntoView
               [appRoot]="scrollRoot"
               [appActive]="rla.isActive"
@@ -65,14 +65,14 @@
             [appSquare]="'1.5rem'"
             slot="toggle">
           </button>
-          <div class="flex flex-col items-end -mt-2" slot="content">
+          <div class="absolute z-30 top-full right-0 flex flex-col items-end -mt-2" slot="content">
             <div class="w-3 overflow-hidden inline-block mx-3.5">
               <div class="h-2 w-2 bg-primary-2 rotate-45 transform origin-bottom-left"></div>
             </div>
-            <ul class="flex flex-col bg-primary-2 rounded-md shadow-lg py-2" slot="content">
+            <ul class="flex flex-col bg-primary-2 rounded-md shadow-lg py-2">
               <li class="block">
                 <a
-                  class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 w-full py-2 px-4"
+                  class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
                   [routerLink]="['category/create']"
                   [routerLinkActive]="'text-info-1'"
                   [queryParamsHandling]="'preserve'"
@@ -82,7 +82,7 @@
               <ng-container *ngIf="routeQueryParams && routeQueryParams.categoryId">
                 <li class="block">
                   <a
-                    class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 w-full py-2 px-4"
+                    class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
                     [routerLink]="['category', routeQueryParams.categoryId, 'edit']"
                     [routerLinkActive]="'text-info-1'"
                     [queryParamsHandling]="'preserve'"
@@ -101,8 +101,9 @@
           <li class="block" *ngFor="let post of postList" [appPost]="post" appCardPost></li>
         </ul>
         <button
-          class="btn btn-success block w-full mb-4"
+          class="btn btn-success w-full mb-4"
           type="button"
+          aria-label="Load more"
           *ngIf="postListHasMore"
           (click)="onPostListLoadMore()">Load more
         </button>
