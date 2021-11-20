@@ -24,14 +24,16 @@ const routes: Routes = [
         component: CategoryComponent,
         resolve: {
           data: CategoryResolverService
-        }
-      },
-      {
-        path: 'posts/:postId',
-        component: PostComponent,
-        resolve: {
-          data: PostResolverService
-        }
+        },
+        children: [
+          {
+            path: 'posts/:postId',
+            component: PostComponent,
+            resolve: {
+              data: PostResolverService
+            }
+          }
+        ]
       },
       {
         path: 'category/:categoryId',

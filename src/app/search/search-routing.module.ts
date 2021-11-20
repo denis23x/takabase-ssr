@@ -30,7 +30,7 @@ const routes: Routes = [
         },
         children: [
           {
-            path: ':id',
+            path: ':postId',
             component: PostComponent,
             resolve: {
               data: PostResolverService

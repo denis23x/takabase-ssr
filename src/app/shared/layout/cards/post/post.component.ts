@@ -22,7 +22,7 @@ export class CardPostComponent implements OnInit, OnDestroy {
 
   post: Post;
 
-  path = '';
+  path = '.';
 
   ngOnInit(): void {}
 

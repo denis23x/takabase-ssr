@@ -1,23 +1,26 @@
-<ng-container *ngIf="postList.length; else postListEmpty;">
-  <ul class="grid gap-4 grid-cols-posts grid-flow-row-dense py-4">
-    <li class="block" *ngFor="let post of postList" [appPost]="post" appCardPost></li>
-  </ul>
-  <button
-    class="btn btn-success w-full mb-4"
-    type="button"
-    aria-label="Load more"
-    *ngIf="postListHasMore"
-    (click)="onPostListLoadMore()">Load more
-  </button>
-</ng-container>
-<ng-template #postListEmpty>
-  <div
-    class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-4 py-2 my-4"
-    [ngSwitch]="postListLoading">
-    <div class="flex space-x-1" *ngSwitchDefault>
-      <span class="block">No posts were found for your request,</span>
-      <a class="block text-info-1 hover:underline" [routerLink]="['/create']">try to create one</a>
+<ng-container>
+  <ng-container *ngIf="postList.length; else postListEmpty;">
+    <ul class="grid gap-4 grid-cols-posts grid-flow-row-dense py-4">
+      <li class="block" *ngFor="let post of postList" [appPost]="post" [appPath]="'./posts/'" appCardPost></li>
+    </ul>
+    <button
+      class="btn btn-success w-full mb-4"
+      type="button"
+      aria-label="Load more"
+      *ngIf="postListHasMore"
+      (click)="onPostListLoadMore()">Load more
+    </button>
+  </ng-container>
+  <ng-template #postListEmpty>
+    <div
+      class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-4 py-2 my-4"
+      [ngSwitch]="postListLoading">
+      <div class="flex space-x-1" *ngSwitchDefault>
+        <span class="block">No posts were found for your request,</span>
+        <a class="block text-info-1 hover:underline" [routerLink]="['/create']">try to create one</a>
+      </div>
+      <span class="block" *ngSwitchCase="true">Loading</span>
     </div>
-    <span class="block" *ngSwitchCase="true">Loading</span>
-  </div>
-</ng-template>
+  </ng-template>
+  <router-outlet></router-outlet>
+</ng-container>

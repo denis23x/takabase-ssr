@@ -14,7 +14,7 @@ export class PostResolverService {
   constructor(private router: Router, private postService: PostService) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Post> {
-    return this.postService.getOne(Number(activatedRouteSnapshot.paramMap.get('id'))).pipe(
+    return this.postService.getOne(Number(activatedRouteSnapshot.paramMap.get('postId'))).pipe(
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])
