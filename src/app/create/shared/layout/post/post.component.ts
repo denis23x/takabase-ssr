@@ -10,7 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './post.component.html'
 })
 export class PostComponent implements OnInit, OnDestroy {
-  @Output() submitPost = new EventEmitter<any>();
+  @Output() submitted = new EventEmitter<any>();
   @Output() closed = new EventEmitter<void>();
 
   @Input()
@@ -50,7 +50,7 @@ export class PostComponent implements OnInit, OnDestroy {
     if (this.helperService.getFormValidation(this.postForm)) {
       this.postFormIsSubmitted = true;
 
-      this.submitPost.emit(this.postForm.value);
+      this.submitted.emit(this.postForm.value);
 
       this.onClose();
     }

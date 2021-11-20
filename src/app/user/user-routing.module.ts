@@ -32,6 +32,11 @@ const routes: Routes = [
         },
         children: [
           {
+            path: 'posts',
+            redirectTo: '',
+            pathMatch: 'full'
+          },
+          {
             path: 'posts/:postId',
             component: PostComponent,
             resolve: {
@@ -41,12 +46,22 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'category',
+        redirectTo: '',
+        pathMatch: 'full'
+      },
+      {
         path: 'category/:categoryId',
         component: CategoryComponent,
         resolve: {
           data: CategoryResolverService
         },
         children: [
+          {
+            path: 'posts',
+            redirectTo: '',
+            pathMatch: 'full'
+          },
           {
             path: 'posts/:postId',
             component: PostComponent,

@@ -22,7 +22,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
   @ViewChild('target') target: any;
   @ViewChild('content') content: any;
 
-  @Output() toggle = new EventEmitter<boolean>();
+  @Output() toggled = new EventEmitter<boolean>();
 
   @Input()
   set appDisabled(disabled: boolean) {
@@ -59,7 +59,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
   setState(state: boolean): void {
     this.state = state;
 
-    this.toggle.emit(this.state);
+    this.toggled.emit(this.state);
 
     this.platformService.setScrollToggle(this.state);
   }

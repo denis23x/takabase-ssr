@@ -50,7 +50,7 @@
         <app-dropdown
           class="flex relative"
           *ngIf="{ value: false } as active"
-          (toggle)="active.value = $event">
+          (toggled)="active.value = $event">
           <button
             class="block fill-current text-secondary-1 hover:text-info-1 cursor-pointer p-2"
             [ngClass]="{ 'text-info-1': active.value }"

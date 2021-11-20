@@ -122,7 +122,7 @@
   <app-overlay *ngIf="bodyFormIsSubmitted">
     <app-post
       [appCategoryList]="categoryList"
-      (submitPost)="onSubmitPostForm($event)"
+      (submitted)="onSubmitPostForm($event)"
       (closed)="bodyFormIsSubmitted = !bodyFormIsSubmitted"
       slot="content">
     </app-post>

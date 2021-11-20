@@ -36,7 +36,7 @@
         class="flex relative"
         *ngIf="{ value: false } as active"
         [appDisabled]="postFormIsSubmitted"
-        (toggle)="active.value = $event">
+        (toggled)="active.value = $event">
         <fieldset class="w-full" slot="toggle" *ngIf="postForm.get('categoryId') as categoryId">
           <label class="block" for="category">
             <input
