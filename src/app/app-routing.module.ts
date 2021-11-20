@@ -2,6 +2,7 @@
 
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard, NoAuthGuard } from './auth/guards';
 
 const routes: Routes = [
   {
@@ -10,7 +11,8 @@ const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+    canLoad: [NoAuthGuard]
   },
   {
     path: 'categories',
@@ -18,7 +20,8 @@ const routes: Routes = [
   },
   {
     path: 'create',
-    loadChildren: () => import('./create/create.module').then(m => m.CreateModule)
+    loadChildren: () => import('./create/create.module').then(m => m.CreateModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'exception',
@@ -30,7 +33,8 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule)
+    loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'search',
@@ -38,7 +42,8 @@ const routes: Routes = [
   },
   {
     path: 'settings',
-    loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
+    loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule),
+    canLoad: [AuthGuard]
   },
   {
     path: 'users',

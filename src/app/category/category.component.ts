@@ -41,7 +41,7 @@ export class CategoryComponent {
       scope: ['user']
     };
 
-    const categoryId = Number(this.activatedRoute.snapshot.queryParamMap.get('categoryId') || 0);
+    const categoryId = Number(this.activatedRoute.snapshot.queryParamMap.get('categoryId'));
 
     if (categoryId) {
       postGetAllDto = {

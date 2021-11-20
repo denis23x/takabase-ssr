@@ -8,6 +8,7 @@ import { PostComponent } from '../post/post.component';
 import { PostResolverService } from '../post/post-resolver.service';
 import { CategoryComponent } from '../category/category.component';
 import { CategoryResolverService } from '../category/category-resolver.service';
+import { UserGuard } from './guards';
 
 const routes: Routes = [
   {
@@ -18,6 +19,7 @@ const routes: Routes = [
   {
     path: ':userId',
     component: UserComponent,
+    canActivate: [UserGuard],
     resolve: {
       data: UserResolverService
     },
@@ -27,14 +29,16 @@ const routes: Routes = [
         component: CategoryComponent,
         resolve: {
           data: CategoryResolverService
-        }
-      },
-      {
-        path: 'posts/:postId',
-        component: PostComponent,
-        resolve: {
-          data: PostResolverService
-        }
+        },
+        children: [
+          {
+            path: 'posts/:postId',
+            component: PostComponent,
+            resolve: {
+              data: PostResolverService
+            }
+          }
+        ]
       },
       {
         path: 'category/:categoryId',

@@ -23,7 +23,7 @@ export class CategoryResolverService {
       scope: ['user']
     };
 
-    const categoryId = Number(activatedRouteSnapshot.paramMap.get('categoryId') || 0);
+    const categoryId = Number(activatedRouteSnapshot.paramMap.get('categoryId'));
 
     if (categoryId) {
       postGetAllDto = {

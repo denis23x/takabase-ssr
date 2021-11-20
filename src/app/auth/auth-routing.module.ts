@@ -5,7 +5,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthLoginComponent } from './login/login.component';
 import { AuthRegistrationComponent } from './registration/registration.component';
 import { AuthResetComponent } from './reset/reset.component';
-import { NoAuthGuard } from './guards';
 
 const routes: Routes = [
   {
@@ -15,18 +14,15 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: AuthLoginComponent,
-    canActivate: [NoAuthGuard]
+    component: AuthLoginComponent
   },
   {
     path: 'registration',
-    component: AuthRegistrationComponent,
-    canActivate: [NoAuthGuard]
+    component: AuthRegistrationComponent
   },
   {
     path: 'reset',
-    component: AuthResetComponent,
-    canActivate: [NoAuthGuard]
+    component: AuthResetComponent
   }
 ];
 

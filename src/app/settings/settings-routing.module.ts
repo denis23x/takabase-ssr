@@ -7,13 +7,11 @@ import { SettingsResolverService } from './settings-resolver.service';
 import { SettingsAccountComponent } from './account/account.component';
 import { SettingsInterfaceComponent } from './interface/interface.component';
 import { SettingsSecurityComponent } from './security/security.component';
-import { AuthGuard } from '../auth/guards';
 
 const routes: Routes = [
   {
     path: '',
     component: SettingsComponent,
-    canActivate: [AuthGuard],
     resolve: {
       data: SettingsResolverService
     },

@@ -1,7 +1,7 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanLoad, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
 import { AuthService } from '../core';
@@ -10,14 +10,14 @@ import { SnackbarService } from '../../core';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class AuthGuard implements CanLoad {
   constructor(
     private router: Router,
     private authService: AuthService,
     private snackbarService: SnackbarService
   ) {}
 
-  canActivate(): Observable<boolean> {
+  canLoad(): Observable<boolean> {
     return this.authService.isAuthenticated.pipe(
       first(),
       switchMap((isAuthenticated: boolean) => {
@@ -25,9 +25,11 @@ export class AuthGuard implements CanActivate {
           this.router
             .navigate(['/login'])
             .then(() => this.snackbarService.warning('Unauthorized', 'Login to continue'));
+
+          return of(false);
         }
 
-        return of(isAuthenticated);
+        return of(true);
       })
     );
   }
