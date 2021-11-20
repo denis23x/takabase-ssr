@@ -14,7 +14,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private notificationService: SnackbarService
+    private snackbarService: SnackbarService
   ) {}
 
   canActivate(): Observable<boolean> {
@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate {
         if (!isAuthenticated) {
           this.router
             .navigate(['/login'])
-            .then(() => this.notificationService.warning('Unauthorized', 'Login to continue'));
+            .then(() => this.snackbarService.warning('Unauthorized', 'Login to continue'));
         }
 
         return of(isAuthenticated);

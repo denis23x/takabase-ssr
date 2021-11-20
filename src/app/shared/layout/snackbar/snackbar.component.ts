@@ -17,14 +17,14 @@ export class SnackbarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.snackbarService$ = this.snackbarService
       .getObservable()
-      .subscribe(snack => this.onNotification(snack));
+      .subscribe(snack => this.onSnack(snack));
   }
 
   ngOnDestroy() {
     [this.snackbarService$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
-  onNotification(snack: Snack) {
+  onSnack(snack: Snack) {
     this.snackbar.push(snack);
 
     if (snack.timeout !== 0) {

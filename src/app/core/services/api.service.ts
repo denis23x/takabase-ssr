@@ -10,9 +10,9 @@ import { ApiError } from '../models';
 
 @Injectable()
 export class ApiService {
-  constructor(private http: HttpClient, private notificationService: SnackbarService) {}
+  constructor(private http: HttpClient, private snackbarService: SnackbarService) {}
 
-  getErrorNotification(response: HttpErrorResponse) {
+  getErrorSnack(response: HttpErrorResponse) {
     const getMessage = (error: ApiError): string => {
       switch (typeof error.message) {
         case 'string':
@@ -28,11 +28,7 @@ export class ApiService {
       return typeof error.message === 'object' ? error.message.length * 4000 : 5000;
     };
 
-    this.notificationService.danger(
-      'Error',
-      getMessage(response.error),
-      getTimeout(response.error)
-    );
+    this.snackbarService.danger('Error', getMessage(response.error), getTimeout(response.error));
 
     return throwError(response);
   }
@@ -40,24 +36,24 @@ export class ApiService {
   get(path: string, params?: any): Observable<any> {
     return this.http
       .get(environment.API_URL + path, { params })
-      .pipe(catchError(error => this.getErrorNotification(error)));
+      .pipe(catchError(error => this.getErrorSnack(error)));
   }
 
   put(path: string, body?: any): Observable<any> {
     return this.http
       .put(environment.API_URL + path, JSON.stringify(body || {}))
-      .pipe(catchError(error => this.getErrorNotification(error)));
+      .pipe(catchError(error => this.getErrorSnack(error)));
   }
 
   post(path: string, body?: any): Observable<any> {
     return this.http
       .post(environment.API_URL + path, JSON.stringify(body || {}))
-      .pipe(catchError(error => this.getErrorNotification(error)));
+      .pipe(catchError(error => this.getErrorSnack(error)));
   }
 
   delete(path: string): Observable<any> {
     return this.http
       .delete(environment.API_URL + path)
-      .pipe(catchError(error => this.getErrorNotification(error)));
+      .pipe(catchError(error => this.getErrorSnack(error)));
   }
 }
