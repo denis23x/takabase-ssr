@@ -9,8 +9,8 @@ import { SearchCategoriesComponent } from './category/category.component';
 import { SearchCategoriesResolverService } from './category/category-resolver.service';
 import { SearchUsersComponent } from './user/user.component';
 import { SearchUsersResolverService } from './user/user-resolver.service';
-import { PostsDetailComponent } from '../post/detail/detail.component';
-import { PostsDetailResolverService } from '../post/detail/detail-resolver.service';
+import { PostComponent } from '../post/post.component';
+import { PostResolverService } from '../post/post-resolver.service';
 
 const routes: Routes = [
   {
@@ -31,9 +31,9 @@ const routes: Routes = [
         children: [
           {
             path: ':id',
-            component: PostsDetailComponent,
+            component: PostComponent,
             resolve: {
-              data: PostsDetailResolverService
+              data: PostResolverService
             }
           }
         ]

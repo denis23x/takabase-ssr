@@ -3,7 +3,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { User } from '../../../user/core';
+import { User } from '../../../core';
 import { AuthService } from '../../../auth/core';
 
 @Component({

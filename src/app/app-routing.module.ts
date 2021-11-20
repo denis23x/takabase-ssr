@@ -13,6 +13,10 @@ const routes: Routes = [
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   },
   {
+    path: 'create',
+    loadChildren: () => import('./create/create.module').then(m => m.CreateModule)
+  },
+  {
     path: 'users',
     loadChildren: () => import('./user/user.module').then(m => m.UserModule)
   },
@@ -21,8 +25,16 @@ const routes: Routes = [
     loadChildren: () => import('./post/post.module').then(m => m.PostModule)
   },
   {
+    path: 'profile',
+    loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule)
+  },
+  {
     path: 'search',
     loadChildren: () => import('./search/search.module').then(m => m.SearchModule)
+  },
+  {
+    path: 'settings',
+    loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
   },
   {
     path: 'exception',

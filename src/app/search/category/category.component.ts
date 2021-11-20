@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { pluck, skip, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { CategoryService, Category, CategoryGetAllDto } from '../../category/core';
+import { CategoryService, Category, CategoryGetAllDto } from '../../core';
 
 @Component({
   selector: 'app-search-categories',

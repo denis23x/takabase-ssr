@@ -3,8 +3,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HelperService, SnackbarService } from '../../core';
-import { Category, CategoryService } from '../core';
+import { HelperService, SnackbarService, Category, CategoryService } from '../../core';
 import { Subscription } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 

@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { pluck, skip, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { PostService, Post, PostGetAllDto } from '../../post/core';
+import { PostService, Post, PostGetAllDto } from '../../core';
 
 @Component({
   selector: 'app-search-posts',

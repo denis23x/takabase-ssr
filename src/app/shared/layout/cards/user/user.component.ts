@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { User } from '../../../../user/core';
+import { User } from '../../../../core';
 
 @Component({
   selector: 'app-card-user, [appCardUser]',

@@ -12,7 +12,7 @@
     <nav class="flex justify-end items-center" *ngIf="user$ | async as user">
       <a
         class="fill-current text-secondary-1 hover:text-info-1 p-2"
-        [routerLink]="['/posts/create']"
+        [routerLink]="['/create']"
         [routerLinkActive]="['text-info-1']"
         [routerLinkActiveOptions]="{ exact: true }"
         aria-label="Post create"
@@ -31,13 +31,13 @@
       <ng-container>
         <a
           class="hidden md:block text-secondary-1 hover:text-info-1 hover:underline mx-2"
-          [routerLink]="['/users/profile']"
+          [routerLink]="['/profile']"
           [routerLinkActive]="['text-info-1']"
           aria-label="Profile">{{user.name}}
         </a>
         <a
           class="block md:hidden fill-current text-secondary-1 hover:text-info-1 p-2"
-          [routerLink]="['/users/profile']"
+          [routerLink]="['/profile']"
           [routerLinkActive]="['text-info-1']"
           aria-label="Profile"
           appSvgIcon
@@ -65,7 +65,7 @@
             <li class="block">
               <a
                 class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
-                [routerLink]="['/users/settings']"
+                [routerLink]="['/settings']"
                 [routerLinkActive]="['text-info-1']"
                 [routerLinkActiveOptions]="{ exact: true }"
                 aria-label="Settings">Settings

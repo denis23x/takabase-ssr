@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Category } from '../../../../category/core';
+import { Category } from '../../../../core';
 
 @Component({
   selector: 'app-card-category, [appCardCategory]',

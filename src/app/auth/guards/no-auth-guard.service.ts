@@ -17,7 +17,7 @@ export class NoAuthGuard implements CanActivate {
       first(),
       switchMap((isAuthenticated: boolean) => {
         if (isAuthenticated) {
-          this.router.navigate(['/users/profile']).then(() => console.debug('Route was changed'));
+          this.router.navigate(['/profile']).then(() => console.debug('Route was changed'));
         }
 
         return of(!isAuthenticated);
