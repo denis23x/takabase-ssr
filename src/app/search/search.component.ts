@@ -35,7 +35,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
     this.searchForm$ = this.searchForm.valueChanges
       .pipe(
-        debounceTime(1000),
+        debounceTime(500),
         filter(() => this.searchForm.valid)
       )
       .subscribe(() => {

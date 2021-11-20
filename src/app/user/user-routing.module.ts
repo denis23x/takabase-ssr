@@ -6,6 +6,8 @@ import { UserComponent } from './user.component';
 import { UserResolverService } from './user-resolver.service';
 import { PostComponent } from '../post/post.component';
 import { PostResolverService } from '../post/post-resolver.service';
+import { CategoryComponent } from '../category/category.component';
+import { CategoryResolverService } from '../category/category-resolver.service';
 
 const routes: Routes = [
   {
@@ -14,18 +16,41 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: ':id',
+    path: ':userId',
     component: UserComponent,
     resolve: {
       data: UserResolverService
     },
     children: [
       {
-        path: 'posts/:id',
+        path: '',
+        component: CategoryComponent,
+        resolve: {
+          data: CategoryResolverService
+        }
+      },
+      {
+        path: 'posts/:postId',
         component: PostComponent,
         resolve: {
           data: PostResolverService
         }
+      },
+      {
+        path: 'category/:categoryId',
+        component: CategoryComponent,
+        resolve: {
+          data: CategoryResolverService
+        },
+        children: [
+          {
+            path: 'posts/:postId',
+            component: PostComponent,
+            resolve: {
+              data: PostResolverService
+            }
+          }
+        ]
       }
     ]
   }

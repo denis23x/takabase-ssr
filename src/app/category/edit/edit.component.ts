@@ -45,7 +45,7 @@ export class CategoryEditComponent implements OnInit, OnDestroy {
     if (this.helperService.getFormValidation(this.editForm)) {
       this.editFormIsSubmitted = true;
 
-      const id = Number(this.activatedRoute.snapshot.queryParams.categoryId);
+      const id = Number(this.activatedRoute.snapshot.queryParamMap.get('categoryId'));
 
       this.categoryService.updateOne(id, this.editForm.value).subscribe(
         (category: Category) => {

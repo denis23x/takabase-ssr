@@ -11,19 +11,16 @@ import { HttpErrorResponse } from '@angular/common/http';
   providedIn: 'root'
 })
 export class SearchCategoriesResolverService {
-  page = 1;
-  size = 10;
-
   constructor(private router: Router, private categoryService: CategoryService) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Category[]> {
     let categoryGetAllDto: CategoryGetAllDto = {
-      page: this.page,
-      size: this.size,
+      page: 1,
+      size: 10,
       scope: ['user']
     };
 
-    const { query: name = null } = activatedRouteSnapshot.parent.queryParams;
+    const name = activatedRouteSnapshot.parent.queryParamMap.get('query');
 
     if (name) {
       categoryGetAllDto = {

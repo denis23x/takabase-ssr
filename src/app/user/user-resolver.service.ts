@@ -2,49 +2,28 @@
 
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
-import { Observable, of, throwError, zip } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { UserService, UserProfile, CategoryService, PostService, PostGetAllDto } from '../core';
+import { forkJoin, Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { UserService, UserProfile, CategoryService } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserResolverService {
-  page = 1;
-  size = 10;
-
   constructor(
     private userService: UserService,
     private categoryService: CategoryService,
-    private postService: PostService,
     private router: Router
   ) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<UserProfile> {
-    return of(Number(activatedRouteSnapshot.paramMap.get('id'))).pipe(
-      switchMap((userId: number) =>
-        zip(this.userService.getOne(userId), this.categoryService.getAll({ userId }))
-      ),
-      switchMap(([user, categoryList]) => {
-        let postGetAllDto: PostGetAllDto = {
-          userId: user.id,
-          page: this.page,
-          size: this.size,
-          scope: ['user']
-        };
+    const userId = Number(activatedRouteSnapshot.paramMap.get('userId'));
 
-        const { categoryId = null } = activatedRouteSnapshot.parent.queryParams;
-
-        if (categoryId) {
-          postGetAllDto = {
-            ...postGetAllDto,
-            categoryId
-          };
-        }
-
-        return zip(of(user), of(categoryList), this.postService.getAll(postGetAllDto));
-      }),
+    return forkJoin([
+      this.userService.getOne(userId),
+      this.categoryService.getAll({ userId })
+    ]).pipe(
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])
@@ -52,7 +31,7 @@ export class UserResolverService {
 
         return throwError(error);
       }),
-      map(([user, categoryList, postList]) => ({ user, categoryList, postList }))
+      map(([user, categoryList]) => ({ user, categoryList }))
     );
   }
 }

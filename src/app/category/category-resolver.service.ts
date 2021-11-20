@@ -1,31 +1,34 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { PostService, Post, PostGetAllDto } from '../../core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { PostService, PostGetAllDto, Post, UserProfile } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SearchPostsResolverService {
-  constructor(private router: Router, private postService: PostService) {}
+export class CategoryResolverService {
+  constructor(private postService: PostService, private router: Router) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Post[]> {
+    const userProfile = activatedRouteSnapshot.parent.data.data as UserProfile;
+
     let postGetAllDto: PostGetAllDto = {
       page: 1,
       size: 10,
+      userId: userProfile.user.id,
       scope: ['user']
     };
 
-    const title = activatedRouteSnapshot.parent.queryParamMap.get('query');
+    const categoryId = Number(activatedRouteSnapshot.paramMap.get('categoryId'));
 
-    if (title) {
+    if (categoryId) {
       postGetAllDto = {
         ...postGetAllDto,
-        title
+        categoryId
       };
     }
 

@@ -13,12 +13,16 @@ const routes: Routes = [
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   },
   {
+    path: 'categories',
+    loadChildren: () => import('./category/category.module').then(m => m.CategoryModule)
+  },
+  {
     path: 'create',
     loadChildren: () => import('./create/create.module').then(m => m.CreateModule)
   },
   {
-    path: 'users',
-    loadChildren: () => import('./user/user.module').then(m => m.UserModule)
+    path: 'exception',
+    loadChildren: () => import('./exception/exception.module').then(m => m.ExceptionModule)
   },
   {
     path: 'posts',
@@ -37,12 +41,8 @@ const routes: Routes = [
     loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
   },
   {
-    path: 'exception',
-    loadChildren: () => import('./exception/exception.module').then(m => m.ExceptionModule)
-  },
-  {
-    path: 'categories',
-    loadChildren: () => import('./category/category.module').then(m => m.CategoryModule)
+    path: 'users',
+    loadChildren: () => import('./user/user.module').then(m => m.UserModule)
   },
   {
     path: '**',

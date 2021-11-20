@@ -58,7 +58,7 @@ export class SearchUsersComponent implements OnInit, OnDestroy {
       size: this.size
     };
 
-    const { query: name = null } = this.activatedRoute.parent.snapshot.queryParams;
+    const name = this.activatedRoute.parent.snapshot.queryParamMap.get('query');
 
     if (name) {
       userGetAllDto = {

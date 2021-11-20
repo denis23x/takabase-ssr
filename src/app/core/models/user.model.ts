@@ -18,7 +18,6 @@ export interface User {
 export interface UserProfile {
   user: User;
   categoryList: Category[];
-  postList: Post[];
 }
 
 export interface UserInterface {
