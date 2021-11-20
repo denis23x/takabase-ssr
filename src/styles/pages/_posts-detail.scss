@@ -1,0 +1,14 @@
+.posts-detail {
+  @apply
+  absolute
+  w-full
+  md:w-9/12
+  xl:w-6/12
+  top-2/4
+  left-2/4
+  -translate-y-2/4
+  -translate-x-2/4;
+
+  max-width: calc(100% - 2rem);
+  max-height: calc(100% - 2rem);
+}

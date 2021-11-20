@@ -109,7 +109,7 @@ export class PlatformService {
       const window = this.getWindow();
       const className = 'overlay';
 
-      if (this.document.documentElement.clientHeight > window.innerHeight) {
+      if (this.document.body.clientHeight > window.innerHeight) {
         this.renderer2[toggle ? 'addClass' : 'removeClass'](this.document.body, className);
       } else {
         this.renderer2.removeClass(this.document.body, className);

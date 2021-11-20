@@ -35,7 +35,7 @@ export class MarkdownPluginService {
           src="${src + (parameter > -1 ? id.substr(0, parameter) : id)}"
           frameborder="0"
           allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
+          allowfullscreen="0">
         </iframe>
       </div>
     `;
