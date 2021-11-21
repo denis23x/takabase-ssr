@@ -12,14 +12,8 @@
     </button>
   </ng-container>
   <ng-template #postListEmpty>
-    <div
-      class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-4 py-2 my-4"
-      [ngSwitch]="postListLoading">
-      <div class="flex space-x-1" *ngSwitchDefault>
-        <span class="block">No posts were found for your request,</span>
-        <a class="block text-info-1 hover:underline" [routerLink]="['/create']">try to create one</a>
-      </div>
-      <span class="block" *ngSwitchCase="true">Loading</span>
+    <div class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-3 py-2 my-4">No posts were found
+      <a class="text-info-1 hover:underline" [routerLink]="['/create']" aria-label="Create post">try to create new one</a>
     </div>
   </ng-template>
   <router-outlet></router-outlet>

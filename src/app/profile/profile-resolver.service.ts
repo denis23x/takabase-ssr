@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of, throwError, zip } from 'rxjs';
 import { catchError, first, map, switchMap } from 'rxjs/operators';
-import { AuthService, UserProfile, User, CategoryService } from '../core';
+import { AuthService, UserProfile, User, CategoryService, CategoryGetAllDto } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
@@ -20,7 +20,13 @@ export class ProfileResolverService {
   resolve(): Observable<UserProfile> {
     return this.authService.userSubject.pipe(
       first(),
-      switchMap((user: User) => zip(of(user), this.categoryService.getAll({ userId: user.id }))),
+      switchMap((user: User) => {
+        const categoryGetAllDto: CategoryGetAllDto = {
+          userId: user.id
+        };
+
+        return zip(of(user), this.categoryService.getAll(categoryGetAllDto));
+      }),
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

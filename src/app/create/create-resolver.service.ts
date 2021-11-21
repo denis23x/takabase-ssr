@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError, first, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AuthService, Category, CategoryService, User } from '../core';
+import { AuthService, Category, CategoryGetAllDto, CategoryService, User } from '../core';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,13 @@ export class CreateResolverService {
   resolve(): Observable<Category[]> {
     return this.authService.userSubject.pipe(
       first(),
-      switchMap((user: User) => this.categoryService.getAll({ userId: user.id })),
+      switchMap((user: User) => {
+        const categoryGetAllDto: CategoryGetAllDto = {
+          userId: user.id
+        };
+
+        return this.categoryService.getAll(categoryGetAllDto);
+      }),
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

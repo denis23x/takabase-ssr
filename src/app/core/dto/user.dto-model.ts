@@ -6,7 +6,7 @@ export interface UserGetOneDto {
 
 export interface UserGetAllDto {
   name?: string;
-  page: number;
-  size: number;
+  page?: number;
+  size?: number;
   scope?: string[];
 }

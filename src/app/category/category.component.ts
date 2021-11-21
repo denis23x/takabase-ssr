@@ -2,7 +2,7 @@
 
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription, zip } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { Post, PostGetAllDto, PostService, User } from '../core';
 import { pluck } from 'rxjs/operators';
 
@@ -25,10 +25,10 @@ export class CategoryComponent {
   constructor(private activatedRoute: ActivatedRoute, private postService: PostService) {}
 
   ngOnInit(): void {
-    this.routeData$ = zip(
+    this.routeData$ = combineLatest([
       this.activatedRoute.parent.data.pipe(pluck('data')),
       this.activatedRoute.data.pipe(pluck('data'))
-    ).subscribe(([userProfile, postList]) => {
+    ]).subscribe(([userProfile, postList]) => {
       this.user = userProfile.user;
 
       this.postList = postList;
@@ -48,7 +48,7 @@ export class CategoryComponent {
       scope: ['user']
     };
 
-    const categoryId: number = Number(this.activatedRoute.snapshot.queryParamMap.get('categoryId'));
+    const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
 
     if (categoryId) {
       postGetAllDto = {

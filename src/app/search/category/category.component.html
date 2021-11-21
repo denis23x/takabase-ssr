@@ -13,7 +13,7 @@
   </ng-container>
   <ng-template #categoryListEmpty>
     <div
-      class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-4 py-2 my-4"
+      class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-3 py-2 my-4"
       [ngSwitch]="categoryListLoading">
       <span class="block" *ngSwitchDefault>No categories were found for your request</span>
       <span class="block" *ngSwitchCase="true">Loading</span>

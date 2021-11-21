@@ -35,60 +35,62 @@
             <ng-container *ngSwitchCase="!!title.errors.maxlength">Max length {{title.errors.maxlength['requiredLength']}} characters</ng-container>
           </span>
         </fieldset>
-        <app-dropdown
-          class="flex relative"
-          *ngIf="{ value: false } as active"
-          [appDisabled]="postFormIsSubmitted"
-          (toggled)="active.value = $event">
-          <fieldset
-            class="flex flex-col space-y-2 w-full"
-            *ngIf="postForm.get('categoryName') as categoryName"
-            slot="toggle">
-            <label class="block text-secondary-2 text-sm" for="category">Category</label>
-            <label class="block relative pointer-events-none" for="category">
-              <input
-                id="category"
-                type="text"
-                class="form-control bg-primary-2 cursor-pointer pr-10"
-                formControlName="categoryName"
-                placeholder="Category"
-                aria-label="Category"
-                readonly />
-              <button
-                class="absolute top-0 right-0 fill-current border border-transparent pointer-events-none p-2"
-                [ngClass]="{ 'opacity-75 text-secondary-2': !active.value, 'opacity-100 text-info-1': active.value }"
-                type="button"
-                aria-label="Menu"
-                appSvgIcon
-                [appIcon]="'list'"
-                [appSquare]="'1.5rem'">
-              </button>
-            </label>
-            <span class="block text-sm text-danger-1" *ngIf="categoryName.touched && categoryName.errors" [ngSwitch]="true">
+        <ng-container *ngIf="categoryList.length; else categoryListEmpty;">
+          <app-dropdown
+            class="flex relative"
+            *ngIf="{ value: false } as active"
+            [appDisabled]="postFormIsSubmitted"
+            (toggled)="active.value = $event">
+            <fieldset
+              class="flex flex-col space-y-2 w-full"
+              *ngIf="postForm.get('categoryName') as categoryName"
+              slot="toggle">
+              <label class="block text-secondary-2 text-sm" for="category">Category</label>
+              <label class="block relative pointer-events-none" for="category">
+                <input
+                  id="category"
+                  type="text"
+                  class="form-control bg-primary-2 cursor-pointer pr-10"
+                  formControlName="categoryName"
+                  placeholder="Category"
+                  aria-label="Category"
+                  readonly />
+                <button
+                  class="absolute top-0 right-0 fill-current border border-transparent pointer-events-none p-2"
+                  [ngClass]="{ 'opacity-75 text-secondary-2': !active.value, 'opacity-100 text-info-1': active.value }"
+                  type="button"
+                  aria-label="Menu"
+                  appSvgIcon
+                  [appIcon]="'list'"
+                  [appSquare]="'1.5rem'">
+                </button>
+              </label>
+              <span class="block text-sm text-danger-1" *ngIf="categoryName.touched && categoryName.errors" [ngSwitch]="true">
               <ng-container *ngSwitchCase="!!categoryName.errors.required">Required</ng-container>
             </span>
-          </fieldset>
-          <div class="absolute z-30 top-full rounded-md overflow-hidden w-full translate-y-4" slot="content">
-            <ul class="flex flex-col bg-primary-2 rounded-md shadow-lg overflow-auto max-h-44 py-2">
-              <li class="block" *ngFor="let category of categoryList; let i = index">
-                <fieldset class="w-full">
-                  <input
-                    [id]="'categoryId-' + category.id"
-                    type="radio"
-                    class="hidden"
-                    formControlName="categoryId"
-                    placeholder="Category"
-                    aria-label="Category"
-                    [value]="category.id" />
-                  <label
-                    class="block text-secondary-1 hover:bg-primary-1 hover:text-info-1 cursor-pointer py-2 px-4"
-                    [for]="'categoryId-' + category.id">{{category.name}}
-                  </label>
-                </fieldset>
-              </li>
-            </ul>
-          </div>
-        </app-dropdown>
+            </fieldset>
+            <div class="absolute z-30 top-full rounded-md overflow-hidden w-full translate-y-4" slot="content">
+              <ul class="flex flex-col bg-primary-2 rounded-md shadow-lg overflow-auto max-h-44 py-2">
+                <li class="block" *ngFor="let category of categoryList; let i = index">
+                  <fieldset class="w-full">
+                    <input
+                      [id]="'categoryId-' + category.id"
+                      type="radio"
+                      class="hidden"
+                      formControlName="categoryId"
+                      placeholder="Category"
+                      aria-label="Category"
+                      [value]="category.id" />
+                    <label
+                      class="block text-secondary-1 hover:bg-primary-1 hover:text-info-1 cursor-pointer py-2 px-4"
+                      [for]="'categoryId-' + category.id">{{category.name}}
+                    </label>
+                  </fieldset>
+                </li>
+              </ul>
+            </div>
+          </app-dropdown>
+        </ng-container>
         <button
           class="btn btn-success w-full"
           type="submit"
@@ -98,4 +100,9 @@
       </fieldset>
     </form>
   </section>
+  <ng-template #categoryListEmpty>
+    <div class="bg-primary-2 text-secondary-1 border border-primary-4 rounded-md px-3 py-2">No categories were found
+      <a class="text-info-1 hover:underline" [routerLink]="['/profile']" aria-label="Create category">you need to create at least one</a>
+    </div>
+  </ng-template>
 </app-overlay>

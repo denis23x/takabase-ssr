@@ -59,7 +59,7 @@ export class SearchPostsComponent implements OnInit, OnDestroy {
       scope: ['user']
     };
 
-    const { query: title = null } = this.activatedRoute.parent.snapshot.queryParams;
+    const title = this.activatedRoute.parent.snapshot.queryParamMap.get('query');
 
     if (title) {
       postGetAllDto = {

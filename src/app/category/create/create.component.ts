@@ -37,7 +37,11 @@ export class CategoryCreateComponent {
     if (this.helperService.getFormValidation(this.createForm)) {
       this.createFormIsSubmitted = true;
 
-      this.categoryService.createOne(this.createForm.value as CategoryCreateOneDto).subscribe(
+      const categoryCreateOneDto: CategoryCreateOneDto = {
+        ...this.createForm.value
+      };
+
+      this.categoryService.createOne(categoryCreateOneDto).subscribe(
         (category: Category) => {
           this.onClose(category);
           this.snackbarService.success('Success', 'Category created');

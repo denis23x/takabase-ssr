@@ -12,7 +12,7 @@ export interface CategoryGetOneDto {
 export interface CategoryGetAllDto {
   name?: string;
   userId?: number;
-  page: number;
-  size: number;
+  page?: number;
+  size?: number;
   scope?: string[];
 }
