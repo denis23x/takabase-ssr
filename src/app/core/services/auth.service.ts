@@ -4,8 +4,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
-import { ApiService, LocalStorageService, User, UserService } from '../../../core';
-import { environment } from '../../../../environments/environment';
+import { ApiService, LocalStorageService, User, UserService } from '../index';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

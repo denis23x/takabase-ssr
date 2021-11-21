@@ -1,8 +1,13 @@
 /** @format */
 
+export interface PostCreateOneDto {
+  title: string;
+  body: string;
+  categoryId: number;
+  image?: string;
+}
+
 export interface PostGetOneDto {
-  userId?: number;
-  categoryId?: number;
   scope?: string[];
 }
 

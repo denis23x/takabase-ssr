@@ -2,8 +2,7 @@
 
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
 import { fadeRouting } from './app.animation';
-import { PlatformService } from './core';
-import { AuthService } from './auth/core';
+import { AuthService, PlatformService } from './core';
 
 @Component({
   selector: 'app-root',

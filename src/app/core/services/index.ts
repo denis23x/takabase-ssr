@@ -1,6 +1,7 @@
 /** @format */
 
 export * from './api.service';
+export * from './auth.service';
 export * from './category.service';
 export * from './helper.service';
 export * from './local-storage.service';

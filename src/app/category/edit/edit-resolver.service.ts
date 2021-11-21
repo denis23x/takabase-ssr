@@ -14,9 +14,9 @@ export class CategoryEditResolverService {
   constructor(private router: Router, private categoryService: CategoryService) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Category> {
-    const userId: number = Number(activatedRouteSnapshot.paramMap.get('id'));
+    const categoryId: number = Number(activatedRouteSnapshot.paramMap.get('categoryId'));
 
-    return this.categoryService.getOne(userId).pipe(
+    return this.categoryService.getOne(categoryId).pipe(
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

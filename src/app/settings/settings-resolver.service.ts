@@ -2,8 +2,8 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { User, UserService } from '../core';
+import { catchError, first } from 'rxjs/operators';
+import { AuthService, User } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -11,10 +11,11 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class SettingsResolverService {
-  constructor(private router: Router, private userService: UserService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   resolve(): Observable<User> {
-    return this.userService.getProfile().pipe(
+    return this.authService.userSubject.pipe(
+      first(),
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])

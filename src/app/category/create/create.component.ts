@@ -3,7 +3,13 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HelperService, SnackbarService, Category, CategoryService } from '../../core';
+import {
+  HelperService,
+  SnackbarService,
+  Category,
+  CategoryService,
+  CategoryCreateOneDto
+} from '../../core';
 
 @Component({
   selector: 'app-category-create',
@@ -31,7 +37,7 @@ export class CategoryCreateComponent {
     if (this.helperService.getFormValidation(this.createForm)) {
       this.createFormIsSubmitted = true;
 
-      this.categoryService.createOne(this.createForm.value).subscribe(
+      this.categoryService.createOne(this.createForm.value as CategoryCreateOneDto).subscribe(
         (category: Category) => {
           this.onClose(category);
           this.snackbarService.success('Success', 'Category created');

@@ -4,8 +4,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { HelperService } from '../../core';
-import { AuthService, AuthRegistrationDto } from '../core';
+import { AuthService, AuthRegistrationDto, HelperService } from '../../core';
 import { fade } from '../../app.animation';
 
 @Component({

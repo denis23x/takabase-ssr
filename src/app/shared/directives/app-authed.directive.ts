@@ -2,7 +2,7 @@
 
 import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../auth/core';
+import { AuthService } from '../../core';
 
 @Directive({
   selector: '[appAuthed]'

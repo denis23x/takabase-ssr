@@ -3,10 +3,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { User, UserService, HelperService, SnackbarService } from '../../core';
+import { AuthService, User, UserService, HelperService, SnackbarService } from '../../core';
 import { pluck } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../auth/core';
 
 @Component({
   selector: 'app-settings-account',

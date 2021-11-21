@@ -3,8 +3,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { User } from '../../../core';
-import { AuthService } from '../../../auth/core';
+import { AuthService, User } from '../../../core';
 
 @Component({
   selector: 'app-header, [appHeader]',

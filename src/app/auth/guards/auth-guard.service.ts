@@ -4,8 +4,7 @@ import { Injectable } from '@angular/core';
 import { CanLoad, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
-import { AuthService } from '../core';
-import { SnackbarService } from '../../core';
+import { AuthService, SnackbarService } from '../../core';
 
 @Injectable({
   providedIn: 'root'

@@ -10,7 +10,7 @@ import {
 } from '@angular/common/http';
 import { EMPTY, Observable, throwError } from 'rxjs';
 import { LocalStorageService } from '../services';
-import { AuthService } from '../../auth/core';
+import { AuthService } from '../../core';
 import { catchError, switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 

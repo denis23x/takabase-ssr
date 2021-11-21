@@ -5,8 +5,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { first, pairwise, startWith } from 'rxjs/operators';
-import { User, UserInterface, UserService, LocalStorageService, PlatformService } from '../../core';
-import { AuthService } from '../../auth/core';
+import {
+  AuthService,
+  User,
+  UserInterface,
+  UserService,
+  LocalStorageService,
+  PlatformService
+} from '../../core';
 import { environment } from '../../../environments/environment';
 
 @Component({

@@ -3,22 +3,23 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, first, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Category, CategoryService, User, UserService } from '../core';
+import { AuthService, Category, CategoryService, User } from '../core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CreateResolverService {
   constructor(
-    private userService: UserService,
+    private authService: AuthService,
     private categoryService: CategoryService,
     private router: Router
   ) {}
 
   resolve(): Observable<Category[]> {
-    return this.userService.getProfile().pipe(
+    return this.authService.userSubject.pipe(
+      first(),
       switchMap((user: User) => this.categoryService.getAll({ userId: user.id })),
       catchError((error: HttpErrorResponse) => {
         this.router

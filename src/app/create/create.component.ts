@@ -10,7 +10,8 @@ import {
   SnackbarService,
   Post,
   PostService,
-  Category
+  Category,
+  PostCreateOneDto
 } from '../core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Split from 'split-grid';
@@ -145,20 +146,20 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onSubmitPostForm(postForm: any): void {
-    this.postService
-      .createOne({
-        ...this.bodyForm.value,
-        ...postForm
-      })
-      .subscribe((post: Post) =>
-        this.router
-          .navigate(['/profile/posts', post.id], {
-            queryParams: {
-              categoryId: postForm.categoryId
-            },
-            queryParamsHandling: 'merge'
-          })
-          .then(() => this.snackbarService.success('Success', 'Post created'))
-      );
+    const postCreateOneDto: PostCreateOneDto = {
+      ...this.bodyForm.value,
+      ...postForm
+    };
+
+    this.postService.createOne(postCreateOneDto).subscribe((post: Post) =>
+      this.router
+        .navigate(['/profile/posts', post.id], {
+          queryParams: {
+            categoryId: postForm.categoryId
+          },
+          queryParamsHandling: 'merge'
+        })
+        .then(() => this.snackbarService.success('Success', 'Post created'))
+    );
   }
 }
