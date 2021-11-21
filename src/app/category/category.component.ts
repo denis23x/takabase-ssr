@@ -2,8 +2,8 @@
 
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { Post, PostGetAllDto, PostService } from '../core';
+import { Subscription, zip } from 'rxjs';
+import { Post, PostGetAllDto, PostService, User } from '../core';
 import { pluck } from 'rxjs/operators';
 
 @Component({
@@ -20,10 +20,17 @@ export class CategoryComponent {
   postListHasMore: boolean;
   postListLoading: boolean;
 
+  user: User;
+
   constructor(private activatedRoute: ActivatedRoute, private postService: PostService) {}
 
   ngOnInit(): void {
-    this.routeData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe((postList: Post[]) => {
+    this.routeData$ = zip(
+      this.activatedRoute.parent.data.pipe(pluck('data')),
+      this.activatedRoute.data.pipe(pluck('data'))
+    ).subscribe(([userProfile, postList]) => {
+      this.user = userProfile.user;
+
       this.postList = postList;
       this.postListHasMore = postList.length === this.size;
     });
@@ -35,13 +42,13 @@ export class CategoryComponent {
 
   getPostList(concat: boolean): void {
     let postGetAllDto: PostGetAllDto = {
-      // userId: this.user.id,
       page: this.page,
       size: this.size,
+      userId: this.user.id,
       scope: ['user']
     };
 
-    const categoryId = Number(this.activatedRoute.snapshot.queryParamMap.get('categoryId'));
+    const categoryId: number = Number(this.activatedRoute.snapshot.queryParamMap.get('categoryId'));
 
     if (categoryId) {
       postGetAllDto = {

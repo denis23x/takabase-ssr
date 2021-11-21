@@ -18,7 +18,7 @@ export class UserResolverService {
   ) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<UserProfile> {
-    const userId = Number(activatedRouteSnapshot.paramMap.get('userId'));
+    const userId: number = Number(activatedRouteSnapshot.paramMap.get('userId'));
 
     return forkJoin([
       this.userService.getOne(userId),

@@ -1,26 +1,29 @@
-<section class="flex justify-center items-start md:w-96 mx-auto p-4">
+<section class="md:w-128 mx-auto p-4">
   <form
-    class="bg-primary-3 border border-primary-4 rounded-md w-full p-4"
+    class="flex flex-col space-y-4 bg-primary-3 border border-primary-4 rounded-md p-4"
     [formGroup]="registrationForm"
     (ngSubmit)="onSubmitForm()"
-    autocomplete="off">
-    <h1 class="text-2xl text-secondary-1 font-medium">Join to Draft</h1>
-    <div class="flex space-x-1 text-base">
-      <span class="block text-secondary-2">Already have an account?</span>
-      <a
-        class="text-info-1 hover:underline"
-        [routerLink]="'/auth/login'"
-        aria-label="Sign in">Sign in
-      </a>
+    autocomplete="off"
+    slot="content">
+    <div class="flex flex-col">
+      <h1 class="text-2xl text-secondary-1 font-medium">Join to Draft</h1>
+      <div class="flex space-x-1 text-base">
+        <span class="block text-secondary-2">Already have an account?</span>
+        <a
+          class="text-info-1 hover:underline"
+          [routerLink]="'../login'"
+          aria-label="Sign in">Sign in
+        </a>
+      </div>
+      <app-oauth class="block mt-4"></app-oauth>
     </div>
-    <app-oauth class="block my-4"></app-oauth>
     <fieldset class="flex flex-col space-y-4" [disabled]="registrationFormIsSubmitted">
-      <fieldset *ngIf="registrationForm.get('name') as name">
+      <fieldset class="flex flex-col space-y-2" *ngIf="registrationForm.get('name') as name">
         <label class="block text-secondary-2 text-sm" for="name">Username</label>
         <input
           id="name"
           type="text"
-          class="form-control bg-primary-2 my-2"
+          class="form-control bg-primary-2"
           formControlName="name"
           placeholder="Username"
           aria-label="Username" />
@@ -30,12 +33,12 @@
           <ng-container *ngSwitchCase="!!name.errors.maxlength">Max length {{name.errors.maxlength['requiredLength']}} characters</ng-container>
         </span>
       </fieldset>
-      <fieldset *ngIf="registrationForm.get('email') as email">
+      <fieldset class="flex flex-col space-y-2" *ngIf="registrationForm.get('email') as email">
         <label class="block text-secondary-2 text-sm" for="email">Email</label>
         <input
           id="email"
           type="email"
-          class="form-control bg-primary-2 my-2"
+          class="form-control bg-primary-2"
           formControlName="email"
           placeholder="Email"
           aria-label="Email" />
@@ -44,13 +47,13 @@
           <ng-container *ngSwitchCase="!!email.errors.email">Email must be a real email address</ng-container>
         </span>
       </fieldset>
-      <fieldset *ngIf="registrationForm.get('password') as password">
+      <fieldset class="flex flex-col space-y-2" *ngIf="registrationForm.get('password') as password">
         <label class="block text-secondary-2 text-sm" for="password">Password</label>
         <div class="relative" *ngIf="{ value: false } as isVisible">
           <input
             id="password"
             [type]="isVisible.value ? 'text' : 'password'"
-            class="form-control bg-primary-2 my-2 pr-11"
+            class="form-control bg-primary-2 pr-11"
             formControlName="password"
             placeholder="Password"
             aria-label="Password" />
@@ -66,7 +69,7 @@
             [@fade]>
           </div>
         </div>
-        <span class="block text-sm text-danger-1 mb-2" *ngIf="password.touched && password.errors" [ngSwitch]="true">
+        <span class="block text-sm text-danger-1" *ngIf="password.touched && password.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!password.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!password.errors.pattern">Password does not match pattern</ng-container>
         </span>

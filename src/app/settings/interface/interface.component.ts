@@ -43,7 +43,7 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.user$ = this.authService.user.pipe(first()).subscribe((user: User) => {
+    this.user$ = this.authService.userSubject.pipe(first()).subscribe((user: User) => {
       this.user = user;
 
       if ('interfaceConfig' in this.user) {

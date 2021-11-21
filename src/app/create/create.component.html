@@ -84,9 +84,9 @@
             </ul>
           </div>
         </div>
-        <div class="hidden lg:flex flex-col items-center justify-between self-center p-2" #gutter>
+        <div class="hidden lg:flex flex-col items-center justify-between self-center" #gutter>
           <button
-            class="fill-current text-secondary-1 opacity-50 cursor-col-resize"
+            class="fill-current text-secondary-1 opacity-50 cursor-col-resize p-2"
             type="button"
             aria-label="Grip"
             appSvgIcon
@@ -119,12 +119,11 @@
       </button>
     </div>
   </section>
-  <app-overlay *ngIf="bodyFormIsSubmitted">
-    <app-post
-      [appCategoryList]="categoryList"
-      (submitted)="onSubmitPostForm($event)"
-      (closed)="bodyFormIsSubmitted = !bodyFormIsSubmitted"
-      slot="content">
-    </app-post>
-  </app-overlay>
+  <app-post
+    *ngIf="bodyFormIsSubmitted"
+    [appCategoryList]="categoryList"
+    (submitted)="onSubmitPostForm($event)"
+    (closed)="bodyFormIsSubmitted = !bodyFormIsSubmitted"
+    slot="content">
+  </app-post>
 </ng-container>

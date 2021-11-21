@@ -1,7 +1,6 @@
 <article class="relative bg-primary-3 border border-primary-4 rounded-md overflow-hidden w-full h-full">
   <a
     [routerLink]="[path, post.id]"
-    [queryParamsHandling]="'preserve'"
     [attr.aria-label]="post.title"
     *ngIf="post.image">
     <img
@@ -41,9 +40,8 @@
       </time>
     </div>
     <a
-      class="text-secondary-1 hover:text-info-1 hover:underline line-clamp-3 mb-0"
+      class="text-secondary-1 hover:text-info-1 hover:underline line-clamp-3 w-full mb-0"
       [routerLink]="[path, post.id]"
-      [queryParamsHandling]="'preserve'"
       [attr.aria-label]="post.title">{{post.title}}
     </a>
   </div>

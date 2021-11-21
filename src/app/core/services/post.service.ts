@@ -19,7 +19,7 @@ export class PostService {
     return this.apiService.get('/posts', params);
   }
 
-  getOne(id: number): Observable<Post> {
-    return this.apiService.get('/posts/' + id);
+  getOne(id: number, params?: any): Observable<Post> {
+    return this.apiService.get('/posts/' + id, params);
   }
 }

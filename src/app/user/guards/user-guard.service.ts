@@ -17,7 +17,7 @@ export class UserGuard implements CanActivate {
     return this.authService.userSubject.pipe(
       first(),
       switchMap((user: User) => {
-        const userId = Number(activatedRouteSnapshot.paramMap.get('userId'));
+        const userId: number = Number(activatedRouteSnapshot.paramMap.get('userId'));
 
         if (userId === user.id) {
           const categoryId: string = activatedRouteSnapshot.children

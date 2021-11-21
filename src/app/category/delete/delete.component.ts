@@ -56,9 +56,11 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
     if (this.helperService.getFormValidation(this.deleteForm)) {
       this.deleteFormIsSubmitted = true;
 
-      const id = Number(this.activatedRoute.snapshot.queryParamMap.get('categoryId'));
+      const categoryId: number = Number(
+        this.activatedRoute.snapshot.queryParamMap.get('categoryId')
+      );
 
-      this.categoryService.deleteOne(id).subscribe(
+      this.categoryService.deleteOne(categoryId).subscribe(
         (category: Category) => {
           this.onClose(category);
           this.snackbarService.success('Success', 'Category deleted!');

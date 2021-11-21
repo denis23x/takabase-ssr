@@ -36,8 +36,8 @@ export class ExceptionStatusComponent implements OnInit, OnDestroy {
     this.routeParams$ = this.activatedRoute.params
       .pipe(pluck('status'))
       .subscribe((status: string) => {
-        const statusCode = Number(status);
-        const message = this.getMessageMap(statusCode);
+        const statusCode: number = Number(status);
+        const message: string = this.getMessageMap(statusCode);
 
         if (!statusCode || !message) {
           this.router.navigate([[], 404]).then(() => console.debug('Route was changed'));

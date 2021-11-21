@@ -23,11 +23,11 @@ export class PostComponent implements OnInit, OnDestroy {
   postFormIsSubmitted: boolean;
 
   categoryList: Category[];
-  categoryActive: Category;
 
   constructor(private formBuilder: FormBuilder, private helperService: HelperService) {
     this.postForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]],
+      categoryName: ['', [Validators.required]],
       categoryId: [null, [Validators.required]]
     });
   }
@@ -36,9 +36,11 @@ export class PostComponent implements OnInit, OnDestroy {
     this.postForm$ = this.postForm
       .get('categoryId')
       .valueChanges.subscribe((categoryId: number) => {
-        this.categoryActive = this.categoryList.find((category: Category) => {
+        const category: Category = this.categoryList.find((category: Category) => {
           return category.id === categoryId;
         });
+
+        this.postForm.get('categoryName').setValue(category.name);
       });
   }
 
@@ -58,8 +60,6 @@ export class PostComponent implements OnInit, OnDestroy {
 
   onClose(): void {
     this.postForm.reset();
-
-    this.categoryActive = undefined;
 
     this.closed.emit();
   }
