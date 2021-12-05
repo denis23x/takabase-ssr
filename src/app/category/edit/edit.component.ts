@@ -1,74 +1,47 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HelperService, SnackbarService, Category, CategoryService } from '../../core';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { Category } from '../../core';
 import { Subscription } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-category-edit',
+  selector: 'app-category-edit-view',
   templateUrl: './edit.component.html'
 })
-export class CategoryEditComponent implements OnInit, OnDestroy {
+export class CategoryEditViewComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
 
-  editForm: FormGroup;
-  editFormIsSubmitted: boolean;
+  category: Category;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private formBuilder: FormBuilder,
-    private helperService: HelperService,
-    private categoryService: CategoryService,
-    private snackbarService: SnackbarService
-  ) {
-    this.editForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]],
-      isPrivate: [false]
-    });
-  }
+  constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.routeData$ = this.activatedRoute.data
       .pipe(pluck('data'))
-      .subscribe((category: Category) => this.editForm.patchValue(category));
+      .subscribe((category: Category) => (this.category = category));
   }
 
   ngOnDestroy(): void {
     [this.routeData$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
-  onSubmit(): void {
-    if (this.helperService.getFormValidation(this.editForm)) {
-      this.editFormIsSubmitted = true;
+  onClose(category?: Category | void): void {
+    let navigationExtras: NavigationExtras = {
+      relativeTo: this.activatedRoute
+    };
 
-      const categoryId: number = Number(
-        this.activatedRoute.snapshot.queryParamMap.get('categoryId')
-      );
-
-      this.categoryService.updateOne(categoryId, this.editForm.value).subscribe(
-        (category: Category) => {
-          this.onClose(category);
-          this.snackbarService.success('Success', 'Category updated!');
-        },
-        () => (this.editFormIsSubmitted = false)
-      );
-    }
-  }
-
-  onClose(category?: Category): void {
-    this.router
-      .navigate(['../'], {
-        relativeTo: this.activatedRoute.parent,
-        queryParamsHandling: 'preserve',
+    if (category) {
+      navigationExtras = {
+        ...navigationExtras,
         state: {
-          action: 'update',
-          category
+          message: 'categoryCreated',
+          data: category
         }
-      })
-      .then(() => console.debug('Route was changed'));
+      };
+    }
+
+    this.router.navigate(['../'], navigationExtras).then(() => console.debug('Route changed'));
   }
 }

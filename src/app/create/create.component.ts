@@ -65,6 +65,8 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onClose(post?: Post | void): void {
+    this.postModal = false;
+
     if (post) {
       this.router
         .navigate(['/profile/category', post.category.id, 'posts', post.id])

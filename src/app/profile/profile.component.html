@@ -68,25 +68,24 @@
               </div>
               <ul class="flex flex-col bg-primary-2 rounded-md shadow-lg py-2">
                 <li class="block">
-                  <a
-                    class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
-                    [routerLink]="['category/create']"
-                    [routerLinkActive]="'text-info-1'"
-                    [queryParamsHandling]="'preserve'"
-                    aria-label="Create">Create
-                  </a>
+                  <button
+                    class="text-secondary-1 hover:text-info-1 hover:bg-primary-1 text-left whitespace-nowrap w-full py-2 px-4"
+                    type="button"
+                    aria-label="Create"
+                    (click)="categoryModal = 'create'">Create
+                  </button>
                 </li>
-                <!--              <ng-container *ngIf="routeQueryParams && routeQueryParams.categoryId">-->
-                <!--                <li class="block">-->
-                <!--                  <a-->
-                <!--                    class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"-->
-                <!--                    [routerLink]="['category', routeQueryParams.categoryId, 'edit']"-->
-                <!--                    [routerLinkActive]="'text-info-1'"-->
-                <!--                    [queryParamsHandling]="'preserve'"-->
-                <!--                    aria-label="Edit">Edit-->
-                <!--                  </a>-->
-                <!--                </li>-->
-                <!--              </ng-container>-->
+                <ng-container *ngIf="categoryActive">
+                  <li class="block">
+                    <button
+                      class="text-secondary-1 hover:bg-primary-1 text-left group whitespace-nowrap w-full py-2 px-4"
+                      type="button"
+                      aria-label="Edit"
+                      (click)="categoryModal = 'edit'">Edit:
+                      <span class="text-secondary-1 group-hover:text-info-1">{{categoryActive.name}}</span>
+                    </button>
+                  </li>
+                </ng-container>
               </ul>
             </div>
           </app-dropdown>
@@ -97,6 +96,22 @@
       <router-outlet></router-outlet>
     </div>
   </div>
+  <app-overlay
+    *ngIf="categoryModal"
+    (clicked)="categoryModal = undefined"
+    [ngSwitch]="categoryModal">
+    <app-category-create
+      *ngSwitchCase="'create'"
+      (closed)="onClose('create', $event)"
+      slot="content">
+    </app-category-create>
+    <app-category-edit
+      *ngSwitchCase="'edit'"
+      [appCategory]="categoryActive"
+      (closed)="onClose('edit', $event)"
+      slot="content">
+    </app-category-edit>
+  </app-overlay>
   <ng-template #categoryListEmpty>
     <div class="text-secondary-1 px-3 py-2">No categories were found
       <a class="text-info-1 hover:underline" [routerLink]="['.']" aria-label="Create category">you need to create at least one</a>
