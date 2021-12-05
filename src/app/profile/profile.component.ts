@@ -77,6 +77,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
           break;
         }
+        case 'delete': {
+          this.categoryList = this.categoryList.filter((c: Category) => c.id !== category.id);
+
+          this.router.navigate(['/profile']).then(() => console.log('Route changed'));
+
+          break;
+        }
       }
     }
   }

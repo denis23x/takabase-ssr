@@ -85,6 +85,15 @@
                       <span class="text-secondary-1 group-hover:text-info-1">{{categoryActive.name}}</span>
                     </button>
                   </li>
+                  <li class="block">
+                    <button
+                      class="text-secondary-1 hover:bg-primary-1 text-left group whitespace-nowrap w-full py-2 px-4"
+                      type="button"
+                      aria-label="Edit"
+                      (click)="categoryModal = 'delete'">Delete:
+                      <span class="text-secondary-1 group-hover:text-info-1">{{categoryActive.name}}</span>
+                    </button>
+                  </li>
                 </ng-container>
               </ul>
             </div>
@@ -111,6 +120,12 @@
       (closed)="onClose('edit', $event)"
       slot="content">
     </app-category-edit>
+    <app-category-delete
+      *ngSwitchCase="'delete'"
+      [appCategory]="categoryActive"
+      (closed)="onClose('delete', $event)"
+      slot="content">
+    </app-category-delete>
   </app-overlay>
   <ng-template #categoryListEmpty>
     <div class="text-secondary-1 px-3 py-2">No categories were found

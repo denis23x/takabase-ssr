@@ -5,8 +5,9 @@ import { SharedModule } from '../shared';
 import { CategoryComponent } from './category.component';
 import { CategoryRoutingModule } from './category-routing.module';
 import { CategoryCreateViewComponent } from './create/create-view.component';
+import { CategoryDeleteViewComponent } from './delete/delete.component';
 import { CategoryEditViewComponent } from './edit/edit.component';
-import { CategoryCreateComponent, CategoryEditComponent } from './shared';
+import { CategoryCreateComponent, CategoryDeleteComponent, CategoryEditComponent } from './shared';
 
 @NgModule({
   imports: [SharedModule, CategoryRoutingModule],
@@ -14,6 +15,8 @@ import { CategoryCreateComponent, CategoryEditComponent } from './shared';
     CategoryComponent,
     CategoryCreateViewComponent,
     CategoryCreateComponent,
+    CategoryDeleteViewComponent,
+    CategoryDeleteComponent,
     CategoryEditViewComponent,
     CategoryEditComponent
   ],
@@ -21,6 +24,8 @@ import { CategoryCreateComponent, CategoryEditComponent } from './shared';
     CategoryComponent,
     CategoryCreateViewComponent,
     CategoryCreateComponent,
+    CategoryDeleteViewComponent,
+    CategoryDeleteComponent,
     CategoryEditViewComponent,
     CategoryEditComponent
   ]
