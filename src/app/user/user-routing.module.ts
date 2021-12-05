@@ -8,7 +8,7 @@ import { PostComponent } from '../post/post.component';
 import { PostResolverService } from '../post/post-resolver.service';
 import { CategoryComponent } from '../category/category.component';
 import { CategoryResolverService } from '../category/category-resolver.service';
-import { UserGuard } from './guards';
+import { UserGuard } from './core';
 
 const routes: Routes = [
   {

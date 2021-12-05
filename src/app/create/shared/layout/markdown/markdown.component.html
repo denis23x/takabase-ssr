@@ -85,7 +85,7 @@
               class="form-control bg-primary-2"
               formControlName="url"
               placeholder="URL address"
-              aria-label="Url" />
+              aria-label="Url">
             <span class="block text-sm text-danger-1" *ngIf="url.touched && url.errors" [ngSwitch]="true">
               <ng-container *ngSwitchCase="!!url.errors.required">Required</ng-container>
               <ng-container *ngSwitchCase="!!url.errors.customValidator">Url does not match pattern</ng-container>
@@ -97,7 +97,7 @@
             class="btn btn-success w-full"
             type="submit"
             aria-label="Submit"
-            [disabled]="urlForm.invalid">Submit
+            [disabled]="urlForm.invalid || urlFormIsSubmitted">Submit
           </button>
           <ng-container *ngIf="urlFormControl.key === 'url-image'">
             <div class="flex justify-center items-center">

@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppAuthedDirective, AppScrollIntoViewDirective } from './directives';
-import { DayjsPipe, SanitizerPipe } from './pipes';
+import { DayjsPipe, MarkdownPipe, SanitizerPipe } from './pipes';
 import {
   AvatarComponent,
   CardCategoryComponent,
@@ -30,6 +30,7 @@ import {
     OverlayComponent,
     SvgIconComponent,
     DayjsPipe,
+    MarkdownPipe,
     SanitizerPipe
   ],
   exports: [
@@ -48,6 +49,7 @@ import {
     OverlayComponent,
     SvgIconComponent,
     DayjsPipe,
+    MarkdownPipe,
     SanitizerPipe
   ]
 })

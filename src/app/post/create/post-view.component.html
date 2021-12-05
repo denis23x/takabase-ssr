@@ -1,0 +1,8 @@
+<app-overlay (clicked)="onClose()">
+  <app-post-create
+    [appBody]="''"
+    [appCategoryList]="categoryList"
+    (closed)="onClose($event)"
+    slot="content">
+  </app-post-create>
+</app-overlay>

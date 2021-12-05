@@ -1,3 +1,3 @@
 /** @format */
 
-export * from './pipes';
+export * from './layout';

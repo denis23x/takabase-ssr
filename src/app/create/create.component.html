@@ -15,10 +15,8 @@
           <form
             class="block"
             autocomplete="off"
-            [formGroup]="bodyForm">
-            <fieldset
-              *ngIf="bodyForm.get('body') as body"
-              [disabled]="bodyFormIsSubmitted">
+            [formGroup]="postForm">
+            <fieldset *ngIf="postForm.get('body') as body">
               <label class="flex">
                 <textarea
                   id="textarea"
@@ -104,26 +102,25 @@
             [appSquare]="'1.5em'">
           </button>
         </div>
-        <article
-          id="preview"
-          class="preview markdown-html bg-primary-3 border border-primary-4 rounded-md overflow-auto p-4"
-          [class.opacity-50]="bodyFormIsSubmitted">
-        </article>
+        <article id="preview" class="preview markdown-html bg-primary-3 border border-primary-4 rounded-md overflow-auto p-4"></article>
       </div>
       <button
         class="btn btn-success block w-full"
         type="button"
         aria-label="Next"
-        [disabled]="bodyForm.invalid || bodyFormIsSubmitted"
-        (click)="onSubmitBodyForm()">Next
+        *ngIf="postForm.get('body') as body"
+        [disabled]="body.invalid"
+        (click)="postModal = body.valid">Next
       </button>
     </div>
   </section>
-  <app-post
-    *ngIf="bodyFormIsSubmitted"
-    [appCategoryList]="categoryList"
-    (submitted)="onSubmitPostForm($event)"
-    (closed)="bodyFormIsSubmitted = !bodyFormIsSubmitted"
-    slot="content">
-  </app-post>
+  <app-overlay *ngIf="postModal" (clicked)="postModal = false">
+    <app-post-create
+      [appBody]="postForm.get('body').value"
+      [appCategoryList]="categoryList"
+      (closed)="onClose($event)"
+      slot="content">
+    </app-post-create>
+  </app-overlay>
+  <router-outlet></router-outlet>
 </ng-container>

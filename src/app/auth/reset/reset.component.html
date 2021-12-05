@@ -24,7 +24,7 @@
           class="form-control bg-primary-2"
           formControlName="email"
           placeholder="Email"
-          aria-label="Email" />
+          aria-label="Email">
         <span class="block text-sm text-danger-1" *ngIf="email.touched && email.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!email.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!email.errors.email">Email must be a real email address</ng-container>
@@ -35,7 +35,7 @@
         class="btn btn-success w-full"
         type="submit"
         aria-label="Reset"
-        [disabled]="resetForm.invalid">Reset
+        [disabled]="resetForm.invalid || resetFormIsSubmitted">Reset
       </button>
     </fieldset>
   </form>

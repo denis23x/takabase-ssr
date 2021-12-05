@@ -25,7 +25,7 @@
           class="form-control bg-primary-2"
           formControlName="name"
           placeholder="Name"
-          aria-label="Name"/>
+          aria-label="Name">
         <span class="block text-sm text-danger-1 mt-2" *ngIf="name.touched && name.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!name.errors.minlength">Min length {{name.errors.minlength['requiredLength']}} characters</ng-container>
@@ -40,7 +40,7 @@
           </div>
           <fieldset class="form-control-toggle" *ngIf="editForm.get('isPrivate') as isPrivate">
             <label for="isPrivate" class="relative flex items-center justify-between cursor-pointer w-full">
-              <input id="isPrivate" type="checkbox" class="hidden" formControlName="isPrivate" aria-label="Private" />
+              <input id="isPrivate" type="checkbox" class="hidden" formControlName="isPrivate" aria-label="Private">
               <span class="block w-11 h-6 rounded-full" [ngClass]="isPrivate.value ? 'bg-success-1' : 'bg-primary-4 opacity-50'"></span>
               <span class="block dot absolute left-0.5 top-0.5 w-5 h-5 bg-primary-2 rounded-full"></span>
             </label>

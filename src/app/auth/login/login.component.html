@@ -25,7 +25,7 @@
           class="form-control bg-primary-2"
           formControlName="email"
           placeholder="Email"
-          aria-label="Email" />
+          aria-label="Email">
         <span class="block text-sm text-danger-1" *ngIf="email.touched && email.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!email.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!email.errors.email">Email must be a real email address</ng-container>
@@ -33,7 +33,7 @@
       </fieldset>
       <fieldset class="flex flex-col space-y-2" *ngIf="loginForm.get('password') as password">
         <label class="flex justify-between text-sm" for="password">
-          <span class="block text-secondary-2 text-sm">Password</span>
+          <span class="block text-secondary-2">Password</span>
           <a
             class="text-info-1 hover:underline"
             [routerLink]="'../reset'"
@@ -47,7 +47,7 @@
             class="form-control bg-primary-2 pr-11"
             formControlName="password"
             placeholder="Password"
-            aria-label="Password" />
+            aria-label="Password">
           <div
             class="absolute top-0 right-0 fill-current text-secondary-2 opacity-50 cursor-pointer p-2.5"
             *ngIf="password.value.length"
@@ -70,7 +70,7 @@
         class="btn btn-success w-full"
         type="submit"
         aria-label="Login"
-        [disabled]="loginForm.invalid">Login
+        [disabled]="loginForm.invalid || loginFormIsSubmitted">Login
       </button>
     </fieldset>
   </form>

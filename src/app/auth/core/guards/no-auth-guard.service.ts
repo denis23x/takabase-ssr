@@ -4,26 +4,20 @@ import { Injectable } from '@angular/core';
 import { CanLoad, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
-import { AuthService, SnackbarService } from '../../core';
+import { AuthService } from '../../../core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanLoad {
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private snackbarService: SnackbarService
-  ) {}
+export class NoAuthGuard implements CanLoad {
+  constructor(private router: Router, private authService: AuthService) {}
 
   canLoad(): Observable<boolean> {
     return this.authService.isAuthenticated.pipe(
       first(),
       switchMap((isAuthenticated: boolean) => {
-        if (!isAuthenticated) {
-          this.router
-            .navigate(['/login'])
-            .then(() => this.snackbarService.warning('Unauthorized', 'Login to continue'));
+        if (isAuthenticated) {
+          this.router.navigate(['/profile']).then(() => console.debug('Route was changed'));
 
           return of(false);
         }

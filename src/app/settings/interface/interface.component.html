@@ -19,7 +19,12 @@
               [appIcon]="(theme === 'dark' ? 'moon' : 'sun').concat(active.value ? '-fill' : '')"
               *ngIf="theme !== 'auto'">
             </app-svg-icon>
-            <input type="radio" class="hidden" formControlName="colorTheme" [value]="theme" [attr.aria-label]="theme" />
+            <input
+              type="radio"
+              class="hidden"
+              formControlName="colorTheme"
+              [value]="theme"
+              [attr.aria-label]="theme">
             <span
               class="text-sm whitespace-nowrap z-10"
               [class.text-info-1]="active.value"
@@ -45,7 +50,7 @@
           <div class="text-secondary-1 capitalize">{{search}}</div>
           <fieldset class="form-control-toggle" *ngIf="additionalSearchForm.get(search) as searchControl">
             <label [for]="search" class="relative flex items-center justify-between cursor-pointer w-full">
-              <input [id]="search" type="checkbox" class="hidden" [formControlName]="search" [attr.aria-label]="search" />
+              <input [id]="search" type="checkbox" class="hidden" [formControlName]="search" [attr.aria-label]="search">
               <ng-container *ngIf="(searchControl.value ? 'bg-success-1' : 'bg-primary-4 opacity-50') as classList">
                 <div class="block w-11 h-6 rounded-full" [ngClass]="classList"></div>
               </ng-container>

@@ -26,7 +26,7 @@
           class="form-control bg-primary-2"
           formControlName="name"
           placeholder="Name"
-          aria-label="Name"/>
+          aria-label="Name">
         <span class="block text-sm text-danger-1 mt-2" *ngIf="name.touched && name.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!name.errors.minlength">Min length {{name.errors.minlength['requiredLength']}} characters</ng-container>

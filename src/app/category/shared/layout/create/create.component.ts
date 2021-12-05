@@ -1,27 +1,26 @@
 /** @format */
 
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   HelperService,
   SnackbarService,
-  Category,
   CategoryService,
-  CategoryCreateOneDto
-} from '../../core';
+  CategoryCreateOneDto,
+  Category
+} from '../../../../core';
 
 @Component({
   selector: 'app-category-create',
   templateUrl: './create.component.html'
 })
-export class CategoryCreateComponent {
+export class CategoryCreateComponent implements OnInit {
+  @Output() closed = new EventEmitter<Category | void>();
+
   createForm: FormGroup;
   createFormIsSubmitted: boolean;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
     private formBuilder: FormBuilder,
     private helperService: HelperService,
     private categoryService: CategoryService,
@@ -33,7 +32,9 @@ export class CategoryCreateComponent {
     });
   }
 
-  onSubmit(): void {
+  ngOnInit(): void {}
+
+  onSubmitForm(): void {
     if (this.helperService.getFormValidation(this.createForm)) {
       this.createFormIsSubmitted = true;
 
@@ -43,29 +44,11 @@ export class CategoryCreateComponent {
 
       this.categoryService.createOne(categoryCreateOneDto).subscribe(
         (category: Category) => {
-          this.onClose(category);
+          this.closed.emit(category);
           this.snackbarService.success('Success', 'Category created');
         },
         () => (this.createFormIsSubmitted = false)
       );
     }
-  }
-
-  onClose(category?: Category): void {
-    this.router
-      .navigate(['../'], {
-        relativeTo: this.activatedRoute.parent,
-        queryParams: {
-          categoryId: category
-            ? category.id
-            : this.activatedRoute.snapshot.queryParamMap.get('categoryId')
-        },
-        queryParamsHandling: 'merge',
-        state: {
-          action: 'create',
-          category
-        }
-      })
-      .then(() => console.debug('Route was changed'));
   }
 }
