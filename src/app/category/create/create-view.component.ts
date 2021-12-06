@@ -1,8 +1,8 @@
 /** @format */
 
 import { Component } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { Category } from '../../core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Category, CategoryExtras } from '../../core';
 
 @Component({
   selector: 'app-category-create-view',
@@ -12,20 +12,20 @@ export class CategoryCreateViewComponent {
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
 
   onClose(category?: Category | void): void {
-    let navigationExtras: NavigationExtras = {
+    let categoryExtras: CategoryExtras = {
       relativeTo: this.activatedRoute
     };
 
     if (category) {
-      navigationExtras = {
-        ...navigationExtras,
+      categoryExtras = {
+        ...categoryExtras,
         state: {
           message: 'categoryCreated',
-          data: category
+          category
         }
       };
     }
 
-    this.router.navigate(['../'], navigationExtras).then(() => console.debug('Route changed'));
+    this.router.navigate(['..'], categoryExtras).then(() => console.debug('Route changed'));
   }
 }

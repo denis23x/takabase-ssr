@@ -70,7 +70,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
       this.preview = this.document.getElementById(this.previewId);
 
       this.textareaInput$ = fromEvent(this.textarea, 'input')
-        .pipe(startWith(1), debounceTime(200))
+        .pipe(startWith(0), debounceTime(200))
         .subscribe(() => {
           this.markdownService.getRender(this.textarea.value, this.preview);
 

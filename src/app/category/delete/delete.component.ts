@@ -1,8 +1,8 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { Category } from '../../core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Category, CategoryExtras } from '../../core';
 import { Subscription } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 
@@ -28,20 +28,20 @@ export class CategoryDeleteViewComponent implements OnInit, OnDestroy {
   }
 
   onClose(category?: Category | void): void {
-    let navigationExtras: NavigationExtras = {
+    let categoryExtras: CategoryExtras = {
       relativeTo: this.activatedRoute
     };
 
     if (category) {
-      navigationExtras = {
-        ...navigationExtras,
+      categoryExtras = {
+        ...categoryExtras,
         state: {
-          message: 'categoryCreated',
-          data: category
+          message: 'categoryDeleted',
+          category
         }
       };
     }
 
-    this.router.navigate(['../'], navigationExtras).then(() => console.debug('Route changed'));
+    this.router.navigate(['..'], categoryExtras).then(() => console.debug('Route changed'));
   }
 }

@@ -1,19 +1,25 @@
 /** @format */
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  Event as RouterEvent,
+  Navigation
+} from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   HelperService,
   SnackbarService,
-  CategoryService,
   Category,
   PostCreateOneDto,
   Post,
-  PostService
+  PostService,
+  CategoryState
 } from '../../../../core';
 import { EMPTY, of, Subscription } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { filter, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-post-create',
@@ -33,7 +39,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   }
 
   routeData$: Subscription;
-  routeEvent$: Subscription;
+  routeEvents$: Subscription;
 
   postForm: FormGroup;
   postForm$: Subscription;
@@ -46,7 +52,8 @@ export class PostCreateComponent implements OnInit, OnDestroy {
     private helperService: HelperService,
     private postService: PostService,
     private snackbarService: SnackbarService,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     this.postForm = this.formBuilder.group({
       body: ['', [Validators.required, Validators.minLength(32), Validators.maxLength(6400)]],
@@ -68,30 +75,38 @@ export class PostCreateComponent implements OnInit, OnDestroy {
         this.postForm.get('categoryName').setValue(category.name);
       });
 
-    this.routeEvent$ = this.router.events
+    this.routeEvents$ = this.router.events
       .pipe(
-        filter((event: any) => event instanceof NavigationEnd),
+        filter((routerEvent: RouterEvent) => routerEvent instanceof NavigationEnd),
+        startWith(this.activatedRoute),
         switchMap(() => {
-          const currentNavigation = this.router.getCurrentNavigation();
+          const navigation: Navigation = this.router.getCurrentNavigation();
 
-          if (currentNavigation.extras.state) {
-            const { message, data: category } = currentNavigation.extras.state;
-
-            if (message === 'categoryCreated') {
-              this.categoryList.unshift(category);
-
-              return of(category.id);
-            }
+          if (navigation && navigation.extras.state) {
+            return of(navigation.extras.state as CategoryState);
           }
 
           return EMPTY;
         })
       )
-      .subscribe((categoryId: number) => this.postForm.get('categoryId').setValue(categoryId));
+      .subscribe((categoryState: CategoryState) => {
+        const { message, category } = categoryState;
+        const { id } = category;
+
+        const messageMap = {
+          ['categoryCreated']: (): void => {
+            this.categoryList.unshift(category);
+
+            this.postForm.get('categoryId').setValue(id);
+          }
+        };
+
+        messageMap[message]();
+      });
   }
 
   ngOnDestroy(): void {
-    [this.routeData$, this.routeEvent$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.routeData$, this.routeEvents$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
   onSubmitForm(): void {

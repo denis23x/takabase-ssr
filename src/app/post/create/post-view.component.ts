@@ -1,9 +1,9 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { pluck } from 'rxjs/operators';
-import { Category, Post } from '../../core';
+import { Category, Post, PostExtras } from '../../core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -28,20 +28,20 @@ export class PostCreateViewComponent implements OnInit, OnDestroy {
   }
 
   onClose(post?: Post | void): void {
-    let navigationExtras: NavigationExtras = {
+    let postExtras: PostExtras = {
       relativeTo: this.activatedRoute
     };
 
     if (post) {
-      navigationExtras = {
-        ...navigationExtras,
+      postExtras = {
+        ...postExtras,
         state: {
           message: 'postCreated',
-          data: post
+          post
         }
       };
     }
 
-    this.router.navigate(['../'], navigationExtras).then(() => console.debug('Route changed'));
+    this.router.navigate(['..'], postExtras).then(() => console.debug('Route changed'));
   }
 }
