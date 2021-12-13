@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { EditComponent } from './edit.component';
 import { EditResolverService } from './edit-resolver.service';
-// import { CategoryCreateViewComponent } from '../category/create/create-view.component';
+import { CategoryHandlerComponent } from '../category/handler/handler.component';
 
 const routes: Routes = [
   {
@@ -12,13 +12,13 @@ const routes: Routes = [
     component: EditComponent,
     resolve: {
       data: EditResolverService
-    }
-    // children: [
-    //   {
-    //     path: 'category',
-    //     component: CategoryCreateViewComponent
-    //   }
-    // ]
+    },
+    children: [
+      {
+        path: 'category',
+        component: CategoryHandlerComponent
+      }
+    ]
   }
 ];
 

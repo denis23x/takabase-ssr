@@ -28,25 +28,27 @@
               formControlName="name"
               placeholder="Name"
               aria-label="Name">
-            <ng-container *ngIf="category && !categoryFormToggleDelete">
-              <div
-                class="absolute top-0 right-0 fill-current text-danger-1 cursor-pointer p-2.5"
-                *ngIf="name.value.length"
-                (click)="onDelete()"
-                appSvgIcon
-                [appIcon]="'trash'"
-                [appSquare]="'1.35rem'">
-              </div>
-            </ng-container>
+            <div
+              class="absolute top-0 right-0 border border-transparent fill-current text-danger-1 cursor-pointer p-2.5"
+              *ngIf="(category && !categoryFormToggleDelete) && name.value.length"
+              (click)="onDelete()"
+              appSvgIcon
+              [appIcon]="'trash'"
+              [appSquare]="'1.25rem'">
+            </div>
           </div>
           <span class="block text-sm text-danger-1 mt-2" *ngIf="name.touched && name.errors" [ngSwitch]="true">
             <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
             <ng-container *ngSwitchCase="!!name.errors.minlength">Min length {{name.errors.minlength['requiredLength']}} characters</ng-container>
             <ng-container *ngSwitchCase="!!name.errors.maxlength">Max length {{name.errors.maxlength['requiredLength']}} characters</ng-container>
           </span>
+          <p
+            class="text-secondary-2"
+            *ngIf="category && !categoryFormToggleDelete">Category {{category.name}} was created {{category.createdAt  | dayjs : 'fromX'}} and contain N posts
+          </p>
           <ng-container *ngIf="categoryFormToggleDelete">
             <span class="block text-sm text-secondary-2 mt-2">Please type <span class="font-bold">{{category.name}}</span> to confirm</span>
-            <p class="text-secondary-1 border border-danger-1 rounded-md space-x-4 py-2.5 px-3">This action cannot be undone. This will permanently delete the <span class="font-bold">{{category.name}}</span> category and remove all posts in it</p>
+            <p class="text-danger-1 border border-danger-1 rounded-md text-sm py-2.5 px-3">This action cannot be undone. This will permanently delete category and remove all posts</p>
           </ng-container>
         </fieldset>
         <button
