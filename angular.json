@@ -151,7 +151,11 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
-              ]
+              ],
+              "optimization": true,
+              "sourceMap": true,
+              "extractLicenses": true,
+              "namedChunks": false
             },
             "development": {
               "optimization": false,

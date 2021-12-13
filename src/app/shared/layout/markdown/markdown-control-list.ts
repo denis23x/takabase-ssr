@@ -1,6 +1,6 @@
 /** @format */
 
-import { MarkdownControl } from '../models';
+import { MarkdownControl } from '../../../core';
 
 export const MarkdownControlList = (): MarkdownControl[] => [
   {

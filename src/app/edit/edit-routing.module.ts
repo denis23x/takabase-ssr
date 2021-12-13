@@ -2,16 +2,16 @@
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CreateComponent } from './create.component';
-import { CreateResolverService } from './create-resolver.service';
+import { EditComponent } from './edit.component';
+import { EditResolverService } from './edit-resolver.service';
 // import { CategoryCreateViewComponent } from '../category/create/create-view.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: CreateComponent,
+    path: ':postId',
+    component: EditComponent,
     resolve: {
-      data: CreateResolverService
+      data: EditResolverService
     }
     // children: [
     //   {
@@ -26,4 +26,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class CreateRoutingModule {}
+export class EditRoutingModule {}

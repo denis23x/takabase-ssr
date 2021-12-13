@@ -24,6 +24,11 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'edit',
+    loadChildren: () => import('./edit/edit.module').then(m => m.EditModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: 'exception',
     loadChildren: () => import('./exception/exception.module').then(m => m.ExceptionModule)
   },

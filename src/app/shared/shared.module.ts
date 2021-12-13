@@ -13,6 +13,7 @@ import {
   CardPostComponent,
   CardUserComponent,
   DropdownComponent,
+  MarkdownComponent,
   OverlayComponent,
   SvgIconComponent
 } from './layout';
@@ -27,6 +28,7 @@ import {
     CardPostComponent,
     CardUserComponent,
     DropdownComponent,
+    MarkdownComponent,
     OverlayComponent,
     SvgIconComponent,
     DayjsPipe,
@@ -46,6 +48,7 @@ import {
     CardPostComponent,
     CardUserComponent,
     DropdownComponent,
+    MarkdownComponent,
     OverlayComponent,
     SvgIconComponent,
     DayjsPipe,

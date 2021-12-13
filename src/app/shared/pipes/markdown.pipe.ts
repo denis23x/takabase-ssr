@@ -1,7 +1,7 @@
 /** @format */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { MarkdownService } from '../../create/core';
+import { MarkdownService } from '../../core';
 
 @Pipe({
   name: 'markdown'

@@ -1,6 +1,6 @@
 /** @format */
 
-export interface PostCreateOneDto {
+export interface PostHandlerDto {
   title: string;
   body: string;
   categoryId: number;

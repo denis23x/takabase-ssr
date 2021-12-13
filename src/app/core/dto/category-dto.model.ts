@@ -1,8 +1,7 @@
 /** @format */
 
-export interface CategoryCreateOneDto {
+export interface CategoryHandlerDto {
   name: string;
-  isPrivate?: boolean;
 }
 
 export interface CategoryGetOneDto {

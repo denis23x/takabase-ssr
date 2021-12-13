@@ -4,12 +4,11 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared';
 import { PostRoutingModule } from './post-routing.module';
 import { PostComponent } from './post.component';
-import { PostCreateViewComponent } from './create/post-view.component';
-import { PostCreateComponent } from './shared';
+import { PostHandlerComponent } from './handler/handler.component';
 
 @NgModule({
   imports: [SharedModule, PostRoutingModule],
-  declarations: [PostComponent, PostCreateViewComponent, PostCreateComponent],
-  exports: [PostComponent, PostCreateViewComponent, PostCreateComponent]
+  declarations: [PostComponent, PostHandlerComponent],
+  exports: [PostComponent, PostHandlerComponent]
 })
 export class PostModule {}

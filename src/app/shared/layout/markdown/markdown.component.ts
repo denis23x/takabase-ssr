@@ -1,8 +1,8 @@
 /** @format */
 
 import { AfterViewInit, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { MarkdownControlList, MarkdownControl, MarkdownService } from '../../../core';
-import { HelperService, PlatformService } from '../../../../core';
+import { MarkdownControl, MarkdownService, HelperService, PlatformService } from '../../../core';
+import { MarkdownControlList } from './markdown-control-list';
 import { BehaviorSubject, fromEvent, merge, Subscription, of } from 'rxjs';
 import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';

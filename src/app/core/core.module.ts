@@ -9,6 +9,8 @@ import {
   ApiService,
   HelperService,
   LocalStorageService,
+  MarkdownService,
+  MarkdownPluginService,
   PlatformService,
   SnackbarService
 } from './services';
@@ -20,6 +22,8 @@ import {
     ApiService,
     HelperService,
     LocalStorageService,
+    MarkdownService,
+    MarkdownPluginService,
     PlatformService,
     SnackbarService
   ],

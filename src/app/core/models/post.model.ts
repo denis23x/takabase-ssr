@@ -2,7 +2,6 @@
 
 import { User } from './user.model';
 import { Category } from './category.model';
-import { NavigationExtras } from '@angular/router';
 
 export interface Post {
   id: number;
@@ -15,11 +14,12 @@ export interface Post {
   updatedAt: string;
 }
 
-export interface PostExtras extends NavigationExtras {
-  state?: PostState;
+export interface PostEdit {
+  post: Post;
+  categoryList: Category[];
 }
 
-export interface PostState {
-  message: string;
-  post: Post;
+export interface PostHandler {
+  postForm: any;
+  onError: () => void;
 }

@@ -1,8 +1,8 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { HelperService, LocalStorageService, PlatformService } from '../../../core';
-import { environment } from '../../../../environments/environment';
+import { HelperService, LocalStorageService, PlatformService } from '../../core';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

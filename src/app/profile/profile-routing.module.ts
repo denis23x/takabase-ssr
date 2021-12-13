@@ -8,11 +8,8 @@ import { PostComponent } from '../post/post.component';
 import { PostResolverService } from '../post/post-resolver.service';
 import { CategoryComponent } from '../category/category.component';
 import { CategoryResolverService } from '../category/category-resolver.service';
-import { CategoryCreateViewComponent } from '../category/create/create-view.component';
-import { CategoryDeleteViewComponent } from '../category/delete/delete.component';
-import { CategoryDeleteResolverService } from '../category/delete/delete-resolver.service';
-import { CategoryEditViewComponent } from '../category/edit/edit.component';
-import { CategoryEditResolverService } from '../category/edit/edit-resolver.service';
+import { CategoryHandlerComponent } from '../category/handler/handler.component';
+import { CategoryHandlerResolverService } from '../category/handler/handler-resolver.service';
 
 const routes: Routes = [
   {
@@ -36,7 +33,7 @@ const routes: Routes = [
           },
           {
             path: 'create/category',
-            component: CategoryCreateViewComponent
+            component: CategoryHandlerComponent
           },
           {
             path: 'posts',
@@ -66,20 +63,13 @@ const routes: Routes = [
         children: [
           {
             path: 'create',
-            component: CategoryCreateViewComponent
-          },
-          {
-            path: 'delete',
-            component: CategoryDeleteViewComponent,
-            resolve: {
-              data: CategoryDeleteResolverService
-            }
+            component: CategoryHandlerComponent
           },
           {
             path: 'edit',
-            component: CategoryEditViewComponent,
+            component: CategoryHandlerComponent,
             resolve: {
-              data: CategoryEditResolverService
+              data: CategoryHandlerResolverService
             }
           },
           {

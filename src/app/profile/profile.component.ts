@@ -70,16 +70,20 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
         const messageMap = {
           ['categoryCreated']: (): void => {
-            this.router
-              .navigate(['/profile/category', id])
-              .then(() => this.categoryList.unshift(category));
+            this.router.navigate(['/profile/category', id]).then(() => {
+              this.categoryList.unshift(category);
+              this.categoryActive = category;
+            });
           },
           ['categoryUpdated']: (): void => {
             this.categoryList[i] = category;
             this.categoryActive = category;
           },
           ['categoryDeleted']: (): void => {
-            this.router.navigate(['/profile']).then(() => this.categoryList.splice(i, 1));
+            this.router.navigate(['/profile']).then(() => {
+              this.categoryList.splice(i, 1);
+              this.categoryActive = undefined;
+            });
           }
         };
 

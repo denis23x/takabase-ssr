@@ -1,0 +1,232 @@
+<ng-container>
+  <section class="page-create grid grid-cols-1 grid-rows-1 gap-4 px-4">
+    <header class="header bg-primary-2 z-20 sticky top-0 px-4 -mx-4">
+      <div
+        class="border-b border-primary-4 py-4"
+        appMarkdown
+        [appScrollSync]="editorScrollSync"
+        [appTextareaId]="'textarea'"
+        [appPreviewId]="'preview'">
+      </div>
+    </header>
+    <div class="content mb-4">
+      <div class="splitter grid mb-4">
+        <div class="editor relative">
+          <form
+            class="block"
+            autocomplete="off"
+            [formGroup]="postForm">
+            <fieldset *ngIf="postForm.get('body') as body">
+              <label class="flex">
+                <textarea
+                  id="textarea"
+                  class="form-control bg-primary-3 resize-none overflow-auto p-4"
+                  [class.whitespace-pre]="editorWhitespace"
+                  formControlName="body"
+                  placeholder="Type a post.."
+                  aria-label="Editor">{{body.value}}
+                </textarea>
+              </label>
+            </fieldset>
+          </form>
+          <div class="layout flex items-center justify-between">
+            <ul class="flex lg:flex-col items-center">
+              <li class="inline-block">
+                <button
+                  class="fill-current text-secondary-1 hover:text-info-1 p-2"
+                  [class.text-info-1]="editorWhitespace"
+                  type="button"
+                  aria-label="Whitespace"
+                  appSvgIcon
+                  [appIcon]="'text-left'"
+                  [appSquare]="'1.5em'"
+                  (click)="editorWhitespace = !editorWhitespace">
+                </button>
+              </li>
+              <li class="inline-block">
+                <button
+                  class="fill-current text-secondary-1 hover:text-info-1 p-2.5"
+                  type="button"
+                  aria-label="Preview"
+                  appSvgIcon
+                  [appIcon]="'eye'"
+                  [appSquare]="'1.25em'">
+                </button>
+              </li>
+              <li class="inline-block">
+                <button
+                  class="fill-current text-secondary-1 hover:text-info-1 p-2.5"
+                  [class.text-info-1]="editorScrollSync"
+                  type="button"
+                  aria-label="Scroll Sync"
+                  appSvgIcon
+                  [appIcon]="'mouse2'"
+                  [appSquare]="'1.25em'"
+                  (click)="editorScrollSync = !editorScrollSync">
+                </button>
+              </li>
+            </ul>
+            <ul class="flex lg:flex-col items-center">
+              <li class="inline-block">
+                <a
+                  class="block fill-current text-secondary-1 hover:text-info-1 p-2.5"
+                  aria-label="Help"
+                  target="_blank"
+                  href="https://en.wikipedia.org/wiki/Markdown"
+                  rel="noopener"
+                  appSvgIcon
+                  [appIcon]="'question-circle'"
+                  [appSquare]="'1.25em'">
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="hidden lg:flex flex-col items-center justify-between self-center" #gutter>
+          <button
+            class="fill-current text-secondary-1 opacity-50 cursor-col-resize p-2"
+            type="button"
+            aria-label="Grip"
+            appSvgIcon
+            [appIcon]="'grip-vertical'"
+            [appSquare]="'1.5em'">
+          </button>
+        </div>
+        <div class="flex lg:hidden items-center justify-center self-center p-2">
+          <button
+            class="fill-current text-secondary-1 opacity-50 cursor-row-resize"
+            type="button"
+            aria-label="Grip"
+            appSvgIcon
+            [appIcon]="'grip-horizontal'"
+            [appSquare]="'1.5em'">
+          </button>
+        </div>
+        <article id="preview" class="preview markdown-html bg-primary-3 border border-primary-4 rounded-md overflow-auto p-4"></article>
+      </div>
+      <button
+        class="btn btn-success block w-full"
+        type="button"
+        aria-label="Next"
+        *ngIf="postForm.get('body') as body"
+        [disabled]="body.invalid"
+        (click)="postModal = body.valid">Next
+      </button>
+    </div>
+  </section>
+  <app-overlay *ngIf="postModal" (clicked)="postModal = false">
+    <section class="absolute inset-0 flex justify-center items-center pointer-events-none p-4" slot="content">
+      <form
+        class="max-h-full max-w-full w-full sm:w-128 flex flex-col space-y-4 bg-primary-3 rounded-lg shadow-lg pointer-events-auto p-4"
+        [formGroup]="postForm"
+        (ngSubmit)="onSubmitForm()"
+        autocomplete="off">
+        <div class="flex justify-between items-center border-b border-primary-4 pb-2">
+          <span class="block text-xl text-secondary-1 font-medium leading-9">Create post</span>
+          <button
+            class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 cursor-pointer p-2"
+            type="button"
+            aria-label="Close"
+            (click)="postModal = false"
+            appSvgIcon
+            [appIcon]="'x-lg'"
+            [appSquare]="'1rem'">
+          </button>
+        </div>
+        <fieldset class="flex flex-col space-y-4" [disabled]="postFormIsSubmitted">
+          <fieldset class="flex flex-col space-y-2" *ngIf="postForm.get('title') as title">
+            <label class="block text-secondary-2 text-sm" for="title">Title</label>
+            <input
+              id="title"
+              type="text"
+              class="form-control bg-primary-2"
+              formControlName="title"
+              placeholder="Title"
+              aria-label="Title">
+            <span class="block text-sm text-danger-1" *ngIf="title.touched && title.errors" [ngSwitch]="true">
+          <ng-container *ngSwitchCase="!!title.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="!!title.errors.minlength">Min length {{title.errors.minlength['requiredLength']}} characters</ng-container>
+          <ng-container *ngSwitchCase="!!title.errors.maxlength">Max length {{title.errors.maxlength['requiredLength']}} characters</ng-container>
+        </span>
+          </fieldset>
+          <ng-container *ngIf="categoryList.length; else categoryListEmpty;">
+            <div class="flex flex-col space-y-2">
+              <div class="flex justify-between text-sm">
+                <span class="block text-secondary-2 cursor-default">Category</span>
+                <a class="text-info-1 hover:underline" [routerLink]="'category'" aria-label="Create one">Create one</a>
+              </div>
+              <app-dropdown
+                class="flex relative"
+                *ngIf="{ value: false } as active"
+                [appDisabled]="postFormIsSubmitted"
+                (toggled)="active.value = $event">
+                <fieldset
+                  class="flex flex-col space-y-2 w-full"
+                  *ngIf="postForm.get('categoryName') as categoryName"
+                  slot="toggle">
+                  <label class="block relative pointer-events-none" for="category" >
+                    <input
+                      id="category"
+                      type="text"
+                      class="form-control bg-primary-2 pr-10"
+                      formControlName="categoryName"
+                      placeholder="Category"
+                      aria-label="Category"
+                      readonly>
+                    <button
+                      class="absolute top-0 right-0 fill-current border border-transparent p-2"
+                      [ngClass]="{ 'opacity-75 text-secondary-2': !active.value, 'opacity-100 text-info-1': active.value }"
+                      type="button"
+                      aria-label="Menu"
+                      appSvgIcon
+                      [appIcon]="'list'"
+                      [appSquare]="'1.5rem'">
+                    </button>
+                  </label>
+                  <span class="block text-sm text-danger-1" *ngIf="categoryName.touched && categoryName.errors" [ngSwitch]="true">
+                <ng-container *ngSwitchCase="!!categoryName.errors.required">Required</ng-container>
+              </span>
+                </fieldset>
+                <div class="absolute z-30 top-full rounded-md overflow-hidden w-full translate-y-4" slot="content">
+                  <ul class="flex flex-col bg-primary-2 rounded-md shadow-lg overflow-auto max-h-44 py-2">
+                    <li class="block" *ngFor="let category of categoryList; let i = index">
+                      <fieldset class="w-full">
+                        <input
+                          [id]="'categoryId-' + category.id"
+                          type="radio"
+                          class="hidden"
+                          formControlName="categoryId"
+                          placeholder="Category"
+                          aria-label="Category"
+                          [value]="category.id">
+                        <label
+                          class="block text-secondary-1 hover:bg-primary-1 hover:text-info-1 cursor-pointer py-2 px-4"
+                          [for]="'categoryId-' + category.id">{{category.name}}
+                        </label>
+                      </fieldset>
+                    </li>
+                  </ul>
+                </div>
+              </app-dropdown>
+            </div>
+          </ng-container>
+          <button
+            class="btn btn-success w-full"
+            type="submit"
+            aria-label="Submit"
+            [disabled]="postForm.invalid || postFormIsSubmitted">Submit
+          </button>
+        </fieldset>
+      </form>
+    </section>
+    <ng-template #categoryListEmpty>
+      <div class="bg-primary-2 text-secondary-1 border border-primary-4 rounded-md px-3 py-2">No categories were found
+        <a
+          class="text-info-1 hover:underline"
+          [routerLink]="['category']"
+          aria-label="Create category">you need to create at least one
+        </a>
+      </div>
+    </ng-template>
+  </app-overlay>
+</ng-container>
