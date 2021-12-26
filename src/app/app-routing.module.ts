@@ -1,7 +1,7 @@
 /** @format */
 
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes, UrlSegment } from '@angular/router';
 import { AuthGuard, NoAuthGuard } from './auth/core';
 
 const routes: Routes = [
@@ -15,17 +15,24 @@ const routes: Routes = [
     canLoad: [NoAuthGuard]
   },
   {
-    path: 'categories',
-    loadChildren: () => import('./category/category.module').then(m => m.CategoryModule)
-  },
-  {
-    path: 'create',
-    loadChildren: () => import('./create/create.module').then(m => m.CreateModule),
-    canLoad: [AuthGuard]
-  },
-  {
-    path: 'edit',
-    loadChildren: () => import('./edit/edit.module').then(m => m.EditModule),
+    matcher: (url: UrlSegment[]) => {
+      switch (url.length) {
+        case 1:
+          return url[0].path === 'create' ? { consumed: url } : null;
+        case 2:
+          return url[0].path === 'edit'
+            ? {
+                consumed: url.slice(0, 1),
+                posParams: {
+                  postId: new UrlSegment(url[1].path, {})
+                }
+              }
+            : null;
+        default:
+          return null;
+      }
+    },
+    loadChildren: () => import('./markdown/markdown.module').then(m => m.MarkdownModule),
     canLoad: [AuthGuard]
   },
   {

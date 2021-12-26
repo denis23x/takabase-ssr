@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Category,
@@ -9,16 +9,23 @@ import {
   CategoryService,
   HelperService,
   SnackbarService
-} from '../../core';
+} from '../../../../core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { filter, pluck } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-category-handler',
-  templateUrl: './handler.component.html'
+  selector: 'app-category-save',
+  templateUrl: './save.component.html'
 })
-export class CategoryHandlerComponent implements OnInit, OnDestroy {
+export class CategorySaveComponent implements OnInit, OnDestroy {
+  @Output() submitted = new EventEmitter<any>();
+
+  @Input()
+  set appCategory(category: Category) {
+    this.category = category;
+  }
+
   routeData$: Subscription;
 
   category: Category;
@@ -59,26 +66,31 @@ export class CategoryHandlerComponent implements OnInit, OnDestroy {
     if (this.helperService.getFormValidation(this.categoryForm)) {
       this.categoryFormIsSubmitted = true;
 
-      if (!this.category) {
-        this.categoryService.createOne(this.categoryForm.value as CategoryHandlerDto).subscribe(
-          (category: Category) => this.onClose(category, 'Created'),
-          () => (this.categoryFormIsSubmitted = false)
-        );
-      } else {
-        if (!this.categoryFormToggleDelete) {
-          this.categoryService
-            .updateOne(this.category.id, this.categoryForm.value as CategoryHandlerDto)
-            .subscribe(
-              (category: Category) => this.onClose(category, 'Updated'),
-              () => (this.categoryFormIsSubmitted = false)
-            );
-        } else {
-          this.categoryService.deleteOne(this.category.id).subscribe(
-            (category: Category) => this.onClose(category, 'Deleted'),
-            () => (this.categoryFormIsSubmitted = false)
-          );
-        }
-      }
+      this.submitted.emit({
+        postForm: this.categoryForm.value,
+        onError: () => (this.categoryFormIsSubmitted = false)
+      });
+
+      // if (!this.category) {
+      //   this.categoryService.createOne(this.categoryForm.value as CategoryHandlerDto).subscribe(
+      //     (category: Category) => this.onClose(category, 'Created'),
+      //     () => (this.categoryFormIsSubmitted = false)
+      //   );
+      // } else {
+      //   if (!this.categoryFormToggleDelete) {
+      //     this.categoryService
+      //       .updateOne(this.category.id, this.categoryForm.value as CategoryHandlerDto)
+      //       .subscribe(
+      //         (category: Category) => this.onClose(category, 'Updated'),
+      //         () => (this.categoryFormIsSubmitted = false)
+      //       );
+      //   } else {
+      //     this.categoryService.deleteOne(this.category.id).subscribe(
+      //       (category: Category) => this.onClose(category, 'Deleted'),
+      //       () => (this.categoryFormIsSubmitted = false)
+      //     );
+      //   }
+      // }
     }
   }
 

@@ -119,7 +119,7 @@
       <form
         class="max-h-full max-w-full w-full sm:w-128 flex flex-col space-y-4 bg-primary-3 rounded-lg shadow-lg pointer-events-auto p-4"
         [formGroup]="postForm"
-        (ngSubmit)="onSubmitForm()"
+        (ngSubmit)="onSubmitPostForm()"
         autocomplete="off">
         <div class="flex justify-between items-center border-b border-primary-4 pb-2">
           <span class="block text-xl text-secondary-1 font-medium leading-9">Create post</span>
@@ -144,16 +144,16 @@
               placeholder="Title"
               aria-label="Title">
             <span class="block text-sm text-danger-1" *ngIf="title.touched && title.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="!!title.errors.required">Required</ng-container>
-          <ng-container *ngSwitchCase="!!title.errors.minlength">Min length {{title.errors.minlength['requiredLength']}} characters</ng-container>
-          <ng-container *ngSwitchCase="!!title.errors.maxlength">Max length {{title.errors.maxlength['requiredLength']}} characters</ng-container>
-        </span>
+              <ng-container *ngSwitchCase="!!title.errors.required">Required</ng-container>
+              <ng-container *ngSwitchCase="!!title.errors.minlength">Min length {{title.errors.minlength['requiredLength']}} characters</ng-container>
+              <ng-container *ngSwitchCase="!!title.errors.maxlength">Max length {{title.errors.maxlength['requiredLength']}} characters</ng-container>
+            </span>
           </fieldset>
           <ng-container *ngIf="categoryList.length; else categoryListEmpty;">
             <div class="flex flex-col space-y-2">
               <div class="flex justify-between text-sm">
                 <span class="block text-secondary-2 cursor-default">Category</span>
-                <a class="text-info-1 hover:underline" [routerLink]="'category'" aria-label="Create one">Create one</a>
+                <button class="text-info-1 hover:underline" type="button" aria-label="Create one" (click)="categoryModal = true">Create one</button>
               </div>
               <app-dropdown
                 class="flex relative"
@@ -228,5 +228,50 @@
         </a>
       </div>
     </ng-template>
+  </app-overlay>
+  <app-overlay *ngIf="categoryModal" (clicked)="categoryModal = false">
+    <section class="absolute inset-0 flex justify-center items-center pointer-events-none p-4" slot="content">
+      <form
+        class="max-h-full max-w-full w-11/12 sm:w-96 flex flex-col space-y-4 bg-primary-3 rounded-lg shadow-lg pointer-events-auto p-4"
+        [formGroup]="categoryForm"
+        (ngSubmit)="onSubmitCategoryForm()"
+        autocomplete="off">
+        <div class="flex justify-between items-center border-b border-primary-4 pb-2">
+          <span class="block text-xl text-secondary-1 font-medium leading-9">Create category</span>
+          <button
+            class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 cursor-pointer p-2"
+            type="button"
+            aria-label="Close"
+            (click)="categoryModal = false"
+            appSvgIcon
+            [appIcon]="'x-lg'"
+            [appSquare]="'1rem'">
+          </button>
+        </div>
+        <fieldset class="flex flex-col space-y-4" [disabled]="categoryFormIsSubmitted">
+          <fieldset class="flex flex-col space-y-2" *ngIf="categoryForm.get('name') as name">
+          <label class="block text-secondary-2 text-sm" for="name">Name</label>
+            <input
+              id="name"
+              type="text"
+              class="form-control bg-primary-2"
+              formControlName="name"
+              placeholder="Name"
+              aria-label="Name">
+            <span class="block text-sm text-danger-1 mt-2" *ngIf="name.touched && name.errors" [ngSwitch]="true">
+              <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
+              <ng-container *ngSwitchCase="!!name.errors.minlength">Min length {{name.errors.minlength['requiredLength']}} characters</ng-container>
+              <ng-container *ngSwitchCase="!!name.errors.maxlength">Max length {{name.errors.maxlength['requiredLength']}} characters</ng-container>
+            </span>
+          </fieldset>
+          <button
+            class="btn btn-success w-full"
+            type="submit"
+            aria-label="Submit"
+            [disabled]="categoryForm.invalid || categoryFormIsSubmitted">Submit
+          </button>
+        </fieldset>
+      </form>
+    </section>
   </app-overlay>
 </ng-container>
