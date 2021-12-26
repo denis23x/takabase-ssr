@@ -1,16 +1,16 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { pluck } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { Post } from '../../../core';
+import { pluck } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Post } from '../core';
 
 @Component({
-  selector: 'app-post',
-  templateUrl: './post.component.html'
+  selector: 'app-profile-post-detail',
+  templateUrl: './detail.component.html'
 })
-export class PostComponent implements OnInit, OnDestroy {
+export class ProfilePostDetailComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
 
   post: Post;
@@ -25,11 +25,5 @@ export class PostComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     [this.routeData$].filter($ => $).forEach($ => $.unsubscribe());
-  }
-
-  navigateToParent(): void {
-    this.router
-      .navigate(['.'], { relativeTo: this.activatedRoute.parent, queryParamsHandling: 'preserve' })
-      .then(() => console.debug('Route was changed'));
   }
 }

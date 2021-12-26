@@ -10,7 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class SearchCategoriesResolverService {
+export class SearchCategoryResolverService {
   constructor(private router: Router, private categoryService: CategoryService) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Category[]> {

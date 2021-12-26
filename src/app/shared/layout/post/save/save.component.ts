@@ -26,16 +26,16 @@ import {
   PlatformService,
   Post,
   PostHandler
-} from '../../core';
+} from '../../../../core';
 import { EMPTY, of, Subscription } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Split from 'split-grid';
 
 @Component({
-  selector: 'app-post-handler',
-  templateUrl: './handler.component.html'
+  selector: 'app-post-save',
+  templateUrl: './save.component.html'
 })
-export class PostHandlerComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PostSaveComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('gutter') gutter: ElementRef;
 
   @Output() submitted = new EventEmitter<PostHandler>();

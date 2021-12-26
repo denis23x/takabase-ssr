@@ -7,10 +7,10 @@ import { Subscription } from 'rxjs';
 import { User, UserService, UserGetAllDto } from '../../core';
 
 @Component({
-  selector: 'app-search-users',
+  selector: 'app-search-user',
   templateUrl: './user.component.html'
 })
-export class SearchUsersComponent implements OnInit, OnDestroy {
+export class SearchUserComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
   routeQueryParams$: Subscription;
 

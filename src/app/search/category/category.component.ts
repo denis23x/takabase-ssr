@@ -7,10 +7,10 @@ import { Subscription } from 'rxjs';
 import { CategoryService, Category, CategoryGetAllDto } from '../../core';
 
 @Component({
-  selector: 'app-search-categories',
+  selector: 'app-search-category',
   templateUrl: './category.component.html'
 })
-export class SearchCategoriesComponent implements OnInit, OnDestroy {
+export class SearchCategoryComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
   routeQueryParams$: Subscription;
 

@@ -33,10 +33,6 @@ const routes: Routes = [
     loadChildren: () => import('./exception/exception.module').then(m => m.ExceptionModule)
   },
   {
-    path: 'posts',
-    loadChildren: () => import('./post/post.module').then(m => m.PostModule)
-  },
-  {
     path: 'profile',
     loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule),
     canLoad: [AuthGuard]

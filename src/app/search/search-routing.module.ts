@@ -3,14 +3,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SearchComponent } from './search.component';
-import { SearchPostsComponent } from './post/post.component';
-import { SearchPostsResolverService } from './post/post-resolver.service';
-import { SearchCategoriesComponent } from './category/category.component';
-import { SearchCategoriesResolverService } from './category/category-resolver.service';
-import { SearchUsersComponent } from './user/user.component';
-import { SearchUsersResolverService } from './user/user-resolver.service';
-import { PostComponent } from '../post/post.component';
-import { PostResolverService } from '../post/post-resolver.service';
+import { SearchPostComponent } from './post/post.component';
+import { SearchPostResolverService } from './post/post-resolver.service';
+import { SearchPostDetailComponent } from './post/detail/detail.component';
+import { SearchPostDetailResolverService } from './post/detail/detail-resolver.service';
+import { SearchCategoryComponent } from './category/category.component';
+import { SearchCategoryResolverService } from './category/category-resolver.service';
+import { SearchUserComponent } from './user/user.component';
+import { SearchUserResolverService } from './user/user-resolver.service';
 
 const routes: Routes = [
   {
@@ -24,32 +24,32 @@ const routes: Routes = [
       },
       {
         path: 'posts',
-        component: SearchPostsComponent,
+        component: SearchPostComponent,
         resolve: {
-          data: SearchPostsResolverService
+          data: SearchPostResolverService
         },
         children: [
           {
             path: ':postId',
-            component: PostComponent,
+            component: SearchPostDetailComponent,
             resolve: {
-              data: PostResolverService
+              data: SearchPostDetailResolverService
             }
           }
         ]
       },
       {
         path: 'categories',
-        component: SearchCategoriesComponent,
+        component: SearchCategoryComponent,
         resolve: {
-          data: SearchCategoriesResolverService
+          data: SearchCategoryResolverService
         }
       },
       {
         path: 'users',
-        component: SearchUsersComponent,
+        component: SearchUserComponent,
         resolve: {
-          data: SearchUsersResolverService
+          data: SearchUserResolverService
         }
       }
     ]

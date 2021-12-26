@@ -7,10 +7,10 @@ import { Subscription } from 'rxjs';
 import { PostService, Post, PostGetAllDto } from '../../core';
 
 @Component({
-  selector: 'app-search-posts',
+  selector: 'app-search-post',
   templateUrl: './post.component.html'
 })
-export class SearchPostsComponent implements OnInit, OnDestroy {
+export class SearchPostComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
   routeQueryParams$: Subscription;
 

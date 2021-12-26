@@ -15,6 +15,8 @@ import {
   DropdownComponent,
   MarkdownComponent,
   OverlayComponent,
+  PostDetailComponent,
+  PostSaveComponent,
   SvgIconComponent
 } from './layout';
 
@@ -30,6 +32,8 @@ import {
     DropdownComponent,
     MarkdownComponent,
     OverlayComponent,
+    PostDetailComponent,
+    PostSaveComponent,
     SvgIconComponent,
     DayjsPipe,
     MarkdownPipe,
@@ -50,6 +54,8 @@ import {
     DropdownComponent,
     MarkdownComponent,
     OverlayComponent,
+    PostDetailComponent,
+    PostSaveComponent,
     SvgIconComponent,
     DayjsPipe,
     MarkdownPipe,
