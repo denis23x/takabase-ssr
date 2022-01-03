@@ -40,11 +40,6 @@ const routes: Routes = [
     loadChildren: () => import('./exception/exception.module').then(m => m.ExceptionModule)
   },
   {
-    path: 'profile',
-    loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule),
-    canLoad: [AuthGuard]
-  },
-  {
     path: 'search',
     loadChildren: () => import('./search/search.module').then(m => m.SearchModule)
   },

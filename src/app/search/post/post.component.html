@@ -1,7 +1,7 @@
 <ng-container>
   <ng-container *ngIf="postList.length; else postListEmpty;">
     <ul class="grid gap-4 grid-cols-posts grid-flow-row-dense py-4">
-      <li class="block" *ngFor="let post of postList" [appPost]="post" appCardPost></li>
+      <li class="block" *ngFor="let post of postList" [appPost]="post" [appPath]="'/users/' + post.user.id + '/posts'" appCardPost></li>
     </ul>
     <button
       class="btn btn-success w-full mb-4"

@@ -8,7 +8,8 @@ import {
   Post,
   PostService,
   SnackbarService,
-  CategoryService
+  CategoryService,
+  User
 } from '../core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { iif, Subscription } from 'rxjs';
@@ -24,6 +25,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('gutter') gutter: ElementRef;
 
   routeData$: Subscription;
+
+  user: User;
 
   post: Post;
   postForm: FormGroup;
@@ -69,6 +72,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     this.routeData$ = this.activatedRoute.data
       .pipe(pluck('data'))
       .subscribe(([user, categoryList, post]) => {
+        this.user = user;
+
         this.categoryList = categoryList;
 
         if (post) {
@@ -128,7 +133,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
         .subscribe(
           (post: Post) => {
             this.router
-              .navigate(['/profile/category', post.category.id, 'posts', post.id])
+              .navigate(['/users', this.user.id, 'category', post.category.id, 'posts', post.id])
               .then(() => {
                 return this.snackbarService.success(
                   'Success',

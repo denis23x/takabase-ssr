@@ -10,7 +10,7 @@ import {
   Navigation
 } from '@angular/router';
 import { EMPTY, of, Subscription } from 'rxjs';
-import { Category, CategoryState, User, UserProfile } from '../core';
+import { Category, CategoryState, User, UserProfile } from '../../src/app/core';
 import { filter, pluck, startWith, switchMap, tap } from 'rxjs/operators';
 
 @Component({

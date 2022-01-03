@@ -4,7 +4,13 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of, throwError, zip } from 'rxjs';
 import { catchError, first, map, switchMap } from 'rxjs/operators';
-import { AuthService, UserProfile, User, CategoryService, CategoryGetAllDto } from '../core';
+import {
+  AuthService,
+  UserProfile,
+  User,
+  CategoryService,
+  CategoryGetAllDto
+} from '../../src/app/core';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({

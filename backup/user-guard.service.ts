@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
-import { AuthService, User } from '../../../core';
+import { AuthService, User } from '../src/app/core';
 
 @Injectable({
   providedIn: 'root'

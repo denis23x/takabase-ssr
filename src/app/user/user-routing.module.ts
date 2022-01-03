@@ -4,11 +4,10 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { UserComponent } from './user.component';
 import { UserResolverService } from './user-resolver.service';
-import { UserPostDetailComponent } from './post/detail/detail.component';
-import { UserPostDetailResolverService } from './post/detail/detail-resolver.service';
-import { CategoryComponent } from '../category/category.component';
-import { CategoryResolverService } from '../category/category-resolver.service';
-import { UserGuard } from './core';
+import { UserCategoryComponent } from './category/category.component';
+import { UserCategoryResolverService } from './category/category-resolver.service';
+import { UserPostComponent } from './post/post.component';
+import { UserPostResolverService } from './post/post-resolver.service';
 
 const routes: Routes = [
   {
@@ -19,16 +18,15 @@ const routes: Routes = [
   {
     path: ':userId',
     component: UserComponent,
-    canActivate: [UserGuard],
     resolve: {
       data: UserResolverService
     },
     children: [
       {
         path: '',
-        component: CategoryComponent,
+        component: UserCategoryComponent,
         resolve: {
-          data: CategoryResolverService
+          data: UserCategoryResolverService
         },
         children: [
           {
@@ -38,9 +36,9 @@ const routes: Routes = [
           },
           {
             path: 'posts/:postId',
-            component: UserPostDetailComponent,
+            component: UserPostComponent,
             resolve: {
-              data: UserPostDetailResolverService
+              data: UserPostResolverService
             }
           }
         ]
@@ -52,9 +50,9 @@ const routes: Routes = [
       },
       {
         path: 'category/:categoryId',
-        component: CategoryComponent,
+        component: UserCategoryComponent,
         resolve: {
-          data: CategoryResolverService
+          data: UserCategoryResolverService
         },
         children: [
           {
@@ -64,9 +62,9 @@ const routes: Routes = [
           },
           {
             path: 'posts/:postId',
-            component: UserPostDetailComponent,
+            component: UserPostComponent,
             resolve: {
-              data: UserPostDetailResolverService
+              data: UserPostResolverService
             }
           }
         ]

@@ -17,7 +17,7 @@ export class NoAuthGuard implements CanLoad {
       first(),
       switchMap((isAuthenticated: boolean) => {
         if (isAuthenticated) {
-          this.router.navigate(['/profile']).then(() => console.debug('Route was changed'));
+          this.router.navigate(['/exception/423']).then(() => console.debug('Route was changed'));
 
           return of(false);
         }

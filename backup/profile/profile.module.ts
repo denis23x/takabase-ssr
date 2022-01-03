@@ -1,7 +1,7 @@
 /** @format */
 
 import { NgModule } from '@angular/core';
-import { SharedModule } from '../shared';
+import { SharedModule } from '../../src/app/shared';
 import { ProfileRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { ProfilePostDetailComponent } from './post/detail/detail.component';

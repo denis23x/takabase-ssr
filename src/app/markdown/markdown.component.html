@@ -221,11 +221,7 @@
     </section>
     <ng-template #categoryListEmpty>
       <div class="bg-primary-2 text-secondary-1 border border-primary-4 rounded-md px-3 py-2">No categories were found
-        <a
-          class="text-info-1 hover:underline"
-          [routerLink]="['category']"
-          aria-label="Create category">you need to create at least one
-        </a>
+        <span class="text-info-1 hover:underline cursor-pointer" (click)="categoryModal = true">you need to create at least one</span>
       </div>
     </ng-template>
   </app-overlay>

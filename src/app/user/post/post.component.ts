@@ -2,15 +2,15 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Post } from '../../../core';
-import { pluck } from 'rxjs/operators';
+import { Post } from '../../core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { pluck } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-profile-post-detail',
-  templateUrl: './detail.component.html'
+  selector: 'app-user-post',
+  templateUrl: './post.component.html'
 })
-export class ProfilePostDetailComponent implements OnInit, OnDestroy {
+export class UserPostComponent implements OnInit, OnDestroy {
   routeData$: Subscription;
 
   post: Post;

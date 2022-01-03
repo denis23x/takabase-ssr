@@ -31,15 +31,15 @@
       <ng-container>
         <a
           class="hidden md:block text-secondary-1 hover:text-info-1 hover:underline mx-2"
-          [routerLink]="['/profile']"
+          [routerLink]="['/users', user.id]"
           [routerLinkActive]="['text-info-1']"
-          aria-label="Profile">{{user.name}}
+          [attr.aria-label]="user.name">{{user.name}}
         </a>
         <a
           class="block md:hidden fill-current text-secondary-1 hover:text-info-1 p-2"
-          [routerLink]="['/profile']"
+          [routerLink]="['/users', user.id]"
           [routerLinkActive]="['text-info-1']"
-          aria-label="Profile"
+          [attr.aria-label]="user.name"
           appSvgIcon
           [appIcon]="'person'">
         </a>
