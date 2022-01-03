@@ -61,7 +61,9 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
       scope: ['user']
     };
 
-    const name = this.activatedRoute.parent.snapshot.queryParamMap.get('query');
+    const name: string = String(
+      this.activatedRoute.parent.snapshot.queryParamMap.get('query') || ''
+    );
 
     if (name) {
       categoryGetAllDto = {

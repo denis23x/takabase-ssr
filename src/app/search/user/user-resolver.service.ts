@@ -19,7 +19,7 @@ export class SearchUserResolverService {
       size: 10
     };
 
-    const name = activatedRouteSnapshot.parent.queryParamMap.get('query');
+    const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
 
     if (name) {
       userGetAllDto = {

@@ -27,21 +27,7 @@ const routes: Routes = [
         component: UserCategoryComponent,
         resolve: {
           data: UserCategoryResolverService
-        },
-        children: [
-          {
-            path: 'posts',
-            redirectTo: '',
-            pathMatch: 'full'
-          },
-          {
-            path: 'posts/:postId',
-            component: UserPostComponent,
-            resolve: {
-              data: UserPostResolverService
-            }
-          }
-        ]
+        }
       },
       {
         path: 'category',

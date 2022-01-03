@@ -13,16 +13,9 @@ export class CardPostComponent implements OnInit, OnDestroy {
     this.post = post;
   }
 
-  @Input()
-  set appPath(path: string) {
-    this.path = path;
-  }
-
   constructor() {}
 
   post: Post;
-
-  path = '.';
 
   ngOnInit(): void {}
 

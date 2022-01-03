@@ -26,4 +26,10 @@ export class UserPostComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     [this.routeData$].filter($ => $).forEach($ => $.unsubscribe());
   }
+
+  navigateToParent(): void {
+    this.router
+      .navigate(['.'], { relativeTo: this.activatedRoute.parent, queryParamsHandling: 'preserve' })
+      .then(() => console.debug('Route was changed'));
+  }
 }

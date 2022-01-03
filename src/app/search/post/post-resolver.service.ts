@@ -17,10 +17,10 @@ export class SearchPostResolverService {
     let postGetAllDto: PostGetAllDto = {
       page: 1,
       size: 10,
-      scope: ['user']
+      scope: ['user', 'category']
     };
 
-    const title = activatedRouteSnapshot.parent.queryParamMap.get('query');
+    const title: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
 
     if (title) {
       postGetAllDto = {

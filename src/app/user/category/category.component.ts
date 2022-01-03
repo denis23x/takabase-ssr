@@ -45,7 +45,7 @@ export class UserCategoryComponent {
       page: this.page,
       size: this.size,
       userId: this.user.id,
-      scope: ['user']
+      scope: ['user', 'category']
     };
 
     const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));

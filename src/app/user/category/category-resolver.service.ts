@@ -21,7 +21,7 @@ export class UserCategoryResolverService {
       page: 1,
       size: 10,
       userId: user.id,
-      scope: ['user']
+      scope: ['user', 'category']
     };
 
     const categoryId: number = Number(activatedRouteSnapshot.paramMap.get('categoryId'));

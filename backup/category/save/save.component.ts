@@ -9,7 +9,7 @@ import {
   CategoryService,
   HelperService,
   SnackbarService
-} from '../../../../core';
+} from '../../../src/app/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { filter, pluck } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
