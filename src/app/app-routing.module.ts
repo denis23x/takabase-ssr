@@ -2,7 +2,12 @@
 
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes, UrlSegment } from '@angular/router';
-import { AuthGuard, NoAuthGuard } from './auth/core';
+import {
+  CanLoadPublicGuard,
+  CanLoadRestrictGuard,
+  CanActivatePublicGuard,
+  CanActivateRestrictGuard
+} from './core';
 
 const routes: Routes = [
   {
@@ -12,7 +17,8 @@ const routes: Routes = [
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
-    canLoad: [NoAuthGuard]
+    canLoad: [CanLoadPublicGuard],
+    canActivate: [CanActivatePublicGuard]
   },
   {
     matcher: (url: UrlSegment[]) => {
@@ -33,7 +39,8 @@ const routes: Routes = [
       }
     },
     loadChildren: () => import('./markdown/markdown.module').then(m => m.MarkdownModule),
-    canLoad: [AuthGuard]
+    canLoad: [CanLoadRestrictGuard],
+    canActivate: [CanActivateRestrictGuard]
   },
   {
     path: 'exception',
@@ -46,7 +53,8 @@ const routes: Routes = [
   {
     path: 'settings',
     loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule),
-    canLoad: [AuthGuard]
+    canLoad: [CanLoadRestrictGuard],
+    canActivate: [CanActivateRestrictGuard]
   },
   {
     path: 'users',
