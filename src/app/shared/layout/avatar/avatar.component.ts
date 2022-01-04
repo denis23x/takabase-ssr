@@ -40,6 +40,7 @@ export class AvatarComponent implements OnInit, OnDestroy {
           )
           .subscribe(() => {
             this.size = this.elementRef.nativeElement.clientWidth;
+
             this.getAvatar();
           });
       }

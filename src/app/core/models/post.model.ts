@@ -13,13 +13,3 @@ export interface Post {
   createdAt: string;
   updatedAt: string;
 }
-
-export interface PostEdit {
-  post: Post;
-  categoryList: Category[];
-}
-
-export interface PostHandler {
-  postForm: any;
-  onError: () => void;
-}

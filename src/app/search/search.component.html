@@ -37,8 +37,7 @@
           appSvgIcon
           [appIcon]="'x'"
           [appSquare]="'1.6rem'"
-          (click)="query.setValue('')"
-          [@fade]>
+          (click)="query.setValue('')">
         </button>
       </label>
       <span class="block text-sm text-danger-1" *ngIf="query.touched && query.errors" [ngSwitch]="true">

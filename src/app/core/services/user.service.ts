@@ -15,16 +15,16 @@ export class UserService {
     return this.apiService.get('/users', params);
   }
 
+  getAllByName(params?: any): Observable<User> {
+    return this.apiService.get('/users', params);
+  }
+
   getProfile(): Observable<User> {
     return this.apiService.get('/users/profile');
   }
 
   getOne(id: number): Observable<User> {
     return this.apiService.get('/users/' + id);
-  }
-
-  getOneByName(params?: any): Observable<User> {
-    return this.apiService.get('/users', params);
   }
 
   updateProfile(body: any): Observable<User> {

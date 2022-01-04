@@ -56,8 +56,7 @@
             (mouseleave)="isVisible.value = false"
             appSvgIcon
             [appIcon]="isVisible.value ? 'eye' : 'eye-slash'"
-            [appSquare]="'1.35rem'"
-            [@fade]>
+            [appSquare]="'1.35rem'">
           </div>
         </div>
         <span class="block text-sm text-danger-1" *ngIf="password.touched && password.errors" [ngSwitch]="true">

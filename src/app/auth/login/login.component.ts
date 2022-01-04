@@ -5,14 +5,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService, AuthLoginDto, HelperService } from '../../core';
-import { fade } from '../../app.animation';
 import { filter } from 'rxjs/operators';
 import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-auth-login',
-  templateUrl: './login.component.html',
-  animations: [fade]
+  templateUrl: './login.component.html'
 })
 export class AuthLoginComponent implements OnInit, OnDestroy {
   queryParams$: Subscription;

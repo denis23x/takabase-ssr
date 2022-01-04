@@ -1,7 +1,7 @@
 <ng-container>
   <app-snackbar></app-snackbar>
   <header class="bg-primary-3 flex justify-between items-center space-x-4 border-b border-primary-4 py-3 px-4" appHeader></header>
-  <main [@fadeRouting]="outlet && outlet.activatedRouteData">
+  <main class="block">
     <router-outlet #outlet="outlet"></router-outlet>
   </main>
 </ng-container>

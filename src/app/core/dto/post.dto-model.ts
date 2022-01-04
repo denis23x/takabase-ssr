@@ -1,12 +1,5 @@
 /** @format */
 
-export interface PostHandlerDto {
-  title: string;
-  body: string;
-  categoryId: number;
-  image?: string;
-}
-
 export interface PostGetOneDto {
   scope?: string[];
 }

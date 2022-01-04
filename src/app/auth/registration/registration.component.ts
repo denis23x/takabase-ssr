@@ -5,12 +5,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService, AuthRegistrationDto, HelperService } from '../../core';
-import { fade } from '../../app.animation';
 
 @Component({
   selector: 'app-auth-registration',
-  templateUrl: './registration.component.html',
-  animations: [fade]
+  templateUrl: './registration.component.html'
 })
 export class AuthRegistrationComponent implements OnDestroy {
   registrationForm: FormGroup;

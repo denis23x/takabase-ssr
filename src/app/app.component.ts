@@ -1,13 +1,11 @@
 /** @format */
 
 import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
-import { fadeRouting } from './app.animation';
 import { AuthService, PlatformService } from './core';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  animations: [fadeRouting]
+  templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit, AfterViewInit {
   title = 'draft-ssr';
