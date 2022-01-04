@@ -2,9 +2,9 @@
 
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
-import { forkJoin, Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { UserService, UserProfile, CategoryService, CategoryGetAllDto } from '../core';
+import { Observable, of, throwError, zip } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { UserService, UserProfile, CategoryService, CategoryGetAllDto, User } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
@@ -18,24 +18,29 @@ export class UserResolverService {
   ) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<UserProfile> {
-    const userId: number = Number(activatedRouteSnapshot.paramMap.get('userId'));
+    const name: string = activatedRouteSnapshot.parent.url[0].path;
 
-    const categoryGetAllDto: CategoryGetAllDto = {
-      userId
-    };
+    return this.userService
+      .getOneByName({
+        name: name.substring(1),
+        exact: 1
+      })
+      .pipe(
+        switchMap((user: User) => {
+          const categoryGetAllDto: CategoryGetAllDto = {
+            userId: user.id
+          };
 
-    return forkJoin([
-      this.userService.getOne(userId),
-      this.categoryService.getAll(categoryGetAllDto)
-    ]).pipe(
-      catchError((error: HttpErrorResponse) => {
-        this.router
-          .navigate(['/exception', error.status])
-          .then(() => console.debug('Route was changed'));
+          return zip(of(user), this.categoryService.getAll(categoryGetAllDto));
+        }),
+        catchError((error: HttpErrorResponse) => {
+          this.router
+            .navigate(['/exception', error.status])
+            .then(() => console.debug('Route was changed'));
 
-        return throwError(error);
-      }),
-      map(([user, categoryList]) => ({ user, categoryList }))
-    );
+          return throwError(error);
+        }),
+        map(([user, categoryList]) => ({ user, categoryList }))
+      );
   }
 }

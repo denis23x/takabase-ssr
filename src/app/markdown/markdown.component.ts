@@ -133,7 +133,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
         .subscribe(
           (post: Post) => {
             this.router
-              .navigate(['/users', this.user.id, 'category', post.category.id, 'posts', post.id])
+              .navigate(['/@' + this.user.name, 'category', post.category.id, 'posts', post.id])
               .then(() => {
                 return this.snackbarService.success(
                   'Success',

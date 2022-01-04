@@ -31,13 +31,13 @@
       <ng-container>
         <a
           class="hidden md:block text-secondary-1 hover:text-info-1 hover:underline mx-2"
-          [routerLink]="['/users', user.id]"
+          [routerLink]="['/@' + user.name]"
           [routerLinkActive]="['text-info-1']"
           [attr.aria-label]="user.name">{{user.name}}
         </a>
         <a
           class="block md:hidden fill-current text-secondary-1 hover:text-info-1 p-2"
-          [routerLink]="['/users', user.id]"
+          [routerLink]="['/@' + user.name]"
           [routerLinkActive]="['text-info-1']"
           [attr.aria-label]="user.name"
           appSvgIcon

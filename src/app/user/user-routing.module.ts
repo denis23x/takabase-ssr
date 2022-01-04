@@ -12,11 +12,6 @@ import { UserPostResolverService } from './post/post-resolver.service';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/',
-    pathMatch: 'full'
-  },
-  {
-    path: ':userId',
     component: UserComponent,
     resolve: {
       data: UserResolverService

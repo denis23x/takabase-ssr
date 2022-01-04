@@ -23,6 +23,10 @@ export class UserService {
     return this.apiService.get('/users/' + id);
   }
 
+  getOneByName(params?: any): Observable<User> {
+    return this.apiService.get('/users', params);
+  }
+
   updateProfile(body: any): Observable<User> {
     return this.apiService.put('/users/profile', body);
   }

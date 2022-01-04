@@ -56,7 +56,7 @@ export class SearchPostComponent implements OnInit, OnDestroy {
     let postGetAllDto: PostGetAllDto = {
       page: this.page,
       size: this.size,
-      scope: ['user']
+      scope: ['user', 'category']
     };
 
     const title: string = String(

@@ -1,6 +1,6 @@
 <article class="relative bg-primary-3 border border-primary-4 rounded-md overflow-hidden w-full h-full">
   <a
-    [routerLink]="['/users', post.user.id, 'category', post.category.id, 'posts', post.id]"
+    [routerLink]="['/@' + post.user.name, 'category', post.category.id, 'posts', post.id]"
     [attr.aria-label]="post.title"
     *ngIf="post.image">
     <img
@@ -13,7 +13,7 @@
     <div class="flex justify-between items-center w-full mb-2">
       <a
         class="flex border border-primary-4 overflow-hidden rounded-md w-10 h-10"
-        [routerLink]="['/users', post.user.id]"
+        [routerLink]="['/@' + post.user.name]"
         [attr.aria-label]="post.user.name"
         [appUser]="post.user"
         [appSize]="38"
@@ -24,14 +24,13 @@
         type="button"
         aria-label="Pin"
         appSvgIcon
-        [appIcon]="'pin-angle'"
-        [slot]="'toggle'">
+        [appIcon]="'pin-angle'">
       </button>
     </div>
     <div class="flex flex-col overflow-hidden w-full mb-4">
       <a
         class="text-info-1 hover:underline whitespace-nowrap overflow-ellipsis overflow-hidden"
-        [routerLink]="['/users', post.user.id]"
+        [routerLink]="['/@' + post.user.name]"
         [attr.aria-label]="post.user.name">{{post.user.name}}
       </a>
       <time
@@ -41,7 +40,7 @@
     </div>
     <a
       class="text-secondary-1 hover:text-info-1 hover:underline line-clamp-3 w-full mb-0"
-      [routerLink]="['/users', post.user.id, 'category', post.category.id, 'posts', post.id]"
+      [routerLink]="['/@' + post.user.name, 'category', post.category.id, 'posts', post.id]"
       [attr.aria-label]="post.title">{{post.title}}
     </a>
   </div>

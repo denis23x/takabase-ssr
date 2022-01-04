@@ -22,21 +22,7 @@ const routes: Routes = [
   },
   {
     matcher: (url: UrlSegment[]) => {
-      switch (url.length) {
-        case 1:
-          return url[0].path === 'create' ? { consumed: url } : null;
-        case 2:
-          return url[0].path === 'edit'
-            ? {
-                consumed: url.slice(0, 1),
-                posParams: {
-                  postId: new UrlSegment(url[1].path, {})
-                }
-              }
-            : null;
-        default:
-          return null;
-      }
+      return ['create', 'edit'].includes(url[0].path) ? { consumed: url.slice(0, 1) } : null;
     },
     loadChildren: () => import('./markdown/markdown.module').then(m => m.MarkdownModule),
     canLoad: [CanLoadRestrictGuard],
@@ -57,7 +43,9 @@ const routes: Routes = [
     canActivate: [CanActivateRestrictGuard]
   },
   {
-    path: 'users',
+    matcher: (url: UrlSegment[]) => {
+      return url[0].path.match(/^@[\w\.]+$/gm) ? { consumed: url.slice(0, 1) } : null;
+    },
     loadChildren: () => import('./user/user.module').then(m => m.UserModule)
   },
   {
