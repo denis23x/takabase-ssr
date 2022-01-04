@@ -3,8 +3,8 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { toSvg } from 'jdenticon';
 import { User, PlatformService } from '../../../core';
-import { filter, startWith } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, fromEvent, merge, Subscription } from 'rxjs';
+import { debounceTime, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-avatar, [appAvatar]',
@@ -13,62 +13,58 @@ import { Subscription } from 'rxjs';
 export class AvatarComponent implements OnInit, OnDestroy {
   @Input()
   set appUser(user: User) {
-    this.user = user;
-  }
-
-  @Input()
-  set appSize(size: number) {
-    this.size = size;
+    this.user$.next(user);
   }
 
   constructor(private platformService: PlatformService, private elementRef: ElementRef) {}
 
-  user: User;
-  size: number;
+  user$ = new BehaviorSubject<User>({} as User);
+  userSubscription$: Subscription;
 
   avatar: string;
-  windowResize$: Subscription;
+  avatarSize: number;
 
   ngOnInit(): void {
-    if (!this.size) {
-      if (this.platformService.isBrowser()) {
-        this.windowResize$ = this.platformService
-          .getResize(10)
-          .pipe(
-            startWith(0),
-            filter(() => this.size !== this.elementRef.nativeElement.clientWidth)
-          )
-          .subscribe(() => {
-            this.size = this.elementRef.nativeElement.clientWidth;
+    if (this.platformService.isBrowser()) {
+      const window = this.platformService.getWindow();
 
-            this.getAvatar();
-          });
-      }
-    } else {
-      this.getAvatar();
+      this.userSubscription$ = merge(
+        this.user$,
+        fromEvent(window, 'resize').pipe(
+          filter(() => {
+            return this.avatarSize !== this.elementRef.nativeElement.clientWidth;
+          })
+        )
+      )
+        .pipe(debounceTime(10))
+        .subscribe(() => {
+          this.avatarSize = this.elementRef.nativeElement.clientWidth;
+          this.avatar = this.user$.getValue().avatar ? this.getAvatar() : this.getJdenticon();
+        });
     }
   }
 
   ngOnDestroy(): void {
-    [this.windowResize$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.userSubscription$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
-  getAvatar(): void {
-    this.avatar = this.user.avatar ? this.getImage() : this.getJdenticon();
-  }
+  getAvatar(): string {
+    const user: User = this.user$.getValue();
 
-  getImage(): string {
     return `<img
       class="block object-cover"
       loading="lazy"
-      width="${this.size}"
-      height="${this.size}"
-      src="${this.user.avatar}"
-      alt="${this.user.name}">`;
+      width="${this.avatarSize}"
+      height="${this.avatarSize}"
+      src="${user.avatar}"
+      alt="${user.name}">`;
   }
 
   getJdenticon(): string {
-    return toSvg(this.user.name, this.size, {
+    const user: User = this.user$.getValue();
+
+    return toSvg(user.name, this.avatarSize, {
+      backColor: '#00000000',
       padding: 0
     });
   }
