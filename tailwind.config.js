@@ -52,7 +52,7 @@ module.exports = {
         ["touch"]: {
           raw: "(hover: none) and (pointer: coarse)",
         },
-        ["2xl"]: "1920px",
+        ["xs"]: "375px",
       },
       spacing: {
         128: "32rem",

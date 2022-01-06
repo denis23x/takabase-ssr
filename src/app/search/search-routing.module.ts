@@ -3,13 +3,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SearchComponent } from './search.component';
-import { SearchPostComponent } from './post/post.component';
-import { SearchPostResolverService } from './post/post-resolver.service';
 import { SearchCategoryComponent } from './category/category.component';
 import { SearchCategoryResolverService } from './category/category-resolver.service';
 import { SearchUserComponent } from './user/user.component';
 import { SearchUserResolverService } from './user/user-resolver.service';
-import { PostDetailComponent, PostDetailResolverService } from '../shared';
+import {
+  CategoryDetailComponent,
+  CategoryDetailResolverService,
+  PostDetailComponent,
+  PostDetailResolverService
+} from '../shared';
 
 const routes: Routes = [
   {
@@ -23,9 +26,9 @@ const routes: Routes = [
       },
       {
         path: 'posts',
-        component: SearchPostComponent,
+        component: CategoryDetailComponent,
         resolve: {
-          data: SearchPostResolverService
+          data: CategoryDetailResolverService
         },
         children: [
           {
