@@ -10,7 +10,7 @@ import {
   Router
 } from '@angular/router';
 import { EMPTY, of, Subscription } from 'rxjs';
-import { User, UserProfile, Category, CategoryState, AuthService } from '../core';
+import { User, Category, CategoryState, AuthService } from '../core';
 import { filter, pluck, startWith, switchMap, tap } from 'rxjs/operators';
 
 @Component({
@@ -42,11 +42,11 @@ export class UserComponent implements OnInit, OnDestroy {
 
     this.routeData$ = this.activatedRoute.data
       .pipe(pluck('data'))
-      .subscribe((userProfile: UserProfile) => {
-        this.user = userProfile.user;
+      .subscribe(([user, categoryList]: [User, Category[]]) => {
+        this.user = user;
         this.userIsProfile = this.userAuthed.id === this.user.id;
 
-        this.categoryList = userProfile.categoryList;
+        this.categoryList = categoryList;
       });
 
     this.routeEvents$ = this.router.events

@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
-import { PostService, Post, UserProfile, User, PostGetOneDto } from '../../../../core';
+import { PostService, Post, User, PostGetOneDto, Category } from '../../../../core';
 import { catchError, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -22,11 +22,9 @@ export class PostDetailResolverService {
 
     return this.postService.getOne(postId, postGetOneDto).pipe(
       switchMap((post: Post) => {
-        const userProfile: UserProfile = activatedRouteSnapshot.parent.parent.data.data;
+        const [user]: [User, Category[]] = activatedRouteSnapshot.parent.parent.data.data;
 
-        if (userProfile) {
-          const user: User = userProfile.user;
-
+        if (user) {
           if (user.id !== post.user.id) {
             const error: any = {
               status: 404,

@@ -3,13 +3,13 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of, throwError, zip } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import {
-  UserService,
-  UserProfile,
+  Category,
   CategoryService,
   CategoryGetAllDto,
   User,
+  UserService,
   UserGetAllDto
 } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -24,7 +24,7 @@ export class UserResolverService {
     private router: Router
   ) {}
 
-  resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<UserProfile> {
+  resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<[User, Category[]]> {
     const name: string = activatedRouteSnapshot.parent.url[0].path;
 
     const userGetAllDto: UserGetAllDto = {
@@ -46,8 +46,7 @@ export class UserResolverService {
           .then(() => console.debug('Route was changed'));
 
         return throwError(error);
-      }),
-      map(([user, categoryList]) => ({ user, categoryList }))
+      })
     );
   }
 }

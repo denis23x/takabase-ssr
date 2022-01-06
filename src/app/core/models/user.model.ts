@@ -1,7 +1,5 @@
 /** @format */
 
-import { Category } from './category.model';
-
 export interface User {
   id: number;
   name: string;
@@ -12,11 +10,6 @@ export interface User {
   interfaceConfig?: UserInterface;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface UserProfile {
-  user: User;
-  categoryList: Category[];
 }
 
 export interface UserInterface {
