@@ -38,7 +38,11 @@ export class AuthService {
 
   getAuthorization() {
     if (this.localStorageService.getItem(environment.TOKEN_LOCALSTORAGE)) {
-      this.userService.getProfile().subscribe((user: User) => this.setAuthorization(user));
+      const getOneDto: any = {
+        scope: ['categories']
+      };
+
+      this.userService.getProfile(getOneDto).subscribe((user: User) => this.setAuthorization(user));
     } else {
       this.removeAuthorization();
     }

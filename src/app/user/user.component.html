@@ -72,10 +72,9 @@
                     <li class="block">
                       <a
                         class="block text-secondary-1 hover:text-info-1 hover:bg-primary-1 hover:underline whitespace-nowrap w-full py-2 px-4"
-                        [routerLink]="['create/category']"
+                        [routerLink]="['create']"
                         [routerLinkActive]="'text-info-1'"
-                        aria-label="Create"
-                        (click)="categoryModal = 'create'">Create
+                        aria-label="Create">Create
                       </a>
                     </li>
                   </ng-container>
@@ -85,8 +84,7 @@
                         class="block text-secondary-1 hover:text-info-1 hover:bg-primary-1 hover:underline whitespace-nowrap w-full py-2 px-4"
                         [routerLink]="['category', category.id, 'create']"
                         [routerLinkActive]="'text-info-1'"
-                        aria-label="Create"
-                        (click)="categoryModal = 'create'">Create
+                        aria-label="Create">Create
                       </a>
                     </li>
                     <li class="block">
@@ -121,7 +119,7 @@
   </div>
   <ng-template #categoryListEmpty>
     <div class="text-secondary-1 px-3 py-2">No categories were found
-      <a class="text-info-1 hover:underline" [routerLink]="['.']" aria-label="Create category">you need to create at least one</a>
+      <a class="text-info-1 hover:underline" [routerLink]="['create']" aria-label="Create category">you need to create at least one</a>
     </div>
   </ng-template>
 </section>

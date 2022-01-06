@@ -19,8 +19,8 @@ export class UserService {
     return this.apiService.get('/users', params);
   }
 
-  getProfile(): Observable<User> {
-    return this.apiService.get('/users/profile');
+  getProfile(params?: any): Observable<User> {
+    return this.apiService.get('/users/profile', params);
   }
 
   getOne(id: number): Observable<User> {

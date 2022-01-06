@@ -9,11 +9,12 @@ import {
   PostService,
   SnackbarService,
   CategoryService,
-  User
+  User,
+  AuthService
 } from '../core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { iif, Subscription } from 'rxjs';
-import { filter, first, pluck } from 'rxjs/operators';
+import { filter, first, pairwise, pluck, startWith } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Split from 'split-grid';
 
@@ -27,6 +28,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   routeData$: Subscription;
 
   user: User;
+  user$: Subscription;
 
   post: Post;
   postForm: FormGroup;
@@ -38,11 +40,6 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   editorWhitespace: boolean;
   editorScrollSync: boolean;
 
-  categoryList: Category[] = [];
-  categoryForm: FormGroup;
-  categoryFormIsSubmitted: boolean;
-  categoryModal: boolean;
-
   constructor(
     private formBuilder: FormBuilder,
     private platformService: PlatformService,
@@ -51,7 +48,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     private helperService: HelperService,
     private postService: PostService,
     private snackbarService: SnackbarService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private authService: AuthService
   ) {
     this.postForm = this.formBuilder.group({
       body: [
@@ -62,41 +60,51 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
       categoryId: [null, [Validators.required]],
       categoryName: ['', [Validators.required]]
     });
-
-    this.categoryForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]]
-    });
   }
 
   ngOnInit(): void {
     this.routeData$ = this.activatedRoute.data
-      .pipe(pluck('data'))
-      .subscribe(([user, categoryList, post]) => {
-        this.user = user;
+      .pipe(
+        pluck('data'),
+        filter((post: Post) => !!post)
+      )
+      .subscribe((post: Post) => {
+        this.post = post;
 
-        this.categoryList = categoryList;
-
-        if (post) {
-          this.post = post;
-
-          this.postForm.patchValue({
-            body: this.post.body,
-            title: this.post.title,
-            categoryId: this.post.category.id,
-            categoryName: this.post.category.name
-          });
-        }
+        this.postForm.patchValue({
+          body: this.post.body,
+          title: this.post.title,
+          categoryId: this.post.category.id,
+          categoryName: this.post.category.name
+        });
       });
 
     this.postForm$ = this.postForm
       .get('categoryId')
       .valueChanges.pipe(filter(() => this.postForm.get('categoryId').valid))
       .subscribe((categoryId: number) => {
-        const category: Category = this.categoryList.find((category: Category) => {
+        const category: Category = this.user.categories.find((category: Category) => {
           return category.id === categoryId;
         });
 
         this.postForm.get('categoryName').setValue(category.name);
+      });
+
+    this.user$ = this.authService.userSubject
+      .pipe(startWith(this.authService.userSubject.getValue()), pairwise())
+      .subscribe(([previous, next]: [User, User]) => {
+        this.user = next || previous;
+
+        const category: Category = next.categories
+          .filter((category: Category) => !previous.categories.includes(category))
+          .shift();
+
+        if (category) {
+          this.postForm.patchValue({
+            categoryId: category.id,
+            categoryName: category.name
+          });
+        }
       });
   }
 
@@ -115,7 +123,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.routeData$, this.postForm$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.routeData$, this.postForm$, this.user$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
   onSubmitPostForm(): void {
@@ -143,29 +151,6 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
           },
           () => (this.postFormIsSubmitted = false)
         );
-    }
-  }
-
-  onSubmitCategoryForm(): void {
-    if (this.helperService.getFormValidation(this.categoryForm)) {
-      this.categoryFormIsSubmitted = true;
-
-      this.categoryService.createOne(this.categoryForm.value).subscribe(
-        (category: Category) => {
-          this.categoryList.unshift(category);
-          this.categoryForm.reset();
-          this.categoryFormIsSubmitted = false;
-          this.categoryModal = false;
-
-          this.postForm.patchValue({
-            categoryId: category.id,
-            categoryName: category.name
-          });
-
-          this.snackbarService.success('Success', 'Category created');
-        },
-        () => (this.categoryFormIsSubmitted = false)
-      );
     }
   }
 }

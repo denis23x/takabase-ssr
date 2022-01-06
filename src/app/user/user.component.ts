@@ -28,7 +28,6 @@ export class UserComponent implements OnInit, OnDestroy {
   userAuthed: User;
 
   categoryList: Category[] = [];
-  categoryModal: string;
   categoryActive: Category;
 
   constructor(

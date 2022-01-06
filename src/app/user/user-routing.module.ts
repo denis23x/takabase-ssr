@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserComponent } from './user.component';
 import { UserResolverService } from './user-resolver.service';
 import {
+  CategoryCreateComponent,
   CategoryDetailComponent,
   CategoryDetailResolverService,
   PostDetailComponent,
@@ -26,6 +27,10 @@ const routes: Routes = [
           data: CategoryDetailResolverService
         },
         children: [
+          {
+            path: 'create',
+            component: CategoryCreateComponent
+          },
           {
             path: 'posts',
             redirectTo: '',
@@ -52,6 +57,10 @@ const routes: Routes = [
           data: CategoryDetailResolverService
         },
         children: [
+          {
+            path: 'create',
+            component: CategoryCreateComponent
+          },
           {
             path: 'posts',
             redirectTo: '',

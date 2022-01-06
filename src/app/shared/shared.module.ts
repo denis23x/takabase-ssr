@@ -9,6 +9,7 @@ import { AppAuthedDirective, AppScrollIntoViewDirective } from './directives';
 import { DayjsPipe, MarkdownPipe, SanitizerPipe } from './pipes';
 import {
   AvatarComponent,
+  CategoryCreateComponent,
   CategoryDetailComponent,
   CategoryDetailResolverService,
   PostCardComponent,
@@ -26,6 +27,7 @@ import {
     AppAuthedDirective,
     AppScrollIntoViewDirective,
     AvatarComponent,
+    CategoryCreateComponent,
     CategoryDetailComponent,
     PostCardComponent,
     PostDetailComponent,
@@ -46,6 +48,7 @@ import {
     AppAuthedDirective,
     AppScrollIntoViewDirective,
     AvatarComponent,
+    CategoryCreateComponent,
     CategoryDetailComponent,
     PostCardComponent,
     PostDetailComponent,

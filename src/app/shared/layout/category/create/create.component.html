@@ -1,0 +1,45 @@
+<app-overlay (closed)="onClose()">
+  <section class="absolute inset-0 flex justify-center items-center pointer-events-none p-4" slot="content">
+    <form
+      class="max-h-full max-w-full w-11/12 sm:w-96 flex flex-col space-y-4 bg-primary-3 rounded-lg shadow-lg pointer-events-auto p-4"
+      [formGroup]="categoryForm"
+      (ngSubmit)="onSubmitCategoryForm()"
+      autocomplete="off">
+      <div class="flex justify-between items-center border-b border-primary-4 pb-2">
+        <span class="block text-xl text-secondary-1 font-medium leading-9">Create category</span>
+        <button
+          class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 cursor-pointer p-2"
+          type="button"
+          aria-label="Close"
+          (click)="onClose()"
+          appSvgIcon
+          [appIcon]="'x-lg'"
+          [appSquare]="'1rem'">
+        </button>
+      </div>
+      <fieldset class="flex flex-col space-y-4" [disabled]="categoryFormIsSubmitted">
+        <fieldset class="flex flex-col space-y-2" *ngIf="categoryForm.get('name') as name">
+          <label class="block text-secondary-2 text-sm" for="name">Name</label>
+          <input
+            id="name"
+            type="text"
+            class="form-control bg-primary-2"
+            formControlName="name"
+            placeholder="Name"
+            aria-label="Name">
+          <span class="block text-sm text-danger-1 mt-2" *ngIf="name.touched && name.errors" [ngSwitch]="true">
+            <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
+            <ng-container *ngSwitchCase="!!name.errors.minlength">Min length {{name.errors.minlength['requiredLength']}} characters</ng-container>
+            <ng-container *ngSwitchCase="!!name.errors.maxlength">Max length {{name.errors.maxlength['requiredLength']}} characters</ng-container>
+          </span>
+        </fieldset>
+        <button
+          class="btn btn-success w-full"
+          type="submit"
+          aria-label="Submit"
+          [disabled]="categoryForm.invalid || categoryFormIsSubmitted">Submit
+        </button>
+      </fieldset>
+    </form>
+  </section>
+</app-overlay>
