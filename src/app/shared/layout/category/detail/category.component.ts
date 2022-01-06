@@ -3,14 +3,14 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Subscription } from 'rxjs';
-import { Post, PostGetAllDto, PostService, User } from '../../core';
+import { Post, PostGetAllDto, PostService, User } from '../../../../core';
 import { pluck } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-user-category',
+  selector: 'app-category-detail',
   templateUrl: './category.component.html'
 })
-export class UserCategoryComponent {
+export class CategoryDetailComponent {
   routeData$: Subscription;
 
   page = 1;

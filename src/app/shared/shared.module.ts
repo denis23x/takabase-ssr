@@ -9,7 +9,11 @@ import { AppAuthedDirective, AppScrollIntoViewDirective } from './directives';
 import { DayjsPipe, MarkdownPipe, SanitizerPipe } from './pipes';
 import {
   AvatarComponent,
-  CardPostComponent,
+  CategoryDetailComponent,
+  CategoryDetailResolverService,
+  PostCardComponent,
+  PostDetailComponent,
+  PostDetailResolverService,
   DropdownComponent,
   MarkdownComponent,
   OverlayComponent,
@@ -22,7 +26,9 @@ import {
     AppAuthedDirective,
     AppScrollIntoViewDirective,
     AvatarComponent,
-    CardPostComponent,
+    CategoryDetailComponent,
+    PostCardComponent,
+    PostDetailComponent,
     DropdownComponent,
     MarkdownComponent,
     OverlayComponent,
@@ -40,7 +46,9 @@ import {
     AppAuthedDirective,
     AppScrollIntoViewDirective,
     AvatarComponent,
-    CardPostComponent,
+    CategoryDetailComponent,
+    PostCardComponent,
+    PostDetailComponent,
     DropdownComponent,
     MarkdownComponent,
     OverlayComponent,
@@ -48,6 +56,7 @@ import {
     DayjsPipe,
     MarkdownPipe,
     SanitizerPipe
-  ]
+  ],
+  providers: [CategoryDetailResolverService, PostDetailResolverService]
 })
 export class SharedModule {}

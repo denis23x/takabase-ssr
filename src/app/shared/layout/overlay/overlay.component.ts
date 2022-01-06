@@ -8,7 +8,7 @@ import { PlatformService } from '../../../core';
   templateUrl: 'overlay.component.html'
 })
 export class OverlayComponent implements OnInit, OnDestroy {
-  @Output() clicked = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
 
   constructor(private platformService: PlatformService) {}
 
@@ -24,7 +24,7 @@ export class OverlayComponent implements OnInit, OnDestroy {
     if (event.target === event.currentTarget) {
       this.platformService.setScrollToggle(false);
 
-      this.clicked.emit();
+      this.closed.emit();
     }
   }
 }

@@ -9,6 +9,7 @@ import { SearchCategoryComponent } from './category/category.component';
 import { SearchCategoryResolverService } from './category/category-resolver.service';
 import { SearchUserComponent } from './user/user.component';
 import { SearchUserResolverService } from './user/user-resolver.service';
+import { PostDetailComponent, PostDetailResolverService } from '../shared';
 
 const routes: Routes = [
   {
@@ -25,7 +26,16 @@ const routes: Routes = [
         component: SearchPostComponent,
         resolve: {
           data: SearchPostResolverService
-        }
+        },
+        children: [
+          {
+            path: ':postId',
+            component: PostDetailComponent,
+            resolve: {
+              data: PostDetailResolverService
+            }
+          }
+        ]
       },
       {
         path: 'categories',

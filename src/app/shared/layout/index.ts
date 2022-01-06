@@ -1,7 +1,8 @@
 /** @format */
 
 export * from './avatar/avatar.component';
-export * from './cards';
+export * from './category';
+export * from './post';
 export * from './dropdown/dropdown.component';
 export * from './header/header.component';
 export * from './markdown/markdown.component';

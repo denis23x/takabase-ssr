@@ -4,10 +4,12 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { UserComponent } from './user.component';
 import { UserResolverService } from './user-resolver.service';
-import { UserCategoryComponent } from './category/category.component';
-import { UserCategoryResolverService } from './category/category-resolver.service';
-import { UserPostComponent } from './post/post.component';
-import { UserPostResolverService } from './post/post-resolver.service';
+import {
+  CategoryDetailComponent,
+  CategoryDetailResolverService,
+  PostDetailComponent,
+  PostDetailResolverService
+} from '../shared';
 
 const routes: Routes = [
   {
@@ -19,21 +21,9 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: UserCategoryComponent,
+        component: CategoryDetailComponent,
         resolve: {
-          data: UserCategoryResolverService
-        }
-      },
-      {
-        path: 'category',
-        redirectTo: '',
-        pathMatch: 'full'
-      },
-      {
-        path: 'category/:categoryId',
-        component: UserCategoryComponent,
-        resolve: {
-          data: UserCategoryResolverService
+          data: CategoryDetailResolverService
         },
         children: [
           {
@@ -43,9 +33,35 @@ const routes: Routes = [
           },
           {
             path: 'posts/:postId',
-            component: UserPostComponent,
+            component: PostDetailComponent,
             resolve: {
-              data: UserPostResolverService
+              data: PostDetailResolverService
+            }
+          }
+        ]
+      },
+      {
+        path: 'category',
+        redirectTo: '',
+        pathMatch: 'full'
+      },
+      {
+        path: 'category/:categoryId',
+        component: CategoryDetailComponent,
+        resolve: {
+          data: CategoryDetailResolverService
+        },
+        children: [
+          {
+            path: 'posts',
+            redirectTo: '',
+            pathMatch: 'full'
+          },
+          {
+            path: 'posts/:postId',
+            component: PostDetailComponent,
+            resolve: {
+              data: PostDetailResolverService
             }
           }
         ]

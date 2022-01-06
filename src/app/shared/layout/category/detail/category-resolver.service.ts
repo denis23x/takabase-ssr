@@ -4,13 +4,13 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { PostService, PostGetAllDto, Post, UserProfile, User } from '../../core';
+import { PostService, PostGetAllDto, Post, UserProfile, User } from '../../../../core';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserCategoryResolverService {
+export class CategoryDetailResolverService {
   constructor(private postService: PostService, private router: Router) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Post[]> {

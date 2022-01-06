@@ -3,7 +3,7 @@
     <ng-content select="[slot=toggle]"></ng-content>
   </div>
   <ng-container *ngIf="state">
-    <app-overlay (click)="setState(false)"></app-overlay>
+    <app-overlay (closed)="setState(false)"></app-overlay>
     <div class="absolute w-full h-full" #content>
       <ng-content select="[slot=content]"></ng-content>
     </div>
