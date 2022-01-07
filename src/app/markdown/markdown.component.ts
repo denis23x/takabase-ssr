@@ -8,7 +8,9 @@ import {
   Post,
   PostService,
   SnackbarService,
-  AuthService
+  AuthService,
+  PostCreateOneDto,
+  PostUpdateOneDto
 } from '../core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { iif, Subscription } from 'rxjs';
@@ -103,14 +105,17 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onSubmitPostForm(postFormIsSubmitted: (submitted: boolean) => boolean): void {
     if (this.helperService.getFormValidation(this.postForm)) {
-      const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-
       this.postFormIsSubmitted = postFormIsSubmitted(true);
+
+      const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+      const postCreateOneDto: PostCreateOneDto = {
+        ...this.postForm.value
+      };
 
       iif(
         () => !!postId,
-        this.postService.updateOne(postId, this.postForm.value),
-        this.postService.createOne(this.postForm.value)
+        this.postService.updateOne(postId, postCreateOneDto as PostUpdateOneDto),
+        this.postService.createOne(postCreateOneDto)
       ).subscribe(
         (post: Post) => {
           this.router

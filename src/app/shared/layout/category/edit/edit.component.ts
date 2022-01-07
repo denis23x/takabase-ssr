@@ -1,7 +1,13 @@
 /** @format */
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Category, CategoryService, HelperService, SnackbarService } from '../../../../core';
+import {
+  Category,
+  CategoryService,
+  CategoryUpdateOneDto,
+  HelperService,
+  SnackbarService
+} from '../../../../core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { iif } from 'rxjs';
 
@@ -70,7 +76,7 @@ export class CategoryEditComponent implements OnInit {
       this.categoryFormIsSubmitted = true;
 
       const categoryId: number = this.categoryForm.value.id;
-      const categoryUpdateOneDto: any = {
+      const categoryUpdateOneDto: CategoryUpdateOneDto = {
         ...this.categoryForm.value
       };
 

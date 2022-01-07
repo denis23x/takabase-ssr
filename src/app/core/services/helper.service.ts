@@ -1,7 +1,7 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 @Injectable()
 export class HelperService {
@@ -25,8 +25,8 @@ export class HelperService {
   }
 
   getCustomValidator(validator: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const value = control.value;
+    return (abstractControl: AbstractControl): ValidationErrors | null => {
+      const value = abstractControl.value;
       const valid = (value: string): boolean => {
         switch (validator) {
           case 'url-youtube':

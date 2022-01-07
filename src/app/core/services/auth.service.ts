@@ -4,7 +4,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
-import { ApiService, LocalStorageService, User, UserService } from '../index';
+import {
+  ApiService,
+  AuthLoginDto,
+  AuthRegistrationDto,
+  LocalStorageService,
+  User,
+  UserGetOneDto,
+  UserService
+} from '../index';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -24,8 +32,12 @@ export class AuthService {
     private localStorageService: LocalStorageService
   ) {}
 
-  getAuthentication(path: string, body: any, set: boolean = true): Observable<User> {
-    return this.apiService.post(path, body).pipe(
+  getAuthentication(
+    path: string,
+    authenticationDto: AuthLoginDto | AuthRegistrationDto,
+    set: boolean = true
+  ): Observable<User> {
+    return this.apiService.post(path, { ...authenticationDto }).pipe(
       tap((user: User) => {
         if (set) {
           this.setAuthorization(user);
@@ -38,11 +50,13 @@ export class AuthService {
 
   getAuthorization() {
     if (this.localStorageService.getItem(environment.TOKEN_LOCALSTORAGE)) {
-      const getOneDto: any = {
+      const userGetOneDto: UserGetOneDto = {
         scope: ['categories']
       };
 
-      this.userService.getProfile(getOneDto).subscribe((user: User) => this.setAuthorization(user));
+      this.userService
+        .getProfile(userGetOneDto)
+        .subscribe((user: User) => this.setAuthorization(user));
     } else {
       this.removeAuthorization();
     }

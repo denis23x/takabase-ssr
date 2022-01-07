@@ -19,8 +19,8 @@ import { debounceTime, filter } from 'rxjs/operators';
   templateUrl: './dropdown.component.html'
 })
 export class DropdownComponent implements OnInit, OnDestroy {
-  @ViewChild('target') target: any;
-  @ViewChild('content') content: any;
+  @ViewChild('target') target: ElementRef;
+  @ViewChild('content') content: ElementRef;
 
   @Output() toggled = new EventEmitter<boolean>();
 

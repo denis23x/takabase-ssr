@@ -6,54 +6,58 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { SnackbarService } from './snackbar.service';
-import { ApiError } from '../models';
+import { RequestError, RequestBody, RequestParams } from '../models';
 
 @Injectable()
 export class ApiService {
   constructor(private http: HttpClient, private snackbarService: SnackbarService) {}
 
-  getErrorSnack(response: HttpErrorResponse) {
-    const getMessage = (error: ApiError): string => {
-      switch (typeof error.message) {
+  setError(httpErrorResponse: HttpErrorResponse): Observable<never> {
+    const getMessage = (requestError: RequestError): string => {
+      switch (typeof requestError.message) {
         case 'string':
-          return String(error.message);
+          return String(requestError.message);
         case 'object':
-          return String(error.message.join(', '));
+          return String(requestError.message.join(', '));
         default:
           return 'Unknown error';
       }
     };
 
-    const getTimeout = (error: ApiError): number => {
-      return typeof error.message === 'object' ? error.message.length * 4000 : 5000;
+    const getTimeout = (requestError: RequestError): number => {
+      return typeof requestError.message === 'object' ? requestError.message.length * 4000 : 5000;
     };
 
-    this.snackbarService.danger('Error', getMessage(response.error), getTimeout(response.error));
+    this.snackbarService.danger(
+      'Error',
+      getMessage(httpErrorResponse.error),
+      getTimeout(httpErrorResponse.error)
+    );
 
-    return throwError(response);
+    return throwError(httpErrorResponse);
   }
 
-  get(path: string, params?: any): Observable<any> {
+  get(path: string, requestParams?: RequestParams): Observable<any> {
     return this.http
-      .get(environment.API_URL + path, { params })
-      .pipe(catchError(error => this.getErrorSnack(error)));
+      .get(environment.API_URL + path, { params: requestParams })
+      .pipe(catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse)));
   }
 
-  put(path: string, body?: any): Observable<any> {
+  put(path: string, requestBody?: RequestBody): Observable<any> {
     return this.http
-      .put(environment.API_URL + path, JSON.stringify(body || {}))
-      .pipe(catchError(error => this.getErrorSnack(error)));
+      .put(environment.API_URL + path, JSON.stringify(requestBody || {}))
+      .pipe(catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse)));
   }
 
-  post(path: string, body?: any): Observable<any> {
+  post(path: string, requestBody?: RequestBody): Observable<any> {
     return this.http
-      .post(environment.API_URL + path, JSON.stringify(body || {}))
-      .pipe(catchError(error => this.getErrorSnack(error)));
+      .post(environment.API_URL + path, JSON.stringify(requestBody || {}))
+      .pipe(catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse)));
   }
 
   delete(path: string): Observable<any> {
     return this.http
       .delete(environment.API_URL + path)
-      .pipe(catchError(error => this.getErrorSnack(error)));
+      .pipe(catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse)));
   }
 }

@@ -1,7 +1,7 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { HelperService, LocalStorageService, PlatformService } from '../../core';
+import { HelperService, LocalStorageService, MarkdownParser, PlatformService } from '../../core';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -25,7 +25,7 @@ export class MarkdownPluginService {
     return '';
   }
 
-  getYoutubeTemplate(service: string, id: string, url: string, options: any): string {
+  getYoutubeTemplate(service: string, id: string, url: string, options?: any): string {
     const parameter = id.indexOf('?');
     const src = 'https://www.youtube.com/embed/';
 
@@ -55,7 +55,7 @@ export class MarkdownPluginService {
     return '';
   }
 
-  getGithubTemplate(service: string, id: string, url: string, options: any): string {
+  getGithubTemplate(service: string, id: string, url: string, options?: any): string {
     const parameter = id.indexOf('?');
     const src = 'https://gist.github.com/';
     const config = this.localStorageService.getItem(environment.CONFIG_LOCALSTORAGE);
@@ -134,7 +134,7 @@ export class MarkdownPluginService {
     `;
   }
 
-  embed(md: any, options: any): (state: any, silent: any) => boolean {
+  embed(md: any, options: any): (state: any, silent: boolean) => boolean {
     return (state, silent): boolean => {
       const theState = state;
       const oldPos = state.pos;
@@ -147,17 +147,17 @@ export class MarkdownPluginService {
       }
 
       const service = match[1].toLowerCase();
-      const parser: any = {
+      const markdownParser: MarkdownParser = {
         ['youtube']: this.getYoutubeParser(match[2]),
         ['github']: this.getGithubParser(match[2])
       };
 
       let id: string;
 
-      if (!parser[service]) {
+      if (!markdownParser[service]) {
         return false;
       } else {
-        id = parser[service];
+        id = markdownParser[service];
       }
 
       const serviceStart: number = oldPos + 2;

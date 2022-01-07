@@ -31,8 +31,8 @@ export class MarkdownResolverService {
         switchMap(([post, user]: [Post, User]) => {
           if (user.id !== post.user.id) {
             return throwError({
-              status: 404,
-              message: 'Not found'
+              status: 403,
+              message: 'Forbidden'
             });
           }
 

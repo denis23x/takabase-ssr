@@ -11,6 +11,7 @@ import Prism from 'prismjs';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.min';
 import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-scss';
+import { MarkdownPosition, MarkdownTextarea } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -63,7 +64,7 @@ export class MarkdownService {
     }
   }
 
-  getTextarea(textarea: HTMLTextAreaElement): any {
+  getTextarea(textarea: HTMLTextAreaElement): MarkdownTextarea {
     const { selectionStart, selectionEnd, value } = textarea;
 
     return {
@@ -75,7 +76,7 @@ export class MarkdownService {
     };
   }
 
-  getPosition(value: string, start: number, end: number): any {
+  getPosition(value: string, start: number, end: number): MarkdownPosition {
     return {
       positionBefore: {
         space: value.substring(start - 1, end).search(/\S+/g) < 0,

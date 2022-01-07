@@ -28,13 +28,14 @@ export class AppScrollIntoViewDirective implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.platformService.isBrowser()) {
       this.intersectionObserver = new IntersectionObserver(
-        (entries: any) =>
-          entries.forEach(
-            (entry: any) =>
+        (entries: IntersectionObserverEntry[]) =>
+          entries.forEach((entry: IntersectionObserverEntry) => {
+            return (
               this.active &&
               !entry.isIntersecting &&
               entry.target.scrollIntoView({ block: 'nearest' })
-          ),
+            );
+          }),
         {
           root: this.root,
           threshold: 1

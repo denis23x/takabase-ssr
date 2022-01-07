@@ -35,8 +35,12 @@ export class AuthRegistrationComponent implements OnDestroy {
     [this.registrationForm$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
-  getAuthentication(authRegistrationDto: AuthRegistrationDto = this.registrationForm.value): void {
+  getAuthentication(): void {
     this.registrationFormIsSubmitted = true;
+
+    const authRegistrationDto: AuthRegistrationDto = {
+      ...this.registrationForm.value
+    };
 
     this.registrationForm$ = this.authService
       .getAuthentication('/users', authRegistrationDto)

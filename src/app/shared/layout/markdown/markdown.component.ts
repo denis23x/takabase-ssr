@@ -3,7 +3,7 @@
 import { AfterViewInit, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { MarkdownControl, MarkdownService, HelperService, PlatformService } from '../../../core';
 import { MarkdownControlList } from './markdown-control-list';
-import { BehaviorSubject, fromEvent, merge, Subscription, of } from 'rxjs';
+import { BehaviorSubject, fromEvent, merge, Subscription, of, EMPTY } from 'rxjs';
 import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DOCUMENT } from '@angular/common';
@@ -70,7 +70,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
       this.preview = this.document.getElementById(this.previewId);
 
       this.textareaInput$ = fromEvent(this.textarea, 'input')
-        .pipe(startWith(0), debounceTime(200))
+        .pipe(startWith(EMPTY), debounceTime(200))
         .subscribe(() => {
           this.markdownService.getRender(this.textarea.value, this.preview);
 

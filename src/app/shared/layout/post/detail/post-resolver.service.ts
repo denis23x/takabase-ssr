@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
-import { PostService, Post, User, PostGetOneDto, Category } from '../../../../core';
+import { PostService, Post, User, PostGetOneDto } from '../../../../core';
 import { catchError, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -28,16 +28,10 @@ export class PostDetailResolverService {
           const user: User = data;
 
           if (user.id !== post.user.id) {
-            const error: any = {
-              status: 404,
-              message: 'Not found'
-            };
-
-            this.router
-              .navigate(['/exception', error.status])
-              .then(() => console.debug('Route was changed'));
-
-            return throwError(error);
+            return throwError({
+              status: 403,
+              message: 'Forbidden'
+            });
           }
         }
 

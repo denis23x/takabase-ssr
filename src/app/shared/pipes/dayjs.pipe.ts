@@ -10,7 +10,7 @@ dayjs.extend(relativeTime);
   name: 'dayjs'
 })
 export class DayjsPipe implements PipeTransform {
-  transform(value: string, type: string, options?: any): string {
+  transform(value: string, type: string, options?: string): string {
     switch (type) {
       case 'fromX':
         return dayjs(value).from(dayjs());

@@ -1,7 +1,13 @@
 /** @format */
 
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Category, CategoryService, HelperService, SnackbarService } from '../../../../core';
+import {
+  Category,
+  CategoryCreateOneDto,
+  CategoryService,
+  HelperService,
+  SnackbarService
+} from '../../../../core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -32,7 +38,11 @@ export class CategoryCreateComponent implements OnInit {
     if (this.helperService.getFormValidation(this.categoryForm)) {
       this.categoryFormIsSubmitted = true;
 
-      this.categoryService.createOne(this.categoryForm.value).subscribe(
+      const categoryCreateOneDto: CategoryCreateOneDto = {
+        ...this.categoryForm.value
+      };
+
+      this.categoryService.createOne(categoryCreateOneDto).subscribe(
         (category: Category) => {
           this.submitted.emit(category);
           this.snackbarService.success('Success', 'Category created');

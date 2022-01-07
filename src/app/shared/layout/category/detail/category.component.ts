@@ -1,22 +1,25 @@
 /** @format */
 
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Post, PostGetAllDto, PostService, User } from '../../../../core';
 import { pluck, skip, tap } from 'rxjs/operators';
 
-export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, snapshot: any): PostGetAllDto => {
-  switch (snapshot.parent.routeConfig.component.name) {
+export const getPostGetAllDto = (
+  postGetAllDto: PostGetAllDto,
+  activatedRouteSnapshot: ActivatedRouteSnapshot
+): PostGetAllDto => {
+  switch (activatedRouteSnapshot.parent.routeConfig.component.name) {
     case 'UserComponent': {
-      const user: User = snapshot.parent.data.data;
+      const user: User = activatedRouteSnapshot.parent.data.data;
 
       postGetAllDto = {
         ...postGetAllDto,
         userId: user.id
       };
 
-      const categoryId: number = Number(snapshot.paramMap.get('categoryId'));
+      const categoryId: number = Number(activatedRouteSnapshot.paramMap.get('categoryId'));
 
       if (categoryId) {
         postGetAllDto = {
@@ -28,7 +31,7 @@ export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, snapshot: any): P
       return postGetAllDto;
     }
     case 'SearchComponent': {
-      const title: string = String(snapshot.parent.queryParamMap.get('query') || '');
+      const title: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
 
       if (title) {
         postGetAllDto = {

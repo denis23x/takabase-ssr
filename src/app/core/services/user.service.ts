@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../services';
 import { User } from '../models';
+import { UserGetAllDto, UserUpdateOneDto } from '../dto';
 
 @Injectable({
   providedIn: 'root'
@@ -11,24 +12,24 @@ import { User } from '../models';
 export class UserService {
   constructor(private apiService: ApiService) {}
 
-  getAll(params?: any): Observable<User[]> {
-    return this.apiService.get('/users', params);
+  getAll(userGetAllDto?: UserGetAllDto): Observable<User[]> {
+    return this.apiService.get('/users', { ...userGetAllDto });
   }
 
-  getAllByName(params?: any): Observable<User> {
-    return this.apiService.get('/users', params);
+  getAllByName(userGetAllDto?: UserGetAllDto): Observable<User> {
+    return this.apiService.get('/users', { ...userGetAllDto });
   }
 
-  getProfile(params?: any): Observable<User> {
-    return this.apiService.get('/users/profile', params);
+  getProfile(userGetOneDto?: UserGetAllDto): Observable<User> {
+    return this.apiService.get('/users/profile', { ...userGetOneDto });
   }
 
   getOne(id: number): Observable<User> {
     return this.apiService.get('/users/' + id);
   }
 
-  updateProfile(body: any): Observable<User> {
-    return this.apiService.put('/users/profile', body);
+  updateProfile(userUpdateOneDto: UserUpdateOneDto): Observable<User> {
+    return this.apiService.put('/users/profile', { ...userUpdateOneDto });
   }
 
   deleteProfile(): Observable<User> {
