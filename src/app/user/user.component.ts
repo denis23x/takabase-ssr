@@ -1,17 +1,10 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-  Event as RouterEvent,
-  Navigation,
-  NavigationEnd,
-  Router
-} from '@angular/router';
-import { EMPTY, of, Subscription } from 'rxjs';
-import { User, Category, CategoryState, AuthService } from '../core';
-import { filter, pluck, startWith, switchMap, tap } from 'rxjs/operators';
+import { ActivatedRoute, NavigationEnd, Router, Event as RouterEvent } from '@angular/router';
+import { combineLatest, EMPTY, of, Subscription } from 'rxjs';
+import { User, Category, AuthService } from '../core';
+import { filter, pluck, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user',
@@ -22,13 +15,10 @@ export class UserComponent implements OnInit, OnDestroy {
   routeEvents$: Subscription;
 
   user: User;
-  userIsProfile: boolean;
+  userProfile: boolean;
 
-  userAuthed$: Subscription;
-  userAuthed: User;
-
-  categoryList: Category[] = [];
-  categoryActive: Category;
+  category: Category;
+  categoryModal: 'create' | 'edit';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -37,72 +27,43 @@ export class UserComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.userAuthed$ = this.authService.user.subscribe((user: User) => (this.userAuthed = user));
-
-    this.routeData$ = this.activatedRoute.data
-      .pipe(pluck('data'))
-      .subscribe(([user, categoryList]: [User, Category[]]) => {
-        this.user = user;
-        this.userIsProfile = this.userAuthed.id === this.user.id;
-
-        this.categoryList = categoryList;
-      });
+    this.routeData$ = combineLatest([
+      this.authService.userSubject,
+      this.activatedRoute.data.pipe(pluck('data'))
+    ]).subscribe(([authedUser, routedUser]: [User, User]) => {
+      this.userProfile = authedUser.id === routedUser.id;
+      this.user = this.userProfile ? authedUser : routedUser;
+    });
 
     this.routeEvents$ = this.router.events
       .pipe(
         filter((routerEvent: RouterEvent) => routerEvent instanceof NavigationEnd),
-        startWith(this.activatedRoute),
-        tap(() => {
-          const categoryId = this.activatedRoute.snapshot.children
-            .map((activatedRouteSnapshot: ActivatedRouteSnapshot) => {
-              return activatedRouteSnapshot.paramMap.get('categoryId');
-            })
-            .shift();
-
-          this.categoryActive = this.categoryList.find((category: Category) => {
-            return category.id === Number(categoryId);
-          });
-        }),
-        switchMap(() => {
-          const navigation: Navigation = this.router.getCurrentNavigation();
-
-          if (navigation && navigation.extras.state) {
-            return of(navigation.extras.state as CategoryState);
-          }
-
-          return EMPTY;
-        })
+        startWith(EMPTY),
+        switchMap(() => of(this.activatedRoute.snapshot.firstChild.params)),
+        pluck('categoryId')
       )
-      .subscribe((categoryState: CategoryState) => {
-        const { message, category } = categoryState;
-        const { id } = category;
-
-        const i = this.categoryList.findIndex((category: Category) => category.id === id);
-
-        const messageMap = {
-          ['categoryCreated']: (): void => {
-            this.router.navigate(['/profile/category', id]).then(() => {
-              this.categoryList.unshift(category);
-              this.categoryActive = category;
-            });
-          },
-          ['categoryUpdated']: (): void => {
-            this.categoryList[i] = category;
-            this.categoryActive = category;
-          },
-          ['categoryDeleted']: (): void => {
-            this.router.navigate(['/profile']).then(() => {
-              this.categoryList.splice(i, 1);
-              this.categoryActive = undefined;
-            });
-          }
-        };
-
-        messageMap[message]();
+      .subscribe((categoryId: string) => {
+        this.category = this.user.categories.find((category: Category) => {
+          return category.id === Number(categoryId);
+        });
       });
   }
 
   ngOnDestroy(): void {
-    [this.routeData$, this.userAuthed$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.routeData$, this.routeEvents$].filter($ => $).forEach($ => $.unsubscribe());
+  }
+
+  onSubmitCategoryForm(category: Category): void {
+    this.authService.getAuthorization();
+
+    let path: string[] = ['/@' + this.user.name];
+
+    category = !!category.id ? category : undefined;
+    category && (path = path.concat(['category', String(category.id)]));
+
+    this.router.navigate(path).then(() => {
+      this.category = category;
+      this.categoryModal = undefined;
+    });
   }
 }

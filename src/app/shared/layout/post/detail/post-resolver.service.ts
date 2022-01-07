@@ -25,7 +25,7 @@ export class PostDetailResolverService {
         const data = activatedRouteSnapshot.parent.parent.data.data;
 
         if (data) {
-          const [user]: [User, Category[]] = data;
+          const user: User = data;
 
           if (user.id !== post.user.id) {
             const error: any = {

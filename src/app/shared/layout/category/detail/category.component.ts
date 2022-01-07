@@ -3,13 +3,13 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Category, Post, PostGetAllDto, PostService, User } from '../../../../core';
+import { Post, PostGetAllDto, PostService, User } from '../../../../core';
 import { pluck, skip, tap } from 'rxjs/operators';
 
 export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, snapshot: any): PostGetAllDto => {
   switch (snapshot.parent.routeConfig.component.name) {
     case 'UserComponent': {
-      const [user]: [User, Category[]] = snapshot.parent.data.data;
+      const user: User = snapshot.parent.data.data;
 
       postGetAllDto = {
         ...postGetAllDto,
