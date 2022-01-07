@@ -56,6 +56,7 @@ export class CategoryDetailComponent {
   page = 1;
   size = 10;
 
+  postPath: string;
   postList: Post[] = [];
   postListLoading: boolean;
   postListHasMore: boolean;
@@ -63,6 +64,11 @@ export class CategoryDetailComponent {
   constructor(private activatedRoute: ActivatedRoute, private postService: PostService) {}
 
   ngOnInit(): void {
+    this.postPath =
+      this.activatedRoute.snapshot.parent.routeConfig.component.name === 'UserComponent'
+        ? 'posts'
+        : './';
+
     this.routeData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe((postList: Post[]) => {
       this.page = 1;
       this.size = 10;

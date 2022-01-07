@@ -14,6 +14,7 @@
         </button>
       </div>
       <div class="border-t border-b border-primary-4 overflow-auto pr-4">
+        <a class="block text-info-1 mb-10" [routerLink]="['/edit', post.id]">Edit this post</a>
         <img class="block" [src]="post.image" [alt]="post.title">
         <article class="markdown-html py-4" #article>{{post.body | markdown: article}}</article>
       </div>

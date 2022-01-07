@@ -22,9 +22,11 @@ export class PostDetailResolverService {
 
     return this.postService.getOne(postId, postGetOneDto).pipe(
       switchMap((post: Post) => {
-        const [user]: [User, Category[]] = activatedRouteSnapshot.parent.parent.data.data;
+        const data = activatedRouteSnapshot.parent.parent.data.data;
 
-        if (user) {
+        if (data) {
+          const [user]: [User, Category[]] = data;
+
           if (user.id !== post.user.id) {
             const error: any = {
               status: 404,

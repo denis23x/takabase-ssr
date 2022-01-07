@@ -8,13 +8,11 @@ import {
   Post,
   PostService,
   SnackbarService,
-  CategoryService,
-  User,
   AuthService
 } from '../core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { iif, Subscription } from 'rxjs';
-import { filter, first, pairwise, pluck, startWith } from 'rxjs/operators';
+import { filter, pluck } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Split from 'split-grid';
 
@@ -27,14 +25,11 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
   routeData$: Subscription;
 
-  user: User;
-  user$: Subscription;
-
-  post: Post;
   postForm: FormGroup;
   postForm$: Subscription;
   postFormIsSubmitted: boolean;
   postModal: boolean;
+  postCategoryModal: boolean;
 
   editorMinSize = 425;
   editorWhitespace: boolean;
@@ -48,7 +43,6 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     private helperService: HelperService,
     private postService: PostService,
     private snackbarService: SnackbarService,
-    private categoryService: CategoryService,
     private authService: AuthService
   ) {
     this.postForm = this.formBuilder.group({
@@ -69,42 +63,12 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
         filter((post: Post) => !!post)
       )
       .subscribe((post: Post) => {
-        this.post = post;
-
         this.postForm.patchValue({
-          body: this.post.body,
-          title: this.post.title,
-          categoryId: this.post.category.id,
-          categoryName: this.post.category.name
+          body: post.body,
+          title: post.title,
+          categoryId: post.category.id,
+          categoryName: post.category.name
         });
-      });
-
-    this.postForm$ = this.postForm
-      .get('categoryId')
-      .valueChanges.pipe(filter(() => this.postForm.get('categoryId').valid))
-      .subscribe((categoryId: number) => {
-        const category: Category = this.user.categories.find((category: Category) => {
-          return category.id === categoryId;
-        });
-
-        this.postForm.get('categoryName').setValue(category.name);
-      });
-
-    this.user$ = this.authService.userSubject
-      .pipe(startWith(this.authService.userSubject.getValue()), pairwise())
-      .subscribe(([previous, next]: [User, User]) => {
-        this.user = next || previous;
-
-        const category: Category = next.categories
-          .filter((category: Category) => !previous.categories.includes(category))
-          .shift();
-
-        if (category) {
-          this.postForm.patchValue({
-            categoryId: category.id,
-            categoryName: category.name
-          });
-        }
       });
   }
 
@@ -123,34 +87,40 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.routeData$, this.postForm$, this.user$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.routeData$, this.postForm$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
-  onSubmitPostForm(): void {
-    if (this.helperService.getFormValidation(this.postForm)) {
-      this.postFormIsSubmitted = true;
+  onSubmitCategoryForm(category: Category): void {
+    this.authService.getAuthorization();
 
-      const isUpdate: boolean = !!this.post;
+    this.postForm.patchValue({
+      categoryId: category.id,
+      categoryName: category.name
+    });
+
+    this.postCategoryModal = false;
+  }
+
+  onSubmitPostForm(postFormIsSubmitted: (submitted: boolean) => boolean): void {
+    if (this.helperService.getFormValidation(this.postForm)) {
+      const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+
+      this.postFormIsSubmitted = postFormIsSubmitted(true);
 
       iif(
-        () => isUpdate,
-        this.postService.updateOne(this.post?.id, this.postForm.value),
+        () => !!postId,
+        this.postService.updateOne(postId, this.postForm.value),
         this.postService.createOne(this.postForm.value)
-      )
-        .pipe(first())
-        .subscribe(
-          (post: Post) => {
-            this.router
-              .navigate(['/@' + this.user.name, 'category', post.category.id, 'posts', post.id])
-              .then(() => {
-                return this.snackbarService.success(
-                  'Success',
-                  'Post' + isUpdate ? 'updated' : 'created'
-                );
-              });
-          },
-          () => (this.postFormIsSubmitted = false)
-        );
+      ).subscribe(
+        (post: Post) => {
+          this.router
+            .navigate(['/@' + post.user.name, 'category', post.category.id, 'posts', post.id])
+            .then(() => {
+              return this.snackbarService.success('Success', 'Post saved');
+            });
+        },
+        () => (this.postFormIsSubmitted = postFormIsSubmitted(false))
+      );
     }
   }
 }

@@ -3,6 +3,7 @@
 import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../core';
+import { tap } from 'rxjs/operators';
 
 @Directive({
   selector: '[appAuthed]'
@@ -24,13 +25,15 @@ export class AppAuthedDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.isAuthenticated$ = this.authService.isAuthenticated.subscribe(isAuthenticated => {
-      if ((isAuthenticated && this.authed) || (!isAuthenticated && !this.authed)) {
-        this.viewContainerRef.createEmbeddedView(this.templateRef);
-      } else {
-        this.viewContainerRef.clear();
-      }
-    });
+    this.isAuthenticated$ = this.authService.isAuthenticated
+      .pipe(tap(() => this.viewContainerRef.clear()))
+      .subscribe(isAuthenticated => {
+        if ((isAuthenticated && this.authed) || (!isAuthenticated && !this.authed)) {
+          this.viewContainerRef.createEmbeddedView(this.templateRef);
+        } else {
+          this.viewContainerRef.clear();
+        }
+      });
   }
 
   ngOnDestroy(): void {
