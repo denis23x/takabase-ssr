@@ -1,6 +1,6 @@
 /** @format */
 
-export interface CategoryCreateOneDto {
+export interface CategoryCreateDto {
   name: string;
 }
 
@@ -16,6 +16,6 @@ export interface CategoryGetOneDto {
   scope?: string[];
 }
 
-export interface CategoryUpdateOneDto {
+export interface CategoryUpdateDto {
   name: string;
 }

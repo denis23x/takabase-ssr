@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../services';
 import { Category } from '../models';
-import { CategoryCreateOneDto, CategoryGetAllDto, CategoryUpdateOneDto } from '../dto';
+import { CategoryCreateDto, CategoryGetAllDto, CategoryUpdateDto } from '../dto';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,8 @@ import { CategoryCreateOneDto, CategoryGetAllDto, CategoryUpdateOneDto } from '.
 export class CategoryService {
   constructor(private apiService: ApiService) {}
 
-  createOne(categoryCreateOneDto: CategoryCreateOneDto): Observable<Category> {
-    return this.apiService.post('/categories', { ...categoryCreateOneDto });
+  create(categoryCreateDto: CategoryCreateDto): Observable<Category> {
+    return this.apiService.post('/categories', { ...categoryCreateDto });
   }
 
   getAll(categoryGetAllDto: CategoryGetAllDto): Observable<Category[]> {
@@ -24,11 +24,11 @@ export class CategoryService {
     return this.apiService.get('/categories/' + id);
   }
 
-  updateOne(id: number, categoryUpdateOneDto: CategoryUpdateOneDto): Observable<Category> {
-    return this.apiService.put('/categories/' + id, { ...categoryUpdateOneDto });
+  update(id: number, categoryUpdateDto: CategoryUpdateDto): Observable<Category> {
+    return this.apiService.put('/categories/' + id, { ...categoryUpdateDto });
   }
 
-  deleteOne(id: number): Observable<Category> {
+  delete(id: number): Observable<Category> {
     return this.apiService.delete('/categories/' + id);
   }
 }

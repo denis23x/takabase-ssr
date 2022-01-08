@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../services';
 import { Post } from '../models';
-import { PostCreateOneDto, PostGetAllDto, PostGetOneDto, PostUpdateOneDto } from '../dto';
+import { PostCreateDto, PostGetAllDto, PostGetOneDto, PostUpdateDto } from '../dto';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,8 @@ import { PostCreateOneDto, PostGetAllDto, PostGetOneDto, PostUpdateOneDto } from
 export class PostService {
   constructor(private apiService: ApiService) {}
 
-  createOne(postCreateOneDto: PostCreateOneDto): Observable<Post> {
-    return this.apiService.post('/posts', { ...postCreateOneDto });
+  create(postCreateDto: PostCreateDto): Observable<Post> {
+    return this.apiService.post('/posts', { ...postCreateDto });
   }
 
   getAll(postGetAllDto: PostGetAllDto): Observable<Post[]> {
@@ -24,11 +24,11 @@ export class PostService {
     return this.apiService.get('/posts/' + id, { ...postGetOneDto });
   }
 
-  updateOne(id: number, postUpdateOneDto: PostUpdateOneDto): Observable<Post> {
-    return this.apiService.put('/posts/' + id, { ...postUpdateOneDto });
+  update(id: number, postUpdateDto: PostUpdateDto): Observable<Post> {
+    return this.apiService.put('/posts/' + id, { ...postUpdateDto });
   }
 
-  deleteOne(id: number): Observable<Post> {
+  delete(id: number): Observable<Post> {
     return this.apiService.delete('/posts/' + id);
   }
 }

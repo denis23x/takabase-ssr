@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../services';
 import { User } from '../models';
-import { UserGetAllDto, UserUpdateOneDto } from '../dto';
+import { UserGetAllDto, UserUpdateDto } from '../dto';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +24,8 @@ export class UserService {
     return this.apiService.get('/users/' + id);
   }
 
-  updateMe(userUpdateOneDto: UserUpdateOneDto): Observable<User> {
-    return this.apiService.put('/users/me', { ...userUpdateOneDto });
+  updateMe(userUpdateDto: UserUpdateDto): Observable<User> {
+    return this.apiService.put('/users/me', { ...userUpdateDto });
   }
 
   deleteMe(): Observable<User> {

@@ -12,7 +12,7 @@ export interface UserGetOneDto {
   scope?: string[];
 }
 
-export interface UserUpdateOneDto {
+export interface UserUpdateDto {
   name?: string;
   biography?: number;
 }

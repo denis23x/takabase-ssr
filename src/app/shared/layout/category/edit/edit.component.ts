@@ -4,7 +4,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   Category,
   CategoryService,
-  CategoryUpdateOneDto,
+  CategoryUpdateDto,
   HelperService,
   SnackbarService
 } from '../../../../core';
@@ -76,14 +76,14 @@ export class CategoryEditComponent implements OnInit {
       this.categoryFormIsSubmitted = true;
 
       const categoryId: number = this.categoryForm.value.id;
-      const categoryUpdateOneDto: CategoryUpdateOneDto = {
+      const categoryUpdateDto: CategoryUpdateDto = {
         ...this.categoryForm.value
       };
 
       iif(
         () => this.categoryFormIsToggled,
-        this.categoryService.deleteOne(categoryId),
-        this.categoryService.updateOne(categoryId, categoryUpdateOneDto)
+        this.categoryService.delete(categoryId),
+        this.categoryService.update(categoryId, categoryUpdateDto)
       ).subscribe(
         (category: Category) => {
           if (this.categoryFormIsToggled) {

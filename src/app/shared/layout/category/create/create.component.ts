@@ -3,7 +3,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   Category,
-  CategoryCreateOneDto,
+  CategoryCreateDto,
   CategoryService,
   HelperService,
   SnackbarService
@@ -38,11 +38,11 @@ export class CategoryCreateComponent implements OnInit {
     if (this.helperService.getFormValidation(this.categoryForm)) {
       this.categoryFormIsSubmitted = true;
 
-      const categoryCreateOneDto: CategoryCreateOneDto = {
+      const categoryCreateDto: CategoryCreateDto = {
         ...this.categoryForm.value
       };
 
-      this.categoryService.createOne(categoryCreateOneDto).subscribe(
+      this.categoryService.create(categoryCreateDto).subscribe(
         (category: Category) => {
           this.submitted.emit(category);
           this.snackbarService.success('Category created', {

@@ -1,6 +1,6 @@
 /** @format */
 
-export interface PostCreateOneDto {
+export interface PostCreateDto {
   body: string;
   title: string;
   image?: string;
@@ -20,7 +20,7 @@ export interface PostGetOneDto {
   scope?: string[];
 }
 
-export interface PostUpdateOneDto {
+export interface PostUpdateDto {
   body?: string;
   title?: string;
   image?: string;
