@@ -26,7 +26,7 @@ export class AvatarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.platformService.isBrowser()) {
-      const window = this.platformService.getWindow();
+      const window: Window = this.platformService.getWindow();
 
       this.userSubscription$ = merge(
         this.user$,

@@ -1,9 +1,13 @@
 /** @format */
 
 export interface Snack {
-  id: number;
-  class: string;
-  title: string;
+  uuid?: string;
   message: string;
-  timeout: number;
+  options?: SnackOptions;
+}
+
+export interface SnackOptions {
+  title?: string;
+  classList?: string | string[];
+  duration?: number;
 }

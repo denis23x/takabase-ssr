@@ -1,31 +1,54 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { Subject, Observable } from 'rxjs';
-import { Snack } from '../models';
+import { ReplaySubject } from 'rxjs';
+import { Snack, SnackOptions } from '../models';
 
 @Injectable()
 export class SnackbarService {
-  private id = 0;
-  private subject = new Subject<Snack>();
+  snackbar$ = new ReplaySubject<Snack>();
 
-  getObservable(): Observable<Snack> {
-    return this.subject.asObservable();
+  info(message: string, snackOptions?: SnackOptions) {
+    this.snackbar$.next({
+      message,
+      options: {
+        classList: 'bg-info-1 text-white',
+        duration: 4000,
+        ...snackOptions
+      }
+    });
   }
 
-  info(title: string, message: string, timeout = 3000) {
-    this.subject.next({ id: this.id++, class: 'bg-info', title, message, timeout });
+  success(message: string, snackOptions?: SnackOptions) {
+    this.snackbar$.next({
+      message,
+      options: {
+        classList: 'bg-success-1 text-white',
+        duration: 4000,
+        ...snackOptions
+      }
+    });
   }
 
-  success(title: string, message: string, timeout = 3000) {
-    this.subject.next({ id: this.id++, class: 'bg-success', title, message, timeout });
+  warning(message: string, snackOptions?: SnackOptions) {
+    this.snackbar$.next({
+      message,
+      options: {
+        classList: 'bg-warning-1 text-black',
+        duration: 5000,
+        ...snackOptions
+      }
+    });
   }
 
-  warning(title: string, message: string, timeout = 5000) {
-    this.subject.next({ id: this.id++, class: 'bg-warning', title, message, timeout });
-  }
-
-  danger(title: string, message: string, timeout = 5000) {
-    this.subject.next({ id: this.id++, class: 'bg-danger', title, message, timeout });
+  danger(message: string, snackOptions?: SnackOptions) {
+    this.snackbar$.next({
+      message,
+      options: {
+        classList: 'bg-danger-1 text-white',
+        duration: 5000,
+        ...snackOptions
+      }
+    });
   }
 }

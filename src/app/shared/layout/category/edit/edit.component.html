@@ -50,13 +50,14 @@
             <ng-container *ngSwitchCase="!!name.errors.minlength">Min length {{name.errors.minlength['requiredLength']}} characters</ng-container>
             <ng-container *ngSwitchCase="!!name.errors.maxlength">Max length {{name.errors.maxlength['requiredLength']}} characters</ng-container>
           </span>
-          <p
-            class="text-secondary-2"
-            *ngIf="!categoryFormIsToggled">Category {{category.name}} was created {{category.createdAt  | dayjs : 'fromX'}} and contain N posts
-          </p>
-          <ng-container *ngIf="categoryFormIsToggled">
-            <span class="block text-sm text-secondary-2 mt-2">Please type <span class="font-bold">{{category.name}}</span> to confirm</span>
-            <p class="text-danger-1 border border-danger-1 rounded-md text-sm py-2.5 px-3">This action cannot be undone. This will permanently delete category and remove all posts</p>
+          <ng-container [ngSwitch]="categoryFormIsToggled">
+            <ng-container *ngSwitchDefault>
+              <p class="text-sm text-secondary-2">Category <span class="text-secondary-1">{{category.name}}</span> was created {{category.createdAt  | dayjs : 'fromX'}} and contain N posts</p>
+            </ng-container>
+            <ng-container *ngSwitchCase="true">
+              <span class="block text-sm text-secondary-2 mt-2">Please type <span class="text-secondary-1">{{category.name}}</span> to confirm</span>
+              <p class="text-danger-1 border border-danger-1 rounded-md text-sm py-2.5 px-3">This action cannot be undone, it will permanently delete category and remove all posts in it</p>
+            </ng-container>
           </ng-container>
         </fieldset>
         <button
@@ -64,7 +65,7 @@
           [ngClass]="{ 'btn-success': !categoryFormIsToggled, 'btn-danger': categoryFormIsToggled }"
           type="submit"
           aria-label="Submit"
-          [disabled]="categoryForm.invalid || categoryFormIsSubmitted">{{categoryFormIsToggled ? 'Delete' : 'Update'}}
+          [disabled]="categoryForm.invalid || categoryFormIsSubmitted">{{categoryFormIsToggled ? 'Delete' : 'Edit'}}
         </button>
       </fieldset>
     </form>

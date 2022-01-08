@@ -21,9 +21,11 @@ export class CanLoadRestrictGuard implements CanLoad {
       first(),
       switchMap((isAuthenticated: boolean) => {
         if (!isAuthenticated) {
-          this.router
-            .navigate(['/login'])
-            .then(() => this.snackbarService.warning('Unauthorized', 'Login to continue'));
+          this.router.navigate(['/exception', 401]).then(() =>
+            this.snackbarService.warning('Login to continue', {
+              title: 'Unauthorized'
+            })
+          );
 
           return of(false);
         }

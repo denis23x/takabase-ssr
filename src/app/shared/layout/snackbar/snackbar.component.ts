@@ -2,40 +2,44 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Snack, SnackbarService } from '../../../core';
+import { HelperService, Snack, SnackbarService } from '../../../core';
 
 @Component({
   selector: 'app-snackbar',
   templateUrl: './snackbar.component.html'
 })
 export class SnackbarComponent implements OnInit, OnDestroy {
-  snackbar: Snack[] = [];
-  snackbarService$: Subscription;
+  snackbar$!: Subscription;
+  snackbarList: Snack[] = [];
 
-  constructor(private snackbarService: SnackbarService) {}
+  constructor(private snackbarService: SnackbarService, private helperService: HelperService) {}
 
   ngOnInit() {
-    this.snackbarService$ = this.snackbarService
-      .getObservable()
-      .subscribe(snack => this.onSnack(snack));
+    this.snackbar$ = this.snackbarService.snackbar$.subscribe((snack: Snack) => {
+      this.onPush({
+        uuid: this.helperService.getUUID(),
+        ...snack
+      });
+    });
   }
 
   ngOnDestroy() {
-    [this.snackbarService$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.snackbar$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
-  onSnack(snack: Snack) {
-    this.snackbar.push(snack);
+  onPush(snack: Snack): void {
+    this.snackbarList.push(snack);
 
-    if (snack.timeout !== 0) {
-      const t = setTimeout(() => {
-        this.onClose(snack);
-        clearTimeout(t);
-      }, snack.timeout);
+    if (snack.options.duration !== 0) {
+      const timeout = setTimeout(() => {
+        this.onClose(snack.uuid);
+
+        clearTimeout(timeout);
+      }, snack.options.duration);
     }
   }
 
-  onClose(snack: Snack) {
-    this.snackbar = this.snackbar.filter(({ id }) => id !== snack.id);
+  onClose(uuid: string): void {
+    this.snackbarList = this.snackbarList.filter((snack: Snack) => snack.uuid !== uuid);
   }
 }

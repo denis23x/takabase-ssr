@@ -45,7 +45,9 @@ export class CategoryCreateComponent implements OnInit {
       this.categoryService.createOne(categoryCreateOneDto).subscribe(
         (category: Category) => {
           this.submitted.emit(category);
-          this.snackbarService.success('Success', 'Category created');
+          this.snackbarService.success('Category created', {
+            title: 'Cheers!'
+          });
         },
         () => (this.categoryFormIsSubmitted = false)
       );

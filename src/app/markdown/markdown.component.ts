@@ -121,7 +121,9 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
           this.router
             .navigate(['/@' + post.user.name, 'category', post.category.id, 'posts', post.id])
             .then(() => {
-              return this.snackbarService.success('Success', 'Post saved');
+              return this.snackbarService.success('Post saved', {
+                title: 'Cheers!'
+              });
             });
         },
         () => (this.postFormIsSubmitted = postFormIsSubmitted(false))

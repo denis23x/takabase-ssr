@@ -30,7 +30,8 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   onClose(): void {
     this.router
       .navigate(['..'], {
-        relativeTo: this.activatedRoute
+        relativeTo: this.activatedRoute,
+        queryParamsHandling: 'preserve'
       })
       .then(() => console.debug('Route changed'));
   }

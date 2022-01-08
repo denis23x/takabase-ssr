@@ -2,10 +2,11 @@
 
 import { Injectable } from '@angular/core';
 import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { PlatformService } from './platform.service';
 
 @Injectable()
 export class HelperService {
-  constructor() {}
+  constructor(private platformService: PlatformService) {}
 
   getRegex(regex: string): RegExp {
     switch (regex) {
@@ -57,5 +58,24 @@ export class HelperService {
     }
 
     return true;
+  }
+
+  getUUID(): string {
+    if (this.platformService.isBrowser()) {
+      const window: Window = this.platformService.getWindow();
+
+      // @ts-ignore
+      const source: string = [1e7] + -1e3 + -4e3 + -8e3 + -1e11;
+      const getUUID = (n: string): string => {
+        const m = Number(n);
+        const uint8Array: Uint8Array = window.crypto.getRandomValues(new Uint8Array(1));
+
+        return (m ^ (uint8Array[0] & (15 >> (m / 4)))).toString(16);
+      };
+
+      return source.replace(/[018]/g, getUUID);
+    }
+
+    return (Math.random() + 1).toString(36).substring(7);
   }
 }

@@ -24,15 +24,14 @@ export class ApiService {
       }
     };
 
-    const getTimeout = (requestError: RequestError): number => {
+    const getDuration = (requestError: RequestError): number => {
       return typeof requestError.message === 'object' ? requestError.message.length * 4000 : 5000;
     };
 
-    this.snackbarService.danger(
-      'Error',
-      getMessage(httpErrorResponse.error),
-      getTimeout(httpErrorResponse.error)
-    );
+    this.snackbarService.danger(getMessage(httpErrorResponse.error), {
+      title: 'Error',
+      duration: getDuration(httpErrorResponse.error)
+    });
 
     return throwError(httpErrorResponse);
   }

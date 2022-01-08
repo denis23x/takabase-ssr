@@ -30,7 +30,7 @@ export class PlatformService {
 
   isMobile(): boolean {
     if (this.isBrowser()) {
-      const window = this.getWindow();
+      const window: Window = this.getWindow();
 
       return (agent => {
         const a =
@@ -62,7 +62,7 @@ export class PlatformService {
     ];
 
     if (this.isBrowser()) {
-      const window = this.getWindow();
+      const window: Window = this.getWindow();
 
       for (const [browser, agent] of browserList) {
         if (window.navigator['brave']) {
@@ -86,7 +86,7 @@ export class PlatformService {
 
   getScroll(debounce: number = 200): Observable<Event> {
     if (this.isBrowser()) {
-      const window = this.getWindow();
+      const window: Window = this.getWindow();
 
       return fromEvent(window, 'scroll').pipe(debounceTime(debounce));
     }
@@ -96,7 +96,7 @@ export class PlatformService {
 
   getResize(debounce: number = 200): Observable<Event> {
     if (this.isBrowser()) {
-      const window = this.getWindow();
+      const window: Window = this.getWindow();
 
       return fromEvent(window, 'resize').pipe(debounceTime(debounce));
     }
@@ -106,7 +106,7 @@ export class PlatformService {
 
   setScrollToggle(toggle: boolean): void {
     if (this.isBrowser()) {
-      const window = this.getWindow();
+      const window: Window = this.getWindow();
       const className = 'overlay';
 
       if (this.document.body.clientHeight > window.innerHeight) {
