@@ -55,7 +55,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
   onSubmitForm(): void {
     if (this.helperService.getFormValidation(this.accountForm)) {
-      this.userService.updateProfile(this.accountForm.value).subscribe((user: User) => {
+      this.userService.updateMe(this.accountForm.value).subscribe((user: User) => {
         this.authService.userSubject.next(user);
         this.snackbarService.info('Information updated');
       });
@@ -63,7 +63,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
   }
 
   onDeleteUser(): void {
-    this.userService.deleteProfile().subscribe(() => {
+    this.userService.deleteMe().subscribe(() => {
       this.authService.removeAuthorization();
 
       this.router.navigate(['.']).then(() => this.snackbarService.info('Account deleted'));

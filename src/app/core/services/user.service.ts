@@ -16,23 +16,19 @@ export class UserService {
     return this.apiService.get('/users', { ...userGetAllDto });
   }
 
-  getAllByName(userGetAllDto?: UserGetAllDto): Observable<User> {
-    return this.apiService.get('/users', { ...userGetAllDto });
-  }
-
-  getProfile(userGetOneDto?: UserGetAllDto): Observable<User> {
-    return this.apiService.get('/users/profile', { ...userGetOneDto });
+  getMe(userGetOneDto?: UserGetAllDto): Observable<User> {
+    return this.apiService.get('/users/me', { ...userGetOneDto });
   }
 
   getOne(id: number): Observable<User> {
     return this.apiService.get('/users/' + id);
   }
 
-  updateProfile(userUpdateOneDto: UserUpdateOneDto): Observable<User> {
-    return this.apiService.put('/users/profile', { ...userUpdateOneDto });
+  updateMe(userUpdateOneDto: UserUpdateOneDto): Observable<User> {
+    return this.apiService.put('/users/me', { ...userUpdateOneDto });
   }
 
-  deleteProfile(): Observable<User> {
-    return this.apiService.delete('/users/profile');
+  deleteMe(): Observable<User> {
+    return this.apiService.delete('/users/me');
   }
 }

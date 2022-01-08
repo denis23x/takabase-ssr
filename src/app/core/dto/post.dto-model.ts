@@ -3,12 +3,8 @@
 export interface PostCreateOneDto {
   body: string;
   title: string;
-  categoryId: number;
   image?: string;
-}
-
-export interface PostGetOneDto {
-  scope?: string[];
+  categoryId: number;
 }
 
 export interface PostGetAllDto {
@@ -20,9 +16,13 @@ export interface PostGetAllDto {
   scope?: string[];
 }
 
+export interface PostGetOneDto {
+  scope?: string[];
+}
+
 export interface PostUpdateOneDto {
   body?: string;
   title?: string;
-  categoryId?: number;
   image?: string;
+  categoryId?: number;
 }

@@ -15,7 +15,7 @@ export class UserComponent implements OnInit, OnDestroy {
   routeEvents$: Subscription;
 
   user: User;
-  userProfile: boolean;
+  userMe: boolean;
 
   category: Category;
   categoryModal: 'create' | 'edit';
@@ -31,8 +31,8 @@ export class UserComponent implements OnInit, OnDestroy {
       this.authService.userSubject,
       this.activatedRoute.data.pipe(pluck('data'))
     ]).subscribe(([authedUser, routedUser]: [User, User]) => {
-      this.userProfile = authedUser.id === routedUser.id;
-      this.user = this.userProfile ? authedUser : routedUser;
+      this.userMe = authedUser.id === routedUser.id;
+      this.user = this.userMe ? authedUser : routedUser;
     });
 
     this.routeEvents$ = this.router.events

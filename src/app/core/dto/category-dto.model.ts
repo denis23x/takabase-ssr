@@ -12,6 +12,10 @@ export interface CategoryGetAllDto {
   scope?: string[];
 }
 
+export interface CategoryGetOneDto {
+  scope?: string[];
+}
+
 export interface CategoryUpdateOneDto {
   name: string;
 }

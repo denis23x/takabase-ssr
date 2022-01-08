@@ -54,9 +54,7 @@ export class AuthService {
         scope: ['categories']
       };
 
-      this.userService
-        .getProfile(userGetOneDto)
-        .subscribe((user: User) => this.setAuthorization(user));
+      this.userService.getMe(userGetOneDto).subscribe((user: User) => this.setAuthorization(user));
     } else {
       this.removeAuthorization();
     }
