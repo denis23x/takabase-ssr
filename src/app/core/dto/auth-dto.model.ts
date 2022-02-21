@@ -5,6 +5,7 @@ export interface AuthLoginDto {
   password?: string;
   googleId?: string;
   facebookId?: string;
+  fingerprint?: string;
 }
 
 export interface AuthRegistrationDto {

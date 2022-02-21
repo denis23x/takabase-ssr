@@ -14,7 +14,7 @@ export class UserResolverService {
   constructor(private userService: UserService, private router: Router) {}
 
   resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<User> {
-    const name: string = activatedRouteSnapshot.parent.url.shift().path;
+    const name: string = activatedRouteSnapshot.parent.url[0].path;
 
     const userGetAllDto: UserGetAllDto = {
       name: name.substring(1),

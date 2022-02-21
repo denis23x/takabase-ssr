@@ -16,7 +16,6 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
   queryParams$: Subscription;
 
   loginForm: FormGroup;
-  loginForm$: Subscription;
   loginFormIsSubmitted: boolean;
 
   constructor(
@@ -45,33 +44,32 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
         filter((queryParams: Params) => {
           const email = queryParams.email;
           const social = ['googleId', 'facebookId']
-            .filter(i => queryParams[i])
-            .map(n => ({ [n]: queryParams[n] }))
+            .filter((social: string) => queryParams[social])
+            .map((social: string) => ({ [social]: queryParams[social] }))
             .shift();
 
           return !!email && !!social;
         })
       )
-      // @ts-ignore
-      .subscribe((authLoginDto: AuthLoginDto) => this.getAuthentication(authLoginDto));
+      .subscribe((authLoginDto: any) => this.onLogin(authLoginDto));
   }
 
   ngOnDestroy(): void {
-    [this.queryParams$, this.loginForm$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.queryParams$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
-  getAuthentication(authLoginDto: AuthLoginDto = this.loginForm.value): void {
+  onLogin(authLoginDto: AuthLoginDto): void {
     this.loginFormIsSubmitted = true;
 
-    this.loginForm$ = this.authService.getAuthentication('/auth/login', authLoginDto).subscribe(
-      () => this.router.navigateByUrl('/'),
+    this.authService.onLogin(authLoginDto).subscribe(
+      () => this.router.navigate(['/']).then(() => console.debug('Route changed')),
       () => (this.loginFormIsSubmitted = false)
     );
   }
 
   onSubmitForm(): void {
     if (this.helperService.getFormValidation(this.loginForm)) {
-      this.getAuthentication();
+      this.onLogin(this.loginForm.value);
     }
   }
 }

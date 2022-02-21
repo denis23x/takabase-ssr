@@ -1,6 +1,58 @@
-<section class="flex justify-center items-start md:w-128 mx-auto p-4">
-  <div class="bg-primary-3 border border-primary-4 text-center rounded-md p-4">
-    <h1 class="text-2xl text-secondary-1 font-medium">Hi there!</h1>
-    <p class="text-secondary-1">Here is a service where you can public and share of your posts (or drafts), like new good looking design, useful tip or some guide with code snippets</p>
+<section class="flex flex-col space-y-20 mx-auto p-4">
+  <div class="relative bg-primary-3 border border-primary-4 text-center rounded-md overflow-hidden p-4">
+    <div class="flex flex-col items-center relative z-10 my-40">
+      <h1 class="bg-primary-3 text-5xl text-secondary-1 font-medium mb-10">Super simple vault for your posts</h1>
+      <h1 class="bg-primary-3 text-2xl text-secondary-1 font-medium">Without annoying background for truly introverts</h1>
+      <p class="bg-primary-3 mb-10">You don't need no more to chat or comment or whatever, just focus on your interests</p>
+      <div class="flex space-x-4">
+        <a
+          class="btn btn-info"
+          [routerLink]="['/search']"
+          aria-label="Search">Search
+        </a>
+        <a
+          class="btn btn-info"
+          [routerLink]="['/auth/login']"
+          aria-label="Search">Try on
+        </a>
+      </div>
+    </div>
+  </div>
+  <ul class="flex items-start justify-center space-x-40 my-10">
+    <li class="text-2xl text-center w-40">Absent direct messages, comments, no likes pursuit</li>
+    <li class="text-2xl text-center w-40">Rich Markdown editor with media content and emoji</li>
+    <li class="text-2xl text-center w-40">Fast and light web app with mobile devices support</li>
+    <li class="text-2xl text-center w-40">Absolutely secure, we not asking any sensitive info except email</li>
+  </ul>
+  <div class="flex items-center w-192 mx-auto p-4">
+    <img class="block w-20" src="assets/angular.svg" alt="Angular">
+    <div class="text-2xl">
+      <p>Every user is shaping out community of this project, count of posts are growing up and you can be on the top</p>
+      <p>Don't waste your time and create some awesome post!</p>
+    </div>
+  </div>
+  <div class="flex items-center w-192 mx-auto p-4">
+    <p class="text-2xl">Fully made with Typescript, using Node and Angular to provide REST API in the SSR wrapper</p>
+    <img class="block w-20" src="assets/angular.svg" alt="Angular">
+  </div>
+  <div class="w-192 mx-auto p-4">
+    <p class="text-2xl text-center">Check if your username is available</p>
+    <form class="flex flex-col space-y-4 bg-primary-3 border border-primary-4 rounded-md p-4">
+      <fieldset class="flex flex-col space-y-4">
+        <fieldset class="flex flex-col space-y-2">
+          <label class="block text-secondary-2 text-sm" for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            class="form-control bg-primary-2"
+            placeholder="Email"
+            aria-label="Email">
+<!--          <span class="block text-sm text-danger-1" *ngIf="email.touched && email.errors" [ngSwitch]="true">-->
+<!--            <ng-container *ngSwitchCase="!!email.errors.required">Required</ng-container>-->
+<!--            <ng-container *ngSwitchCase="!!email.errors.email">Email must be a real email address</ng-container>-->
+<!--          </span>-->
+        </fieldset>
+      </fieldset>
+    </form>
   </div>
 </section>

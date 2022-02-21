@@ -3,8 +3,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { AuthService, AuthRegistrationDto, HelperService } from '../../core';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-auth-registration',
@@ -12,7 +12,6 @@ import { AuthService, AuthRegistrationDto, HelperService } from '../../core';
 })
 export class AuthRegistrationComponent implements OnDestroy {
   registrationForm: FormGroup;
-  registrationForm$: Subscription;
   registrationFormIsSubmitted: boolean;
 
   constructor(
@@ -24,35 +23,28 @@ export class AuthRegistrationComponent implements OnDestroy {
     this.registrationForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]],
       email: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [Validators.required, Validators.pattern(this.helperService.getRegex('password'))]
-      ]
+      // prettier-ignore
+      password: ['', [Validators.required, Validators.pattern(this.helperService.getRegex('password'))]]
     });
   }
 
-  ngOnDestroy(): void {
-    [this.registrationForm$].filter($ => $).forEach($ => $.unsubscribe());
-  }
+  ngOnDestroy(): void {}
 
-  getAuthentication(): void {
+  onRegistration(authRegistrationDto: AuthRegistrationDto): void {
     this.registrationFormIsSubmitted = true;
 
-    const authRegistrationDto: AuthRegistrationDto = {
-      ...this.registrationForm.value
-    };
-
-    this.registrationForm$ = this.authService
-      .getAuthentication('/users', authRegistrationDto)
+    this.authService
+      .onRegistration(authRegistrationDto)
+      .pipe(switchMap(() => this.authService.onLogin(authRegistrationDto)))
       .subscribe(
-        () => this.router.navigateByUrl('/'),
+        () => this.router.navigate(['/']).then(() => console.debug('Route changed')),
         () => (this.registrationFormIsSubmitted = false)
       );
   }
 
   onSubmitForm(): void {
     if (this.helperService.getFormValidation(this.registrationForm)) {
-      this.getAuthentication();
+      this.onRegistration(this.registrationForm.value);
     }
   }
 }

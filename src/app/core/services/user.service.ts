@@ -16,10 +16,6 @@ export class UserService {
     return this.apiService.get('/users', { ...userGetAllDto });
   }
 
-  getMe(userGetOneDto?: UserGetAllDto): Observable<User> {
-    return this.apiService.get('/users/me', { ...userGetOneDto });
-  }
-
   getOne(id: number): Observable<User> {
     return this.apiService.get('/users/' + id);
   }

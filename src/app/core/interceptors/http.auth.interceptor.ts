@@ -8,9 +8,9 @@ import {
   HttpRequest,
   HttpErrorResponse
 } from '@angular/common/http';
-import { EMPTY, Observable, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { LocalStorageService } from '../services';
-import { AuthLoginDto, AuthRegistrationDto, AuthService, RequestHeaders } from '../../core';
+import { AuthService, RequestHeaders } from '../../core';
 import { catchError, switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
@@ -26,8 +26,8 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 
     const token = this.localStorageService.getItem(environment.TOKEN_LOCALSTORAGE);
 
-    if (token) {
-      requestHeaders['Authorization'] = `Bearer ${token}`;
+    if (!!token) {
+      requestHeaders['Authorization'] = 'Bearer ' + token;
     }
 
     return request.clone({
@@ -36,20 +36,17 @@ export class HttpAuthInterceptor implements HttpInterceptor {
     });
   }
 
-  private handleResponseError(
-    error: HttpErrorResponse,
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  // prettier-ignore
+  private handleResponseError(error: HttpErrorResponse, request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     switch (error.status) {
       case 401:
         return this.authService
-          .getAuthentication('/auth/refresh', {} as AuthLoginDto | AuthRegistrationDto, false)
+          .onRefresh()
           .pipe(switchMap(() => next.handle(this.getRequestHeaders(request))));
       case 403:
         this.authService.removeAuthorization();
 
-        return EMPTY;
+        return throwError(error);
       default:
         return throwError(error);
     }
