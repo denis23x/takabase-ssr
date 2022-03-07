@@ -10,7 +10,7 @@ import { RequestError, RequestBody, RequestParams } from '../models';
 
 @Injectable()
 export class ApiService {
-  constructor(private http: HttpClient, private snackbarService: SnackbarService) {}
+  constructor(private httpClient: HttpClient, private snackbarService: SnackbarService) {}
 
   setError(httpErrorResponse: HttpErrorResponse): Observable<never> {
     const getMessage = (requestError: RequestError): string => {
@@ -37,28 +37,28 @@ export class ApiService {
   }
 
   get(path: string, requestParams?: RequestParams): Observable<any> {
-    return this.http.get(environment.API_URL + path, { params: requestParams }).pipe(
+    return this.httpClient.get(environment.API_URL + path, { params: requestParams }).pipe(
       pluck('data'),
       catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse))
     );
   }
 
   put(path: string, requestBody?: RequestBody): Observable<any> {
-    return this.http.put(environment.API_URL + path, JSON.stringify(requestBody || {})).pipe(
+    return this.httpClient.put(environment.API_URL + path, JSON.stringify(requestBody || {})).pipe(
       pluck('data'),
       catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse))
     );
   }
 
   post(path: string, requestBody?: RequestBody): Observable<any> {
-    return this.http.post(environment.API_URL + path, JSON.stringify(requestBody || {})).pipe(
+    return this.httpClient.post(environment.API_URL + path, JSON.stringify(requestBody || {})).pipe(
       pluck('data'),
       catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse))
     );
   }
 
   delete(path: string): Observable<any> {
-    return this.http.delete(environment.API_URL + path).pipe(
+    return this.httpClient.delete(environment.API_URL + path).pipe(
       pluck('data'),
       catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse))
     );

@@ -18,13 +18,17 @@ import { environment } from '../../../environments/environment';
 export class HttpAuthInterceptor implements HttpInterceptor {
   constructor(private localStorageService: LocalStorageService, private authService: AuthService) {}
 
-  private getRequestHeaders(request: HttpRequest<any>): HttpRequest<any> {
+  private getToken(): string {
+    return this.localStorageService.getItem(environment.TOKEN_LOCALSTORAGE);
+  }
+
+  private setRequestHeaders(request: HttpRequest<any>): HttpRequest<any> {
     const requestHeaders: RequestHeaders = {
       ['Content-Type']: 'application/json',
       ['Accept']: 'application/json'
     };
 
-    const token = this.localStorageService.getItem(environment.TOKEN_LOCALSTORAGE);
+    const token: string = this.getToken();
 
     if (!!token) {
       requestHeaders['Authorization'] = 'Bearer ' + token;
@@ -42,20 +46,30 @@ export class HttpAuthInterceptor implements HttpInterceptor {
       case 401:
         return this.authService
           .onRefresh()
-          .pipe(switchMap(() => next.handle(this.getRequestHeaders(request))));
-      case 403:
+          .pipe(
+            switchMap(() => next.handle(this.setRequestHeaders(request))),
+            catchError((error: HttpErrorResponse) => {
+              this.authService.removeAuthorization();
+
+              return throwError(error);
+          }));
+      default:
         this.authService.removeAuthorization();
 
-        return throwError(error);
-      default:
         return throwError(error);
     }
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(this.getRequestHeaders(request)).pipe(
+    return next.handle(this.setRequestHeaders(request)).pipe(
       catchError((error: HttpErrorResponse) => {
-        return this.handleResponseError(error, request, next);
+        const token: string = this.getToken();
+
+        if (!!token) {
+          return this.handleResponseError(error, request, next);
+        }
+
+        return throwError(error);
       })
     );
   }
