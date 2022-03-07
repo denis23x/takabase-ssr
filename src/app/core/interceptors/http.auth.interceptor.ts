@@ -42,22 +42,17 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 
   // prettier-ignore
   private handleResponseError(error: HttpErrorResponse, request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    switch (error.status) {
-      case 401:
+    if ([401, 403].includes(error.status)) {
+      if (!request.url.includes('auth/refresh')) {
         return this.authService
           .onRefresh()
-          .pipe(
-            switchMap(() => next.handle(this.setRequestHeaders(request))),
-            catchError((error: HttpErrorResponse) => {
-              this.authService.removeAuthorization();
+          .pipe(switchMap(() => next.handle(this.setRequestHeaders(request))));
+      }
 
-              return throwError(error);
-          }));
-      default:
-        this.authService.removeAuthorization();
-
-        return throwError(error);
+      this.authService.removeAuthorization();
     }
+
+    return throwError(error);
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

@@ -1,7 +1,6 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, ReplaySubject, from } from 'rxjs';
 import { distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import {
@@ -30,7 +29,6 @@ export class AuthService {
   constructor(
     private apiService: ApiService,
     private userService: UserService,
-    private httpBackend: HttpBackend,
     private localStorageService: LocalStorageService
   ) {
     this.agent = from(FingerprintJS.load());
@@ -51,18 +49,11 @@ export class AuthService {
   }
 
   onRefresh(): Observable<User> {
-    /** AVOIDING INTERCEPTORS CHAIN */
-
-    const httpClient: HttpClient = new HttpClient(this.httpBackend);
-
     return this.getFingerprint().pipe(
       switchMap((getResult: GetResult) => {
-        return (
-          httpClient
-            .post(environment.API_URL + '/auth/refresh', { fingerprint: getResult.visitorId })
-            // @ts-ignore
-            .pipe(tap((user: User) => this.setAuthorization(user)))
-        );
+        return this.apiService
+          .post('/auth/refresh', { fingerprint: getResult.visitorId })
+          .pipe(tap((user: User) => this.setAuthorization(user)));
       })
     );
   }
