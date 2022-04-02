@@ -38,7 +38,11 @@ export class AuthService {
     return this.getFingerprint().pipe(
       switchMap((getResult: GetResult) => {
         return this.apiService
-          .post('/auth/login', { ...authLoginDto, fingerprint: getResult.visitorId })
+          .post('/auth/login', {
+            ...authLoginDto,
+            fingerprint: getResult.visitorId,
+            scope: ['categories']
+          })
           .pipe(tap((user: User) => this.setAuthorization(user)));
       })
     );
@@ -64,7 +68,11 @@ export class AuthService {
 
   getAuthorization(): void {
     if (this.localStorageService.getItem(environment.TOKEN_LOCALSTORAGE)) {
-      this.apiService.get('/auth/me').subscribe((user: User) => this.setAuthorization(user));
+      this.apiService
+        .get('/auth/me', {
+          scope: ['categories']
+        })
+        .subscribe((user: User) => this.setAuthorization(user));
     } else {
       this.removeAuthorization();
     }
