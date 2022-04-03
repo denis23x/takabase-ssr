@@ -11,7 +11,7 @@ export class HelperService {
   getRegex(regex: string): RegExp {
     switch (regex) {
       case 'password':
-        return /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){6,32}$/;
+        return /^((?=.*\d)|(?=.*[!@#$%^&*]))(?=.*[a-zA-Z]).{6,32}$/;
       case 'url-youtube':
         return /^https:\/\/(www\.)?youtube\.com\/watch\?v=(\S{11})\S*$/;
       case 'url-gist':

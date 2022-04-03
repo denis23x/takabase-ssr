@@ -60,8 +60,7 @@
         </div>
         <span class="block text-sm text-danger-1" *ngIf="password.touched && password.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!password.errors.required">Required</ng-container>
-          <ng-container *ngSwitchCase="!!password.errors.minlength">Min length {{password.errors.minlength['requiredLength']}} characters</ng-container>
-          <ng-container *ngSwitchCase="!!password.errors.maxlength">Max length {{password.errors.maxlength['requiredLength']}} characters</ng-container>
+          <ng-container *ngSwitchCase="!!password.errors.pattern">Password does not match pattern</ng-container>
         </span>
       </fieldset>
       <button

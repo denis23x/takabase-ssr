@@ -71,7 +71,7 @@
           <ng-container *ngSwitchCase="!!password.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!password.errors.pattern">Password does not match pattern</ng-container>
         </span>
-        <label class="block text-secondary-2 text-sm" for="password">The password must be 6-32 characters long, must contain at least one number, one special character and uppercase and lowercase letters with no space</label>
+        <label class="block text-secondary-2 text-sm" for="password">The password must be 6-32 characters long, must contain at least one number or special character</label>
       </fieldset>
       <button
         class="btn btn-success w-full"
