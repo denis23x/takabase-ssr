@@ -29,7 +29,8 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(32)]]
+      // prettier-ignore
+      password: ['', [Validators.required, Validators.pattern(this.helperService.getRegex('password'))]]
     });
   }
 

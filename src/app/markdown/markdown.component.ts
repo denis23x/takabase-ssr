@@ -50,9 +50,9 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     this.postForm = this.formBuilder.group({
       body: [
         'Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века.',
-        [Validators.required, Validators.minLength(32), Validators.maxLength(6400)]
+        [Validators.required, Validators.minLength(24), Validators.maxLength(7200)]
       ],
-      title: ['Lorem', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]],
+      title: ['Lorem', [Validators.required, Validators.minLength(4), Validators.maxLength(36)]],
       categoryId: [null, [Validators.required]],
       categoryName: ['', [Validators.required]]
     });
@@ -111,6 +111,9 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
       const postCreateDto: PostCreateDto = {
         ...this.postForm.value
       };
+
+      // @ts-ignore
+      delete postCreateDto.categoryName;
 
       iif(
         () => !!postId,
