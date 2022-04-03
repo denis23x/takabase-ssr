@@ -7,6 +7,7 @@ import { SettingsResolverService } from './settings-resolver.service';
 import { SettingsAccountComponent } from './account/account.component';
 import { SettingsInterfaceComponent } from './interface/interface.component';
 import { SettingsSecurityComponent } from './security/security.component';
+import { SettingsSecurityResolverService } from './security/security-resolver.service';
 
 const routes: Routes = [
   {
@@ -31,7 +32,10 @@ const routes: Routes = [
       },
       {
         path: 'security',
-        component: SettingsSecurityComponent
+        component: SettingsSecurityComponent,
+        resolve: {
+          data: SettingsSecurityResolverService
+        }
       }
     ]
   }

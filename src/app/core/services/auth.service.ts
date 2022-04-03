@@ -5,11 +5,13 @@ import { Observable, BehaviorSubject, ReplaySubject, from } from 'rxjs';
 import { distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import {
   ApiService,
-  AuthLoginDto,
-  AuthRegistrationDto,
+  LoginDto,
+  LogoutDto,
+  RegistrationDto,
   LocalStorageService,
   User,
-  UserService
+  UserService,
+  MeDto
 } from '../index';
 import { environment } from '../../../environments/environment';
 import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
@@ -34,12 +36,12 @@ export class AuthService {
     this.agent = from(FingerprintJS.load());
   }
 
-  onLogin(authLoginDto: AuthLoginDto): Observable<User> {
+  onLogin(loginDto: LoginDto): Observable<User> {
     return this.getFingerprint().pipe(
       switchMap((getResult: GetResult) => {
         return this.apiService
           .post('/auth/login', {
-            ...authLoginDto,
+            ...loginDto,
             fingerprint: getResult.visitorId,
             scope: ['categories']
           })
@@ -48,8 +50,21 @@ export class AuthService {
     );
   }
 
-  onRegistration(authRegistrationDto: AuthRegistrationDto): Observable<User> {
-    return this.apiService.post('/auth/registration', { ...authRegistrationDto });
+  onLogout(logoutDto: LogoutDto): Observable<User> {
+    return this.getFingerprint().pipe(
+      switchMap((getResult: GetResult) => {
+        return this.apiService
+          .post('/auth/logout', {
+            ...logoutDto,
+            fingerprint: getResult.visitorId
+          })
+          .pipe(tap(() => this.removeAuthorization()));
+      })
+    );
+  }
+
+  onRegistration(registrationDto: RegistrationDto): Observable<User> {
+    return this.apiService.post('/auth/registration', { ...registrationDto });
   }
 
   onRefresh(): Observable<User> {
@@ -76,6 +91,10 @@ export class AuthService {
     } else {
       this.removeAuthorization();
     }
+  }
+
+  getMe(meDto: MeDto): Observable<User> {
+    return this.apiService.get('/auth/me', { ...meDto });
   }
 
   setAuthorization(user: User): void {

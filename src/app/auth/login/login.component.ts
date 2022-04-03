@@ -4,7 +4,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService, AuthLoginDto, HelperService } from '../../core';
+import { AuthService, LoginDto, HelperService } from '../../core';
 import { filter } from 'rxjs/operators';
 import { Meta, Title } from '@angular/platform-browser';
 
@@ -59,10 +59,10 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
     [this.queryParams$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
-  onLogin(authLoginDto: AuthLoginDto): void {
+  onLogin(loginDto: LoginDto): void {
     this.loginFormIsSubmitted = true;
 
-    this.authService.onLogin(authLoginDto).subscribe(
+    this.authService.onLogin(loginDto).subscribe(
       () => this.router.navigate(['/']).then(() => console.debug('Route changed')),
       () => (this.loginFormIsSubmitted = false)
     );

@@ -46,6 +46,7 @@
     "rxjs": "~6.6.0",
     "split-grid": "^1.0.11",
     "tslib": "^2.3.0",
+    "ua-parser-js": "^1.0.2",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
@@ -61,6 +62,7 @@
     "@types/markdown-it-link-attributes": "^3.0.1",
     "@types/node": "^12.11.1",
     "@types/prismjs": "^1.16.6",
+    "@types/ua-parser-js": "^0.7.36",
     "jasmine-core": "~3.8.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",

@@ -3,7 +3,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService, AuthRegistrationDto, HelperService } from '../../core';
+import { AuthService, RegistrationDto, LoginDto, HelperService } from '../../core';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
@@ -30,12 +30,21 @@ export class AuthRegistrationComponent implements OnDestroy {
 
   ngOnDestroy(): void {}
 
-  onRegistration(authRegistrationDto: AuthRegistrationDto): void {
+  onRegistration(registrationDto: RegistrationDto): void {
     this.registrationFormIsSubmitted = true;
 
     this.authService
-      .onRegistration(authRegistrationDto)
-      .pipe(switchMap(() => this.authService.onLogin(authRegistrationDto)))
+      .onRegistration(registrationDto)
+      .pipe(
+        switchMap(() => {
+          const loginDto: LoginDto = {
+            email: registrationDto.email,
+            password: registrationDto.password
+          };
+
+          return this.authService.onLogin(loginDto);
+        })
+      )
       .subscribe(
         () => this.router.navigate(['/']).then(() => console.debug('Route changed')),
         () => (this.registrationFormIsSubmitted = false)

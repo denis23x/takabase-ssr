@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppAuthedDirective, AppScrollIntoViewDirective } from './directives';
-import { DayjsPipe, MarkdownPipe, SanitizerPipe } from './pipes';
+import { DayjsPipe, MarkdownPipe, SanitizerPipe, UaPipe } from './pipes';
 import {
   AvatarComponent,
   CategoryCreateComponent,
@@ -41,7 +41,8 @@ import {
     SvgIconComponent,
     DayjsPipe,
     MarkdownPipe,
-    SanitizerPipe
+    SanitizerPipe,
+    UaPipe
   ],
   exports: [
     CommonModule,
@@ -64,7 +65,8 @@ import {
     SvgIconComponent,
     DayjsPipe,
     MarkdownPipe,
-    SanitizerPipe
+    SanitizerPipe,
+    UaPipe
   ],
   providers: [CategoryDetailResolverService, PostDetailResolverService]
 })

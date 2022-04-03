@@ -1,6 +1,6 @@
 /** @format */
 
-export * from './auth-dto.model';
-export * from './category-dto.model';
-export * from './post.dto-model';
-export * from './user.dto-model';
+export * from './auth';
+export * from './category';
+export * from './post';
+export * from './user';

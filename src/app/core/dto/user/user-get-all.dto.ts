@@ -7,12 +7,3 @@ export interface UserGetAllDto {
   size?: number;
   scope?: string[];
 }
-
-export interface UserGetOneDto {
-  scope?: string[];
-}
-
-export interface UserUpdateDto {
-  name?: string;
-  biography?: number;
-}
