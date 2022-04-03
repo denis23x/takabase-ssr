@@ -1,7 +1,7 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, ReplaySubject, from } from 'rxjs';
+import { Observable, BehaviorSubject, ReplaySubject, from, of } from 'rxjs';
 import { distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 import {
   ApiService,
@@ -20,7 +20,7 @@ import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
   providedIn: 'root'
 })
 export class AuthService {
-  agent: Observable<Agent>;
+  agent: Promise<Agent> = FingerprintJS.load();
 
   userSubject = new BehaviorSubject<User>({} as User);
   user = this.userSubject.asObservable().pipe(distinctUntilChanged());
@@ -32,17 +32,15 @@ export class AuthService {
     private apiService: ApiService,
     private userService: UserService,
     private localStorageService: LocalStorageService
-  ) {
-    this.agent = from(FingerprintJS.load());
-  }
+  ) {}
 
   onLogin(loginDto: LoginDto): Observable<User> {
     return this.getFingerprint().pipe(
-      switchMap((getResult: GetResult) => {
+      switchMap((fingerprint: string) => {
         return this.apiService
           .post('/auth/login', {
             ...loginDto,
-            fingerprint: getResult.visitorId,
+            fingerprint,
             scope: ['categories']
           })
           .pipe(tap((user: User) => this.setAuthorization(user)));
@@ -52,13 +50,11 @@ export class AuthService {
 
   onLogout(logoutDto: LogoutDto): Observable<User> {
     return this.getFingerprint().pipe(
-      switchMap((getResult: GetResult) => {
-        return this.apiService
-          .post('/auth/logout', {
-            ...logoutDto,
-            fingerprint: getResult.visitorId
-          })
-          .pipe(tap(() => this.removeAuthorization()));
+      switchMap((fingerprint: string) => {
+        return this.apiService.post('/auth/logout', {
+          ...logoutDto,
+          fingerprint
+        });
       })
     );
   }
@@ -69,16 +65,22 @@ export class AuthService {
 
   onRefresh(): Observable<User> {
     return this.getFingerprint().pipe(
-      switchMap((getResult: GetResult) => {
+      switchMap((fingerprint: string) => {
         return this.apiService
-          .post('/auth/refresh', { fingerprint: getResult.visitorId })
+          .post('/auth/refresh', { fingerprint })
           .pipe(tap((user: User) => this.setAuthorization(user)));
       })
     );
   }
 
-  getFingerprint(): Observable<GetResult> {
-    return this.agent.pipe(switchMap((agent: Agent) => agent.get()));
+  getFingerprint(): Observable<string> {
+    return from(this.agent.then((agent: Agent) => agent.get())).pipe(
+      switchMap((getResult: GetResult) => {
+        const { platform, timezone, vendor } = getResult.components;
+
+        return of(FingerprintJS.hashComponents({ platform, timezone, vendor }));
+      })
+    );
   }
 
   getAuthorization(): void {

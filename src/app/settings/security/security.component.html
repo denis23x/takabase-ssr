@@ -1,38 +1,44 @@
-<section>
-  <div class="bg-primary-3 border border-primary-4 rounded-md w-full p-4">
-    <h1 class="text-2xl text-secondary-1 font-medium">Security</h1>
-    <hr class="block mb-5">
-    <button class="btn btn-info" (click)="onLogout()">logout from all sessions</button>
-    <h1 class="text-2xl text-secondary-1 font-medium">Current</h1>
-    <ng-container *ngIf="!!sessionCurrent">
+<section class="bg-primary-3 flex flex-col space-y-4 border border-primary-4 rounded-md w-full p-4">
+  <div class="flex flex-col space-y-4 space-y-reverse border-b border-primary-4">
+    <div class="text-secondary-1">Current session</div>
+    <div class="text-secondary-2 text-sm">Some text about current session</div>
+    <div class="flex items-center justify-between" *ngIf="!!sessionCurrent">
       <div class="flex flex-col" *ngIf="(sessionCurrent.ua | ua) as ua">
         <div class="flex items-center justify-start space-x-2">
-          <span class="block">{{ua.browser.name}}</span>
-          <span class="block">{{ua.browser.version}}</span>
+          <span class="block">{{ua.os.name}}</span>
+          <small class="block text-secondary-2">{{ua.os.version}}</small>
         </div>
         <div class="flex items-center justify-start space-x-2">
-          <span class="block">{{ua.os.name}}</span>
-          <span class="block">{{ua.os.version}}</span>
+          <span class="block">{{ua.browser.name}}</span>
+          <small class="block text-secondary-2">{{ua.browser.version}}</small>
         </div>
       </div>
-    </ng-container>
-    <ng-container *ngIf="!!sessionList.length">
-      <h1 class="text-2xl text-secondary-1 font-medium">Rest</h1>
-      <ul class="block mb-5">
-        <li class="flex items-center justify-between mb-5" *ngFor="let session of sessionList">
-          <div class="flex flex-col" *ngIf="(session.ua | ua) as ua">
-            <div class="flex items-center justify-start space-x-2">
-              <span class="block">{{ua.browser.name}}</span>
-              <span class="block">{{ua.browser.version}}</span>
-            </div>
-            <div class="flex items-center justify-start space-x-2">
-              <span class="block">{{ua.os.name}}</span>
-              <span class="block">{{ua.os.version}}</span>
-            </div>
+      <button class="btn btn-danger" (click)="onLogoutAll()">Logout</button>
+    </div>
+  </div>
+  <div class="flex flex-col">
+    <div class="text-secondary-1">Active sessions</div>
+    <div class="text-secondary-2 text-sm mb-4">Some text about active session</div>
+    <ul class="border border-primary-4 rounded-md px-4">
+      <li
+        class="flex items-center justify-between py-4"
+        [ngClass]="{ 'border-b border-primary-4': !odd }"
+        *ngFor="let session of sessionList; let odd = odd">
+        <div class="flex flex-col" *ngIf="(session.ua | ua) as ua">
+          <div class="flex items-center justify-start space-x-2">
+            <span class="block">{{ua.os.name || 'Unknown'}}</span>
+            <small class="block text-secondary-2">{{ua.os.version || 'Unknown'}}</small>
           </div>
-          <button class="btn btn-info" (click)="onLogout(session)">do logout</button>
-        </li>
-      </ul>
-    </ng-container>
+          <div class="flex items-center justify-start space-x-2">
+            <span class="block">{{ua.browser.name || 'Unknown'}}</span>
+            <small class="block text-secondary-2">{{ua.browser.version || 'Unknown'}}</small>
+          </div>
+          <div class="flex items-center justify-start space-x-2">
+            <span class="block text-danger-1">This session can be dangerous!</span>
+          </div>
+        </div>
+        <button class="btn btn-info" (click)="onLogout(session.id)">Logout</button>
+      </li>
+    </ul>
   </div>
 </section>

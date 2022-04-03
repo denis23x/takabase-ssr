@@ -5,7 +5,6 @@ import { pluck, switchMap } from 'rxjs/operators';
 import { AuthService, Session, SnackbarService, User } from '../../core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GetResult } from '@fingerprintjs/fingerprintjs';
 
 @Component({
   selector: 'app-settings-security',
@@ -36,18 +35,14 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
           return this.authService.getFingerprint();
         })
       )
-      .subscribe((getResult: GetResult) => {
-        console.log(getResult);
-
-        // https://www.npmjs.com/package/ipinfo
-
-        this.sessionCurrent = this.user.sessions.find((session: Session) => {
-          return session.fingerprint === getResult.visitorId;
+      .subscribe((fingerprint: string) => {
+        // prettier-ignore
+        const [sessionCurrent, ...sessionList]: Session[] = this.user.sessions.sort((session: Session) => {
+          return session.fingerprint === fingerprint ? -1 : 1;
         });
 
-        this.sessionList = this.user.sessions.filter((session: Session) => {
-          return session.fingerprint !== getResult.visitorId;
-        });
+        this.sessionCurrent = sessionCurrent;
+        this.sessionList = sessionList;
       });
   }
 
@@ -55,25 +50,17 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
     [this.routeData$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
-  onLogout(session?: Session): void {
-    if (!!session) {
-      this.authService
-        .onLogout({
-          id: session.id
-        })
-        .subscribe(() => {
-          this.snackbarService.success('Session removed');
+  onLogout(id: number): void {
+    this.authService.onLogout({ id }).subscribe(() => {
+      this.sessionList = this.sessionList.filter((session: Session) => session.id !== id);
 
-          this.sessionList = this.sessionList.filter((session2: Session) => {
-            return session2.id !== session.id;
-          });
-        });
-    } else {
-      this.authService
-        .onLogout({
-          reset: 1
-        })
-        .subscribe(() => this.router.navigateByUrl('/').then(() => console.debug('Route changed')));
-    }
+      this.snackbarService.success('Session removed');
+    });
+  }
+
+  onLogoutAll(): void {
+    this.authService.onLogout({ reset: 1 }).subscribe(() => {
+      this.router.navigateByUrl('/').then(() => this.authService.removeAuthorization());
+    });
   }
 }
