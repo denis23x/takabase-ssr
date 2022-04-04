@@ -1,44 +1,87 @@
 <section class="bg-primary-3 flex flex-col space-y-4 border border-primary-4 rounded-md w-full p-4">
   <div class="flex flex-col space-y-4 space-y-reverse border-b border-primary-4">
     <div class="text-secondary-1">Current session</div>
-    <div class="text-secondary-2 text-sm">Some text about current session</div>
+    <div class="text-secondary-2 text-sm">You currently logged in with this session</div>
     <div class="flex items-center justify-between" *ngIf="!!sessionCurrent">
-      <div class="flex flex-col" *ngIf="(sessionCurrent.ua | ua) as ua">
-        <div class="flex items-center justify-start space-x-2">
-          <span class="block">{{ua.os.name}}</span>
-          <small class="block text-secondary-2">{{ua.os.version}}</small>
+      <ng-container *ngIf="(sessionCurrent.ua | ua) as ua">
+        <div class="flex items-center justify-start space-x-4">
+          <ng-container [ngTemplateOutlet]="deviceTypeIcon" [ngTemplateOutletContext]="{ ua }"></ng-container>
+          <div class="flex flex-col">
+            <p class="flex items-center justify-start space-x-2">
+              <span class="block">{{ua.os.name}}</span>
+              <small class="block text-secondary-2">{{ua.browser.name}} {{ua.browser.version}}</small>
+            </p>
+            <small class="text-secondary-2">Qostanay, Kazakhstan</small>
+          </div>
         </div>
-        <div class="flex items-center justify-start space-x-2">
-          <span class="block">{{ua.browser.name}}</span>
-          <small class="block text-secondary-2">{{ua.browser.version}}</small>
-        </div>
-      </div>
-      <button class="btn btn-danger" (click)="onLogoutAll()">Logout</button>
+        <button class="btn btn-danger" type="button" aria-label="Logout" (click)="onLogoutAll()">Logout</button>
+      </ng-container>
     </div>
   </div>
   <div class="flex flex-col">
     <div class="text-secondary-1">Active sessions</div>
-    <div class="text-secondary-2 text-sm mb-4">Some text about active session</div>
+    <div class="text-secondary-2 text-sm mb-4">Other sessions, you can terminate them from here</div>
     <ul class="border border-primary-4 rounded-md px-4">
-      <li
-        class="flex items-center justify-between py-4"
-        [ngClass]="{ 'border-b border-primary-4': !odd }"
-        *ngFor="let session of sessionList; let odd = odd">
-        <div class="flex flex-col" *ngIf="(session.ua | ua) as ua">
-          <div class="flex items-center justify-start space-x-2">
-            <span class="block">{{ua.os.name || 'Unknown'}}</span>
-            <small class="block text-secondary-2">{{ua.os.version || 'Unknown'}}</small>
+      <li class="flex items-center justify-between border-b border-primary-4 last:border-b-0 py-4" *ngFor="let session of sessionList">
+        <ng-container *ngIf="(session.ua | ua) as ua">
+          <div class="flex items-center justify-start space-x-4">
+            <ng-container [ngTemplateOutlet]="deviceTypeIcon" [ngTemplateOutletContext]="{ ua }"></ng-container>
+            <div class="flex flex-col">
+              <p class="flex items-center justify-start space-x-2">
+                <span class="block" [ngClass]="{ 'line-through text-secondary-2': !ua.os.name }">{{ua.os.name || 'Undefined'}}</span>
+                <ng-container [ngSwitch]="(ua.browser | json) !== '{}'">
+                  <small class="block text-danger-1" *ngSwitchDefault>This session can be dangerous</small>
+                  <small class="block text-secondary-2" *ngSwitchCase="true">{{ua.browser.name}} {{ua.browser.version}}</small>
+                </ng-container>
+              </p>
+              <small class="text-secondary-2">Kaliningrad, Russia</small>
+            </div>
           </div>
-          <div class="flex items-center justify-start space-x-2">
-            <span class="block">{{ua.browser.name || 'Unknown'}}</span>
-            <small class="block text-secondary-2">{{ua.browser.version || 'Unknown'}}</small>
-          </div>
-          <div class="flex items-center justify-start space-x-2">
-            <span class="block text-danger-1">This session can be dangerous!</span>
-          </div>
-        </div>
-        <button class="btn btn-info" (click)="onLogout(session.id)">Logout</button>
+          <button
+            class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 cursor-pointer p-2"
+            type="button"
+            aria-label="Terminate session"
+            (click)="onLogout(session.id)"
+            appSvgIcon
+            [appIcon]="'x-lg'"
+            [appSquare]="'1rem'">
+          </button>
+        </ng-container>
       </li>
     </ul>
   </div>
+  <ng-template #deviceTypeIcon let-ua="ua">
+    <div class="flex items-center justify-center" [ngSwitch]="ua.device.type">
+      <app-svg-icon
+        class="fill-current text-secondary-1"
+        *ngSwitchCase="undefined"
+        [appIcon]="'display'"
+        appSquare="24">
+      </app-svg-icon>
+      <app-svg-icon
+        class="fill-current text-secondary-1"
+        *ngSwitchCase="'mobile'"
+        [appIcon]="'phone'"
+        appSquare="24">
+      </app-svg-icon>
+      <app-svg-icon
+        class="fill-current text-secondary-1"
+        *ngSwitchCase="'smarttv'"
+        [appIcon]="'tv'"
+        appSquare="24">
+      </app-svg-icon>
+      <app-svg-icon
+        class="fill-current text-secondary-1"
+        *ngSwitchCase="'tablet'"
+        [appIcon]="'tablet'"
+        appSquare="24">
+      </app-svg-icon>
+      <app-svg-icon
+        class="fill-current text-secondary-1"
+        *ngSwitchDefault
+        [appIcon]="'question-circle'"
+        appSquare="24">
+      </app-svg-icon>
+    </div>
+  </ng-template>
 </section>
