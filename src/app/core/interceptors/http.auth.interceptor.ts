@@ -11,7 +11,7 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { LocalStorageService } from '../services';
 import { AuthService, RequestHeaders } from '../../core';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, first, switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
@@ -49,7 +49,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
           .pipe(switchMap(() => next.handle(this.setRequestHeaders(request))));
       }
 
-      this.authService.removeAuthorization();
+      this.authService.removeAuthorization().pipe(first());
     }
 
     return throwError(error);
