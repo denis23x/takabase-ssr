@@ -26,7 +26,7 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.routeData$ = this.activatedRoute.data
+    this.routeData$ = this.activatedRoute.parent?.data
       .pipe(
         pluck('data'),
         switchMap((user: User) => {
