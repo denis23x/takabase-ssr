@@ -8,16 +8,14 @@
   disabled:opacity-50
   placeholder-secondary-2
   focus:ring
-  focus:ring-blue-400
-  focus:ring-opacity-30
+  focus:ring-info-1/30
   focus:border-info-1
   rounded-md;
 
   &.ng-touched.ng-invalid {
     @apply
     border-danger-1
-    focus:ring-red-400
-    focus:ring-opacity-30;
+    focus:ring-danger-1/30;
   }
 
   &:-webkit-autofill,

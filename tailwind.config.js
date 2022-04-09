@@ -1,10 +1,6 @@
-const colors = require("tailwindcss/colors")
-
-delete colors["lightBlue"]
-
 module.exports = {
   mode: "jit",
-  purge: {
+  content: {
     enabled: true,
     content: ["./src/**/*.html"],
     safelist: [
@@ -25,18 +21,47 @@ module.exports = {
       sans: ["Ubuntu", "sans-serif"],
     },
     colors: {
-      ...colors,
-      ["primary-1"]: "var(--primary-1)",
-      ["primary-2"]: "var(--primary-2)",
-      ["primary-3"]: "var(--primary-3)",
-      ["primary-4"]: "var(--primary-4)",
-      ["secondary-1"]: "var(--secondary-1)",
-      ["secondary-2"]: "var(--secondary-2)",
-      ["info-1"]: "var(--info-1)",
-      ["success-1"]: "var(--success-1)",
-      ["warning-1"]: "var(--warning-1)",
-      ["danger-1"]: "var(--danger-1)",
+      ["current"]: "currentColor",
       ["transparent"]: "transparent",
+
+      /**
+       * Colors opacity issue handler
+       * https://github.com/adamwathan/tailwind-css-variable-text-opacity-demo
+       **/
+
+      ...(() => {
+        const colors = {}
+        const variables = [
+          "white",
+          "black",
+          "primary-1",
+          "primary-2",
+          "primary-3",
+          "primary-4",
+          "secondary-1",
+          "secondary-2",
+          "info-1",
+          "success-1",
+          "warning-1",
+          "danger-1",
+        ]
+
+        variables.forEach((variable) => {
+          colors[variable] = ({ opacityVariable, opacityValue }) => {
+            if (opacityValue !== undefined) {
+              return `rgba(var(--${variable}), ${opacityValue})`
+            }
+
+            if (opacityVariable !== undefined) {
+              return `rgba(var(--${variable}), var(${opacityVariable}, 1))`
+            }
+
+            return `rgb(var(--${variable}))`
+          }
+        })
+
+        return colors
+      })(),
     },
     cursor: {
       ["default"]: "default",
@@ -66,12 +91,6 @@ module.exports = {
         128: "32rem",
         192: "48rem",
       },
-    },
-  },
-  variants: {
-    extend: {
-      backgroundColor: ["active", "disabled"],
-      cursor: ["disabled"],
     },
   },
   plugins: [require("@tailwindcss/forms"), require("@tailwindcss/line-clamp")],

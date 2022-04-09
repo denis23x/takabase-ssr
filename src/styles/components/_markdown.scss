@@ -6,7 +6,7 @@
   }
 
   p {
-    @apply text-secondary-1 overflow-hidden overflow-ellipsis;
+    @apply text-secondary-1 overflow-hidden text-ellipsis;
 
     &:not(:last-child) {
       @apply mb-4;
