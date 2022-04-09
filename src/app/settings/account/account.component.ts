@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AuthService, User, UserService, HelperService, SnackbarService } from '../../core';
 import { pluck } from 'rxjs/operators';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-settings-account',
@@ -26,8 +26,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
     private authService: AuthService,
-    private snackbarService: SnackbarService,
-    private router: Router
+    private snackbarService: SnackbarService
   ) {
     this.accountForm = this.formBuilder.group({
       name: ['', [Validators.required]],
@@ -64,11 +63,5 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
   onDeleteUser(): void {
     console.log('onDeleteUser');
-
-    // this.userService.deleteMe().subscribe(() => {
-    //   this.authService.removeAuthorization();
-    //
-    //   this.router.navigate(['.']).then(() => this.snackbarService.info('Account deleted'));
-    // });
   }
 }

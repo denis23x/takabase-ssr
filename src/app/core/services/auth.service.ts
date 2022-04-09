@@ -48,7 +48,7 @@ export class AuthService {
     );
   }
 
-  onLogout(logoutDto: LogoutDto): Observable<User> {
+  onLogout(logoutDto?: LogoutDto): Observable<User> {
     return this.getFingerprint().pipe(
       switchMap((fingerprint: string) => {
         return this.apiService.post('/auth/logout', {

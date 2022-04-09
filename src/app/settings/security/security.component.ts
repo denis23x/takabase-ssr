@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { first, pluck, switchMap } from 'rxjs/operators';
+import { pluck, switchMap } from 'rxjs/operators';
 import { AuthService, Session, SnackbarService, User } from '../../core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -50,19 +50,11 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
     [this.routeData$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
-  onLogout(id: number): void {
+  onSessionTerminate(id: number): void {
     this.authService.onLogout({ id }).subscribe(() => {
-      if (this.sessionCurrent.id === id) {
-        // prettier-ignore
-        this.authService
-          .removeAuthorization()
-          .pipe(first())
-          .subscribe(() => this.router.navigateByUrl('/').then(() => console.debug('Route changed')));
-      } else {
-        this.sessionList = this.sessionList.filter((session: Session) => session.id !== id);
+      this.sessionList = this.sessionList.filter((session: Session) => session.id !== id);
 
-        this.snackbarService.success('Session terminated');
-      }
+      this.snackbarService.success('Session terminated');
     });
   }
 }
