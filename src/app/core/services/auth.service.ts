@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, ReplaySubject, from, of } from 'rxjs';
-import { distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import { distinctUntilChanged, first, switchMap, tap } from 'rxjs/operators';
 import {
   ApiService,
   LoginDto,
@@ -91,7 +91,7 @@ export class AuthService {
         })
         .subscribe((user: User) => this.setAuthorization(user));
     } else {
-      this.removeAuthorization();
+      this.removeAuthorization().pipe(first());
     }
   }
 
@@ -117,10 +117,12 @@ export class AuthService {
     this.isAuthenticatedSubject.next(true);
   }
 
-  removeAuthorization(): void {
+  removeAuthorization(): Observable<void> {
     this.userSubject.next({} as User);
     this.isAuthenticatedSubject.next(false);
 
     this.localStorageService.removeItem(environment.TOKEN_LOCALSTORAGE);
+
+    return of(null);
   }
 }

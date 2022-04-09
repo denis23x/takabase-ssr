@@ -4,7 +4,7 @@
     <div class="text-secondary-2 text-sm">You currently logged in with this session</div>
     <div class="flex items-center justify-between" *ngIf="!!sessionCurrent">
       <ng-container [ngTemplateOutlet]="sessionTemplate" [ngTemplateOutletContext]="{ session: sessionCurrent }"></ng-container>
-      <button class="btn btn-info" type="button" aria-label="Logout" (click)="onLogoutAll()">Logout</button>
+      <button class="btn btn-info" type="button" aria-label="Logout" (click)="onLogout(sessionCurrent.id)">Logout</button>
     </div>
   </div>
   <div class="flex flex-col">

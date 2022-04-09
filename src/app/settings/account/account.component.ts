@@ -63,10 +63,12 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
   }
 
   onDeleteUser(): void {
-    this.userService.deleteMe().subscribe(() => {
-      this.authService.removeAuthorization();
+    console.log('onDeleteUser');
 
-      this.router.navigate(['.']).then(() => this.snackbarService.info('Account deleted'));
-    });
+    // this.userService.deleteMe().subscribe(() => {
+    //   this.authService.removeAuthorization();
+    //
+    //   this.router.navigate(['.']).then(() => this.snackbarService.info('Account deleted'));
+    // });
   }
 }
