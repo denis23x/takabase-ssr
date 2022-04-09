@@ -1,14 +1,16 @@
 @mixin theme-light {
-  --primary-1: #dedede;
-  --primary-2: #f7f7f7;
-  --primary-3: #ffffff;
-  --primary-4: #c4c4c4;
-  --secondary-1: #3d3d3d;
-  --secondary-2: #909090;
-  --info-1: #508ef3;
-  --success-1: #3ac76c;
-  --warning-1: #ffc107;
-  --danger-1: #F87171;
+  --white: 255, 255, 255;         // #ffffff
+  --black: 0, 0, 0;               // #000000
+  --primary-1: 222, 222, 222;     // #dedede
+  --primary-2: 247, 247, 247;     // #f7f7f7
+  --primary-3: 255, 255, 255;     // #ffffff
+  --primary-4: 196, 196, 196;     // #c4c4c4
+  --secondary-1: 61, 61, 61;      // #3d3d3d
+  --secondary-2: 144, 144, 144;   // #909090
+  --info-1: 80, 142, 243;         // #508ef3
+  --success-1: 58, 199, 108;      // #3ac76c
+  --warning-1: 255, 193, 7;       // #ffc107
+  --danger-1: 248, 113, 113;      // #f87171
 
   --prismjs-color-1: #b83426;
   --prismjs-color-2: #31353a;
@@ -23,7 +25,7 @@
 
   --gist-color-1: #fafafa;
   --gist-color-2: #31353a;
-  --gist-color-3: #bc9458;        // same color in comparison with dark theme (judging by typescript language)
+  --gist-color-3: #bc9458;        // same color (as dark theme) in comparison with dark theme (suggest by TS language)
   --gist-color-4: #2570c5;
   --gist-color-5: #ffe5bb;        // same
   --gist-color-6: #cc3;           // same
@@ -36,16 +38,18 @@
 }
 
 @mixin theme-dark {
-  --primary-1: #2c2c2c;
-  --primary-2: #3e3e3e;
-  --primary-3: #343434;
-  --primary-4: #222222;
-  --secondary-1: #f7f7f3;
-  --secondary-2: #a4a4a4;
-  --info-1: #5fa6ff;
-  --success-1: #139050;
-  --warning-1: #e09918;
-  --danger-1: #fa5c5c;
+  --white: 255, 255, 255;         // #ffffff
+  --black: 0, 0, 0;               // #000000
+  --primary-1: 44, 44, 44;        // #2c2c2c
+  --primary-2: 62, 62, 62;        // #3e3e3e
+  --primary-3: 52, 52, 52;        // #343434
+  --primary-4: 34, 34, 34;        // #222222
+  --secondary-1: 247, 247, 243;   // #f7f7f3
+  --secondary-2: 164, 164, 164;   // #a4a4a4
+  --info-1: 95, 166, 255;         // #5fa6ff
+  --success-1: 19, 144, 80;       // #139050
+  --warning-1: 224, 153, 24;      // #e09918
+  --danger-1: 250, 92, 92;        // #fa5c5c
 
   --prismjs-color-1: #cc7832;
   --prismjs-color-2: #a9b7c6;
