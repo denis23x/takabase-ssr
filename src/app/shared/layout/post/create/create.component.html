@@ -33,7 +33,7 @@
             <ng-container *ngSwitchCase="!!title.errors.maxlength">Max length {{title.errors.maxlength['requiredLength']}} characters</ng-container>
           </span>
         </fieldset>
-        <ng-container *ngIf="user.categories.length; else categoryListEmpty;">
+        <ng-container *ngIf="user.categories.length; else categoryListEmptyTemplate;">
           <div class="flex flex-col space-y-2">
             <div class="flex justify-between text-sm">
               <span class="block text-secondary-2 cursor-default">Category</span>
@@ -108,7 +108,7 @@
       </fieldset>
     </form>
   </section>
-  <ng-template #categoryListEmpty>
+  <ng-template #categoryListEmptyTemplate>
     <div class="bg-primary-2 text-secondary-1 border border-primary-4 rounded-md px-3 py-2">No categories were found
       <button
         class="inline-block text-info-1 hover:underline cursor-pointer"

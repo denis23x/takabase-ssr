@@ -3,19 +3,8 @@
     <div class="text-secondary-1">Current session</div>
     <div class="text-secondary-2 text-sm">You currently logged in with this session</div>
     <div class="flex items-center justify-between" *ngIf="!!sessionCurrent">
-      <ng-container *ngIf="(sessionCurrent.ua | ua) as ua">
-        <div class="flex items-center justify-start space-x-4">
-          <ng-container [ngTemplateOutlet]="deviceTypeIcon" [ngTemplateOutletContext]="{ ua }"></ng-container>
-          <div class="flex flex-col">
-            <p class="flex items-center justify-start space-x-2">
-              <span class="block">{{ua.os.name}}</span>
-              <small class="block text-secondary-2">{{ua.browser.name}} {{ua.browser.version}}</small>
-            </p>
-            <small class="text-secondary-2">Qostanay, Kazakhstan</small>
-          </div>
-        </div>
-        <button class="btn btn-danger" type="button" aria-label="Logout" (click)="onLogoutAll()">Logout</button>
-      </ng-container>
+      <ng-container [ngTemplateOutlet]="sessionTemplate" [ngTemplateOutletContext]="{ session: sessionCurrent }"></ng-container>
+      <button class="btn btn-info" type="button" aria-label="Logout" (click)="onLogoutAll()">Logout</button>
     </div>
   </div>
   <div class="flex flex-col">
@@ -23,65 +12,62 @@
     <div class="text-secondary-2 text-sm mb-4">Other sessions, you can terminate them from here</div>
     <ul class="border border-primary-4 rounded-md px-4">
       <li class="flex items-center justify-between border-b border-primary-4 last:border-b-0 py-4" *ngFor="let session of sessionList">
-        <ng-container *ngIf="(session.ua | ua) as ua">
-          <div class="flex items-center justify-start space-x-4">
-            <ng-container [ngTemplateOutlet]="deviceTypeIcon" [ngTemplateOutletContext]="{ ua }"></ng-container>
-            <div class="flex flex-col">
-              <p class="flex items-center justify-start space-x-2">
-                <span class="block" [ngClass]="{ 'line-through text-secondary-2': !ua.os.name }">{{ua.os.name || 'Undefined'}}</span>
-                <ng-container [ngSwitch]="(ua.browser | json) !== '{}'">
-                  <small class="block text-danger-1" *ngSwitchDefault>This session can be dangerous</small>
-                  <small class="block text-secondary-2" *ngSwitchCase="true">{{ua.browser.name}} {{ua.browser.version}}</small>
-                </ng-container>
-              </p>
-              <small class="text-secondary-2">Kaliningrad, Russia</small>
-            </div>
-          </div>
-          <button
-            class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 cursor-pointer p-2"
-            type="button"
-            aria-label="Terminate session"
-            (click)="onLogout(session.id)"
-            appSvgIcon
-            [appIcon]="'x-lg'"
-            [appSquare]="'1rem'">
-          </button>
-        </ng-container>
+        <ng-container [ngTemplateOutlet]="sessionTemplate" [ngTemplateOutletContext]="{ session }"></ng-container>
+        <button
+          class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 cursor-pointer p-2"
+          type="button"
+          aria-label="Terminate session"
+          (click)="onLogout(session.id)"
+          appSvgIcon
+          [appIcon]="'x-lg'"
+          [appSquare]="'1rem'">
+        </button>
       </li>
     </ul>
   </div>
-  <ng-template #deviceTypeIcon let-ua="ua">
-    <div class="flex items-center justify-center" [ngSwitch]="ua.device.type">
-      <app-svg-icon
-        class="fill-current text-secondary-1"
-        *ngSwitchCase="undefined"
-        [appIcon]="'display'"
-        appSquare="24">
-      </app-svg-icon>
-      <app-svg-icon
-        class="fill-current text-secondary-1"
-        *ngSwitchCase="'mobile'"
-        [appIcon]="'phone'"
-        appSquare="24">
-      </app-svg-icon>
-      <app-svg-icon
-        class="fill-current text-secondary-1"
-        *ngSwitchCase="'smarttv'"
-        [appIcon]="'tv'"
-        appSquare="24">
-      </app-svg-icon>
-      <app-svg-icon
-        class="fill-current text-secondary-1"
-        *ngSwitchCase="'tablet'"
-        [appIcon]="'tablet'"
-        appSquare="24">
-      </app-svg-icon>
-      <app-svg-icon
-        class="fill-current text-secondary-1"
-        *ngSwitchDefault
-        [appIcon]="'question-circle'"
-        appSquare="24">
-      </app-svg-icon>
+  <ng-template #sessionTemplate let-session="session">
+    <div class="flex justify-start items-center space-x-4">
+      <div class="flex items-center justify-center" [ngSwitch]="session.ua.device.type">
+        <app-svg-icon
+          class="fill-current text-secondary-1"
+          *ngSwitchCase="undefined"
+          [appIcon]="'display'"
+          appSquare="24">
+        </app-svg-icon>
+        <app-svg-icon
+          class="fill-current text-secondary-1"
+          *ngSwitchCase="'mobile'"
+          [appIcon]="'phone'"
+          appSquare="24">
+        </app-svg-icon>
+        <app-svg-icon
+          class="fill-current text-secondary-1"
+          *ngSwitchCase="'smarttv'"
+          [appIcon]="'tv'"
+          appSquare="24">
+        </app-svg-icon>
+        <app-svg-icon
+          class="fill-current text-secondary-1"
+          *ngSwitchCase="'tablet'"
+          [appIcon]="'tablet'"
+          appSquare="24">
+        </app-svg-icon>
+        <app-svg-icon
+          class="fill-current text-secondary-1"
+          *ngSwitchDefault
+          [appIcon]="'question-circle'"
+          appSquare="24">
+        </app-svg-icon>
+      </div>
+      <div class="flex flex-col">
+        <p class="flex items-center justify-start space-x-2" *ngIf="session.ua as ua">
+          <span class="block" [class.text-danger-1]="!ua.os.name">{{ua.os.name || 'Undefined operation system'}}</span>
+          <small class="block text-secondary-2">{{ua.browser.name}} {{ua.browser.version}}</small>
+        </p>
+        <p class="flex" *ngIf="session.ip as ip">
+          <small class="text-secondary-2">{{ip.country}}, {{ip.city || ip.ip}}</small>
+        </p>
+      </div>
     </div>
   </ng-template>
 </section>

@@ -29,7 +29,7 @@
       (toggled)="active.value = $event">
       <button
         class="fill-current text-secondary-1 hover:text-info-1 cursor-pointer p-2"
-        [ngClass]="{ 'text-info-1': active.value }"
+        [class.text-info-1]="active.value"
         type="button"
         aria-label="Menu"
         appSvgIcon

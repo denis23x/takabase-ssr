@@ -24,7 +24,7 @@
   <div class="view grid grid-cols-1 grid-rows-1 self-start">
     <header class="header bg-primary-2 border-b border-t md:border-t-0 border-primary-4 z-20 sticky -top-px py-4">
       <nav class="flex justify-between items-center border border-primary-4 bg-primary-3 rounded-md">
-        <ng-container *ngIf="user.categories.length; else categoryListEmpty;">
+        <ng-container *ngIf="user.categories.length; else categoryListEmptyTemplate;">
           <ul class="flex justify-start items-center overflow-auto px-1" #scrollRoot>
             <li class="inline-block">
               <a
@@ -54,7 +54,7 @@
             (toggled)="active.value = $event">
             <button
               class="block fill-current text-secondary-1 hover:text-info-1 cursor-pointer p-2"
-              [ngClass]="{ 'text-info-1': active.value }"
+              [class.text-info-1]="active.value"
               type="button"
               aria-label="Menu"
               appSvgIcon
@@ -107,7 +107,7 @@
       <router-outlet></router-outlet>
     </div>
   </div>
-  <ng-template #categoryListEmpty>
+  <ng-template #categoryListEmptyTemplate>
     <div class="text-secondary-1 px-3 py-2">No categories were found
       <button
         class="text-info-1 hover:underline"

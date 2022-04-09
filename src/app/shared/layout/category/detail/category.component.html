@@ -1,5 +1,5 @@
 <ng-container>
-  <ng-container *ngIf="postList.length; else postListEmpty;">
+  <ng-container *ngIf="postList.length; else postListEmptyTemplate;">
     <ul class="grid gap-4 grid-cols-posts xs:auto-rows-fr py-4">
       <li
         class="block"
@@ -17,7 +17,7 @@
       (click)="onPostListLoadMore()">Load more
     </button>
   </ng-container>
-  <ng-template #postListEmpty>
+  <ng-template #postListEmptyTemplate>
     <div
       class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-3 py-2 my-4"
       [ngSwitch]="postListLoading">
