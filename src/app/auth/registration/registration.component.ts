@@ -3,7 +3,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService, RegistrationDto, LoginDto, HelperService } from '../../core';
+import { AuthService, RegistrationDto, LoginDto, HelperService, User } from '../../core';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
@@ -33,6 +33,7 @@ export class AuthRegistrationComponent implements OnDestroy {
   onRegistration(registrationDto: RegistrationDto): void {
     this.registrationFormIsSubmitted = true;
 
+    // prettier-ignore
     this.authService
       .onRegistration(registrationDto)
       .pipe(
@@ -46,7 +47,7 @@ export class AuthRegistrationComponent implements OnDestroy {
         })
       )
       .subscribe(
-        () => this.router.navigate(['/']).then(() => console.debug('Route changed')),
+        (user: User) => this.router.navigate(['/@' + user.name]).then(() => console.debug('Route changed')),
         () => (this.registrationFormIsSubmitted = false)
       );
   }
