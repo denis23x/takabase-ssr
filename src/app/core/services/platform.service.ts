@@ -4,6 +4,7 @@ import { Inject, Injectable, PLATFORM_ID, Renderer2, RendererFactory2 } from '@a
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { EMPTY, fromEvent, Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { UserSettings, UserSettingsTheme } from '../models';
 
 /**
  * Window provider is based on
@@ -115,6 +116,23 @@ export class PlatformService {
         this.renderer2[toggle ? 'addClass' : 'removeClass'](this.document.body, className);
       } else {
         this.renderer2.removeClass(this.document.body, className);
+      }
+    }
+  }
+
+  setSettings(settings: UserSettings): void {
+    if (settings.theme) {
+      if (this.isBrowser()) {
+        const themeList: string[] = Object.values(UserSettingsTheme);
+        const themeCurrent: string | undefined = themeList.find((theme: string) => {
+          return this.document.body.classList.contains(theme);
+        });
+
+        if (!!themeCurrent) {
+          this.document.body.classList.remove(themeCurrent);
+        }
+
+        this.document.body.classList.add(settings.theme);
       }
     }
   }

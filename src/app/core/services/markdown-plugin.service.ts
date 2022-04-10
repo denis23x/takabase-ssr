@@ -58,6 +58,9 @@ export class MarkdownPluginService {
   getGithubTemplate(service: string, id: string, url: string, options?: any): string {
     const parameter = id.indexOf('?');
     const src = 'https://gist.github.com/';
+
+    // TODO: review!
+
     const config = this.localStorageService.getItem(environment.USER_SETTINGS_LOCALSTORAGE);
     const randomId = id + '-' + Date.now() + Math.floor(Math.random() * Date.now());
 

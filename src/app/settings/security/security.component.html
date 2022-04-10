@@ -66,7 +66,7 @@
       </div>
       <div class="flex flex-col leading-tight">
         <p class="flex items-center justify-start space-x-1" *ngIf="session.ua as ua">
-          <span class="block" [class.text-danger-1]="!ua.os.name">{{ua.os.name || 'Undefined'}}</span>
+          <span class="block text-secondary-1" [class.text-danger-1]="!ua.os.name">{{ua.os.name || 'Undefined'}}</span>
           <small class="block text-secondary-2">{{ua.browser.name}} {{ua.browser.version}}</small>
         </p>
         <p class="block" *ngIf="session.ip as ip">
