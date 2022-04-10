@@ -1,11 +1,11 @@
 @use "../abstracts/variables";
 
 body {
-  &.light {
+  &.LIGHT {
     @include variables.theme-light;
   }
 
-  &.dark {
+  &.DARK {
     @include variables.theme-dark;
   }
 

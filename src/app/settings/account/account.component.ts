@@ -53,12 +53,12 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
   }
 
   onSubmitForm(): void {
-    if (this.helperService.getFormValidation(this.accountForm)) {
-      this.userService.updateMe(this.accountForm.value).subscribe((user: User) => {
-        this.authService.userSubject.next(user);
-        this.snackbarService.info('Information updated');
-      });
-    }
+    // if (this.helperService.getFormValidation(this.accountForm)) {
+    //   this.userService.update(this.accountForm.value).subscribe((user: User) => {
+    //     this.authService.userSubject.next(user);
+    //     this.snackbarService.info('Information updated');
+    //   });
+    // }
   }
 
   onDeleteUser(): void {
