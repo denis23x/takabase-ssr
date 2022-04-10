@@ -20,8 +20,8 @@ export class UserService {
     return this.apiService.get('/users/' + id);
   }
 
-  updateMe(userUpdateDto: UserUpdateDto): Observable<User> {
-    return this.apiService.put('/users/me', { ...userUpdateDto });
+  update(id: number, userUpdateDto: UserUpdateDto): Observable<User> {
+    return this.apiService.put('/users/' + id, { ...userUpdateDto });
   }
 
   deleteMe(): Observable<User> {
