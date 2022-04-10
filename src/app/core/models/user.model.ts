@@ -23,7 +23,7 @@ export interface UserSettings {
   theme: UserSettingsTheme;
 }
 
-enum UserSettingsTheme {
+export enum UserSettingsTheme {
   AUTO = 'AUTO',
   LIGHT = 'LIGHT',
   DARK = 'DARK'

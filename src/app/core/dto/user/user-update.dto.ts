@@ -5,4 +5,8 @@ export interface UserUpdateDto {
   biography?: string;
   avatar?: string;
   email?: string;
+
+  // TODO: remake to proper model
+
+  settings: any;
 }

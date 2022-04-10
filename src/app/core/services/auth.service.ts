@@ -11,7 +11,8 @@ import {
   LocalStorageService,
   User,
   UserService,
-  MeDto
+  MeDto,
+  PlatformService
 } from '../index';
 import { environment } from '../../../environments/environment';
 import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
@@ -31,7 +32,8 @@ export class AuthService {
   constructor(
     private apiService: ApiService,
     private userService: UserService,
-    private localStorageService: LocalStorageService
+    private localStorageService: LocalStorageService,
+    private platformService: PlatformService
   ) {}
 
   onLogin(loginDto: LoginDto): Observable<User> {
@@ -87,7 +89,7 @@ export class AuthService {
     if (this.localStorageService.getItem(environment.USER_ACCESS_TOKEN_LOCALSTORAGE)) {
       this.apiService
         .get('/auth/me', {
-          scope: ['categories']
+          scope: ['categories', 'settings']
         })
         .subscribe((user: User) => this.setAuthorization(user));
     } else {
@@ -106,8 +108,7 @@ export class AuthService {
     }
 
     if (!!user.settings) {
-      // prettier-ignore
-      this.localStorageService.setItem(environment.USER_SETTINGS_LOCALSTORAGE, JSON.stringify(user.settings));
+      this.platformService.setSettings(user.settings);
     }
 
     this.userSubject.next(user);
@@ -117,6 +118,8 @@ export class AuthService {
   removeAuthorization(): Observable<void> {
     this.userSubject.next({} as User);
     this.isAuthenticatedSubject.next(false);
+
+    // TODO: add remove settings
 
     this.localStorageService.removeItem(environment.USER_ACCESS_TOKEN_LOCALSTORAGE);
 
