@@ -14,11 +14,17 @@ export interface User {
   email?: string;
   sessions: Session[];
   accessToken?: string;
-  interfaceConfig?: UserInterface;
+  settings?: UserSettings;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface UserInterface {
-  colorTheme: string;
+export interface UserSettings {
+  theme: UserSettingsTheme;
+}
+
+enum UserSettingsTheme {
+  AUTO = 'AUTO',
+  LIGHT = 'LIGHT',
+  DARK = 'DARK'
 }

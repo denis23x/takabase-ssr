@@ -41,7 +41,7 @@ export class AuthService {
           .post('/auth/login', {
             ...loginDto,
             fingerprint,
-            scope: ['categories']
+            scope: ['categories', 'settings']
           })
           .pipe(tap((user: User) => this.setAuthorization(user)));
       })
@@ -84,7 +84,7 @@ export class AuthService {
   }
 
   getAuthorization(): void {
-    if (this.localStorageService.getItem(environment.TOKEN_LOCALSTORAGE)) {
+    if (this.localStorageService.getItem(environment.USER_ACCESS_TOKEN_LOCALSTORAGE)) {
       this.apiService
         .get('/auth/me', {
           scope: ['categories']
@@ -101,16 +101,13 @@ export class AuthService {
 
   setAuthorization(user: User): void {
     if (!!user.accessToken) {
-      this.localStorageService.setItem(environment.TOKEN_LOCALSTORAGE, user.accessToken);
+      // prettier-ignore
+      this.localStorageService.setItem(environment.USER_ACCESS_TOKEN_LOCALSTORAGE, user.accessToken);
     }
 
-    const config = this.localStorageService.getItem(environment.CONFIG_LOCALSTORAGE);
-
-    if (config) {
-      user = {
-        ...user,
-        interfaceConfig: JSON.parse(config)
-      };
+    if (!!user.settings) {
+      // prettier-ignore
+      this.localStorageService.setItem(environment.USER_SETTINGS_LOCALSTORAGE, JSON.stringify(user.settings));
     }
 
     this.userSubject.next(user);
@@ -121,7 +118,7 @@ export class AuthService {
     this.userSubject.next({} as User);
     this.isAuthenticatedSubject.next(false);
 
-    this.localStorageService.removeItem(environment.TOKEN_LOCALSTORAGE);
+    this.localStorageService.removeItem(environment.USER_ACCESS_TOKEN_LOCALSTORAGE);
 
     return of(null);
   }

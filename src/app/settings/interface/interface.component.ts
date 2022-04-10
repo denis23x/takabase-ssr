@@ -5,14 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { first, pairwise, startWith } from 'rxjs/operators';
-import {
-  AuthService,
-  User,
-  UserInterface,
-  UserService,
-  LocalStorageService,
-  PlatformService
-} from '../../core';
+import { AuthService, User, UserService, LocalStorageService, PlatformService } from '../../core';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -53,15 +46,15 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
       this.user = user;
 
       if ('interfaceConfig' in this.user) {
-        const interfaceConfig = this.user.interfaceConfig as UserInterface;
-
-        if ('colorTheme' in interfaceConfig) {
-          this.colorThemeForm.patchValue(interfaceConfig);
-        }
-
-        if ('users' in interfaceConfig || 'categories' in interfaceConfig) {
-          this.additionalSearchForm.patchValue(interfaceConfig);
-        }
+        // const interfaceConfig = this.user.interfaceConfig as UserInterface;
+        //
+        // if ('colorTheme' in interfaceConfig) {
+        //   this.colorThemeForm.patchValue(interfaceConfig);
+        // }
+        //
+        // if ('users' in interfaceConfig || 'categories' in interfaceConfig) {
+        //   this.additionalSearchForm.patchValue(interfaceConfig);
+        // }
       }
     });
 
@@ -88,17 +81,17 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
   }
 
   setConfig(interfaceConfig: any): void {
-    this.authService.userSubject.next({
-      ...this.user,
-      interfaceConfig: {
-        ...this.user.interfaceConfig,
-        ...interfaceConfig
-      }
-    });
-
-    this.localStorageService.setItem(
-      environment.CONFIG_LOCALSTORAGE,
-      JSON.stringify(this.authService.userSubject.getValue().interfaceConfig)
-    );
+    // this.authService.userSubject.next({
+    //   ...this.user,
+    //   interfaceConfig: {
+    //     ...this.user.interfaceConfig,
+    //     ...interfaceConfig
+    //   }
+    // });
+    //
+    // this.localStorageService.setItem(
+    //   environment.CONFIG_LOCALSTORAGE,
+    //   JSON.stringify(this.authService.userSubject.getValue().interfaceConfig)
+    // );
   }
 }
