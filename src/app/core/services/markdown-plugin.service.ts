@@ -58,10 +58,10 @@ export class MarkdownPluginService {
   getGithubTemplate(service: string, id: string, url: string, options?: any): string {
     const parameter = id.indexOf('?');
     const src = 'https://gist.github.com/';
-    const config = this.localStorageService.getItem(environment.CONFIG_LOCALSTORAGE);
+    const config = this.localStorageService.getItem(environment.USER_SETTINGS_LOCALSTORAGE);
     const randomId = id + '-' + Date.now() + Math.floor(Math.random() * Date.now());
 
-    let colorTheme = 'auto';
+    let colorTheme = 'AUTO';
 
     if (config) {
       colorTheme = JSON.parse(config).colorTheme;

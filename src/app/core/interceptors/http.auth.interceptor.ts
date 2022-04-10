@@ -19,7 +19,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
   constructor(private localStorageService: LocalStorageService, private authService: AuthService) {}
 
   private getToken(): string {
-    return this.localStorageService.getItem(environment.TOKEN_LOCALSTORAGE);
+    return this.localStorageService.getItem(environment.USER_ACCESS_TOKEN_LOCALSTORAGE);
   }
 
   private setRequestHeaders(request: HttpRequest<any>): HttpRequest<any> {

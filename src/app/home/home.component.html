@@ -32,7 +32,9 @@
     </div>
     <div class="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
       <a class="btn btn-info text-center w-full lg:w-fit" [routerLink]="['/search']" aria-label="Search post">Search post</a>
-      <a class="btn btn-success text-center w-full lg:w-fit" [routerLink]="['/auth/registration']" aria-label="Join to Draft">Join to Draft</a>
+      <ng-container *appAuthed="false">
+        <a class="btn btn-success text-center w-full lg:w-fit" [routerLink]="['/auth/registration']" aria-label="Join to Draft">Join to Draft</a>
+      </ng-container>
     </div>
   </div>
   <div class="flex order-4 lg:order-4 bg-primary-3 border border-primary-4 rounded-md w-full p-4">

@@ -6,8 +6,8 @@
 
 export const environment = {
   production: false,
-  TOKEN_LOCALSTORAGE: 'draftAccessToken',
-  CONFIG_LOCALSTORAGE: 'draftUserConfig',
+  USER_ACCESS_TOKEN_LOCALSTORAGE: 'draftUserAccessToken',
+  USER_SETTINGS_LOCALSTORAGE: 'draftUserSettings',
   API_URL: 'http://localhost:3323/api'
 };
 

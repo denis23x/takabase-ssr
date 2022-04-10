@@ -16,7 +16,7 @@ export class SettingsResolverService {
   resolve(): Observable<User> {
     return this.authService
       .getMe({
-        scope: ['sessions']
+        scope: ['sessions', 'settings']
       })
       .pipe(
         catchError((error: HttpErrorResponse) => {
