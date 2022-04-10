@@ -50,7 +50,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   urlModal: boolean;
 
   constructor(
-    @Inject(DOCUMENT) private document: Document,
+    @Inject(DOCUMENT)
+    private document: Document,
     private markdownService: MarkdownService,
     private platformService: PlatformService,
     private formBuilder: FormBuilder,

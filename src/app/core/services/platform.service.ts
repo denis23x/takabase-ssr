@@ -17,8 +17,10 @@ export class PlatformService {
   private readonly renderer2: Renderer2;
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: string,
-    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID)
+    private platformId: string,
+    @Inject(DOCUMENT)
+    private document: Document,
     private rendererFactory2: RendererFactory2
   ) {
     this.renderer2 = rendererFactory2.createRenderer(null, null);
