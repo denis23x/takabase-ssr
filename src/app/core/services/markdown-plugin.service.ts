@@ -61,10 +61,10 @@ export class MarkdownPluginService {
     const config = this.localStorageService.getItem(environment.USER_SETTINGS_LOCALSTORAGE);
     const randomId = id + '-' + Date.now() + Math.floor(Math.random() * Date.now());
 
-    let colorTheme = 'AUTO';
+    let theme: string = 'AUTO';
 
     if (config) {
-      colorTheme = JSON.parse(config).colorTheme;
+      theme = JSON.parse(config).colorTheme;
     }
 
     const srcdoc = `
@@ -73,7 +73,7 @@ export class MarkdownPluginService {
           <base target='_parent'>
           <title>Gist</title>
         </head>
-        <body class='${colorTheme}'>
+        <body class='${theme}'>
           <script src='${src + (parameter > -1 ? id.substr(0, parameter) : id)}.js'></script>
         </body>
       </html>

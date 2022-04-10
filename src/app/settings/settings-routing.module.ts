@@ -12,6 +12,7 @@ const routes: Routes = [
   {
     path: '',
     component: SettingsComponent,
+    runGuardsAndResolvers: 'always',
     resolve: {
       data: SettingsResolverService
     },
