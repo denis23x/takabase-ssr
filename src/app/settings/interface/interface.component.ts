@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './interface.component.html'
 })
 export class SettingsInterfaceComponent implements OnInit, OnDestroy {
-  routeData$: Subscription;
+  activatedRouteData$: Subscription;
 
   user: User;
 
@@ -31,7 +31,7 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.routeData$ = this.activatedRoute.parent?.data
+    this.activatedRouteData$ = this.activatedRoute.parent?.data
       .pipe(
         pluck('data'),
         tap((user: User) => (this.user = user))
@@ -54,6 +54,6 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.routeData$, this.themeForm$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.activatedRouteData$, this.themeForm$].forEach($ => $?.unsubscribe());
   }
 }

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { HelperService } from '../../core';
@@ -9,7 +9,7 @@ import { HelperService } from '../../core';
   selector: 'app-auth-reset',
   templateUrl: './reset.component.html'
 })
-export class AuthResetComponent implements OnInit, OnDestroy {
+export class AuthResetComponent implements OnInit {
   resetForm: FormGroup;
   resetForm$: Subscription;
   resetFormIsSubmitted: boolean;
@@ -21,8 +21,6 @@ export class AuthResetComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {}
-
-  ngOnDestroy(): void {}
 
   onSubmitForm(): void {
     if (this.helperService.getFormValidation(this.resetForm)) {

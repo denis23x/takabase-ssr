@@ -1,13 +1,13 @@
 /** @format */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Post } from '../../../../core';
 
 @Component({
   selector: 'app-post-card, [appPostCard]',
   templateUrl: './card.component.html'
 })
-export class PostCardComponent implements OnInit, OnDestroy {
+export class PostCardComponent implements OnInit {
   @Input()
   set appPost(post: Post) {
     this.post = post;
@@ -24,6 +24,4 @@ export class PostCardComponent implements OnInit, OnDestroy {
   postPath: string = '';
 
   ngOnInit(): void {}
-
-  ngOnDestroy(): void {}
 }

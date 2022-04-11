@@ -112,9 +112,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.textareaInput$, this.history$, this.scrollSync$]
-      .filter($ => $)
-      .forEach($ => $.unsubscribe());
+    [this.textareaInput$, this.history$, this.scrollSync$].forEach($ => $?.unsubscribe());
   }
 
   setValue(value: string): void {

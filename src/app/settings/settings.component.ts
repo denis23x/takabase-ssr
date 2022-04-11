@@ -11,19 +11,19 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './settings.component.html'
 })
 export class SettingsComponent implements OnInit, OnDestroy {
-  routeData$: Subscription;
+  activatedRouteData$: Subscription;
 
   user: User;
 
   constructor(private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this.routeData$ = this.activatedRoute.data
+    this.activatedRouteData$ = this.activatedRoute.data
       .pipe(pluck('data'))
       .subscribe((user: User) => (this.user = user));
   }
 
   ngOnDestroy() {
-    [this.routeData$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.activatedRouteData$].filter($ => $).forEach($ => $.unsubscribe());
   }
 }

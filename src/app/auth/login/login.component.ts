@@ -56,7 +56,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.queryParams$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.queryParams$].forEach($ => $?.unsubscribe());
   }
 
   onLogin(loginDto: LoginDto): void {

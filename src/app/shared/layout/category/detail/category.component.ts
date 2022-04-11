@@ -53,8 +53,8 @@ export const getPostGetAllDto = (
   templateUrl: './category.component.html'
 })
 export class CategoryDetailComponent {
-  routeData$: Subscription;
-  routeQueryParams$: Subscription;
+  activatedRouteData$: Subscription;
+  activatedRouteQueryParams$: Subscription;
 
   page = 1;
   size = 10;
@@ -67,21 +67,21 @@ export class CategoryDetailComponent {
   constructor(private activatedRoute: ActivatedRoute, private postService: PostService) {}
 
   ngOnInit(): void {
-    this.postPath =
-      this.activatedRoute.snapshot.parent.routeConfig.component.name === 'UserComponent'
-        ? 'posts'
-        : './';
+    // prettier-ignore
+    this.postPath = this.activatedRoute.snapshot.parent.routeConfig.component.name === 'UserComponent' ? 'posts' : './';
 
-    this.routeData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe((postList: Post[]) => {
-      this.page = 1;
-      this.size = 10;
+    this.activatedRouteData$ = this.activatedRoute.data
+      .pipe(pluck('data'))
+      .subscribe((postList: Post[]) => {
+        this.page = 1;
+        this.size = 10;
 
-      this.postList = postList;
-      this.postListLoading = false;
-      this.postListHasMore = postList.length === this.size;
-    });
+        this.postList = postList;
+        this.postListLoading = false;
+        this.postListHasMore = postList.length === this.size;
+      });
 
-    this.routeQueryParams$ = this.activatedRoute.queryParams
+    this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
       .pipe(
         skip(1),
         tap(() => {
@@ -97,7 +97,8 @@ export class CategoryDetailComponent {
   }
 
   ngOnDestroy(): void {
-    [this.routeData$, this.routeQueryParams$].filter($ => $).forEach($ => $.unsubscribe());
+    // prettier-ignore
+    [this.activatedRouteData$, this.activatedRouteQueryParams$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
   getPostList(concat: boolean): void {

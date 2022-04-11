@@ -11,20 +11,20 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './post.component.html'
 })
 export class PostDetailComponent implements OnInit, OnDestroy {
-  routeData$: Subscription;
+  activatedRouteData$: Subscription;
 
   post: Post;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.routeData$ = this.activatedRoute.data
+    this.activatedRouteData$ = this.activatedRoute.data
       .pipe(pluck('data'))
       .subscribe((post: Post) => (this.post = post));
   }
 
   ngOnDestroy(): void {
-    [this.routeData$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.activatedRouteData$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
   onClose(): void {

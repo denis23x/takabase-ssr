@@ -25,7 +25,7 @@ import Split from 'split-grid';
 export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('gutter') gutter: ElementRef;
 
-  routeData$: Subscription;
+  activatedRouteData$: Subscription;
 
   postForm: FormGroup;
   postForm$: Subscription;
@@ -59,7 +59,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.routeData$ = this.activatedRoute.data
+    this.activatedRouteData$ = this.activatedRoute.data
       .pipe(
         pluck('data'),
         filter((post: Post) => !!post)
@@ -89,7 +89,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.routeData$, this.postForm$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.activatedRouteData$, this.postForm$].forEach($ => $?.unsubscribe());
   }
 
   onSubmitCategoryForm(category: Category): void {

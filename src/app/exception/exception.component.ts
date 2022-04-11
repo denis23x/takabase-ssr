@@ -48,7 +48,7 @@ export class ExceptionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.routeParams$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.routeParams$].forEach($ => $?.unsubscribe());
   }
 
   getMessageMap(status: number): string | undefined {

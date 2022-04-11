@@ -11,8 +11,8 @@ import { CategoryService, Category, CategoryGetAllDto } from '../../core';
   templateUrl: './category.component.html'
 })
 export class SearchCategoryComponent implements OnInit, OnDestroy {
-  routeData$: Subscription;
-  routeQueryParams$: Subscription;
+  activatedRouteData$: Subscription;
+  activatedRouteQueryParams$: Subscription;
 
   page = 1;
   size = 10;
@@ -28,14 +28,14 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.routeData$ = this.activatedRoute.data
+    this.activatedRouteData$ = this.activatedRoute.data
       .pipe(pluck('data'))
       .subscribe((categoryList: Category[]) => {
         this.categoryList = categoryList;
         this.categoryListHasMore = categoryList.length === this.size;
       });
 
-    this.routeQueryParams$ = this.activatedRoute.parent.queryParams
+    this.activatedRouteQueryParams$ = this.activatedRoute.parent.queryParams
       .pipe(
         skip(1),
         tap(() => {
@@ -51,7 +51,7 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.routeData$, this.routeQueryParams$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
   }
 
   getCategoryList(concat: boolean): void {
