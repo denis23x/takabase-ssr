@@ -18,6 +18,7 @@ export class UserComponent implements OnInit, OnDestroy {
   userMe: boolean;
 
   category: Category;
+  categoryList: Category[];
   categoryModal: 'create' | 'edit';
 
   constructor(
@@ -30,15 +31,17 @@ export class UserComponent implements OnInit, OnDestroy {
     this.activatedRouteData$ = combineLatest([
       this.authService.userSubject,
       this.activatedRoute.data.pipe(pluck('data'))
-    ]).subscribe(([userAuthed, userResolved]: [User, User]) => {
-      this.userMe = userAuthed.id === userResolved.id;
-      this.user = userResolved;
+    ]).subscribe(([userAuthed, [user, categoryList]]: [User, [User, Category[]]]) => {
+      this.userMe = userAuthed.id === user.id;
+      this.user = user;
+
+      this.categoryList = categoryList;
     });
 
     this.activatedRouteParams$ = this.activatedRoute.firstChild.params
       .pipe(pluck('categoryId'))
       .subscribe((categoryId: string) => {
-        this.category = this.user.categories.find((category: Category) => {
+        this.category = this.categoryList.find((category: Category) => {
           return category.id === Number(categoryId);
         });
       });
