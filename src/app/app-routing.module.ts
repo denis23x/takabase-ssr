@@ -22,7 +22,9 @@ const routes: Routes = [
   },
   {
     matcher: (url: UrlSegment[]) => {
-      return ['create', 'edit'].includes(url[0].path) ? { consumed: url.slice(0, 1) } : null;
+      const [path]: UrlSegment[] = url;
+
+      return ['create', 'edit'].includes(path.path) ? { consumed: url.slice(0, 1) } : null;
     },
     loadChildren: () => import('./markdown/markdown.module').then(m => m.MarkdownModule),
     canLoad: [CanLoadRestrictGuard],
@@ -44,7 +46,9 @@ const routes: Routes = [
   },
   {
     matcher: (url: UrlSegment[]) => {
-      return url[0].path.match(/^@[\w\.]+$/gm) ? { consumed: url.slice(0, 1) } : null;
+      const [path]: UrlSegment[] = url;
+
+      return path.path.match(/^@[\w\.]+$/gm) ? { consumed: url.slice(0, 1) } : null;
     },
     loadChildren: () => import('./user/user.module').then(m => m.UserModule)
   },

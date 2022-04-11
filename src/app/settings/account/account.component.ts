@@ -44,7 +44,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
       });
 
     this.accountForm$ = this.accountForm.valueChanges.subscribe(value => {
-      console.log(value);
+      // console.log(value);
     });
   }
 

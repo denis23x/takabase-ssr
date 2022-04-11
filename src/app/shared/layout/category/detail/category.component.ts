@@ -3,16 +3,14 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Post, PostGetAllDto, PostService, User } from '../../../../core';
+import { Category, Post, PostGetAllDto, PostService, User } from '../../../../core';
 import { pluck, skip, tap } from 'rxjs/operators';
 
-export const getPostGetAllDto = (
-  postGetAllDto: PostGetAllDto,
-  activatedRouteSnapshot: ActivatedRouteSnapshot
-): PostGetAllDto => {
+// prettier-ignore
+export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto => {
   switch (activatedRouteSnapshot.parent.routeConfig.component.name) {
     case 'UserComponent': {
-      const user: User = activatedRouteSnapshot.parent.data.data;
+      const [user]: [User, Category[]] = activatedRouteSnapshot.parent.data.data;
 
       postGetAllDto = {
         ...postGetAllDto,
