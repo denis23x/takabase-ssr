@@ -11,8 +11,8 @@ import { User, UserService, UserGetAllDto } from '../../core';
   templateUrl: './user.component.html'
 })
 export class SearchUserComponent implements OnInit, OnDestroy {
-  routeData$: Subscription;
-  routeQueryParams$: Subscription;
+  activatedRouteData$: Subscription;
+  activatedRouteQueryParams$: Subscription;
 
   page = 1;
   size = 10;
@@ -28,12 +28,14 @@ export class SearchUserComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.routeData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe((userList: User[]) => {
-      this.userList = userList;
-      this.userListHasMore = userList.length === this.size;
-    });
+    this.activatedRouteData$ = this.activatedRoute.data
+      .pipe(pluck('data'))
+      .subscribe((userList: User[]) => {
+        this.userList = userList;
+        this.userListHasMore = userList.length === this.size;
+      });
 
-    this.routeQueryParams$ = this.activatedRoute.parent.queryParams
+    this.activatedRouteQueryParams$ = this.activatedRoute.parent.queryParams
       .pipe(
         skip(1),
         tap(() => {
@@ -49,7 +51,7 @@ export class SearchUserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.routeData$, this.routeQueryParams$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
   }
 
   getUserList(concat: boolean): void {

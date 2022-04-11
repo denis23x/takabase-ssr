@@ -1,18 +1,18 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, Event as RouterEvent } from '@angular/router';
-import { combineLatest, EMPTY, of, Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { combineLatest, Subscription } from 'rxjs';
 import { User, Category, AuthService } from '../core';
-import { filter, pluck, startWith, switchMap } from 'rxjs/operators';
+import { pluck } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html'
 })
 export class UserComponent implements OnInit, OnDestroy {
-  routeData$: Subscription;
-  routeEvents$: Subscription;
+  activatedRouteData$: Subscription;
+  activatedRouteParams$: Subscription;
 
   user: User;
   userMe: boolean;
@@ -27,21 +27,16 @@ export class UserComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.routeData$ = combineLatest([
+    this.activatedRouteData$ = combineLatest([
       this.authService.userSubject,
       this.activatedRoute.data.pipe(pluck('data'))
-    ]).subscribe(([authedUser, routedUser]: [User, User]) => {
-      this.userMe = authedUser.id === routedUser.id;
-      this.user = this.userMe ? authedUser : routedUser;
+    ]).subscribe(([userAuthed, userResolved]: [User, User]) => {
+      this.userMe = userAuthed.id === userResolved.id;
+      this.user = userResolved;
     });
 
-    this.routeEvents$ = this.router.events
-      .pipe(
-        filter((routerEvent: RouterEvent) => routerEvent instanceof NavigationEnd),
-        startWith(EMPTY),
-        switchMap(() => of(this.activatedRoute.snapshot.firstChild.params)),
-        pluck('categoryId')
-      )
+    this.activatedRouteParams$ = this.activatedRoute.firstChild.params
+      .pipe(pluck('categoryId'))
       .subscribe((categoryId: string) => {
         this.category = this.user.categories.find((category: Category) => {
           return category.id === Number(categoryId);
@@ -50,7 +45,8 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.routeData$, this.routeEvents$].filter($ => $).forEach($ => $.unsubscribe());
+    // prettier-ignore
+    [this.activatedRouteData$, this.activatedRouteParams$].filter($ => $).forEach($ => $.unsubscribe());
   }
 
   onSubmitCategoryForm(category: Category): void {

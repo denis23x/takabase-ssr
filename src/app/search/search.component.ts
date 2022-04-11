@@ -52,6 +52,6 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.routeQueryParams$, this.searchForm$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.routeQueryParams$, this.searchForm$].forEach($ => $?.unsubscribe());
   }
 }

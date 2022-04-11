@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './account.component.html'
 })
 export class SettingsAccountComponent implements OnInit, OnDestroy {
-  routeData$: Subscription;
+  activatedRouteData$: Subscription;
 
   user: User;
 
@@ -35,7 +35,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.routeData$ = this.activatedRoute.parent.data
+    this.activatedRouteData$ = this.activatedRoute.parent.data
       .pipe(pluck('data'))
       .subscribe((user: User) => {
         this.user = user;
@@ -49,7 +49,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.accountForm$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.accountForm$].forEach($ => $?.unsubscribe());
   }
 
   onSubmitForm(): void {

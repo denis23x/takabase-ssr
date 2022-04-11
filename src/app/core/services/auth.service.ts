@@ -43,7 +43,7 @@ export class AuthService {
           .post('/auth/login', {
             ...loginDto,
             fingerprint,
-            scope: ['categories', 'settings']
+            scope: ['settings']
           })
           .pipe(tap((user: User) => this.setAuthorization(user)));
       })
@@ -89,7 +89,7 @@ export class AuthService {
     if (this.localStorageService.getItem(environment.USER_ACCESS_TOKEN_LOCALSTORAGE)) {
       this.apiService
         .get('/auth/me', {
-          scope: ['categories', 'settings']
+          scope: ['settings']
         })
         .subscribe((user: User) => this.setAuthorization(user));
     } else {

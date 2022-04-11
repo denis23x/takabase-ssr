@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './security.component.html'
 })
 export class SettingsSecurityComponent implements OnInit, OnDestroy {
-  routeData$: Subscription;
+  activatedRouteData$: Subscription;
 
   user: User;
 
@@ -26,7 +26,7 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.routeData$ = this.activatedRoute.parent?.data
+    this.activatedRouteData$ = this.activatedRoute.parent?.data
       .pipe(
         pluck('data'),
         switchMap((user: User) => {
@@ -47,7 +47,7 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.routeData$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.activatedRouteData$].forEach($ => $?.unsubscribe());
   }
 
   onSessionTerminate(id: number): void {

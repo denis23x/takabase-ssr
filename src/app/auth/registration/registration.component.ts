@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService, RegistrationDto, LoginDto, HelperService, User } from '../../core';
@@ -10,7 +10,7 @@ import { switchMap } from 'rxjs/operators';
   selector: 'app-auth-registration',
   templateUrl: './registration.component.html'
 })
-export class AuthRegistrationComponent implements OnDestroy {
+export class AuthRegistrationComponent implements OnInit {
   registrationForm: FormGroup;
   registrationFormIsSubmitted: boolean;
 
@@ -28,7 +28,7 @@ export class AuthRegistrationComponent implements OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {}
+  ngOnInit(): void {}
 
   onRegistration(registrationDto: RegistrationDto): void {
     this.registrationFormIsSubmitted = true;
