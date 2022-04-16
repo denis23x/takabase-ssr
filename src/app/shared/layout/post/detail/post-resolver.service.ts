@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
-import { PostService, Post, User, PostGetOneDto } from '../../../../core';
+import { PostService, Post, User, PostGetOneDto, Category } from '../../../../core';
 import { catchError, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -22,10 +22,11 @@ export class PostDetailResolverService {
 
     return this.postService.getOne(postId, postGetOneDto).pipe(
       switchMap((post: Post) => {
-        const data = activatedRouteSnapshot.parent.parent.data.data;
+        const data: [User, Category[]] | undefined = activatedRouteSnapshot.parent.parent.data.data;
 
-        if (data) {
-          const user: User = data;
+        if (!!data) {
+          // @ts-ignore
+          const user: User = [...data].shift();
 
           if (user.id !== post.user.id) {
             return throwError({
