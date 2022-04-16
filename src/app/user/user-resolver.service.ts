@@ -49,7 +49,7 @@ export class UserResolverService {
         const categoryGetAllDto: CategoryGetAllDto = {
           userId: user.id,
           page: 1,
-          size: 100
+          size: 999
         };
 
         return zip(of(user), this.categoryService.getAll(categoryGetAllDto));
