@@ -108,23 +108,10 @@
         class="btn btn-success block w-full"
         type="button"
         aria-label="Next"
-        *ngIf="postForm.get('body') as body"
-        [disabled]="body.invalid"
-        (click)="postModal = body.valid">Next
+        [disabled]="postForm.invalid"
+        (click)="onSubmitPostForm()">Next
       </button>
     </div>
   </section>
-  <ng-container>
-    <app-post-create
-      *ngIf="postModal"
-      [appPostForm]="postForm"
-      (submitted)="onSubmitPostForm($event)"
-      (closed)="$event ? postCategoryModal = $event : postModal = $event">
-    </app-post-create>
-    <app-category-create
-      *ngIf="postCategoryModal"
-      (submitted)="onSubmitCategoryForm($event)"
-      (closed)="postCategoryModal = $event">
-    </app-category-create>
-  </ng-container>
+  <router-outlet></router-outlet>
 </ng-container>
