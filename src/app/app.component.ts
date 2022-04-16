@@ -22,7 +22,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.platformService.isBrowser()) {
-      this.renderer2.selectRootElement('.pre-loader').remove();
+      this.renderer2.selectRootElement('#loader').remove();
     }
   }
 }

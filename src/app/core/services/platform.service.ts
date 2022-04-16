@@ -136,4 +136,17 @@ export class PlatformService {
       }
     }
   }
+
+  removeSettings(): void {
+    if (this.isBrowser()) {
+      const themeList: string[] = Object.values(UserSettingsTheme);
+      const themeCurrent: string | undefined = themeList.find((theme: string) => {
+        return this.document.body.classList.contains(theme);
+      });
+
+      if (!!themeCurrent) {
+        this.document.body.classList.remove(themeCurrent);
+      }
+    }
+  }
 }

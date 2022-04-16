@@ -24,7 +24,6 @@
     <meta name="target" content="all">
     <meta name="MobileOptimized" content="320">
     <meta name="date" content="Feb. 23, 2021">
-
     <meta name="og:title" content="Draftnow">
     <meta name="og:description" content="Simplest note taking app">
     <meta name="og:type" content="Social">
@@ -36,117 +35,10 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico"/>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="preload" href="assets/icons/sprite.svg" as="image">
-
-    <style type="text/css">
-      @media (prefers-color-scheme: light) {
-        :root {
-          --primary-2:#f7f7f7;
-          --secondary-1:#3d3d3d
-        }
-      }
-
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --primary-2:#3e3e3e;
-          --secondary-1:#f7f7f3
-        }
-      }
-
-      body.LIGHT {
-        --primary-2:#f7f7f7;
-        --secondary-1:#050910
-      }
-
-      body.DARK {
-        --primary-2:#343434;
-        --secondary-1:#e5e5e5
-      }
-
-      .pre-loader {
-        position:fixed;
-        width:100%;
-        height:100%;
-        background:var(--primary-2);
-        z-index:100;
-        display:flex;
-        flex-direction:column;
-        justify-content:center;
-        align-items:center
-      }
-
-      .pre-loader figure {
-        display:inline-block;
-        position:relative;
-        width:80px;
-        height:80px
-      }
-
-      .pre-loader figure div {
-        position:absolute;
-        border:4px solid var(--secondary-1);
-        opacity:.5;
-        border-radius:50%;
-        animation: ripple 1s cubic-bezier(0,.2,.8,1) infinite
-      }
-
-      .pre-loader figure div:nth-child(2) {
-        animation-delay:-.5s
-      }
-
-      .pre-loader span {
-        font-size:.75rem;
-        color:var(--secondary-1);
-        margin:0 0 1rem 0;
-        text-transform:uppercase;
-        opacity:.5
-      }
-
-      @keyframes ripple {
-        0%{
-          top:36px;
-          left:36px;
-          width:0;
-          height:0;
-          opacity:.5
-        }
-
-        100%{
-          top:0;
-          left:0;
-          width:72px;
-          height:72px;
-          opacity:0
-        }
-      }
-    </style>
 </head>
 <body class="bg-primary-2">
-  <noscript>Please enable JavaScript to continue using this application.</noscript>
-  <div class="pre-loader">
-    <figure>
-      <div></div>
-      <div></div>
-    </figure>
-    <span>Loading</span>
-  </div>
-  <script type="text/javascript">
-
-    // TODO: remove ??
-
-    // (() => {
-    //   if (window) {
-    //     const settings = window.localStorage.getItem("draftUserSettings");
-    //
-    //     if (settings) {
-    //       const settingsParsed = JSON.parse(settings);
-    //
-    //       if (settingsParsed.hasOwnProperty('theme')) {
-    //         window.document.body.classList.add(settingsParsed.theme)
-    //       }
-    //     }
-    //   }
-    // })();
-  </script>
+  <noscript>Please enable JavaScript to continue using this application</noscript>
+  <div id="loader" class="fixed flex items-center justify-center text-secondary-2 w-full h-full">Loading</div>
   <app-root></app-root>
 </body>
 </html>
