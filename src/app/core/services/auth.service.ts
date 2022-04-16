@@ -116,12 +116,14 @@ export class AuthService {
   }
 
   removeAuthorization(): Observable<void> {
-    this.userSubject.next({} as User);
-    this.isAuthenticatedSubject.next(false);
-
-    // TODO: add remove settings
+    // TODO: update
 
     this.localStorageService.removeItem(environment.USER_ACCESS_TOKEN_LOCALSTORAGE);
+
+    this.platformService.removeSettings();
+
+    this.userSubject.next({} as User);
+    this.isAuthenticatedSubject.next(false);
 
     return of(null);
   }

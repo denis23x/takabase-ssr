@@ -4,7 +4,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { pluck, tap } from 'rxjs/operators';
-import { AuthService, User, UserService } from '../../core';
+import { AuthService, User, UserService, UserUpdateDto } from '../../core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -38,17 +38,15 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
       )
       .subscribe((user: User) => this.themeForm.patchValue(user.settings));
 
-    // TODO: remake to proper request
-
     this.themeForm$ = this.themeForm.valueChanges.subscribe((value: any) => {
+      const userUpdateDto: UserUpdateDto = {
+        settings: {
+          theme: value.theme
+        }
+      };
+
       this.userService
-        .update(this.user.id, {
-          settings: {
-            update: {
-              theme: value.theme
-            }
-          }
-        })
+        .update(this.user.id, userUpdateDto)
         .subscribe((user: User) => this.authService.setAuthorization(user));
     });
   }
