@@ -17,7 +17,7 @@ export class CanLoadPublicGuard implements CanLoad {
   ) {}
 
   canLoad(): Observable<boolean> {
-    return this.authService.isAuthenticated.pipe(
+    return this.authService.userAuthenticated.pipe(
       first(),
       switchMap((isAuthenticated: boolean) => {
         if (isAuthenticated) {

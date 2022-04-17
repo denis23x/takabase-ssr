@@ -24,6 +24,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    [this.activatedRouteData$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.activatedRouteData$].forEach($ => $?.unsubscribe());
   }
 }

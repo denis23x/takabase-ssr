@@ -17,7 +17,7 @@ export class CanActivateRestrictGuard implements CanActivate {
   ) {}
 
   canActivate(): Observable<boolean> {
-    return this.authService.isAuthenticated.pipe(
+    return this.authService.userAuthenticated.pipe(
       first(),
       switchMap((isAuthenticated: boolean) => {
         if (!isAuthenticated) {

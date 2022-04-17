@@ -48,8 +48,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // prettier-ignore
-    [this.activatedRouteData$, this.activatedRouteParams$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.activatedRouteData$, this.activatedRouteParams$].forEach($ => $?.unsubscribe());
   }
 
   onSubmitCategoryForm(category: Category): void {

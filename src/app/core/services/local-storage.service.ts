@@ -9,7 +9,9 @@ export class LocalStorageService {
 
   getItem(item: string): string {
     if (this.platformService.isBrowser()) {
-      return this.platformService.getWindow().localStorage[item];
+      const window: Window = this.platformService.getWindow();
+
+      return window.localStorage.getItem(item);
     }
 
     return '';
@@ -17,13 +19,17 @@ export class LocalStorageService {
 
   setItem(key: string, value: string): void {
     if (this.platformService.isBrowser()) {
-      this.platformService.getWindow().localStorage[key] = value;
+      const window: Window = this.platformService.getWindow();
+
+      window.localStorage.setItem(key, value);
     }
   }
 
   removeItem(item: string): void {
     if (this.platformService.isBrowser()) {
-      return this.platformService.getWindow().localStorage.removeItem(item);
+      const window: Window = this.platformService.getWindow();
+
+      window.localStorage.removeItem(item);
     }
   }
 }

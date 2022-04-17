@@ -95,8 +95,7 @@ export class CategoryDetailComponent {
   }
 
   ngOnDestroy(): void {
-    // prettier-ignore
-    [this.activatedRouteData$, this.activatedRouteQueryParams$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
   }
 
   getPostList(concat: boolean): void {

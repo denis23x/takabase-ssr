@@ -3,13 +3,13 @@
     <app-svg-icon class="fill-current text-secondary-1 p-2" [appIcon]="'box-arrow-in-down'"></app-svg-icon>
     <span class="text-secondary-1">Draftnow</span>
   </a>
-  <ng-container *appAuthed="false">
+  <ng-container *appAuthenticated="false">
     <nav class="flex justify-end items-center space-x-4">
       <a class="btn btn-info" [routerLink]="['/auth/login']" aria-label="Login">Login</a>
     </nav>
   </ng-container>
-  <ng-container *appAuthed="true">
-    <nav class="flex justify-end items-center" *ngIf="user$ | async as user">
+  <ng-container *appAuthenticated="true">
+    <nav class="flex justify-end items-center" *ngIf="!!user">
       <a
         class="fill-current text-secondary-1 hover:text-info-1 p-2"
         [routerLink]="['/create']"

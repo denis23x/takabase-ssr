@@ -1,7 +1,13 @@
 /** @format */
 
 import { AfterViewInit, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { MarkdownControl, MarkdownService, HelperService, PlatformService } from '../../../core';
+import {
+  MarkdownControl,
+  MarkdownService,
+  HelperService,
+  PlatformService,
+  User
+} from '../../../core';
 import { MarkdownControlList } from './markdown-control-list';
 import { BehaviorSubject, fromEvent, merge, Subscription, of, EMPTY } from 'rxjs';
 import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
@@ -42,7 +48,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   preview: HTMLElement;
 
   historyRemember = true;
-  history$ = new BehaviorSubject<string[]>([]);
+  history$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
   urlForm: FormGroup;
   urlFormControl = {} as MarkdownControl;

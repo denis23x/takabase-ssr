@@ -1,8 +1,8 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, ReplaySubject, from, of } from 'rxjs';
-import { distinctUntilChanged, first, switchMap, tap } from 'rxjs/operators';
+import { Observable, BehaviorSubject, from, of } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import {
   ApiService,
   LoginDto,
@@ -23,11 +23,10 @@ import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
 export class AuthService {
   agent: Promise<Agent> = FingerprintJS.load();
 
-  userSubject = new BehaviorSubject<User>({} as User);
-  user = this.userSubject.asObservable().pipe(distinctUntilChanged());
-
-  isAuthenticatedSubject = new ReplaySubject<boolean>(1);
-  isAuthenticated = this.isAuthenticatedSubject.asObservable();
+  userSubject: BehaviorSubject<User> = new BehaviorSubject<User>({} as User);
+  userAuthenticated: Observable<boolean> = this.userSubject
+    .asObservable()
+    .pipe(switchMap((user: User) => of(!!Object.keys(user).length)));
 
   constructor(
     private apiService: ApiService,
@@ -103,7 +102,6 @@ export class AuthService {
 
   setAuthorization(user: User): Observable<void> {
     this.userSubject.next(user);
-    this.isAuthenticatedSubject.next(true);
 
     if (!!user.accessToken) {
       this.localStorageService.setItem(environment.USER_ACCESS_TOKEN, user.accessToken);
@@ -121,7 +119,6 @@ export class AuthService {
     this.platformService.removeSettings(this.userSubject.getValue());
 
     this.userSubject.next({} as User);
-    this.isAuthenticatedSubject.next(false);
 
     return of(null);
   }

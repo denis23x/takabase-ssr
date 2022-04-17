@@ -53,7 +53,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.click$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.click$].forEach($ => $?.unsubscribe());
   }
 
   setState(state: boolean): void {
