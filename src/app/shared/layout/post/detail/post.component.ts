@@ -24,7 +24,7 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.activatedRouteData$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.activatedRouteData$].forEach($ => $?.unsubscribe());
   }
 
   onClose(): void {

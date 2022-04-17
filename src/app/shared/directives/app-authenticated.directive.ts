@@ -6,17 +6,16 @@ import { AuthService } from '../../core';
 import { tap } from 'rxjs/operators';
 
 @Directive({
-  selector: '[appAuthed]'
+  selector: '[appAuthenticated]'
 })
-export class AppAuthedDirective implements OnInit, OnDestroy {
+export class AppAuthenticatedDirective implements OnInit, OnDestroy {
   @Input()
-  set appAuthed(authed: boolean) {
-    this.authed = authed;
+  set appAuthenticated(authenticated: boolean) {
+    this.authenticated = authenticated;
   }
 
-  isAuthenticated$: Subscription;
-
-  authed: boolean;
+  authenticated$: Subscription;
+  authenticated: boolean;
 
   constructor(
     private templateRef: TemplateRef<any>,
@@ -25,10 +24,10 @@ export class AppAuthedDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.isAuthenticated$ = this.authService.isAuthenticated
+    this.authenticated$ = this.authService.userAuthenticated
       .pipe(tap(() => this.viewContainerRef.clear()))
       .subscribe(isAuthenticated => {
-        if ((isAuthenticated && this.authed) || (!isAuthenticated && !this.authed)) {
+        if ((isAuthenticated && this.authenticated) || (!isAuthenticated && !this.authenticated)) {
           this.viewContainerRef.createEmbeddedView(this.templateRef);
         } else {
           this.viewContainerRef.clear();
@@ -37,6 +36,6 @@ export class AppAuthedDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.isAuthenticated$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.authenticated$].forEach($ => $?.unsubscribe());
   }
 }

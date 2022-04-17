@@ -92,7 +92,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.activatedRouteData$, this.postForm$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.activatedRouteData$, this.postForm$].forEach($ => $?.unsubscribe());
   }
 
   onSubmitPostForm(): void {

@@ -47,6 +47,6 @@ export class AppScrollIntoViewDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.intersectionObserver].filter($ => $).forEach($ => $.disconnect());
+    [this.intersectionObserver].forEach($ => $?.disconnect());
   }
 }

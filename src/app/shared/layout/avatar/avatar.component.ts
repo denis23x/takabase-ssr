@@ -18,7 +18,7 @@ export class AvatarComponent implements OnInit, OnDestroy {
 
   constructor(private platformService: PlatformService, private elementRef: ElementRef) {}
 
-  user$ = new BehaviorSubject<User>({} as User);
+  user$: BehaviorSubject<User> = new BehaviorSubject<User>({} as User);
   userSubscription$: Subscription;
 
   avatar: string;
@@ -45,7 +45,7 @@ export class AvatarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.userSubscription$].filter($ => $).forEach($ => $.unsubscribe());
+    [this.userSubscription$].forEach($ => $?.unsubscribe());
   }
 
   getAvatar(): string {
