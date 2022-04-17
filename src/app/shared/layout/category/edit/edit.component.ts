@@ -94,7 +94,10 @@ export class CategoryEditComponent implements OnInit {
           }
 
           this.submitted.emit(category);
+
           this.snackbarService.success('Category updated');
+
+          this.categoryFormIsSubmitted = false;
         },
         () => (this.categoryFormIsSubmitted = false)
       );

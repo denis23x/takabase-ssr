@@ -30,31 +30,31 @@ export class AuthRegistrationComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onRegistration(registrationDto: RegistrationDto): void {
-    this.registrationFormIsSubmitted = true;
-
-    // prettier-ignore
-    this.authService
-      .onRegistration(registrationDto)
-      .pipe(
-        switchMap(() => {
-          const loginDto: LoginDto = {
-            email: registrationDto.email,
-            password: registrationDto.password
-          };
-
-          return this.authService.onLogin(loginDto);
-        })
-      )
-      .subscribe(
-        (user: User) => this.router.navigate(['/@' + user.name]).then(() => console.debug('Route changed')),
-        () => (this.registrationFormIsSubmitted = false)
-      );
-  }
-
   onSubmitForm(): void {
     if (this.helperService.getFormValidation(this.registrationForm)) {
-      this.onRegistration(this.registrationForm.value);
+      this.registrationFormIsSubmitted = true;
+
+      const registrationDto: RegistrationDto = {
+        ...this.registrationForm.value
+      };
+
+      // prettier-ignore
+      this.authService
+        .onRegistration(registrationDto)
+        .pipe(
+          switchMap(() => {
+            const loginDto: LoginDto = {
+              email: registrationDto.email,
+              password: registrationDto.password
+            };
+
+            return this.authService.onLogin(loginDto);
+          })
+        )
+        .subscribe(
+          (user: User) => this.router.navigate(['/@' + user.name]).then(() => console.debug('Route changed')),
+          () => (this.registrationFormIsSubmitted = false)
+        );
     }
   }
 }

@@ -3,8 +3,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { AuthService, User, UserService, HelperService, SnackbarService } from '../../core';
-import { pluck } from 'rxjs/operators';
+import {
+  AuthService,
+  User,
+  UserService,
+  HelperService,
+  SnackbarService,
+  UserUpdateDto
+} from '../../core';
+import { pluck, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -36,16 +43,11 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.activatedRouteData$ = this.activatedRoute.parent.data
-      .pipe(pluck('data'))
-      .subscribe((user: User) => {
-        this.user = user;
-
-        this.accountForm.patchValue(this.user);
-      });
-
-    this.accountForm$ = this.accountForm.valueChanges.subscribe(value => {
-      // console.log(value);
-    });
+      .pipe(
+        pluck('data'),
+        tap((user: User) => (this.user = user))
+      )
+      .subscribe((user: User) => this.accountForm.patchValue(user));
   }
 
   ngOnDestroy(): void {
@@ -53,12 +55,24 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
   }
 
   onSubmitForm(): void {
-    // if (this.helperService.getFormValidation(this.accountForm)) {
-    //   this.userService.update(this.accountForm.value).subscribe((user: User) => {
-    //     this.authService.userSubject.next(user);
-    //     this.snackbarService.info('Information updated');
-    //   });
-    // }
+    if (this.helperService.getFormValidation(this.accountForm)) {
+      this.accountFormIsSubmitted = true;
+
+      const userUpdateDto: UserUpdateDto = {
+        ...this.accountForm.value
+      };
+
+      this.userService.update(this.user.id, userUpdateDto).subscribe(
+        (user: User) => {
+          this.authService.setAuthorization(user);
+
+          this.snackbarService.success('Information updated');
+
+          this.accountFormIsSubmitted = false;
+        },
+        () => (this.accountFormIsSubmitted = false)
+      );
+    }
   }
 
   onDeleteUser(): void {
