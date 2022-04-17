@@ -5,67 +5,57 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { AppAuthenticatedDirective, AppScrollIntoViewDirective } from './directives';
-import { DayjsPipe, MarkdownPipe, SanitizerPipe } from './pipes';
 import {
   AvatarComponent,
   CategoryCreateComponent,
   CategoryDetailComponent,
-  CategoryDetailResolverService,
   CategoryEditComponent,
+  DropdownComponent,
+  HeaderComponent,
+  MarkdownComponent,
+  OverlayComponent,
   PostCardComponent,
   PostCreateComponent,
   PostDetailComponent,
-  PostDetailResolverService,
+  ShareComponent,
+  SnackbarComponent,
+  SvgIconComponent
+} from './components';
+import { AppAuthenticatedDirective, AppScrollIntoViewDirective } from './directives';
+import { DayjsPipe, MarkdownPipe, SanitizerPipe } from './pipes';
+
+const components: any[] = [
+  AvatarComponent,
+  CategoryCreateComponent,
+  CategoryDetailComponent,
+  CategoryEditComponent,
   DropdownComponent,
+  HeaderComponent,
   MarkdownComponent,
   OverlayComponent,
+  PostCardComponent,
+  PostCreateComponent,
+  PostDetailComponent,
+  ShareComponent,
+  SnackbarComponent,
   SvgIconComponent
-} from './layout';
+];
+
+const directives: any[] = [AppAuthenticatedDirective, AppScrollIntoViewDirective];
+const pipes: any[] = [DayjsPipe, MarkdownPipe, SanitizerPipe];
 
 @NgModule({
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, RouterModule],
-  declarations: [
-    AppAuthenticatedDirective,
-    AppScrollIntoViewDirective,
-    AvatarComponent,
-    CategoryCreateComponent,
-    CategoryDetailComponent,
-    CategoryEditComponent,
-    PostCardComponent,
-    PostCreateComponent,
-    PostDetailComponent,
-    DropdownComponent,
-    MarkdownComponent,
-    OverlayComponent,
-    SvgIconComponent,
-    DayjsPipe,
-    MarkdownPipe,
-    SanitizerPipe
-  ],
+  imports: [CommonModule, FormsModule, HttpClientModule, ReactiveFormsModule, RouterModule],
+  declarations: [...components, ...directives, ...pipes],
   exports: [
+    ...components,
+    ...directives,
+    ...pipes,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
     HttpClientModule,
-    RouterModule,
-    AppAuthenticatedDirective,
-    AppScrollIntoViewDirective,
-    AvatarComponent,
-    CategoryCreateComponent,
-    CategoryDetailComponent,
-    CategoryEditComponent,
-    PostCardComponent,
-    PostCreateComponent,
-    PostDetailComponent,
-    DropdownComponent,
-    MarkdownComponent,
-    OverlayComponent,
-    SvgIconComponent,
-    DayjsPipe,
-    MarkdownPipe,
-    SanitizerPipe
-  ],
-  providers: [CategoryDetailResolverService, PostDetailResolverService]
+    ReactiveFormsModule,
+    RouterModule
+  ]
 })
 export class SharedModule {}

@@ -19,7 +19,7 @@
       <li class="flex items-center justify-between space-x-4 border-b border-primary-4 last:border-b-0 py-4" *ngFor="let session of sessionList">
         <ng-container [ngTemplateOutlet]="sessionTemplate" [ngTemplateOutletContext]="{ session }"></ng-container>
         <button
-          class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 cursor-pointer p-2"
+          class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 p-2"
           type="button"
           aria-label="Terminate session"
           (click)="onSessionTerminate(session.id)"
