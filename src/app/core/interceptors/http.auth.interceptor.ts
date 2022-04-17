@@ -19,7 +19,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
   constructor(private localStorageService: LocalStorageService, private authService: AuthService) {}
 
   private getToken(): string {
-    return this.localStorageService.getItem(environment.USER_ACCESS_TOKEN_LOCALSTORAGE);
+    return this.localStorageService.getItem(environment.USER_ACCESS_TOKEN);
   }
 
   private setRequestHeaders(request: HttpRequest<any>): HttpRequest<any> {
@@ -49,7 +49,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
           .pipe(switchMap(() => next.handle(this.setRequestHeaders(request))));
       }
 
-      this.authService.removeAuthorization().pipe(first());
+      this.authService.removeAuthorization();
     }
 
     return throwError(error);

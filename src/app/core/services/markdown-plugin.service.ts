@@ -61,14 +61,14 @@ export class MarkdownPluginService {
 
     // TODO: review!
 
-    const config = this.localStorageService.getItem(environment.USER_SETTINGS_LOCALSTORAGE);
+    // const config = this.localStorageService.getItem(environment.USER_SETTINGS_LOCALSTORAGE);
     const randomId = id + '-' + Date.now() + Math.floor(Math.random() * Date.now());
 
     let theme: string = 'AUTO';
 
-    if (config) {
-      theme = JSON.parse(config).colorTheme;
-    }
+    // if (config) {
+    //   theme = JSON.parse(config).colorTheme;
+    // }
 
     const srcdoc = `
       <html lang='en' translate='no'>
