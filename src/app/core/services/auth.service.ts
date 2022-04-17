@@ -86,14 +86,14 @@ export class AuthService {
   }
 
   getAuthorization(): void {
-    if (this.localStorageService.getItem(environment.USER_ACCESS_TOKEN_LOCALSTORAGE)) {
+    if (this.localStorageService.getItem(environment.USER_ACCESS_TOKEN)) {
       this.apiService
         .get('/auth/me', {
           scope: ['settings']
         })
         .subscribe((user: User) => this.setAuthorization(user));
     } else {
-      this.removeAuthorization().pipe(first());
+      this.removeAuthorization();
     }
   }
 
@@ -101,26 +101,24 @@ export class AuthService {
     return this.apiService.get('/auth/me', { ...meDto });
   }
 
-  setAuthorization(user: User): void {
+  setAuthorization(user: User): Observable<void> {
+    this.userSubject.next(user);
+    this.isAuthenticatedSubject.next(true);
+
     if (!!user.accessToken) {
-      // prettier-ignore
-      this.localStorageService.setItem(environment.USER_ACCESS_TOKEN_LOCALSTORAGE, user.accessToken);
+      this.localStorageService.setItem(environment.USER_ACCESS_TOKEN, user.accessToken);
     }
 
     if (!!user.settings) {
-      this.platformService.setSettings(user.settings);
+      this.platformService.setSettings(this.userSubject.getValue());
     }
 
-    this.userSubject.next(user);
-    this.isAuthenticatedSubject.next(true);
+    return of(null);
   }
 
   removeAuthorization(): Observable<void> {
-    // TODO: update
-
-    this.localStorageService.removeItem(environment.USER_ACCESS_TOKEN_LOCALSTORAGE);
-
-    this.platformService.removeSettings();
+    this.localStorageService.removeItem(environment.USER_ACCESS_TOKEN);
+    this.platformService.removeSettings(this.userSubject.getValue());
 
     this.userSubject.next({} as User);
     this.isAuthenticatedSubject.next(false);

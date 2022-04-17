@@ -4,7 +4,7 @@ import { Inject, Injectable, PLATFORM_ID, Renderer2, RendererFactory2 } from '@a
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { EMPTY, fromEvent, Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { UserSettings, UserSettingsTheme } from '../models';
+import { User, UserSettingsTheme } from '../models';
 
 /**
  * Window provider is based on
@@ -120,33 +120,16 @@ export class PlatformService {
     }
   }
 
-  setSettings(settings: UserSettings): void {
-    if (settings.theme) {
-      if (this.isBrowser()) {
-        const themeList: string[] = Object.values(UserSettingsTheme);
-        const themeCurrent: string | undefined = themeList.find((theme: string) => {
-          return this.document.body.classList.contains(theme);
-        });
-
-        if (!!themeCurrent) {
-          this.document.body.classList.remove(themeCurrent);
-        }
-
-        this.document.body.classList.add(settings.theme);
-      }
+  setSettings(user: User): void {
+    if (this.isBrowser()) {
+      this.document.body.classList.remove(...Object.values(UserSettingsTheme));
+      this.document.body.classList.add(user.settings.theme);
     }
   }
 
-  removeSettings(): void {
+  removeSettings(user: User): void {
     if (this.isBrowser()) {
-      const themeList: string[] = Object.values(UserSettingsTheme);
-      const themeCurrent: string | undefined = themeList.find((theme: string) => {
-        return this.document.body.classList.contains(theme);
-      });
-
-      if (!!themeCurrent) {
-        this.document.body.classList.remove(themeCurrent);
-      }
+      this.document.body.classList.remove(user.settings.theme);
     }
   }
 }

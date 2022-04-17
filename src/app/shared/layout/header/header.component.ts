@@ -26,7 +26,7 @@ export class HeaderComponent implements OnInit {
       .onLogout()
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          this.authService.removeAuthorization().pipe(first()).subscribe(() => {
+          this.authService.removeAuthorization().subscribe(() => {
             this.router
               .navigate(['/exception', error.status])
               .then(() => console.debug('Route was changed'));
