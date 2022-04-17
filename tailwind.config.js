@@ -1,21 +1,14 @@
 module.exports = {
   mode: "jit",
-  content: {
-    enabled: true,
-    content: ["./src/**/*.html"],
-    safelist: [
-      "bg-info-1",
-      "bg-success-1",
-      "bg-warning-1",
-      "bg-danger-1",
-      "text-white",
-      "text-black",
-    ],
-    options: {
-      keyframes: true,
-      fontFace: true,
-    },
-  },
+  content: ["./src/**/*.html"],
+  safelist: [
+    "bg-info-1",
+    "bg-success-1",
+    "bg-warning-1",
+    "bg-danger-1",
+    "text-white",
+    "text-black",
+  ],
   theme: {
     fontFamily: {
       sans: ["Ubuntu", "sans-serif"],

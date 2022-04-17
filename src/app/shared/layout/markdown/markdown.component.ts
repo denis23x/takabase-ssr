@@ -150,8 +150,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setControl(control: MarkdownControl): void {
-    const { selectionStart, selectionEnd, positionBefore, positionAfter, value } =
-      this.markdownService.getTextarea(this.textarea);
+    // prettier-ignore
+    const { selectionStart, selectionEnd, positionBefore, positionAfter, value } = this.markdownService.getTextarea(this.textarea);
 
     let start: number = selectionStart;
     let end: number = selectionEnd;

@@ -42,25 +42,29 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
     this.queryParams$ = this.activatedRoute.queryParams
       .pipe(
-        filter((queryParams: Params) => {
-          const email = queryParams.email;
+        filter((params: Params) => {
+          const email = params.email;
           const social = ['googleId', 'facebookId']
-            .filter((social: string) => queryParams[social])
-            .map((social: string) => ({ [social]: queryParams[social] }))
+            .filter((social: string) => params[social])
+            .map((social: string) => ({ [social]: params[social] }))
             .shift();
 
           return !!email && !!social;
         })
       )
-      .subscribe((authLoginDto: any) => this.onLogin(authLoginDto));
+      .subscribe((params: Params) => this.onLogin(params));
   }
 
   ngOnDestroy(): void {
     [this.queryParams$].forEach($ => $?.unsubscribe());
   }
 
-  onLogin(loginDto: LoginDto): void {
+  onLogin(value: any): void {
     this.loginFormIsSubmitted = true;
+
+    const loginDto: LoginDto = {
+      ...value
+    };
 
     // prettier-ignore
     this.authService.onLogin(loginDto).subscribe(
