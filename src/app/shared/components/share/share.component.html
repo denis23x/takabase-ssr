@@ -1,90 +1,15 @@
-<ul class="flex items-center justify-start">
-  <li>
+<ul class="flex flex-wrap items-center justify-start">
+  <li class="flex items-center justify-center" *ngFor="let share of shareList">
     <a
       class="block fill-current text-secondary-1 p-2"
-      href="mailto:?subject=Super%20fast%20and%20easy%20Social%20Media%20Sharing%20Buttons.%20No%20JavaScript.%20No%20tracking.&amp;body=http%3A%2F%2Fsharingbuttons.io"
+      [ngClass]="'hover:text-[' + share.color + ']'"
+      [href]="share.href"
       target="_blank"
       rel="noopener"
-      aria-label="Envelope"
+      [attr.aria-label]="share.label"
       appSvgIcon
-      [appIcon]="'envelope'">>
-    </a>
-  </li>
-  <li>
-    <a
-      class="block fill-current text-secondary-1 p-2"
-      href="https://facebook.com/sharer/sharer.php?u=http%3A%2F%2Fsharingbuttons.io"
-      target="_blank"
-      rel="noopener"
-      aria-label="Facebook"
-      appSvgIcon
-      [appIcon]="'facebook'">
-    </a>
-  </li>
-  <li>
-    <a
-      class="block fill-current text-secondary-1 p-2"
-      href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3A%2F%2Fsharingbuttons.io&amp;title=Super%20fast%20and%20easy%20Social%20Media%20Sharing%20Buttons.%20No%20JavaScript.%20No%20tracking.&amp;summary=Super%20fast%20and%20easy%20Social%20Media%20Sharing%20Buttons.%20No%20JavaScript.%20No%20tracking.&amp;source=http%3A%2F%2Fsharingbuttons.io"
-      target="_blank"
-      rel="noopener"
-      aria-label="Linkedin"
-      appSvgIcon
-      [appIcon]="'linkedin'">
-    </a>
-  </li>
-  <li>
-    <a
-      class="block fill-current text-secondary-1 p-2"
-      href="https://pinterest.com/pin/create/button/?url=http%3A%2F%2Fsharingbuttons.io&amp;media=http%3A%2F%2Fsharingbuttons.io&amp;description=Super%20fast%20and%20easy%20Social%20Media%20Sharing%20Buttons.%20No%20JavaScript.%20No%20tracking."
-      target="_blank"
-      rel="noopener"
-      aria-label="Pinterest"
-      appSvgIcon
-      [appIcon]="'pinterest'">
-    </a>
-  </li>
-  <li>
-    <a
-      class="block fill-current text-secondary-1 p-2"
-      href="https://reddit.com/submit/?url=http%3A%2F%2Fsharingbuttons.io&amp;resubmit=true&amp;title=Super%20fast%20and%20easy%20Social%20Media%20Sharing%20Buttons.%20No%20JavaScript.%20No%20tracking."
-      target="_blank"
-      rel="noopener"
-      aria-label="Reddit"
-      appSvgIcon
-      [appIcon]="'reddit'">
-    </a>
-  </li>
-  <li>
-    <a
-      class="block fill-current text-secondary-1 p-2"
-      href="https://telegram.me/share/url?text=Super%20fast%20and%20easy%20Social%20Media%20Sharing%20Buttons.%20No%20JavaScript.%20No%20tracking.&amp;url=http%3A%2F%2Fsharingbuttons.io"
-      target="_blank"
-      rel="noopener"
-      aria-label="Telegram"
-      appSvgIcon
-      [appIcon]="'telegram'">
-    </a>
-  </li>
-  <li>
-    <a
-      class="block fill-current text-secondary-1 p-2"
-      href="https://twitter.com/intent/tweet/?text=Super%20fast%20and%20easy%20Social%20Media%20Sharing%20Buttons.%20No%20JavaScript.%20No%20tracking.&amp;url=http%3A%2F%2Fsharingbuttons.io"
-      target="_blank"
-      rel="noopener"
-      aria-label="Twitter"
-      appSvgIcon
-      [appIcon]="'twitter'">
-    </a>
-  </li>
-  <li>
-    <a
-      class="block fill-current text-secondary-1 p-2"
-      href="whatsapp://send?text=Super%20fast%20and%20easy%20Social%20Media%20Sharing%20Buttons.%20No%20JavaScript.%20No%20tracking.%20http%3A%2F%2Fsharingbuttons.io"
-      target="_blank"
-      rel="noopener"
-      aria-label="Whatsapp"
-      appSvgIcon
-      [appIcon]="'whatsapp'">
+      [title]="share.label"
+      [appIcon]="share.icon">>
     </a>
   </li>
 </ul>
