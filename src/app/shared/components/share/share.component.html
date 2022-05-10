@@ -1,15 +1,93 @@
-<ul class="flex flex-wrap items-center justify-start">
-  <li class="flex items-center justify-center" *ngFor="let share of shareList">
+<ul class="flex flex-wrap items-center justify-start space-x-4">
+  <li class="flex items-center justify-center">
     <a
-      class="block fill-current text-secondary-1 p-2"
-      [ngClass]="'hover:text-[' + share.color + ']'"
-      [href]="share.href"
+      class="block fill-current bg-white text-[#1877f2] outline outline-primary-3 rounded-full"
+      aria-label="Facebook"
       target="_blank"
       rel="noopener"
-      [attr.aria-label]="share.label"
       appSvgIcon
-      [title]="share.label"
-      [appIcon]="share.icon">>
+      appSquare="20"
+      title="Facebook"
+      [appIcon]="'facebook'"
+      [href]="shareMap.facebook">
+    </a>
+  </li>
+  <li class="flex items-center justify-center">
+    <a
+      class="block fill-current bg-white text-[#0A66C2] outline outline-primary-3 rounded-sm"
+      aria-label="Linkedin"
+      target="_blank"
+      rel="noopener"
+      appSvgIcon
+      appSquare="20"
+      title="Linkedin"
+      [appIcon]="'linkedin'"
+      [href]="shareMap.linkedin">
+    </a>
+  </li>
+  <li class="flex items-center justify-center">
+    <a
+      class="block fill-current bg-white text-[#E60023] outline outline-primary-3 rounded-full"
+      aria-label="Pinterest"
+      target="_blank"
+      rel="noopener"
+      appSvgIcon
+      appSquare="20"
+      title="Pinterest"
+      [appIcon]="'pinterest'"
+      [href]="shareMap.pinterest">
+    </a>
+  </li>
+  <li class="flex items-center justify-center">
+    <a
+      class="block fill-current bg-white text-[#FF4500] outline outline-primary-3 rounded-full"
+      aria-label="Reddit"
+      target="_blank"
+      rel="noopener"
+      appSvgIcon
+      appSquare="20"
+      title="Reddit"
+      [appIcon]="'reddit'"
+      [href]="shareMap.reddit">
+    </a>
+  </li>
+  <li class="flex items-center justify-center">
+    <a
+      class="block fill-current bg-white text-[#2AABEE] outline outline-primary-3 rounded-full"
+      aria-label="Telegram"
+      target="_blank"
+      rel="noopener"
+      appSvgIcon
+      appSquare="20"
+      title="Telegram"
+      [appIcon]="'telegram'"
+      [href]="shareMap.telegram">
+    </a>
+  </li>
+  <li class="flex items-center justify-center">
+    <a
+      class="block fill-current text-[#1DA1F2] rounded-full"
+      aria-label="Twitter"
+      target="_blank"
+      rel="noopener"
+      appSvgIcon
+      appSquare="20"
+      title="Twitter"
+      [appIcon]="'twitter'"
+      [href]="shareMap.twitter">
+    </a>
+  </li>
+  <li class="flex items-center justify-center">
+    <a
+      class="block fill-current text-[#25D366] rounded-full"
+      aria-label="Whatsapp"
+      target="_blank"
+      rel="noopener"
+      appSvgIcon
+      appSquare="20"
+      title="Whatsapp"
+      [appIcon]="'whatsapp'"
+      [href]="shareMap.whatsapp">
     </a>
   </li>
 </ul>
