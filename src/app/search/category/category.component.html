@@ -2,7 +2,7 @@
   <ng-container *ngIf="categoryList.length; else categoryListEmptyTemplate;">
     <ul class="flex flex-wrap -m-2 py-4">
       <li class="flex p-2" *ngFor="let category of categoryList">
-        <div class="flex flex-col overflow-hidden bg-primary-3 border border-primary-4 rounded-md py-2 px-4">
+        <div class="flex flex-col space-y-4 bg-primary-3 border border-primary-4 rounded-md overflow-hidden p-4">
           <a
             class="text-secondary-1 text-info-1 hover:underline"
             [routerLink]="['/@' + category.user.name, 'category', category.id]"

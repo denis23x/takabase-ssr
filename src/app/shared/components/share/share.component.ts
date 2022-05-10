@@ -120,4 +120,12 @@ export class ShareComponent implements OnInit, OnDestroy {
       .map((key: string) => [key, data[key]].map(encodeURIComponent).join('='))
       .join('&');
   }
+
+  onCopyUrl(): void {
+    if (this.platformService.isBrowser()) {
+      const window: Window = this.platformService.getWindow();
+
+      window.navigator.clipboard.writeText(this.shareUrl).then(() => console.debug('Url copied'));
+    }
+  }
 }

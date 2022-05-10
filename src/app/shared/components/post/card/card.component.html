@@ -10,8 +10,8 @@
       [src]="post.image"
       [alt]="post.title">
   </a>
-  <div class="flex flex-col items-start w-full h-full p-4" *ngIf="!post.image">
-    <div class="flex justify-between items-center w-full mb-2">
+  <div class="flex flex-col items-start space-y-4 w-full h-full p-4" *ngIf="!post.image">
+    <div class="flex justify-between items-center w-full">
       <a
         class="flex border border-primary-4 overflow-hidden rounded-md w-10 h-10"
         [routerLink]="['/@' + post.user.name]"
@@ -27,7 +27,7 @@
         [appIcon]="'pin-angle'">
       </button>
     </div>
-    <div class="flex flex-col overflow-hidden w-full mb-4">
+    <div class="flex flex-col overflow-hidden w-full">
       <a
         class="text-info-1 hover:underline whitespace-nowrap text-ellipsis overflow-hidden"
         [routerLink]="['/@' + post.user.name]"

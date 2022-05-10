@@ -1,7 +1,10 @@
-<ul class="flex flex-wrap items-center justify-start space-x-4">
+<ul class="flex items-center justify-start">
   <li class="flex items-center justify-center">
+    <button class="btn btn-info px-2 whitespace-nowrap" (click)="onCopyUrl()">Copy link</button>
+  </li>
+  <li class="flex items-center justify-center group hover:bg-primary-1 p-2.5">
     <a
-      class="block fill-current bg-white text-[#1877f2] outline outline-primary-3 rounded-full"
+      class="block fill-current bg-white text-[#1877f2] outline outline-primary-2 group-hover:outline-primary-1 rounded-full"
       aria-label="Facebook"
       target="_blank"
       rel="noopener"
@@ -12,9 +15,9 @@
       [href]="shareMap.facebook">
     </a>
   </li>
-  <li class="flex items-center justify-center">
+  <li class="flex items-center justify-center group hover:bg-primary-1 p-2.5">
     <a
-      class="block fill-current bg-white text-[#0A66C2] outline outline-primary-3 rounded-sm"
+      class="block fill-current bg-white text-[#0A66C2] outline outline-primary-2 group-hover:outline-primary-1 rounded-sm"
       aria-label="Linkedin"
       target="_blank"
       rel="noopener"
@@ -25,9 +28,9 @@
       [href]="shareMap.linkedin">
     </a>
   </li>
-  <li class="flex items-center justify-center">
+  <li class="flex items-center justify-center group hover:bg-primary-1 p-2.5">
     <a
-      class="block fill-current bg-white text-[#E60023] outline outline-primary-3 rounded-full"
+      class="block fill-current bg-white text-[#E60023] outline outline-primary-2 group-hover:outline-primary-1 rounded-full"
       aria-label="Pinterest"
       target="_blank"
       rel="noopener"
@@ -38,9 +41,9 @@
       [href]="shareMap.pinterest">
     </a>
   </li>
-  <li class="flex items-center justify-center">
+  <li class="flex items-center justify-center group hover:bg-primary-1 p-2.5">
     <a
-      class="block fill-current bg-white text-[#FF4500] outline outline-primary-3 rounded-full"
+      class="block fill-current bg-white text-[#FF4500] outline outline-primary-2 group-hover:outline-primary-1 rounded-full"
       aria-label="Reddit"
       target="_blank"
       rel="noopener"
@@ -51,9 +54,9 @@
       [href]="shareMap.reddit">
     </a>
   </li>
-  <li class="flex items-center justify-center">
+  <li class="flex items-center justify-center group hover:bg-primary-1 p-2.5">
     <a
-      class="block fill-current bg-white text-[#2AABEE] outline outline-primary-3 rounded-full"
+      class="block fill-current bg-white text-[#2AABEE] outline outline-primary-2 group-hover:outline-primary-1 rounded-full"
       aria-label="Telegram"
       target="_blank"
       rel="noopener"
@@ -64,7 +67,7 @@
       [href]="shareMap.telegram">
     </a>
   </li>
-  <li class="flex items-center justify-center">
+  <li class="flex items-center justify-center hover:bg-primary-1 p-2.5">
     <a
       class="block fill-current text-[#1DA1F2] rounded-full"
       aria-label="Twitter"
@@ -77,7 +80,7 @@
       [href]="shareMap.twitter">
     </a>
   </li>
-  <li class="flex items-center justify-center">
+  <li class="flex items-center justify-center hover:bg-primary-1 p-2.5">
     <a
       class="block fill-current text-[#25D366] rounded-full"
       aria-label="Whatsapp"
