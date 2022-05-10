@@ -2,7 +2,7 @@
   "name": "draft-ssr",
   "version": "0.0.0",
   "scripts": {
-    "spa:start:dev": "ng run draft-ssr:serve:development",
+    "spa:start:dev": "ng run draft-ssr:serve:development --disable-host-check",
     "spa:start:prod": "ng run draft-ssr:serve:production",
     "spa:build:dev": "ng run draft-ssr:build:development",
     "spa:build:prod": "ng run draft-ssr:build:production",
