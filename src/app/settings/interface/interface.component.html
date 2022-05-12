@@ -10,12 +10,13 @@
           <label
             class="flex justify-center cursor-pointer relative py-2 px-3"
             *ngIf="{ value: themeControl.value === theme } as active">
-            <app-svg-icon
+            <i
               class="relative z-10 flex items-center justify-center fill-current"
               [class.text-warning-1]="active.value"
+              appSvgIcon
               [appIcon]="(theme === 'DARK' ? 'moon' : 'sun').concat(active.value ? '-fill' : '')"
               *ngIf="theme !== 'AUTO'">
-            </app-svg-icon>
+            </i>
             <input
               type="radio"
               class="hidden"
