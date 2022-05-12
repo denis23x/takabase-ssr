@@ -53,6 +53,10 @@ const routes: Routes = [
     loadChildren: () => import('./user/user.module').then(m => m.UserModule)
   },
   {
+    path: 'ui',
+    loadChildren: () => import('./ui/ui.module').then(m => m.UiModule)
+  },
+  {
     path: '**',
     pathMatch: 'full',
     redirectTo: '/exception/404'
