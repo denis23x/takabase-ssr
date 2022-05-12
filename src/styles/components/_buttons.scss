@@ -2,14 +2,27 @@
   @apply
   border
   border-transparent
-  py-2
-  px-4
-  rounded-md
   cursor-pointer
   disabled:opacity-50
   disabled:cursor-not-allowed;
 
-  &.btn-light {
+  &.md {
+    @apply
+    text-base
+    py-2
+    px-4
+    rounded-md;
+  }
+
+  &.sm {
+    @apply
+    text-sm
+    py-1
+    px-2
+    rounded;
+  }
+
+  &.btn-primary {
     @apply
     border-primary-4
     text-secondary-1
@@ -48,6 +61,14 @@
     @apply
     text-white
     bg-danger-1
+    hover:brightness-110
+    disabled:hover:brightness-100;
+  }
+
+  &.btn-transparent {
+    @apply
+    text-secondary-1
+    bg-transparent
     hover:brightness-110
     disabled:hover:brightness-100;
   }
