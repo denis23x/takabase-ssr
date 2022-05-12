@@ -40,9 +40,9 @@
           (click)="query.setValue('')">
         </button>
       </label>
-      <span class="block text-sm text-danger-1" *ngIf="query.touched && query.errors" [ngSwitch]="true">
+      <label class="block text-danger-1 text-sm" for="search" *ngIf="query.touched && query.errors" [ngSwitch]="true">
         <ng-container *ngSwitchCase="!!query.errors.minlength">Min length {{query.errors.minlength['requiredLength']}} characters</ng-container>
-      </span>
+      </label>
     </fieldset>
   </form>
   <div class="content">

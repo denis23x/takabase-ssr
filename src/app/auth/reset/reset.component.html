@@ -7,11 +7,7 @@
       <h1 class="text-2xl text-secondary-1 font-medium">Password reset</h1>
       <div class="flex space-x-1 text-base">
         <span class="block text-secondary-2">Remembered password?</span>
-        <a
-          class="text-info-1 hover:underline"
-          [routerLink]="['../login']"
-          aria-label="Try login">Try login
-        </a>
+        <a class="text-info-1 hover:underline" [routerLink]="['../login']" aria-label="Try login">Try login</a>
       </div>
     </div>
     <fieldset class="flex flex-col space-y-4" [disabled]="resetFormIsSubmitted">
@@ -24,10 +20,10 @@
           formControlName="email"
           placeholder="Email"
           aria-label="Email">
-        <span class="block text-sm text-danger-1" *ngIf="email.touched && email.errors" [ngSwitch]="true">
+        <label class="block text-danger-1 text-sm" for="email" *ngIf="email.touched && email.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!email.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!email.errors.email">Email must be a real email address</ng-container>
-        </span>
+        </label>
         <label class="block text-secondary-2 text-sm" for="email">We will send an email with further instructions</label>
       </fieldset>
       <button
