@@ -1,96 +1,42 @@
-<ul class="flex items-center justify-start">
-  <li class="flex items-center justify-center mr-2 py-2">
-    <button class="btn btn-info sm whitespace-nowrap px-2" (click)="onCopyUrl()">Copy link</button>
-  </li>
-  <li class="flex items-center justify-center group hover:bg-primary-1 p-2.5">
-    <a
-      class="block fill-current bg-white text-[#1877f2] outline outline-primary-2 group-hover:outline-primary-1 rounded-full"
-      aria-label="Facebook"
-      target="_blank"
-      rel="noopener"
-      appSvgIcon
-      appSquare="20"
-      title="Facebook"
-      [appIcon]="'facebook'"
-      [href]="shareMap.facebook">
-    </a>
-  </li>
-  <li class="flex items-center justify-center group hover:bg-primary-1 p-2.5">
-    <a
-      class="block fill-current bg-white text-[#0A66C2] outline outline-primary-2 group-hover:outline-primary-1 rounded-sm"
-      aria-label="Linkedin"
-      target="_blank"
-      rel="noopener"
-      appSvgIcon
-      appSquare="20"
-      title="Linkedin"
-      [appIcon]="'linkedin'"
-      [href]="shareMap.linkedin">
-    </a>
-  </li>
-  <li class="flex items-center justify-center group hover:bg-primary-1 p-2.5">
-    <a
-      class="block fill-current bg-white text-[#E60023] outline outline-primary-2 group-hover:outline-primary-1 rounded-full"
-      aria-label="Pinterest"
-      target="_blank"
-      rel="noopener"
-      appSvgIcon
-      appSquare="20"
-      title="Pinterest"
-      [appIcon]="'pinterest'"
-      [href]="shareMap.pinterest">
-    </a>
-  </li>
-  <li class="flex items-center justify-center group hover:bg-primary-1 p-2.5">
-    <a
-      class="block fill-current bg-white text-[#FF4500] outline outline-primary-2 group-hover:outline-primary-1 rounded-full"
-      aria-label="Reddit"
-      target="_blank"
-      rel="noopener"
-      appSvgIcon
-      appSquare="20"
-      title="Reddit"
-      [appIcon]="'reddit'"
-      [href]="shareMap.reddit">
-    </a>
-  </li>
-  <li class="flex items-center justify-center group hover:bg-primary-1 p-2.5">
-    <a
-      class="block fill-current bg-white text-[#2AABEE] outline outline-primary-2 group-hover:outline-primary-1 rounded-full"
-      aria-label="Telegram"
-      target="_blank"
-      rel="noopener"
-      appSvgIcon
-      appSquare="20"
-      title="Telegram"
-      [appIcon]="'telegram'"
-      [href]="shareMap.telegram">
-    </a>
-  </li>
-  <li class="flex items-center justify-center hover:bg-primary-1 p-2.5">
-    <a
-      class="block fill-current text-[#1DA1F2] rounded-full"
-      aria-label="Twitter"
-      target="_blank"
-      rel="noopener"
-      appSvgIcon
-      appSquare="20"
-      title="Twitter"
-      [appIcon]="'twitter'"
-      [href]="shareMap.twitter">
-    </a>
-  </li>
-  <li class="flex items-center justify-center hover:bg-primary-1 p-2.5">
-    <a
-      class="block fill-current text-[#25D366] rounded-full"
-      aria-label="Whatsapp"
-      target="_blank"
-      rel="noopener"
-      appSvgIcon
-      appSquare="20"
-      title="Whatsapp"
-      [appIcon]="'whatsapp'"
-      [href]="shareMap.whatsapp">
-    </a>
-  </li>
-</ul>
+<div class="flex flex-col-reverse sm:flex-row items-center justify-start space-x-0 sm:space-x-2">
+  <div class="flex border-t sm:border-t-0 border-primary-4 w-full py-2">
+    <button
+      class="btn btn-info sm whitespace-nowrap w-full"
+      type="button"
+      aria-label="Copy URL"
+      (click)="onCopyUrl()">Copy URL
+    </button>
+  </div>
+  <ul class="flex items-center justify-start">
+    <li class="block">
+      <a class="block p-2.5" aria-label="Facebook" title="Facebook" target="_blank" rel="noopener" [href]="shareMap.facebook">
+        <i class="block fill-current bg-white text-[#1877f2] outline outline-primary-2 rounded-full" appSvgIcon [appIcon]="'facebook'" appSquare="20"></i>
+      </a>
+    </li>
+    <li class="block">
+      <a class="block p-2.5" aria-label="Linkedin" title="Linkedin" target="_blank" rel="noopener" [href]="shareMap.linkedin">
+        <i class="block fill-current bg-white text-[#0A66C2] outline outline-primary-2 rounded-sm" appSvgIcon [appIcon]="'linkedin'" appSquare="20"></i>
+      </a>
+    </li>
+    <li class="block">
+      <a class="block p-2.5" aria-label="Pinterest" title="Pinterest" target="_blank" rel="noopener" [href]="shareMap.pinterest">
+        <i class="block fill-current bg-white text-[#E60023] outline outline-primary-2 rounded-full" appSvgIcon [appIcon]="'pinterest'" appSquare="20"></i>
+      </a>
+    </li>
+    <li class="block">
+      <a class="block p-2.5" aria-label="Reddit" title="Reddit" target="_blank" rel="noopener" [href]="shareMap.reddit">
+        <i class="block fill-current bg-white text-[#FF4500] outline outline-primary-2 rounded-full" appSvgIcon [appIcon]="'reddit'" appSquare="20"></i>
+      </a>
+    </li>
+    <li class="block">
+      <a class="block p-2.5" aria-label="Telegram" title="Telegram" target="_blank" rel="noopener" [href]="shareMap.telegram">
+        <i class="block fill-current bg-white text-[#2AABEE] outline outline-primary-2 rounded-full" appSvgIcon [appIcon]="'telegram'" appSquare="20"></i>
+      </a>
+    </li>
+    <li class="block">
+      <a class="block p-2.5" aria-label="Twitter" title="Twitter" target="_blank" rel="noopener" [href]="shareMap.twitter">
+        <i class="block fill-current bg-transparent text-[#1DA1F2] outline outline-primary-2 rounded-full" appSvgIcon [appIcon]="'twitter'" appSquare="20"></i>
+      </a>
+    </li>
+  </ul>
+</div>

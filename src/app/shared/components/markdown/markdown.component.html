@@ -5,7 +5,8 @@
         <button
           class="fill-current text-secondary-1 hover:text-info-1 p-2.5"
           type="button"
-          aria-label="Back"
+          aria-label="Undo"
+          title="Undo"
           [disabled]="!history$.getValue().length"
           (click)="onBack()"
           appSvgIcon
@@ -17,6 +18,7 @@
           class="fill-current text-secondary-1 hover:text-info-1 p-2.5"
           type="button"
           [attr.aria-label]="control.label"
+          [attr.title]="control.label"
           (click)="onControl(control)"
           appSvgIcon
           [appIcon]="control.icon">

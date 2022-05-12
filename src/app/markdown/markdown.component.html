@@ -36,7 +36,8 @@
                   class="fill-current text-secondary-1 hover:text-info-1 p-2"
                   [class.text-info-1]="editorWhitespace"
                   type="button"
-                  aria-label="Whitespace"
+                  aria-label="Text wrap"
+                  title="Text wrap"
                   appSvgIcon
                   [appIcon]="'text-left'"
                   [appSquare]="'1.5em'"
@@ -48,6 +49,7 @@
                   class="fill-current text-secondary-1 hover:text-info-1 p-2.5"
                   type="button"
                   aria-label="Preview"
+                  title="Preview"
                   appSvgIcon
                   [appIcon]="'eye'"
                   [appSquare]="'1.25em'">
@@ -58,7 +60,8 @@
                   class="fill-current text-secondary-1 hover:text-info-1 p-2.5"
                   [class.text-info-1]="editorScrollSync"
                   type="button"
-                  aria-label="Scroll Sync"
+                  aria-label="Scroll sync"
+                  title="Scroll sync"
                   appSvgIcon
                   [appIcon]="'mouse2'"
                   [appSquare]="'1.25em'"
@@ -71,6 +74,7 @@
                 <a
                   class="block fill-current text-secondary-1 hover:text-info-1 p-2.5"
                   aria-label="Help"
+                  title="Help"
                   target="_blank"
                   href="https://en.wikipedia.org/wiki/Markdown"
                   rel="noopener"
@@ -86,7 +90,8 @@
           <button
             class="fill-current text-secondary-1 opacity-50 cursor-col-resize p-2"
             type="button"
-            aria-label="Grip"
+            aria-label="Resize"
+            title="Resize"
             appSvgIcon
             [appIcon]="'grip-vertical'"
             [appSquare]="'1.5em'">
@@ -97,7 +102,8 @@
             id="grip-horizontal"
             class="fill-current text-secondary-1 opacity-50 cursor-row-resize p-2"
             type="button"
-            aria-label="Grip"
+            aria-label="Drag"
+            title="Drag"
             appSvgIcon
             [appIcon]="'grip-horizontal'"
             [appSquare]="'1.5em'">

@@ -1,11 +1,11 @@
 <ng-container>
-  <a class="flex justify-start items-center" [routerLink]="['/']" aria-label="Draftnow">
+  <a class="flex justify-start items-center" [routerLink]="['/']" aria-label="Draftnow" title="Draftnow">
     <i class="fill-current text-secondary-1 p-2" appSvgIcon [appIcon]="'box-arrow-in-down'"></i>
     <span class="text-secondary-1">Draftnow</span>
   </a>
   <ng-container *appAuthenticated="false">
     <nav class="flex justify-end items-center space-x-4">
-      <a class="btn btn-info" [routerLink]="['/auth/login']" aria-label="Login">Login</a>
+      <a class="btn btn-info md" [routerLink]="['/auth/login']" aria-label="Login">Login</a>
     </nav>
   </ng-container>
   <ng-container *appAuthenticated="true">
@@ -15,7 +15,8 @@
         [routerLink]="['/create']"
         [routerLinkActive]="['text-info-1']"
         [routerLinkActiveOptions]="{ exact: true }"
-        aria-label="Post create"
+        aria-label="Create post"
+        title="Create post"
         appSvgIcon
         [appIcon]="'file-earmark-plus'">
       </a>
@@ -24,6 +25,7 @@
         [routerLink]="['/search']"
         [routerLinkActive]="['text-info-1']"
         aria-label="Search"
+        title="Search"
         appSvgIcon
         [appIcon]="'search'"
         [appSquare]="'1.15em'">
@@ -33,13 +35,15 @@
           class="hidden md:block text-secondary-1 hover:text-info-1 hover:underline mx-2"
           [routerLink]="['/@' + user.name]"
           [routerLinkActive]="['text-info-1']"
-          [attr.aria-label]="user.name">{{user.name}}
+          [attr.aria-label]="user.name"
+          title="Profile">{{user.name}}
         </a>
         <a
           class="block md:hidden fill-current text-secondary-1 hover:text-info-1 p-2"
           [routerLink]="['/@' + user.name]"
           [routerLinkActive]="['text-info-1']"
           [attr.aria-label]="user.name"
+          title="Profile"
           appSvgIcon
           [appIcon]="'person'">
         </a>
@@ -69,6 +73,15 @@
                 [routerLinkActive]="['text-info-1']"
                 [routerLinkActiveOptions]="{ exact: true }"
                 aria-label="Settings">Settings
+              </a>
+            </li>
+            <li class="block">
+              <a
+                class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
+                [routerLink]="['/ui']"
+                [routerLinkActive]="['text-info-1']"
+                [routerLinkActiveOptions]="{ exact: true }"
+                aria-label="UI">UI
               </a>
             </li>
             <li
