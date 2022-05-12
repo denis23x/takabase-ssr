@@ -27,11 +27,11 @@
             formControlName="name"
             placeholder="Name"
             aria-label="Name">
-          <span class="block text-sm text-danger-1 mt-2" *ngIf="name.touched && name.errors" [ngSwitch]="true">
+          <label class="block text-danger-1 text-sm mt-2" for="name" *ngIf="name.touched && name.errors" [ngSwitch]="true">
             <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
             <ng-container *ngSwitchCase="!!name.errors.minlength">Min length {{name.errors.minlength['requiredLength']}} characters</ng-container>
             <ng-container *ngSwitchCase="!!name.errors.maxlength">Max length {{name.errors.maxlength['requiredLength']}} characters</ng-container>
-          </span>
+          </label>
         </fieldset>
         <button
           class="btn btn-success w-full"

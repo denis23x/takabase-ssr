@@ -34,9 +34,9 @@
           formControlName="name"
           placeholder="Name"
           aria-label="Name">
-        <span class="block text-sm text-danger-1" *ngIf="name.touched && name.errors" [ngSwitch]="true">
+        <label class="block text-sm text-danger-1" for="name" *ngIf="name.touched && name.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
-        </span>
+        </label>
       </fieldset>
       <fieldset *ngIf="accountForm.get('biography') as biography">
         <label class="block text-secondary-2 text-sm" for="biography">Biography</label>
@@ -48,9 +48,9 @@
           placeholder="Biography"
           aria-label="Biography">
         </textarea>
-        <span class="block text-sm text-danger-1" *ngIf="biography.touched && biography.errors" [ngSwitch]="true">
+        <label class="block text-sm text-danger-1" for="biography" *ngIf="biography.touched && biography.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!biography.errors.required">Required</ng-container>
-        </span>
+        </label>
       </fieldset>
       <button
         class="btn btn-success w-full"
