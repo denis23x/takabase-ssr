@@ -8,11 +8,7 @@
       <h1 class="text-2xl text-secondary-1 font-medium">Join to Draft</h1>
       <div class="flex space-x-1 text-base">
         <span class="block text-secondary-2">Already have an account?</span>
-        <a
-          class="text-info-1 hover:underline"
-          [routerLink]="['../login']"
-          aria-label="Sign in">Sign in
-        </a>
+        <a class="text-info-1 hover:underline" [routerLink]="['../login']" aria-label="Sign in">Sign in</a>
       </div>
       <app-oauth class="block mt-4"></app-oauth>
     </div>
@@ -26,11 +22,11 @@
           formControlName="name"
           placeholder="Username"
           aria-label="Username">
-        <span class="block text-sm text-danger-1" *ngIf="name.touched && name.errors" [ngSwitch]="true">
+        <label class="block text-danger-1 text-sm" for="name" *ngIf="name.touched && name.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!name.errors.minlength">Min length {{name.errors.minlength['requiredLength']}} characters</ng-container>
           <ng-container *ngSwitchCase="!!name.errors.maxlength">Max length {{name.errors.maxlength['requiredLength']}} characters</ng-container>
-        </span>
+        </label>
       </fieldset>
       <fieldset class="flex flex-col space-y-2" *ngIf="registrationForm.get('email') as email">
         <label class="block text-secondary-2 text-sm" for="email">Email</label>
@@ -41,10 +37,10 @@
           formControlName="email"
           placeholder="Email"
           aria-label="Email">
-        <span class="block text-sm text-danger-1" *ngIf="email.touched && email.errors" [ngSwitch]="true">
+        <label class="block text-danger-1 text-sm" for="email" *ngIf="email.touched && email.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!email.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!email.errors.email">Email must be a real email address</ng-container>
-        </span>
+        </label>
       </fieldset>
       <fieldset class="flex flex-col space-y-2" *ngIf="registrationForm.get('password') as password">
         <label class="block text-secondary-2 text-sm" for="password">Password</label>
@@ -52,11 +48,11 @@
           <input
             id="password"
             [type]="isVisible.value ? 'text' : 'password'"
-            class="form-control bg-primary-2 pr-11"
+            class="form-control bg-primary-2 pr-10"
             formControlName="password"
             placeholder="Password"
             aria-label="Password">
-          <div
+          <i
             class="absolute top-0 right-0 fill-current text-secondary-2 opacity-50 cursor-pointer p-2.5"
             *ngIf="password.value.length"
             (touchstart)="isVisible.value = !isVisible.value"
@@ -65,12 +61,12 @@
             appSvgIcon
             [appIcon]="isVisible.value ? 'eye' : 'eye-slash'"
             [appSquare]="'1.35rem'">
-          </div>
+          </i>
         </div>
-        <span class="block text-sm text-danger-1" *ngIf="password.touched && password.errors" [ngSwitch]="true">
+        <label class="block text-danger-1 text-sm" for="password" *ngIf="password.touched && password.errors" [ngSwitch]="true">
           <ng-container *ngSwitchCase="!!password.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!password.errors.pattern">Password does not match pattern</ng-container>
-        </span>
+        </label>
         <label class="block text-secondary-2 text-sm" for="password">The password must be 6-32 characters long, must contain at least one number or special character</label>
       </fieldset>
       <button
