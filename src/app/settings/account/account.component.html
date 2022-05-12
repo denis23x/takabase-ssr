@@ -9,13 +9,13 @@
       <div class="flex flex-col">
         <div class="flex items-center justify-start space-x-4 mb-4">
           <button
-            class="btn btn-success"
+            class="btn btn-success sm"
             type="button"
             aria-label="Change"
             [disabled]="accountForm.invalid || accountFormIsSubmitted">Change
           </button>
           <button
-            class="btn btn-danger"
+            class="btn btn-danger sm"
             type="button"
             aria-label="Remove"
             [disabled]="accountForm.invalid || accountFormIsSubmitted">Remove
@@ -53,13 +53,13 @@
         </label>
       </fieldset>
       <button
-        class="btn btn-success w-full"
+        class="btn btn-success md w-full"
         type="submit"
         aria-label="Submit"
         [disabled]="accountForm.invalid || accountFormIsSubmitted">Submit
       </button>
       <button
-        class="btn btn-danger w-full"
+        class="btn btn-danger md w-full"
         type="button"
         aria-label="Delete"
         (click)="onDeleteUser()">Delete me!!!
