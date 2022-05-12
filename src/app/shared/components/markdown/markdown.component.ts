@@ -217,6 +217,6 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     this.urlForm.controls['url'].clearValidators();
     this.urlForm.reset();
 
-    this.textarea.focus();
+    // this.textarea.focus();
   }
 }
