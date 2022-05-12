@@ -5,8 +5,14 @@
         <span class="block font-bold capitalize mr-1" *ngIf="snack.options.title">{{ snack.options.title }}</span>
         <span class="block">{{ snack.message }}</span>
       </p>
-      <button class="block p-2" (click)="onClose(snack.uuid)">
-        <app-svg-icon class="fill-current" [appIcon]="'x'" [appSquare]="'1.5em'"></app-svg-icon>
+      <button
+        class="block fill-current p-2"
+        type="button"
+        aria-label="Close"
+        appSvgIcon
+        [appIcon]="'x'"
+        [appSquare]="'1.5em'"
+        (click)="onClose(snack.uuid)">
       </button>
     </div>
   </li>

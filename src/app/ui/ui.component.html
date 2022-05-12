@@ -54,7 +54,7 @@
   <details class="flex flex-col space-y-4" *ngIf="{ value: false } as toggle" (toggle)="toggle.value = !toggle.value">
     <summary class="bg-primary-2 list-none">
       <div class="flex items-center space-x-2 bg-primary-3 text-secondary-1 border border-primary-4 rounded-md cursor-pointer px-2 py-2">
-        <app-svg-icon class="fill-current text-secondary-1" [appIcon]="toggle.value ? 'dash' : 'plus'"></app-svg-icon>
+        <i class="fill-current text-secondary-1" appSvgIcon [appIcon]="toggle.value ? 'dash' : 'plus'"></i>
         <span class="block">Input</span>
       </div>
     </summary>
