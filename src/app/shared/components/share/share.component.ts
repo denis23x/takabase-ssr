@@ -22,8 +22,7 @@ export class ShareComponent implements OnInit, OnDestroy {
     pinterest: 'https://pinterest.com/pin/create/button/',
     reddit: 'https://reddit.com/submit/',
     telegram: 'https://telegram.me/share/url',
-    twitter: 'https://twitter.com/intent/tweet/',
-    whatsapp: 'https://api.whatsapp.com/send'
+    twitter: 'https://twitter.com/intent/tweet/'
   };
 
   constructor(private platformService: PlatformService, private activatedRoute: ActivatedRoute) {}
@@ -101,12 +100,6 @@ export class ShareComponent implements OnInit, OnDestroy {
           text: post.title
           // via: '',
           // hashtags: ''
-        };
-      }
-      case 'whatsapp': {
-        return {
-          url: this.shareUrl,
-          text: post.title
         };
       }
       default: {

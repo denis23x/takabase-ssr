@@ -1,16 +1,18 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, Subscription } from 'rxjs';
+import { ActivatedRoute, NavigationEnd, Router, Event as RouterEvent } from '@angular/router';
+import { combineLatest, EMPTY, of, Subscription } from 'rxjs';
 import { User, Category, AuthService } from '../core';
-import { pluck } from 'rxjs/operators';
+import { filter, pluck, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html'
 })
 export class UserComponent implements OnInit, OnDestroy {
+  routeEvents$: Subscription;
+
   activatedRouteData$: Subscription;
   activatedRouteParams$: Subscription;
 
@@ -38,13 +40,26 @@ export class UserComponent implements OnInit, OnDestroy {
       this.categoryList = categoryList;
     });
 
-    this.activatedRouteParams$ = this.activatedRoute.firstChild.params
-      .pipe(pluck('categoryId'))
+    this.routeEvents$ = this.router.events
+      .pipe(
+        filter((routerEvent: RouterEvent) => routerEvent instanceof NavigationEnd),
+        startWith(EMPTY),
+        switchMap(() => of(this.activatedRoute.snapshot.firstChild.params)),
+        pluck('categoryId')
+      )
       .subscribe((categoryId: string) => {
         this.category = this.categoryList.find((category: Category) => {
           return category.id === Number(categoryId);
         });
       });
+
+    // this.activatedRouteParams$ = this.activatedRoute.firstChild.params
+    //   .pipe(pluck('categoryId'))
+    //   .subscribe((categoryId: string) => {
+    //     this.category = this.categoryList.find((category: Category) => {
+    //       return category.id === Number(categoryId);
+    //     });
+    //   });
   }
 
   ngOnDestroy(): void {
