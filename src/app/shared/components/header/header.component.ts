@@ -34,7 +34,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.authService.removeAuthorization().subscribe(() => {
             this.router
               .navigate(['/exception', error.status])
-              .then(() => console.debug('Route was changed'));
+              .then(() => console.debug('Route changed'));
           });
 
           return throwError(error);

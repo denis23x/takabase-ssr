@@ -47,7 +47,7 @@ export class SearchComponent implements OnInit, OnDestroy {
             queryParams: { query },
             queryParamsHandling: 'merge'
           })
-          .then(() => console.debug('Route was changed'));
+          .then(() => console.debug('Route changed'));
       });
   }
 

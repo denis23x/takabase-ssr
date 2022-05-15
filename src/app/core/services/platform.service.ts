@@ -2,7 +2,7 @@
 
 import { Inject, Injectable, PLATFORM_ID, Renderer2, RendererFactory2 } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { EMPTY, fromEvent, Observable } from 'rxjs';
+import { BehaviorSubject, EMPTY, fromEvent, Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { User, UserSettingsTheme } from '../models';
 
@@ -16,6 +16,8 @@ const getWindow = (): Window => window;
 @Injectable()
 export class PlatformService {
   private readonly renderer2: Renderer2;
+
+  overlayUUIDList: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
   constructor(
     @Inject(PLATFORM_ID)
