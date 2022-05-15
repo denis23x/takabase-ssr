@@ -40,6 +40,7 @@
     "markdown-it": "^12.2.0",
     "markdown-it-incremental-dom": "^2.1.0",
     "markdown-it-link-attributes": "^3.0.0",
+    "ngx-image-cropper": "^6.1.0",
     "prismjs": "^1.24.1",
     "rxjs": "~6.6.0",
     "split-grid": "^1.0.11",
