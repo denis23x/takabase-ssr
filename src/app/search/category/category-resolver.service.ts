@@ -33,7 +33,7 @@ export class SearchCategoryResolverService {
       catchError((error: HttpErrorResponse) => {
         this.router
           .navigate(['/exception', error.status])
-          .then(() => console.debug('Route was changed'));
+          .then(() => console.debug('Route changed'));
 
         return throwError(error);
       })

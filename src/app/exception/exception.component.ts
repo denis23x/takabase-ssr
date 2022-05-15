@@ -39,7 +39,7 @@ export class ExceptionComponent implements OnInit, OnDestroy {
         const message: string = this.getMessageMap(statusCode);
 
         if (!statusCode || !message) {
-          this.router.navigate([[], 404]).then(() => console.debug('Route was changed'));
+          this.router.navigate([[], 404]).then(() => console.debug('Route changed'));
         }
 
         this.statusCode = statusCode;

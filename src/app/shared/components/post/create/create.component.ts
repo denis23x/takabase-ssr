@@ -95,6 +95,14 @@ export class PostCreateComponent implements OnInit, OnDestroy {
     [this.activatedRouteData$, this.postForm$].forEach($ => $?.unsubscribe());
   }
 
+  onClose(): void {
+    this.router
+      .navigate(['..'], {
+        relativeTo: this.activatedRoute
+      })
+      .then(() => console.debug('Route changed'));
+  }
+
   onSubmitPostForm(): void {
     if (this.helperService.getFormValidation(this.postForm)) {
       this.postFormIsSubmitted = true;
