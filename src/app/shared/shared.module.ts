@@ -10,6 +10,7 @@ import {
   CategoryCreateComponent,
   CategoryDetailComponent,
   CategoryEditComponent,
+  CropperComponent,
   DropdownComponent,
   HeaderComponent,
   MarkdownComponent,
@@ -30,6 +31,7 @@ const components: any[] = [
   CategoryCreateComponent,
   CategoryDetailComponent,
   CategoryEditComponent,
+  CropperComponent,
   DropdownComponent,
   HeaderComponent,
   MarkdownComponent,
@@ -46,7 +48,14 @@ const directives: any[] = [AppAuthenticatedDirective, AppScrollIntoViewDirective
 const pipes: any[] = [DayjsPipe, MarkdownPipe, SanitizerPipe];
 
 @NgModule({
-  imports: [CommonModule, FormsModule, HttpClientModule, ReactiveFormsModule, RouterModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    HttpClientModule,
+    ImageCropperModule,
+    ReactiveFormsModule,
+    RouterModule
+  ],
   declarations: [...components, ...directives, ...pipes],
   exports: [
     ...components,
