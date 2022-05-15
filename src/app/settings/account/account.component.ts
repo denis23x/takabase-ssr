@@ -78,8 +78,17 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCropper(event: Event): void {
+  onShowCropper(event: Event): void {
     this.cropperModal = true;
     this.cropperEvent = event;
+  }
+
+  onCloseCropper(): void {
+    this.cropperModal = false;
+    this.cropperEvent = undefined;
+  }
+
+  onSubmitCropper(): void {
+    this.onCloseCropper();
   }
 }

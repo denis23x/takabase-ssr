@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { base64ToFile, ImageCroppedEvent } from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
@@ -10,12 +10,14 @@ import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform
   templateUrl: './cropper.component.html'
 })
 export class CropperComponent implements OnInit, OnDestroy {
+  @Output() closed = new EventEmitter<boolean>();
+  @Output() submitted = new EventEmitter<any>();
+
   @Input()
   set appEvent(event: Event) {
     this.cropperEvent = event;
   }
 
-  cropperModal: boolean;
   cropperEvent: any;
   cropperBase64: any;
 
@@ -137,5 +139,14 @@ export class CropperComponent implements OnInit, OnDestroy {
     this.cropperPosition = {
       ...this.cropperPositionInitial
     };
+  }
+
+  onClose(): void {
+    this.cropperEvent = undefined;
+    this.cropperBase64 = undefined;
+
+    this.onReset();
+
+    this.closed.emit(false);
   }
 }
