@@ -35,7 +35,7 @@
             class="hidden"
             placeholder="Avatar"
             aria-label="Avatar"
-            (change)="onCropper($event)"
+            (change)="onShowCropper($event)"
             #avatarInput>
         </fieldset>
         <label class="block text-secondary-2 text-sm" for="avatar">Specify a file, you may able to use only *.png, *.jpg files</label>
@@ -76,6 +76,11 @@
         [disabled]="accountForm.invalid || accountFormIsSubmitted">Submit
       </button>
     </fieldset>
-    <app-cropper *ngIf="cropperModal" [appEvent]="cropperEvent"></app-cropper>
+    <app-cropper
+      *ngIf="cropperModal"
+      [appEvent]="cropperEvent"
+      (closed)="onCloseCropper()"
+      (submitted)="onSubmitCropper()">
+    </app-cropper>
   </form>
 </section>
