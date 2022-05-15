@@ -24,8 +24,8 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 
   private setRequestHeaders(request: HttpRequest<any>): HttpRequest<any> {
     const requestHeaders: RequestHeaders = {
-      ['Content-Type']: 'application/json',
-      ['Accept']: 'application/json'
+      // ['Content-Type']: 'application/json',
+      // ['Accept']: 'application/json'
     };
 
     const token: string = this.getToken();

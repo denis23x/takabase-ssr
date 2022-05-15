@@ -23,6 +23,7 @@ import {
 } from './components';
 import { AppAuthenticatedDirective, AppScrollIntoViewDirective } from './directives';
 import { DayjsPipe, MarkdownPipe, SanitizerPipe } from './pipes';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 const components: any[] = [
   AvatarComponent,
@@ -54,6 +55,7 @@ const pipes: any[] = [DayjsPipe, MarkdownPipe, SanitizerPipe];
     CommonModule,
     FormsModule,
     HttpClientModule,
+    ImageCropperModule,
     ReactiveFormsModule,
     RouterModule
   ]

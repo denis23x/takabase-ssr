@@ -57,6 +57,10 @@ export class ApiService {
     );
   }
 
+  post2(path: string, requestBody?: RequestBody): Observable<any> {
+    return this.httpClient.post(environment.API_URL + path, requestBody).pipe(pluck('data'));
+  }
+
   delete(path: string): Observable<any> {
     return this.httpClient.delete(environment.API_URL + path).pipe(
       pluck('data'),
