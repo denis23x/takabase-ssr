@@ -4,7 +4,7 @@
       class="block fill-current bg-[#EA4335] text-white rounded-full p-1.5"
       [href]="apiUrl + '/auth/google'"
       aria-label="Google"
-      target="_blank"
+      target="_self"
       rel="noopener"
       appSvgIcon
       title="Google"
@@ -16,12 +16,25 @@
       class="block fill-current bg-white text-[#1877f2] outline outline-primary-3 rounded-full"
       [href]="apiUrl + '/auth/facebook'"
       aria-label="Facebook"
-      target="_blank"
+      target="_self"
       rel="noopener"
       appSvgIcon
       appSquare="32"
       title="Facebook"
       [appIcon]="'facebook'">
+    </a>
+  </li>
+  <li class="block">
+    <a
+      class="block fill-current bg-white text-[#333333] outline outline-primary-3 rounded-full"
+      [href]="apiUrl + '/auth/github'"
+      aria-label="Github"
+      target="_self"
+      rel="noopener"
+      appSvgIcon
+      appSquare="32"
+      title="Github"
+      [appIcon]="'github'">
     </a>
   </li>
 </ul>
