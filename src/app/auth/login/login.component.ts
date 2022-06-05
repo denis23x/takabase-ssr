@@ -44,7 +44,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
       .pipe(
         filter((params: Params) => {
           const email = params.email;
-          const social = ['googleId', 'facebookId']
+          const social = ['facebookId', 'githubId', 'googleId']
             .filter((social: string) => params[social])
             .map((social: string) => ({ [social]: params[social] }))
             .shift();
