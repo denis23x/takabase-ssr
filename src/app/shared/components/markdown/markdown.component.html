@@ -30,7 +30,7 @@
       *ngIf="{ value: false } as active"
       (toggled)="active.value = $event">
       <button
-        class="fill-current text-secondary-1 hover:text-info-1 p-2"
+        class="fill-current bg-primary-2 text-secondary-1 hover:text-info-1 border-l border-primary-4 rounded-r-md p-2"
         [class.text-info-1]="active.value"
         type="button"
         aria-label="Menu"

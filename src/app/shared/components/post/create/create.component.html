@@ -40,8 +40,8 @@
               <button
                 class="text-info-1 hover:underline"
                 type="button"
-                aria-label="Create one"
-                (click)="categoryModal = true">Create one
+                aria-label="Create"
+                (click)="categoryModal = true">Create
               </button>
             </div>
             <app-dropdown
@@ -63,13 +63,13 @@
                     aria-label="Category"
                     readonly>
                   <button
-                    class="absolute top-0 right-0 fill-current border border-transparent p-2"
+                    class="absolute top-0 right-0 fill-current border border-transparent p-2.5"
                     [ngClass]="{ 'opacity-75 text-secondary-2': !active.value, 'opacity-100 text-info-1': active.value }"
                     type="button"
                     aria-label="Menu"
                     appSvgIcon
-                    [appIcon]="'list'"
-                    [appSquare]="'1.5rem'">
+                    [appIcon]="categoryName.invalid ? 'folder' : 'folder-check'"
+                    [appSquare]="'1.25rem'">
                   </button>
                 </label>
                 <span class="block text-sm text-danger-1" *ngIf="categoryName.touched && categoryName.errors" [ngSwitch]="true">
@@ -118,7 +118,7 @@
       <button
         class="inline-block text-info-1 hover:underline"
         type="button"
-        aria-label="Create one"
+        aria-label="Create"
         (click)="categoryModal = true">you need to create at least one
       </button>
     </div>
