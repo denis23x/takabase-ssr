@@ -67,15 +67,19 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   onSubmitCategoryForm(category: Category): void {
-    this.authService.getAuthorization();
-
     let path: string[] = ['/@' + this.user.name];
 
-    category = !!category.id ? category : undefined;
-    category && (path = path.concat(['category', String(category.id)]));
+    // prettier-ignore
+    this.categoryList = this.categoryList.filter((category: Category) => category.id !== this.category?.id);
+
+    if (!!category.id) {
+      path = path.concat(['category', String(category.id)]);
+
+      this.categoryList.unshift(category);
+    }
 
     this.router.navigate(path).then(() => {
-      this.category = category;
+      this.category = !!category.id ? category : undefined;
       this.categoryModal = undefined;
     });
   }
