@@ -1,31 +1,24 @@
+const colorVariableList = [
+  "white",
+  "black",
+  "primary-1",
+  "primary-2",
+  "primary-3",
+  "primary-4",
+  "secondary-1",
+  "secondary-2",
+  "info-1",
+  "success-1",
+  "warning-1",
+  "danger-1",
+]
+
 module.exports = {
   mode: "jit",
   content: ["./src/**/*.html"],
   safelist: [
-    "text-white",
-    "text-black",
-    "text-primary-1",
-    "text-primary-2",
-    "text-primary-3",
-    "text-primary-4",
-    "text-secondary-1",
-    "text-secondary-2",
-    "text-info-1",
-    "text-success-1",
-    "text-warning-1",
-    "text-danger-1",
-    "bg-white",
-    "bg-black",
-    "bg-primary-1",
-    "bg-primary-2",
-    "bg-primary-3",
-    "bg-primary-4",
-    "bg-secondary-1",
-    "bg-secondary-2",
-    "bg-info-1",
-    "bg-success-1",
-    "bg-warning-1",
-    "bg-danger-1",
+    ...colorVariableList.map((variable) => "bg-" + variable),
+    ...colorVariableList.map((variable) => "text-" + variable),
     "text-2xl",
     "text-xl",
     "text-lg",
@@ -47,24 +40,10 @@ module.exports = {
        **/
 
       ...(() => {
-        const colors = {}
-        const variables = [
-          "white",
-          "black",
-          "primary-1",
-          "primary-2",
-          "primary-3",
-          "primary-4",
-          "secondary-1",
-          "secondary-2",
-          "info-1",
-          "success-1",
-          "warning-1",
-          "danger-1",
-        ]
+        const colorList = {}
 
-        variables.forEach((variable) => {
-          colors[variable] = ({ opacityVariable, opacityValue }) => {
+        colorVariableList.forEach((variable) => {
+          colorList[variable] = ({ opacityVariable, opacityValue }) => {
             if (opacityValue !== undefined) {
               return `rgba(var(--${variable}), ${opacityValue})`
             }
@@ -77,7 +56,7 @@ module.exports = {
           }
         })
 
-        return colors
+        return colorList
       })(),
     },
     cursor: {
@@ -88,6 +67,9 @@ module.exports = {
       ["row-resize"]: "row-resize",
     },
     extend: {
+      scale: {
+        "-1": "-1",
+      },
       saturate: {
         75: ".75",
       },
