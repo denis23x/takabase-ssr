@@ -40,9 +40,7 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
 
     this.themeForm$ = this.themeForm.valueChanges.subscribe((value: any) => {
       const userUpdateDto: UserUpdateDto = {
-        settings: {
-          theme: value.theme
-        }
+        settings: value
       };
 
       this.userService

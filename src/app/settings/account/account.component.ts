@@ -23,6 +23,10 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
   user: User;
 
+  avatarForm: FormGroup;
+  avatarForm$: Subscription;
+  avatarFormIsSubmitted: boolean;
+
   accountForm: FormGroup;
   accountForm$: Subscription;
   accountFormIsSubmitted: boolean;
@@ -38,6 +42,10 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private snackbarService: SnackbarService
   ) {
+    this.avatarForm = this.formBuilder.group({
+      url: ['']
+    });
+
     this.accountForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       biography: ['']
