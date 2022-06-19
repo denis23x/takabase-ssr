@@ -1,46 +1,62 @@
-<section>
+<section class="bg-primary-3 border border-primary-4 rounded-md w-full p-4">
   <form
-    class="bg-primary-3 border border-primary-4 rounded-md w-full p-4"
-    [formGroup]="accountForm"
+    class="block"
+    [formGroup]="avatarForm"
     (ngSubmit)="onSubmitForm()"
     autocomplete="off">
     <fieldset class="flex items-center justify-start space-x-4 border-b border-primary-4 pb-4 mb-4">
       <figure
-        class="flex border border-primary-4 overflow-hidden rounded-md cursor-pointer h-16 w-16 md:h-20 md:w-20"
-        [appUser]="user"
+        class="flex border border-primary-4 overflow-hidden rounded-md cursor-pointer h-[76px] w-[76px]"
         appAvatar
-        (click)="avatarInput.click()">
+        [appUser]="user"
+        (click)="fileInput.click()">
       </figure>
-      <div class="flex flex-col">
-        <div class="flex items-center justify-start space-x-4 mb-4">
-          <button
-            class="btn btn-success sm"
-            type="button"
-            aria-label="Change"
-            [disabled]="accountForm.invalid || accountFormIsSubmitted"
-            (click)="avatarInput.click()">Change
-          </button>
-          <button
-            class="btn btn-danger sm"
-            type="button"
-            aria-label="Remove"
-            [disabled]="accountForm.invalid || accountFormIsSubmitted">Remove
-          </button>
-        </div>
-        <fieldset>
+      <fieldset class="flex flex-1 flex-col space-y-2" *ngIf="avatarForm.get('url') as url">
+        <label class="block text-secondary-2" for="url">Only *.png, *.jpg files</label>
+        <div class="relative">
           <input
-            id="avatar"
-            type="file"
-            accept="image/gif, image/jpeg, image/jpg, image/png"
-            class="hidden"
-            placeholder="Avatar"
-            aria-label="Avatar"
-            (change)="onShowCropper($event)"
-            #avatarInput>
-        </fieldset>
-        <label class="block text-secondary-2 text-sm" for="avatar">Specify a file, you may able to use only *.png, *.jpg files</label>
-      </div>
+            id="url"
+            type="text"
+            class="form-control bg-primary-2 truncate pr-10"
+            formControlName="url"
+            placeholder="URL address"
+            aria-label="Url">
+          <i
+            class="absolute top-px right-px fill-current bg-primary-2 text-secondary-1 hover:text-info-1 border-l border-primary-4 rounded-r-md cursor-pointer p-2.5"
+            appSvgIcon
+            [appIcon]="'folder'"
+            [appSquare]="'1.25rem'"
+            (click)="fileInput.click()">
+          </i>
+        </div>
+        <label class="block text-danger-1 text-sm" for="url" *ngIf="url.touched && url.errors" [ngSwitch]="true">
+          <ng-container *ngSwitchCase="!!url.errors.required">Required</ng-container>
+          <ng-container *ngSwitchCase="!!url.errors.customValidator">Url does not match pattern</ng-container>
+        </label>
+      </fieldset>
+      <fieldset class="flex hidden">
+        <input
+          id="file"
+          type="file"
+          accept="image/gif, image/jpeg, image/jpg, image/png"
+          placeholder="File"
+          aria-label="File"
+          (change)="onShowCropper($event)"
+          #fileInput>
+      </fieldset>
     </fieldset>
+    <app-cropper
+      *ngIf="cropperModal"
+      [appEvent]="cropperEvent"
+      (closed)="onCloseCropper()"
+      (submitted)="onSubmitCropper()">
+    </app-cropper>
+  </form>
+  <form
+    class="block"
+    [formGroup]="accountForm"
+    (ngSubmit)="onSubmitForm()"
+    autocomplete="off">
     <fieldset class="flex flex-col space-y-4" [disabled]="accountFormIsSubmitted">
       <fieldset *ngIf="accountForm.get('name') as name">
         <label class="block text-secondary-2 text-sm" for="name">Name</label>
@@ -76,11 +92,5 @@
         [disabled]="accountForm.invalid || accountFormIsSubmitted">Submit
       </button>
     </fieldset>
-    <app-cropper
-      *ngIf="cropperModal"
-      [appEvent]="cropperEvent"
-      (closed)="onCloseCropper()"
-      (submitted)="onSubmitCropper()">
-    </app-cropper>
   </form>
 </section>
