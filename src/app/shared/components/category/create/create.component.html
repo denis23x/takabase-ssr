@@ -32,6 +32,7 @@
             <ng-container *ngSwitchCase="!!name.errors.minlength">Min length {{name.errors.minlength['requiredLength']}} characters</ng-container>
             <ng-container *ngSwitchCase="!!name.errors.maxlength">Max length {{name.errors.maxlength['requiredLength']}} characters</ng-container>
           </label>
+          <p class="text-sm text-secondary-2">You can change category name later</p>
         </fieldset>
         <button
           class="btn btn-success md w-full"
