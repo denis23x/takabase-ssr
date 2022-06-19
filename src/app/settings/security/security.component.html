@@ -45,7 +45,7 @@
           <small class="block text-secondary-2">{{ua.browser.name}} {{ua.browser.version}}</small>
         </p>
         <p class="block" *ngIf="session.ip as ip">
-          <small class="text-secondary-2">{{ip.country || 'Undefined'}}, {{ip.city || ip.ip}}</small>
+          <small class="block text-secondary-2">{{ip.country || 'Undefined'}}, {{ip.city || ip.ip}}</small>
         </p>
       </div>
     </div>

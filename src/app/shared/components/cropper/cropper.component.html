@@ -95,12 +95,12 @@
           <ul class="flex justify-start items-center overflow-auto px-1">
             <li class="inline-block">
               <button
-                class="fill-current text-secondary-1 hover:text-info-1 p-2.5"
+                class="fill-current text-secondary-1 hover:text-info-1 -scale-x-1 p-2.5"
                 type="button"
                 aria-label="Rotate counterclockwise"
                 title="Rotate counterclockwise"
                 appSvgIcon
-                [appIcon]="'arrow-counterclockwise'"
+                [appIcon]="'arrow-clockwise'"
                 (click)="onRotate(false)">
               </button>
             </li>
@@ -117,12 +117,12 @@
             </li>
             <li class="inline-block">
               <button
-                class="fill-current text-secondary-1 hover:text-info-1 p-2.5"
+                class="fill-current text-secondary-1 hover:text-info-1 rotate-90 p-2.5"
                 type="button"
                 aria-label="Flip horizontal"
                 title="Flip horizontal"
                 appSvgIcon
-                [appIcon]="'symmetry-horizontal'"
+                [appIcon]="'symmetry-vertical'"
                 (click)="onFlip(true)">
               </button>
             </li>
