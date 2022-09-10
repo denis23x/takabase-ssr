@@ -11,7 +11,7 @@ import {
 import { Observable, throwError } from 'rxjs';
 import { LocalStorageService } from '../services';
 import { AuthService, RequestHeaders } from '../../core';
-import { catchError, first, switchMap } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
@@ -23,10 +23,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
   }
 
   private setRequestHeaders(request: HttpRequest<any>): HttpRequest<any> {
-    const requestHeaders: RequestHeaders = {
-      ['Content-Type']: 'application/json',
-      ['Accept']: 'application/json'
-    };
+    const requestHeaders: RequestHeaders = {};
 
     const token: string = this.getToken();
 

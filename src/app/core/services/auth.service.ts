@@ -61,7 +61,7 @@ export class AuthService {
   }
 
   onRegistration(registrationDto: RegistrationDto): Observable<User> {
-    return this.apiService.post('/auth/registration', { ...registrationDto });
+    return this.apiService.post('/auth/registration', registrationDto);
   }
 
   onRefresh(): Observable<User> {
@@ -87,9 +87,7 @@ export class AuthService {
   getAuthorization(): void {
     if (this.localStorageService.getItem(environment.USER_ACCESS_TOKEN)) {
       this.apiService
-        .get('/auth/me', {
-          scope: ['settings']
-        })
+        .get('/auth/me', { scope: ['settings'] })
         .subscribe((user: User) => this.setAuthorization(user));
     } else {
       this.removeAuthorization();
@@ -97,7 +95,7 @@ export class AuthService {
   }
 
   getMe(meDto: MeDto): Observable<User> {
-    return this.apiService.get('/auth/me', { ...meDto });
+    return this.apiService.get('/auth/me', meDto);
   }
 
   setAuthorization(user: User): Observable<void> {

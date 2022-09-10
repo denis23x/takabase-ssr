@@ -11,6 +11,10 @@ export class FileService {
   constructor(private apiService: ApiService) {}
 
   create(anyDto: any): Observable<any> {
-    return this.apiService.post2('/files', anyDto);
+    return this.apiService.post('/files', anyDto);
+  }
+
+  createByUrl(anyDto: any): Observable<any> {
+    return this.apiService.get('/files/url', anyDto, { responseType: 'blob' });
   }
 }

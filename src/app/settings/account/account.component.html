@@ -4,14 +4,14 @@
     [formGroup]="avatarForm"
     (ngSubmit)="onSubmitForm()"
     autocomplete="off">
-    <fieldset class="flex items-center justify-start space-x-4 border-b border-primary-4 pb-4 mb-4">
+    <fieldset class="flex items-start justify-start space-x-4 border-b border-primary-4 pb-4 mb-4">
       <figure
         class="flex border border-primary-4 overflow-hidden rounded-md cursor-pointer h-[76px] w-[76px]"
         appAvatar
         [appUser]="user"
         (click)="fileInput.click()">
       </figure>
-      <fieldset class="flex flex-1 flex-col space-y-2" *ngIf="avatarForm.get('url') as url">
+      <fieldset class="flex flex-1 flex-col space-y-2 mt-0.5" *ngIf="avatarForm.get('url') as url">
         <label class="block text-secondary-2" for="url">Only *.png, *.jpg files</label>
         <div class="relative">
           <input
@@ -47,6 +47,8 @@
     </fieldset>
     <app-cropper
       *ngIf="cropperModal"
+      [appFile]="cropperFile"
+      [appUrl]="cropperUrl"
       [appEvent]="cropperEvent"
       (closed)="onCloseCropper()"
       (submitted)="onSubmitCropper()">

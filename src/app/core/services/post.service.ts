@@ -13,19 +13,19 @@ export class PostService {
   constructor(private apiService: ApiService) {}
 
   create(postCreateDto: PostCreateDto): Observable<Post> {
-    return this.apiService.post('/posts', { ...postCreateDto });
+    return this.apiService.post('/posts', postCreateDto);
   }
 
   getAll(postGetAllDto: PostGetAllDto): Observable<Post[]> {
-    return this.apiService.get('/posts', { ...postGetAllDto });
+    return this.apiService.get('/posts', postGetAllDto);
   }
 
   getOne(id: number, postGetOneDto?: PostGetOneDto): Observable<Post> {
-    return this.apiService.get('/posts/' + id, { ...postGetOneDto });
+    return this.apiService.get('/posts/' + id, postGetOneDto);
   }
 
   update(id: number, postUpdateDto: PostUpdateDto): Observable<Post> {
-    return this.apiService.put('/posts/' + id, { ...postUpdateDto });
+    return this.apiService.put('/posts/' + id, postUpdateDto);
   }
 
   delete(id: number): Observable<Post> {

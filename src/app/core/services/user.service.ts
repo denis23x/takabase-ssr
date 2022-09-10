@@ -13,7 +13,7 @@ export class UserService {
   constructor(private apiService: ApiService) {}
 
   getAll(userGetAllDto?: UserGetAllDto): Observable<User[]> {
-    return this.apiService.get('/users', { ...userGetAllDto });
+    return this.apiService.get('/users', userGetAllDto);
   }
 
   getOne(id: number): Observable<User> {
@@ -21,7 +21,7 @@ export class UserService {
   }
 
   update(id: number, userUpdateDto: UserUpdateDto): Observable<User> {
-    return this.apiService.put('/users/' + id, { ...userUpdateDto });
+    return this.apiService.put('/users/' + id, userUpdateDto);
   }
 
   deleteMe(): Observable<User> {

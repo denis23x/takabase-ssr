@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { base64ToFile, ImageCroppedEvent } from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
+import { FileService } from '../../../core';
 
 @Component({
   selector: 'app-cropper, [appCropper]',
@@ -14,12 +15,24 @@ export class CropperComponent implements OnInit, OnDestroy {
   @Output() submitted = new EventEmitter<any>();
 
   @Input()
+  set appFile(file: any) {
+    this.cropperFile = file;
+  }
+
+  @Input()
+  set appUrl(url: string) {
+    this.cropperUrl = url;
+  }
+
+  @Input()
   set appEvent(event: Event) {
     this.cropperEvent = event;
   }
 
-  cropperEvent: any;
-  cropperBase64: any;
+  cropperFile: any;
+  cropperUrl: string;
+  cropperEvent: Event;
+  cropperBase64: string;
 
   imageTransform: ImageTransform = {
     scale: 1,
@@ -39,28 +52,61 @@ export class CropperComponent implements OnInit, OnDestroy {
 
   cropperPositionInitial: CropperPosition = undefined;
 
-  constructor() {}
+  constructor(private fileService: FileService) {}
 
   ngOnInit(): void {}
 
   ngOnDestroy(): void {}
 
-  onSubmitCropper(): void {
-    const file: Blob = base64ToFile(this.cropperBase64);
+  b64toBlob(b64Data: any, contentType: any, sliceSize?: any): any {
+    contentType = contentType || '';
+    sliceSize = sliceSize || 512;
 
-    // const formData: FormData = new FormData();
-    //
-    // formData.append('avatar', file);
-    //
-    // this.fileService.create(formData).subscribe(res => {
-    //   this.authService.setAuthorization(res);
-    //
-    //   this.user = res;
-    //
-    //   this.snackbarService.success('Information updated');
-    //
-    //   this.onCloseCropper();
-    // });
+    var byteCharacters = atob(b64Data);
+    var byteArrays = [];
+
+    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      var byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      var byteArray = new Uint8Array(byteNumbers);
+
+      byteArrays.push(byteArray);
+    }
+
+    var blob = new Blob(byteArrays, { type: contentType });
+
+    return blob;
+  }
+
+  onSubmitCropper(): void {
+    // var ImageURL = this.cropperBase64;
+    // var block = ImageURL.split(';');
+    // var contentType = block[0].split(':')[1]; // In this case "image/gif"
+    // var realData = block[1].split(',')[1]; // In this case "R0lGODlhPQBEAPeoAJosM...."
+    // var blob = this.b64toBlob(realData, contentType);
+
+    const formData: FormData = new FormData();
+
+    formData.append('avatar', base64ToFile(this.cropperBase64));
+
+    this.fileService.create(formData).subscribe(res => {
+      // this.authService.setAuthorization(res);
+      //
+      // this.user = res;
+      //
+      // this.snackbarService.success('Information updated');
+      //
+      // this.onCloseCropper();
+    });
+  }
+
+  onImageLoaded(event: any): void {
+    console.log(event);
   }
 
   onImageCropped(imageCroppedEvent: ImageCroppedEvent): void {

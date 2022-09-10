@@ -4,13 +4,17 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, pluck } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { SnackbarService } from './snackbar.service';
-import { RequestError, RequestBody, RequestParams } from '../models';
+import { RequestError } from '../models';
 
 @Injectable()
 export class ApiService {
   constructor(private httpClient: HttpClient, private snackbarService: SnackbarService) {}
+
+  setUrl(url: string): string {
+    return environment.API_URL + url;
+  }
 
   setError(httpErrorResponse: HttpErrorResponse): Observable<never> {
     const getMessage = (requestError: RequestError): string => {
@@ -36,34 +40,30 @@ export class ApiService {
     return throwError(httpErrorResponse);
   }
 
-  get(path: string, requestParams?: RequestParams): Observable<any> {
-    return this.httpClient.get(environment.API_URL + path, { params: requestParams }).pipe(
-      pluck('data'),
+  get(url: string, params?: any, options?: any): Observable<any> {
+    return this.httpClient.get(this.setUrl(url), { ...options, params }).pipe(
+      map((response: any) => response.data || response),
       catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse))
     );
   }
 
-  put(path: string, requestBody?: RequestBody): Observable<any> {
-    return this.httpClient.put(environment.API_URL + path, JSON.stringify(requestBody || {})).pipe(
-      pluck('data'),
+  put(url: string, body: any | null, options?: any): Observable<any> {
+    return this.httpClient.put(this.setUrl(url), body, options).pipe(
+      map((response: any) => response.data || response),
       catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse))
     );
   }
 
-  post(path: string, requestBody?: RequestBody): Observable<any> {
-    return this.httpClient.post(environment.API_URL + path, JSON.stringify(requestBody || {})).pipe(
-      pluck('data'),
+  post(url: string, body: any | null, options?: any): Observable<any> {
+    return this.httpClient.post(this.setUrl(url), body, options).pipe(
+      map((response: any) => response.data || response),
       catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse))
     );
   }
 
-  post2(path: string, requestBody?: RequestBody): Observable<any> {
-    return this.httpClient.post(environment.API_URL + path, requestBody).pipe(pluck('data'));
-  }
-
-  delete(path: string): Observable<any> {
-    return this.httpClient.delete(environment.API_URL + path).pipe(
-      pluck('data'),
+  delete(url: string): Observable<any> {
+    return this.httpClient.delete(this.setUrl(url)).pipe(
+      map((response: any) => response.data || response),
       catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse))
     );
   }
