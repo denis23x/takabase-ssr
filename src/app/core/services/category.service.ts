@@ -13,11 +13,11 @@ export class CategoryService {
   constructor(private apiService: ApiService) {}
 
   create(categoryCreateDto: CategoryCreateDto): Observable<Category> {
-    return this.apiService.post('/categories', { ...categoryCreateDto });
+    return this.apiService.post('/categories', categoryCreateDto);
   }
 
   getAll(categoryGetAllDto: CategoryGetAllDto): Observable<Category[]> {
-    return this.apiService.get('/categories', { ...categoryGetAllDto });
+    return this.apiService.get('/categories', categoryGetAllDto);
   }
 
   getOne(id: number): Observable<Category> {
@@ -25,7 +25,7 @@ export class CategoryService {
   }
 
   update(id: number, categoryUpdateDto: CategoryUpdateDto): Observable<Category> {
-    return this.apiService.put('/categories/' + id, { ...categoryUpdateDto });
+    return this.apiService.put('/categories/' + id, categoryUpdateDto);
   }
 
   delete(id: number): Observable<Category> {

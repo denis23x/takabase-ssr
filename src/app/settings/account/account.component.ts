@@ -9,9 +9,10 @@ import {
   UserService,
   HelperService,
   SnackbarService,
-  UserUpdateDto
+  UserUpdateDto,
+  FileService
 } from '../../core';
-import { pluck, tap } from 'rxjs/operators';
+import { filter, pluck, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -32,7 +33,9 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
   accountFormIsSubmitted: boolean;
 
   cropperModal: boolean;
+  cropperUrl: string;
   cropperEvent: Event;
+  cropperFile: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,10 +43,11 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
     private authService: AuthService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private fileService: FileService
   ) {
     this.avatarForm = this.formBuilder.group({
-      url: ['']
+      url: ['', [this.helperService.getCustomValidator('url-image'), Validators.required]]
     });
 
     this.accountForm = this.formBuilder.group({
@@ -58,11 +62,42 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
         pluck('data'),
         tap((user: User) => (this.user = user))
       )
-      .subscribe((user: User) => this.accountForm.patchValue(user));
+      .subscribe((user: User) => {
+        this.avatarForm.patchValue({
+          url: user.avatar
+        });
+
+        this.accountForm.patchValue(user);
+      });
+
+    this.avatarForm$ = this.avatarForm.valueChanges
+      .pipe(filter(() => this.avatarForm.valid))
+      .subscribe((value: any) => {
+        // this.cropperModal = true;
+        // this.cropperUrl = value.url;
+
+        this.fileService
+          .createByUrl({
+            url: value.url
+          })
+          .subscribe(response => {
+            this.cropperModal = true;
+            this.cropperFile = response;
+
+            // const reader = new FileReader();
+            //
+            // reader.readAsDataURL(response);
+            //
+            // reader.onloadend = () => {
+            //   this.cropperModal = true;
+            //   this.cropperFile = response;
+            // };
+          });
+      });
   }
 
   ngOnDestroy(): void {
-    [this.accountForm$].forEach($ => $?.unsubscribe());
+    [this.avatarForm$, this.accountForm$].forEach($ => $?.unsubscribe());
   }
 
   onSubmitForm(): void {
@@ -97,6 +132,8 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
   }
 
   onSubmitCropper(): void {
-    this.onCloseCropper();
+    console.log('onSubmitCropper');
+
+    // this.onCloseCropper();
   }
 }

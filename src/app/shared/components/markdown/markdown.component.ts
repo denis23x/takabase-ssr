@@ -1,13 +1,7 @@
 /** @format */
 
 import { AfterViewInit, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-  MarkdownControl,
-  MarkdownService,
-  HelperService,
-  PlatformService,
-  User
-} from '../../../core';
+import { MarkdownControl, MarkdownService, HelperService, PlatformService } from '../../../core';
 import { MarkdownControlList } from './markdown-control-list';
 import { BehaviorSubject, fromEvent, merge, Subscription, of, EMPTY } from 'rxjs';
 import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
@@ -122,7 +116,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   setValue(value: string): void {
-    const selectionStart = this.textarea.selectionStart;
+    const selectionStart: number = this.textarea.selectionStart;
 
     this.textarea.value = value;
     this.textarea.dispatchEvent(new Event('input', { bubbles: true }));
@@ -163,7 +157,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 
-    const valueHandler = () => {
+    const valueHandler = (): string => {
       const url = this.urlForm.get('url').value;
 
       if (url) {
@@ -216,7 +210,5 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     this.urlModal = false;
     this.urlForm.controls['url'].clearValidators();
     this.urlForm.reset();
-
-    // this.textarea.focus();
   }
 }
