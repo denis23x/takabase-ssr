@@ -48,10 +48,8 @@
     <app-cropper
       *ngIf="cropperModal"
       [appFile]="cropperFile"
-      [appUrl]="cropperUrl"
-      [appEvent]="cropperEvent"
       (closed)="onCloseCropper()"
-      (submitted)="onSubmitCropper()">
+      (submitted)="onSubmitCropper($event)">
     </app-cropper>
   </form>
   <form

@@ -15,6 +15,6 @@ export class FileService {
   }
 
   createByUrl(anyDto: any): Observable<any> {
-    return this.apiService.get('/files/url', anyDto, { responseType: 'blob' });
+    return this.apiService.get('/files', anyDto, { responseType: 'blob' });
   }
 }

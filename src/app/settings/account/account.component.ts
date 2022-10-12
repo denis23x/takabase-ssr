@@ -32,10 +32,8 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
   accountForm$: Subscription;
   accountFormIsSubmitted: boolean;
 
+  cropperFile: File;
   cropperModal: boolean;
-  cropperUrl: string;
-  cropperEvent: Event;
-  cropperFile: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -73,26 +71,9 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
     this.avatarForm$ = this.avatarForm.valueChanges
       .pipe(filter(() => this.avatarForm.valid))
       .subscribe((value: any) => {
-        // this.cropperModal = true;
-        // this.cropperUrl = value.url;
-
         this.fileService
-          .createByUrl({
-            url: value.url
-          })
-          .subscribe(response => {
-            this.cropperModal = true;
-            this.cropperFile = response;
-
-            // const reader = new FileReader();
-            //
-            // reader.readAsDataURL(response);
-            //
-            // reader.onloadend = () => {
-            //   this.cropperModal = true;
-            //   this.cropperFile = response;
-            // };
-          });
+          .createByUrl(value)
+          .subscribe((file: File) => this.onShowCropper(undefined, file));
       });
   }
 
@@ -121,18 +102,20 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
     }
   }
 
-  onShowCropper(event: Event): void {
+  onShowCropper(event?: Event, file?: File): void {
+    const inputElement: HTMLInputElement = event ? (event.target as HTMLInputElement) : undefined;
+
+    this.cropperFile = inputElement ? inputElement.files.item(0) : file;
     this.cropperModal = true;
-    this.cropperEvent = event;
   }
 
   onCloseCropper(): void {
+    this.cropperFile = undefined;
     this.cropperModal = false;
-    this.cropperEvent = undefined;
   }
 
-  onSubmitCropper(): void {
-    console.log('onSubmitCropper');
+  onSubmitCropper(event: any): void {
+    console.log('onSubmitCropper', event);
 
     // this.onCloseCropper();
   }
