@@ -18,8 +18,6 @@
           <image-cropper
             class="block border border-primary-4 rounded-md"
             [imageFile]="cropperFile"
-            [imageURL]="cropperUrl"
-            [imageChangedEvent]="cropperEvent"
             [maintainAspectRatio]="true"
             [containWithinAspectRatio]="false"
             [aspectRatio]="1"
@@ -28,7 +26,6 @@
             [resizeToHeight]="256"
             [transform]="imageTransform"
             [cropper]="cropperPosition"
-            (imageLoaded)="onImageLoaded($event)"
             (imageCropped)="onImageCropped($event)">
           </image-cropper>
           <ul class="grid grid-cols-3 grid-rows-3 absolute -top-4 -left-4 scale-50">
