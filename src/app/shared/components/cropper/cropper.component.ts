@@ -146,7 +146,7 @@ export class CropperComponent implements OnInit {
 
     const formData: FormData = new FormData();
 
-    formData.append('avatar', file);
+    formData.append('avatars', file);
 
     this.fileService.create(formData).subscribe((res: any) => {
       this.submitted.emit(res);
