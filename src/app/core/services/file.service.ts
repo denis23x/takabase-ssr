@@ -3,6 +3,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../services';
+import { FileCreateDto, FileGetOneDto } from '../dto';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,11 @@ import { ApiService } from '../services';
 export class FileService {
   constructor(private apiService: ApiService) {}
 
-  create(anyDto: any): Observable<any> {
-    return this.apiService.post('/files', anyDto);
+  create(formData: FormData): Observable<FileCreateDto> {
+    return this.apiService.post('/files', formData);
   }
 
-  createByUrl(anyDto: any): Observable<any> {
-    return this.apiService.get('/files', anyDto, { responseType: 'blob' });
+  getOne(fileGetOneDto: FileGetOneDto): Observable<File> {
+    return this.apiService.get('/files', fileGetOneDto, { responseType: 'blob' });
   }
 }

@@ -10,9 +10,11 @@ import {
   HelperService,
   SnackbarService,
   UserUpdateDto,
-  FileService
+  FileService,
+  FileGetOneDto,
+  FileCreateDto
 } from '../../core';
-import { filter, pluck, tap } from 'rxjs/operators';
+import { pluck, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -45,7 +47,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
     private fileService: FileService
   ) {
     this.avatarForm = this.formBuilder.group({
-      url: ['', [this.helperService.getCustomValidator('url-image'), Validators.required]]
+      url: ['', [this.helperService.getCustomValidator('url-image')]]
     });
 
     this.accountForm = this.formBuilder.group({
@@ -60,25 +62,63 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
         pluck('data'),
         tap((user: User) => (this.user = user))
       )
-      .subscribe((user: User) => {
-        this.avatarForm.patchValue({
-          url: user.avatar
-        });
-
-        this.accountForm.patchValue(user);
-      });
-
-    this.avatarForm$ = this.avatarForm.valueChanges
-      .pipe(filter(() => this.avatarForm.valid))
-      .subscribe((value: any) => {
-        this.fileService
-          .createByUrl(value)
-          .subscribe((file: File) => this.onShowCropper(undefined, file));
-      });
+      .subscribe((user: User) => this.accountForm.patchValue(user));
   }
 
   ngOnDestroy(): void {
-    [this.avatarForm$, this.accountForm$].forEach($ => $?.unsubscribe());
+    [this.avatarForm$, this.accountForm$, this.accountForm$].forEach($ => $?.unsubscribe());
+  }
+
+  onSubmitAvatarForm(): void {
+    if (this.helperService.getFormValidation(this.avatarForm)) {
+      this.avatarFormIsSubmitted = true;
+
+      const fileGetOneDto: FileGetOneDto = {
+        ...this.avatarForm.value
+      };
+
+      // prettier-ignore
+      this.fileService.getOne(fileGetOneDto).subscribe((file: File) => {
+        this.onShowCropper(undefined, file);
+
+        this.avatarFormIsSubmitted = false;
+      },
+      () => (this.avatarFormIsSubmitted = false)
+      );
+    }
+  }
+
+  onUpdateAvatar(fileCreateDto?: FileCreateDto): void {
+    const userUpdateDto: UserUpdateDto = {
+      avatar: fileCreateDto?.path || null
+    };
+
+    // prettier-ignore
+    this.userService.update(this.user.id, userUpdateDto).subscribe((user: User) => {
+      this.user = user;
+
+      this.authService.setAuthorization(user);
+
+      if (!!fileCreateDto) {
+        this.snackbarService.success('Avatar updated');
+      } else {
+        this.snackbarService.danger('Avatar deleted');
+      }
+    });
+  }
+
+  onShowCropper(event?: Event, file?: File): void {
+    const inputElement: HTMLInputElement = event ? (event.target as HTMLInputElement) : undefined;
+
+    this.cropperFile = inputElement ? inputElement.files.item(0) : file;
+    this.cropperModal = true;
+
+    this.avatarForm.reset();
+  }
+
+  onCloseCropper(): void {
+    this.cropperFile = undefined;
+    this.cropperModal = false;
   }
 
   onSubmitForm(): void {
@@ -91,6 +131,8 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
       // prettier-ignore
       this.userService.update(this.user.id, userUpdateDto).subscribe((user: User) => {
+        this.user = user;
+
         this.authService.setAuthorization(user);
 
         this.snackbarService.success('Information updated');
@@ -100,23 +142,5 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
       () => (this.accountFormIsSubmitted = false)
       );
     }
-  }
-
-  onShowCropper(event?: Event, file?: File): void {
-    const inputElement: HTMLInputElement = event ? (event.target as HTMLInputElement) : undefined;
-
-    this.cropperFile = inputElement ? inputElement.files.item(0) : file;
-    this.cropperModal = true;
-  }
-
-  onCloseCropper(): void {
-    this.cropperFile = undefined;
-    this.cropperModal = false;
-  }
-
-  onSubmitCropper(event: any): void {
-    console.log('onSubmitCropper', event);
-
-    // this.onCloseCropper();
   }
 }
