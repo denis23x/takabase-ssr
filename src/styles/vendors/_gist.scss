@@ -4,11 +4,11 @@
 body {
   @apply m-0;
 
-  &.light {
+  &.LIGHT {
     @include variables.theme-light;
   }
 
-  &.dark {
+  &.DARK {
     @include variables.theme-dark;
   }
 

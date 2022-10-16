@@ -1,22 +1,17 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { HelperService, LocalStorageService, MarkdownParser, PlatformService } from '../../core';
-import { environment } from '../../../environments/environment';
+import { AuthService, HelperService, MarkdownParser, User } from '../../core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MarkdownPluginService {
-  constructor(
-    private helperService: HelperService,
-    private platformService: PlatformService,
-    private localStorageService: LocalStorageService
-  ) {}
+  constructor(private helperService: HelperService, private authService: AuthService) {}
 
   getYoutubeParser(url: string): string {
-    const regex = this.helperService.getRegex('url-youtube');
-    const match = url.match(regex);
+    const regex: RegExp = this.helperService.getRegex('url-youtube');
+    const match: RegExpMatchArray | null = url.match(regex);
 
     if (match) {
       return match[2];
@@ -26,8 +21,8 @@ export class MarkdownPluginService {
   }
 
   getYoutubeTemplate(service: string, id: string, url: string, options?: any): string {
-    const parameter = id.indexOf('?');
-    const src = 'https://www.youtube.com/embed/';
+    const parameter: number = id.indexOf('?');
+    const src: string = 'https://www.youtube.com/embed/';
 
     return `
       <div class="youtube-iframe">
@@ -42,8 +37,8 @@ export class MarkdownPluginService {
   }
 
   getGithubParser(url: string): string {
-    const regex = this.helperService.getRegex('url-gist');
-    const match = url.match(regex);
+    const regex: RegExp = this.helperService.getRegex('url-gist');
+    const match: RegExpMatchArray | null = url.match(regex);
 
     if (match) {
       const username = match[2];
@@ -56,21 +51,14 @@ export class MarkdownPluginService {
   }
 
   getGithubTemplate(service: string, id: string, url: string, options?: any): string {
-    const parameter = id.indexOf('?');
-    const src = 'https://gist.github.com/';
+    const parameter: number = id.indexOf('?');
+    const src: string = 'https://gist.github.com/';
 
-    // TODO: review!
+    const user: User = this.authService.userSubject.getValue();
+    const randomId: string = id + '-' + Date.now() + Math.floor(Math.random() * Date.now());
+    const theme: string = user.settings.theme || 'AUTO';
 
-    // const config = this.localStorageService.getItem(environment.USER_SETTINGS_LOCALSTORAGE);
-    const randomId = id + '-' + Date.now() + Math.floor(Math.random() * Date.now());
-
-    let theme: string = 'AUTO';
-
-    // if (config) {
-    //   theme = JSON.parse(config).colorTheme;
-    // }
-
-    const srcdoc = `
+    const srcdoc: string = `
       <html lang='en' translate='no'>
         <head>
           <base target='_parent'>
@@ -82,7 +70,7 @@ export class MarkdownPluginService {
       </html>
     `;
 
-    const onload = `
+    const onload: string = `
       (function(){
         /******************/
         /*** ADD STYLES ***/
@@ -138,18 +126,20 @@ export class MarkdownPluginService {
   }
 
   embed(md: any, options: any): (state: any, silent: boolean) => boolean {
-    return (state, silent): boolean => {
-      const theState = state;
-      const oldPos = state.pos;
+    return (state: any, silent: boolean): boolean => {
+      const theState: any = state;
+      const oldPos: number = state.pos;
 
-      const regex = /@\[([a-zA-Z].+)]\([\s]*(.*?)[\s]*[)]/im;
-      const match = regex.exec(state.src.slice(state.pos, state.src.length));
+      const regex: RegExp = /@\[([a-zA-Z].+)]\([\s]*(.*?)[\s]*[)]/im;
+
+      // prettier-ignore
+      const match: RegExpMatchArray | null = regex.exec(state.src.slice(state.pos, state.src.length));
 
       if (!match || match.length < 3) {
         return false;
       }
 
-      const service = match[1].toLowerCase();
+      const service: string = match[1].toLowerCase();
       const markdownParser: MarkdownParser = {
         ['youtube']: this.getYoutubeParser(match[2]),
         ['github']: this.getGithubParser(match[2])
@@ -192,10 +182,10 @@ export class MarkdownPluginService {
 
   tokenize(md: any, options: any): (tokens: any, idx: any) => string {
     return (tokens, idx): string => {
-      const id = md.utils.escapeHtml(tokens[idx].id);
-      const service = md.utils.escapeHtml(tokens[idx].service).toLowerCase();
+      const id: string = md.utils.escapeHtml(tokens[idx].id);
+      const service: string = md.utils.escapeHtml(tokens[idx].service).toLowerCase();
 
-      if (!id) {
+      if (!id.length) {
         return '';
       } else {
         switch (service) {
@@ -211,8 +201,8 @@ export class MarkdownPluginService {
   }
 
   insert(md: any, options: any): void {
-    const theOptions = options;
-    const theMd = md;
+    const theOptions: any = options;
+    const theMd: any = md;
 
     theMd.renderer.rules.iframe = this.tokenize(theMd, theOptions);
     theMd.inline.ruler.before('emphasis', 'iframe', this.embed(theMd, theOptions));
