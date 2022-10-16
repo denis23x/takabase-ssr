@@ -1,12 +1,17 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService, LoginDto, HelperService, User } from '../../core';
 import { filter } from 'rxjs/operators';
-import { Meta, Title } from '@angular/platform-browser';
+import { Meta } from '@angular/platform-browser';
+
+interface LoginForm {
+  email: FormControl<string>;
+  password: FormControl<string>;
+}
 
 @Component({
   selector: 'app-auth-login',
@@ -15,36 +20,35 @@ import { Meta, Title } from '@angular/platform-browser';
 export class AuthLoginComponent implements OnInit, OnDestroy {
   queryParams$: Subscription;
 
-  loginForm: UntypedFormGroup;
-  loginFormIsSubmitted: boolean;
+  loginForm: FormGroup;
+  loginFormIsSubmitted: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private helperService: HelperService,
-    private meta: Meta,
-    private title: Title
+    private meta: Meta
   ) {
-    this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      // prettier-ignore
-      password: ['', [Validators.required, Validators.pattern(this.helperService.getRegex('password'))]]
+    this.loginForm = this.formBuilder.group<LoginForm>({
+      email: this.formBuilder.control('', [Validators.required, Validators.email]),
+      password: this.formBuilder.control('', [
+        Validators.required,
+        Validators.pattern(this.helperService.getRegex('password'))
+      ])
     });
   }
 
   ngOnInit(): void {
-    this.title.setTitle('Draftnow - Login');
-
     this.meta.addTag({ name: 'title', content: 'my login title' });
     this.meta.addTag({ name: 'description', content: 'my login description' });
 
     this.queryParams$ = this.activatedRoute.queryParams
       .pipe(
         filter((params: Params) => {
-          const email = params.email;
-          const social = ['facebookId', 'githubId', 'googleId']
+          const email: string | undefined = params.email;
+          const social: any = ['facebookId', 'githubId', 'googleId']
             .filter((social: string) => params[social])
             .map((social: string) => ({ [social]: params[social] }))
             .shift();
@@ -52,7 +56,11 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
           return !!email && !!social;
         })
       )
-      .subscribe((params: Params) => this.onLogin(params));
+      .subscribe({
+        next: (params: Params) => this.onLogin(params),
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Query params subscription complete')
+      });
   }
 
   ngOnDestroy(): void {
@@ -66,11 +74,12 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
       ...value
     };
 
-    // prettier-ignore
-    this.authService.onLogin(loginDto).subscribe(
-      (user: User) => this.router.navigate(['/@' + user.name]).then(() => console.debug('Route changed')),
-      () => (this.loginFormIsSubmitted = false)
-    );
+    this.authService.onLogin(loginDto).subscribe({
+      // prettier-ignore
+      next: (user: User) => this.router.navigate(['/@' + user.name]).then(() => console.debug('Route changed')),
+      error: () => (this.loginFormIsSubmitted = false),
+      complete: () => console.debug('User login subscription complete')
+    });
   }
 
   onSubmitForm(): void {

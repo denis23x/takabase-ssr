@@ -1,6 +1,10 @@
 {
   "name": "draft-ssr",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "Node frontend project",
+  "author": "Denis Iakimenko",
+  "private": true,
+  "license": "UNLICENSED",
   "scripts": {
     "spa:start:dev": "ng run draft-ssr:serve:development --disable-host-check",
     "spa:start:prod": "ng run draft-ssr:serve:production",
@@ -16,7 +20,6 @@
     "spite:build": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --stripAttrs class --stripAttrs fill",
     "node:start": "node dist/draft-ssr/server/main.js"
   },
-  "private": true,
   "dependencies": {
     "@angular/animations": "^14.2.6",
     "@angular/common": "^14.2.6",
