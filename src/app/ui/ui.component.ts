@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { HelperService } from '../core';
 
 @Component({
@@ -28,9 +28,9 @@ export class UiComponent {
 
   buttonList: string[] = ['primary', 'info', 'success', 'warning', 'danger', 'transparent'];
 
-  inputForm: FormGroup;
+  inputForm: UntypedFormGroup;
 
-  constructor(private formBuilder: FormBuilder, private helperService: HelperService) {
+  constructor(private formBuilder: UntypedFormBuilder, private helperService: HelperService) {
     this.inputForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       // prettier-ignore

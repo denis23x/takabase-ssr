@@ -21,7 +21,11 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "markdown-it-incremental-dom"
+              "incremental-dom",
+              "prismjs",
+              "dompurify",
+              "markdown-it-incremental-dom",
+              "markdown-it-link-attributes"
             ],
             "outputPath": "dist/draft-ssr/browser",
             "index": "src/index.html",
@@ -165,6 +169,5 @@
         }
       }
     }
-  },
-  "defaultProject": "draft-ssr"
+  }
 }

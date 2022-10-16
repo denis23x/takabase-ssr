@@ -8,7 +8,7 @@ import {
   HelperService,
   SnackbarService
 } from '../../../../core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { iif } from 'rxjs';
 
 @Component({
@@ -30,12 +30,12 @@ export class CategoryEditComponent implements OnInit {
   }
 
   category: Category;
-  categoryForm: FormGroup;
+  categoryForm: UntypedFormGroup;
   categoryFormIsSubmitted: boolean;
   categoryFormIsToggled: boolean;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private helperService: HelperService,
     private categoryService: CategoryService,
     private snackbarService: SnackbarService

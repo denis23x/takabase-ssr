@@ -11,7 +11,7 @@ import {
 } from '../../../../core';
 import { iif, Subscription } from 'rxjs';
 import { filter, pairwise, pluck, startWith, switchMap } from 'rxjs/operators';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Navigation, Router } from '@angular/router';
 
 @Component({
@@ -24,12 +24,12 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   categoryList: Category[] = [];
   categoryModal: boolean;
 
-  postForm: FormGroup;
+  postForm: UntypedFormGroup;
   postForm$: Subscription;
   postFormIsSubmitted: boolean;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private helperService: HelperService,
     private router: Router,
     private activatedRoute: ActivatedRoute,

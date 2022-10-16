@@ -2,7 +2,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { debounceTime, filter, pluck } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
@@ -13,13 +13,13 @@ import { Subscription } from 'rxjs';
 export class SearchComponent implements OnInit, OnDestroy {
   routeQueryParams$: Subscription;
 
-  searchForm: FormGroup;
+  searchForm: UntypedFormGroup;
   searchForm$: Subscription;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {
     this.searchForm = this.formBuilder.group({
       query: ['', [Validators.minLength(4), Validators.maxLength(24)]]
