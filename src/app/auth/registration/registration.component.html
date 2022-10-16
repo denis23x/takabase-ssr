@@ -2,8 +2,7 @@
   <form
     class="flex flex-col space-y-4 bg-primary-3 border border-primary-4 rounded-md p-4"
     [formGroup]="registrationForm"
-    (ngSubmit)="onSubmitForm()"
-    autocomplete="off">
+    (ngSubmit)="onSubmitForm()">
     <div class="flex flex-col">
       <h1 class="text-2xl text-secondary-1 font-medium">Join to Draft</h1>
       <div class="flex space-x-1 text-base">
@@ -17,6 +16,7 @@
         <label class="block text-secondary-2 text-sm" for="name">Username</label>
         <input
           id="name"
+          autocomplete="username"
           type="text"
           class="form-control bg-primary-2 truncate"
           formControlName="name"
@@ -32,6 +32,7 @@
         <label class="block text-secondary-2 text-sm" for="email">Email</label>
         <input
           id="email"
+          autocomplete="username"
           type="email"
           class="form-control bg-primary-2 truncate"
           formControlName="email"
@@ -47,6 +48,7 @@
         <div class="relative" *ngIf="{ value: false } as isVisible">
           <input
             id="password"
+            autocomplete="new-password"
             [type]="isVisible.value ? 'text' : 'password'"
             class="form-control bg-primary-2 pr-10"
             formControlName="password"

@@ -1,30 +1,42 @@
 /** @format */
 
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService, RegistrationDto, LoginDto, HelperService, User } from '../../core';
 import { switchMap } from 'rxjs/operators';
+
+interface RegistrationForm {
+  name: FormControl<string>;
+  email: FormControl<string>;
+  password: FormControl<string>;
+}
 
 @Component({
   selector: 'app-auth-registration',
   templateUrl: './registration.component.html'
 })
 export class AuthRegistrationComponent implements OnInit {
-  registrationForm: UntypedFormGroup;
-  registrationFormIsSubmitted: boolean;
+  registrationForm: FormGroup;
+  registrationFormIsSubmitted: boolean = false;
 
   constructor(
     private router: Router,
     private authService: AuthService,
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private helperService: HelperService
   ) {
-    this.registrationForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]],
-      email: ['', [Validators.required, Validators.email]],
-      // prettier-ignore
-      password: ['', [Validators.required, Validators.pattern(this.helperService.getRegex('password'))]]
+    this.registrationForm = this.formBuilder.group<RegistrationForm>({
+      name: this.formBuilder.control('', [
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(24)
+      ]),
+      email: this.formBuilder.control('', [Validators.required, Validators.email]),
+      password: this.formBuilder.control('', [
+        Validators.required,
+        Validators.pattern(this.helperService.getRegex('password'))
+      ])
     });
   }
 
@@ -38,11 +50,10 @@ export class AuthRegistrationComponent implements OnInit {
         ...this.registrationForm.value
       };
 
-      // prettier-ignore
       this.authService
         .onRegistration(registrationDto)
         .pipe(
-          switchMap(() => {
+          switchMap((user: User) => {
             const loginDto: LoginDto = {
               email: registrationDto.email,
               password: registrationDto.password
@@ -51,10 +62,12 @@ export class AuthRegistrationComponent implements OnInit {
             return this.authService.onLogin(loginDto);
           })
         )
-        .subscribe(
-          (user: User) => this.router.navigate(['/@' + user.name]).then(() => console.debug('Route changed')),
-          () => (this.registrationFormIsSubmitted = false)
-        );
+        .subscribe({
+          // prettier-ignore
+          next: (user: User) => this.router.navigate(['/@' + user.name]).then(() => console.debug('Route changed')),
+          error: () => (this.registrationFormIsSubmitted = false),
+          complete: () => console.debug('User registration subscription complete')
+        });
     }
   }
 }
