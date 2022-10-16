@@ -2,17 +2,26 @@
   <form
     class="block"
     [formGroup]="avatarForm"
-    (ngSubmit)="onSubmitForm()"
+    (ngSubmit)="onSubmitAvatarForm()"
     autocomplete="off">
-    <fieldset class="flex items-start justify-start space-x-4 border-b border-primary-4 pb-4 mb-4">
+    <fieldset class="flex items-start justify-start space-x-4 border-b border-primary-4 pb-4 mb-4" [disabled]="avatarFormIsSubmitted">
       <figure
-        class="flex border border-primary-4 overflow-hidden rounded-md cursor-pointer h-[76px] w-[76px]"
+        class="flex border border-primary-4 overflow-hidden rounded-md cursor-pointer h-24 w-24"
         appAvatar
         [appUser]="user"
         (click)="fileInput.click()">
       </figure>
-      <fieldset class="flex flex-1 flex-col space-y-2 mt-0.5" *ngIf="avatarForm.get('url') as url">
-        <label class="block text-secondary-2" for="url">Only *.png, *.jpg files</label>
+      <fieldset class="flex flex-1 flex-col space-y-2" *ngIf="avatarForm.get('url') as url">
+        <div class="flex items-center justify-between text-sm">
+          <label class="block text-secondary-2" for="url">Avatar</label>
+          <button
+            *ngIf="user.avatar"
+            class="text-danger-1 hover:underline"
+            type="button"
+            aria-label="Delete"
+            (click)="onUpdateAvatar()">Delete
+          </button>
+        </div>
         <div class="relative">
           <input
             id="url"
@@ -21,26 +30,32 @@
             formControlName="url"
             placeholder="URL address"
             aria-label="Url">
-          <i
-            class="absolute top-px right-px fill-current bg-primary-2 text-secondary-1 hover:text-info-1 border-l border-primary-4 rounded-r-md cursor-pointer p-2.5"
-            appSvgIcon
-            [appIcon]="'folder'"
-            [appSquare]="'1.25rem'"
-            (click)="fileInput.click()">
-          </i>
+          <ng-container *ngIf="url.value?.length" [ngSwitch]="!!avatarFormIsSubmitted">
+            <button
+              *ngSwitchCase="false"
+              class="absolute top-px right-px rounded-r-md fill-current opacity-50 hover:opacity-100 text-secondary-1 p-2.5"
+              type="submit"
+              aria-label="Download"
+              appSvgIcon
+              [appIcon]="'download'"
+              [appSquare]="'1.25rem'">
+            </button>
+            <span
+              *ngSwitchCase="true"
+              class="absolute top-3 right-3 block border-2 border-transparent border-b-2 border-b-secondary-1 rounded-full opacity-50 pointer-events-none animate-spin w-5 h-5">
+            </span>
+          </ng-container>
         </div>
         <label class="block text-danger-1 text-sm" for="url" *ngIf="url.touched && url.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="!!url.errors.required">Required</ng-container>
           <ng-container *ngSwitchCase="!!url.errors.customValidator">Url does not match pattern</ng-container>
         </label>
+        <label class="block text-secondary-2 text-sm" for="url">Accept only *.png, *.jpg files</label>
       </fieldset>
-      <fieldset class="flex hidden">
+      <fieldset class="flex flex-1 hidden">
         <input
-          id="file"
           type="file"
-          accept="image/gif, image/jpeg, image/jpg, image/png"
-          placeholder="File"
-          aria-label="File"
+          accept="image/jpeg, image/jpg, image/png"
+          aria-label="Hidden"
           (change)="onShowCropper($event)"
           #fileInput>
       </fieldset>
@@ -49,7 +64,7 @@
       *ngIf="cropperModal"
       [appFile]="cropperFile"
       (closed)="onCloseCropper()"
-      (submitted)="onSubmitCropper($event)">
+      (submitted)="onUpdateAvatar($event)">
     </app-cropper>
   </form>
   <form
@@ -76,6 +91,7 @@
         <textarea
           id="biography"
           type="text"
+          rows="6"
           class="form-control bg-primary-2 my-2"
           formControlName="biography"
           placeholder="Biography"

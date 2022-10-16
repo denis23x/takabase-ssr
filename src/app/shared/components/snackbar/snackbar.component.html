@@ -1,6 +1,6 @@
 <ul class="absolute right-0 bottom-0 flex flex-col space-y-5 items-end justify-end max-w-lg p-8 z-40">
   <li class="overflow-hidden rounded-md shadow-lg" [ngClass]="snack.options.classList" *ngFor="let snack of snackbarList">
-    <div class="flex items-start justify-start border border-transparent p-2" [ngClass]="snack.options.classList">
+    <div class="flex items-start justify-start border border-transparent py-1 px-2" [ngClass]="snack.options.classList">
       <p class="flex flex-wrap items-start justify-start p-2">
         <span class="block font-bold capitalize mr-1" *ngIf="snack.options.title">{{ snack.options.title }}</span>
         <span class="block">{{ snack.message }}</span>
