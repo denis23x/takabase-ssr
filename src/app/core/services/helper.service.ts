@@ -1,7 +1,7 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { PlatformService } from './platform.service';
 
 @Injectable()
@@ -48,7 +48,7 @@ export class HelperService {
     };
   }
 
-  getFormValidation(formGroup: FormGroup): boolean {
+  getFormValidation(formGroup: UntypedFormGroup): boolean {
     if (formGroup.invalid) {
       Object.keys(formGroup.controls).forEach(control =>
         formGroup.get(control).markAsTouched({ onlySelf: true })

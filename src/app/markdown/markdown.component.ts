@@ -13,7 +13,7 @@ import { PlatformService, HelperService, Post } from '../core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fromEvent, Subscription } from 'rxjs';
 import { filter, pluck } from 'rxjs/operators';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { DOCUMENT } from '@angular/common';
 import Split from 'split-grid';
 
@@ -30,7 +30,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   mousedown$: Subscription;
   mousemove$: Subscription;
 
-  postForm: FormGroup;
+  postForm: UntypedFormGroup;
   postForm$: Subscription;
 
   editorMinSize = 425;
@@ -40,7 +40,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT)
     private document: Document,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private platformService: PlatformService,
     private activatedRoute: ActivatedRoute,
     private router: Router,

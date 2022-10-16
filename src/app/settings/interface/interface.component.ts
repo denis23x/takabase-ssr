@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { pluck, tap } from 'rxjs/operators';
 import { AuthService, User, UserService, UserUpdateDto } from '../../core';
@@ -16,11 +16,11 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
 
   user: User;
 
-  themeForm: FormGroup;
+  themeForm: UntypedFormGroup;
   themeForm$: Subscription;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private userService: UserService,
     private authService: AuthService,
     private activatedRoute: ActivatedRoute

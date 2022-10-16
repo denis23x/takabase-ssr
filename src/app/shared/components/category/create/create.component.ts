@@ -8,7 +8,7 @@ import {
   HelperService,
   SnackbarService
 } from '../../../../core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-category-create',
@@ -18,11 +18,11 @@ export class CategoryCreateComponent implements OnInit {
   @Output() closed = new EventEmitter<boolean>();
   @Output() submitted = new EventEmitter<Category>();
 
-  categoryForm: FormGroup;
+  categoryForm: UntypedFormGroup;
   categoryFormIsSubmitted: boolean;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private helperService: HelperService,
     private categoryService: CategoryService,
     private snackbarService: SnackbarService

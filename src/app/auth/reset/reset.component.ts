@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { HelperService } from '../../core';
 
@@ -10,11 +10,11 @@ import { HelperService } from '../../core';
   templateUrl: './reset.component.html'
 })
 export class AuthResetComponent implements OnInit {
-  resetForm: FormGroup;
+  resetForm: UntypedFormGroup;
   resetForm$: Subscription;
   resetFormIsSubmitted: boolean;
 
-  constructor(private formBuilder: FormBuilder, private helperService: HelperService) {
+  constructor(private formBuilder: UntypedFormBuilder, private helperService: HelperService) {
     this.resetForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]]
     });

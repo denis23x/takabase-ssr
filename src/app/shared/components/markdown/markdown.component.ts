@@ -5,7 +5,7 @@ import { MarkdownControl, MarkdownService, HelperService, PlatformService } from
 import { MarkdownControlList } from './markdown-control-list';
 import { BehaviorSubject, fromEvent, merge, Subscription, of, EMPTY } from 'rxjs';
 import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { DOCUMENT } from '@angular/common';
 
 @Component({
@@ -44,7 +44,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   historyRemember = true;
   history$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
-  urlForm: FormGroup;
+  urlForm: UntypedFormGroup;
   urlFormControl = {} as MarkdownControl;
   urlFormIsSubmitted: boolean;
   urlModal: boolean;
@@ -54,7 +54,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     private document: Document,
     private markdownService: MarkdownService,
     private platformService: PlatformService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private helperService: HelperService
   ) {
     this.urlForm = this.formBuilder.group({

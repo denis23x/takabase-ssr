@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService, RegistrationDto, LoginDto, HelperService, User } from '../../core';
 import { switchMap } from 'rxjs/operators';
@@ -11,13 +11,13 @@ import { switchMap } from 'rxjs/operators';
   templateUrl: './registration.component.html'
 })
 export class AuthRegistrationComponent implements OnInit {
-  registrationForm: FormGroup;
+  registrationForm: UntypedFormGroup;
   registrationFormIsSubmitted: boolean;
 
   constructor(
     private router: Router,
     private authService: AuthService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private helperService: HelperService
   ) {
     this.registrationForm = this.formBuilder.group({

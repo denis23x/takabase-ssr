@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import {
   AuthService,
@@ -26,11 +26,11 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
   user: User;
 
-  avatarForm: FormGroup;
+  avatarForm: UntypedFormGroup;
   avatarForm$: Subscription;
   avatarFormIsSubmitted: boolean;
 
-  accountForm: FormGroup;
+  accountForm: UntypedFormGroup;
   accountForm$: Subscription;
   accountFormIsSubmitted: boolean;
 
@@ -38,7 +38,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
   cropperModal: boolean;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private helperService: HelperService,
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
