@@ -35,7 +35,7 @@ export class SearchCategoryResolverService {
           .navigate(['/exception', error.status])
           .then(() => console.debug('Route changed'));
 
-        return throwError(error);
+        return throwError(() => new Error('Search category resolver error'));
       })
     );
   }

@@ -34,7 +34,7 @@ export class SearchUserResolverService {
           .navigate(['/exception', error.status])
           .then(() => console.debug('Route changed'));
 
-        return throwError(error);
+        return throwError(() => new Error('Search user resolver error'));
       })
     );
   }

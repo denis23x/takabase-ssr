@@ -24,7 +24,7 @@ export class SettingsResolverService {
             .navigate(['/exception', error.status])
             .then(() => console.debug('Route changed'));
 
-          return throwError(error);
+          return throwError(() => new Error('Settings resolver error'));
         })
       );
   }

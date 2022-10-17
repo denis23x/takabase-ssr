@@ -49,7 +49,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
       this.authService.removeAuthorization();
     }
 
-    return throwError(error);
+    return throwError(() => new Error('Interceptor response error 1'));
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -61,7 +61,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
           return this.handleResponseError(error, request, next);
         }
 
-        return throwError(error);
+        return throwError(() => new Error('Interceptor response error 2'));
       })
     );
   }

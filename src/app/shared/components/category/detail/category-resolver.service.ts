@@ -31,7 +31,7 @@ export class CategoryDetailResolverService {
           .navigate(['/exception', error.status])
           .then(() => console.debug('Route changed'));
 
-        return throwError(error);
+        return throwError(() => new Error('Category detail resolver error'));
       })
     );
   }

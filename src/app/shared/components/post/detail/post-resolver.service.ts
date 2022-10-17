@@ -29,10 +29,7 @@ export class PostDetailResolverService {
           const user: User = [...data].shift();
 
           if (user.id !== post.user.id) {
-            return throwError({
-              status: 403,
-              message: 'Forbidden'
-            });
+            return throwError(() => new Error('Forbidden'));
           }
         }
 
@@ -43,7 +40,7 @@ export class PostDetailResolverService {
           .navigate(['/exception', error.status])
           .then(() => console.debug('Route changed'));
 
-        return throwError(error);
+        return throwError(() => new Error('Post detail resolver error'));
       })
     );
   }

@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             complete: () => console.debug('Auth service remove authorization subscription complete')
           });
 
-          return throwError(error);
+          return throwError(() => new Error('Logout error'));
         }),
         switchMap(() => this.authService.removeAuthorization())
       )
