@@ -3,9 +3,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { pluck, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { AuthService, User, UserService, UserUpdateDto } from '../../core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Data } from '@angular/router';
 
 interface ThemeForm {
   theme: FormControl<string>;
@@ -37,7 +37,7 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRouteData$ = this.activatedRoute.parent?.data
       .pipe(
-        pluck('data'),
+        map((data: Data) => data.data),
         tap((user: User) => (this.user = user))
       )
       .subscribe({

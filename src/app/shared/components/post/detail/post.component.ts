@@ -2,9 +2,9 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService, Post, User } from '../../../../core';
-import { pluck } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 
 @Component({
   selector: 'app-post-detail',
@@ -31,11 +31,13 @@ export class PostDetailComponent implements OnInit, OnDestroy {
       complete: () => console.debug('Auth service user subscription complete')
     });
 
-    this.activatedRouteData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe({
-      next: (post: Post) => (this.post = post),
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Activated route data subscription complete')
-    });
+    this.activatedRouteData$ = this.activatedRoute.data
+      .pipe(map((data: Data) => data.data))
+      .subscribe({
+        next: (post: Post) => (this.post = post),
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route data subscription complete')
+      });
   }
 
   ngOnDestroy(): void {

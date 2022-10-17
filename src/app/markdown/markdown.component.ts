@@ -10,9 +10,9 @@ import {
   ViewChild
 } from '@angular/core';
 import { PlatformService, HelperService, Post } from '../core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 import { fromEvent, Subscription } from 'rxjs';
-import { filter, pluck } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { DOCUMENT } from '@angular/common';
 import Split from 'split-grid';
@@ -54,7 +54,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRouteData$ = this.activatedRoute.data
       .pipe(
-        pluck('data'),
+        map((data: Data) => data.data),
         filter((post: Post) => !!post)
       )
       .subscribe({

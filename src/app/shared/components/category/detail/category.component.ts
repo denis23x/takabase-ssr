@@ -1,10 +1,10 @@
 /** @format */
 
 import { Component } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Data } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Category, Post, PostGetAllDto, PostService, User } from '../../../../core';
-import { pluck, skip, tap } from 'rxjs/operators';
+import { map, skip, tap } from 'rxjs/operators';
 
 // prettier-ignore
 export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto => {
@@ -69,18 +69,20 @@ export class CategoryDetailComponent {
     // prettier-ignore
     this.postPath = this.activatedRoute.snapshot.parent.routeConfig.component.name === 'UserComponent' ? 'posts' : './';
 
-    this.activatedRouteData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe({
-      next: (postList: Post[]) => {
-        this.page = 1;
-        this.size = 10;
+    this.activatedRouteData$ = this.activatedRoute.data
+      .pipe(map((data: Data) => data.data))
+      .subscribe({
+        next: (postList: Post[]) => {
+          this.page = 1;
+          this.size = 10;
 
-        this.postList = postList;
-        this.postListLoading = false;
-        this.postListHasMore = postList.length === this.size;
-      },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Activated route data subscription complete')
-    });
+          this.postList = postList;
+          this.postListLoading = false;
+          this.postListHasMore = postList.length === this.size;
+        },
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route data subscription complete')
+      });
 
     this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
       .pipe(

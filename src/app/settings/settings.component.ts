@@ -3,8 +3,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { User } from '../core';
-import { pluck } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { ActivatedRoute, Data } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -18,11 +18,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this.activatedRouteData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe({
-      next: (user: User) => (this.user = user),
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Activated route data subscription complete')
-    });
+    this.activatedRouteData$ = this.activatedRoute.data
+      .pipe(map((data: Data) => data.data))
+      .subscribe({
+        next: (user: User) => (this.user = user),
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route data subscription complete')
+      });
   }
 
   ngOnDestroy() {

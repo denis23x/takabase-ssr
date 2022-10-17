@@ -1,10 +1,10 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { pluck, switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { AuthService, LogoutDto, Session, SnackbarService, User } from '../../core';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 
 @Component({
   selector: 'app-settings-security',
@@ -28,7 +28,7 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRouteData$ = this.activatedRoute.parent?.data
       .pipe(
-        pluck('data'),
+        map((data: Data) => data.data),
         switchMap((user: User) => {
           this.user = user;
 
