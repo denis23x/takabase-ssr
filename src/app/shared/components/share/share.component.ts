@@ -28,9 +28,8 @@ export class ShareComponent implements OnInit, OnDestroy {
   constructor(private platformService: PlatformService, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.activatedRouteData$ = this.activatedRoute.data
-      .pipe(pluck('data'))
-      .subscribe((post: Post) => {
+    this.activatedRouteData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe({
+      next: (post: Post) => {
         if (this.platformService.isBrowser()) {
           const window: Window = this.platformService.getWindow();
 
@@ -45,7 +44,10 @@ export class ShareComponent implements OnInit, OnDestroy {
 
           this.shareMap[share] = [this.shareMap[share], encodedURI].join('?');
         });
-      });
+      },
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Activated route data subscription complete')
+    });
   }
 
   ngOnDestroy(): void {
@@ -109,9 +111,8 @@ export class ShareComponent implements OnInit, OnDestroy {
   }
 
   getEncodedURI(data: any): string {
-    return Object.keys(data)
-      .map((key: string) => [key, data[key]].map(encodeURIComponent).join('='))
-      .join('&');
+    // prettier-ignore
+    return Object.keys(data).map((key: string) => [key, data[key]].map(encodeURIComponent).join('=')).join('&');
   }
 
   onCopyUrl(): void {

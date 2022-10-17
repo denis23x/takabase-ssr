@@ -14,7 +14,7 @@ interface ResetForm {
 })
 export class AuthResetComponent implements OnInit {
   resetForm: FormGroup;
-  resetFormIsSubmitted: boolean;
+  resetFormIsSubmitted: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private helperService: HelperService) {
     this.resetForm = this.formBuilder.group<ResetForm>({

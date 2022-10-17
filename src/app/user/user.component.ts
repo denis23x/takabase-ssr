@@ -17,7 +17,7 @@ export class UserComponent implements OnInit, OnDestroy {
   activatedRouteParams$: Subscription;
 
   user: User;
-  userMe: boolean;
+  userMe: boolean = false;
 
   category: Category;
   categoryList: Category[];
@@ -33,11 +33,15 @@ export class UserComponent implements OnInit, OnDestroy {
     this.activatedRouteData$ = combineLatest([
       this.authService.userSubject,
       this.activatedRoute.data.pipe(pluck('data'))
-    ]).subscribe(([userAuthed, [user, categoryList]]: [User, [User, Category[]]]) => {
-      this.userMe = userAuthed.id === user.id;
-      this.user = user;
+    ]).subscribe({
+      next: ([userAuthed, [user, categoryList]]: [User, [User, Category[]]]) => {
+        this.userMe = userAuthed.id === user.id;
+        this.user = user;
 
-      this.categoryList = categoryList;
+        this.categoryList = categoryList;
+      },
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Auth service user/activated route data subscription complete')
     });
 
     this.routeEvents$ = this.router.events
@@ -47,19 +51,15 @@ export class UserComponent implements OnInit, OnDestroy {
         switchMap(() => of(this.activatedRoute.snapshot.firstChild.params)),
         pluck('categoryId')
       )
-      .subscribe((categoryId: string) => {
-        this.category = this.categoryList.find((category: Category) => {
-          return category.id === Number(categoryId);
-        });
+      .subscribe({
+        next: (categoryId: string) => {
+          this.category = this.categoryList.find((category: Category) => {
+            return category.id === Number(categoryId);
+          });
+        },
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Router events navigation end subscription complete')
       });
-
-    // this.activatedRouteParams$ = this.activatedRoute.firstChild.params
-    //   .pipe(pluck('categoryId'))
-    //   .subscribe((categoryId: string) => {
-    //     this.category = this.categoryList.find((category: Category) => {
-    //       return category.id === Number(categoryId);
-    //     });
-    //   });
   }
 
   ngOnDestroy(): void {

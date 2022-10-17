@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import {
   AuthService,
@@ -17,6 +17,15 @@ import {
 import { pluck, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
+interface AvatarForm {
+  url: FormControl<string>;
+}
+
+interface AccountForm {
+  name: FormControl<string>;
+  biography: FormControl<string>;
+}
+
 @Component({
   selector: 'app-settings-account',
   templateUrl: './account.component.html'
@@ -26,19 +35,19 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
   user: User;
 
-  avatarForm: UntypedFormGroup;
+  avatarForm: FormGroup;
   avatarForm$: Subscription;
-  avatarFormIsSubmitted: boolean;
+  avatarFormIsSubmitted: boolean = false;
 
-  accountForm: UntypedFormGroup;
+  accountForm: FormGroup;
   accountForm$: Subscription;
-  accountFormIsSubmitted: boolean;
+  accountFormIsSubmitted: boolean = false;
 
   cropperFile: File;
-  cropperModal: boolean;
+  cropperModal: boolean = false;
 
   constructor(
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private helperService: HelperService,
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
@@ -46,13 +55,13 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
     private snackbarService: SnackbarService,
     private fileService: FileService
   ) {
-    this.avatarForm = this.formBuilder.group({
-      url: ['', [this.helperService.getCustomValidator('url-image')]]
+    this.avatarForm = this.formBuilder.group<AvatarForm>({
+      url: this.formBuilder.control('', [this.helperService.getCustomValidator('url-image')])
     });
 
-    this.accountForm = this.formBuilder.group({
-      name: ['', [Validators.required]],
-      biography: ['']
+    this.accountForm = this.formBuilder.group<AccountForm>({
+      name: this.formBuilder.control('', [Validators.required]),
+      biography: this.formBuilder.control('', [])
     });
   }
 
@@ -62,7 +71,11 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
         pluck('data'),
         tap((user: User) => (this.user = user))
       )
-      .subscribe((user: User) => this.accountForm.patchValue(user));
+      .subscribe({
+        next: (user: User) => this.accountForm.patchValue(user),
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route parent data subscription complete')
+      });
   }
 
   ngOnDestroy(): void {
@@ -77,14 +90,15 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
         ...this.avatarForm.value
       };
 
-      // prettier-ignore
-      this.fileService.getOne(fileGetOneDto).subscribe((file: File) => {
-        this.onShowCropper(undefined, file);
+      this.fileService.getOne(fileGetOneDto).subscribe({
+        next: (file: File) => {
+          this.onShowCropper(undefined, file);
 
-        this.avatarFormIsSubmitted = false;
-      },
-      () => (this.avatarFormIsSubmitted = false)
-      );
+          this.avatarFormIsSubmitted = false;
+        },
+        error: () => (this.avatarFormIsSubmitted = false),
+        complete: () => console.debug('File service get one subscription complete')
+      });
     }
   }
 
@@ -94,16 +108,20 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
     };
 
     // prettier-ignore
-    this.userService.update(this.user.id, userUpdateDto).subscribe((user: User) => {
-      this.user = user;
+    this.userService.update(this.user.id, userUpdateDto).subscribe({
+      next: (user: User) => {
+        this.user = user;
 
-      this.authService.setAuthorization(user);
+        this.authService.setAuthorization(user);
 
-      if (!!fileCreateDto) {
-        this.snackbarService.success('Avatar updated');
-      } else {
-        this.snackbarService.danger('Avatar deleted');
-      }
+        if (!!fileCreateDto) {
+          this.snackbarService.success('Avatar updated');
+        } else {
+          this.snackbarService.danger('Avatar deleted');
+        }
+      },
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('User service update subscription complete')
     });
   }
 
@@ -129,18 +147,19 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
         ...this.accountForm.value
       };
 
-      // prettier-ignore
-      this.userService.update(this.user.id, userUpdateDto).subscribe((user: User) => {
-        this.user = user;
+      this.userService.update(this.user.id, userUpdateDto).subscribe({
+        next: (user: User) => {
+          this.user = user;
 
-        this.authService.setAuthorization(user);
+          this.authService.setAuthorization(user);
 
-        this.snackbarService.success('Information updated');
+          this.snackbarService.success('Information updated');
 
-        this.accountFormIsSubmitted = false;
-      },
-      () => (this.accountFormIsSubmitted = false)
-      );
+          this.accountFormIsSubmitted = false;
+        },
+        error: () => (this.accountFormIsSubmitted = false),
+        complete: () => console.debug('User service update subscription complete')
+      });
     }
   }
 }

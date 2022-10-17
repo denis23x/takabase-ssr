@@ -11,8 +11,15 @@ import {
 } from '../../../../core';
 import { iif, Subscription } from 'rxjs';
 import { filter, pairwise, pluck, startWith, switchMap } from 'rxjs/operators';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Navigation, Router } from '@angular/router';
+
+interface PostForm {
+  body: FormControl<string>;
+  title: FormControl<string>;
+  categoryId: FormControl<number>;
+  categoryName: FormControl<string>;
+}
 
 @Component({
   selector: 'app-post-create',
@@ -22,25 +29,33 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   activatedRouteData$: Subscription;
 
   categoryList: Category[] = [];
-  categoryModal: boolean;
+  categoryModal: boolean = false;
 
-  postForm: UntypedFormGroup;
+  postForm: FormGroup;
   postForm$: Subscription;
-  postFormIsSubmitted: boolean;
+  postFormIsSubmitted: boolean = false;
 
   constructor(
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private helperService: HelperService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private postService: PostService,
     private snackbarService: SnackbarService
   ) {
-    this.postForm = this.formBuilder.group({
-      body: ['', [Validators.required, Validators.minLength(24), Validators.maxLength(7200)]],
-      title: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(36)]],
-      categoryId: [null, [Validators.required]],
-      categoryName: ['', [Validators.required]]
+    this.postForm = this.formBuilder.group<PostForm>({
+      body: this.formBuilder.control('', [
+        Validators.required,
+        Validators.minLength(24),
+        Validators.maxLength(7200)
+      ]),
+      title: this.formBuilder.control('', [
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(36)
+      ]),
+      categoryId: this.formBuilder.control(null, [Validators.required]),
+      categoryName: this.formBuilder.control('', [Validators.required])
     });
 
     const navigation: Navigation = this.router.getCurrentNavigation();
@@ -67,12 +82,16 @@ export class PostCreateComponent implements OnInit, OnDestroy {
           return this.activatedRoute.parent.data.pipe(pluck('data'), filter((post: Post) => !!post));
         })
       )
-      .subscribe((post: Post) => {
-        this.postForm.patchValue({
-          title: post.title,
-          categoryId: post.category.id,
-          categoryName: post.category.name
-        });
+      .subscribe({
+        next: (post: Post) => {
+          this.postForm.patchValue({
+            title: post.title,
+            categoryId: post.category.id,
+            categoryName: post.category.name
+          });
+        },
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route data subscription complete')
       });
 
     // prettier-ignore
@@ -82,12 +101,16 @@ export class PostCreateComponent implements OnInit, OnDestroy {
         pairwise(),
         filter(([previousValue, nextValue]): any => previousValue.categoryId !== nextValue.categoryId)
       )
-      .subscribe(([previousValue, nextValue]): any => {
-        const category: Category | undefined = this.categoryList.find((category: Category) => {
-          return category.id === nextValue.categoryId;
-        });
+      .subscribe({
+        next: ([previousValue, nextValue]): any => {
+          const category: Category | undefined = this.categoryList.find((category: Category) => {
+            return category.id === nextValue.categoryId;
+          });
 
-        this.postForm.get('categoryName').setValue(category.name);
+          this.postForm.get('categoryName').setValue(category.name);
+        },
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Post form value changes subscription complete')
       });
   }
 
@@ -115,9 +138,12 @@ export class PostCreateComponent implements OnInit, OnDestroy {
       // @ts-ignore
       delete postCreateDto.categoryName;
 
-      // prettier-ignore
-      iif(() => !!postId, this.postService.update(postId, postCreateDto), this.postService.create(postCreateDto)).subscribe(
-        (post: Post) => {
+      iif(
+        () => !!postId,
+        this.postService.update(postId, postCreateDto),
+        this.postService.create(postCreateDto)
+      ).subscribe({
+        next: (post: Post) => {
           this.router
             .navigate(['/@' + post.user.name, 'category', post.category.id, 'posts', post.id])
             .then(() => {
@@ -126,8 +152,9 @@ export class PostCreateComponent implements OnInit, OnDestroy {
               });
             });
         },
-        () => (this.postFormIsSubmitted = false)
-      );
+        error: () => (this.postFormIsSubmitted = false),
+        complete: () => console.debug('Post service update/create subscription complete')
+      });
     }
   }
 

@@ -1,7 +1,7 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { AbstractControl, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { PlatformService } from './platform.service';
 
 @Injectable()
@@ -27,7 +27,7 @@ export class HelperService {
 
   getCustomValidator(validator: string): ValidatorFn {
     return (abstractControl: AbstractControl): ValidationErrors | null => {
-      const value = abstractControl.value;
+      const value: string = abstractControl.value;
       const valid = (value: string): boolean => {
         switch (validator) {
           case 'url-youtube':
@@ -48,9 +48,9 @@ export class HelperService {
     };
   }
 
-  getFormValidation(formGroup: UntypedFormGroup): boolean {
+  getFormValidation(formGroup: FormGroup): boolean {
     if (formGroup.invalid) {
-      Object.keys(formGroup.controls).forEach(control =>
+      Object.keys(formGroup.controls).forEach((control: string) =>
         formGroup.get(control).markAsTouched({ onlySelf: true })
       );
 

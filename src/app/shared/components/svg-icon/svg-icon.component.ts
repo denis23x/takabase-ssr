@@ -1,12 +1,12 @@
 /** @format */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-svg-icon, [appSvgIcon]',
   templateUrl: './svg-icon.component.html'
 })
-export class SvgIconComponent {
+export class SvgIconComponent implements OnInit {
   @Input()
   set appSquare(square: string) {
     this.square = square;
@@ -39,4 +39,8 @@ export class SvgIconComponent {
   height = '1.25em';
 
   icon: string;
+
+  constructor() {}
+
+  ngOnInit(): void {}
 }

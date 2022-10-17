@@ -32,9 +32,8 @@ export class ExceptionComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.routeParams$ = this.activatedRoute.params
-      .pipe(pluck('status'))
-      .subscribe((status: string) => {
+    this.routeParams$ = this.activatedRoute.params.pipe(pluck('status')).subscribe({
+      next: (status: string) => {
         const statusCode: number = Number(status);
         const message: string = this.getMessageMap(statusCode);
 
@@ -44,7 +43,10 @@ export class ExceptionComponent implements OnInit, OnDestroy {
 
         this.statusCode = statusCode;
         this.message = message;
-      });
+      },
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Activated route params subscription complete')
+    });
   }
 
   ngOnDestroy(): void {
@@ -52,8 +54,10 @@ export class ExceptionComponent implements OnInit, OnDestroy {
   }
 
   getMessageMap(status: number): string | undefined {
-    const i = this.statusCodeMap.findIndex(([min, max]) => min <= status === status < max);
+    const index: number = this.statusCodeMap.findIndex(([min, max]: number[]) => {
+      return min <= status === status < max;
+    });
 
-    return this.messageMap[i];
+    return this.messageMap[index];
   }
 }

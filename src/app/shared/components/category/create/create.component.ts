@@ -8,7 +8,11 @@ import {
   HelperService,
   SnackbarService
 } from '../../../../core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+
+interface CategoryForm {
+  name: FormControl<string>;
+}
 
 @Component({
   selector: 'app-category-create',
@@ -18,17 +22,21 @@ export class CategoryCreateComponent implements OnInit {
   @Output() closed = new EventEmitter<boolean>();
   @Output() submitted = new EventEmitter<Category>();
 
-  categoryForm: UntypedFormGroup;
-  categoryFormIsSubmitted: boolean;
+  categoryForm: FormGroup;
+  categoryFormIsSubmitted: boolean = false;
 
   constructor(
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private helperService: HelperService,
     private categoryService: CategoryService,
     private snackbarService: SnackbarService
   ) {
-    this.categoryForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]]
+    this.categoryForm = this.formBuilder.group<CategoryForm>({
+      name: this.formBuilder.control('', [
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(24)
+      ])
     });
   }
 
@@ -42,8 +50,8 @@ export class CategoryCreateComponent implements OnInit {
         ...this.categoryForm.value
       };
 
-      this.categoryService.create(categoryCreateDto).subscribe(
-        (category: Category) => {
+      this.categoryService.create(categoryCreateDto).subscribe({
+        next: (category: Category) => {
           this.submitted.emit(category);
 
           this.snackbarService.success('Category created', {
@@ -52,8 +60,9 @@ export class CategoryCreateComponent implements OnInit {
 
           this.categoryFormIsSubmitted = false;
         },
-        () => (this.categoryFormIsSubmitted = false)
-      );
+        error: () => (this.categoryFormIsSubmitted = false),
+        complete: () => console.debug('Category service create subscription complete')
+      });
     }
   }
 }

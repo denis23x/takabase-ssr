@@ -29,7 +29,9 @@ export class MarkdownService {
         const prism = Prism.highlight(value, Prism.languages[language], language);
 
         return this.getTemplate(prism, language);
-      } catch (e) {}
+      } catch (error: any) {
+        console.error(error);
+      }
 
       return this.getTemplate(this.markdown.utils.escapeHtml(value));
     }
@@ -50,12 +52,12 @@ export class MarkdownService {
   ) {}
 
   getCss(): void {
-    const cssId = 'prismjs-css';
-    const cssHref = 'prismjs.css';
+    const cssId: string = 'prismjs-css';
+    const cssHref: string = 'prismjs.css';
 
     if (!this.document.getElementById(cssId)) {
-      const head = this.document.getElementsByTagName('head')[0];
-      const style = this.document.createElement('link');
+      const head: HTMLHeadElement = this.document.getElementsByTagName('head').item(0);
+      const style: HTMLLinkElement = this.document.createElement('link');
 
       style.id = cssId;
       style.rel = 'stylesheet';
@@ -103,7 +105,7 @@ export class MarkdownService {
   }
 
   getTemplate(value: string, language: string = 'none'): string {
-    const template = `
+    const template: string = `
       <pre class="line-numbers language-${language}">
         <code class="language-${language}">${value}</code>
       </pre>

@@ -21,7 +21,7 @@ export class SearchUserResolverService {
 
     const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
 
-    if (name) {
+    if (!!name.length) {
       userGetAllDto = {
         ...userGetAllDto,
         name

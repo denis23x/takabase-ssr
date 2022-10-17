@@ -2,9 +2,9 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subscription, throwError } from 'rxjs';
+import { Subscription, throwError } from 'rxjs';
 import { AuthService, User } from '../../../core';
-import { catchError, first, switchMap } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -18,7 +18,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.user$ = this.authService.userSubject.subscribe((user: User) => (this.user = user));
+    this.user$ = this.authService.userSubject.subscribe({
+      next: (user: User) => (this.user = user),
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Auth service user subscription complete')
+    });
   }
 
   ngOnDestroy(): void {
@@ -26,21 +30,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onLogout(): void {
-    // prettier-ignore
     this.authService
       .onLogout()
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          this.authService.removeAuthorization().subscribe(() => {
-            this.router
-              .navigate(['/exception', error.status])
-              .then(() => console.debug('Route changed'));
+          this.authService.removeAuthorization().subscribe({
+            // prettier-ignore
+            next: () => this.router.navigate(['/exception', error.status]).then(() => console.debug('Route changed')),
+            error: (error: any) => console.error(error),
+            complete: () => console.debug('Auth service remove authorization subscription complete')
           });
 
           return throwError(error);
         }),
         switchMap(() => this.authService.removeAuthorization())
       )
-      .subscribe(() => this.router.navigateByUrl('/').then(() => console.debug('Route changed')));
+      .subscribe({
+        next: () => this.router.navigateByUrl('/').then(() => console.debug('Route changed')),
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Auth service logout subscription complete')
+      });
   }
 }
