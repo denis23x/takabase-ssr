@@ -34,8 +34,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   postForm$: Subscription;
 
   editorMinSize = 425;
-  editorWhitespace: boolean;
-  editorScrollSync: boolean;
+  editorWhitespace: boolean = false;
+  editorScrollSync: boolean = false;
 
   constructor(
     @Inject(DOCUMENT)
@@ -57,7 +57,11 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
         pluck('data'),
         filter((post: Post) => !!post)
       )
-      .subscribe((post: Post) => this.postForm.get('body').setValue(post.body));
+      .subscribe({
+        next: (post: Post) => this.postForm.get('body').setValue(post.body),
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route data subscription complete')
+      });
   }
 
   ngAfterViewInit(): void {
@@ -110,9 +114,17 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
       position.x = mouseEvent.clientX;
       position.y = mouseEvent.clientY;
 
-      // prettier-ignore
-      this.mousemove$ = fromEvent(this.document, 'mousemove').subscribe((event: Event) => mouseMoveHandler(event as MouseEvent));
-      this.mouseup$ = fromEvent(this.document, 'mouseup').subscribe(() => mouseUpHandler());
+      this.mousemove$ = fromEvent(this.document, 'mousemove').subscribe({
+        next: (event: Event) => mouseMoveHandler(event as MouseEvent),
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Document mouse move subscription complete')
+      });
+
+      this.mouseup$ = fromEvent(this.document, 'mouseup').subscribe({
+        next: () => mouseUpHandler(),
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Document mouse up subscription complete')
+      });
     };
 
     const mouseMoveHandler = (mouseEvent: MouseEvent): void => {
@@ -133,7 +145,11 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mousedown$ = fromEvent(this.document, 'mousedown')
       // @ts-ignore
       .pipe(filter((event: Event) => event.target.parentElement.id === 'grip-horizontal'))
-      .subscribe((event: Event) => mouseDownHandler(event as MouseEvent));
+      .subscribe({
+        next: (event: Event) => mouseDownHandler(event as MouseEvent),
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Document mouse down subscription complete')
+      });
   }
 
   onSubmitPostForm(): void {

@@ -31,9 +31,9 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
   click$: Subscription;
 
-  disabled = false;
+  disabled: boolean = false;
 
-  state = false;
+  state: boolean = false;
 
   constructor(private platformService: PlatformService, private elementRef: ElementRef) {}
 
@@ -43,12 +43,16 @@ export class DropdownComponent implements OnInit, OnDestroy {
         debounceTime(10),
         filter(() => !this.disabled)
       )
-      .subscribe((event: any) => {
-        if (this.state && this.content.nativeElement.contains(event.target)) {
-          this.setState(false);
-        } else if (this.target.nativeElement.contains(event.target)) {
-          this.setState(true);
-        }
+      .subscribe({
+        next: (event: any) => {
+          if (this.state && this.content.nativeElement.contains(event.target)) {
+            this.setState(false);
+          } else if (this.target.nativeElement.contains(event.target)) {
+            this.setState(true);
+          }
+        },
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Element reference click subscription complete')
       });
   }
 

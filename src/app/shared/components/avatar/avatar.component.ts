@@ -22,7 +22,7 @@ export class AvatarComponent implements OnInit, OnDestroy {
   userSubscription$: Subscription;
 
   avatar: string;
-  avatarSize: number;
+  avatarSize: number = 38;
 
   ngOnInit(): void {
     if (this.platformService.isBrowser()) {
@@ -37,9 +37,13 @@ export class AvatarComponent implements OnInit, OnDestroy {
         )
       )
         .pipe(debounceTime(10))
-        .subscribe(() => {
-          this.avatarSize = this.elementRef.nativeElement.clientWidth;
-          this.avatar = this.user$.getValue().avatar ? this.getAvatar() : this.getJdenticon();
+        .subscribe({
+          next: () => {
+            this.avatarSize = this.elementRef.nativeElement.clientWidth;
+            this.avatar = this.user$.getValue().avatar ? this.getAvatar() : this.getJdenticon();
+          },
+          error: (error: any) => console.error(error),
+          complete: () => console.debug('User/resize subscription complete')
         });
     }
   }
@@ -51,13 +55,15 @@ export class AvatarComponent implements OnInit, OnDestroy {
   getAvatar(): string {
     const user: User = this.user$.getValue();
 
-    return `<img
-      class="block object-cover"
-      loading="lazy"
-      width="${this.avatarSize}"
-      height="${this.avatarSize}"
-      src="${user.avatar}"
-      alt="${user.name}">`;
+    return `
+      <img
+        class="block object-cover"
+        loading="lazy"
+        width="${this.avatarSize}"
+        height="${this.avatarSize}"
+        src="${user.avatar}"
+        alt="${user.name}">
+    `;
   }
 
   getJdenticon(): string {

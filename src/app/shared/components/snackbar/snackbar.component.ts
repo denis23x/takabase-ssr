@@ -15,11 +15,15 @@ export class SnackbarComponent implements OnInit, OnDestroy {
   constructor(private snackbarService: SnackbarService, private helperService: HelperService) {}
 
   ngOnInit() {
-    this.snackbar$ = this.snackbarService.snackbar$.subscribe((snack: Snack) => {
-      this.onPush({
-        uuid: this.helperService.getUUID(),
-        ...snack
-      });
+    this.snackbar$ = this.snackbarService.snackbar$.subscribe({
+      next: (snack: Snack) => {
+        this.onPush({
+          uuid: this.helperService.getUUID(),
+          ...snack
+        });
+      },
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Snackbar service snackbar subscription complete')
     });
   }
 

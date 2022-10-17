@@ -14,12 +14,12 @@ export class SearchUserComponent implements OnInit, OnDestroy {
   activatedRouteData$: Subscription;
   activatedRouteQueryParams$: Subscription;
 
-  page = 1;
-  size = 10;
+  page: number = 1;
+  size: number = 10;
 
   userList: User[] = [];
-  userListHasMore: boolean;
-  userListLoading: boolean;
+  userListHasMore: boolean = false;
+  userListLoading: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -28,12 +28,14 @@ export class SearchUserComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRouteData$ = this.activatedRoute.data
-      .pipe(pluck('data'))
-      .subscribe((userList: User[]) => {
+    this.activatedRouteData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe({
+      next: (userList: User[]) => {
         this.userList = userList;
         this.userListHasMore = userList.length === this.size;
-      });
+      },
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Activated route data subscription complete')
+    });
 
     this.activatedRouteQueryParams$ = this.activatedRoute.parent.queryParams
       .pipe(
@@ -47,7 +49,11 @@ export class SearchUserComponent implements OnInit, OnDestroy {
           this.userListHasMore = false;
         })
       )
-      .subscribe(() => this.getUserList(false));
+      .subscribe({
+        next: () => this.getUserList(false),
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route parent query params subscription complete')
+      });
   }
 
   ngOnDestroy(): void {
@@ -60,21 +66,24 @@ export class SearchUserComponent implements OnInit, OnDestroy {
       size: this.size
     };
 
-    const name: string = String(
-      this.activatedRoute.parent.snapshot.queryParamMap.get('query') || ''
-    );
+    // prettier-ignore
+    const name: string = String(this.activatedRoute.parent.snapshot.queryParamMap.get('query') || '');
 
-    if (name) {
+    if (!!name.length) {
       userGetAllDto = {
         ...userGetAllDto,
         name
       };
     }
 
-    this.userService.getAll(userGetAllDto).subscribe((userList: User[]) => {
-      this.userList = concat ? this.userList.concat(userList) : userList;
-      this.userListLoading = false;
-      this.userListHasMore = userList.length === this.size;
+    this.userService.getAll(userGetAllDto).subscribe({
+      next: (userList: User[]) => {
+        this.userList = concat ? this.userList.concat(userList) : userList;
+        this.userListLoading = false;
+        this.userListHasMore = userList.length === this.size;
+      },
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('User service get all subscription complete')
     });
   }
 

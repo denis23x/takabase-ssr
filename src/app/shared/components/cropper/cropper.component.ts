@@ -4,7 +4,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
-import { FileService } from '../../../core';
+import { FileCreateDto, FileService } from '../../../core';
 
 @Component({
   selector: 'app-cropper, [appCropper]',
@@ -12,7 +12,7 @@ import { FileService } from '../../../core';
 })
 export class CropperComponent implements OnInit {
   @Output() closed = new EventEmitter<boolean>();
-  @Output() submitted = new EventEmitter<any>();
+  @Output() submitted = new EventEmitter<FileCreateDto>();
 
   @Input()
   set appFile(file: File) {
@@ -148,10 +148,14 @@ export class CropperComponent implements OnInit {
 
     formData.append('avatars', file);
 
-    this.fileService.create(formData).subscribe((res: any) => {
-      this.submitted.emit(res);
+    this.fileService.create(formData).subscribe({
+      next: (fileCreateDto: FileCreateDto) => {
+        this.submitted.emit(fileCreateDto);
 
-      this.onClose();
+        this.onClose();
+      },
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('File service create subscription complete')
     });
   }
 }

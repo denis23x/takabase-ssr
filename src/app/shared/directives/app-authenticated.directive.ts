@@ -15,7 +15,7 @@ export class AppAuthenticatedDirective implements OnInit, OnDestroy {
   }
 
   authenticated$: Subscription;
-  authenticated: boolean;
+  authenticated: boolean = false;
 
   constructor(
     private templateRef: TemplateRef<any>,
@@ -26,12 +26,17 @@ export class AppAuthenticatedDirective implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.authenticated$ = this.authService.userAuthenticated
       .pipe(tap(() => this.viewContainerRef.clear()))
-      .subscribe(isAuthenticated => {
-        if ((isAuthenticated && this.authenticated) || (!isAuthenticated && !this.authenticated)) {
-          this.viewContainerRef.createEmbeddedView(this.templateRef);
-        } else {
-          this.viewContainerRef.clear();
-        }
+      .subscribe({
+        next: (isAuthenticated: boolean) => {
+          // prettier-ignore
+          if ((isAuthenticated && this.authenticated) || (!isAuthenticated && !this.authenticated)) {
+            this.viewContainerRef.createEmbeddedView(this.templateRef);
+          } else {
+            this.viewContainerRef.clear();
+          }
+        },
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Auth service user authenticated subscription complete')
       });
   }
 

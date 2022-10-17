@@ -1,8 +1,14 @@
 /** @format */
 
 import { Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HelperService } from '../core';
+
+interface InputForm {
+  email: FormControl<string>;
+  password: FormControl<string>;
+  query: FormControl<string>;
+}
 
 @Component({
   selector: 'app-ui',
@@ -28,14 +34,16 @@ export class UiComponent {
 
   buttonList: string[] = ['primary', 'info', 'success', 'warning', 'danger', 'transparent'];
 
-  inputForm: UntypedFormGroup;
+  inputForm: FormGroup;
 
-  constructor(private formBuilder: UntypedFormBuilder, private helperService: HelperService) {
-    this.inputForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      // prettier-ignore
-      password: ['', [Validators.required, Validators.pattern(this.helperService.getRegex('password'))]],
-      query: ['', [Validators.minLength(4), Validators.maxLength(24)]]
+  constructor(private formBuilder: FormBuilder, private helperService: HelperService) {
+    this.inputForm = this.formBuilder.group<InputForm>({
+      email: this.formBuilder.control('', [Validators.required, Validators.email]),
+      password: this.formBuilder.control('', [
+        Validators.required,
+        Validators.pattern(this.helperService.getRegex('password'))
+      ]),
+      query: this.formBuilder.control('', [Validators.minLength(4), Validators.maxLength(24)])
     });
   }
 }

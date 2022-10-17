@@ -18,9 +18,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this.activatedRouteData$ = this.activatedRoute.data
-      .pipe(pluck('data'))
-      .subscribe((user: User) => (this.user = user));
+    this.activatedRouteData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe({
+      next: (user: User) => (this.user = user),
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Activated route data subscription complete')
+    });
   }
 
   ngOnDestroy() {

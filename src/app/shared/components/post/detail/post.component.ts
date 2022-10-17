@@ -25,11 +25,17 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.user$ = this.authService.userSubject.subscribe((user: User) => (this.user = user));
+    this.user$ = this.authService.userSubject.subscribe({
+      next: (user: User) => (this.user = user),
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Auth service user subscription complete')
+    });
 
-    this.activatedRouteData$ = this.activatedRoute.data
-      .pipe(pluck('data'))
-      .subscribe((post: Post) => (this.post = post));
+    this.activatedRouteData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe({
+      next: (post: Post) => (this.post = post),
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Activated route data subscription complete')
+    });
   }
 
   ngOnDestroy(): void {

@@ -14,12 +14,12 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
   activatedRouteData$: Subscription;
   activatedRouteQueryParams$: Subscription;
 
-  page = 1;
-  size = 10;
+  page: number = 1;
+  size: number = 10;
 
   categoryList: Category[] = [];
-  categoryListHasMore: boolean;
-  categoryListLoading: boolean;
+  categoryListHasMore: boolean = false;
+  categoryListLoading: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -28,12 +28,14 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRouteData$ = this.activatedRoute.data
-      .pipe(pluck('data'))
-      .subscribe((categoryList: Category[]) => {
+    this.activatedRouteData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe({
+      next: (categoryList: Category[]) => {
         this.categoryList = categoryList;
         this.categoryListHasMore = categoryList.length === this.size;
-      });
+      },
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Activated route data subscription complete')
+    });
 
     this.activatedRouteQueryParams$ = this.activatedRoute.parent.queryParams
       .pipe(
@@ -47,7 +49,11 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
           this.categoryListHasMore = false;
         })
       )
-      .subscribe(() => this.getCategoryList(false));
+      .subscribe({
+        next: () => this.getCategoryList(false),
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route parent query params subscription complete')
+      });
   }
 
   ngOnDestroy(): void {
@@ -61,21 +67,24 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
       scope: ['user']
     };
 
-    const name: string = String(
-      this.activatedRoute.parent.snapshot.queryParamMap.get('query') || ''
-    );
+    // prettier-ignore
+    const name: string = String(this.activatedRoute.parent.snapshot.queryParamMap.get('query') || '');
 
-    if (name) {
+    if (!!name.length) {
       categoryGetAllDto = {
         ...categoryGetAllDto,
         name
       };
     }
 
-    this.categoryService.getAll(categoryGetAllDto).subscribe((categoryList: Category[]) => {
-      this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
-      this.categoryListLoading = false;
-      this.categoryListHasMore = categoryList.length === this.size;
+    this.categoryService.getAll(categoryGetAllDto).subscribe({
+      next: (categoryList: Category[]) => {
+        this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
+        this.categoryListLoading = false;
+        this.categoryListHasMore = categoryList.length === this.size;
+      },
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Category service get all subscription complete')
     });
   }
 

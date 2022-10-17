@@ -39,8 +39,8 @@ export class OverlayComponent implements OnInit, OnDestroy {
     this.platformService.overlayUUIDList.next(this.platformService.overlayUUIDList.getValue().filter((uuid: string) => uuid !== this.uuid));
   }
 
-  onClick(event: MouseEvent): void {
-    if (event.target === event.currentTarget) {
+  onClick(mouseEvent: MouseEvent): void {
+    if (mouseEvent.target === mouseEvent.currentTarget) {
       this.platformService.setScrollToggle(false);
 
       this.closed.emit();

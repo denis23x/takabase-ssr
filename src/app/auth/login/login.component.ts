@@ -59,7 +59,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (params: Params) => this.onLogin(params),
         error: (error: any) => console.error(error),
-        complete: () => console.debug('Query params subscription complete')
+        complete: () => console.debug('Activated route query params subscription complete')
       });
   }
 

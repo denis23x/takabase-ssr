@@ -2,7 +2,7 @@
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { pluck, switchMap } from 'rxjs/operators';
-import { AuthService, Session, SnackbarService, User } from '../../core';
+import { AuthService, LogoutDto, Session, SnackbarService, User } from '../../core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -35,14 +35,18 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
           return this.authService.getFingerprint();
         })
       )
-      .subscribe((fingerprint: string) => {
-        // prettier-ignore
-        const [sessionCurrent, ...sessionList]: Session[] = this.user.sessions.sort((session: Session) => {
-          return session.fingerprint === fingerprint ? -1 : 1;
-        });
+      .subscribe({
+        next: (fingerprint: string) => {
+          // prettier-ignore
+          const [sessionCurrent, ...sessionList]: Session[] = this.user.sessions.sort((session: Session) => {
+            return session.fingerprint === fingerprint ? -1 : 1;
+          });
 
-        this.sessionCurrent = sessionCurrent;
-        this.sessionList = sessionList;
+          this.sessionCurrent = sessionCurrent;
+          this.sessionList = sessionList;
+        },
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route parent data subscription complete')
       });
   }
 
@@ -51,10 +55,18 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
   }
 
   onSessionTerminate(id: number): void {
-    this.authService.onLogout({ id }).subscribe(() => {
-      this.sessionList = this.sessionList.filter((session: Session) => session.id !== id);
+    const logoutDto: LogoutDto = {
+      id
+    };
 
-      this.snackbarService.success('Session terminated');
+    this.authService.onLogout(logoutDto).subscribe({
+      next: () => {
+        this.sessionList = this.sessionList.filter((session: Session) => session.id !== id);
+
+        this.snackbarService.success('Session terminated');
+      },
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Auth service logout subscription complete')
     });
   }
 }

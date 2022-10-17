@@ -22,7 +22,7 @@ export class SearchCategoryResolverService {
 
     const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
 
-    if (name) {
+    if (!!name.length) {
       categoryGetAllDto = {
         ...categoryGetAllDto,
         name

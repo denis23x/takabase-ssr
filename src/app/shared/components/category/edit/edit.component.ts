@@ -8,8 +8,13 @@ import {
   HelperService,
   SnackbarService
 } from '../../../../core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { iif } from 'rxjs';
+
+interface CategoryForm {
+  id: FormControl<number>;
+  name: FormControl<string>;
+}
 
 @Component({
   selector: 'app-category-edit',
@@ -30,19 +35,23 @@ export class CategoryEditComponent implements OnInit {
   }
 
   category: Category;
-  categoryForm: UntypedFormGroup;
-  categoryFormIsSubmitted: boolean;
-  categoryFormIsToggled: boolean;
+  categoryForm: FormGroup;
+  categoryFormIsSubmitted: boolean = false;
+  categoryFormIsToggled: boolean = false;
 
   constructor(
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private helperService: HelperService,
     private categoryService: CategoryService,
     private snackbarService: SnackbarService
   ) {
-    this.categoryForm = this.formBuilder.group({
-      id: [null, [Validators.required]],
-      name: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(24)]]
+    this.categoryForm = this.formBuilder.group<CategoryForm>({
+      id: this.formBuilder.control(null, [Validators.required]),
+      name: this.formBuilder.control('', [
+        Validators.required,
+        Validators.minLength(4),
+        Validators.maxLength(24)
+      ])
     });
   }
 
@@ -84,8 +93,8 @@ export class CategoryEditComponent implements OnInit {
         () => this.categoryFormIsToggled,
         this.categoryService.delete(categoryId),
         this.categoryService.update(categoryId, categoryUpdateDto)
-      ).subscribe(
-        (category: Category) => {
+      ).subscribe({
+        next: (category: Category) => {
           if (this.categoryFormIsToggled) {
             category = {
               ...category,
@@ -99,8 +108,9 @@ export class CategoryEditComponent implements OnInit {
 
           this.categoryFormIsSubmitted = false;
         },
-        () => (this.categoryFormIsSubmitted = false)
-      );
+        error: () => (this.categoryFormIsSubmitted = false),
+        complete: () => console.debug('Category service delete/update subscription complete')
+      });
     }
   }
 }

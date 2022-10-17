@@ -5,8 +5,12 @@ import { MarkdownControl, MarkdownService, HelperService, PlatformService } from
 import { MarkdownControlList } from './markdown-control-list';
 import { BehaviorSubject, fromEvent, merge, Subscription, of, EMPTY } from 'rxjs';
 import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DOCUMENT } from '@angular/common';
+
+interface UrlForm {
+  url: FormControl<string>;
+}
 
 @Component({
   selector: 'app-markdown, [appMarkdown]',
@@ -30,9 +34,9 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
   controlList: MarkdownControl[] = MarkdownControlList();
 
-  scrollSync: boolean;
+  scrollSync: boolean = false;
   scrollSync$: Subscription;
-  scrollSyncIsBusy: boolean;
+  scrollSyncIsBusy: boolean = false;
 
   textareaInput$: Subscription;
   textareaId: string;
@@ -41,24 +45,24 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   previewId: string;
   preview: HTMLElement;
 
-  historyRemember = true;
+  historyRemember: boolean = true;
   history$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
-  urlForm: UntypedFormGroup;
-  urlFormControl = {} as MarkdownControl;
-  urlFormIsSubmitted: boolean;
-  urlModal: boolean;
+  urlForm: FormGroup;
+  urlFormControl: MarkdownControl = {} as MarkdownControl;
+  urlFormIsSubmitted: boolean = false;
+  urlModal: boolean = false;
 
   constructor(
     @Inject(DOCUMENT)
     private document: Document,
     private markdownService: MarkdownService,
     private platformService: PlatformService,
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private helperService: HelperService
   ) {
-    this.urlForm = this.formBuilder.group({
-      url: ['']
+    this.urlForm = this.formBuilder.group<UrlForm>({
+      url: this.formBuilder.control('', [this.helperService.getCustomValidator('url-image')])
     });
   }
 
@@ -72,16 +76,20 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.textareaInput$ = fromEvent(this.textarea, 'input')
         .pipe(startWith(EMPTY), debounceTime(200))
-        .subscribe(() => {
-          this.markdownService.getRender(this.textarea.value, this.preview);
+        .subscribe({
+          next: () => {
+            this.markdownService.getRender(this.textarea.value, this.preview);
 
-          if (this.historyRemember) {
-            const value = this.textarea.value;
+            if (this.historyRemember) {
+              const value: string = this.textarea.value;
 
-            this.history$.next(value ? this.history$.getValue().concat([value]) : []);
-          } else {
-            this.historyRemember = true;
-          }
+              this.history$.next(value ? this.history$.getValue().concat([value]) : []);
+            } else {
+              this.historyRemember = true;
+            }
+          },
+          error: (error: any) => console.error(error),
+          complete: () => console.debug('Textarea input subscription complete')
         });
 
       this.scrollSync$ = merge(
@@ -93,7 +101,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
           debounceTime(10),
           switchMap((event: Event) => {
             const { id } = event.target as Element;
-            const elementList = ['textarea', 'preview'];
+            const elementList: string[] = ['textarea', 'preview'];
 
             return of([
               this[elementList[+(id === 'preview')]],
@@ -101,12 +109,16 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
             ]);
           })
         )
-        .subscribe(([element, target]: HTMLTextAreaElement[] | HTMLElement[]) => {
-          if (!this.scrollSyncIsBusy) {
-            target.scrollTop = this.getScroll(element, target);
-          }
+        .subscribe({
+          next: ([element, target]: HTMLTextAreaElement[] | HTMLElement[]) => {
+            if (!this.scrollSyncIsBusy) {
+              target.scrollTop = this.getScroll(element, target);
+            }
 
-          this.scrollSyncIsBusy = !this.scrollSyncIsBusy;
+            this.scrollSyncIsBusy = !this.scrollSyncIsBusy;
+          },
+          error: (error: any) => console.error(error),
+          complete: () => console.debug('Textarea/preview scroll subscription complete')
         });
     }
   }
@@ -130,11 +142,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     if (key.includes('url')) {
       const { selection } = this.markdownService.getTextarea(this.textarea);
 
-      this.urlForm.controls['url'].setValidators([
-        this.helperService.getCustomValidator(key),
-        Validators.required
-      ]);
-
+      // prettier-ignore
+      this.urlForm.controls['url'].setValidators([this.helperService.getCustomValidator(key), Validators.required]);
       this.urlForm.get('url').setValue(selection);
       this.urlFormControl = control;
       this.urlModal = true;
@@ -158,9 +167,9 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const valueHandler = (): string => {
-      const url = this.urlForm.get('url').value;
+      const url: string = this.urlForm.get('url').value;
 
-      if (url) {
+      if (!!url.length) {
         this.urlFormControl = {} as MarkdownControl;
         this.urlForm.reset();
 
@@ -190,12 +199,12 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getScroll(a: HTMLTextAreaElement | HTMLElement, b: HTMLTextAreaElement | HTMLElement): number {
-    const aScrollTop = a.scrollTop;
-    const aMaxHeight = a.scrollHeight - a.clientHeight;
-    const aScrollPosition = Math.round((aScrollTop / aMaxHeight) * 100);
+    const aScrollTop: number = a.scrollTop;
+    const aMaxHeight: number = a.scrollHeight - a.clientHeight;
+    const aScrollPosition: number = Math.round((aScrollTop / aMaxHeight) * 100);
 
-    const bMaxHeight = b.scrollHeight - b.clientHeight;
-    const bScrollPosition = Math.round(bMaxHeight * (aScrollPosition / 100));
+    const bMaxHeight: number = b.scrollHeight - b.clientHeight;
+    const bScrollPosition: number = Math.round(bMaxHeight * (aScrollPosition / 100));
 
     return bScrollPosition;
   }

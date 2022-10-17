@@ -21,7 +21,7 @@ export class AppScrollIntoViewDirective implements OnInit, OnDestroy {
 
   root: HTMLElement;
 
-  active: boolean;
+  active: boolean = false;
 
   constructor(private elementRef: ElementRef, private platformService: PlatformService) {}
 
@@ -30,11 +30,8 @@ export class AppScrollIntoViewDirective implements OnInit, OnDestroy {
       this.intersectionObserver = new IntersectionObserver(
         (entries: IntersectionObserverEntry[]) =>
           entries.forEach((entry: IntersectionObserverEntry) => {
-            return (
-              this.active &&
-              !entry.isIntersecting &&
-              entry.target.scrollIntoView({ block: 'nearest' })
-            );
+            // prettier-ignore
+            return (this.active && !entry.isIntersecting && entry.target.scrollIntoView({ block: 'nearest' }));
           }),
         {
           root: this.root,
