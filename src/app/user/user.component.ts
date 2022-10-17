@@ -1,10 +1,10 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, Event as RouterEvent } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, Event as RouterEvent, Data } from '@angular/router';
 import { combineLatest, EMPTY, of, Subscription } from 'rxjs';
 import { User, Category, AuthService } from '../core';
-import { filter, pluck, startWith, switchMap } from 'rxjs/operators';
+import { filter, map, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user',
@@ -32,7 +32,7 @@ export class UserComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRouteData$ = combineLatest([
       this.authService.userSubject,
-      this.activatedRoute.data.pipe(pluck('data'))
+      this.activatedRoute.data.pipe(map((data: Data) => data.data))
     ]).subscribe({
       next: ([userAuthed, [user, categoryList]]: [User, [User, Category[]]]) => {
         this.userMe = userAuthed.id === user.id;
@@ -49,7 +49,7 @@ export class UserComponent implements OnInit, OnDestroy {
         filter((routerEvent: RouterEvent) => routerEvent instanceof NavigationEnd),
         startWith(EMPTY),
         switchMap(() => of(this.activatedRoute.snapshot.firstChild.params)),
-        pluck('categoryId')
+        map((data: Data) => data.categoryId)
       )
       .subscribe({
         next: (categoryId: string) => {

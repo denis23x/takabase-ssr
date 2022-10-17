@@ -2,8 +2,8 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PlatformService, Post } from '../../../core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { pluck } from 'rxjs/operators';
+import { ActivatedRoute, Data, Params } from '@angular/router';
+import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { Share } from '../../../core/models/share.model';
 
@@ -28,26 +28,28 @@ export class ShareComponent implements OnInit, OnDestroy {
   constructor(private platformService: PlatformService, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.activatedRouteData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe({
-      next: (post: Post) => {
-        if (this.platformService.isBrowser()) {
-          const window: Window = this.platformService.getWindow();
+    this.activatedRouteData$ = this.activatedRoute.data
+      .pipe(map((data: Data) => data.data))
+      .subscribe({
+        next: (post: Post) => {
+          if (this.platformService.isBrowser()) {
+            const window: Window = this.platformService.getWindow();
 
-          this.shareUrl = window.location.href;
-        }
+            this.shareUrl = window.location.href;
+          }
 
-        const shareList: string[] = Object.keys(this.shareMap);
+          const shareList: string[] = Object.keys(this.shareMap);
 
-        shareList.forEach((share: string) => {
-          const params: Params = this.getParams(share, post);
-          const encodedURI: string = this.getEncodedURI(params);
+          shareList.forEach((share: string) => {
+            const params: Params = this.getParams(share, post);
+            const encodedURI: string = this.getEncodedURI(params);
 
-          this.shareMap[share] = [this.shareMap[share], encodedURI].join('?');
-        });
-      },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Activated route data subscription complete')
-    });
+            this.shareMap[share] = [this.shareMap[share], encodedURI].join('?');
+          });
+        },
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route data subscription complete')
+      });
   }
 
   ngOnDestroy(): void {

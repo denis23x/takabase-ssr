@@ -14,8 +14,8 @@ import {
   FileGetOneDto,
   FileCreateDto
 } from '../../core';
-import { pluck, tap } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { map, tap } from 'rxjs/operators';
+import { ActivatedRoute, Data } from '@angular/router';
 
 interface AvatarForm {
   url: FormControl<string>;
@@ -68,7 +68,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRouteData$ = this.activatedRoute.parent.data
       .pipe(
-        pluck('data'),
+        map((data: Data) => data.data),
         tap((user: User) => (this.user = user))
       )
       .subscribe({

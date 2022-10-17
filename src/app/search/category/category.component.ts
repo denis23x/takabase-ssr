@@ -1,8 +1,8 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { pluck, skip, tap } from 'rxjs/operators';
+import { ActivatedRoute, Data, Router } from '@angular/router';
+import { map, skip, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { CategoryService, Category, CategoryGetAllDto } from '../../core';
 
@@ -28,14 +28,16 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRouteData$ = this.activatedRoute.data.pipe(pluck('data')).subscribe({
-      next: (categoryList: Category[]) => {
-        this.categoryList = categoryList;
-        this.categoryListHasMore = categoryList.length === this.size;
-      },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Activated route data subscription complete')
-    });
+    this.activatedRouteData$ = this.activatedRoute.data
+      .pipe(map((data: Data) => data.data))
+      .subscribe({
+        next: (categoryList: Category[]) => {
+          this.categoryList = categoryList;
+          this.categoryListHasMore = categoryList.length === this.size;
+        },
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route data subscription complete')
+      });
 
     this.activatedRouteQueryParams$ = this.activatedRoute.parent.queryParams
       .pipe(

@@ -2,8 +2,8 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { pluck } from 'rxjs/operators';
-import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 
 @Component({
   templateUrl: './exception.component.html'
@@ -32,21 +32,23 @@ export class ExceptionComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.routeParams$ = this.activatedRoute.params.pipe(pluck('status')).subscribe({
-      next: (status: string) => {
-        const statusCode: number = Number(status);
-        const message: string = this.getMessageMap(statusCode);
+    this.routeParams$ = this.activatedRoute.params
+      .pipe(map((data: Data) => data.status))
+      .subscribe({
+        next: (status: string) => {
+          const statusCode: number = Number(status);
+          const message: string = this.getMessageMap(statusCode);
 
-        if (!statusCode || !message) {
-          this.router.navigate([[], 520]).then(() => console.debug('Route changed'));
-        }
+          if (!statusCode || !message) {
+            this.router.navigate([[], 520]).then(() => console.debug('Route changed'));
+          }
 
-        this.statusCode = statusCode;
-        this.message = message;
-      },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Activated route params subscription complete')
-    });
+          this.statusCode = statusCode;
+          this.message = message;
+        },
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route params subscription complete')
+      });
   }
 
   ngOnDestroy(): void {

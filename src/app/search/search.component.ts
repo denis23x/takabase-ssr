@@ -1,9 +1,9 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { debounceTime, filter, pluck } from 'rxjs/operators';
+import { debounceTime, filter, map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 interface SearchForm {
@@ -31,11 +31,13 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.routeQueryParams$ = this.activatedRoute.queryParams.pipe(pluck('query')).subscribe({
-      next: (query: string = '') => this.searchForm.setValue({ query }),
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Activated route query params subscription complete')
-    });
+    this.routeQueryParams$ = this.activatedRoute.queryParams
+      .pipe(map((data: Data) => data.query))
+      .subscribe({
+        next: (query: string = '') => this.searchForm.setValue({ query }),
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route query params subscription complete')
+      });
 
     this.searchForm$ = this.searchForm.valueChanges
       .pipe(

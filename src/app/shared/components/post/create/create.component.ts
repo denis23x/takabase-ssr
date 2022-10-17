@@ -10,9 +10,9 @@ import {
   SnackbarService
 } from '../../../../core';
 import { iif, Subscription } from 'rxjs';
-import { filter, pairwise, pluck, startWith, switchMap } from 'rxjs/operators';
+import { filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Navigation, Router } from '@angular/router';
+import { ActivatedRoute, Data, Navigation, Router } from '@angular/router';
 
 interface PostForm {
   body: FormControl<string>;
@@ -74,12 +74,14 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRouteData$ = this.activatedRoute.data
       .pipe(
-        pluck('data'),
+        map((data: Data) => data.data),
         switchMap((categoryList: Category[]) => {
           this.categoryList = categoryList;
 
-          // prettier-ignore
-          return this.activatedRoute.parent.data.pipe(pluck('data'), filter((post: Post) => !!post));
+          return this.activatedRoute.parent.data.pipe(
+            map((data: Data) => data.data),
+            filter((post: Post) => !!post)
+          );
         })
       )
       .subscribe({
