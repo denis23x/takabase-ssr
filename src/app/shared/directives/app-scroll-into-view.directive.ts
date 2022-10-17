@@ -8,8 +8,8 @@ import { PlatformService } from '../../core';
 })
 export class AppScrollIntoViewDirective implements OnInit, OnDestroy {
   @Input()
-  set appRoot(root: HTMLElement) {
-    this.root = root;
+  set appRoot(rootHTMLElement: HTMLElement) {
+    this.rootHTMLElement = rootHTMLElement;
   }
 
   @Input()
@@ -19,7 +19,7 @@ export class AppScrollIntoViewDirective implements OnInit, OnDestroy {
 
   intersectionObserver: IntersectionObserver;
 
-  root: HTMLElement;
+  rootHTMLElement: HTMLElement;
 
   active: boolean = false;
 
@@ -27,17 +27,17 @@ export class AppScrollIntoViewDirective implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.platformService.isBrowser()) {
-      this.intersectionObserver = new IntersectionObserver(
-        (entries: IntersectionObserverEntry[]) =>
-          entries.forEach((entry: IntersectionObserverEntry) => {
-            // prettier-ignore
-            return (this.active && !entry.isIntersecting && entry.target.scrollIntoView({ block: 'nearest' }));
-          }),
-        {
-          root: this.root,
-          threshold: 1
-        }
-      );
+      const options: IntersectionObserverInit = {
+        root: this.rootHTMLElement,
+        threshold: 1
+      };
+
+      // prettier-ignore
+      this.intersectionObserver = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+        entries.forEach((entry: IntersectionObserverEntry) => {
+          return (this.active && !entry.isIntersecting && entry.target.scrollIntoView({ block: 'nearest' }));
+        })
+      }, options);
 
       this.intersectionObserver.observe(this.elementRef.nativeElement);
     }
