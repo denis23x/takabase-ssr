@@ -34,7 +34,7 @@ export class PostCreateResolverService {
           .navigate(['/exception', error.status])
           .then(() => console.debug('Route changed'));
 
-        return throwError(error);
+        return throwError(() => new Error('Post create resolver error'));
       })
     );
   }

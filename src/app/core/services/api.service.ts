@@ -37,7 +37,7 @@ export class ApiService {
       duration: getDuration(httpErrorResponse.error)
     });
 
-    return throwError(httpErrorResponse);
+    return throwError(() => new Error('Api service error'));
   }
 
   get(url: string, params?: any, options?: any): Observable<any> {

@@ -30,10 +30,7 @@ export class MarkdownResolverService {
         mergeMap((post: Post) => combineLatest([of(post), postUser$])),
         switchMap(([post, user]: [Post, User]) => {
           if (user.id !== post.user.id) {
-            return throwError({
-              status: 403,
-              message: 'Forbidden'
-            });
+            return throwError(() => new Error('Forbidden'));
           }
 
           return of(post);
@@ -43,7 +40,7 @@ export class MarkdownResolverService {
             .navigate(['/exception', error.status])
             .then(() => console.debug('Route changed'));
 
-          return throwError(error);
+          return throwError(() => new Error('Markdown resolver error'));
         })
       );
     }
