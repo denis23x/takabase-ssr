@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Data } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Category, Post, PostGetAllDto, PostService, User } from '../../../../core';
-import { map, skip, tap } from 'rxjs/operators';
+import { first, map, skip, tap } from 'rxjs/operators';
 
 // prettier-ignore
 export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto => {
@@ -51,7 +51,6 @@ export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, activatedRouteSna
   templateUrl: './category.component.html'
 })
 export class CategoryDetailComponent {
-  activatedRouteData$: Subscription;
   activatedRouteQueryParams$: Subscription;
 
   page: number = 1;
@@ -69,8 +68,11 @@ export class CategoryDetailComponent {
     // prettier-ignore
     this.postPath = this.activatedRoute.snapshot.parent.routeConfig.component.name === 'UserComponent' ? 'posts' : './';
 
-    this.activatedRouteData$ = this.activatedRoute.data
-      .pipe(map((data: Data) => data.data))
+    this.activatedRoute.data
+      .pipe(
+        first(),
+        map((data: Data) => data.data)
+      )
       .subscribe({
         next: (postList: Post[]) => {
           this.page = 1;
@@ -80,8 +82,7 @@ export class CategoryDetailComponent {
           this.postListLoading = false;
           this.postListHasMore = postList.length === this.size;
         },
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route data subscription complete')
+        error: (error: any) => console.error(error)
       });
 
     this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
@@ -98,13 +99,12 @@ export class CategoryDetailComponent {
       )
       .subscribe({
         next: () => this.getPostList(false),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route query params subscription complete')
+        error: (error: any) => console.error(error)
       });
   }
 
   ngOnDestroy(): void {
-    [this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
+    [this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
   }
 
   getPostList(concat: boolean): void {
@@ -124,8 +124,7 @@ export class CategoryDetailComponent {
         this.postListLoading = false;
         this.postListHasMore = postList.length === this.size;
       },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Post service get all subscription complete')
+      error: (error: any) => console.error(error)
     });
   }
 

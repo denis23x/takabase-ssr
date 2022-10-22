@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { combineLatest, EMPTY, Observable, of, throwError } from 'rxjs';
-import { catchError, first, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, filter, first, mergeMap, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService, Post, PostGetOneDto, PostService, User } from '../core';
 
@@ -30,17 +30,22 @@ export class MarkdownResolverService {
         mergeMap((post: Post) => combineLatest([of(post), postUser$])),
         switchMap(([post, user]: [Post, User]) => {
           if (user.id !== post.user.id) {
-            return throwError(() => new Error('Forbidden'));
+            return throwError(() => {
+              return {
+                status: 403,
+                message: 'Forbidden'
+              };
+            });
           }
 
           return of(post);
         }),
-        catchError((error: HttpErrorResponse) => {
+        catchError((httpErrorResponse: HttpErrorResponse) => {
           this.router
-            .navigate(['/exception', error.status])
+            .navigate(['/exception', httpErrorResponse.status])
             .then(() => console.debug('Route changed'));
 
-          return throwError(() => new Error('Markdown resolver error'));
+          return throwError(() => httpErrorResponse);
         })
       );
     }

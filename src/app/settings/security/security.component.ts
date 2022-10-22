@@ -1,18 +1,15 @@
 /** @format */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { map, switchMap } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { first, map, switchMap } from 'rxjs/operators';
 import { AuthService, LogoutDto, Session, SnackbarService, User } from '../../core';
-import { Subscription } from 'rxjs';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 
 @Component({
   selector: 'app-settings-security',
   templateUrl: './security.component.html'
 })
-export class SettingsSecurityComponent implements OnInit, OnDestroy {
-  activatedRouteData$: Subscription;
-
+export class SettingsSecurityComponent implements OnInit {
   user: User;
 
   sessionCurrent!: Session;
@@ -26,8 +23,9 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRouteData$ = this.activatedRoute.parent?.data
+    this.activatedRoute.parent?.data
       .pipe(
+        first(),
         map((data: Data) => data.data),
         switchMap((user: User) => {
           this.user = user;
@@ -45,13 +43,8 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
           this.sessionCurrent = sessionCurrent;
           this.sessionList = sessionList;
         },
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route parent data subscription complete')
+        error: (error: any) => console.error(error)
       });
-  }
-
-  ngOnDestroy(): void {
-    [this.activatedRouteData$].forEach($ => $?.unsubscribe());
   }
 
   onSessionTerminate(id: number): void {
@@ -65,8 +58,7 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
 
         this.snackbarService.success('Session terminated');
       },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Auth service logout subscription complete')
+      error: (error: any) => console.error(error)
     });
   }
 }

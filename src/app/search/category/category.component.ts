@@ -2,7 +2,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
-import { map, skip, tap } from 'rxjs/operators';
+import { first, map, skip, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { CategoryService, Category, CategoryGetAllDto } from '../../core';
 
@@ -11,7 +11,6 @@ import { CategoryService, Category, CategoryGetAllDto } from '../../core';
   templateUrl: './category.component.html'
 })
 export class SearchCategoryComponent implements OnInit, OnDestroy {
-  activatedRouteData$: Subscription;
   activatedRouteQueryParams$: Subscription;
 
   page: number = 1;
@@ -28,15 +27,17 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRouteData$ = this.activatedRoute.data
-      .pipe(map((data: Data) => data.data))
+    this.activatedRoute.data
+      .pipe(
+        first(),
+        map((data: Data) => data.data)
+      )
       .subscribe({
         next: (categoryList: Category[]) => {
           this.categoryList = categoryList;
           this.categoryListHasMore = categoryList.length === this.size;
         },
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route data subscription complete')
+        error: (error: any) => console.error(error)
       });
 
     this.activatedRouteQueryParams$ = this.activatedRoute.parent.queryParams
@@ -53,13 +54,12 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: () => this.getCategoryList(false),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route parent query params subscription complete')
+        error: (error: any) => console.error(error)
       });
   }
 
   ngOnDestroy(): void {
-    [this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
+    [this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
   }
 
   getCategoryList(concat: boolean): void {
@@ -85,8 +85,7 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
         this.categoryListLoading = false;
         this.categoryListHasMore = categoryList.length === this.size;
       },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Category service get all subscription complete')
+      error: (error: any) => console.error(error)
     });
   }
 
