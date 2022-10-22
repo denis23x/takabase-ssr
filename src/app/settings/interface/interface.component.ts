@@ -3,7 +3,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { AuthService, User, UserService, UserUpdateDto } from '../../core';
 import { ActivatedRoute, Data } from '@angular/router';
 
@@ -16,10 +16,12 @@ interface ThemeForm {
   templateUrl: './interface.component.html'
 })
 export class SettingsInterfaceComponent implements OnInit, OnDestroy {
-  user: User;
+  activatedRouteData$: Subscription | undefined;
 
-  themeForm: FormGroup;
-  themeForm$: Subscription;
+  user: User | undefined;
+
+  themeForm: FormGroup | undefined;
+  themeForm$: Subscription | undefined;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,9 +35,8 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.parent?.data
+    this.activatedRouteData$ = this.activatedRoute.parent?.data
       .pipe(
-        first(),
         map((data: Data) => data.data),
         tap((user: User) => (this.user = user))
       )
@@ -60,6 +61,6 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.themeForm$].forEach($ => $?.unsubscribe());
+    [this.activatedRouteData$, this.themeForm$].forEach($ => $?.unsubscribe());
   }
 }

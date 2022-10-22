@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   AuthService,
@@ -13,8 +13,9 @@ import {
   FileGetOneDto,
   FileCreateDto
 } from '../../core';
-import { first, map, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ActivatedRoute, Data } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 interface AvatarForm {
   url: FormControl<string>;
@@ -29,7 +30,9 @@ interface AccountForm {
   selector: 'app-settings-account',
   templateUrl: './account.component.html'
 })
-export class SettingsAccountComponent implements OnInit {
+export class SettingsAccountComponent implements OnInit, OnDestroy {
+  activatedRouteData$: Subscription | undefined;
+
   user: User | undefined;
 
   avatarForm: FormGroup | undefined;
@@ -61,9 +64,8 @@ export class SettingsAccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.parent.data
+    this.activatedRouteData$ = this.activatedRoute.parent.data
       .pipe(
-        first(),
         map((data: Data) => data.data),
         tap((user: User) => (this.user = user))
       )
@@ -71,6 +73,10 @@ export class SettingsAccountComponent implements OnInit {
         next: (user: User) => this.accountForm.patchValue(user),
         error: (error: any) => console.error(error)
       });
+  }
+
+  ngOnDestroy(): void {
+    [this.activatedRouteData$].forEach($ => $?.unsubscribe());
   }
 
   onSubmitAvatarForm(): void {

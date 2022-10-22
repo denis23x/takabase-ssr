@@ -1,11 +1,12 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { AuthService, LoginDto, HelperService, User } from '../../core';
-import { filter, first } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { Meta } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 
 interface LoginForm {
   email: FormControl<string>;
@@ -16,7 +17,9 @@ interface LoginForm {
   selector: 'app-auth-login',
   templateUrl: './login.component.html'
 })
-export class AuthLoginComponent implements OnInit {
+export class AuthLoginComponent implements OnInit, OnDestroy {
+  activatedRouteData$: Subscription | undefined;
+
   loginForm: FormGroup | undefined;
   loginFormIsSubmitted: boolean = false;
 
@@ -41,9 +44,8 @@ export class AuthLoginComponent implements OnInit {
     this.meta.addTag({ name: 'title', content: 'my login title' });
     this.meta.addTag({ name: 'description', content: 'my login description' });
 
-    this.activatedRoute.queryParams
+    this.activatedRouteData$ = this.activatedRoute.queryParams
       .pipe(
-        first(),
         filter((params: Params) => {
           const email: string | undefined = params.email;
           const social: any = ['facebookId', 'githubId', 'googleId']
@@ -58,6 +60,10 @@ export class AuthLoginComponent implements OnInit {
         next: (params: Params) => this.onLogin(params),
         error: (error: any) => console.error(error)
       });
+  }
+
+  ngOnDestroy(): void {
+    [this.activatedRouteData$].forEach($ => $?.unsubscribe());
   }
 
   onLogin(value: any): void {

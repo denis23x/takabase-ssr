@@ -2,7 +2,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
-import { first, map, skip, tap } from 'rxjs/operators';
+import { map, skip, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { CategoryService, Category, CategoryGetAllDto } from '../../core';
 
@@ -11,7 +11,8 @@ import { CategoryService, Category, CategoryGetAllDto } from '../../core';
   templateUrl: './category.component.html'
 })
 export class SearchCategoryComponent implements OnInit, OnDestroy {
-  activatedRouteQueryParams$: Subscription;
+  activatedRouteData$: Subscription | undefined;
+  activatedRouteQueryParams$: Subscription | undefined;
 
   page: number = 1;
   size: number = 10;
@@ -27,11 +28,8 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.data
-      .pipe(
-        first(),
-        map((data: Data) => data.data)
-      )
+    this.activatedRouteData$ = this.activatedRoute.data
+      .pipe(map((data: Data) => data.data))
       .subscribe({
         next: (categoryList: Category[]) => {
           this.categoryList = categoryList;
@@ -59,7 +57,7 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
+    [this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
   }
 
   getCategoryList(concat: boolean): void {

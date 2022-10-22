@@ -1,18 +1,21 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
-import { first, map, switchMap } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { map, switchMap } from 'rxjs/operators';
 import { AuthService, LogoutDto, Session, SnackbarService, User } from '../../core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-settings-security',
   templateUrl: './security.component.html'
 })
-export class SettingsSecurityComponent implements OnInit {
-  user: User;
+export class SettingsSecurityComponent implements OnInit, OnDestroy {
+  activatedRouteData$: Subscription | undefined;
 
-  sessionCurrent!: Session;
+  user: User | undefined;
+
+  sessionCurrent: Session | undefined;
   sessionList: Session[] = [];
 
   constructor(
@@ -23,9 +26,8 @@ export class SettingsSecurityComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.parent?.data
+    this.activatedRouteData$ = this.activatedRoute.parent?.data
       .pipe(
-        first(),
         map((data: Data) => data.data),
         switchMap((user: User) => {
           this.user = user;
@@ -45,6 +47,10 @@ export class SettingsSecurityComponent implements OnInit {
         },
         error: (error: any) => console.error(error)
       });
+  }
+
+  ngOnDestroy(): void {
+    [this.activatedRouteData$].forEach($ => $?.unsubscribe());
   }
 
   onSessionTerminate(id: number): void {
