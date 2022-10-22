@@ -32,14 +32,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.authService
       .onLogout()
       .pipe(
-        catchError((error: HttpErrorResponse) => {
+        catchError((httpErrorResponse: HttpErrorResponse) => {
           this.authService.removeAuthorization().subscribe({
             // prettier-ignore
-            next: () => this.router.navigate(['/exception', error.status]).then(() => console.debug('Route changed')),
+            next: () => this.router.navigate(['/exception', httpErrorResponse.status]).then(() => console.debug('Route changed')),
             error: (error: any) => console.error(error)
           });
 
-          return throwError(() => new Error('Logout error'));
+          return throwError(() => httpErrorResponse);
         }),
         switchMap(() => this.authService.removeAuthorization())
       )

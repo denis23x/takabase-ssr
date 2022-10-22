@@ -29,12 +29,12 @@ export class SearchUserResolverService {
     }
 
     return this.userService.getAll(userGetAllDto).pipe(
-      catchError((error: HttpErrorResponse) => {
+      catchError((httpErrorResponse: HttpErrorResponse) => {
         this.router
-          .navigate(['/exception', error.status])
+          .navigate(['/exception', httpErrorResponse.status])
           .then(() => console.debug('Route changed'));
 
-        return throwError(() => new Error('Search user resolver error'));
+        return throwError(() => httpErrorResponse);
       })
     );
   }

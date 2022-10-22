@@ -29,18 +29,23 @@ export class PostDetailResolverService {
           const user: User = [...data].shift();
 
           if (user.id !== post.user.id) {
-            return throwError(() => new Error('Forbidden'));
+            return throwError(() => {
+              return {
+                status: 403,
+                message: 'Forbidden'
+              };
+            });
           }
         }
 
         return of(post);
       }),
-      catchError((error: HttpErrorResponse) => {
+      catchError((httpErrorResponse: HttpErrorResponse) => {
         this.router
-          .navigate(['/exception', error.status])
+          .navigate(['/exception', httpErrorResponse.status])
           .then(() => console.debug('Route changed'));
 
-        return throwError(() => new Error('Post detail resolver error'));
+        return throwError(() => httpErrorResponse);
       })
     );
   }

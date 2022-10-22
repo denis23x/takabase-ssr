@@ -29,12 +29,12 @@ export class PostCreateResolverService {
 
         return this.categoryService.getAll(categoryGetAllDto);
       }),
-      catchError((error: HttpErrorResponse) => {
+      catchError((httpErrorResponse: HttpErrorResponse) => {
         this.router
-          .navigate(['/exception', error.status])
+          .navigate(['/exception', httpErrorResponse.status])
           .then(() => console.debug('Route changed'));
 
-        return throwError(() => new Error('Post create resolver error'));
+        return throwError(() => httpErrorResponse);
       })
     );
   }

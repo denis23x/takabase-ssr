@@ -30,12 +30,12 @@ export class SearchCategoryResolverService {
     }
 
     return this.categoryService.getAll(categoryGetAllDto).pipe(
-      catchError((error: HttpErrorResponse) => {
+      catchError((httpErrorResponse: HttpErrorResponse) => {
         this.router
-          .navigate(['/exception', error.status])
+          .navigate(['/exception', httpErrorResponse.status])
           .then(() => console.debug('Route changed'));
 
-        return throwError(() => new Error('Search category resolver error'));
+        return throwError(() => httpErrorResponse);
       })
     );
   }
