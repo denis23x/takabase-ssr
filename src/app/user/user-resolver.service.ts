@@ -37,10 +37,7 @@ export class UserResolverService {
     return this.userService.getAll(userGetAllDto).pipe(
       switchMap((userList: User[]) => {
         if (!userList.length) {
-          return throwError({
-            status: 404,
-            message: 'Not found'
-          });
+          return throwError(() => new Error('User get all error'));
         }
 
         return of(userList.shift());
@@ -59,7 +56,7 @@ export class UserResolverService {
           .navigate(['/exception', error.status])
           .then(() => console.debug('Route changed'));
 
-        return throwError(error);
+        return throwError(() => new Error('User resolver error'));
       })
     );
   }

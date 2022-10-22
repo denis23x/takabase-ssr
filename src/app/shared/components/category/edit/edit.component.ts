@@ -108,8 +108,7 @@ export class CategoryEditComponent implements OnInit {
 
           this.categoryFormIsSubmitted = false;
         },
-        error: () => (this.categoryFormIsSubmitted = false),
-        complete: () => console.debug('Category service delete/update subscription complete')
+        error: () => (this.categoryFormIsSubmitted = false)
       });
     }
   }

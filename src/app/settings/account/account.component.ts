@@ -73,8 +73,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (user: User) => this.accountForm.patchValue(user),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route parent data subscription complete')
+        error: (error: any) => console.error(error)
       });
   }
 
@@ -96,8 +95,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
           this.avatarFormIsSubmitted = false;
         },
-        error: () => (this.avatarFormIsSubmitted = false),
-        complete: () => console.debug('File service get one subscription complete')
+        error: () => (this.avatarFormIsSubmitted = false)
       });
     }
   }
@@ -121,7 +119,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
         }
       },
       error: (error: any) => console.error(error),
-      complete: () => console.debug('User service update subscription complete')
     });
   }
 
@@ -157,8 +154,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
           this.accountFormIsSubmitted = false;
         },
-        error: () => (this.accountFormIsSubmitted = false),
-        complete: () => console.debug('User service update subscription complete')
+        error: () => (this.accountFormIsSubmitted = false)
       });
     }
   }

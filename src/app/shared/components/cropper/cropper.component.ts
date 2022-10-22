@@ -154,8 +154,7 @@ export class CropperComponent implements OnInit {
 
         this.onClose();
       },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('File service create subscription complete')
+      error: (error: any) => console.error(error)
     });
   }
 }

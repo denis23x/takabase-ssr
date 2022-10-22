@@ -22,8 +22,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       .pipe(map((data: Data) => data.data))
       .subscribe({
         next: (user: User) => (this.user = user),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route data subscription complete')
+        error: (error: any) => console.error(error)
       });
   }
 
