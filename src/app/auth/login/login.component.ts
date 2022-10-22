@@ -1,11 +1,10 @@
 /** @format */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { AuthService, LoginDto, HelperService, User } from '../../core';
-import { filter } from 'rxjs/operators';
+import { filter, first } from 'rxjs/operators';
 import { Meta } from '@angular/platform-browser';
 
 interface LoginForm {
@@ -17,10 +16,8 @@ interface LoginForm {
   selector: 'app-auth-login',
   templateUrl: './login.component.html'
 })
-export class AuthLoginComponent implements OnInit, OnDestroy {
-  queryParams$: Subscription;
-
-  loginForm: FormGroup;
+export class AuthLoginComponent implements OnInit {
+  loginForm: FormGroup | undefined;
   loginFormIsSubmitted: boolean = false;
 
   constructor(
@@ -44,8 +41,9 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
     this.meta.addTag({ name: 'title', content: 'my login title' });
     this.meta.addTag({ name: 'description', content: 'my login description' });
 
-    this.queryParams$ = this.activatedRoute.queryParams
+    this.activatedRoute.queryParams
       .pipe(
+        first(),
         filter((params: Params) => {
           const email: string | undefined = params.email;
           const social: any = ['facebookId', 'githubId', 'googleId']
@@ -58,13 +56,8 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (params: Params) => this.onLogin(params),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route query params subscription complete')
+        error: (error: any) => console.error(error)
       });
-  }
-
-  ngOnDestroy(): void {
-    [this.queryParams$].forEach($ => $?.unsubscribe());
   }
 
   onLogin(value: any): void {
@@ -77,8 +70,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
     this.authService.onLogin(loginDto).subscribe({
       // prettier-ignore
       next: (user: User) => this.router.navigate(['/@' + user.name]).then(() => console.debug('Route changed')),
-      error: () => (this.loginFormIsSubmitted = false),
-      complete: () => console.debug('User login subscription complete')
+      error: () => (this.loginFormIsSubmitted = false)
     });
   }
 

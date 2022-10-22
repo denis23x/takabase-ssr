@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { first, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { AuthService, SnackbarService } from '../../services';
 
 @Injectable({
@@ -18,9 +18,8 @@ export class CanActivateRestrictGuard implements CanActivate {
 
   canActivate(): Observable<boolean> {
     return this.authService.userAuthenticated.pipe(
-      first(),
-      switchMap((isAuthenticated: boolean) => {
-        if (!isAuthenticated) {
+      switchMap((userAuthenticated: boolean) => {
+        if (!userAuthenticated) {
           this.router.navigate(['/exception', 401]).then(() =>
             this.snackbarService.warning('Login to continue', {
               title: 'Unauthorized'
