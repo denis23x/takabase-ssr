@@ -51,7 +51,8 @@ export class DropdownComponent implements OnInit, OnDestroy {
             this.setState(true);
           }
         },
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Element reference click subscription complete')
       });
   }
 

@@ -88,7 +88,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
               this.historyRemember = true;
             }
           },
-          error: (error: any) => console.error(error)
+          error: (error: any) => console.error(error),
+          complete: () => console.debug('Textarea input subscription complete')
         });
 
       this.scrollSync$ = merge(
@@ -116,7 +117,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
             this.scrollSyncIsBusy = !this.scrollSyncIsBusy;
           },
-          error: (error: any) => console.error(error)
+          error: (error: any) => console.error(error),
+          complete: () => console.debug('Textarea/preview scroll subscription complete')
         });
     }
   }

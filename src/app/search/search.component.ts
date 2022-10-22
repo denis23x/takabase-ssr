@@ -35,7 +35,8 @@ export class SearchComponent implements OnInit, OnDestroy {
       .pipe(map((data: Data) => data.query))
       .subscribe({
         next: (query: string = '') => this.searchForm.setValue({ query }),
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route query params subscription complete')
       });
 
     this.searchForm$ = this.searchForm.valueChanges
@@ -57,7 +58,8 @@ export class SearchComponent implements OnInit, OnDestroy {
             })
             .then(() => console.debug('Route changed'));
         },
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Search form value changes subscription complete')
       });
   }
 

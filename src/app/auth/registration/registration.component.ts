@@ -65,7 +65,8 @@ export class AuthRegistrationComponent implements OnInit {
         .subscribe({
           // prettier-ignore
           next: (user: User) => this.router.navigate(['/@' + user.name]).then(() => console.debug('Route changed')),
-          error: () => (this.registrationFormIsSubmitted = false)
+          error: () => (this.registrationFormIsSubmitted = false),
+          complete: () => console.debug('User registration subscription complete')
         });
     }
   }

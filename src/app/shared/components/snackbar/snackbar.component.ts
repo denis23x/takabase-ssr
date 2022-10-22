@@ -22,7 +22,8 @@ export class SnackbarComponent implements OnInit, OnDestroy {
           ...snack
         });
       },
-      error: (error: any) => console.error(error)
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Snackbar service snackbar subscription complete')
     });
   }
 

@@ -40,7 +40,8 @@ export class UserComponent implements OnInit, OnDestroy {
 
         this.categoryList = categoryList;
       },
-      error: (error: any) => console.error(error)
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Auth service user/activated route data subscription complete')
     });
 
     this.routeEvents$ = this.router.events
@@ -56,7 +57,8 @@ export class UserComponent implements OnInit, OnDestroy {
             return category.id === Number(categoryId);
           });
         },
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Router events navigation end subscription complete')
       });
   }
 
