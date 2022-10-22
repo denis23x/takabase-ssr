@@ -17,7 +17,7 @@ interface RegistrationForm {
   templateUrl: './registration.component.html'
 })
 export class AuthRegistrationComponent implements OnInit {
-  registrationForm: FormGroup;
+  registrationForm: FormGroup | undefined;
   registrationFormIsSubmitted: boolean = false;
 
   constructor(
@@ -65,8 +65,7 @@ export class AuthRegistrationComponent implements OnInit {
         .subscribe({
           // prettier-ignore
           next: (user: User) => this.router.navigate(['/@' + user.name]).then(() => console.debug('Route changed')),
-          error: () => (this.registrationFormIsSubmitted = false),
-          complete: () => console.debug('User registration subscription complete')
+          error: () => (this.registrationFormIsSubmitted = false)
         });
     }
   }

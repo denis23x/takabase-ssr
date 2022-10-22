@@ -1,69 +1,90 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, Event as RouterEvent, Data } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  Event as RouterEvent,
+  Data,
+  Params
+} from '@angular/router';
 import { combineLatest, EMPTY, of, Subscription } from 'rxjs';
-import { User, Category, AuthService } from '../core';
-import { filter, map, startWith, switchMap } from 'rxjs/operators';
+import { User, Category, AuthService, TitleService } from '../core';
+import { filter, first, map, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html'
 })
 export class UserComponent implements OnInit, OnDestroy {
-  routeEvents$: Subscription;
+  routeEvents$: Subscription | undefined;
 
-  activatedRouteData$: Subscription;
-  activatedRouteParams$: Subscription;
-
-  user: User;
+  user: User | undefined;
   userMe: boolean = false;
 
-  category: Category;
-  categoryList: Category[];
-  categoryModal: 'create' | 'edit';
+  category: Category | undefined;
+  categoryList: Category[] = [];
+  categoryModal: 'create' | 'edit' | undefined;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private titleService: TitleService
   ) {}
 
   ngOnInit(): void {
-    this.activatedRouteData$ = combineLatest([
-      this.authService.userSubject,
+    combineLatest([
+      this.authService.userSubject.pipe(filter((user: User) => !!Object.keys(user).length)),
       this.activatedRoute.data.pipe(map((data: Data) => data.data))
-    ]).subscribe({
-      next: ([userAuthed, [user, categoryList]]: [User, [User, Category[]]]) => {
-        this.userMe = userAuthed.id === user.id;
-        this.user = user;
-
-        this.categoryList = categoryList;
-      },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Auth service user/activated route data subscription complete')
-    });
-
-    this.routeEvents$ = this.router.events
-      .pipe(
-        filter((routerEvent: RouterEvent) => routerEvent instanceof NavigationEnd),
-        startWith(EMPTY),
-        switchMap(() => of(this.activatedRoute.snapshot.firstChild.params)),
-        map((data: Data) => data.categoryId)
-      )
+    ])
+      .pipe(first())
       .subscribe({
-        next: (categoryId: string) => {
-          this.category = this.categoryList.find((category: Category) => {
-            return category.id === Number(categoryId);
-          });
+        next: ([userAuthed, [user, categoryList]]: [User, [User, Category[]]]) => {
+          this.userMe = userAuthed.id === user.id;
+          this.user = user;
+
+          this.categoryList = categoryList;
+
+          this.titleService.setTitle(this.user.name);
         },
         error: (error: any) => console.error(error),
-        complete: () => console.debug('Router events navigation end subscription complete')
+        complete: () => {
+          this.routeEvents$ = this.router.events
+            .pipe(
+              filter((routerEvent: RouterEvent) => routerEvent instanceof NavigationEnd),
+              startWith(EMPTY),
+              switchMap(() => of(this.activatedRoute.snapshot.firstChild.params)),
+              map((params: Params) => params.categoryId)
+            )
+            .subscribe({
+              next: (categoryId: string | undefined) => {
+                // prettier-ignore
+                const category: Category | undefined = this.categoryList.find((category: Category) => {
+                  return category.id === Number(categoryId);
+                });
+
+                if (!!category) {
+                  if (!!this.category) {
+                    this.titleService.updateTitle(this.category.name, category.name);
+                  } else {
+                    this.titleService.appendTitle(category.name);
+                  }
+                } else {
+                  this.titleService.setTitle(this.user.name);
+                }
+
+                this.category = category;
+              },
+              error: (error: any) => console.error(error)
+            });
+        }
       });
   }
 
   ngOnDestroy(): void {
-    [this.activatedRouteData$, this.activatedRouteParams$].forEach($ => $?.unsubscribe());
+    [this.routeEvents$].forEach($ => $?.unsubscribe());
   }
 
   onSubmitCategoryForm(category: Category): void {

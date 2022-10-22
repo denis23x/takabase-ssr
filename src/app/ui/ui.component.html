@@ -1,5 +1,5 @@
 <section class="grid grid-cols-1 gap-4 max-w-128 lg:max-w-256 mx-auto p-4">
-  <h1 class="text-2xl">UI elements</h1>
+  <h1 class="text-secondary-1 text-2xl">UI elements</h1>
   <details class="flex flex-col space-y-4" *ngIf="{ value: false } as toggle" (toggle)="toggle.value = !toggle.value">
     <summary class="bg-primary-2 list-none">
       <div class="flex items-center space-x-2 bg-primary-3 text-secondary-1 border border-primary-4 rounded-md cursor-pointer px-2 py-2">
@@ -27,7 +27,7 @@
     </summary>
     <div class="flex flex-col space-y-4 bg-primary-3 border border-primary-4 rounded-md p-4">
       <ul class="flex flex-col gap-4">
-        <li class="flex" *ngFor="let typography of typographyList; let i = index" [ngClass]="typography">{{'H' + (i + 1)}} Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+        <li class="flex text-secondary-1" *ngFor="let typography of typographyList; let i = index" [ngClass]="typography">{{'H' + (i + 1)}} Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
       </ul>
     </div>
   </details>

@@ -27,9 +27,9 @@ export class AppAuthenticatedDirective implements OnInit, OnDestroy {
     this.authenticated$ = this.authService.userAuthenticated
       .pipe(tap(() => this.viewContainerRef.clear()))
       .subscribe({
-        next: (isAuthenticated: boolean) => {
+        next: (userAuthenticated: boolean) => {
           // prettier-ignore
-          if ((isAuthenticated && this.authenticated) || (!isAuthenticated && !this.authenticated)) {
+          if ((userAuthenticated && this.authenticated) || (!userAuthenticated && !this.authenticated)) {
             this.viewContainerRef.createEmbeddedView(this.templateRef);
           } else {
             this.viewContainerRef.clear();

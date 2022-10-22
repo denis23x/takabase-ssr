@@ -3,7 +3,7 @@
     <div class="flex items-start justify-start border border-transparent py-1 px-2" [ngClass]="snack.options.classList">
       <p class="flex flex-wrap items-start justify-start p-2">
         <span class="block font-bold capitalize mr-1" *ngIf="snack.options.title">{{ snack.options.title }}</span>
-        <span class="block">{{ snack.message }}</span>
+        <span class="block first-letter:capitalize">{{ snack.message }}</span>
       </p>
       <button
         class="block fill-current p-2"

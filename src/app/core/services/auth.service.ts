@@ -24,9 +24,9 @@ export class AuthService {
   agent: Promise<Agent> = FingerprintJS.load();
 
   userSubject: BehaviorSubject<User> = new BehaviorSubject<User>({} as User);
-  userAuthenticated: Observable<boolean> = this.userSubject
-    .asObservable()
-    .pipe(switchMap((user: User) => of(!!Object.keys(user).length)));
+
+  // prettier-ignore
+  userAuthenticated: Observable<boolean> = of(!!this.localStorageService.getItem(environment.USER_ACCESS_TOKEN));
 
   constructor(
     private apiService: ApiService,
@@ -88,8 +88,7 @@ export class AuthService {
     if (this.localStorageService.getItem(environment.USER_ACCESS_TOKEN)) {
       this.apiService.get('/auth/me', { scope: ['settings'] }).subscribe({
         next: (user: User) => this.setAuthorization(user),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Api service subscription complete')
+        error: (error: any) => console.error(error)
       });
     } else {
       this.removeAuthorization();

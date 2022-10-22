@@ -11,7 +11,8 @@ import {
   MarkdownService,
   MarkdownPluginService,
   PlatformService,
-  SnackbarService
+  SnackbarService,
+  TitleService
 } from './services';
 
 @NgModule({
@@ -24,7 +25,8 @@ import {
     MarkdownService,
     MarkdownPluginService,
     PlatformService,
-    SnackbarService
+    SnackbarService,
+    TitleService
   ],
   declarations: []
 })

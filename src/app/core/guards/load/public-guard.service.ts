@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { CanLoad, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { first, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { AuthService, SnackbarService } from '../../services';
 
 @Injectable({
@@ -18,9 +18,8 @@ export class CanLoadPublicGuard implements CanLoad {
 
   canLoad(): Observable<boolean> {
     return this.authService.userAuthenticated.pipe(
-      first(),
-      switchMap((isAuthenticated: boolean) => {
-        if (isAuthenticated) {
+      switchMap((userAuthenticated: boolean) => {
+        if (userAuthenticated) {
           this.router.navigate(['/exception', 403]).then(() => {
             this.snackbarService.warning('Access denied', {
               title: 'Forbidden'

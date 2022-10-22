@@ -1,8 +1,7 @@
 /** @format */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import {
   AuthService,
   User,
@@ -14,7 +13,7 @@ import {
   FileGetOneDto,
   FileCreateDto
 } from '../../core';
-import { map, tap } from 'rxjs/operators';
+import { first, map, tap } from 'rxjs/operators';
 import { ActivatedRoute, Data } from '@angular/router';
 
 interface AvatarForm {
@@ -30,20 +29,16 @@ interface AccountForm {
   selector: 'app-settings-account',
   templateUrl: './account.component.html'
 })
-export class SettingsAccountComponent implements OnInit, OnDestroy {
-  activatedRouteData$: Subscription;
+export class SettingsAccountComponent implements OnInit {
+  user: User | undefined;
 
-  user: User;
-
-  avatarForm: FormGroup;
-  avatarForm$: Subscription;
+  avatarForm: FormGroup | undefined;
   avatarFormIsSubmitted: boolean = false;
 
-  accountForm: FormGroup;
-  accountForm$: Subscription;
+  accountForm: FormGroup | undefined;
   accountFormIsSubmitted: boolean = false;
 
-  cropperFile: File;
+  cropperFile: File | undefined;
   cropperModal: boolean = false;
 
   constructor(
@@ -66,20 +61,16 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activatedRouteData$ = this.activatedRoute.parent.data
+    this.activatedRoute.parent.data
       .pipe(
+        first(),
         map((data: Data) => data.data),
         tap((user: User) => (this.user = user))
       )
       .subscribe({
         next: (user: User) => this.accountForm.patchValue(user),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route parent data subscription complete')
+        error: (error: any) => console.error(error)
       });
-  }
-
-  ngOnDestroy(): void {
-    [this.avatarForm$, this.accountForm$, this.accountForm$].forEach($ => $?.unsubscribe());
   }
 
   onSubmitAvatarForm(): void {
@@ -96,8 +87,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
           this.avatarFormIsSubmitted = false;
         },
-        error: () => (this.avatarFormIsSubmitted = false),
-        complete: () => console.debug('File service get one subscription complete')
+        error: () => (this.avatarFormIsSubmitted = false)
       });
     }
   }
@@ -107,21 +97,15 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
       avatar: fileCreateDto?.path || null
     };
 
-    // prettier-ignore
     this.userService.update(this.user.id, userUpdateDto).subscribe({
       next: (user: User) => {
         this.user = user;
 
         this.authService.setAuthorization(user);
 
-        if (!!fileCreateDto) {
-          this.snackbarService.success('Avatar updated');
-        } else {
-          this.snackbarService.danger('Avatar deleted');
-        }
+        this.snackbarService.success(!!fileCreateDto ? 'Avatar updated' : 'Avatar deleted');
       },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('User service update subscription complete')
+      error: (error: any) => console.error(error)
     });
   }
 
@@ -157,8 +141,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
           this.accountFormIsSubmitted = false;
         },
-        error: () => (this.accountFormIsSubmitted = false),
-        complete: () => console.debug('User service update subscription complete')
+        error: () => (this.accountFormIsSubmitted = false)
       });
     }
   }
