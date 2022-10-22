@@ -1,13 +1,16 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
-import { first, map } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   templateUrl: './exception.component.html'
 })
-export class ExceptionComponent implements OnInit {
+export class ExceptionComponent implements OnInit, OnDestroy {
+  activatedRouteData$: Subscription | undefined;
+
   statusCode: number | undefined;
   statusCodeMap: number[][] = [
     [100, 199],
@@ -29,11 +32,8 @@ export class ExceptionComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    this.activatedRoute.params
-      .pipe(
-        first(),
-        map((data: Data) => data.status)
-      )
+    this.activatedRouteData$ = this.activatedRoute.params
+      .pipe(map((data: Data) => data.status))
       .subscribe({
         next: (status: string) => {
           const statusCode: number = Number(status);
@@ -48,6 +48,10 @@ export class ExceptionComponent implements OnInit {
         },
         error: (error: any) => console.error(error)
       });
+  }
+
+  ngOnDestroy(): void {
+    [this.activatedRouteData$].forEach($ => $?.unsubscribe());
   }
 
   getMessageMap(status: number): string | undefined {

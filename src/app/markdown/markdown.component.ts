@@ -12,7 +12,7 @@ import {
 import { PlatformService, HelperService, Post } from '../core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { fromEvent, Subscription } from 'rxjs';
-import { filter, first, map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { DOCUMENT } from '@angular/common';
 import Split from 'split-grid';
@@ -24,14 +24,16 @@ import Split from 'split-grid';
 export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('gutter') gutter: ElementRef;
 
-  mouseup$: Subscription;
-  mousedown$: Subscription;
-  mousemove$: Subscription;
+  activatedRouteData$: Subscription | undefined;
 
-  postForm: UntypedFormGroup;
-  postForm$: Subscription;
+  mouseup$: Subscription | undefined;
+  mousedown$: Subscription | undefined;
+  mousemove$: Subscription | undefined;
 
-  editorMinSize = 425;
+  postForm: UntypedFormGroup | undefined;
+  postForm$: Subscription | undefined;
+
+  editorMinSize: number = 425;
   editorWhitespace: boolean = false;
   editorScrollSync: boolean = false;
 
@@ -50,9 +52,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.data
+    this.activatedRouteData$ = this.activatedRoute.data
       .pipe(
-        first(),
         map((data: Data) => data.data),
         filter((post: Post) => !!post)
       )
@@ -83,8 +84,13 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // prettier-ignore
-    [this.mouseup$, this.mousedown$, this.mousemove$, this.postForm$].forEach($ => $?.unsubscribe());
+    [
+      this.activatedRouteData$,
+      this.mouseup$,
+      this.mousedown$,
+      this.mousemove$,
+      this.postForm$
+    ].forEach($ => $?.unsubscribe());
   }
 
   onDrag(): void {

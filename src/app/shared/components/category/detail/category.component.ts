@@ -1,10 +1,10 @@
 /** @format */
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Data } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Category, Post, PostGetAllDto, PostService, User } from '../../../../core';
-import { first, map, skip, tap } from 'rxjs/operators';
+import { map, skip, tap } from 'rxjs/operators';
 
 // prettier-ignore
 export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto => {
@@ -50,8 +50,9 @@ export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, activatedRouteSna
   selector: 'app-category-detail',
   templateUrl: './category.component.html'
 })
-export class CategoryDetailComponent {
-  activatedRouteQueryParams$: Subscription;
+export class CategoryDetailComponent implements OnInit, OnDestroy {
+  activatedRouteData$: Subscription | undefined;
+  activatedRouteQueryParams$: Subscription | undefined;
 
   page: number = 1;
   size: number = 10;
@@ -68,11 +69,8 @@ export class CategoryDetailComponent {
     // prettier-ignore
     this.postPath = this.activatedRoute.snapshot.parent.routeConfig.component.name === 'UserComponent' ? 'posts' : './';
 
-    this.activatedRoute.data
-      .pipe(
-        first(),
-        map((data: Data) => data.data)
-      )
+    this.activatedRouteData$ = this.activatedRoute.data
+      .pipe(map((data: Data) => data.data))
       .subscribe({
         next: (postList: Post[]) => {
           this.page = 1;
@@ -104,7 +102,7 @@ export class CategoryDetailComponent {
   }
 
   ngOnDestroy(): void {
-    [this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
+    [this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
   }
 
   getPostList(concat: boolean): void {

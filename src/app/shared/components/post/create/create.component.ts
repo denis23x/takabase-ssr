@@ -10,7 +10,7 @@ import {
   SnackbarService
 } from '../../../../core';
 import { iif, Subscription } from 'rxjs';
-import { filter, first, map, pairwise, startWith, switchMap } from 'rxjs/operators';
+import { filter, map, pairwise, startWith, switchMap } from 'rxjs/operators';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Data, Navigation, Router } from '@angular/router';
 
@@ -26,11 +26,13 @@ interface PostForm {
   templateUrl: './create.component.html'
 })
 export class PostCreateComponent implements OnInit, OnDestroy {
+  activatedRouteData$: Subscription | undefined;
+
   categoryList: Category[] = [];
   categoryModal: boolean = false;
 
-  postForm: FormGroup;
-  postForm$: Subscription;
+  postForm: FormGroup | undefined;
+  postForm$: Subscription | undefined;
   postFormIsSubmitted: boolean = false;
 
   constructor(
@@ -70,15 +72,13 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.data
+    this.activatedRouteData$ = this.activatedRoute.data
       .pipe(
-        first(),
         map((data: Data) => data.data),
         switchMap((categoryList: Category[]) => {
           this.categoryList = categoryList;
 
           return this.activatedRoute.parent.data.pipe(
-            first(),
             map((data: Data) => data.data),
             filter((post: Post) => !!post)
           );
@@ -115,7 +115,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [this.postForm$].forEach($ => $?.unsubscribe());
+    [this.activatedRouteData$, this.postForm$].forEach($ => $?.unsubscribe());
   }
 
   onClose(): void {
