@@ -19,12 +19,12 @@ export class SettingsResolverService {
         scope: ['sessions', 'settings']
       })
       .pipe(
-        catchError((error: HttpErrorResponse) => {
+        catchError((httpErrorResponse: HttpErrorResponse) => {
           this.router
-            .navigate(['/exception', error.status])
+            .navigate(['/exception', httpErrorResponse.status])
             .then(() => console.debug('Route changed'));
 
-          return throwError(() => new Error('Settings resolver error'));
+          return throwError(() => httpErrorResponse);
         })
       );
   }

@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { combineLatest, EMPTY, Observable, of, throwError } from 'rxjs';
-import { catchError, filter, first, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, first, mergeMap, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService, Post, PostGetOneDto, PostService, User } from '../core';
 
