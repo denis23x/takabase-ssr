@@ -1,19 +1,16 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PlatformService, Post } from '../../../core';
 import { ActivatedRoute, Data, Params } from '@angular/router';
-import { map } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { first, map } from 'rxjs/operators';
 import { Share } from '../../../core/models/share.model';
 
 @Component({
   selector: 'app-share',
   templateUrl: './share.component.html'
 })
-export class ShareComponent implements OnInit, OnDestroy {
-  activatedRouteData$: Subscription;
-
+export class ShareComponent implements OnInit {
   shareUrl: string;
 
   shareMap: Share = {
@@ -28,8 +25,11 @@ export class ShareComponent implements OnInit, OnDestroy {
   constructor(private platformService: PlatformService, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.activatedRouteData$ = this.activatedRoute.data
-      .pipe(map((data: Data) => data.data))
+    this.activatedRoute.data
+      .pipe(
+        first(),
+        map((data: Data) => data.data)
+      )
       .subscribe({
         next: (post: Post) => {
           if (this.platformService.isBrowser()) {
@@ -47,13 +47,8 @@ export class ShareComponent implements OnInit, OnDestroy {
             this.shareMap[share] = [this.shareMap[share], encodedURI].join('?');
           });
         },
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route data subscription complete')
+        error: (error: any) => console.error(error)
       });
-  }
-
-  ngOnDestroy(): void {
-    [this.activatedRouteData$].forEach($ => $?.unsubscribe());
   }
 
   getParams(share: string, post: Post): Params {

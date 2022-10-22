@@ -20,8 +20,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.user$ = this.authService.userSubject.subscribe({
       next: (user: User) => (this.user = user),
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Auth service user subscription complete')
+      error: (error: any) => console.error(error)
     });
   }
 
@@ -37,8 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.authService.removeAuthorization().subscribe({
             // prettier-ignore
             next: () => this.router.navigate(['/exception', error.status]).then(() => console.debug('Route changed')),
-            error: (error: any) => console.error(error),
-            complete: () => console.debug('Auth service remove authorization subscription complete')
+            error: (error: any) => console.error(error)
           });
 
           return throwError(() => new Error('Logout error'));
@@ -47,8 +45,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: () => this.router.navigateByUrl('/').then(() => console.debug('Route changed')),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Auth service logout subscription complete')
+        error: (error: any) => console.error(error)
       });
   }
 }

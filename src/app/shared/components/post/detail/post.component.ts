@@ -2,7 +2,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService, Post, User } from '../../../../core';
-import { map } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 
@@ -11,8 +11,6 @@ import { ActivatedRoute, Data, Router } from '@angular/router';
   templateUrl: './post.component.html'
 })
 export class PostDetailComponent implements OnInit, OnDestroy {
-  activatedRouteData$: Subscription;
-
   user$: Subscription;
   user: User;
 
@@ -27,21 +25,22 @@ export class PostDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.user$ = this.authService.userSubject.subscribe({
       next: (user: User) => (this.user = user),
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Auth service user subscription complete')
+      error: (error: any) => console.error(error)
     });
 
-    this.activatedRouteData$ = this.activatedRoute.data
-      .pipe(map((data: Data) => data.data))
+    this.activatedRoute.data
+      .pipe(
+        first(),
+        map((data: Data) => data.data)
+      )
       .subscribe({
         next: (post: Post) => (this.post = post),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route data subscription complete')
+        error: (error: any) => console.error(error)
       });
   }
 
   ngOnDestroy(): void {
-    [this.user$, this.activatedRouteData$].forEach($ => $?.unsubscribe());
+    [this.user$].forEach($ => $?.unsubscribe());
   }
 
   onClose(): void {

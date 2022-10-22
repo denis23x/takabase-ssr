@@ -34,9 +34,8 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.routeQueryParams$ = this.activatedRoute.queryParams
       .pipe(map((data: Data) => data.query))
       .subscribe({
-        next: (query: string = '') => this.searchForm.setValue({ query }),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route query params subscription complete')
+        next: (query: string = '') => this.searchForm.setValue({ query }, { emitEvent: false }),
+        error: (error: any) => console.error(error)
       });
 
     this.searchForm$ = this.searchForm.valueChanges
@@ -48,7 +47,7 @@ export class SearchComponent implements OnInit, OnDestroy {
         next: () => {
           let { query = '' } = this.searchForm.value;
 
-          !query && (query = null);
+          !query.length && (query = null);
 
           this.router
             .navigate([], {
@@ -58,8 +57,7 @@ export class SearchComponent implements OnInit, OnDestroy {
             })
             .then(() => console.debug('Route changed'));
         },
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Search form value changes subscription complete')
+        error: (error: any) => console.error(error)
       });
   }
 

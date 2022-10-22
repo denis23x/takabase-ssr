@@ -60,8 +60,7 @@ export class CategoryCreateComponent implements OnInit {
 
           this.categoryFormIsSubmitted = false;
         },
-        error: () => (this.categoryFormIsSubmitted = false),
-        complete: () => console.debug('Category service create subscription complete')
+        error: () => (this.categoryFormIsSubmitted = false)
       });
     }
   }

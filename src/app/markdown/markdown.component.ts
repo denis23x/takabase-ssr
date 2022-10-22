@@ -12,7 +12,7 @@ import {
 import { PlatformService, HelperService, Post } from '../core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { fromEvent, Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, first, map } from 'rxjs/operators';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { DOCUMENT } from '@angular/common';
 import Split from 'split-grid';
@@ -23,8 +23,6 @@ import Split from 'split-grid';
 })
 export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('gutter') gutter: ElementRef;
-
-  activatedRouteData$: Subscription;
 
   mouseup$: Subscription;
   mousedown$: Subscription;
@@ -52,15 +50,15 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.activatedRouteData$ = this.activatedRoute.data
+    this.activatedRoute.data
       .pipe(
+        first(),
         map((data: Data) => data.data),
         filter((post: Post) => !!post)
       )
       .subscribe({
         next: (post: Post) => this.postForm.get('body').setValue(post.body),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route data subscription complete')
+        error: (error: any) => console.error(error)
       });
   }
 
@@ -85,13 +83,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    [
-      this.activatedRouteData$,
-      this.mouseup$,
-      this.mousedown$,
-      this.mousemove$,
-      this.postForm$
-    ].forEach($ => $?.unsubscribe());
+    // prettier-ignore
+    [this.mouseup$, this.mousedown$, this.mousemove$, this.postForm$].forEach($ => $?.unsubscribe());
   }
 
   onDrag(): void {
@@ -116,14 +109,12 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.mousemove$ = fromEvent(this.document, 'mousemove').subscribe({
         next: (event: Event) => mouseMoveHandler(event as MouseEvent),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Document mouse move subscription complete')
+        error: (error: any) => console.error(error)
       });
 
       this.mouseup$ = fromEvent(this.document, 'mouseup').subscribe({
         next: () => mouseUpHandler(),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Document mouse up subscription complete')
+        error: (error: any) => console.error(error)
       });
     };
 
@@ -147,8 +138,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(filter((event: Event) => event.target.parentElement.id === 'grip-horizontal'))
       .subscribe({
         next: (event: Event) => mouseDownHandler(event as MouseEvent),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Document mouse down subscription complete')
+        error: (error: any) => console.error(error)
       });
   }
 
