@@ -35,8 +35,7 @@ export class SearchUserComponent implements OnInit, OnDestroy {
           this.userList = userList;
           this.userListHasMore = userList.length === this.size;
         },
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route data subscription complete')
+        error: (error: any) => console.error(error)
       });
 
     this.activatedRouteQueryParams$ = this.activatedRoute.parent.queryParams
@@ -53,8 +52,7 @@ export class SearchUserComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: () => this.getUserList(false),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route parent query params subscription complete')
+        error: (error: any) => console.error(error)
       });
   }
 
@@ -84,8 +82,7 @@ export class SearchUserComponent implements OnInit, OnDestroy {
         this.userListLoading = false;
         this.userListHasMore = userList.length === this.size;
       },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('User service get all subscription complete')
+      error: (error: any) => console.error(error)
     });
   }
 

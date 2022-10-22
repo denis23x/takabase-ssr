@@ -42,8 +42,7 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (user: User) => this.themeForm.patchValue(user.settings),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route parent data subscription complete')
+        error: (error: any) => console.error(error)
       });
 
     this.themeForm$ = this.themeForm.valueChanges.subscribe({
@@ -54,12 +53,10 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
 
         this.userService.update(this.user.id, userUpdateDto).subscribe({
           next: (user: User) => this.authService.setAuthorization(user),
-          error: (error: any) => console.error(error),
-          complete: () => console.debug('User service update subscription complete')
+          error: (error: any) => console.error(error)
         });
       },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Theme form values changes subscription complete')
+      error: (error: any) => console.error(error)
     });
   }
 

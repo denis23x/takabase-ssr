@@ -45,8 +45,7 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
           this.sessionCurrent = sessionCurrent;
           this.sessionList = sessionList;
         },
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route parent data subscription complete')
+        error: (error: any) => console.error(error)
       });
   }
 
@@ -65,8 +64,7 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
 
         this.snackbarService.success('Session terminated');
       },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Auth service logout subscription complete')
+      error: (error: any) => console.error(error)
     });
   }
 }

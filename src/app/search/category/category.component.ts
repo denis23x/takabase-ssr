@@ -35,8 +35,7 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
           this.categoryList = categoryList;
           this.categoryListHasMore = categoryList.length === this.size;
         },
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route data subscription complete')
+        error: (error: any) => console.error(error)
       });
 
     this.activatedRouteQueryParams$ = this.activatedRoute.parent.queryParams
@@ -53,8 +52,7 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: () => this.getCategoryList(false),
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Activated route parent query params subscription complete')
+        error: (error: any) => console.error(error)
       });
   }
 
@@ -85,8 +83,7 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
         this.categoryListLoading = false;
         this.categoryListHasMore = categoryList.length === this.size;
       },
-      error: (error: any) => console.error(error),
-      complete: () => console.debug('Category service get all subscription complete')
+      error: (error: any) => console.error(error)
     });
   }
 

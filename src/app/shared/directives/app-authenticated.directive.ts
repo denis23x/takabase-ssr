@@ -35,8 +35,7 @@ export class AppAuthenticatedDirective implements OnInit, OnDestroy {
             this.viewContainerRef.clear();
           }
         },
-        error: (error: any) => console.error(error),
-        complete: () => console.debug('Auth service user authenticated subscription complete')
+        error: (error: any) => console.error(error)
       });
   }
 
