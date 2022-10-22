@@ -47,7 +47,8 @@ export class ShareComponent implements OnInit, OnDestroy {
             this.shareMap[share] = [this.shareMap[share], encodedURI].join('?');
           });
         },
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route data subscription complete')
       });
   }
 

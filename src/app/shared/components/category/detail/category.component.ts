@@ -80,7 +80,8 @@ export class CategoryDetailComponent {
           this.postListLoading = false;
           this.postListHasMore = postList.length === this.size;
         },
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route data subscription complete')
       });
 
     this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
@@ -97,7 +98,8 @@ export class CategoryDetailComponent {
       )
       .subscribe({
         next: () => this.getPostList(false),
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route query params subscription complete')
       });
   }
 
@@ -122,7 +124,8 @@ export class CategoryDetailComponent {
         this.postListLoading = false;
         this.postListHasMore = postList.length === this.size;
       },
-      error: (error: any) => console.error(error)
+      error: (error: any) => console.error(error),
+      complete: () => console.debug('Post service get all subscription complete')
     });
   }
 

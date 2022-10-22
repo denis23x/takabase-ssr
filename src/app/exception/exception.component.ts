@@ -46,7 +46,8 @@ export class ExceptionComponent implements OnInit, OnDestroy {
           this.statusCode = statusCode;
           this.message = message;
         },
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route params subscription complete')
       });
   }
 

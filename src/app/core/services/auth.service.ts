@@ -88,7 +88,8 @@ export class AuthService {
     if (this.localStorageService.getItem(environment.USER_ACCESS_TOKEN)) {
       this.apiService.get('/auth/me', { scope: ['settings'] }).subscribe({
         next: (user: User) => this.setAuthorization(user),
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Api service subscription complete')
       });
     } else {
       this.removeAuthorization();

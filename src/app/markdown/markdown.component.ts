@@ -59,7 +59,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
       )
       .subscribe({
         next: (post: Post) => this.postForm.get('body').setValue(post.body),
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route data subscription complete')
       });
   }
 
@@ -115,12 +116,14 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.mousemove$ = fromEvent(this.document, 'mousemove').subscribe({
         next: (event: Event) => mouseMoveHandler(event as MouseEvent),
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Document mouse move subscription complete')
       });
 
       this.mouseup$ = fromEvent(this.document, 'mouseup').subscribe({
         next: () => mouseUpHandler(),
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Document mouse up subscription complete')
       });
     };
 
@@ -144,7 +147,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(filter((event: Event) => event.target.parentElement.id === 'grip-horizontal'))
       .subscribe({
         next: (event: Event) => mouseDownHandler(event as MouseEvent),
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Document mouse down subscription complete')
       });
   }
 

@@ -92,7 +92,8 @@ export class PostCreateComponent implements OnInit, OnDestroy {
             categoryName: post.category.name
           });
         },
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route data subscription complete')
       });
 
     // prettier-ignore
@@ -111,6 +112,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
           this.postForm.get('categoryName').setValue(category.name);
         },
         error: (error: any) => console.error(error),
+        complete: () => console.debug('Post form value changes subscription complete')
       });
   }
 
@@ -152,7 +154,8 @@ export class PostCreateComponent implements OnInit, OnDestroy {
               });
             });
         },
-        error: () => (this.postFormIsSubmitted = false)
+        error: () => (this.postFormIsSubmitted = false),
+        complete: () => console.debug('Post service update/create subscription complete')
       });
     }
   }

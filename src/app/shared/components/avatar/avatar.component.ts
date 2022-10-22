@@ -42,7 +42,8 @@ export class AvatarComponent implements OnInit, OnDestroy {
             this.avatarSize = this.elementRef.nativeElement.clientWidth;
             this.avatar = this.user$.getValue().avatar ? this.getAvatar() : this.getJdenticon();
           },
-          error: (error: any) => console.error(error)
+          error: (error: any) => console.error(error),
+          complete: () => console.debug('User/resize subscription complete')
         });
     }
   }

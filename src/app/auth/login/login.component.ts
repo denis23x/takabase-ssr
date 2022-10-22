@@ -58,7 +58,8 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (params: Params) => this.onLogin(params),
-        error: (error: any) => console.error(error)
+        error: (error: any) => console.error(error),
+        complete: () => console.debug('Activated route query params subscription complete')
       });
   }
 
@@ -76,7 +77,8 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
     this.authService.onLogin(loginDto).subscribe({
       // prettier-ignore
       next: (user: User) => this.router.navigate(['/@' + user.name]).then(() => console.debug('Route changed')),
-      error: () => (this.loginFormIsSubmitted = false)
+      error: () => (this.loginFormIsSubmitted = false),
+      complete: () => console.debug('User login subscription complete')
     });
   }
 
