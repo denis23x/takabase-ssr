@@ -53,10 +53,7 @@ export class MarkdownPluginService {
   getGithubTemplate(service: string, id: string, url: string, options?: any): string {
     const parameter: number = id.indexOf('?');
     const src: string = 'https://gist.github.com/';
-
-    const user: User = this.authService.user.getValue();
     const randomId: string = id + '-' + Date.now() + Math.floor(Math.random() * Date.now());
-    const theme: string = user.settings.theme || 'AUTO';
 
     const srcdoc: string = `
       <html lang='en' translate='no'>
@@ -64,7 +61,7 @@ export class MarkdownPluginService {
           <base target='_parent'>
           <title>Gist</title>
         </head>
-        <body class='${theme}'>
+        <body>
           <script src='${src + (parameter > -1 ? id.substr(0, parameter) : id)}.js'></script>
         </body>
       </html>
@@ -83,6 +80,15 @@ export class MarkdownPluginService {
         style.href = 'gist.css';
 
         head.appendChild(style);
+
+        /******************/
+        /*** APPLY THEME ***/
+        /******************/
+
+        const parentClassList = window.parent.document.body.classList;
+        const parentTheme = parentClassList.value.split(' ').find((className) => ['AUTO', 'LIGHT', 'DARK'].includes(className))
+
+        this.contentWindow.document.body.classList.add(parentTheme);
 
         /*********************/
         /*** UPDATE LINKS ***/
