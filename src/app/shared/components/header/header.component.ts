@@ -12,20 +12,20 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './header.component.html'
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  user$: Subscription;
-  user: User;
+  authUser: User | undefined;
+  authUser$: Subscription | undefined;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    this.user$ = this.authService.user.subscribe({
-      next: (user: User) => (this.user = user),
+    this.authUser$ = this.authService.user.subscribe({
+      next: (user: User) => (this.authUser = user),
       error: (error: any) => console.error(error)
     });
   }
 
   ngOnDestroy(): void {
-    [this.user$].forEach($ => $?.unsubscribe());
+    [this.authUser$].forEach($ => $?.unsubscribe());
   }
 
   onLogout(): void {
@@ -34,8 +34,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .pipe(
         catchError((httpErrorResponse: HttpErrorResponse) => {
           this.authService.removeAuthorization().subscribe({
-            // prettier-ignore
-            next: () => this.router.navigate(['/exception', httpErrorResponse.status]).then(() => console.debug('Route changed')),
+            next: () => {
+              this.router
+                .navigate(['/exception', httpErrorResponse.status])
+                .then(() => console.debug('Route changed'));
+            },
             error: (error: any) => console.error(error)
           });
 

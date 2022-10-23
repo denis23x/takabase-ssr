@@ -13,8 +13,8 @@ import { ActivatedRoute, Data, Router } from '@angular/router';
 export class PostDetailComponent implements OnInit, OnDestroy {
   activatedRouteData$: Subscription | undefined;
 
-  user$: Subscription | undefined;
-  user: User | undefined;
+  authUser: User | undefined;
+  authUser$: Subscription | undefined;
 
   post: Post | undefined;
 
@@ -32,14 +32,14 @@ export class PostDetailComponent implements OnInit, OnDestroy {
         error: (error: any) => console.error(error)
       });
 
-    this.user$ = this.authService.user.subscribe({
-      next: (user: User) => (this.user = user),
+    this.authUser$ = this.authService.user.subscribe({
+      next: (user: User) => (this.authUser = user),
       error: (error: any) => console.error(error)
     });
   }
 
   ngOnDestroy(): void {
-    [this.activatedRouteData$, this.user$].forEach($ => $?.unsubscribe());
+    [this.activatedRouteData$, this.authUser$].forEach($ => $?.unsubscribe());
   }
 
   onClose(): void {
