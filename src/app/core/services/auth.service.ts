@@ -7,7 +7,6 @@ import {
   ApiService,
   LoginDto,
   LogoutDto,
-  RegistrationDto,
   LocalStorageService,
   User,
   UserService,
@@ -21,12 +20,12 @@ import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
   providedIn: 'root'
 })
 export class AuthService {
-  agent: Promise<Agent> = FingerprintJS.load();
+  user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
+  userAuthenticated: Observable<boolean> = this.user
+    .asObservable()
+    .pipe(switchMap((user: User) => of(!!user)));
 
-  userSubject: BehaviorSubject<User> = new BehaviorSubject<User>({} as User);
-
-  // prettier-ignore
-  userAuthenticated: Observable<boolean> = of(!!this.localStorageService.getItem(environment.USER_ACCESS_TOKEN));
+  userAgent: Promise<Agent> = FingerprintJS.load();
 
   constructor(
     private apiService: ApiService,
@@ -60,10 +59,6 @@ export class AuthService {
     );
   }
 
-  onRegistration(registrationDto: RegistrationDto): Observable<User> {
-    return this.apiService.post('/auth/registration', registrationDto);
-  }
-
   onRefresh(): Observable<User> {
     return this.getFingerprint().pipe(
       switchMap((fingerprint: string) => {
@@ -75,7 +70,7 @@ export class AuthService {
   }
 
   getFingerprint(): Observable<string> {
-    return from(this.agent.then((agent: Agent) => agent.get())).pipe(
+    return from(this.userAgent.then((agent: Agent) => agent.get())).pipe(
       switchMap((getResult: GetResult) => {
         const { platform, timezone, vendor } = getResult.components;
 
@@ -100,14 +95,14 @@ export class AuthService {
   }
 
   setAuthorization(user: User): Observable<void> {
-    this.userSubject.next(user);
+    this.user.next(user);
 
     if (!!user.accessToken) {
       this.localStorageService.setItem(environment.USER_ACCESS_TOKEN, user.accessToken);
     }
 
     if (!!user.settings) {
-      this.platformService.setSettings(this.userSubject.getValue());
+      this.platformService.setSettings(this.user.getValue());
     }
 
     return of(null);
@@ -115,9 +110,9 @@ export class AuthService {
 
   removeAuthorization(): Observable<void> {
     this.localStorageService.removeItem(environment.USER_ACCESS_TOKEN);
-    this.platformService.removeSettings(this.userSubject.getValue());
+    this.platformService.removeSettings(this.user.getValue());
 
-    this.userSubject.next({} as User);
+    this.user.next(undefined);
 
     return of(null);
   }

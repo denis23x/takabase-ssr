@@ -54,7 +54,7 @@ export class MarkdownPluginService {
     const parameter: number = id.indexOf('?');
     const src: string = 'https://gist.github.com/';
 
-    const user: User = this.authService.userSubject.getValue();
+    const user: User = this.authService.user.getValue();
     const randomId: string = id + '-' + Date.now() + Math.floor(Math.random() * Date.now());
     const theme: string = user.settings.theme || 'AUTO';
 
