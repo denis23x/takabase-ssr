@@ -6,7 +6,7 @@ import { Snack, SnackOptions } from '../models';
 
 @Injectable()
 export class SnackbarService {
-  snackbar$ = new ReplaySubject<Snack>();
+  snackbar$: ReplaySubject<Snack> = new ReplaySubject<Snack>();
 
   info(message: string, snackOptions?: SnackOptions) {
     this.snackbar$.next({

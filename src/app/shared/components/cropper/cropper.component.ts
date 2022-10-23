@@ -1,6 +1,14 @@
 /** @format */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
@@ -11,16 +19,19 @@ import { FileCreateDto, FileService } from '../../../core';
   templateUrl: './cropper.component.html'
 })
 export class CropperComponent implements OnInit {
-  @Output() closed = new EventEmitter<boolean>();
-  @Output() submitted = new EventEmitter<FileCreateDto>();
+  @ViewChild('cropperContent') cropperContent: ElementRef | undefined;
+
+  @Output() closed: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() submitted: EventEmitter<FileCreateDto> = new EventEmitter<FileCreateDto>();
 
   @Input()
   set appFile(file: File) {
     this.cropperFile = file;
   }
 
-  cropperFile: File;
-  cropperBase64: string;
+  cropperFile: File = undefined;
+  cropperBase64: string = undefined;
+  cropperIsScrollable: boolean = false;
 
   imageTransform: ImageTransform = {
     scale: 1,
@@ -49,6 +60,15 @@ export class CropperComponent implements OnInit {
     if (!this.cropperPositionInitial) {
       this.cropperPositionInitial = imageCroppedEvent.cropperPosition;
     }
+
+    /** Set cropperIsScrollable */
+
+    const content: HTMLElement = this.cropperContent.nativeElement;
+    const contentFirstChild: HTMLElement = content.firstChild as HTMLElement;
+    const contentFirstChildMargin: number = 32;
+
+    // prettier-ignore
+    this.cropperIsScrollable = content.clientHeight - contentFirstChildMargin < contentFirstChild.clientHeight;
   }
 
   onRotate(direction: boolean): void {

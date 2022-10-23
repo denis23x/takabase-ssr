@@ -15,7 +15,7 @@ const getWindow = (): Window => window;
 
 @Injectable()
 export class PlatformService {
-  private readonly renderer2: Renderer2;
+  renderer2: Renderer2 | undefined;
 
   overlayUUIDList: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 

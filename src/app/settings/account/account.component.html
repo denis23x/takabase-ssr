@@ -9,7 +9,7 @@
         class="flex border border-primary-4 overflow-hidden rounded-md cursor-pointer h-24 w-24"
         appAvatar
         [appUser]="user"
-        (click)="fileInput.click()">
+        (click)="avatarInput.click()">
       </figure>
       <fieldset class="flex flex-1 flex-col space-y-2" *ngIf="avatarForm.get('url') as url">
         <div class="flex items-center justify-between text-sm">
@@ -57,7 +57,7 @@
           accept="image/jpeg, image/jpg, image/png"
           aria-label="Hidden"
           (change)="onShowCropper($event)"
-          #fileInput>
+          #avatarInput>
       </fieldset>
     </fieldset>
     <app-cropper

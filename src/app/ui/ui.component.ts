@@ -34,7 +34,7 @@ export class UiComponent {
 
   buttonList: string[] = ['primary', 'info', 'success', 'warning', 'danger', 'transparent'];
 
-  inputForm: FormGroup;
+  inputForm: FormGroup | undefined;
 
   constructor(private formBuilder: FormBuilder, private helperService: HelperService) {
     this.inputForm = this.formBuilder.group<InputForm>({

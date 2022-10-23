@@ -15,10 +15,10 @@ interface SearchForm {
   templateUrl: './search.component.html'
 })
 export class SearchComponent implements OnInit, OnDestroy {
-  routeQueryParams$: Subscription;
+  routeQueryParams$: Subscription | undefined;
 
-  searchForm: FormGroup;
-  searchForm$: Subscription;
+  searchForm: FormGroup | undefined;
+  searchForm$: Subscription | undefined;
 
   constructor(
     private activatedRoute: ActivatedRoute,

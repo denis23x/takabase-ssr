@@ -1,10 +1,10 @@
 <ng-container>
-  <div class="flex w-full" #target>
+  <div class="flex w-full" #dropdownTarget>
     <ng-content select="[slot=toggle]"></ng-content>
   </div>
-  <ng-container *ngIf="state">
+  <ng-container *ngIf="dropdownState">
     <app-overlay (closed)="setState(false)"></app-overlay>
-    <div class="absolute w-full h-full" #content>
+    <div class="absolute w-full h-full" #dropdownContent>
       <ng-content select="[slot=content]"></ng-content>
     </div>
   </ng-container>

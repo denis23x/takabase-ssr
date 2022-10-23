@@ -13,7 +13,7 @@ interface ResetForm {
   templateUrl: './reset.component.html'
 })
 export class AuthResetComponent implements OnInit {
-  resetForm: FormGroup;
+  resetForm: FormGroup | undefined;
   resetFormIsSubmitted: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private helperService: HelperService) {

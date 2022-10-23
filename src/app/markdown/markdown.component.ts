@@ -22,7 +22,7 @@ import Split from 'split-grid';
   templateUrl: './markdown.component.html'
 })
 export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('gutter') gutter: ElementRef;
+  @ViewChild('gutter') gutter: ElementRef | undefined;
 
   activatedRouteData$: Subscription | undefined;
 

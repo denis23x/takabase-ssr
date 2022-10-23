@@ -17,9 +17,9 @@ export class AppScrollIntoViewDirective implements OnInit, OnDestroy {
     this.active = active;
   }
 
-  intersectionObserver: IntersectionObserver;
+  intersectionObserver: IntersectionObserver | undefined;
 
-  rootHTMLElement: HTMLElement;
+  rootHTMLElement: HTMLElement | undefined;
 
   active: boolean = false;
 

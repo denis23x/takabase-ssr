@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   AuthService,
@@ -31,6 +31,8 @@ interface AccountForm {
   templateUrl: './account.component.html'
 })
 export class SettingsAccountComponent implements OnInit, OnDestroy {
+  @ViewChild('avatarInput') avatarInput: ElementRef | undefined;
+
   activatedRouteData$: Subscription | undefined;
 
   user: User | undefined;
@@ -127,6 +129,10 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
   onCloseCropper(): void {
     this.cropperFile = undefined;
     this.cropperModal = false;
+
+    /** Rest avatarInput value */
+
+    this.avatarInput.nativeElement.value = '';
   }
 
   onSubmitForm(): void {

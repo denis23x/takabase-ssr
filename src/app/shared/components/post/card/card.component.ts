@@ -20,7 +20,7 @@ export class PostCardComponent implements OnInit {
 
   constructor() {}
 
-  post: Post;
+  post: Post | undefined;
   postPath: string = '';
 
   ngOnInit(): void {}
