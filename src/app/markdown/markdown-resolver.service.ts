@@ -21,7 +21,7 @@ export class MarkdownResolverService {
     const postId: number = Number(activatedRouteSnapshot.paramMap.get('postId'));
 
     if (postId) {
-      const postUser$ = this.authService.userSubject.pipe(first());
+      const postUser$ = this.authService.user.pipe(first());
       const postGetOneDto: PostGetOneDto = {
         scope: ['user', 'category']
       };

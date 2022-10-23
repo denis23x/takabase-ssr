@@ -4,13 +4,17 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../services';
 import { User } from '../models';
-import { UserGetAllDto, UserUpdateDto } from '../dto';
+import { RegistrationDto, UserGetAllDto, UserUpdateDto } from '../dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   constructor(private apiService: ApiService) {}
+
+  create(registrationDto: RegistrationDto): Observable<User> {
+    return this.apiService.post('/auth/registration', registrationDto);
+  }
 
   getAll(userGetAllDto?: UserGetAllDto): Observable<User[]> {
     return this.apiService.get('/users', userGetAllDto);

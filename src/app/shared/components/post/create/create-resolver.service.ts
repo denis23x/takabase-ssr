@@ -19,7 +19,7 @@ export class PostCreateResolverService {
   ) {}
 
   resolve(): Observable<Category[]> {
-    return this.authService.userSubject.pipe(first()).pipe(
+    return this.authService.user.pipe(first()).pipe(
       switchMap((user: User) => {
         const categoryGetAllDto: CategoryGetAllDto = {
           page: 1,

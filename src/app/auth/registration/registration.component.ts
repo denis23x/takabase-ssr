@@ -3,7 +3,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService, RegistrationDto, LoginDto, HelperService, User } from '../../core';
+import {
+  AuthService,
+  RegistrationDto,
+  LoginDto,
+  HelperService,
+  User,
+  UserService
+} from '../../core';
 import { switchMap } from 'rxjs/operators';
 
 interface RegistrationForm {
@@ -23,6 +30,7 @@ export class AuthRegistrationComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
+    private userService: UserService,
     private formBuilder: FormBuilder,
     private helperService: HelperService
   ) {
@@ -50,8 +58,8 @@ export class AuthRegistrationComponent implements OnInit {
         ...this.registrationForm.value
       };
 
-      this.authService
-        .onRegistration(registrationDto)
+      this.userService
+        .create(registrationDto)
         .pipe(
           switchMap((user: User) => {
             const loginDto: LoginDto = {

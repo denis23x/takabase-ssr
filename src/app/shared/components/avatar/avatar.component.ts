@@ -18,7 +18,7 @@ export class AvatarComponent implements OnInit, OnDestroy {
 
   constructor(private platformService: PlatformService, private elementRef: ElementRef) {}
 
-  user$: BehaviorSubject<User> = new BehaviorSubject<User>({} as User);
+  user$: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
   userSubscription$: Subscription;
 
   avatar: string;

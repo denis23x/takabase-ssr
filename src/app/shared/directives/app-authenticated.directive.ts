@@ -14,7 +14,7 @@ export class AppAuthenticatedDirective implements OnInit, OnDestroy {
     this.authenticated = authenticated;
   }
 
-  authenticated$: Subscription;
+  authenticated$: Subscription | undefined;
   authenticated: boolean = false;
 
   constructor(

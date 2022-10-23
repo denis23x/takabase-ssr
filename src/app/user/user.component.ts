@@ -9,19 +9,22 @@ import {
   Data,
   Params
 } from '@angular/router';
-import { combineLatest, EMPTY, of, Subscription } from 'rxjs';
+import { EMPTY, of, Subscription } from 'rxjs';
 import { User, Category, AuthService, TitleService } from '../core';
-import { filter, first, map, startWith, switchMap } from 'rxjs/operators';
+import { filter, map, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html'
 })
 export class UserComponent implements OnInit, OnDestroy {
+  activatedRouteData$: Subscription | undefined;
   routeEvents$: Subscription | undefined;
 
   user: User | undefined;
-  userMe: boolean = false;
+
+  authUser: User | undefined;
+  authUser$: Subscription | undefined;
 
   category: Category | undefined;
   categoryList: Category[] = [];
@@ -35,56 +38,56 @@ export class UserComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    combineLatest([
-      this.authService.userSubject.pipe(filter((user: User) => !!Object.keys(user).length)),
-      this.activatedRoute.data.pipe(map((data: Data) => data.data))
-    ])
-      .pipe(first())
+    this.activatedRouteData$ = this.activatedRoute.data
+      .pipe(map((data: Data) => data.data))
       .subscribe({
-        next: ([userAuthed, [user, categoryList]]: [User, [User, Category[]]]) => {
-          this.userMe = userAuthed.id === user.id;
+        next: ([user, categoryList]: [User, Category[]]) => {
           this.user = user;
 
           this.categoryList = categoryList;
 
           this.titleService.setTitle(this.user.name);
         },
-        error: (error: any) => console.error(error),
-        complete: () => {
-          this.routeEvents$ = this.router.events
-            .pipe(
-              filter((routerEvent: RouterEvent) => routerEvent instanceof NavigationEnd),
-              startWith(EMPTY),
-              switchMap(() => of(this.activatedRoute.snapshot.firstChild.params)),
-              map((params: Params) => params.categoryId)
-            )
-            .subscribe({
-              next: (categoryId: string | undefined) => {
-                // prettier-ignore
-                const category: Category | undefined = this.categoryList.find((category: Category) => {
-                  return category.id === Number(categoryId);
-                });
-
-                if (!!category) {
-                  if (!!this.category) {
-                    this.titleService.updateTitle(this.category.name, category.name);
-                  } else {
-                    this.titleService.appendTitle(category.name);
-                  }
-                } else {
-                  this.titleService.setTitle(this.user.name);
-                }
-
-                this.category = category;
-              },
-              error: (error: any) => console.error(error)
-            });
-        }
+        error: (error: any) => console.error(error)
       });
+
+    this.routeEvents$ = this.router.events
+      .pipe(
+        filter((routerEvent: RouterEvent) => routerEvent instanceof NavigationEnd),
+        startWith(EMPTY),
+        switchMap(() => of(this.activatedRoute.snapshot.firstChild.params)),
+        map((params: Params) => params.categoryId)
+      )
+      .subscribe({
+        next: (categoryId: string | undefined) => {
+          // prettier-ignore
+          const category: Category | undefined = this.categoryList.find((category: Category) => {
+            return category.id === Number(categoryId);
+          });
+
+          if (!!category) {
+            if (!!this.category) {
+              this.titleService.updateTitle(this.category.name, category.name);
+            } else {
+              this.titleService.appendTitle(category.name);
+            }
+          } else {
+            this.titleService.setTitle(this.user.name);
+          }
+
+          this.category = category;
+        },
+        error: (error: any) => console.error(error)
+      });
+
+    this.authUser$ = this.authService.user.subscribe({
+      next: (user: User) => (this.authUser = user),
+      error: (error: any) => console.error(error)
+    });
   }
 
   ngOnDestroy(): void {
-    [this.routeEvents$].forEach($ => $?.unsubscribe());
+    [this.activatedRouteData$, this.routeEvents$, this.authUser$].forEach($ => $?.unsubscribe());
   }
 
   onSubmitCategoryForm(category: Category): void {
