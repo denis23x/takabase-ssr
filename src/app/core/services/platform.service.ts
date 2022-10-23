@@ -132,7 +132,7 @@ export class PlatformService {
 
   removeSettings(user: User): void {
     if (this.isBrowser()) {
-      // this.document.body.classList.remove(user.settings?.theme);
+      this.document.body.classList.remove(user.settings?.theme);
     }
   }
 }

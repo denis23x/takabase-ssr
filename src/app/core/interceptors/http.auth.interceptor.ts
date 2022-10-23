@@ -46,7 +46,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
           .pipe(switchMap(() => next.handle(this.setRequestHeaders(request))));
       }
 
-      this.authService.removeAuthorization();
+      this.authService.removeUser();
     }
 
     return throwError(() => httpErrorResponse);

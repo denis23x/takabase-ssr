@@ -3,10 +3,10 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes, UrlSegment } from '@angular/router';
 import {
+  CanLoadPrivateGuard,
   CanLoadPublicGuard,
-  CanLoadRestrictGuard,
-  CanActivatePublicGuard,
-  CanActivateRestrictGuard
+  CanActivatePrivateGuard,
+  CanActivatePublicGuard
 } from './core';
 
 const routes: Routes = [
@@ -27,8 +27,8 @@ const routes: Routes = [
       return ['create', 'edit'].includes(path.path) ? { consumed: url.slice(0, 1) } : null;
     },
     loadChildren: () => import('./markdown/markdown.module').then(m => m.MarkdownModule),
-    canLoad: [CanLoadRestrictGuard],
-    canActivate: [CanActivateRestrictGuard]
+    canLoad: [CanLoadPrivateGuard],
+    canActivate: [CanActivatePrivateGuard]
   },
   {
     path: 'exception',
@@ -41,8 +41,8 @@ const routes: Routes = [
   {
     path: 'settings',
     loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule),
-    canLoad: [CanLoadRestrictGuard],
-    canActivate: [CanActivateRestrictGuard]
+    canLoad: [CanLoadPrivateGuard],
+    canActivate: [CanActivatePrivateGuard]
   },
   {
     matcher: (url: UrlSegment[]) => {

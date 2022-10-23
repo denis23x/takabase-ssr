@@ -2,7 +2,7 @@
 
 import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../core';
+import { AuthService, User } from '../../core';
 import { tap } from 'rxjs/operators';
 
 @Directive({
@@ -24,12 +24,11 @@ export class AppAuthenticatedDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.authenticated$ = this.authService.userAuthenticated
+    this.authenticated$ = this.authService.user
       .pipe(tap(() => this.viewContainerRef.clear()))
       .subscribe({
-        next: (userAuthenticated: boolean) => {
-          // prettier-ignore
-          if ((userAuthenticated && this.authenticated) || (!userAuthenticated && !this.authenticated)) {
+        next: (user: User | undefined) => {
+          if ((!!user && this.authenticated) || (!user && !this.authenticated)) {
             this.viewContainerRef.createEmbeddedView(this.templateRef);
           } else {
             this.viewContainerRef.clear();

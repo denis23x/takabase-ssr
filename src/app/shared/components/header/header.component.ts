@@ -33,7 +33,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .onLogout()
       .pipe(
         catchError((httpErrorResponse: HttpErrorResponse) => {
-          this.authService.removeAuthorization().subscribe({
+          this.authService.removeUser().subscribe({
             next: () => {
               this.router
                 .navigate(['/exception', httpErrorResponse.status])
@@ -44,7 +44,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
           return throwError(() => httpErrorResponse);
         }),
-        switchMap(() => this.authService.removeAuthorization())
+        switchMap(() => this.authService.removeUser())
       )
       .subscribe({
         next: () => this.router.navigateByUrl('/').then(() => console.debug('Route changed')),

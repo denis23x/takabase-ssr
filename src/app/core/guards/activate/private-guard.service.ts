@@ -8,10 +8,10 @@ import { AuthService } from '../../services';
 @Injectable({
   providedIn: 'root'
 })
-export class CanActivatePublicGuard implements CanActivate {
+export class CanActivatePrivateGuard implements CanActivate {
   constructor(private authService: AuthService) {}
 
   canActivate(): Observable<boolean> {
-    return this.authService.guardPublic();
+    return this.authService.guardPrivate();
   }
 }
