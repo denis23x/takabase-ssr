@@ -105,13 +105,13 @@
       <div class="flex items-center justify-between p-2">
         <div class="flex items-center justify-start space-x-1">
           <i class="fill-current text-secondary-2 -scale-x-1" appSvgIcon [appIcon]="'filter-left'" [appSquare]="'1.25rem'"></i>
-          <span class="block text-secondary-2">Sorting:</span>
+          <span class="block text-sm text-secondary-2">Sorting:</span>
           <app-dropdown
             class="flex relative"
             *ngIf="{ value: false } as active"
             (toggled)="active.value = $event">
             <button
-              class="block fill-current text-secondary-1 hover:text-info-1"
+              class="block text-sm text-secondary-1 hover:text-info-1"
               [class.text-info-1]="active.value"
               type="button"
               aria-label="Sorting"
@@ -141,7 +141,7 @@
           </app-dropdown>
         </div>
         <button
-          class="block text-secondary-1 hover:text-info-1"
+          class="block text-sm text-secondary-1 hover:text-info-1"
           type="button"
           aria-label="Help">Help
         </button>

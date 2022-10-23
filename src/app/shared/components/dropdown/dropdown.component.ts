@@ -19,21 +19,20 @@ import { debounceTime, filter } from 'rxjs/operators';
   templateUrl: './dropdown.component.html'
 })
 export class DropdownComponent implements OnInit, OnDestroy {
-  @ViewChild('target') target: ElementRef;
-  @ViewChild('content') content: ElementRef;
+  @ViewChild('dropdownTarget') dropdownTarget: ElementRef | undefined;
+  @ViewChild('dropdownContent') dropdownContent: ElementRef | undefined;
 
-  @Output() toggled = new EventEmitter<boolean>();
+  @Output() toggled: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   @Input()
   set appDisabled(disabled: boolean) {
-    this.disabled = disabled;
+    this.dropdownDisabled = disabled;
   }
 
-  click$: Subscription;
+  click$: Subscription | undefined;
 
-  disabled: boolean = false;
-
-  state: boolean = false;
+  dropdownDisabled: boolean = false;
+  dropdownState: boolean = false;
 
   constructor(private platformService: PlatformService, private elementRef: ElementRef) {}
 
@@ -41,13 +40,13 @@ export class DropdownComponent implements OnInit, OnDestroy {
     this.click$ = fromEvent(this.elementRef.nativeElement, 'click')
       .pipe(
         debounceTime(10),
-        filter(() => !this.disabled)
+        filter(() => !this.dropdownDisabled)
       )
       .subscribe({
         next: (event: any) => {
-          if (this.state && this.content.nativeElement.contains(event.target)) {
+          if (this.dropdownState && this.dropdownContent.nativeElement.contains(event.target)) {
             this.setState(false);
-          } else if (this.target.nativeElement.contains(event.target)) {
+          } else if (this.dropdownTarget.nativeElement.contains(event.target)) {
             this.setState(true);
           }
         },
@@ -60,10 +59,10 @@ export class DropdownComponent implements OnInit, OnDestroy {
   }
 
   setState(state: boolean): void {
-    this.state = state;
+    this.dropdownState = state;
 
-    this.toggled.emit(this.state);
+    this.toggled.emit(this.dropdownState);
 
-    this.platformService.setScrollToggle(this.state);
+    this.platformService.setScrollToggle(this.dropdownState);
   }
 }

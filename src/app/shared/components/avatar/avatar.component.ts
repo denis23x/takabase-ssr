@@ -19,9 +19,9 @@ export class AvatarComponent implements OnInit, OnDestroy {
   constructor(private platformService: PlatformService, private elementRef: ElementRef) {}
 
   user$: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
-  userSubscription$: Subscription;
+  userSubscription$: Subscription | undefined;
 
-  avatar: string;
+  avatar: string | undefined;
   avatarSize: number = 38;
 
   ngOnInit(): void {

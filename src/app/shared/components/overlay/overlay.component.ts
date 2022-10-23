@@ -8,7 +8,7 @@ import { HelperService, PlatformService } from '../../../core';
   templateUrl: 'overlay.component.html'
 })
 export class OverlayComponent implements OnInit, OnDestroy {
-  @Output() closed = new EventEmitter<void>();
+  @Output() closed: EventEmitter<void> = new EventEmitter<void>();
 
   @HostListener('document:keyup.esc', ['$event'])
   onEsc(keyboardEvent: KeyboardEvent): void {
@@ -19,7 +19,7 @@ export class OverlayComponent implements OnInit, OnDestroy {
     }
   }
 
-  uuid: string;
+  uuid: string | undefined;
 
   constructor(private platformService: PlatformService, private helperService: HelperService) {}
 

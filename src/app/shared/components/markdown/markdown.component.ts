@@ -35,21 +35,21 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
   controlList: MarkdownControl[] = MarkdownControlList();
 
   scrollSync: boolean = false;
-  scrollSync$: Subscription;
+  scrollSync$: Subscription | undefined;
   scrollSyncIsBusy: boolean = false;
 
-  textareaInput$: Subscription;
-  textareaId: string;
-  textarea: HTMLTextAreaElement;
+  textareaInput$: Subscription | undefined;
+  textareaId: string | undefined;
+  textarea: HTMLTextAreaElement | undefined;
 
-  previewId: string;
-  preview: HTMLElement;
+  previewId: string | undefined;
+  preview: HTMLElement | undefined;
 
   historyRemember: boolean = true;
   history$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
-  urlForm: FormGroup;
-  urlFormControl: MarkdownControl = {} as MarkdownControl;
+  urlForm: FormGroup | undefined;
+  urlFormControl: MarkdownControl | undefined;
   urlFormIsSubmitted: boolean = false;
   urlModal: boolean = false;
 
@@ -168,7 +168,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
       const url: string = this.urlForm.get('url').value;
 
       if (!!url.length) {
-        this.urlFormControl = {} as MarkdownControl;
+        this.urlFormControl = undefined;
         this.urlForm.reset();
 
         this.onCloseUrlForm();

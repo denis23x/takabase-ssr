@@ -9,7 +9,7 @@ import { HelperService, Snack, SnackbarService } from '../../../core';
   templateUrl: './snackbar.component.html'
 })
 export class SnackbarComponent implements OnInit, OnDestroy {
-  snackbar$!: Subscription;
+  snackbar$: Subscription | undefined;
   snackbarList: Snack[] = [];
 
   constructor(private snackbarService: SnackbarService, private helperService: HelperService) {}

@@ -32,13 +32,13 @@ export class SvgIconComponent implements OnInit {
     this.icon = icon;
   }
 
-  square: string;
-  viewBox = '0 0 16 16';
+  square: string | undefined;
+  viewBox: string = '0 0 16 16';
 
-  width = '1.25em';
-  height = '1.25em';
+  width: string = '1.25em';
+  height: string = '1.25em';
 
-  icon: string;
+  icon: string | undefined;
 
   constructor() {}
 

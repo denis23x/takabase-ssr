@@ -19,10 +19,10 @@ interface CategoryForm {
   templateUrl: './create.component.html'
 })
 export class CategoryCreateComponent implements OnInit {
-  @Output() closed = new EventEmitter<boolean>();
-  @Output() submitted = new EventEmitter<Category>();
+  @Output() closed: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() submitted: EventEmitter<Category> = new EventEmitter<Category>();
 
-  categoryForm: FormGroup;
+  categoryForm: FormGroup | undefined;
   categoryFormIsSubmitted: boolean = false;
 
   constructor(

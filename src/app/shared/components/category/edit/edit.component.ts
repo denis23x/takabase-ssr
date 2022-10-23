@@ -21,8 +21,8 @@ interface CategoryForm {
   templateUrl: './edit.component.html'
 })
 export class CategoryEditComponent implements OnInit {
-  @Output() submitted = new EventEmitter<Category>();
-  @Output() closed = new EventEmitter<boolean>();
+  @Output() closed: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() submitted: EventEmitter<Category> = new EventEmitter<Category>();
 
   @Input()
   set appCategory(category: Category) {
@@ -34,8 +34,8 @@ export class CategoryEditComponent implements OnInit {
     });
   }
 
-  category: Category;
-  categoryForm: FormGroup;
+  category: Category | undefined;
+  categoryForm: FormGroup | undefined;
   categoryFormIsSubmitted: boolean = false;
   categoryFormIsToggled: boolean = false;
 
