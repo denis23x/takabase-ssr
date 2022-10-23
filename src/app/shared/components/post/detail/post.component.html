@@ -36,7 +36,7 @@
         <a
           class="block text-info-1 my-10"
           [routerLink]="['/edit', post.id]"
-          *ngIf="post.user.id === user.id">Edit this post
+          *ngIf="post.user.id === authUser?.id">Edit this post
         </a>
         <div class="text-2xl text-secondary-1 font-medium my-4">{{post.title}}</div>
         <article class="markdown-html my-4" #article>{{post.body | markdown: article}}</article>
@@ -69,7 +69,7 @@
           class="block text-secondary-1 hover:text-danger-1 p-2"
           type="button"
           aria-label="Report"
-          *ngIf="post.user.id !== user.id">Report
+          *ngIf="post.user.id !== authUser?.id">Report
         </button>
       </footer>
     </div>
