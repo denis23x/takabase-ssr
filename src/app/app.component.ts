@@ -8,8 +8,6 @@ import { AuthService, PlatformService } from './core';
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit, AfterViewInit {
-  title = 'draft-ssr';
-
   constructor(
     private authService: AuthService,
     private platformService: PlatformService,
@@ -17,7 +15,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.getAuthorization();
+    this.authService.getUser().subscribe({
+      next: () => console.debug('Authorization received'),
+      error: (error: any) => console.error(error)
+    });
   }
 
   ngAfterViewInit(): void {

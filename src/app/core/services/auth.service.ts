@@ -3,6 +3,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, from, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import {
   ApiService,
   LoginDto,
@@ -10,8 +11,8 @@ import {
   LocalStorageService,
   User,
   UserService,
-  MeDto,
-  PlatformService
+  PlatformService,
+  SnackbarService
 } from '../index';
 import { environment } from '../../../environments/environment';
 import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
@@ -21,18 +22,66 @@ import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
 })
 export class AuthService {
   user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
-  userAuthenticated: Observable<boolean> = this.user
-    .asObservable()
-    .pipe(switchMap((user: User) => of(!!user)));
-
   userAgent: Promise<Agent> = FingerprintJS.load();
 
   constructor(
     private apiService: ApiService,
     private userService: UserService,
     private localStorageService: LocalStorageService,
-    private platformService: PlatformService
+    private platformService: PlatformService,
+    private router: Router,
+    private snackbarService: SnackbarService
   ) {}
+
+  getFingerprint(): Observable<string> {
+    return from(this.userAgent.then((agent: Agent) => agent.get())).pipe(
+      switchMap((getResult: GetResult) => {
+        const { platform, timezone, vendor } = getResult.components;
+
+        return of(FingerprintJS.hashComponents({ platform, timezone, vendor }));
+      })
+    );
+  }
+
+  /** Guards */
+
+  guardPublic(): Observable<boolean> {
+    return this.getUser().pipe(
+      switchMap((user: User | undefined) => {
+        if (!user) {
+          return of(true);
+        }
+
+        this.router.navigate(['/exception', 403]).then(() =>
+          this.snackbarService.warning('Access denied', {
+            title: 'Forbidden'
+          })
+        );
+
+        return of(false);
+      })
+    );
+  }
+
+  guardPrivate(): Observable<boolean> {
+    return this.getUser().pipe(
+      switchMap((user: User | undefined) => {
+        if (!!user) {
+          return of(true);
+        }
+
+        this.router.navigate(['/exception', 401]).then(() =>
+          this.snackbarService.warning('Login to continue', {
+            title: 'Unauthorized'
+          })
+        );
+
+        return of(false);
+      })
+    );
+  }
+
+  /** Authorization API */
 
   onLogin(loginDto: LoginDto): Observable<User> {
     return this.getFingerprint().pipe(
@@ -43,7 +92,7 @@ export class AuthService {
             fingerprint,
             scope: ['settings']
           })
-          .pipe(tap((user: User) => this.setAuthorization(user)));
+          .pipe(tap((user: User) => this.setUser(user)));
       })
     );
   }
@@ -64,37 +113,30 @@ export class AuthService {
       switchMap((fingerprint: string) => {
         return this.apiService
           .post('/auth/refresh', { fingerprint })
-          .pipe(tap((user: User) => this.setAuthorization(user)));
+          .pipe(tap((user: User) => this.setUser(user)));
       })
     );
   }
 
-  getFingerprint(): Observable<string> {
-    return from(this.userAgent.then((agent: Agent) => agent.get())).pipe(
-      switchMap((getResult: GetResult) => {
-        const { platform, timezone, vendor } = getResult.components;
+  /** Service */
 
-        return of(FingerprintJS.hashComponents({ platform, timezone, vendor }));
-      })
-    );
-  }
+  getUser(): Observable<User | undefined> {
+    const user: User | undefined = this.user.getValue();
 
-  getAuthorization(): void {
-    if (this.localStorageService.getItem(environment.USER_ACCESS_TOKEN)) {
-      this.apiService.get('/auth/me', { scope: ['settings'] }).subscribe({
-        next: (user: User) => this.setAuthorization(user),
-        error: (error: any) => console.error(error)
-      });
+    if (!!user) {
+      return of(user);
     } else {
-      this.removeAuthorization();
+      if (this.localStorageService.getItem(environment.USER_ACCESS_TOKEN)) {
+        return this.apiService
+          .get('/auth/me', { scope: ['settings'] })
+          .pipe(tap((user: User) => this.setUser(user)));
+      } else {
+        return of(undefined);
+      }
     }
   }
 
-  getMe(meDto: MeDto): Observable<User> {
-    return this.apiService.get('/auth/me', meDto);
-  }
-
-  setAuthorization(user: User): Observable<void> {
+  setUser(user: User): Observable<void> {
     this.user.next(user);
 
     if (!!user.accessToken) {
@@ -108,9 +150,10 @@ export class AuthService {
     return of(null);
   }
 
-  removeAuthorization(): Observable<void> {
-    this.localStorageService.removeItem(environment.USER_ACCESS_TOKEN);
+  removeUser(): Observable<void> {
     this.platformService.removeSettings(this.user.getValue());
+
+    this.localStorageService.removeItem(environment.USER_ACCESS_TOKEN);
 
     this.user.next(undefined);
 

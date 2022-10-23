@@ -107,7 +107,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
       next: (user: User) => {
         this.user = user;
 
-        this.authService.setAuthorization(user);
+        this.authService.setUser(user);
 
         this.snackbarService.success(!!fileCreateDto ? 'Avatar updated' : 'Avatar deleted');
       },
@@ -141,7 +141,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
         next: (user: User) => {
           this.user = user;
 
-          this.authService.setAuthorization(user);
+          this.authService.setUser(user);
 
           this.snackbarService.success('Information updated');
 

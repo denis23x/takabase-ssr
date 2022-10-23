@@ -52,7 +52,7 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
         };
 
         this.userService.update(this.user.id, userUpdateDto).subscribe({
-          next: (user: User) => this.authService.setAuthorization(user),
+          next: (user: User) => this.authService.setUser(user),
           error: (error: any) => console.error(error)
         });
       },
