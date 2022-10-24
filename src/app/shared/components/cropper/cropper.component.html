@@ -13,85 +13,69 @@
           [appSquare]="'1rem'">
         </button>
       </header>
-      <div class="relative z-10 !m-0">
-        <ul class="grid grid-cols-3 grid-rows-3 absolute top-4 left-0 scale-50">
-          <li class="inline-block"></li>
-          <li class="inline-block bg-primary-2 border-x border-t border-primary-4 rounded-t-3xl">
-            <button
-              class="fill-current text-secondary-1 hover:text-info-1 rotate-90 p-2.5"
-              type="button"
-              aria-label="Up"
-              title="Up"
-              appSvgIcon
-              [appIcon]="'caret-left-fill'"
-              (click)="onTranslateV(true)">
-            </button>
-          </li>
-          <li class="inline-block"></li>
-          <li class="inline-block bg-primary-2 border-y border-l border-primary-4 rounded-l-3xl">
-            <button
-              class="fill-current text-secondary-1 hover:text-info-1 p-2.5"
-              type="button"
-              aria-label="Left"
-              title="Left"
-              appSvgIcon
-              [appIcon]="'caret-left-fill'"
-              (click)="onTranslateH(true)">
-            </button>
-          </li>
-          <li class="inline-block bg-primary-2">
-            <button
-              class="fill-current text-secondary-1 hover:text-info-1 p-2.5"
-              type="button"
-              aria-label="Center"
-              title="Center"
-              appSvgIcon
-              [appIcon]="'record-circle'"
-              appSquare="24"
-              (click)="onTranslateReset()">
-            </button>
-          </li>
-          <li class="inline-block bg-primary-2 border-y border-r border-primary-4 rounded-r-3xl">
-            <button
-              class="fill-current text-secondary-1 hover:text-info-1 rotate-180 p-2.5"
-              type="button"
-              aria-label="Right"
-              title="Right"
-              appSvgIcon
-              [appIcon]="'caret-left-fill'"
-              (click)="onTranslateH(false)">
-            </button>
-          </li>
-          <li class="inline-block"></li>
-          <li class="inline-block bg-primary-2 border-x border-b border-primary-4 rounded-b-3xl">
-            <button
-              class="fill-current text-secondary-1 hover:text-info-1 -rotate-90 p-2.5"
-              type="button"
-              aria-label="Down"
-              title="Down"
-              appSvgIcon
-              [appIcon]="'caret-left-fill'"
-              (click)="onTranslateV(false)">
-            </button>
-          </li>
-          <li class="inline-block"></li>
-        </ul>
-      </div>
-      <div class="border-t border-b border-primary-4 overflow-auto" [ngClass]="{ 'pr-4': cropperIsScrollable }" #cropperContent>
-        <image-cropper
-          class="block border border-primary-4 rounded-md my-4"
-          [imageFile]="cropperFile"
-          [maintainAspectRatio]="true"
-          [containWithinAspectRatio]="false"
-          [aspectRatio]="1"
-          [format]="'png'"
-          [alignImage]="'center'"
-          [resizeToWidth]="256"
-          [resizeToHeight]="256"
-          [transform]="imageTransform"
-          [cropper]="cropperPosition"
-          (imageCropped)="onImageCropped($event)">
-        </image-cropper>
+      <div class="border-y border-primary-4 overflow-auto" [ngClass]="{ 'pr-4': cropperIsScrollable }" #cropperContent>
+        <div class="relative">
+          <image-cropper
+            class="block border border-primary-4 rounded-md my-4"
+            [imageFile]="cropperFile"
+            [maintainAspectRatio]="true"
+            [containWithinAspectRatio]="false"
+            [aspectRatio]="1"
+            [format]="'png'"
+            [alignImage]="'center'"
+            [resizeToWidth]="256"
+            [resizeToHeight]="256"
+            [transform]="imageTransform"
+            [cropper]="cropperPosition"
+            (imageCropped)="onImageCropped($event)">
+          </image-cropper>
+          <ul class="block">
+            <li class="absolute top-4 left-1/2 -translate-x-1/2 rounded-full group opacity-25 hover:opacity-100 overflow-hidden">
+              <button
+                class="fill-current bg-white group-hover:bg-primary-2 text-primary-2 group-hover:text-secondary-1 rotate-90 p-2.5"
+                type="button"
+                aria-label="Up"
+                title="Up"
+                appSvgIcon
+                [appIcon]="'caret-left-fill'"
+                (click)="onTranslateV(true)">
+              </button>
+            </li>
+            <li class="absolute left-4 top-1/2 -translate-y-1/2 rounded-full group opacity-25 hover:opacity-100 overflow-hidden">
+              <button
+                class="fill-current bg-white group-hover:bg-primary-2 text-primary-2 group-hover:text-secondary-1 rotate-0 p-2.5"
+                type="button"
+                aria-label="Left"
+                title="Left"
+                appSvgIcon
+                [appIcon]="'caret-left-fill'"
+                (click)="onTranslateH(true)">
+              </button>
+            </li>
+            <li class="absolute right-4 top-1/2 -translate-y-1/2 rounded-full group opacity-25 hover:opacity-100 overflow-hidden">
+              <button
+                class="fill-current bg-white group-hover:bg-primary-2 text-primary-2 group-hover:text-secondary-1 rotate-180 p-2.5"
+                type="button"
+                aria-label="Right"
+                title="Right"
+                appSvgIcon
+                [appIcon]="'caret-left-fill'"
+                (click)="onTranslateH(false)">
+              </button>
+            </li>
+            <li class="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full group opacity-25 hover:opacity-100 overflow-hidden">
+              <button
+                class="fill-current bg-white group-hover:bg-primary-2 text-primary-2 group-hover:text-secondary-1 -rotate-90 p-2.5"
+                type="button"
+                aria-label="Down"
+                title="Down"
+                appSvgIcon
+                [appIcon]="'caret-left-fill'"
+                (click)="onTranslateV(false)">
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
       <footer class="flex flex-col space-y-4">
         <div class="flex justify-between items-center border border-primary-4 bg-primary-2 rounded-md">
