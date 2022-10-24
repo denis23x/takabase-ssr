@@ -65,6 +65,8 @@ export class UserComponent implements OnInit, OnDestroy {
             return category.id === Number(categoryId);
           });
 
+          /** Title handler */
+
           if (!!category) {
             if (!!this.category) {
               this.titleService.updateTitle(this.category.name, category.name);

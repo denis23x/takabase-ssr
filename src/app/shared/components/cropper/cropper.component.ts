@@ -74,7 +74,7 @@ export class CropperComponent implements OnInit {
   onRotate(direction: boolean): void {
     this.imageTransform = {
       ...this.imageTransform,
-      rotate: direction ? this.imageTransform.rotate + 45 : this.imageTransform.rotate - 45
+      rotate: direction ? this.imageTransform.rotate + 15 : this.imageTransform.rotate - 15
     };
   }
 
@@ -104,8 +104,8 @@ export class CropperComponent implements OnInit {
     this.imageTransform = {
       ...this.imageTransform,
       translateH: direction
-        ? this.imageTransform.translateH + 5
-        : this.imageTransform.translateH - 5
+        ? this.imageTransform.translateH + 2.5
+        : this.imageTransform.translateH - 2.5
     };
   }
 
@@ -113,8 +113,8 @@ export class CropperComponent implements OnInit {
     this.imageTransform = {
       ...this.imageTransform,
       translateV: direction
-        ? this.imageTransform.translateV + 5
-        : this.imageTransform.translateV - 5
+        ? this.imageTransform.translateV + 2.5
+        : this.imageTransform.translateV - 2.5
     };
   }
 

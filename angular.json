@@ -41,12 +41,12 @@
             "styles": [
               "src/styles.scss",
               {
-                "input": "src/styles/vendors/_gist.scss",
+                "input": "src/styles/vendor/_gist.scss",
                 "bundleName": "gist",
                 "inject": false
               },
               {
-                "input": "src/styles/vendors/_prismjs.scss",
+                "input": "src/styles/vendor/_prismjs.scss",
                 "bundleName": "prismjs",
                 "inject": false
               }
