@@ -1,25 +1,29 @@
 /** @format */
 
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild
 } from '@angular/core';
-import { ImageCroppedEvent } from 'ngx-image-cropper';
+import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
 import { FileCreateDto, FileService } from '../../../core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cropper, [appCropper]',
   templateUrl: './cropper.component.html'
 })
-export class CropperComponent implements OnInit {
+export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('cropperContent') cropperContent: ElementRef | undefined;
+  @ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent | undefined;
 
   @Output() closed: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() submitted: EventEmitter<FileCreateDto> = new EventEmitter<FileCreateDto>();
@@ -32,7 +36,9 @@ export class CropperComponent implements OnInit {
   cropperFile: File = undefined;
   cropperBase64: string = undefined;
   cropperIsScrollable: boolean = false;
+  cropperBackgroundIsDraggable: boolean = false;
 
+  imageTransform$: Subscription | undefined;
   imageTransform: ImageTransform = {
     scale: 1,
     rotate: 0,
@@ -53,6 +59,17 @@ export class CropperComponent implements OnInit {
   constructor(private fileService: FileService) {}
 
   ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    // prettier-ignore
+    this.imageTransform$ = this.imageCropper.transformChange.subscribe((imageTransform: ImageTransform) => {
+      this.imageTransform = imageTransform;
+    });
+  }
+
+  ngOnDestroy(): void {
+    [this.imageTransform$].forEach($ => $?.unsubscribe());
+  }
 
   onImageCropped(imageCroppedEvent: ImageCroppedEvent): void {
     this.cropperBase64 = imageCroppedEvent.base64;
@@ -97,32 +114,6 @@ export class CropperComponent implements OnInit {
       ...this.imageTransform,
       // prettier-ignore
       scale: direction ? this.imageTransform.scale + 1 : this.imageTransform.scale > 1 ? this.imageTransform.scale - 1 : 1
-    };
-  }
-
-  onTranslateH(direction: boolean): void {
-    this.imageTransform = {
-      ...this.imageTransform,
-      translateH: direction
-        ? this.imageTransform.translateH + 2.5
-        : this.imageTransform.translateH - 2.5
-    };
-  }
-
-  onTranslateV(direction: boolean): void {
-    this.imageTransform = {
-      ...this.imageTransform,
-      translateV: direction
-        ? this.imageTransform.translateV + 2.5
-        : this.imageTransform.translateV - 2.5
-    };
-  }
-
-  onTranslateReset(): void {
-    this.imageTransform = {
-      ...this.imageTransform,
-      translateH: 0,
-      translateV: 0
     };
   }
 
