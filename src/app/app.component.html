@@ -1,7 +1,10 @@
 <ng-container>
+  <div class="fixed w-full h-full opacity-10 bg-[url('/assets/images/pattern-32.svg')]"></div>
   <app-snackbar></app-snackbar>
-  <header class="bg-primary-3 flex justify-between items-center space-x-4 border-b border-primary-4 py-3 px-4" appHeader></header>
-  <main class="block">
-    <router-outlet #outlet="outlet"></router-outlet>
-  </main>
+  <div class="relative grid grid-cols-1 grid-rows-none grid-flow-row auto-rows-max gap-8 p-8 min-h-screen z-[1] mx-auto w-full max-w-[1024px]">
+    <app-header></app-header>
+    <main class="block">
+      <router-outlet #outlet="outlet"></router-outlet>
+    </main>
+  </div>
 </ng-container>
