@@ -1,49 +1,39 @@
-<article class="relative bg-primary-3 border border-primary-4 rounded-md overflow-hidden w-full h-full">
-  <a
-    [routerLink]="[postPath, post.id]"
-    [queryParamsHandling]="'preserve'"
-    [attr.aria-label]="post.title"
-    *ngIf="post.image">
-    <img
-      class="block object-cover object-center w-full h-full"
-      loading="lazy"
-      [src]="post.image"
-      [alt]="post.title">
-  </a>
-  <div class="flex flex-col items-start space-y-4 w-full h-full p-4" *ngIf="!post.image">
-    <div class="flex justify-between items-center w-full">
-      <a
-        class="flex border border-primary-4 overflow-hidden rounded-md w-10 h-10"
-        [routerLink]="['/@' + post.user.name]"
-        [attr.aria-label]="post.user.name"
-        [appUser]="post.user"
-        appAvatar>
-      </a>
-      <button
-        class="block fill-current text-secondary-1 hover:text-info-1 opacity-25 hover:opacity-100 p-2"
-        type="button"
-        aria-label="Pin"
-        title="Pin"
-        appSvgIcon
-        [appIcon]="'pin-angle'">
-      </button>
-    </div>
-    <div class="flex flex-col overflow-hidden w-full">
-      <a
-        class="text-info-1 hover:underline whitespace-nowrap text-ellipsis overflow-hidden"
-        [routerLink]="['/@' + post.user.name]"
-        [attr.aria-label]="post.user.name">{{post.user.name}}
-      </a>
-      <time
-        class="text-secondary-2 text-sm"
-        [attr.datetime]="post.updatedAt">{{post.updatedAt | dayjs : 'fromX'}}
-      </time>
-    </div>
-    <a
-      class="text-secondary-1 hover:text-info-1 hover:underline line-clamp-3 w-full mb-0"
-      [routerLink]="[postPath, post.id]"
-      [queryParamsHandling]="'preserve'"
-      [attr.aria-label]="post.title">{{post.title}}
-    </a>
-  </div>
+<!-- @format -->
+
+<article class="card card-compact bg-base-100 shadow-xl w-full h-full">
+	<figure *ngIf="post.image">
+		<a
+			[routerLink]="[postPath, post.id]"
+			[queryParamsHandling]="'preserve'"
+			[attr.aria-label]="post.title"
+		>
+			<img
+				class="object-cover object-center"
+				loading="lazy"
+				[src]="post.image"
+				[alt]="post.title"
+			/>
+		</a>
+	</figure>
+	<div class="card-body">
+		<h2 class="card-title">
+			<a
+				class="link link-hover line-clamp-2"
+				[routerLink]="[postPath, post.id]"
+				[queryParamsHandling]="'preserve'"
+				[attr.aria-label]="post.title"
+			>
+				{{ post.title }}
+			</a>
+		</h2>
+		<p class="base-content line-clamp-4">{{ post.title }}</p>
+		<div class="card-actions justify-start">
+			<time
+				class="base-content opacity-40 text-sm"
+				[attr.datetime]="post.updatedAt"
+			>
+				{{ post.updatedAt | dayjs: "fromX" }}
+			</time>
+		</div>
+	</div>
 </article>

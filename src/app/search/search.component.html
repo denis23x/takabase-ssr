@@ -1,51 +1,80 @@
-<section class="grid grid-cols-1 grid-rows-1 px-4">
-  <nav class="bg-primary-2 border-b border-primary-4 overflow-hidden py-4">
-    <ul class="flex justify-start items-center bg-primary-3 border border-primary-4 rounded-md overflow-auto px-1" #scrollRoot>
-      <li class="inline-block" *ngFor="let link of ['Posts', 'Categories', 'Users']">
-        <a
-          class="block text-secondary-1 hover:text-info-1 hover:underline p-2"
-          appScrollIntoView
-          [appRoot]="scrollRoot"
-          [appActive]="routerLinkActive.isActive"
-          [routerLink]="link.toLowerCase()"
-          [routerLinkActive]="'text-info-1'"
-          [queryParamsHandling]="'preserve'"
-          [attr.aria-label]="link"
-          #routerLinkActive="routerLinkActive">{{link}}
-        </a>
-      </li>
-    </ul>
-  </nav>
-  <form
-    class="bg-primary-2 z-20 sticky top-0 border-b border-primary-4 w-full py-2"
-    [formGroup]="searchForm"
-    autocomplete="off">
-    <fieldset *ngIf="searchForm.get('query') as query">
-      <label class="block relative" for="search">
-        <input
-          id="search"
-          type="text"
-          class="form-control bg-primary-3 truncate my-2 pr-10"
-          formControlName="query"
-          placeholder="Search"
-          aria-label="Search">
-        <button
-          class="absolute top-0 right-0 fill-current opacity-50 hover:opacity-100 text-secondary-1 hover:text-danger-1 p-2"
-          type="button"
-          *ngIf="query.value.length"
-          aria-label="Clear"
-          appSvgIcon
-          [appIcon]="'x'"
-          [appSquare]="'1.6rem'"
-          (click)="query.setValue('')">
-        </button>
-      </label>
-      <label class="block text-danger-1 text-sm" for="search" *ngIf="query.touched && query.errors" [ngSwitch]="true">
-        <ng-container *ngSwitchCase="!!query.errors.minlength">Min length {{query.errors.minlength['requiredLength']}} characters</ng-container>
-      </label>
-    </fieldset>
-  </form>
-  <div class="content">
-    <router-outlet></router-outlet>
-  </div>
-</section>
+<!-- @format -->
+
+<ng-container>
+	<div class="flex flex-col space-y-4 md:space-y-8">
+		<div class="navbar bg-base-100 rounded-box shadow-xl">
+			<div class="flex-none w-full">
+				<form class="w-full" [formGroup]="searchForm" autocomplete="off">
+					<fieldset
+						class="flex flex-col space-y-2"
+						*ngIf="searchForm.get('query') as query"
+					>
+						<label class="block relative" for="search">
+							<input
+								id="search"
+								type="text"
+								class="input input-bordered truncate w-full pr-12"
+								[class.input-error]="query.touched && query.errors"
+								formControlName="query"
+								placeholder="Search"
+								aria-label="Search"
+							/>
+							<button
+								class="btn btn-error btn-sm btn-circle absolute top-2 right-2"
+								type="button"
+								*ngIf="query.value.length"
+								aria-label="Clear"
+								title="Clear"
+								appSvgIcon
+								[appIcon]="'x'"
+								[appSquare]="'1.75rem'"
+								(click)="query.setValue('')"
+							></button>
+						</label>
+						<label
+							class="block text-error text-sm px-2"
+							for="search"
+							*ngIf="query.touched && query.errors"
+							[ngSwitch]="true"
+						>
+							<!-- prettier-ignore -->
+							<ng-container *ngSwitchCase="!!query.errors.minlength">
+								Min length {{ query.errors.minlength["requiredLength"] }} characters
+							</ng-container>
+						</label>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+		<div class="flex flex-col">
+			<nav class="flex px-4">
+				<ul class="tabs space-x-1 translate-y-px" #scrollRoot>
+					<!-- prettier-ignore -->
+					<li
+						class="tab tab-lg tab-lifted"
+						[ngClass]="routerLinkActive.isActive ? 'tab-active' : 'bg-base-200 h-10'"
+						*ngFor="let link of ['Posts', 'Categories', 'Users']"
+					>
+						<a
+							appScrollIntoView
+							[appRoot]="scrollRoot"
+							[appActive]="routerLinkActive.isActive"
+							[routerLink]="link.toLowerCase()"
+							[routerLinkActive]="''"
+							[queryParamsHandling]="'preserve'"
+							[attr.aria-label]="link"
+							#routerLinkActive="routerLinkActive"
+						>
+							{{ link }}
+						</a>
+					</li>
+				</ul>
+			</nav>
+			<div class="border rounded-box bg-primary-content p-4">
+				<div class="rounded-box bg-base-200 p-4">
+					<router-outlet></router-outlet>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-container>

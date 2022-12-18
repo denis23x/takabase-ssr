@@ -4,7 +4,9 @@
     {
       "files": "*.ts",
       "options": {
-        "printWidth": 100,
+        "printWidth": 80,
+        "tabWidth": 2,
+        "useTabs": true,
         "semi": true,
         "singleQuote": true,
         "trailingComma": "none",
@@ -15,7 +17,12 @@
     {
       "files": "*.html",
       "options": {
-        "singleQuote": false
+        "printWidth": 80,
+        "tabWidth": 2,
+        "useTabs": true,
+        "bracketSameLine": false,
+        "singleQuote": false,
+        "insertPragma": true
       }
     }
   ]

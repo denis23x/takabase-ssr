@@ -1,1 +1,9 @@
-<figure class="flex" [innerHTML]="avatar | sanitizer : 'html'"></figure>
+<!-- @format -->
+
+<ng-container>
+	<div class="avatar">
+		<div [ngClass]="avatarClassList">
+			<figure class="flex" [innerHTML]="avatar | sanitizer: 'html'"></figure>
+		</div>
+	</div>
+</ng-container>

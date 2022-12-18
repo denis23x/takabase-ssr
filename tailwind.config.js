@@ -27,38 +27,38 @@ module.exports = {
     "text-xs",
   ],
   theme: {
-    fontFamily: {
-      sans: ["Ubuntu", "sans-serif"],
-    },
-    colors: {
-      ["current"]: "currentColor",
-      ["transparent"]: "transparent",
-
-      /**
-       * Colors opacity issue handler
-       * https://github.com/adamwathan/tailwind-css-variable-text-opacity-demo
-       **/
-
-      ...(() => {
-        const colorList = {}
-
-        colorVariableList.forEach((variable) => {
-          colorList[variable] = ({ opacityVariable, opacityValue }) => {
-            if (opacityValue !== undefined) {
-              return `rgba(var(--${variable}), ${opacityValue})`
-            }
-
-            if (opacityVariable !== undefined) {
-              return `rgba(var(--${variable}), var(${opacityVariable}, 1))`
-            }
-
-            return `rgb(var(--${variable}))`
-          }
-        })
-
-        return colorList
-      })(),
-    },
+    // fontFamily: {
+    //   sans: ["Ubuntu", "sans-serif"],
+    // },
+    // colors: {
+    //   ["current"]: "currentColor",
+    //   ["transparent"]: "transparent",
+    //
+    //   /**
+    //    * Colors opacity issue handler
+    //    * https://github.com/adamwathan/tailwind-css-variable-text-opacity-demo
+    //    **/
+    //
+    //   ...(() => {
+    //     const colorList = {}
+    //
+    //     colorVariableList.forEach((variable) => {
+    //       colorList[variable] = ({ opacityVariable, opacityValue }) => {
+    //         if (opacityValue !== undefined) {
+    //           return `rgba(var(--${variable}), ${opacityValue})`
+    //         }
+    //
+    //         if (opacityVariable !== undefined) {
+    //           return `rgba(var(--${variable}), var(${opacityVariable}, 1))`
+    //         }
+    //
+    //         return `rgb(var(--${variable}))`
+    //       }
+    //     })
+    //
+    //     return colorList
+    //   })(),
+    // },
     cursor: {
       ["default"]: "default",
       ["pointer"]: "pointer",
@@ -100,7 +100,7 @@ module.exports = {
     },
   },
   plugins: [
-    require("@tailwindcss/forms"),
+    // require("@tailwindcss/forms"),
     require("@tailwindcss/line-clamp"),
     require("daisyui"),
   ],

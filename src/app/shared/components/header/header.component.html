@@ -1,122 +1,114 @@
+<!-- @format -->
+
 <header class="navbar bg-base-100 shadow-xl rounded-box">
-  <div class="navbar-start">
-    <div class="dropdown">
-      <label tabindex="0" class="btn btn-ghost btn-circle">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
-      </label>
-      <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-        <li><a>Homepage</a></li>
-        <li><a>Portfolio</a></li>
-        <li><a>About</a></li>
-      </ul>
-    </div>
-    <a class="flex justify-start items-center" [routerLink]="['/']" aria-label="Draftnow" title="Draftnow">
-      <i class="fill-current text-secondary-1 p-2" appSvgIcon [appIcon]="'box-arrow-in-down'"></i>
-      <span class="text-secondary-1">Draftnow</span>
-    </a>
-  </div>
-  <div class="navbar-center">
-    <a class="btn btn-ghost normal-case text-xl">daisyUI</a>
-  </div>
-  <div class="navbar-end">
-    <ng-container *appAuthenticated="false">
-      <nav class="flex justify-end items-center space-x-4">
-        <a class="btn btn-info md" [routerLink]="['/auth/login']" aria-label="Login">Login</a>
-      </nav>
-    </ng-container>
-    <ng-container *appAuthenticated="true">
-      <nav class="flex justify-end items-center" *ngIf="!!authUser">
-        <a
-          class="fill-current text-secondary-1 hover:text-info-1 p-2"
-          [routerLink]="['/create']"
-          [routerLinkActive]="['text-info-1']"
-          [routerLinkActiveOptions]="{ exact: true }"
-          aria-label="Create post"
-          title="Create post"
-          appSvgIcon
-          [appIcon]="'file-earmark-plus'">
-        </a>
-        <a
-          class="fill-current text-secondary-1 hover:text-info-1 p-2"
-          [routerLink]="['/search']"
-          [routerLinkActive]="['text-info-1']"
-          aria-label="Search"
-          title="Search"
-          appSvgIcon
-          [appIcon]="'search'"
-          [appSquare]="'1.15em'">
-        </a>
-        <ng-container>
-          <a
-            class="hidden md:block text-secondary-1 hover:text-info-1 hover:underline mx-2"
-            [routerLink]="['/@' + authUser.name]"
-            [routerLinkActive]="['text-info-1']"
-            [attr.aria-label]="authUser.name"
-            title="Profile">{{authUser.name}}
-          </a>
-          <a
-            class="block md:hidden fill-current text-secondary-1 hover:text-info-1 p-2"
-            [routerLink]="['/@' + authUser.name]"
-            [routerLinkActive]="['text-info-1']"
-            [attr.aria-label]="authUser.name"
-            title="Profile"
-            appSvgIcon
-            [appIcon]="'person'">
-          </a>
-        </ng-container>
-        <app-dropdown
-          class="flex relative"
-          *ngIf="{ value: false } as active"
-          (toggled)="active.value = $event">
-          <button
-            class="block fill-current text-secondary-1 hover:text-info-1 p-2"
-            [class.text-info-1]="active.value"
-            type="button"
-            aria-label="Menu"
-            appSvgIcon
-            [appIcon]="'three-dots-vertical'"
-            slot="toggle">
-          </button>
-          <div class="absolute z-30 top-full right-0 flex flex-col items-end -mt-1" slot="content">
-            <div class="w-3 overflow-hidden inline-block mx-3">
-              <div class="h-2 w-2 bg-primary-2 rotate-45 origin-bottom-left"></div>
-            </div>
-            <ul class="flex flex-col bg-primary-2 rounded-md shadow-lg py-2">
-              <li class="block">
-                <a
-                  class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
-                  [routerLink]="['/settings']"
-                  [routerLinkActive]="['text-info-1']"
-                  [routerLinkActiveOptions]="{ exact: true }"
-                  aria-label="Settings">Settings
-                </a>
-              </li>
-              <li class="block">
-                <a
-                  class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
-                  [routerLink]="['/ui']"
-                  [routerLinkActive]="['text-info-1']"
-                  [routerLinkActiveOptions]="{ exact: true }"
-                  aria-label="UI">UI
-                </a>
-              </li>
-              <li
-                class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 cursor-pointer whitespace-nowrap w-full py-2 px-4"
-                (click)="onLogout()">Logout
-              </li>
-            </ul>
-          </div>
-        </app-dropdown>
-      </nav>
-    </ng-container>
-    <button class="btn btn-ghost btn-circle">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-    </button>
-    <button class="btn btn-ghost btn-circle">
-      <div class="indicator">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
-        <span class="badge badge-xs badge-primary indicator-item"></span>
-      </div>
-    </button>
-  </div>
+	<div class="navbar-start">
+		<div class="dropdown">
+			<label tabindex="0" class="btn btn-ghost btn-circle">
+				<button
+					class="block fill-current text-secondary-1 hover:text-info-1 p-2"
+					type="button"
+					aria-label="Menu"
+					appSvgIcon
+					[appIcon]="'three-dots-vertical'"
+					[appSquare]="'1.5em'"
+				></button>
+			</label>
+			<ul
+				tabindex="0"
+				class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+			>
+				<li><a>Homepage</a></li>
+				<li><a>Portfolio</a></li>
+				<li><a>About</a></li>
+				<li class="block">
+					<a
+						class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
+						[routerLink]="['/settings']"
+						[routerLinkActive]="['text-info-1']"
+						[routerLinkActiveOptions]="{ exact: true }"
+						aria-label="Settings"
+					>
+						Settings
+					</a>
+				</li>
+				<li class="block">
+					<a
+						class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
+						[routerLink]="['/ui']"
+						[routerLinkActive]="['text-info-1']"
+						[routerLinkActiveOptions]="{ exact: true }"
+						aria-label="UI"
+					>
+						UI
+					</a>
+				</li>
+				<li
+					class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 cursor-pointer whitespace-nowrap w-full py-2 px-4"
+					(click)="onLogout()"
+				>
+					Logout
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="navbar-center">
+		<a
+			class="btn btn-ghost normal-case text-xl"
+			[routerLink]="['/']"
+			aria-label="Draft"
+			title="Draft"
+		>
+			Draft
+		</a>
+	</div>
+	<div class="navbar-end">
+		<ng-container *appAuthenticated="false">
+			<nav class="flex justify-end items-center space-x-4">
+				<a
+					class="btn btn-primary"
+					[routerLink]="['/auth/login']"
+					aria-label="Login"
+					title="Login"
+				>
+					Login
+				</a>
+			</nav>
+		</ng-container>
+		<ng-container *appAuthenticated="true">
+			<nav class="flex justify-end items-center space-x-2" *ngIf="!!authUser">
+				<a
+					class="btn btn-ghost btn-circle"
+					[routerLink]="['/create']"
+					[routerLinkActive]="['btn-active']"
+					[routerLinkActiveOptions]="{ exact: true }"
+					aria-label="Create post"
+					title="Create post"
+					appSvgIcon
+					[appIcon]="'file-earmark-plus'"
+					[appSquare]="'1.5em'"
+				>
+				</a>
+				<a
+					class="btn btn-ghost btn-circle"
+					[routerLink]="['/search']"
+					[routerLinkActive]="['btn-active']"
+					aria-label="Search"
+					title="Search"
+					appSvgIcon
+					[appIcon]="'search'"
+					[appSquare]="'1.5em'"
+				>
+				</a>
+				<a
+					class="btn btn-link btn-circle"
+					[routerLink]="['/@' + authUser.name]"
+					[attr.aria-label]="authUser.name"
+					[title]="authUser.name"
+					[appUser]="authUser"
+					appAvatar
+				>
+				</a>
+			</nav>
+		</ng-container>
+	</div>
 </header>
