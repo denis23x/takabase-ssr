@@ -1,114 +1,118 @@
 <!-- @format -->
 
-<header class="navbar bg-base-100 shadow-xl rounded-box">
-	<div class="navbar-start">
-		<div class="dropdown">
-			<label tabindex="0" class="btn btn-ghost btn-circle">
-				<button
-					class="block fill-current text-secondary-1 hover:text-info-1 p-2"
-					type="button"
-					aria-label="Menu"
-					appSvgIcon
-					[appIcon]="'three-dots-vertical'"
-					[appSquare]="'1.5em'"
-				></button>
-			</label>
-			<ul
-				tabindex="0"
-				class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-			>
-				<li><a>Homepage</a></li>
-				<li><a>Portfolio</a></li>
-				<li><a>About</a></li>
-				<li class="block">
-					<a
-						class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
-						[routerLink]="['/settings']"
-						[routerLinkActive]="['text-info-1']"
-						[routerLinkActiveOptions]="{ exact: true }"
-						aria-label="Settings"
-					>
-						Settings
-					</a>
-				</li>
-				<li class="block">
-					<a
-						class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
-						[routerLink]="['/ui']"
-						[routerLinkActive]="['text-info-1']"
-						[routerLinkActiveOptions]="{ exact: true }"
-						aria-label="UI"
-					>
-						UI
-					</a>
-				</li>
-				<li
-					class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 cursor-pointer whitespace-nowrap w-full py-2 px-4"
-					(click)="onLogout()"
+<ng-container>
+	<header class="navbar border bg-base-100 shadow-xl rounded-box">
+		<div class="navbar-start">
+			<div class="dropdown">
+				<label tabindex="0" class="btn btn-ghost btn-circle">
+					<button
+						class="block fill-current text-secondary-1 hover:text-info-1 p-2"
+						type="button"
+						aria-label="Menu"
+						appSvgIcon
+						[appIcon]="'three-dots-vertical'"
+						[appSquare]="'1.5em'"
+					></button>
+				</label>
+				<ul
+					tabindex="0"
+					class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
 				>
-					Logout
-				</li>
-			</ul>
+					<li><a>Homepage</a></li>
+					<li><a>Portfolio</a></li>
+					<li><a>About</a></li>
+					<li class="block">
+						<a
+							class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
+							[routerLink]="['/settings']"
+							[routerLinkActive]="['text-info-1']"
+							[routerLinkActiveOptions]="{ exact: true }"
+							aria-label="Settings"
+						>
+							Settings
+						</a>
+					</li>
+					<li class="block">
+						<a
+							class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
+							[routerLink]="['/ui']"
+							[routerLinkActive]="['text-info-1']"
+							[routerLinkActiveOptions]="{ exact: true }"
+							aria-label="UI"
+						>
+							UI
+						</a>
+					</li>
+					<li
+						class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 cursor-pointer whitespace-nowrap w-full py-2 px-4"
+						(click)="onLogout()"
+					>
+						Logout
+					</li>
+				</ul>
+			</div>
 		</div>
-	</div>
-	<div class="navbar-center">
-		<a
-			class="btn btn-ghost normal-case text-xl"
-			[routerLink]="['/']"
-			aria-label="Draft"
-			title="Draft"
-		>
-			Draft
-		</a>
-	</div>
-	<div class="navbar-end">
-		<ng-container *appAuthenticated="false">
-			<nav class="flex justify-end items-center space-x-4">
-				<a
-					class="btn btn-primary"
-					[routerLink]="['/auth/login']"
-					aria-label="Login"
-					title="Login"
-				>
-					Login
-				</a>
-			</nav>
-		</ng-container>
-		<ng-container *appAuthenticated="true">
-			<nav class="flex justify-end items-center space-x-2" *ngIf="!!authUser">
-				<a
-					class="btn btn-ghost btn-circle"
-					[routerLink]="['/create']"
-					[routerLinkActive]="['btn-active']"
-					[routerLinkActiveOptions]="{ exact: true }"
-					aria-label="Create post"
-					title="Create post"
-					appSvgIcon
-					[appIcon]="'file-earmark-plus'"
-					[appSquare]="'1.5em'"
-				>
-				</a>
-				<a
-					class="btn btn-ghost btn-circle"
-					[routerLink]="['/search']"
-					[routerLinkActive]="['btn-active']"
-					aria-label="Search"
-					title="Search"
-					appSvgIcon
-					[appIcon]="'search'"
-					[appSquare]="'1.5em'"
-				>
-				</a>
-				<a
-					class="btn btn-link btn-circle"
-					[routerLink]="['/@' + authUser.name]"
-					[attr.aria-label]="authUser.name"
-					[title]="authUser.name"
-					[appUser]="authUser"
-					appAvatar
-				>
-				</a>
-			</nav>
-		</ng-container>
-	</div>
-</header>
+		<div class="navbar-center">
+			<a
+				class="btn btn-ghost normal-case text-xl"
+				[routerLink]="['/']"
+				aria-label="Draft"
+				title="Draft"
+			>
+				Draft
+			</a>
+		</div>
+		<div class="navbar-end">
+			<ng-container *appAuthenticated="false">
+				<nav class="flex justify-end items-center space-x-4">
+					<a
+						class="btn btn-primary"
+						[routerLink]="['/auth/login']"
+						aria-label="Login"
+						title="Login"
+					>
+						Login
+					</a>
+				</nav>
+			</ng-container>
+			<ng-container *appAuthenticated="true">
+				<nav class="flex justify-end items-center space-x-2" *ngIf="!!authUser">
+					<a
+						class="btn btn-ghost btn-circle"
+						[routerLink]="['/create']"
+						[routerLinkActive]="['btn-active']"
+						[routerLinkActiveOptions]="{ exact: true }"
+						aria-label="Create post"
+						title="Create post"
+						appSvgIcon
+						[appIcon]="'file-earmark-plus'"
+						[appSquare]="'1.5em'"
+						[appViewBox]="'0 0 14 14'"
+					>
+					</a>
+					<a
+						class="btn btn-ghost btn-circle"
+						[routerLink]="['/search']"
+						[routerLinkActive]="['btn-active']"
+						aria-label="Search"
+						title="Search"
+						appSvgIcon
+						[appIcon]="'search'"
+						[appSquare]="'1.5em'"
+						[appViewBox]="'0 0 14 14'"
+					>
+					</a>
+					<a
+						class="btn btn-link btn-circle"
+						[routerLink]="['/@' + authUser.name]"
+						[attr.aria-label]="authUser.name"
+						[title]="authUser.name"
+						[appUser]="authUser"
+						appAvatar
+					>
+					</a>
+				</nav>
+			</ng-container>
+		</div>
+	</header>
+</ng-container>

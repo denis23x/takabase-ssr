@@ -5,158 +5,156 @@ import { Observable, BehaviorSubject, from, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import {
-  ApiService,
-  LoginDto,
-  LogoutDto,
-  LocalStorageService,
-  User,
-  UserService,
-  PlatformService,
-  SnackbarService
+	ApiService,
+	LoginDto,
+	LogoutDto,
+	LocalStorageService,
+	User,
+	UserService,
+	PlatformService,
+	SnackbarService
 } from '../index';
 import { environment } from '../../../environments/environment';
 import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class AuthService {
-  user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
-  userAgent: Promise<Agent> = FingerprintJS.load();
+	// prettier-ignore
+	user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
+	userAgent: Promise<Agent> = FingerprintJS.load();
 
-  constructor(
-    private apiService: ApiService,
-    private userService: UserService,
-    private localStorageService: LocalStorageService,
-    private platformService: PlatformService,
-    private router: Router,
-    private snackbarService: SnackbarService
-  ) {}
+	constructor(
+		private apiService: ApiService,
+		private userService: UserService,
+		private localStorageService: LocalStorageService,
+		private platformService: PlatformService,
+		private router: Router,
+		private snackbarService: SnackbarService
+	) {}
 
-  getFingerprint(): Observable<string> {
-    return from(this.userAgent.then((agent: Agent) => agent.get())).pipe(
-      switchMap((getResult: GetResult) => {
-        const { platform, timezone, vendor } = getResult.components;
+	getFingerprint(): Observable<string> {
+		return from(this.userAgent.then((agent: Agent) => agent.get())).pipe(
+			switchMap((getResult: GetResult) => {
+				const { platform, timezone, vendor } = getResult.components;
 
-        return of(FingerprintJS.hashComponents({ platform, timezone, vendor }));
-      })
-    );
-  }
+				return of(FingerprintJS.hashComponents({ platform, timezone, vendor }));
+			})
+		);
+	}
 
-  /** Guards */
+	/** Guards */
 
-  guardPublic(): Observable<boolean> {
-    return this.getUser().pipe(
-      switchMap((user: User | undefined) => {
-        if (!user) {
-          return of(true);
-        }
+	guardPublic(): Observable<boolean> {
+		return this.getUser().pipe(
+			switchMap((user: User | undefined) => {
+				if (!user) {
+					return of(true);
+				}
 
-        this.router.navigate(['/exception', 403]).then(() =>
-          this.snackbarService.warning('Access denied', {
-            title: 'Forbidden'
-          })
-        );
+				this.router.navigate(['/exception', 403]).then(() => {
+					this.snackbarService.warning('Forbidden', 'Access denied');
+				});
 
-        return of(false);
-      })
-    );
-  }
+				return of(false);
+			})
+		);
+	}
 
-  guardPrivate(): Observable<boolean> {
-    return this.getUser().pipe(
-      switchMap((user: User | undefined) => {
-        if (!!user) {
-          return of(true);
-        }
+	guardPrivate(): Observable<boolean> {
+		return this.getUser().pipe(
+			switchMap((user: User | undefined) => {
+				if (!!user) {
+					return of(true);
+				}
 
-        this.router.navigate(['/exception', 401]).then(() =>
-          this.snackbarService.warning('Login to continue', {
-            title: 'Unauthorized'
-          })
-        );
+				this.router.navigate(['/exception', 401]).then(() => {
+					this.snackbarService.warning('Unauthorized', 'Login to continue');
+				});
 
-        return of(false);
-      })
-    );
-  }
+				return of(false);
+			})
+		);
+	}
 
-  /** Authorization API */
+	/** Authorization API */
 
-  onLogin(loginDto: LoginDto): Observable<User> {
-    return this.getFingerprint().pipe(
-      switchMap((fingerprint: string) => {
-        return this.apiService
-          .post('/auth/login', {
-            ...loginDto,
-            fingerprint,
-            scope: ['settings']
-          })
-          .pipe(tap((user: User) => this.setUser(user)));
-      })
-    );
-  }
+	onLogin(loginDto: LoginDto): Observable<User> {
+		return this.getFingerprint().pipe(
+			switchMap((fingerprint: string) => {
+				return this.apiService
+					.post('/auth/login', {
+						...loginDto,
+						fingerprint,
+						scope: ['settings']
+					})
+					.pipe(tap((user: User) => this.setUser(user)));
+			})
+		);
+	}
 
-  onLogout(logoutDto?: LogoutDto): Observable<User> {
-    return this.getFingerprint().pipe(
-      switchMap((fingerprint: string) => {
-        return this.apiService.post('/auth/logout', {
-          ...logoutDto,
-          fingerprint
-        });
-      })
-    );
-  }
+	onLogout(logoutDto?: LogoutDto): Observable<User> {
+		return this.getFingerprint().pipe(
+			switchMap((fingerprint: string) => {
+				return this.apiService.post('/auth/logout', {
+					...logoutDto,
+					fingerprint
+				});
+			})
+		);
+	}
 
-  onRefresh(): Observable<User> {
-    return this.getFingerprint().pipe(
-      switchMap((fingerprint: string) => {
-        return this.apiService
-          .post('/auth/refresh', { fingerprint })
-          .pipe(tap((user: User) => this.setUser(user)));
-      })
-    );
-  }
+	onRefresh(): Observable<User> {
+		return this.getFingerprint().pipe(
+			switchMap((fingerprint: string) => {
+				return this.apiService
+					.post('/auth/refresh', { fingerprint })
+					.pipe(tap((user: User) => this.setUser(user)));
+			})
+		);
+	}
 
-  /** Service */
+	/** Service */
 
-  getUser(): Observable<User | undefined> {
-    const user: User | undefined = this.user.getValue();
+	getUser(): Observable<User | undefined> {
+		const user: User | undefined = this.user.getValue();
 
-    if (!!user) {
-      return of(user);
-    } else {
-      if (this.localStorageService.getItem(environment.USER_ACCESS_TOKEN)) {
-        return this.apiService
-          .get('/auth/me', { scope: ['settings'] })
-          .pipe(tap((user: User) => this.setUser(user)));
-      } else {
-        return of(undefined);
-      }
-    }
-  }
+		if (!!user) {
+			return of(user);
+		} else {
+			if (this.localStorageService.getItem(environment.USER_ACCESS_TOKEN)) {
+				return this.apiService
+					.get('/auth/me', { scope: ['settings'] })
+					.pipe(tap((user: User) => this.setUser(user)));
+			} else {
+				return of(undefined);
+			}
+		}
+	}
 
-  setUser(user: User): Observable<void> {
-    this.user.next(user);
+	setUser(user: User): Observable<void> {
+		this.user.next(user);
 
-    if (!!user.accessToken) {
-      this.localStorageService.setItem(environment.USER_ACCESS_TOKEN, user.accessToken);
-    }
+		if (!!user.accessToken) {
+			// prettier-ignore
+			this.localStorageService.setItem(environment.USER_ACCESS_TOKEN, user.accessToken);
+		}
 
-    if (!!user.settings) {
-      this.platformService.setSettings(this.user.getValue());
-    }
+		if (!!user.settings) {
+			this.platformService.setSettings(this.user.getValue());
+		}
 
-    return of(null);
-  }
+		return of(null);
+	}
 
-  removeUser(): Observable<void> {
-    this.platformService.removeSettings(this.user.getValue());
+	removeUser(): Observable<void> {
+		this.platformService.removeSettings(this.user.getValue());
 
-    this.localStorageService.removeItem(environment.USER_ACCESS_TOKEN);
+		this.localStorageService.removeItem(environment.USER_ACCESS_TOKEN);
 
-    this.user.next(undefined);
+		this.user.next(undefined);
 
-    return of(null);
-  }
+		return of(null);
+	}
 }

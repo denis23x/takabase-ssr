@@ -1,9 +1,11 @@
+<!-- @format -->
+
 <ng-container>
-  <svg
-    class="block"
-    [attr.width]="square || width"
-    [attr.height]="square || height"
-    [attr.viewBox]="viewBox">
-    <use [attr.xlink:href]="'assets/icons/sprite.svg#' + icon"></use>
-  </svg>
+	<svg
+		[attr.width]="square || width"
+		[attr.height]="square || height"
+		[attr.viewBox]="viewBox"
+	>
+		<use [attr.xlink:href]="'assets/icons/sprite.svg#' + icon"></use>
+	</svg>
 </ng-container>

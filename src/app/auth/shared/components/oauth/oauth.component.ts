@@ -4,13 +4,13 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
-  selector: 'app-oauth, [appOauth]',
-  templateUrl: './oauth.component.html'
+	selector: 'app-oauth, [appOauth]',
+	templateUrl: './oauth.component.html'
 })
 export class OauthComponent implements OnInit {
-  apiUrl: string = environment.API_URL;
+	apiUrl: string = environment.API_URL;
 
-  constructor() {}
+	constructor() {}
 
-  ngOnInit(): void {}
+	ngOnInit(): void {}
 }

@@ -1,64 +1,19 @@
-const colorVariableList = [
-  "white",
-  "black",
-  "primary-1",
-  "primary-2",
-  "primary-3",
-  "primary-4",
-  "secondary-1",
-  "secondary-2",
-  "info-1",
-  "success-1",
-  "warning-1",
-  "danger-1",
-]
-
 module.exports = {
   mode: "jit",
   content: ["./src/**/*.html"],
   safelist: [
-    ...colorVariableList.map((variable) => "bg-" + variable),
-    ...colorVariableList.map((variable) => "text-" + variable),
     "text-2xl",
     "text-xl",
     "text-lg",
     "text-base",
     "text-sm",
     "text-xs",
+    "alert-info",
+    "alert-success",
+    "alert-warning",
+    "alert-error",
   ],
   theme: {
-    // fontFamily: {
-    //   sans: ["Ubuntu", "sans-serif"],
-    // },
-    // colors: {
-    //   ["current"]: "currentColor",
-    //   ["transparent"]: "transparent",
-    //
-    //   /**
-    //    * Colors opacity issue handler
-    //    * https://github.com/adamwathan/tailwind-css-variable-text-opacity-demo
-    //    **/
-    //
-    //   ...(() => {
-    //     const colorList = {}
-    //
-    //     colorVariableList.forEach((variable) => {
-    //       colorList[variable] = ({ opacityVariable, opacityValue }) => {
-    //         if (opacityValue !== undefined) {
-    //           return `rgba(var(--${variable}), ${opacityValue})`
-    //         }
-    //
-    //         if (opacityVariable !== undefined) {
-    //           return `rgba(var(--${variable}), var(${opacityVariable}, 1))`
-    //         }
-    //
-    //         return `rgb(var(--${variable}))`
-    //       }
-    //     })
-    //
-    //     return colorList
-    //   })(),
-    // },
     cursor: {
       ["default"]: "default",
       ["pointer"]: "pointer",
@@ -99,9 +54,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    // require("@tailwindcss/forms"),
-    require("@tailwindcss/line-clamp"),
-    require("daisyui"),
-  ],
+  plugins: [require("@tailwindcss/line-clamp"), require("daisyui")],
 }

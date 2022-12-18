@@ -1,19 +1,26 @@
-<ul class="absolute right-0 bottom-0 flex flex-col space-y-5 items-end justify-end max-w-lg p-8 z-40">
-  <li class="overflow-hidden rounded-md shadow-lg" [ngClass]="snack.options.classList" *ngFor="let snack of snackbarList">
-    <div class="flex items-start justify-start border border-transparent py-1 px-2" [ngClass]="snack.options.classList">
-      <p class="flex flex-wrap items-start justify-start p-2">
-        <span class="block font-bold capitalize mr-1" *ngIf="snack.options.title">{{ snack.options.title }}</span>
-        <span class="block first-letter:capitalize">{{ snack.message }}</span>
-      </p>
-      <button
-        class="block fill-current p-2"
-        type="button"
-        aria-label="Close"
-        appSvgIcon
-        [appIcon]="'x'"
-        [appSquare]="'1.5em'"
-        (click)="onClose(snack.uuid)">
-      </button>
-    </div>
-  </li>
-</ul>
+<!-- @format -->
+
+<ng-container>
+	<ul
+		class="fixed right-0 bottom-0 flex flex-col space-y-5 items-end justify-end max-w-lg p-8 z-40"
+	>
+		<li
+			class="alert shadow-lg"
+			[ngClass]="snack.options.classList"
+			*ngFor="let snack of snackbarList"
+			(click)="onClose(snack.uuid)"
+		>
+			<div class="flex flex-col items-start justify-start w-full">
+				<span class="block font-bold capitalize" *ngIf="snack.title">
+					{{ snack.title }}
+				</span>
+				<div class="first-letter:capitalize">{{ snack.message }}</div>
+				<progress
+					class="progress opacity-50"
+					[value]="snack.progress.value || 0"
+					[max]="100"
+				></progress>
+			</div>
+		</li>
+	</ul>
+</ng-container>

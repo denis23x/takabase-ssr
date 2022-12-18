@@ -2,53 +2,77 @@
 
 import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { Snack, SnackOptions } from '../models';
+import { Snack, SnackDuration, SnackOptions, SnackProgress } from '../models';
 
 @Injectable()
 export class SnackbarService {
-  snackbar$: ReplaySubject<Snack> = new ReplaySubject<Snack>();
+	snackbar$: ReplaySubject<Snack> = new ReplaySubject<Snack>();
 
-  info(message: string, snackOptions?: SnackOptions) {
-    this.snackbar$.next({
-      message,
-      options: {
-        classList: 'bg-info-1 text-white',
-        duration: 4000,
-        ...snackOptions
-      }
-    });
-  }
+	getDefaultDuration(duration: number = 4000): SnackDuration {
+		return {
+			value: duration
+		};
+	}
 
-  success(message: string, snackOptions?: SnackOptions) {
-    this.snackbar$.next({
-      message,
-      options: {
-        classList: 'bg-success-1 text-white',
-        duration: 4000,
-        ...snackOptions
-      }
-    });
-  }
+	getDefaultProgress(): SnackProgress {
+		return {
+			value: 0
+		};
+	}
 
-  warning(message: string, snackOptions?: SnackOptions) {
-    this.snackbar$.next({
-      message,
-      options: {
-        classList: 'bg-warning-1 text-black',
-        duration: 5000,
-        ...snackOptions
-      }
-    });
-  }
+	// prettier-ignore
+	info(title: string | null, message: string, duration?: number, options?: SnackOptions) {
+		this.snackbar$.next({
+			title,
+			message,
+			duration: this.getDefaultDuration(duration),
+			progress: this.getDefaultProgress(),
+			options: {
+				classList: 'alert-info text-white',
+				...options
+			}
+		});
+	}
 
-  danger(message: string, snackOptions?: SnackOptions) {
-    this.snackbar$.next({
-      message,
-      options: {
-        classList: 'bg-danger-1 text-white',
-        duration: 5000,
-        ...snackOptions
-      }
-    });
-  }
+	// prettier-ignore
+	success(title: string | null, message: string, duration?: number, options?: SnackOptions) {
+		this.snackbar$.next({
+			title,
+			message,
+      duration: this.getDefaultDuration(duration),
+      progress: this.getDefaultProgress(),
+			options: {
+				classList: 'alert-success text-white',
+				...options
+			}
+		});
+	}
+
+	// prettier-ignore
+	warning(title: string | null, message: string, duration?: number, options?: SnackOptions) {
+		this.snackbar$.next({
+			title,
+			message,
+      duration: this.getDefaultDuration(duration),
+      progress: this.getDefaultProgress(),
+			options: {
+				classList: 'alert-warning text-black',
+				...options
+			}
+		});
+	}
+
+	// prettier-ignore
+	danger(title: string | null, message: string, duration?: number, options?: SnackOptions) {
+		this.snackbar$.next({
+			title,
+			message,
+      duration: this.getDefaultDuration(duration),
+      progress: this.getDefaultProgress(),
+			options: {
+				classList: 'alert-error text-white',
+				...options
+			}
+		});
+	}
 }

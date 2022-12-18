@@ -1,68 +1,146 @@
-<section class="md:w-128 mx-auto p-4">
-  <form
-    class="flex flex-col space-y-4 bg-primary-3 border border-primary-4 rounded-md p-4"
-    [formGroup]="loginForm"
-    (ngSubmit)="onSubmitForm()">
-    <div class="flex flex-col">
-      <h1 class="text-2xl text-secondary-1 font-medium">Login to Draft</h1>
-      <div class="flex space-x-1 text-base">
-        <span class="block text-secondary-2">Don't have account?</span>
-        <a class="text-info-1 hover:underline" [routerLink]="['../registration']" aria-label="Join now">Join now</a>
-      </div>
-      <app-oauth class="block mt-4"></app-oauth>
-    </div>
-    <fieldset class="flex flex-col space-y-4" [disabled]="loginFormIsSubmitted">
-      <fieldset class="flex flex-col space-y-2" *ngIf="loginForm.get('email') as email">
-        <label class="block text-secondary-2 text-sm" for="email">Email</label>
-        <input
-          id="email"
-          autocomplete="username"
-          type="email"
-          class="form-control bg-primary-2 truncate"
-          formControlName="email"
-          placeholder="Email"
-          aria-label="Email">
-        <label class="block text-danger-1 text-sm" for="email" *ngIf="email.touched && email.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="!!email.errors.required">Required</ng-container>
-          <ng-container *ngSwitchCase="!!email.errors.email">Email must be a real email address</ng-container>
-        </label>
-      </fieldset>
-      <fieldset class="flex flex-col space-y-2" *ngIf="loginForm.get('password') as password">
-        <div class="flex items-center justify-between">
-          <label class="block text-secondary-2 text-sm" for="password">Password</label>
-          <a class="text-info-1 text-sm hover:underline" [routerLink]="['../reset']" aria-label="Forgot password">Forgot password</a>
-        </div>
-        <div class="relative" *ngIf="{ value: false } as isVisible">
-          <input
-            id="password"
-            autocomplete="current-password"
-            [type]="isVisible.value ? 'text' : 'password'"
-            class="form-control bg-primary-2 pr-10"
-            formControlName="password"
-            placeholder="Password"
-            aria-label="Password">
-          <i
-            class="absolute top-0 right-0 fill-current text-secondary-2 opacity-50 cursor-pointer p-2.5"
-            *ngIf="password.value.length"
-            (touchstart)="isVisible.value = !isVisible.value"
-            (mouseenter)="isVisible.value = true"
-            (mouseleave)="isVisible.value = false"
-            appSvgIcon
-            [appIcon]="isVisible.value ? 'eye' : 'eye-slash'"
-            [appSquare]="'1.35rem'">
-          </i>
-        </div>
-        <label class="block text-danger-1 text-sm" for="password" *ngIf="password.touched && password.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="!!password.errors.required">Required</ng-container>
-          <ng-container *ngSwitchCase="!!password.errors.pattern">Password does not match pattern</ng-container>
-        </label>
-      </fieldset>
-      <button
-        class="btn btn-success md w-full"
-        type="submit"
-        aria-label="Login"
-        [disabled]="loginForm.invalid || loginFormIsSubmitted">Login
-      </button>
-    </fieldset>
-  </form>
-</section>
+<!-- @format -->
+
+<ng-container>
+	<div class="bg-base-100 border rounded-box shadow-xl p-4">
+		<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-box w-full">
+			<div
+				class="flex flex-col items-start sm:items-center justify-center space-y-4 rounded-t-box sm:rounded-box bg-base-200 -mx-4 -mt-4 sm:m-0 p-4"
+			>
+				<h2 class="text-xl text-base-content font-medium">Login via</h2>
+				<app-oauth class="block mt-4"></app-oauth>
+				<div class="inline text-left sm:text-center">
+					<span class="block text-base-content">Don't have an account?</span>
+					<a
+						class="link link-primary"
+						[routerLink]="['../registration']"
+						aria-label="Join now"
+					>
+						Registration
+					</a>
+				</div>
+			</div>
+			<form
+				class="flex flex-col rounded-none bg-base-100"
+				[formGroup]="loginForm"
+				(ngSubmit)="onSubmitForm()"
+			>
+				<div class="flex flex-col">
+					<h2 class="text-xl text-base-content font-medium">
+						Login with credentials
+					</h2>
+					<div class="flex space-x-1 text-base-content">
+						Enter your email and password
+					</div>
+				</div>
+				<hr class="my-4" />
+				<fieldset
+					class="flex flex-col space-y-4"
+					[disabled]="loginFormIsSubmitted"
+				>
+					<fieldset
+						class="form-control"
+						*ngIf="loginForm.get('email') as email"
+					>
+						<label class="label" for="email">
+							<span class="label-text">Email</span>
+						</label>
+						<input
+							id="email"
+							autocomplete="username"
+							type="email"
+							class="input input-bordered truncate w-full"
+							[class.input-success]="email.touched && !email.errors"
+							[class.input-error]="email.touched && email.errors"
+							[class.input-disabled]="loginFormIsSubmitted"
+							formControlName="email"
+							placeholder="Email"
+							aria-label="Email"
+						/>
+						<label
+							class="label"
+							for="email"
+							*ngIf="email.touched && email.errors"
+						>
+							<span class="label-text text-error" [ngSwitch]="true">
+								<ng-container *ngSwitchCase="!!email.errors.required">
+									Required
+								</ng-container>
+								<ng-container *ngSwitchCase="!!email.errors.email">
+									Email must be a real email address
+								</ng-container>
+							</span>
+						</label>
+					</fieldset>
+					<fieldset
+						class="form-control"
+						*ngIf="loginForm.get('password') as password"
+					>
+						<label class="label" for="password">
+							<span class="label-text">Password</span>
+							<a
+								class="label-text-alt link !link-primary"
+								[routerLink]="['../reset']"
+								aria-label="Forgot password"
+							>
+								Forgot password?
+							</a>
+						</label>
+						<div class="relative" *ngIf="{ value: false } as isVisible">
+							<input
+								id="password"
+								autocomplete="current-password"
+								[type]="isVisible.value ? 'text' : 'password'"
+								class="input input-bordered truncate w-full pr-12"
+								[class.input-success]="password.touched && !password.errors"
+								[class.input-error]="password.touched && password.errors"
+								[class.input-disabled]="loginFormIsSubmitted"
+								formControlName="password"
+								placeholder="Password"
+								aria-label="Password"
+							/>
+							<button
+								class="btn btn-ghost btn-sm btn-circle fill-current absolute top-2 right-2"
+								type="button"
+								*ngIf="password.value.length"
+								(touchstart)="isVisible.value = !isVisible.value"
+								(mouseenter)="isVisible.value = true"
+								(mouseleave)="isVisible.value = false"
+								aria-label="Password"
+								title="Password"
+								appSvgIcon
+								[appIcon]="isVisible.value ? 'eye' : 'eye-slash'"
+								[appSquare]="'1.5em'"
+								[appViewBox]="'0 0 14 14'"
+							></button>
+						</div>
+						<label
+							class="label"
+							for="password"
+							*ngIf="password.touched && password.errors"
+						>
+							<span class="label-text text-error" [ngSwitch]="true">
+								<ng-container *ngSwitchCase="!!password.errors.required">
+									Required
+								</ng-container>
+								<ng-container *ngSwitchCase="!!password.errors.pattern">
+									Password does not match pattern
+								</ng-container>
+							</span>
+						</label>
+					</fieldset>
+					<fieldset class="form-control">
+						<button
+							class="btn btn-primary w-full"
+							[class.loading]="loginFormIsSubmitted"
+							type="submit"
+							aria-label="Login"
+							[disabled]="loginForm.invalid || loginFormIsSubmitted"
+						>
+							Login
+						</button>
+					</fieldset>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</ng-container>

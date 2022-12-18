@@ -74,10 +74,9 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 			});
 	}
 
+	// prettier-ignore
 	ngOnDestroy(): void {
-		[this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ =>
-			$?.unsubscribe()
-		);
+		[this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
 	}
 
 	getPostList(concat: boolean): void {
