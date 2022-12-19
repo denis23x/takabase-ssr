@@ -1,75 +1,201 @@
-<section class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-128 lg:max-w-256 mx-auto p-4">
-  <div class="flex order-1 lg:order-1 col-span-1 lg:col-span-2 items-center justify-start w-full">
-    <p class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md w-full p-4">
-      Work in progress, some features may not working properly, feel free to give me feedback
-    </p>
-  </div>
-  <div class="flex order-3 lg:order-2 w-full">
-    <ul class="grid grid-cols-2 bg-primary-3 border border-primary-4 rounded-md">
-      <li class="flex flex-col items-center justify-start text-center border-b border-r border-primary-4 p-4">
-        <i class="fill-current text-secondary-1 p-4" appSvgIcon [appIcon]="'heart'" [appSquare]="'2rem'"></i>
-        <span class="block text-secondary-1">Absent direct messages and comments, no likes pursuit</span>
-      </li>
-      <li class="flex flex-col items-center justify-start text-center border-b border-primary-4 p-4">
-        <i class="fill-current text-secondary-1 p-4" appSvgIcon [appIcon]="'markdown'" [appSquare]="'2rem'"></i>
-        <span class="block text-secondary-1">Rich Markdown editor with media embed and emoji</span>
-      </li>
-      <li class="flex flex-col items-center justify-start text-center border-r border-primary-4 p-4 p-4">
-        <i class="fill-current text-secondary-1 p-4" appSvgIcon [appIcon]="'gem'" [appSquare]="'2rem'"></i>
-        <span class="block text-secondary-1">Super light web app with full mobile devices support</span>
-      </li>
-      <li class="flex flex-col items-center justify-start text-center p-4">
-        <i class="fill-current text-secondary-1 p-4" appSvgIcon [appIcon]="'fingerprint'" [appSquare]="'2rem'"></i>
-        <span class="block text-secondary-1">Well protected, don't worry about your sensitive info</span>
-      </li>
-    </ul>
-  </div>
-  <div class="flex order-2 lg:order-3 flex-col justify-center space-y-8 w-full">
-    <h1 class="text-5xl text-secondary-1 font-medium">Just save your posts</h1>
-    <div class="flex flex-col">
-      <h2 class="text-2xl text-secondary-1 font-medium">Without annoying background</h2>
-      <p class="block text-secondary-2">You don't need no more to chat or comment or whatever, just focus on your interests</p>
-    </div>
-    <div class="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
-      <a class="btn btn-info md text-center w-full lg:w-fit" [routerLink]="['/search']" aria-label="Search post">Search post</a>
-      <ng-container *appAuthenticated="false">
-        <a class="btn btn-success md text-center w-full lg:w-fit" [routerLink]="['/auth/registration']" aria-label="Join to Draft">Join to Draft</a>
-      </ng-container>
-    </div>
-  </div>
-  <div class="flex order-4 lg:order-4 bg-primary-3 border border-primary-4 rounded-md w-full p-4">
-    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-8">
-      <div class="flex flex-col">
-        <h2 class="text-2xl text-secondary-1 font-medium whitespace-nowrap">Pet project</h2>
-        <a class="block text-info-1" href="https://t.me/denis23x" target="_blank" rel="nofollow" aria-label="Contact me">Contact me</a>
-      </div>
-      <ul class="flex items-center justify-center xs:space-x-4">
-        <li class="block">
-          <a href="https://angular.io/" target="_blank" rel="nofollow" aria-label="Angular">
-            <img class="block w-16 h-16" loading="lazy" src="assets/logos/angular.svg" alt="Angular">
-          </a>
-        </li>
-        <li class="block">
-          <a href="https://tailwindcss.com/" target="_blank" rel="nofollow" aria-label="Tailwind">
-            <img class="block w-16 h-16" loading="lazy" src="assets/logos/tailwind.svg" alt="Tailwind">
-          </a>
-        </li>
-        <li class="block">
-          <a href="https://nestjs.com/" target="_blank" rel="nofollow" aria-label="Nest">
-            <img class="block w-16 h-16" loading="lazy" src="assets/logos/nest.svg" alt="Nest">
-          </a>
-        </li>
-        <li class="block">
-          <a href="https://www.prisma.io/" target="_blank" rel="nofollow" aria-label="Prisma">
-            <img class="block w-16 h-16" loading="lazy" src="assets/logos/prisma.svg" alt="Prisma">
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div class="flex order-5 lg:order-5 items-center justify-start w-full">
-    <a class="block" href="https://www.buymeacoffee.com/damage23xs" target="_blank" rel="nofollow">
-      <img class="block w-64" loading="lazy" src="assets/logos/buymeacoffee.svg" alt="Buy Me a Coffee">
-    </a>
-  </div>
+<!-- @format -->
+
+<section
+	class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-128 lg:max-w-256 mx-auto p-4"
+>
+	<div
+		class="flex order-1 lg:order-1 col-span-1 lg:col-span-2 items-center justify-start w-full"
+	>
+		<p
+			class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md w-full p-4"
+		>
+			Work in progress, some features may not working properly, feel free to
+			give me feedback
+		</p>
+	</div>
+	<div class="flex order-3 lg:order-2 w-full">
+		<ul
+			class="grid grid-cols-2 bg-primary-3 border border-primary-4 rounded-md"
+		>
+			<li
+				class="flex flex-col items-center justify-start text-center border-b border-r border-primary-4 p-4"
+			>
+				<i
+					class="fill-current text-secondary-1 p-4"
+					appSvgIcon
+					[appIcon]="'heart'"
+					[appSquare]="'2rem'"
+				></i>
+				<span class="block text-secondary-1">
+					Absent direct messages and comments, no likes pursuit
+				</span>
+			</li>
+			<li
+				class="flex flex-col items-center justify-start text-center border-b border-primary-4 p-4"
+			>
+				<i
+					class="fill-current text-secondary-1 p-4"
+					appSvgIcon
+					[appIcon]="'markdown'"
+					[appSquare]="'2rem'"
+				></i>
+				<span class="block text-secondary-1">
+					Rich Markdown editor with media embed and emoji
+				</span>
+			</li>
+			<li
+				class="flex flex-col items-center justify-start text-center border-r border-primary-4 p-4 p-4"
+			>
+				<i
+					class="fill-current text-secondary-1 p-4"
+					appSvgIcon
+					[appIcon]="'gem'"
+					[appSquare]="'2rem'"
+				></i>
+				<span class="block text-secondary-1">
+					Super light web app with full mobile devices support
+				</span>
+			</li>
+			<li class="flex flex-col items-center justify-start text-center p-4">
+				<i
+					class="fill-current text-secondary-1 p-4"
+					appSvgIcon
+					[appIcon]="'fingerprint'"
+					[appSquare]="'2rem'"
+				></i>
+				<span class="block text-secondary-1">
+					Well protected, don't worry about your sensitive info
+				</span>
+			</li>
+		</ul>
+	</div>
+	<div class="flex order-2 lg:order-3 flex-col justify-center space-y-8 w-full">
+		<h2 class="text-5xl text-secondary-1 font-medium">Just save your posts</h2>
+		<div class="flex flex-col">
+			<h2 class="text-2xl text-secondary-1 font-medium">
+				Without annoying background
+			</h2>
+			<p class="block text-secondary-2">
+				You don't need no more to chat or comment or whatever, just focus on
+				your interests
+			</p>
+		</div>
+		<div class="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
+			<a
+				class="btn btn-info md text-center w-full lg:w-fit"
+				[routerLink]="['/search']"
+				aria-label="Search post"
+			>
+				Search post
+			</a>
+			<ng-container *appAuthenticated="false">
+				<a
+					class="btn btn-success md text-center w-full lg:w-fit"
+					[routerLink]="['/auth/registration']"
+					aria-label="Join to Draft"
+				>
+					Join to Draft
+				</a>
+			</ng-container>
+		</div>
+	</div>
+	<div
+		class="flex order-4 lg:order-4 bg-primary-3 border border-primary-4 rounded-md w-full p-4"
+	>
+		<div
+			class="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-8"
+		>
+			<div class="flex flex-col">
+				<h2 class="text-2xl text-secondary-1 font-medium whitespace-nowrap">
+					Pet project
+				</h2>
+				<a
+					class="block text-info-1"
+					href="https://t.me/denis23x"
+					target="_blank"
+					rel="nofollow"
+					aria-label="Contact me"
+				>
+					Contact me
+				</a>
+			</div>
+			<ul class="flex items-center justify-center xs:space-x-4">
+				<li class="block">
+					<a
+						href="https://angular.io/"
+						target="_blank"
+						rel="nofollow"
+						aria-label="Angular"
+					>
+						<img
+							class="block w-16 h-16"
+							loading="lazy"
+							src="assets/logos/angular.svg"
+							alt="Angular"
+						/>
+					</a>
+				</li>
+				<li class="block">
+					<a
+						href="https://tailwindcss.com/"
+						target="_blank"
+						rel="nofollow"
+						aria-label="Tailwind"
+					>
+						<img
+							class="block w-16 h-16"
+							loading="lazy"
+							src="assets/logos/tailwind.svg"
+							alt="Tailwind"
+						/>
+					</a>
+				</li>
+				<li class="block">
+					<a
+						href="https://nestjs.com/"
+						target="_blank"
+						rel="nofollow"
+						aria-label="Nest"
+					>
+						<img
+							class="block w-16 h-16"
+							loading="lazy"
+							src="assets/logos/nest.svg"
+							alt="Nest"
+						/>
+					</a>
+				</li>
+				<li class="block">
+					<a
+						href="https://www.prisma.io/"
+						target="_blank"
+						rel="nofollow"
+						aria-label="Prisma"
+					>
+						<img
+							class="block w-16 h-16"
+							loading="lazy"
+							src="assets/logos/prisma.svg"
+							alt="Prisma"
+						/>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="flex order-5 lg:order-5 items-center justify-start w-full">
+		<a
+			class="block"
+			href="https://www.buymeacoffee.com/damage23xs"
+			target="_blank"
+			rel="nofollow"
+		>
+			<img
+				class="block w-64"
+				loading="lazy"
+				src="assets/logos/buymeacoffee.svg"
+				alt="Buy Me a Coffee"
+			/>
+		</a>
+	</div>
 </section>

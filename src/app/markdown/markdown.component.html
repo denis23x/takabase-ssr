@@ -1,124 +1,188 @@
+<!-- @format -->
+
 <ng-container>
-  <section class="page-create grid grid-cols-1 grid-rows-1 gap-4 px-4">
-    <header class="header bg-primary-2 z-20 sticky top-0 px-4 -mx-4">
-      <div
-        class="border-b border-primary-4 py-4"
-        appMarkdown
-        [appScrollSync]="editorScrollSync"
-        [appTextareaId]="'textarea'"
-        [appPreviewId]="'preview'">
-      </div>
-    </header>
-    <div class="content mb-4">
-      <div class="splitter grid mb-4">
-        <div class="editor relative">
-          <form
-            class="block"
-            autocomplete="off"
-            [formGroup]="postForm">
-            <fieldset *ngIf="postForm.get('body') as body">
-              <label class="flex">
-                <textarea
-                  id="textarea"
-                  class="form-control bg-primary-3 resize-none overflow-auto p-4"
-                  [class.whitespace-pre]="editorWhitespace"
-                  formControlName="body"
-                  placeholder="Type a post.."
-                  aria-label="Editor">{{body.value}}
-                </textarea>
-              </label>
-            </fieldset>
-          </form>
-          <div class="layout flex items-center justify-between">
-            <ul class="flex lg:flex-col items-center">
-              <li class="inline-block">
-                <button
-                  class="fill-current text-secondary-1 hover:text-info-1 p-2"
-                  [class.text-info-1]="editorWhitespace"
-                  type="button"
-                  aria-label="Text wrap"
-                  title="Text wrap"
-                  appSvgIcon
-                  [appIcon]="'text-left'"
-                  [appSquare]="'1.5em'"
-                  (click)="editorWhitespace = !editorWhitespace">
-                </button>
-              </li>
-              <li class="inline-block">
-                <button
-                  class="fill-current text-secondary-1 hover:text-info-1 p-2.5"
-                  type="button"
-                  aria-label="Preview"
-                  title="Preview"
-                  appSvgIcon
-                  [appIcon]="'eye'"
-                  [appSquare]="'1.25em'">
-                </button>
-              </li>
-              <li class="inline-block">
-                <button
-                  class="fill-current text-secondary-1 hover:text-info-1 p-2.5"
-                  [class.text-info-1]="editorScrollSync"
-                  type="button"
-                  aria-label="Scroll sync"
-                  title="Scroll sync"
-                  appSvgIcon
-                  [appIcon]="'mouse2'"
-                  [appSquare]="'1.25em'"
-                  (click)="editorScrollSync = !editorScrollSync">
-                </button>
-              </li>
-            </ul>
-            <ul class="flex lg:flex-col items-center">
-              <li class="inline-block">
-                <a
-                  class="block fill-current text-secondary-1 hover:text-info-1 p-2.5"
-                  aria-label="Help"
-                  title="Help"
-                  target="_blank"
-                  href="https://en.wikipedia.org/wiki/Markdown"
-                  rel="noopener"
-                  appSvgIcon
-                  [appIcon]="'question-circle'"
-                  [appSquare]="'1.25em'">
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="hidden lg:flex flex-col items-center justify-between self-center" #gutter>
-          <button
-            class="fill-current text-secondary-1 opacity-50 cursor-col-resize p-2"
-            type="button"
-            aria-label="Resize"
-            title="Resize"
-            appSvgIcon
-            [appIcon]="'grip-vertical'"
-            [appSquare]="'1.5em'">
-          </button>
-        </div>
-        <div class="flex lg:hidden items-center justify-center self-center">
-          <button
-            id="grip-horizontal"
-            class="fill-current text-secondary-1 opacity-50 cursor-row-resize rotate-90 p-2"
-            type="button"
-            aria-label="Drag"
-            title="Drag"
-            appSvgIcon
-            [appIcon]="'grip-vertical'"
-            [appSquare]="'1.5em'">
-          </button>
-        </div>
-        <article id="preview" class="preview markdown-html bg-primary-3 border border-primary-4 rounded-md overflow-auto p-4"></article>
-      </div>
-      <button
-        class="btn btn-success md block w-full"
-        type="button"
-        aria-label="Next"
-        [disabled]="postForm.invalid"
-        (click)="onSubmitPostForm()">Next
-      </button>
-    </div>
-  </section>
-  <router-outlet></router-outlet>
+	<div class="flex flex-col space-y-4 md:space-y-8">
+		<div
+			class="grid grid-cols-1 sm:grid-cols-12 gap-4 bg-base-100 border rounded-box shadow-xl w-full p-4"
+		>
+			<ul class="steps steps-vertical col-span-1 mx-auto w-10 overflow-hidden">
+				<li class="step step-primary"></li>
+				<li class="step step-primary"></li>
+				<li class="step"></li>
+				<li class="step"></li>
+			</ul>
+			<div
+				class="flex flex-col items-start sm:items-center justify-center space-y-4 col-span-4 rounded-t-box sm:rounded-box bg-base-200 -mx-4 -mt-4 sm:m-0 p-4"
+			>
+				<h2 class="text-xl text-base-content font-medium">Login via</h2>
+				<div class="inline text-left sm:text-center">
+					<span class="block text-base-content">Don't have an account?</span>
+					<a
+						class="link link-primary"
+						[routerLink]="['../registration']"
+						aria-label="Join now"
+					>
+						Registration
+					</a>
+				</div>
+			</div>
+			<form
+				class="flex flex-col col-span-7 rounded-none bg-base-100"
+				autocomplete="off"
+				[formGroup]="postForm"
+			>
+				<div class="flex flex-col">
+					<h2 class="text-xl text-base-content font-medium">Write a post</h2>
+					<div class="flex space-x-1 text-base-content">
+						Enter the accompanying information
+					</div>
+				</div>
+				<hr class="my-4" />
+				<fieldset
+					class="flex flex-col space-y-4"
+					[disabled]="postFormIsSubmitted"
+				>
+					<fieldset class="form-control" *ngIf="postForm.get('title') as title">
+						<label class="label" for="title">
+							<span class="label-text">Title</span>
+						</label>
+						<input
+							id="title"
+							type="text"
+							class="input input-bordered truncate w-full"
+							placeholder="Type post title"
+							[class.input-success]="title.touched && !title.errors"
+							[class.input-error]="title.touched && title.errors"
+							[class.input-disabled]="postFormIsSubmitted"
+							formControlName="title"
+							aria-label="Title"
+						/>
+						<label
+							class="label"
+							for="title"
+							*ngIf="title.touched && title.errors"
+						>
+							<span class="label-text text-error" [ngSwitch]="true">
+								<ng-container *ngSwitchCase="!!title.errors.required">
+									Required
+								</ng-container>
+								<!-- prettier-ignore -->
+								<ng-container *ngSwitchCase="!!title.errors.minlength">
+                  Min length {{ title.errors.minlength["requiredLength"] }} characters
+                </ng-container>
+								<!-- prettier-ignore -->
+								<ng-container *ngSwitchCase="!!title.errors.maxlength">
+                  Max length {{ title.errors.maxlength["requiredLength"] }} characters
+                </ng-container>
+							</span>
+						</label>
+					</fieldset>
+					<fieldset
+						class="form-control"
+						*ngIf="postForm.get('description') as description"
+					>
+						<label class="label" for="description">
+							<span class="label-text">Description</span>
+						</label>
+						<!-- prettier-ignore -->
+						<input
+              id="description"
+              type="text"
+              class="input input-bordered truncate w-full"
+              placeholder="Type post description"
+              [class.input-success]="description.touched && !description.errors"
+              [class.input-error]="description.touched && description.errors"
+              [class.input-disabled]="postFormIsSubmitted"
+              formControlName="description"
+              aria-label="Description"
+            />
+						<label
+							class="label"
+							for="description"
+							*ngIf="description.touched && description.errors"
+						>
+							<span class="label-text text-error" [ngSwitch]="true">
+								<ng-container *ngSwitchCase="!!description.errors.required">
+									Required
+								</ng-container>
+								<!-- prettier-ignore -->
+								<ng-container *ngSwitchCase="!!description.errors.minlength">
+                  Min length {{ description.errors.minlength["requiredLength"] }} characters
+                </ng-container>
+								<!-- prettier-ignore -->
+								<ng-container *ngSwitchCase="!!description.errors.maxlength">
+                  Max length {{ description.errors.maxlength["requiredLength"] }} characters
+                </ng-container>
+							</span>
+						</label>
+					</fieldset>
+				</fieldset>
+			</form>
+		</div>
+		<div class="bg-primary-content border rounded-box shadow-xl p-4">
+			<div class="flex flex-col space-y-4 bg-base-200 rounded-box p-4">
+				<div
+					appMarkdown
+					[appTextareaId]="'textarea'"
+					[appPreviewId]="'preview'"
+				></div>
+				<form class="block" autocomplete="off" [formGroup]="postForm">
+					<fieldset class="form-control" *ngIf="postForm.get('body') as body">
+						<label class="label" for="textarea">
+							<span class="label-text">Body</span>
+						</label>
+						<label class="flex">
+							<textarea
+								id="textarea"
+								class="textarea textarea-bordered w-full"
+								placeholder="Type post body"
+								[rows]="10"
+								[class.textarea-success]="body.touched && !body.errors"
+								[class.textarea-error]="body.touched && body.errors"
+								[class.textarea-disabled]="postFormIsSubmitted"
+								formControlName="body"
+								aria-label="Body"
+							>
+                {{ body.value }}
+              </textarea>
+						</label>
+						<label
+							class="label"
+							for="textarea"
+							*ngIf="body.touched && body.errors"
+						>
+							<span class="label-text text-error" [ngSwitch]="true">
+								<ng-container *ngSwitchCase="!!body.errors.required">
+									Required
+								</ng-container>
+								<!-- prettier-ignore -->
+								<ng-container *ngSwitchCase="!!body.errors.minlength">
+                  Min length {{ body.errors.minlength["requiredLength"] }} characters
+                </ng-container>
+								<!-- prettier-ignore -->
+								<ng-container *ngSwitchCase="!!body.errors.maxlength">
+                  Max length {{ body.errors.maxlength["requiredLength"] }} characters
+                </ng-container>
+							</span>
+						</label>
+					</fieldset>
+				</form>
+			</div>
+			<!-- TODO: update preview -->
+			<article
+				id="preview"
+				class="preview markdown-html bg-primary-3 border border-primary-4 rounded-md overflow-auto p-4"
+			></article>
+			<button
+				class="btn btn-success md block w-full"
+				type="button"
+				aria-label="Next"
+				[disabled]="postForm.invalid"
+				(click)="onSubmitPostForm()"
+			>
+				Next
+			</button>
+			<router-outlet></router-outlet>
+		</div>
+	</div>
 </ng-container>

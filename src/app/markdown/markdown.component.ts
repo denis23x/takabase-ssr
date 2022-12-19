@@ -1,163 +1,88 @@
 /** @format */
 
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Inject,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { PlatformService, HelperService, Post } from '../core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
-import { fromEvent, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	Validators
+} from '@angular/forms';
 import { DOCUMENT } from '@angular/common';
-import Split from 'split-grid';
+
+interface PostForm {
+	title: FormControl<string>;
+	description: FormControl<string>;
+	categoryId: FormControl<number>;
+	categoryName: FormControl<string>;
+	body: FormControl<string>;
+}
 
 @Component({
-  selector: 'app-markdown',
-  templateUrl: './markdown.component.html'
+	selector: 'app-markdown',
+	templateUrl: './markdown.component.html'
 })
-export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('gutter') gutter: ElementRef | undefined;
+export class MarkdownComponent implements OnInit, OnDestroy {
+	activatedRouteData$: Subscription | undefined;
 
-  activatedRouteData$: Subscription | undefined;
+	postForm: FormGroup | undefined;
+	postFormIsSubmitted: boolean = false;
 
-  mouseup$: Subscription | undefined;
-  mousedown$: Subscription | undefined;
-  mousemove$: Subscription | undefined;
+	constructor(
+		@Inject(DOCUMENT)
+		private document: Document,
+		private formBuilder: FormBuilder,
+		private platformService: PlatformService,
+		private activatedRoute: ActivatedRoute,
+		private router: Router,
+		private helperService: HelperService
+	) {
+		this.postForm = this.formBuilder.group<PostForm>({
+			title: this.formBuilder.control('', [
+				Validators.required,
+				Validators.minLength(4),
+				Validators.maxLength(36)
+			]),
+			description: this.formBuilder.control('', [Validators.required]),
+			categoryId: this.formBuilder.control(null, [Validators.required]),
+			categoryName: this.formBuilder.control('', [Validators.required]),
+			body: this.formBuilder.control('', [
+				Validators.required,
+				Validators.minLength(24),
+				Validators.maxLength(7200)
+			])
+		});
+	}
 
-  postForm: UntypedFormGroup | undefined;
-  postForm$: Subscription | undefined;
+	ngOnInit(): void {
+		this.activatedRouteData$ = this.activatedRoute.data
+			.pipe(
+				map((data: Data) => data.data),
+				filter((post: Post) => !!post)
+			)
+			.subscribe({
+				next: (post: Post) => this.postForm.get('body').setValue(post.body),
+				error: (error: any) => console.error(error)
+			});
+	}
 
-  editorMinSize: number = 425;
-  editorWhitespace: boolean = false;
-  editorScrollSync: boolean = false;
+	ngOnDestroy(): void {
+		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
+	}
 
-  constructor(
-    @Inject(DOCUMENT)
-    private document: Document,
-    private formBuilder: UntypedFormBuilder,
-    private platformService: PlatformService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private helperService: HelperService
-  ) {
-    this.postForm = this.formBuilder.group({
-      body: ['', [Validators.required, Validators.minLength(24), Validators.maxLength(7200)]]
-    });
-  }
-
-  ngOnInit(): void {
-    this.activatedRouteData$ = this.activatedRoute.data
-      .pipe(
-        map((data: Data) => data.data),
-        filter((post: Post) => !!post)
-      )
-      .subscribe({
-        next: (post: Post) => this.postForm.get('body').setValue(post.body),
-        error: (error: any) => console.error(error)
-      });
-  }
-
-  ngAfterViewInit(): void {
-    if (this.platformService.isBrowser()) {
-      /** Initialize Split */
-
-      Split({
-        minSize: this.editorMinSize,
-        columnGutters: [
-          {
-            track: 1,
-            element: this.gutter.nativeElement
-          }
-        ]
-      });
-
-      /** Initialize Drag HTML */
-
-      this.onDrag();
-    }
-  }
-
-  ngOnDestroy(): void {
-    [
-      this.activatedRouteData$,
-      this.mouseup$,
-      this.mousedown$,
-      this.mousemove$,
-      this.postForm$
-    ].forEach($ => $?.unsubscribe());
-  }
-
-  onDrag(): void {
-    /** https://htmldom.dev/drag-to-scroll/ */
-
-    const htmlElement: HTMLElement = this.document.querySelector('html');
-    const position: any = {
-      top: 0,
-      left: 0,
-      x: 0,
-      y: 0
-    };
-
-    const mouseDownHandler = (mouseEvent: MouseEvent): void => {
-      htmlElement.style.cursor = 'row-resize';
-      htmlElement.style.userSelect = 'none';
-
-      position.left = htmlElement.scrollLeft;
-      position.top = htmlElement.scrollTop;
-      position.x = mouseEvent.clientX;
-      position.y = mouseEvent.clientY;
-
-      this.mousemove$ = fromEvent(this.document, 'mousemove').subscribe({
-        next: (event: Event) => mouseMoveHandler(event as MouseEvent),
-        error: (error: any) => console.error(error)
-      });
-
-      this.mouseup$ = fromEvent(this.document, 'mouseup').subscribe({
-        next: () => mouseUpHandler(),
-        error: (error: any) => console.error(error)
-      });
-    };
-
-    const mouseMoveHandler = (mouseEvent: MouseEvent): void => {
-      const dx: number = mouseEvent.clientX - position.x;
-      const dy: number = mouseEvent.clientY - position.y;
-
-      htmlElement.scrollTop = position.top - dy;
-      htmlElement.scrollLeft = position.left - dx;
-    };
-
-    const mouseUpHandler = (): void => {
-      htmlElement.removeAttribute('style');
-
-      this.mousemove$?.unsubscribe();
-      this.mouseup$?.unsubscribe();
-    };
-
-    this.mousedown$ = fromEvent(this.document, 'mousedown')
-      // @ts-ignore
-      .pipe(filter((event: Event) => event.target.parentElement.id === 'grip-horizontal'))
-      .subscribe({
-        next: (event: Event) => mouseDownHandler(event as MouseEvent),
-        error: (error: any) => console.error(error)
-      });
-  }
-
-  onSubmitPostForm(): void {
-    if (this.helperService.getFormValidation(this.postForm)) {
-      this.router
-        .navigate(['./submit'], {
-          relativeTo: this.activatedRoute,
-          state: {
-            postForm: this.postForm.value
-          }
-        })
-        .then(() => console.debug('Route changed'));
-    }
-  }
+	onSubmitPostForm(): void {
+		if (this.helperService.getFormValidation(this.postForm)) {
+			this.router
+				.navigate(['./submit'], {
+					relativeTo: this.activatedRoute,
+					state: {
+						postForm: this.postForm.value
+					}
+				})
+				.then(() => console.debug('Route changed'));
+		}
+	}
 }

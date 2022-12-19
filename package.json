@@ -47,7 +47,6 @@
     "ngx-image-cropper": "^6.2.2",
     "prismjs": "^1.29.0",
     "rxjs": "~7.5.7",
-    "split-grid": "^1.0.11",
     "tslib": "^2.4.0",
     "zone.js": "~0.11.8"
   },
