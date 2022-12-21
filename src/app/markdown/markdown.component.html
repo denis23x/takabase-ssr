@@ -3,7 +3,7 @@
 <ng-container>
 	<div class="flex flex-col space-y-4 md:space-y-8">
 		<div
-			class="grid grid-cols-12 gap-4 bg-base-100 border rounded-box shadow-xl w-full p-4"
+			class="grid grid-cols-12 gap-4 bg-base-100 border border-base-content/20 rounded-box shadow-xl w-full p-4"
 		>
 			<div
 				class="flex flex-col items-start sm:items-center justify-center space-y-4 col-span-12 sm:col-span-4 md:col-span-3 rounded-t-box sm:rounded-box bg-base-200 -mx-4 -mt-4 sm:m-0 p-4"
@@ -31,7 +31,7 @@
 						Enter the accompanying information
 					</div>
 				</div>
-				<hr class="my-4" />
+				<hr class="border-base-content/20 my-4" />
 				<fieldset
 					class="grid grid-cols-12 gap-4"
 					[disabled]="postFormIsSubmitted"
@@ -43,7 +43,7 @@
 						<label class="label" for="title">
 							<div class="indicator">
 								<span
-									class="indicator-item badge badge-error translate-x-full translate-y-0 w-max text-base-100 text-xs"
+									class="indicator-item badge badge-error text-xs translate-x-full translate-y-0 w-max"
 									*ngIf="title.touched && title.errors"
 									[ngSwitch]="true"
 								>
@@ -81,7 +81,7 @@
 						<label class="label" for="categoryName">
 							<div class="indicator">
 								<span
-									class="indicator-item badge badge-error translate-x-full translate-y-0 w-max text-base-100 text-xs"
+									class="indicator-item badge badge-error text-xs translate-x-full translate-y-0 w-max"
 									*ngIf="categoryName.touched && categoryName.errors"
 									[ngSwitch]="true"
 								>
@@ -116,7 +116,7 @@
 							</div>
 							<div class="absolute top-full left-0 w-full z-[1]" slot="content">
 								<ul
-									class="menu shadow bg-base-100 border rounded-box w-full mt-2 p-2"
+									class="menu shadow bg-base-100 border border-base-content/20 rounded-box w-full mt-2 p-2"
 								>
 									<li
 										class="flex overflow-hidden w-full"
@@ -143,7 +143,7 @@
 						<label class="label" for="description">
 							<div class="indicator">
 								<span
-									class="indicator-item badge badge-error translate-x-full translate-y-0 w-max text-base-100 text-xs"
+									class="indicator-item badge badge-error text-xs translate-x-full translate-y-0 w-max"
 									*ngIf="description.touched && description.errors"
 									[ngSwitch]="true"
 								>
@@ -168,8 +168,8 @@
               type="text"
               class="input input-bordered truncate w-full"
               placeholder="Type post description"
-              [class.input-success]="description.touched && !description.errors"
-              [class.input-error]="description.touched && description.errors"
+              [class.input-success]="description.touched && description.valid"
+              [class.input-error]="description.touched && description.invalid"
               [class.input-disabled]="postFormIsSubmitted"
               formControlName="description"
               aria-label="Description"
@@ -178,7 +178,9 @@
 				</fieldset>
 			</form>
 		</div>
-		<div class="bg-primary-content border rounded-box shadow-xl p-4">
+		<div
+			class="bg-base-100 border border-base-content/20 rounded-box shadow-xl p-4"
+		>
 			<div class="flex flex-col space-y-4 bg-base-200 rounded-box p-4">
 				<div
 					appMarkdown
@@ -190,7 +192,7 @@
 						<label class="label" for="textarea">
 							<div class="indicator">
 								<span
-									class="indicator-item badge badge-error translate-x-full translate-y-0 w-max text-base-100 text-xs"
+									class="indicator-item badge badge-error text-xs translate-x-full translate-y-0 w-max"
 									*ngIf="body.touched && body.errors"
 									[ngSwitch]="true"
 								>
@@ -226,10 +228,7 @@
 				</form>
 			</div>
 			<!-- TODO: update preview -->
-			<article
-				id="preview"
-				class="preview markdown-html bg-primary-3 border border-primary-4 rounded-md overflow-auto p-4"
-			></article>
+			<article id="preview" class="border border-base-content/20"></article>
 			<button
 				class="btn btn-success md block w-full"
 				type="button"

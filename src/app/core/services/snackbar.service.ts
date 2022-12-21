@@ -28,7 +28,7 @@ export class SnackbarService {
 			duration: this.getDefaultDuration(duration),
 			progress: this.getDefaultProgress(),
 			options: {
-				classList: 'alert-info text-white',
+				classList: 'alert-info',
 				...options
 			}
 		});
@@ -42,7 +42,7 @@ export class SnackbarService {
       duration: this.getDefaultDuration(duration),
       progress: this.getDefaultProgress(),
 			options: {
-				classList: 'alert-success text-white',
+				classList: 'alert-success',
 				...options
 			}
 		});
@@ -56,7 +56,7 @@ export class SnackbarService {
       duration: this.getDefaultDuration(duration),
       progress: this.getDefaultProgress(),
 			options: {
-				classList: 'alert-warning text-black',
+				classList: 'alert-warning',
 				...options
 			}
 		});
@@ -70,7 +70,7 @@ export class SnackbarService {
       duration: this.getDefaultDuration(duration),
       progress: this.getDefaultProgress(),
 			options: {
-				classList: 'alert-error text-white',
+				classList: 'alert-error',
 				...options
 			}
 		});

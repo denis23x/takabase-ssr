@@ -1,12 +1,14 @@
 <!-- @format -->
 
 <ng-container>
-	<header class="navbar border bg-base-100 shadow-xl rounded-box">
+	<header
+		class="navbar border border-base-content/20 bg-base-100 shadow-xl rounded-box"
+	>
 		<div class="navbar-start">
 			<div class="dropdown">
 				<label tabindex="0" class="btn btn-ghost btn-circle">
 					<button
-						class="block fill-current text-secondary-1 hover:text-info-1 p-2"
+						class="block fill-current p-2"
 						type="button"
 						aria-label="Menu"
 						appSvgIcon
@@ -23,17 +25,15 @@
 					<li><a>About</a></li>
 					<li class="block">
 						<a
-							class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
+							class="block whitespace-nowrap w-full py-2 px-4"
 							[routerLink]="['/settings']"
-							[routerLinkActive]="['text-info-1']"
-							[routerLinkActiveOptions]="{ exact: true }"
 							aria-label="Settings"
 						>
 							Settings
 						</a>
 					</li>
 					<li
-						class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 cursor-pointer whitespace-nowrap w-full py-2 px-4"
+						class="block cursor-pointer whitespace-nowrap w-full py-2 px-4"
 						(click)="onLogout()"
 					>
 						Logout
@@ -67,7 +67,7 @@
 			<ng-container *appAuthenticated="true">
 				<nav class="flex justify-end items-center space-x-2" *ngIf="!!authUser">
 					<a
-						class="btn btn-ghost btn-circle"
+						class="btn btn-ghost btn-circle fill-current"
 						[routerLink]="['/create']"
 						[routerLinkActive]="['btn-active']"
 						[routerLinkActiveOptions]="{ exact: true }"
@@ -80,7 +80,7 @@
 					>
 					</a>
 					<a
-						class="btn btn-ghost btn-circle"
+						class="btn btn-ghost btn-circle fill-current"
 						[routerLink]="['/search']"
 						[routerLinkActive]="['btn-active']"
 						aria-label="Search"

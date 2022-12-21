@@ -2,25 +2,49 @@
 
 <ng-container>
 	<div class="flex flex-col space-y-4 md:space-y-8">
-		<div class="navbar bg-base-100 border rounded-box shadow-xl">
+		<div
+			class="navbar bg-base-100 border border-base-content/20 rounded-box shadow-xl"
+		>
 			<div class="flex-none w-full">
 				<form class="w-full" [formGroup]="searchForm" autocomplete="off">
 					<fieldset
 						class="form-control"
 						*ngIf="searchForm.get('query') as query"
 					>
+						<label class="label" for="search">
+							<div class="indicator">
+								<span
+									class="indicator-item badge badge-error text-xs translate-x-full translate-y-0 w-max"
+									*ngIf="query.touched && query.errors"
+									[ngSwitch]="true"
+								>
+									<!-- prettier-ignore -->
+									<ng-container *ngSwitchCase="!!query.errors.minlength">
+                    Min length {{ query.errors.minlength["requiredLength"] }} characters
+                  </ng-container>
+									<!-- prettier-ignore -->
+									<ng-container *ngSwitchCase="!!query.errors.maxlength">
+                    Max length {{ query.errors.maxlength["requiredLength"] }} characters
+                  </ng-container>
+								</span>
+								<span class="label-text mr-2">Search</span>
+							</div>
+						</label>
 						<label class="block relative" for="search">
 							<input
 								id="search"
 								type="text"
 								class="input input-bordered truncate w-full pr-12"
-								[class.input-error]="query.touched && query.errors"
+								[class.input-success]="query.touched && query.value"
+								[class.input-error]="query.touched && query.invalid"
 								formControlName="query"
-								placeholder="Search"
+								placeholder="Type keywords"
 								aria-label="Search"
 							/>
 							<button
-								class="btn btn-error btn-sm btn-circle fill-current absolute top-2 right-2"
+								class="btn btn-ghost btn-sm btn-circle fill-current absolute top-2 right-2"
+								[class.!btn-success]="query.touched && query.value"
+								[class.!btn-error]="query.touched && query.invalid"
 								type="button"
 								*ngIf="query.value.length"
 								aria-label="Clear"
@@ -31,18 +55,6 @@
 								(click)="query.setValue('')"
 							></button>
 						</label>
-						<label
-							class="label"
-							for="search"
-							*ngIf="query.touched && query.errors"
-						>
-							<span class="label-text text-error" [ngSwitch]="true">
-								<!-- prettier-ignore -->
-								<ng-container *ngSwitchCase="!!query.errors.minlength">
-                  Min length {{ query.errors.minlength["requiredLength"] }} characters
-                </ng-container>
-							</span>
-						</label>
 					</fieldset>
 				</form>
 			</div>
@@ -52,11 +64,12 @@
 				<ul class="tabs space-x-1 translate-y-px" #scrollRoot>
 					<!-- prettier-ignore -->
 					<li
-						class="tab tab-lg tab-lifted"
+						class="tab tab-lg tab-lifted !px-0"
 						[ngClass]="routerLinkActive.isActive ? 'tab-active' : 'bg-base-200 h-10'"
 						*ngFor="let link of ['Posts', 'Categories', 'Users']"
 					>
 						<a
+              class="block px-4"
 							appScrollIntoView
 							[appRoot]="scrollRoot"
 							[appActive]="routerLinkActive.isActive"
@@ -71,7 +84,9 @@
 					</li>
 				</ul>
 			</nav>
-			<div class="bg-primary-content border rounded-box shadow-xl p-4">
+			<div
+				class="bg-base-100 border border-base-content/20 rounded-box shadow-xl p-4"
+			>
 				<div class="bg-base-200 rounded-box p-4">
 					<router-outlet></router-outlet>
 				</div>

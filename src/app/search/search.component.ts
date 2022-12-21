@@ -1,67 +1,81 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import {
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	Validators
+} from '@angular/forms';
 import { debounceTime, filter, map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 interface SearchForm {
-  query: FormControl<string>;
+	query: FormControl<string>;
 }
 
 @Component({
-  selector: 'app-search',
-  templateUrl: './search.component.html'
+	selector: 'app-search',
+	templateUrl: './search.component.html'
 })
 export class SearchComponent implements OnInit, OnDestroy {
-  routeQueryParams$: Subscription | undefined;
+	routeQueryParams$: Subscription | undefined;
 
-  searchForm: FormGroup | undefined;
-  searchForm$: Subscription | undefined;
+	searchForm: FormGroup | undefined;
+	searchForm$: Subscription | undefined;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private formBuilder: FormBuilder
-  ) {
-    this.searchForm = this.formBuilder.group<SearchForm>({
-      query: this.formBuilder.control('', [Validators.minLength(4), Validators.maxLength(24)])
-    });
-  }
+	constructor(
+		private activatedRoute: ActivatedRoute,
+		private router: Router,
+		private formBuilder: FormBuilder
+	) {
+		this.searchForm = this.formBuilder.group<SearchForm>({
+			query: this.formBuilder.control('', [
+				Validators.minLength(4),
+				Validators.maxLength(24)
+			])
+		});
+	}
 
-  ngOnInit(): void {
-    this.routeQueryParams$ = this.activatedRoute.queryParams
-      .pipe(map((data: Data) => data.query))
-      .subscribe({
-        next: (query: string = '') => this.searchForm.setValue({ query }, { emitEvent: false }),
-        error: (error: any) => console.error(error)
-      });
+	ngOnInit(): void {
+		this.routeQueryParams$ = this.activatedRoute.queryParams
+			.pipe(
+				map((params: Params) => params.query),
+				filter((query: string) => !!query)
+			)
+			.subscribe({
+				next: (query: string) => {
+					this.searchForm.setValue({ query }, { emitEvent: false });
+					this.searchForm.markAllAsTouched();
+				},
+				error: (error: any) => console.error(error)
+			});
 
-    this.searchForm$ = this.searchForm.valueChanges
-      .pipe(
-        debounceTime(500),
-        filter(() => this.searchForm.valid)
-      )
-      .subscribe({
-        next: () => {
-          let { query = '' } = this.searchForm.value;
+		this.searchForm$ = this.searchForm.valueChanges
+			.pipe(
+				debounceTime(500),
+				filter(() => this.searchForm.valid)
+			)
+			.subscribe({
+				next: () => {
+					let { query = '' } = this.searchForm.value;
 
-          !query.length && (query = null);
+					!query.length && (query = null);
 
-          this.router
-            .navigate([], {
-              relativeTo: this.activatedRoute,
-              queryParams: { query },
-              queryParamsHandling: 'merge'
-            })
-            .then(() => console.debug('Route changed'));
-        },
-        error: (error: any) => console.error(error)
-      });
-  }
+					this.router
+						.navigate([], {
+							relativeTo: this.activatedRoute,
+							queryParams: { query },
+							queryParamsHandling: 'merge'
+						})
+						.then(() => console.debug('Route changed'));
+				},
+				error: (error: any) => console.error(error)
+			});
+	}
 
-  ngOnDestroy(): void {
-    [this.routeQueryParams$, this.searchForm$].forEach($ => $?.unsubscribe());
-  }
+	ngOnDestroy(): void {
+		[this.routeQueryParams$, this.searchForm$].forEach($ => $?.unsubscribe());
+	}
 }

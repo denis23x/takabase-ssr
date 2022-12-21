@@ -1,7 +1,9 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="bg-base-100 border rounded-box shadow-xl p-4">
+	<div
+		class="bg-base-100 border border-base-content/20 rounded-box shadow-xl p-4"
+	>
 		<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-box w-full">
 			<div
 				class="flex flex-col items-start sm:items-center justify-center space-y-4 rounded-t-box sm:rounded-box bg-base-200 -mx-4 -mt-4 sm:m-0 p-4"
@@ -32,7 +34,7 @@
 						Enter your email and password
 					</div>
 				</div>
-				<hr class="my-4" />
+				<hr class="border-base-content/20 my-4" />
 				<fieldset
 					class="flex flex-col space-y-4"
 					[disabled]="loginFormIsSubmitted"
@@ -42,7 +44,21 @@
 						*ngIf="loginForm.get('email') as email"
 					>
 						<label class="label" for="email">
-							<span class="label-text">Email</span>
+							<div class="indicator">
+								<span
+									class="indicator-item badge badge-error text-xs translate-x-full translate-y-0 w-max"
+									*ngIf="email.touched && email.errors"
+									[ngSwitch]="true"
+								>
+									<ng-container *ngSwitchCase="!!email.errors.required">
+										Required
+									</ng-container>
+									<ng-container *ngSwitchCase="!!email.errors.email">
+										Email must be a real email address
+									</ng-container>
+								</span>
+								<span class="label-text mr-2">Email</span>
+							</div>
 						</label>
 						<input
 							id="email"
@@ -56,36 +72,29 @@
 							placeholder="Email"
 							aria-label="Email"
 						/>
-						<label
-							class="label"
-							for="email"
-							*ngIf="email.touched && email.errors"
-						>
-							<span class="label-text text-error" [ngSwitch]="true">
-								<ng-container *ngSwitchCase="!!email.errors.required">
-									Required
-								</ng-container>
-								<ng-container *ngSwitchCase="!!email.errors.email">
-									Email must be a real email address
-								</ng-container>
-							</span>
-						</label>
 					</fieldset>
 					<fieldset
 						class="form-control"
 						*ngIf="loginForm.get('password') as password"
 					>
 						<label class="label" for="password">
-							<span class="label-text">Password</span>
-							<a
-								class="label-text-alt link !link-primary"
-								[routerLink]="['../reset']"
-								aria-label="Forgot password"
-							>
-								Forgot password?
-							</a>
+							<div class="indicator">
+								<span
+									class="indicator-item badge badge-error text-xs translate-x-full translate-y-0 w-max"
+									*ngIf="password.touched && password.errors"
+									[ngSwitch]="true"
+								>
+									<ng-container *ngSwitchCase="!!password.errors.required">
+										Required
+									</ng-container>
+									<ng-container *ngSwitchCase="!!password.errors.pattern">
+										Password does not match pattern
+									</ng-container>
+								</span>
+								<span class="label-text mr-2">Password</span>
+							</div>
 						</label>
-						<div class="relative" *ngIf="{ value: false } as isVisible">
+						<label class="block relative" *ngIf="{ value: false } as isVisible">
 							<input
 								id="password"
 								autocomplete="current-password"
@@ -100,6 +109,8 @@
 							/>
 							<button
 								class="btn btn-ghost btn-sm btn-circle fill-current absolute top-2 right-2"
+								[class.!btn-success]="password.touched && password.value"
+								[class.!btn-error]="password.touched && password.invalid"
 								type="button"
 								*ngIf="password.value.length"
 								(touchstart)="isVisible.value = !isVisible.value"
@@ -112,20 +123,15 @@
 								[appSquare]="'1.5em'"
 								[appViewBox]="'0 0 14 14'"
 							></button>
-						</div>
-						<label
-							class="label"
-							for="password"
-							*ngIf="password.touched && password.errors"
-						>
-							<span class="label-text text-error" [ngSwitch]="true">
-								<ng-container *ngSwitchCase="!!password.errors.required">
-									Required
-								</ng-container>
-								<ng-container *ngSwitchCase="!!password.errors.pattern">
-									Password does not match pattern
-								</ng-container>
-							</span>
+						</label>
+						<label class="label" for="password">
+							<a
+								class="label-text-alt link !link-primary"
+								[routerLink]="['../reset']"
+								aria-label="Forgot password"
+							>
+								Forgot password?
+							</a>
 						</label>
 					</fieldset>
 					<fieldset class="form-control">

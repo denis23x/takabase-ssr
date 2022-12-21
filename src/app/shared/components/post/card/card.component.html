@@ -1,6 +1,8 @@
 <!-- @format -->
 
-<article class="card card-compact bg-base-100 shadow-xl w-full h-full">
+<article
+	class="card card-compact bg-base-100 border border-base-content/20 shadow-xl w-full h-full"
+>
 	<figure *ngIf="post.image">
 		<a
 			[routerLink]="[postPath, post.id]"
