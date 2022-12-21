@@ -7,9 +7,19 @@ import {
 	OnInit,
 	ViewChild
 } from '@angular/core';
-import { PlatformService, HelperService, Post, Category } from '../core';
+import {
+	PlatformService,
+	HelperService,
+	Post,
+	Category,
+	PostCreateDto,
+	PostService,
+	SnackbarService,
+	User,
+	AuthService
+} from '../core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
-import { of, Subscription, switchMap } from 'rxjs';
+import { iif, of, Subscription, switchMap } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import {
 	AbstractControl,
@@ -41,12 +51,18 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 	postForm: FormGroup | undefined;
 	postFormIsSubmitted: boolean = false;
 
+	authUser: User | undefined;
+	authUser$: Subscription | undefined;
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private platformService: PlatformService,
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
-		private helperService: HelperService
+		private helperService: HelperService,
+		private postService: PostService,
+		private snackbarService: SnackbarService,
+		private authService: AuthService
 	) {
 		this.postForm = this.formBuilder.group<PostForm>({
 			title: this.formBuilder.control('', [
@@ -88,10 +104,15 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 				},
 				error: (error: any) => console.error(error)
 			});
+
+		this.authUser$ = this.authService.user.subscribe({
+			next: (user: User) => (this.authUser = user),
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
+		[this.activatedRouteData$, this.authUser$].forEach($ => $?.unsubscribe());
 	}
 
 	onToggleCategory(toggle: boolean): void {
@@ -113,35 +134,33 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 
 	onSubmitPostForm(): void {
 		if (this.helperService.getFormValidation(this.postForm)) {
+			this.postFormIsSubmitted = true;
+
+			// prettier-ignore
+			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+			const postCreateDto: PostCreateDto = {
+				...this.postForm.value
+			};
+
+			// @ts-ignore
+			delete postCreateDto.categoryName;
+
+			// @ts-ignore
+			delete postCreateDto.description;
+
+			iif(
+				() => !!postId,
+				this.postService.update(postId, postCreateDto),
+				this.postService.create(postCreateDto)
+			).subscribe({
+				next: (post: Post) => {
+					// prettier-ignore
+					this.router
+            .navigate(['/@' + post.user.name, 'category', post.category.id, 'posts', post.id])
+            .then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
+				},
+				error: () => (this.postFormIsSubmitted = false)
+			});
 		}
 	}
-
-	// onSubmitPostForm(): void {
-	//   if (this.helperService.getFormValidation(this.postForm)) {
-	//     this.postFormIsSubmitted = true;
-	//
-	//     // prettier-ignore
-	//     const postId: number = Number(this.activatedRoute.parent.snapshot.paramMap.get('postId'));
-	//     const postCreateDto: PostCreateDto = {
-	//       ...this.postForm.value
-	//     };
-	//
-	//     // @ts-ignore
-	//     delete postCreateDto.categoryName;
-	//
-	//     iif(
-	//       () => !!postId,
-	//       this.postService.update(postId, postCreateDto),
-	//       this.postService.create(postCreateDto)
-	//     ).subscribe({
-	//       next: (post: Post) => {
-	//         // prettier-ignore
-	//         this.router
-	//           .navigate(['/@' + post.user.name, 'category', post.category.id, 'posts', post.id])
-	//           .then(() => this.snackbarService.success('Cheers!', 'Post saved'));
-	//       },
-	//       error: () => (this.postFormIsSubmitted = false)
-	//     });
-	//   }
-	// }
 }

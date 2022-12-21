@@ -255,27 +255,73 @@
 				</form>
 			</div>
 			<div class="grid grid-cols-12 gap-4">
-				<label
-					for="my-modal-4"
-					class="btn btn-primary col-span-12 sm:col-span-3 w-full"
-				>
-					Preview
-				</label>
-				<!-- Put this part before </body> tag -->
-				<input type="checkbox" id="my-modal-4" class="modal-toggle" />
-				<label for="my-modal-4" class="modal cursor-pointer">
-					<label class="modal-box relative" for="">
-						<h3 class="text-lg font-bold">
-							Congratulations random Internet user!
-						</h3>
-						<article
-							id="preview"
-							class="border border-base-content/20"
-						></article>
+				<div class="block col-span-12 sm:col-span-3">
+					<label for="my-modal-4" class="btn btn-secondary w-full">
+						Preview
 					</label>
-				</label>
+					<input type="checkbox" id="my-modal-4" class="modal-toggle" />
+					<!-- TODO: https://www.w3schools.com/howto/howto_js_draggable.asp -->
+					<!-- TODO: named outlet -->
+					<!-- TODO: resizeable -->
+					<label for="my-modal-4" class="modal cursor-pointer">
+						<div class="mockup-window border bg-base-300 resize">
+							<div
+								class="flex flex-col bg-base-100 max-w-[768px] max-h-[90vh] relative p-4"
+							>
+								<div class="flex items-center justify-start space-x-4 mb-4">
+									<a
+										class="btn btn-link btn-circle"
+										[routerLink]="['/@' + authUser.name]"
+										[attr.aria-label]="authUser.name"
+										[title]="authUser.name"
+										[appUser]="authUser"
+										appAvatar
+									>
+									</a>
+									<div class="flex flex-col items-start justify-start">
+										<a
+											class="link link-primary"
+											[routerLink]="['/@' + authUser.name]"
+											[attr.aria-label]="authUser.name"
+											[title]="authUser.name"
+										>
+											{{ authUser.name }}
+										</a>
+										<time
+											class="base-content opacity-40 text-sm"
+											[attr.datetime]="authUser.updatedAt"
+										>
+											{{ authUser.updatedAt | dayjs: "fromX" }}
+										</time>
+									</div>
+								</div>
+								<hr class="border-base-content/20" />
+								<div class="relative overflow-auto pr-4">
+									<h2 class="text-2xl text-base-content font-medium my-4">
+										{{ postForm.get("title").value }}
+									</h2>
+									<div class="bg-base-200 rounded-box p-4 mb-8">
+										Lorem Ipsum is simply dummy text of the printing and
+										typesetting industry. Lorem Ipsum has been the industry's
+										standard dummy text ever since the 1500s, when an unknown
+										printer took a galley of type and scrambled it to make a
+										type specimen book.
+									</div>
+									<article
+										id="preview"
+										class="prose prose-img:rounded-box max-w-none"
+									></article>
+								</div>
+								<hr class="border-base-content/20" />
+								<div class="flex items-center justify-start space-x-4 mt-4">
+									<app-share></app-share>
+								</div>
+							</div>
+						</div>
+					</label>
+				</div>
 				<button
-					class="btn btn-primary col-span-12 sm:col-span-9 w-full"
+					class="btn btn-primary col-span-12 sm:col-span-9"
 					type="button"
 					aria-label="Submit"
 					[disabled]="postForm.invalid"

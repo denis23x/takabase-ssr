@@ -87,5 +87,9 @@ module.exports = {
       "winter",
     ],
   },
-  plugins: [require("@tailwindcss/line-clamp"), require("daisyui")],
+  plugins: [
+    require("@tailwindcss/line-clamp"),
+    require("@tailwindcss/typography"),
+    require("daisyui"),
+  ],
 }

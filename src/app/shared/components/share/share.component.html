@@ -1,42 +1,102 @@
-<div class="flex flex-col-reverse sm:flex-row items-center justify-start space-x-0 sm:space-x-2">
-  <div class="flex border-t sm:border-t-0 border-primary-4 w-full py-2">
-    <button
-      class="btn btn-info sm whitespace-nowrap w-full"
-      type="button"
-      aria-label="Copy URL"
-      (click)="onCopyUrl()">Copy URL
-    </button>
-  </div>
-  <ul class="flex items-center justify-start">
-    <li class="block">
-      <a class="block p-2.5" aria-label="Facebook" title="Facebook" target="_blank" rel="noopener" [href]="shareMap.facebook">
-        <i class="block fill-current bg-white text-[#1877f2] outline outline-primary-2 rounded-full" appSvgIcon [appIcon]="'facebook'" appSquare="20"></i>
-      </a>
-    </li>
-    <li class="block">
-      <a class="block p-2.5" aria-label="Linkedin" title="Linkedin" target="_blank" rel="noopener" [href]="shareMap.linkedin">
-        <i class="block fill-current bg-white text-[#0A66C2] outline outline-primary-2 rounded-sm" appSvgIcon [appIcon]="'linkedin'" appSquare="20"></i>
-      </a>
-    </li>
-    <li class="block">
-      <a class="block p-2.5" aria-label="Pinterest" title="Pinterest" target="_blank" rel="noopener" [href]="shareMap.pinterest">
-        <i class="block fill-current bg-white text-[#E60023] outline outline-primary-2 rounded-full" appSvgIcon [appIcon]="'pinterest'" appSquare="20"></i>
-      </a>
-    </li>
-    <li class="block">
-      <a class="block p-2.5" aria-label="Reddit" title="Reddit" target="_blank" rel="noopener" [href]="shareMap.reddit">
-        <i class="block fill-current bg-white text-[#FF4500] outline outline-primary-2 rounded-full" appSvgIcon [appIcon]="'reddit'" appSquare="20"></i>
-      </a>
-    </li>
-    <li class="block">
-      <a class="block p-2.5" aria-label="Telegram" title="Telegram" target="_blank" rel="noopener" [href]="shareMap.telegram">
-        <i class="block fill-current bg-white text-[#2AABEE] outline outline-primary-2 rounded-full" appSvgIcon [appIcon]="'telegram'" appSquare="20"></i>
-      </a>
-    </li>
-    <li class="block">
-      <a class="block p-2.5" aria-label="Twitter" title="Twitter" target="_blank" rel="noopener" [href]="shareMap.twitter">
-        <i class="block fill-current bg-transparent text-[#1DA1F2] outline outline-primary-2 rounded-full" appSvgIcon [appIcon]="'twitter'" appSquare="20"></i>
-      </a>
-    </li>
-  </ul>
-</div>
+<!-- @format -->
+
+<ng-container>
+	<ul class="flex items-center justify-start space-x-2">
+		<li class="block">
+			<button
+				class="btn btn-ghost btn-circle fill-current"
+				type="button"
+				aria-label="Copy URL"
+				title="Copy URL"
+				appSvgIcon
+				[appIcon]="'clipboard'"
+				[appSquare]="'16'"
+				(click)="onCopyUrl()"
+			></button>
+		</li>
+		<li class="block">
+			<a
+				class="btn btn-ghost btn-circle fill-current text-[#1877f2]"
+				aria-label="Facebook"
+				title="Facebook"
+				target="_blank"
+				rel="noopener"
+				appSvgIcon
+				[href]="shareMap.facebook"
+				[appIcon]="'facebook'"
+				[appSquare]="'20'"
+			>
+			</a>
+		</li>
+		<li class="block">
+			<a
+				class="btn btn-ghost btn-circle fill-current text-[#0A66C2]"
+				aria-label="Linkedin"
+				title="Linkedin"
+				target="_blank"
+				rel="noopener"
+				appSvgIcon
+				[href]="shareMap.linkedin"
+				[appIcon]="'linkedin'"
+				[appSquare]="'20'"
+			>
+			</a>
+		</li>
+		<li class="block">
+			<a
+				class="btn btn-ghost btn-circle fill-current text-[#E60023]"
+				aria-label="Pinterest"
+				title="Pinterest"
+				target="_blank"
+				rel="noopener"
+				appSvgIcon
+				[href]="shareMap.pinterest"
+				[appIcon]="'pinterest'"
+				[appSquare]="'20'"
+			>
+			</a>
+		</li>
+		<li class="block">
+			<a
+				class="btn btn-ghost btn-circle fill-current text-[#FF4500]"
+				aria-label="Reddit"
+				title="Reddit"
+				target="_blank"
+				rel="noopener"
+				appSvgIcon
+				[href]="shareMap.reddit"
+				[appIcon]="'reddit'"
+				[appSquare]="'20'"
+			>
+			</a>
+		</li>
+		<li class="block">
+			<a
+				class="btn btn-ghost btn-circle fill-current text-[#2AABEE]"
+				aria-label="Telegram"
+				title="Telegram"
+				target="_blank"
+				rel="noopener"
+				appSvgIcon
+				[href]="shareMap.telegram"
+				[appIcon]="'telegram'"
+				[appSquare]="'20'"
+			>
+			</a>
+		</li>
+		<li class="block">
+			<a
+				class="btn btn-ghost btn-circle fill-current text-[#1DA1F2]"
+				aria-label="Twitter"
+				title="Twitter"
+				target="_blank"
+				rel="noopener"
+				appSvgIcon
+				[href]="shareMap.twitter"
+				[appIcon]="'twitter'"
+				[appSquare]="'20'"
+			>
+			</a>
+		</li>
+	</ul>
+</ng-container>
