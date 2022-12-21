@@ -26,15 +26,10 @@
 				[formGroup]="loginForm"
 				(ngSubmit)="onSubmitForm()"
 			>
-				<div class="flex flex-col">
-					<h2 class="text-xl text-base-content font-medium">
-						Login with credentials
-					</h2>
-					<div class="flex space-x-1 text-base-content">
-						Enter your email and password
-					</div>
-				</div>
-				<hr class="border-base-content/20 my-4" />
+				<h2 class="text-xl text-base-content font-medium">
+					Login with credentials
+				</h2>
+				<hr class="border-base-content/20 my-2" />
 				<fieldset
 					class="flex flex-col space-y-4"
 					[disabled]="loginFormIsSubmitted"
@@ -60,18 +55,34 @@
 								<span class="label-text mr-2">Email</span>
 							</div>
 						</label>
-						<input
-							id="email"
-							autocomplete="username"
-							type="email"
-							class="input input-bordered truncate w-full"
-							[class.input-success]="email.touched && !email.errors"
-							[class.input-error]="email.touched && email.errors"
-							[class.input-disabled]="loginFormIsSubmitted"
-							formControlName="email"
-							placeholder="Email"
-							aria-label="Email"
-						/>
+						<label class="block relative" for="email">
+							<input
+								id="email"
+								autocomplete="username"
+								type="email"
+								class="input input-bordered truncate w-full"
+								[class.input-success]="email.touched && !email.errors"
+								[class.input-error]="email.touched && email.errors"
+								[class.input-disabled]="loginFormIsSubmitted"
+								formControlName="email"
+								placeholder="Type your Email"
+								aria-label="Email"
+							/>
+							<button
+								class="btn btn-sm btn-circle fill-current absolute top-2 right-2"
+								[class.btn-success]="email.touched && email.valid"
+								[class.btn-error]="email.touched && email.invalid"
+								[class.btn-ghost]="email.untouched"
+								type="button"
+								*ngIf="email.value.length"
+								aria-label="Clear"
+								title="Clear"
+								appSvgIcon
+								[appIcon]="'x'"
+								[appSquare]="'1.75rem'"
+								(click)="email.setValue('')"
+							></button>
+						</label>
 					</fieldset>
 					<fieldset
 						class="form-control"
@@ -104,13 +115,14 @@
 								[class.input-error]="password.touched && password.errors"
 								[class.input-disabled]="loginFormIsSubmitted"
 								formControlName="password"
-								placeholder="Password"
+								placeholder="Type your password"
 								aria-label="Password"
 							/>
 							<button
-								class="btn btn-ghost btn-sm btn-circle fill-current absolute top-2 right-2"
-								[class.!btn-success]="password.touched && password.value"
-								[class.!btn-error]="password.touched && password.invalid"
+								class="btn btn-sm btn-circle fill-current absolute top-2 right-2"
+								[class.btn-success]="password.touched && password.value"
+								[class.btn-error]="password.touched && password.invalid"
+								[class.btn-ghost]="password.untouched"
 								type="button"
 								*ngIf="password.value.length"
 								(touchstart)="isVisible.value = !isVisible.value"
@@ -120,7 +132,7 @@
 								title="Password"
 								appSvgIcon
 								[appIcon]="isVisible.value ? 'eye' : 'eye-slash'"
-								[appSquare]="'1.5em'"
+								[appSquare]="'1.4em'"
 								[appViewBox]="'0 0 14 14'"
 							></button>
 						</label>

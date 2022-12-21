@@ -77,7 +77,15 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 				filter((post: Post) => !!post)
 			)
 			.subscribe({
-				next: (post: any) => this.postForm.patchValue(post),
+				next: (post: Post) => {
+					this.postForm.patchValue({
+						...post,
+						categoryId: post.category.id,
+						categoryName: post.category.name
+					});
+
+					this.postForm.markAllAsTouched();
+				},
 				error: (error: any) => console.error(error)
 			});
 	}

@@ -42,9 +42,10 @@
 								aria-label="Search"
 							/>
 							<button
-								class="btn btn-ghost btn-sm btn-circle fill-current absolute top-2 right-2"
-								[class.!btn-success]="query.touched && query.value"
-								[class.!btn-error]="query.touched && query.invalid"
+								class="btn btn-sm btn-circle fill-current absolute top-2 right-2"
+								[class.btn-success]="query.touched && query.value"
+								[class.btn-error]="query.touched && query.invalid"
+								[class.btn-ghost]="query.untouched"
 								type="button"
 								*ngIf="query.value.length"
 								aria-label="Clear"

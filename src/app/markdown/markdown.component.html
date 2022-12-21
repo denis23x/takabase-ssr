@@ -25,13 +25,8 @@
 				autocomplete="off"
 				[formGroup]="postForm"
 			>
-				<div class="flex flex-col">
-					<h2 class="text-xl text-base-content font-medium">Write a post</h2>
-					<div class="flex space-x-1 text-base-content">
-						Enter the accompanying information
-					</div>
-				</div>
-				<hr class="border-base-content/20 my-4" />
+				<h2 class="text-xl text-base-content font-medium">Write a post</h2>
+				<hr class="border-base-content/20 my-2" />
 				<fieldset
 					class="grid grid-cols-12 gap-4"
 					[disabled]="postFormIsSubmitted"
@@ -62,17 +57,33 @@
 								<span class="label-text mr-2">Title</span>
 							</div>
 						</label>
-						<input
-							id="title"
-							type="text"
-							class="input input-bordered truncate w-full"
-							placeholder="Type post title"
-							[class.input-success]="title.touched && title.valid"
-							[class.input-error]="title.touched && title.invalid"
-							[class.input-disabled]="postFormIsSubmitted"
-							formControlName="title"
-							aria-label="Title"
-						/>
+						<label class="block relative" for="title">
+							<input
+								id="title"
+								type="text"
+								class="input input-bordered truncate w-full pr-12"
+								placeholder="Type post title"
+								[class.input-success]="title.touched && title.valid"
+								[class.input-error]="title.touched && title.invalid"
+								[class.input-disabled]="postFormIsSubmitted"
+								formControlName="title"
+								aria-label="Title"
+							/>
+							<button
+								class="btn btn-sm btn-circle fill-current absolute top-2 right-2"
+								[class.btn-success]="title.touched && title.valid"
+								[class.btn-error]="title.touched && title.invalid"
+								[class.btn-ghost]="title.untouched"
+								type="button"
+								*ngIf="title.value.length"
+								aria-label="Clear"
+								title="Clear"
+								appSvgIcon
+								[appIcon]="'x'"
+								[appSquare]="'1.75rem'"
+								(click)="title.setValue('')"
+							></button>
+						</label>
 					</fieldset>
 					<fieldset
 						class="form-control col-span-12 sm:col-span-5"
@@ -98,7 +109,7 @@
 							class="relative"
 							(toggled)="onToggleCategory($event)"
 						>
-							<div slot="toggle">
+							<div class="block" slot="toggle">
 								<!-- prettier-ignore -->
 								<input
                   #categoryNameInput
@@ -162,24 +173,40 @@
 								<span class="label-text mr-2">Description</span>
 							</div>
 						</label>
-						<!-- prettier-ignore -->
-						<input
-              id="description"
-              type="text"
-              class="input input-bordered truncate w-full"
-              placeholder="Type post description"
-              [class.input-success]="description.touched && description.valid"
-              [class.input-error]="description.touched && description.invalid"
-              [class.input-disabled]="postFormIsSubmitted"
-              formControlName="description"
-              aria-label="Description"
-            />
+						<label class="block relative" for="description">
+							<!-- prettier-ignore -->
+							<input
+                id="description"
+                type="text"
+                class="input input-bordered truncate w-full pr-12"
+                placeholder="Type post description"
+                [class.input-success]="description.touched && description.valid"
+                [class.input-error]="description.touched && description.invalid"
+                [class.input-disabled]="postFormIsSubmitted"
+                formControlName="description"
+                aria-label="Description"
+              />
+							<button
+								class="btn btn-sm btn-circle fill-current absolute top-2 right-2"
+								[class.btn-success]="description.touched && description.valid"
+								[class.btn-error]="description.touched && description.invalid"
+								[class.btn-ghost]="description.untouched"
+								type="button"
+								*ngIf="description.value.length"
+								aria-label="Clear"
+								title="Clear"
+								appSvgIcon
+								[appIcon]="'x'"
+								[appSquare]="'1.75rem'"
+								(click)="description.setValue('')"
+							></button>
+						</label>
 					</fieldset>
 				</fieldset>
 			</form>
 		</div>
 		<div
-			class="bg-base-100 border border-base-content/20 rounded-box shadow-xl p-4"
+			class="flex flex-col space-y-4 bg-base-100 border border-base-content/20 rounded-box shadow-xl p-4"
 		>
 			<div class="flex flex-col space-y-4 bg-base-200 rounded-box p-4">
 				<div
@@ -215,7 +242,7 @@
 							id="textarea"
 							class="textarea textarea-bordered w-full"
 							placeholder="Type post body"
-							[rows]="10"
+							[rows]="8"
 							[class.textarea-success]="body.touched && !body.errors"
 							[class.textarea-error]="body.touched && body.errors"
 							[class.textarea-disabled]="postFormIsSubmitted"
@@ -227,17 +254,36 @@
 					</fieldset>
 				</form>
 			</div>
-			<!-- TODO: update preview -->
-			<article id="preview" class="border border-base-content/20"></article>
-			<button
-				class="btn btn-success md block w-full"
-				type="button"
-				aria-label="Next"
-				[disabled]="postForm.invalid"
-				(click)="onSubmitPostForm()"
-			>
-				Next
-			</button>
+			<div class="grid grid-cols-12 gap-4">
+				<label
+					for="my-modal-4"
+					class="btn btn-primary col-span-12 sm:col-span-3 w-full"
+				>
+					Preview
+				</label>
+				<!-- Put this part before </body> tag -->
+				<input type="checkbox" id="my-modal-4" class="modal-toggle" />
+				<label for="my-modal-4" class="modal cursor-pointer">
+					<label class="modal-box relative" for="">
+						<h3 class="text-lg font-bold">
+							Congratulations random Internet user!
+						</h3>
+						<article
+							id="preview"
+							class="border border-base-content/20"
+						></article>
+					</label>
+				</label>
+				<button
+					class="btn btn-primary col-span-12 sm:col-span-9 w-full"
+					type="button"
+					aria-label="Submit"
+					[disabled]="postForm.invalid"
+					(click)="onSubmitPostForm()"
+				>
+					Submit
+				</button>
+			</div>
 		</div>
 	</div>
 </ng-container>
