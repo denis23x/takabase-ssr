@@ -1,31 +1,33 @@
 <!-- @format -->
 
 <ng-container>
-	<ul class="menu menu-horizontal bg-base-100 rounded-box border">
-		<li class="inline-block">
-			<button
-				class="fill-current text-base-content"
-				type="button"
-				aria-label="Undo"
-				title="Undo"
-				[disabled]="!history$.getValue().length"
-				(click)="onBack()"
-				appSvgIcon
-				[appIcon]="'arrow-left'"
-			></button>
-		</li>
-		<li class="inline-block" *ngFor="let control of controlList">
-			<button
-				class="fill-current text-base-content"
-				type="button"
-				[attr.aria-label]="control.label"
-				[attr.title]="control.label"
-				(click)="onControl(control)"
-				appSvgIcon
-				[appIcon]="control.icon"
-			></button>
-		</li>
-	</ul>
+	<div class="overflow-auto">
+		<ul class="menu menu-horizontal bg-base-100 rounded-box border">
+			<li class="inline-block">
+				<button
+					class="fill-current text-base-content"
+					type="button"
+					aria-label="Undo"
+					title="Undo"
+					[disabled]="!history$.getValue().length"
+					(click)="onBack()"
+					appSvgIcon
+					[appIcon]="'arrow-left'"
+				></button>
+			</li>
+			<li class="inline-block" *ngFor="let control of controlList">
+				<button
+					class="fill-current text-base-content"
+					type="button"
+					[attr.aria-label]="control.label"
+					[attr.title]="control.label"
+					(click)="onControl(control)"
+					appSvgIcon
+					[appIcon]="control.icon"
+				></button>
+			</li>
+		</ul>
+	</div>
 	<!-- TODO: update modal -->
 	<app-overlay *ngIf="urlModal" (closed)="onCloseUrlForm()">
 		<div

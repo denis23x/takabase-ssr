@@ -1,68 +1,75 @@
 /** @format */
 
 import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+	Component,
+	ElementRef,
+	EventEmitter,
+	Inject,
+	OnDestroy,
+	OnInit,
+	Output,
+	ViewChild
 } from '@angular/core';
-import { PlatformService } from '../../../core';
 import { fromEvent, Subscription } from 'rxjs';
-import { debounceTime, filter } from 'rxjs/operators';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
-  selector: 'app-dropdown, [appDropdown]',
-  templateUrl: './dropdown.component.html'
+	selector: 'app-dropdown, [appDropdown]',
+	templateUrl: './dropdown.component.html'
 })
 export class DropdownComponent implements OnInit, OnDestroy {
-  @ViewChild('dropdownTarget') dropdownTarget: ElementRef | undefined;
-  @ViewChild('dropdownContent') dropdownContent: ElementRef | undefined;
+	@ViewChild('dropdownTarget') dropdownTarget: ElementRef | undefined;
+	@ViewChild('dropdownContent') dropdownContent: ElementRef | undefined;
 
-  @Output() toggled: EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() toggled: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  @Input()
-  set appDisabled(disabled: boolean) {
-    this.dropdownDisabled = disabled;
-  }
+	click$: Subscription | undefined;
 
-  click$: Subscription | undefined;
+	state: boolean = false;
 
-  dropdownDisabled: boolean = false;
-  dropdownState: boolean = false;
+	constructor(
+		@Inject(DOCUMENT)
+		private document: Document
+	) {}
 
-  constructor(private platformService: PlatformService, private elementRef: ElementRef) {}
+	ngOnInit(): void {
+		this.click$ = fromEvent(this.document, 'click').subscribe({
+			next: (event: any) => {
+				// prettier-ignore
+				const target: boolean = this.dropdownTarget.nativeElement.contains(event.target);
 
-  ngOnInit(): void {
-    this.click$ = fromEvent(this.elementRef.nativeElement, 'click')
-      .pipe(
-        debounceTime(10),
-        filter(() => !this.dropdownDisabled)
-      )
-      .subscribe({
-        next: (event: any) => {
-          if (this.dropdownState && this.dropdownContent.nativeElement.contains(event.target)) {
-            this.setState(false);
-          } else if (this.dropdownTarget.nativeElement.contains(event.target)) {
-            this.setState(true);
-          }
-        },
-        error: (error: any) => console.error(error)
-      });
-  }
+				// prettier-ignore
+				const content: boolean = this.dropdownContent.nativeElement.contains(event.target);
 
-  ngOnDestroy(): void {
-    [this.click$].forEach($ => $?.unsubscribe());
-  }
+				/** If closed and click on target */
 
-  setState(state: boolean): void {
-    this.dropdownState = state;
+				if (!this.state && target) {
+					this.setState(true);
+				}
 
-    this.toggled.emit(this.dropdownState);
+				/** If opened and click on content */
 
-    this.platformService.setScrollToggle(this.dropdownState);
-  }
+				if (!!this.state && content) {
+					this.setState(false);
+				}
+
+				/** If opened and click outside */
+
+				if (!!this.state && !target && !content) {
+					this.setState(false);
+				}
+			},
+			error: (error: any) => console.error(error)
+		});
+	}
+
+	ngOnDestroy(): void {
+		[this.click$].forEach($ => $?.unsubscribe());
+	}
+
+	setState(state: boolean): void {
+		this.state = state;
+
+		this.toggled.emit(this.state);
+	}
 }

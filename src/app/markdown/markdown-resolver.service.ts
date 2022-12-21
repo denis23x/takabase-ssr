@@ -2,54 +2,85 @@
 
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
-import { combineLatest, EMPTY, Observable, of, throwError } from 'rxjs';
-import { catchError, first, mergeMap, switchMap } from 'rxjs/operators';
+import { forkJoin, Observable, of, throwError } from 'rxjs';
+import { catchError, first, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AuthService, Post, PostGetOneDto, PostService, User } from '../core';
+import {
+	AuthService,
+	Category,
+	CategoryGetAllDto,
+	CategoryService,
+	Post,
+	PostGetOneDto,
+	PostService,
+	User
+} from '../core';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class MarkdownResolverService {
-  constructor(
-    private authService: AuthService,
-    private postService: PostService,
-    private router: Router
-  ) {}
+	constructor(
+		private authService: AuthService,
+		private categoryService: CategoryService,
+		private postService: PostService,
+		private router: Router
+	) {}
 
-  resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Post> {
-    const postId: number = Number(activatedRouteSnapshot.paramMap.get('postId'));
+	// prettier-ignore
+	resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<(Category[] | Post)[]> {
+		const postId: number = Number(activatedRouteSnapshot.paramMap.get('postId'));
 
-    if (postId) {
-      const postUser$ = this.authService.user.pipe(first());
-      const postGetOneDto: PostGetOneDto = {
-        scope: ['user', 'category']
-      };
+		return this.authService.user.pipe(first()).pipe(
+			switchMap((user: User) => {
+				const categoryList$ = (): Observable<Category[]> => {
+					const categoryGetAllDto: CategoryGetAllDto = {
+						page: 1,
+						size: 999,
+						userId: user.id
+					};
 
-      return this.postService.getOne(postId, postGetOneDto).pipe(
-        mergeMap((post: Post) => combineLatest([of(post), postUser$])),
-        switchMap(([post, user]: [Post, User]) => {
-          if (user.id !== post.user.id) {
-            return throwError(() => {
-              return {
-                status: 403,
-                message: 'Forbidden'
-              };
-            });
-          }
+					return this.categoryService.getAll(categoryGetAllDto);
+				};
 
-          return of(post);
-        }),
-        catchError((httpErrorResponse: HttpErrorResponse) => {
-          this.router
-            .navigate(['/exception', httpErrorResponse.status])
-            .then(() => console.debug('Route changed'));
+				const post$ = (): Observable<Post> => {
+					const postGetOneDto: PostGetOneDto = {
+						scope: ['user', 'category']
+					};
 
-          return throwError(() => httpErrorResponse);
-        })
-      );
-    }
+					return this.postService.getOne(postId, postGetOneDto).pipe(
+						switchMap((post: Post) => {
+							if (user.id !== post.user.id) {
+								return throwError(() => {
+									return {
+										status: 403,
+										message: 'Forbidden'
+									};
+								});
+							}
 
-    return EMPTY;
-  }
+							return of(post);
+						})
+					);
+				};
+
+				const forkJoin$ = (): Observable<Category[] | Post>[] => {
+					if (!!postId) {
+						return [categoryList$(), post$()];
+					} else {
+						return [categoryList$()];
+					}
+				};
+
+				return forkJoin(forkJoin$());
+			}),
+			catchError((httpErrorResponse: HttpErrorResponse) => {
+				this.router
+					.navigate(['/exception', httpErrorResponse.status])
+					.then(() => console.debug('Route changed'));
+
+				return throwError(() => httpErrorResponse);
+			})
+		);
+	}
 }

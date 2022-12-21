@@ -3,16 +3,10 @@
 <ng-container>
 	<div class="flex flex-col space-y-4 md:space-y-8">
 		<div
-			class="grid grid-cols-1 sm:grid-cols-12 gap-4 bg-base-100 border rounded-box shadow-xl w-full p-4"
+			class="grid grid-cols-12 gap-4 bg-base-100 border rounded-box shadow-xl w-full p-4"
 		>
-			<ul class="steps steps-vertical col-span-1 mx-auto w-10 overflow-hidden">
-				<li class="step step-primary"></li>
-				<li class="step step-primary"></li>
-				<li class="step"></li>
-				<li class="step"></li>
-			</ul>
 			<div
-				class="flex flex-col items-start sm:items-center justify-center space-y-4 col-span-4 rounded-t-box sm:rounded-box bg-base-200 -mx-4 -mt-4 sm:m-0 p-4"
+				class="flex flex-col items-start sm:items-center justify-center space-y-4 col-span-12 sm:col-span-4 md:col-span-3 rounded-t-box sm:rounded-box bg-base-200 -mx-4 -mt-4 sm:m-0 p-4"
 			>
 				<h2 class="text-xl text-base-content font-medium">Login via</h2>
 				<div class="inline text-left sm:text-center">
@@ -27,7 +21,7 @@
 				</div>
 			</div>
 			<form
-				class="flex flex-col col-span-7 rounded-none bg-base-100"
+				class="flex flex-col col-span-12 sm:col-span-8 md:col-span-9 rounded-none bg-base-100"
 				autocomplete="off"
 				[formGroup]="postForm"
 			>
@@ -39,50 +33,134 @@
 				</div>
 				<hr class="my-4" />
 				<fieldset
-					class="flex flex-col space-y-4"
+					class="grid grid-cols-12 gap-4"
 					[disabled]="postFormIsSubmitted"
 				>
-					<fieldset class="form-control" *ngIf="postForm.get('title') as title">
+					<fieldset
+						class="form-control col-span-12 sm:col-span-7"
+						*ngIf="postForm.get('title') as title"
+					>
 						<label class="label" for="title">
-							<span class="label-text">Title</span>
+							<div class="indicator">
+								<span
+									class="indicator-item badge badge-error translate-x-full translate-y-0 w-max text-base-100 text-xs"
+									*ngIf="title.touched && title.errors"
+									[ngSwitch]="true"
+								>
+									<ng-container *ngSwitchCase="!!title.errors.required">
+										Required
+									</ng-container>
+									<!-- prettier-ignore -->
+									<ng-container *ngSwitchCase="!!title.errors.minlength">
+                    Min length {{ title.errors.minlength["requiredLength"] }} characters
+                  </ng-container>
+									<!-- prettier-ignore -->
+									<ng-container *ngSwitchCase="!!title.errors.maxlength">
+                    Max length {{ title.errors.maxlength["requiredLength"] }} characters
+                  </ng-container>
+								</span>
+								<span class="label-text mr-2">Title</span>
+							</div>
 						</label>
 						<input
 							id="title"
 							type="text"
 							class="input input-bordered truncate w-full"
 							placeholder="Type post title"
-							[class.input-success]="title.touched && !title.errors"
-							[class.input-error]="title.touched && title.errors"
+							[class.input-success]="title.touched && title.valid"
+							[class.input-error]="title.touched && title.invalid"
 							[class.input-disabled]="postFormIsSubmitted"
 							formControlName="title"
 							aria-label="Title"
 						/>
-						<label
-							class="label"
-							for="title"
-							*ngIf="title.touched && title.errors"
-						>
-							<span class="label-text text-error" [ngSwitch]="true">
-								<ng-container *ngSwitchCase="!!title.errors.required">
-									Required
-								</ng-container>
-								<!-- prettier-ignore -->
-								<ng-container *ngSwitchCase="!!title.errors.minlength">
-                  Min length {{ title.errors.minlength["requiredLength"] }} characters
-                </ng-container>
-								<!-- prettier-ignore -->
-								<ng-container *ngSwitchCase="!!title.errors.maxlength">
-                  Max length {{ title.errors.maxlength["requiredLength"] }} characters
-                </ng-container>
-							</span>
-						</label>
 					</fieldset>
 					<fieldset
-						class="form-control"
+						class="form-control col-span-12 sm:col-span-5"
+						*ngIf="postForm.get('categoryName') as categoryName"
+					>
+						<label class="label" for="categoryName">
+							<div class="indicator">
+								<span
+									class="indicator-item badge badge-error translate-x-full translate-y-0 w-max text-base-100 text-xs"
+									*ngIf="categoryName.touched && categoryName.errors"
+									[ngSwitch]="true"
+								>
+									<!-- prettier-ignore -->
+									<ng-container *ngSwitchCase="!!categoryName.errors.required">
+                    Required
+                  </ng-container>
+								</span>
+								<span class="label-text mr-2">Category</span>
+							</div>
+						</label>
+						<div
+							appDropdown
+							class="relative"
+							(toggled)="onToggleCategory($event)"
+						>
+							<div slot="toggle">
+								<!-- prettier-ignore -->
+								<input
+                  #categoryNameInput
+                  id="categoryName"
+                  type="text"
+                  class="input input-bordered truncate pointer-events-none w-full"
+                  placeholder="Select post category"
+                  [class.input-success]="categoryName.touched && categoryName.value"
+                  [class.input-error]="categoryName.touched && categoryName.invalid"
+                  [class.input-disabled]="postFormIsSubmitted"
+                  formControlName="categoryName"
+                  aria-label="Category"
+                  readonly
+                />
+							</div>
+							<div class="absolute top-full left-0 w-full z-[1]" slot="content">
+								<ul
+									class="menu shadow bg-base-100 border rounded-box w-full mt-2 p-2"
+								>
+									<li
+										class="flex overflow-hidden w-full"
+										*ngFor="let category of categoryList"
+									>
+										<button
+											class="block text-left truncate w-full"
+											[class.active]="categoryName.value === category.name"
+											type="button"
+											(click)="onChangeCategory(category)"
+											[attr.aria-label]="category.name"
+										>
+											{{ category.name }}
+										</button>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</fieldset>
+					<fieldset
+						class="form-control col-span-12 sm:col-span-12"
 						*ngIf="postForm.get('description') as description"
 					>
 						<label class="label" for="description">
-							<span class="label-text">Description</span>
+							<div class="indicator">
+								<span
+									class="indicator-item badge badge-error translate-x-full translate-y-0 w-max text-base-100 text-xs"
+									*ngIf="description.touched && description.errors"
+									[ngSwitch]="true"
+								>
+									<ng-container *ngSwitchCase="!!description.errors.required">
+										Required
+									</ng-container>
+									<!-- prettier-ignore -->
+									<ng-container *ngSwitchCase="!!description.errors.minlength">
+                    Min length {{ description.errors.minlength["requiredLength"] }} characters
+                  </ng-container>
+									<!-- prettier-ignore -->
+									<ng-container *ngSwitchCase="!!description.errors.maxlength">
+                    Max length {{ description.errors.maxlength["requiredLength"] }} characters
+                  </ng-container>
+								</span>
+								<span class="label-text mr-2">Description</span>
+							</div>
 						</label>
 						<!-- prettier-ignore -->
 						<input
@@ -96,25 +174,6 @@
               formControlName="description"
               aria-label="Description"
             />
-						<label
-							class="label"
-							for="description"
-							*ngIf="description.touched && description.errors"
-						>
-							<span class="label-text text-error" [ngSwitch]="true">
-								<ng-container *ngSwitchCase="!!description.errors.required">
-									Required
-								</ng-container>
-								<!-- prettier-ignore -->
-								<ng-container *ngSwitchCase="!!description.errors.minlength">
-                  Min length {{ description.errors.minlength["requiredLength"] }} characters
-                </ng-container>
-								<!-- prettier-ignore -->
-								<ng-container *ngSwitchCase="!!description.errors.maxlength">
-                  Max length {{ description.errors.maxlength["requiredLength"] }} characters
-                </ng-container>
-							</span>
-						</label>
 					</fieldset>
 				</fieldset>
 			</form>
@@ -129,42 +188,40 @@
 				<form class="block" autocomplete="off" [formGroup]="postForm">
 					<fieldset class="form-control" *ngIf="postForm.get('body') as body">
 						<label class="label" for="textarea">
-							<span class="label-text">Body</span>
+							<div class="indicator">
+								<span
+									class="indicator-item badge badge-error translate-x-full translate-y-0 w-max text-base-100 text-xs"
+									*ngIf="body.touched && body.errors"
+									[ngSwitch]="true"
+								>
+									<ng-container *ngSwitchCase="!!body.errors.required">
+										Required
+									</ng-container>
+									<!-- prettier-ignore -->
+									<ng-container *ngSwitchCase="!!body.errors.minlength">
+                    Min length {{ body.errors.minlength["requiredLength"] }} characters
+                  </ng-container>
+									<!-- prettier-ignore -->
+									<ng-container *ngSwitchCase="!!body.errors.maxlength">
+                    Max length {{ body.errors.maxlength["requiredLength"] }} characters
+                  </ng-container>
+								</span>
+								<span class="label-text mr-2">Body</span>
+							</div>
 						</label>
-						<label class="flex">
-							<textarea
-								id="textarea"
-								class="textarea textarea-bordered w-full"
-								placeholder="Type post body"
-								[rows]="10"
-								[class.textarea-success]="body.touched && !body.errors"
-								[class.textarea-error]="body.touched && body.errors"
-								[class.textarea-disabled]="postFormIsSubmitted"
-								formControlName="body"
-								aria-label="Body"
-							>
-                {{ body.value }}
-              </textarea>
-						</label>
-						<label
-							class="label"
-							for="textarea"
-							*ngIf="body.touched && body.errors"
+						<textarea
+							id="textarea"
+							class="textarea textarea-bordered w-full"
+							placeholder="Type post body"
+							[rows]="10"
+							[class.textarea-success]="body.touched && !body.errors"
+							[class.textarea-error]="body.touched && body.errors"
+							[class.textarea-disabled]="postFormIsSubmitted"
+							formControlName="body"
+							aria-label="Body"
 						>
-							<span class="label-text text-error" [ngSwitch]="true">
-								<ng-container *ngSwitchCase="!!body.errors.required">
-									Required
-								</ng-container>
-								<!-- prettier-ignore -->
-								<ng-container *ngSwitchCase="!!body.errors.minlength">
-                  Min length {{ body.errors.minlength["requiredLength"] }} characters
-                </ng-container>
-								<!-- prettier-ignore -->
-								<ng-container *ngSwitchCase="!!body.errors.maxlength">
-                  Max length {{ body.errors.maxlength["requiredLength"] }} characters
-                </ng-container>
-							</span>
-						</label>
+              {{ body.value }}
+            </textarea>
 					</fieldset>
 				</form>
 			</div>
@@ -182,7 +239,6 @@
 			>
 				Next
 			</button>
-			<router-outlet></router-outlet>
 		</div>
 	</div>
 </ng-container>
