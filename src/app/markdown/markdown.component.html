@@ -104,47 +104,41 @@
 								<span class="label-text mr-2">Category</span>
 							</div>
 						</label>
-						<div
-							appDropdown
-							class="relative"
-							(toggled)="onToggleCategory($event)"
-						>
-							<div class="block" slot="toggle">
-								<!-- prettier-ignore -->
-								<input
-                  #categoryNameInput
-                  id="categoryName"
-                  type="text"
-                  class="input input-bordered truncate pointer-events-none w-full"
-                  placeholder="Select post category"
-                  [class.input-success]="categoryName.touched && categoryName.value"
-                  [class.input-error]="categoryName.touched && categoryName.invalid"
-                  [class.input-disabled]="postFormIsSubmitted"
-                  formControlName="categoryName"
-                  aria-label="Category"
-                  readonly
-                />
-							</div>
-							<div class="absolute top-full left-0 w-full z-[1]" slot="content">
-								<ul
-									class="menu shadow bg-base-100 border border-base-content/20 rounded-box w-full mt-2 p-2"
+						<div appDropdown (toggled)="onToggleCategory($event)">
+							<!-- prettier-ignore -->
+							<input
+                #categoryNameInput
+                id="categoryName"
+                type="text"
+                class="input input-bordered truncate w-full"
+                placeholder="Select post category"
+                [class.input-success]="categoryName.touched && categoryName.value"
+                [class.input-error]="categoryName.touched && categoryName.invalid"
+                [class.input-disabled]="postFormIsSubmitted"
+                formControlName="categoryName"
+                aria-label="Category"
+                slot="target"
+                readonly
+              />
+							<ul
+								class="menu flex-nowrap shadow bg-base-100 border border-base-content/20 rounded-box max-h-64 overflow-y-auto mt-2 p-2"
+								slot="content"
+							>
+								<li
+									class="flex overflow-hidden w-full"
+									*ngFor="let category of categoryList"
 								>
-									<li
-										class="flex overflow-hidden w-full"
-										*ngFor="let category of categoryList"
+									<button
+										class="block text-left truncate w-full"
+										[class.active]="categoryName.value === category.name"
+										type="button"
+										(click)="onChangeCategory(category)"
+										[attr.aria-label]="category.name"
 									>
-										<button
-											class="block text-left truncate w-full"
-											[class.active]="categoryName.value === category.name"
-											type="button"
-											(click)="onChangeCategory(category)"
-											[attr.aria-label]="category.name"
-										>
-											{{ category.name }}
-										</button>
-									</li>
-								</ul>
-							</div>
+										{{ category.name }}
+									</button>
+								</li>
+							</ul>
 						</div>
 					</fieldset>
 					<fieldset
@@ -237,6 +231,13 @@
 								</span>
 								<span class="label-text mr-2">Body</span>
 							</div>
+							<span
+								class="label-text-alt"
+								[class.text-success]="body.touched && !body.errors"
+								[class.text-error]="body.touched && body.errors"
+							>
+								{{ body.value.length }}/7200
+							</span>
 						</label>
 						<textarea
 							id="textarea"
@@ -301,11 +302,7 @@
 										{{ postForm.get("title").value }}
 									</h2>
 									<div class="bg-base-200 rounded-box p-4 mb-8">
-										Lorem Ipsum is simply dummy text of the printing and
-										typesetting industry. Lorem Ipsum has been the industry's
-										standard dummy text ever since the 1500s, when an unknown
-										printer took a galley of type and scrambled it to make a
-										type specimen book.
+										{{ postForm.get("description").value }}
 									</div>
 									<article
 										id="preview"

@@ -70,7 +70,11 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 				Validators.minLength(4),
 				Validators.maxLength(36)
 			]),
-			description: this.formBuilder.control('', [Validators.required]),
+			description: this.formBuilder.control('', [
+				Validators.required,
+				Validators.minLength(4),
+				Validators.maxLength(255)
+			]),
 			categoryId: this.formBuilder.control(null, [Validators.required]),
 			categoryName: this.formBuilder.control('', []),
 			body: this.formBuilder.control('', [
@@ -118,10 +122,10 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 	onToggleCategory(toggle: boolean): void {
 		const abstractControl: AbstractControl = this.postForm.get('categoryName');
 
-		if (toggle) {
-			this.categoryNameInput.nativeElement.focus();
-		} else if (!abstractControl.value) {
+		if (!toggle && !abstractControl.value) {
 			abstractControl.setErrors({ required: true });
+
+			this.categoryNameInput.nativeElement.blur();
 		}
 	}
 
@@ -144,9 +148,6 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 
 			// @ts-ignore
 			delete postCreateDto.categoryName;
-
-			// @ts-ignore
-			delete postCreateDto.description;
 
 			iif(
 				() => !!postId,
