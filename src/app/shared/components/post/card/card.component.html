@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <article
-	class="card card-compact bg-base-100 border border-base-content/20 shadow-xl w-full h-full"
+	class="flex flex-col bg-base-100 border border-base-content/20 shadow-xl rounded-box overflow-hidden w-full h-full"
 >
 	<figure *ngIf="post.image">
 		<a
@@ -17,25 +17,21 @@
 			/>
 		</a>
 	</figure>
-	<div class="card-body">
-		<h2 class="card-title">
-			<a
-				class="link link-hover line-clamp-2"
-				[routerLink]="[postPath, post.id]"
-				[queryParamsHandling]="'preserve'"
-				[attr.aria-label]="post.title"
-			>
-				{{ post.title }}
-			</a>
-		</h2>
-		<p class="base-content line-clamp-4">{{ post.title }}</p>
-		<div class="card-actions justify-start">
-			<time
-				class="base-content opacity-40 text-sm"
-				[attr.datetime]="post.updatedAt"
-			>
-				{{ post.updatedAt | dayjs: "fromX" }}
-			</time>
-		</div>
+	<div class="flex flex-col w-full h-full p-4">
+		<a
+			class="text-xl font-bold link link-hover line-clamp-2 mb-2"
+			[routerLink]="[postPath, post.id]"
+			[queryParamsHandling]="'preserve'"
+			[attr.aria-label]="post.title"
+		>
+			{{ post.title }}
+		</a>
+		<p class="base-content line-clamp-4 mb-2">{{ post.description }}</p>
+		<time
+			class="base-content opacity-40 text-sm !mt-auto"
+			[attr.datetime]="post.updatedAt"
+		>
+			{{ post.updatedAt | dayjs: "fromX" }}
+		</time>
 	</div>
 </article>

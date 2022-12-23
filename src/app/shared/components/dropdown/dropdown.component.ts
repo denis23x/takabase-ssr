@@ -10,8 +10,10 @@ import {
 	Output,
 	ViewChild
 } from '@angular/core';
-import { fromEvent, Subscription } from 'rxjs';
+import { fromEvent, merge, Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
+import { filter } from 'rxjs/operators';
+import { PlatformService } from '../../../core';
 
 @Component({
 	selector: 'app-dropdown, [appDropdown]',
@@ -23,17 +25,23 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
 	@Output() toggled: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	click$: Subscription | undefined;
+	windowClick$: Subscription | undefined;
+	windowAction$: Subscription | undefined;
 
-	state: boolean = false;
+	dropdownState: boolean = false;
+	dropdownStateStyle: Object = {
+		display: 'none'
+	};
 
 	constructor(
 		@Inject(DOCUMENT)
-		private document: Document
+		private document: Document,
+		private elementRef: ElementRef,
+		private platformService: PlatformService
 	) {}
 
 	ngOnInit(): void {
-		this.click$ = fromEvent(this.document, 'click').subscribe({
+		this.windowClick$ = fromEvent(this.document, 'click').subscribe({
 			next: (event: any) => {
 				// prettier-ignore
 				const target: boolean = this.dropdownTarget.nativeElement.contains(event.target);
@@ -41,35 +49,65 @@ export class DropdownComponent implements OnInit, OnDestroy {
 				// prettier-ignore
 				const content: boolean = this.dropdownContent.nativeElement.contains(event.target);
 
-				/** If closed and click on target */
+				/**
+				 * If click on target = show/hide toggle
+				 * If opened - close on click content or outside
+				 */
 
-				if (!this.state && target) {
-					this.setState(true);
-				}
-
-				/** If opened and click on content */
-
-				if (!!this.state && content) {
-					this.setState(false);
-				}
-
-				/** If opened and click outside */
-
-				if (!!this.state && !target && !content) {
-					this.setState(false);
+				if (target) {
+					this.setStateStyle(!this.dropdownState);
+				} else if (!!this.dropdownState) {
+					if (content) {
+						this.setStateStyle(false);
+					} else if (!target && !content) {
+						this.setStateStyle(false);
+					}
 				}
 			},
 			error: (error: any) => console.error(error)
 		});
+
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
+			this.windowAction$ = merge(
+				fromEvent(window, 'scroll'),
+				fromEvent(window, 'resize')
+			)
+				.pipe(filter(() => this.dropdownState))
+				.subscribe({
+					next: () => this.setStateStyle(false),
+					error: (error: any) => console.error(error)
+				});
+		}
 	}
 
 	ngOnDestroy(): void {
-		[this.click$].forEach($ => $?.unsubscribe());
+		[this.windowClick$, this.windowAction$].forEach($ => $?.unsubscribe());
 	}
 
-	setState(state: boolean): void {
-		this.state = state;
+	setStateStyle(state: boolean): void {
+		this.dropdownState = state;
 
-		this.toggled.emit(this.state);
+		// prettier-ignore
+		const elementRefStyle: any = this.elementRef.nativeElement.getBoundingClientRect();
+
+		// prettier-ignore
+		if (this.dropdownState) {
+      this.dropdownStateStyle = {
+        'display': 'block',
+        'position': 'fixed',
+        'width.px': elementRefStyle.width,
+        'top.px': elementRefStyle.top + elementRefStyle.height,
+        'left.px': elementRefStyle.left,
+        'z-index': 2
+      };
+    } else {
+      this.dropdownStateStyle = {
+        'display': 'none'
+      };
+    }
+
+		this.toggled.emit(this.dropdownState);
 	}
 }

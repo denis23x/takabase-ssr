@@ -1,10 +1,10 @@
 <!-- @format -->
 
 <ng-container>
-	<div #dropdownTarget>
-		<ng-content select="[slot=toggle]"></ng-content>
-	</div>
-	<div #dropdownContent [class.hidden]="!state">
+	<slot #dropdownTarget>
+		<ng-content select="[slot=target]"></ng-content>
+	</slot>
+	<slot #dropdownContent [ngStyle]="dropdownStateStyle">
 		<ng-content select="[slot=content]"></ng-content>
-	</div>
+	</slot>
 </ng-container>
