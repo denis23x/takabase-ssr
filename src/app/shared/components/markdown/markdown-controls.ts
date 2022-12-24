@@ -7,33 +7,25 @@ export const MarkdownControlHeading = (): MarkdownControl[] => [
 		key: 'heading-h1',
 		label: 'Heading 1',
 		classList: ['text-4xl', 'font-extrabold'],
-		handler: (text: string): string => {
-			return '\n# ' + (text.length ? text + '\n' : 'H1 ');
-		}
+		handler: (value: string): string => '# ' + value
 	},
 	{
 		key: 'heading-h2',
 		label: 'Heading 2',
 		classList: ['text-2xl', 'font-bold'],
-		handler: (text: string): string => {
-			return '\n## ' + (text.length ? text + '\n' : 'H2 ');
-		}
+		handler: (value: string): string => '## ' + value
 	},
 	{
 		key: 'heading-h3',
 		label: 'Heading 3',
 		classList: ['text-xl', 'font-semibold'],
-		handler: (text: string): string => {
-			return '\n### ' + (text.length ? text + '\n' : 'H3 ');
-		}
+		handler: (value: string): string => '### ' + value
 	},
 	{
 		key: 'heading-h4',
 		label: 'Heading 4',
 		classList: ['text-base', 'font-semibold'],
-		handler: (text: string): string => {
-			return '\n#### ' + (text.length ? text + '\n' : 'H4 ');
-		}
+		handler: (value: string): string => '#### ' + value
 	}
 ];
 
@@ -42,31 +34,25 @@ export const MarkdownControlFormatting = (): MarkdownControl[] => [
 		key: 'formatting-bold',
 		label: 'Bold',
 		classList: ['font-semibold'],
-		handler: (text: string): string => {
-			return '**' + (text.length ? text : 'Bold') + '**';
-		}
+		handler: (value: string): string => '**' + value + '**'
 	},
 	{
 		key: 'formatting-strikethrough',
 		label: 'Strikethrough',
 		classList: ['line-through'],
-		handler: (text: string): string => {
-			return '~~' + (text.length ? text : 'Strikethrough') + '~~';
-		}
+		handler: (value: string): string => '~~' + value + '~~'
 	},
 	{
 		key: 'formatting-italic',
 		label: 'Italic',
 		classList: ['italic'],
-		handler: (text: string): string => {
-			return '*' + (text.length ? text : 'Italic') + '*';
-		}
+		handler: (value: string): string => '_' + value + '_'
 	}
 ];
 
 export const MarkdownControlList = (): MarkdownControl[] => [
 	{
-		key: 'list-default',
+		key: 'list-unordered',
 		label: 'Unordered',
 		handler: (text: string): string => {
 			return text.length ? '\n- ' + text : '\n- List \n';
@@ -86,37 +72,25 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 		key: 'url-link',
 		label: 'Link',
 		icon: 'link',
-		handler: (text: string, url: string): string => {
-			return text.length
-				? `[${text}](${url})`
-				: `[Enter link description here](${url})`;
-		}
+		handler: (value: any): string => `[${value.title}](${value.url})`
 	},
 	{
 		key: 'url-image',
 		label: 'Image',
 		icon: 'image',
-		handler: (text: string, url: string): string => {
-			return text.length
-				? `\n![${text}](${url})\n`
-				: `\n![Enter image description here](${url})\n`;
-		}
+		handler: (value: any): string => `![${value.title}](${value.url})`
 	},
 	{
 		key: 'url-gist',
 		label: 'Gist',
 		icon: 'github',
-		handler: (url: string): string => {
-			return `\n@[Github](${url})\n`;
-		}
+		handler: (value: any): string => `@[Github](${value.url})`
 	},
 	{
 		key: 'url-youtube',
 		label: 'Youtube',
 		icon: 'youtube',
-		handler: (url: string): string => {
-			return `\n@[Youtube](${url})\n`;
-		}
+		handler: (value: any): string => `@[Youtube](${value.url})`
 	}
 ];
 

@@ -14,7 +14,8 @@ import {
 	MarkdownControl,
 	MarkdownService,
 	HelperService,
-	PlatformService
+	PlatformService,
+	MarkdownTextarea
 } from '../../../core';
 import {
 	MarkdownControlHeading,
@@ -41,10 +42,12 @@ import { DOCUMENT } from '@angular/common';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 
 interface UrlForm {
-	url: FormControl<string>;
+	title?: FormControl<string>;
+	url?: FormControl<string>;
 }
 
 /** https://www.markdownguide.org/basic-syntax/ */
+/** https://markdown-it.github.io/ */
 
 @Component({
 	selector: 'app-markdown, [appMarkdown]',
@@ -96,7 +99,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	urlForm: FormGroup | undefined;
 	urlFormControl: MarkdownControl | undefined;
 	urlFormIsSubmitted: boolean = false;
-	urlModal: boolean = false;
+	urlFormModal: boolean = false;
 
 	constructor(
 		@Inject(DOCUMENT)
@@ -106,11 +109,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 		private formBuilder: FormBuilder,
 		private helperService: HelperService
 	) {
-		this.urlForm = this.formBuilder.group<UrlForm>({
-			url: this.formBuilder.control('', [
-				this.helperService.getCustomValidator('url-image')
-			])
-		});
+		this.urlForm = this.formBuilder.group<UrlForm>({});
 	}
 
 	ngOnInit(): void {}
@@ -129,9 +128,9 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
 						if (this.historyRemember) {
 							const value: string = this.textarea.value;
+							const history: string[] = this.history$.getValue();
 
-							// prettier-ignore
-							this.history$.next(value ? this.history$.getValue().concat([value]) : []);
+							this.history$.next(value ? history.concat([value]) : []);
 						} else {
 							this.historyRemember = true;
 						}
@@ -219,85 +218,157 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	onBack(): void {
 		this.historyRemember = false;
-		this.history$.next(this.history$.getValue().slice(0, -1));
 
-		this.setValue(String(this.history$.getValue().slice(-2).pop() || ''));
+		const history: string[] = this.history$.getValue();
+
+		history.pop();
+
+		const value: string = history[history.length - 1];
+
+		if (!!value) {
+			this.setTextareaValue(value);
+		}
 	}
 
-	onControl(control: MarkdownControl): void {
-		const { key } = control;
+	onMarkdownControl(markdownControl: MarkdownControl): void {
+		const markdownTextarea: MarkdownTextarea = this.getTextarea(this.textarea);
 
-		if (key.includes('url')) {
-			const { selection } = this.markdownService.getTextarea(this.textarea);
+		if (markdownControl.key.includes('url')) {
+			switch (markdownControl.key) {
+				case 'url-link': {
+					/** Inspect value */
 
-			// prettier-ignore
-			this.urlForm.controls['url'].setValidators([this.helperService.getCustomValidator(key), Validators.required]);
-			this.urlForm.get('url').setValue(selection);
-			this.urlFormControl = control;
-			this.urlModal = true;
+					const getValue = (value: string): any => {
+						// prettier-ignore
+						const isUrl: boolean = this.helperService.getRegex('url-link').test(value || '');
+
+						return {
+							title: value,
+							url: isUrl ? value : ''
+						};
+					};
+
+					const value: any = getValue(markdownTextarea.selection);
+
+					/** Add controls */
+
+					// prettier-ignore
+					this.urlForm.addControl('title', this.formBuilder.control(value.title, [Validators.required]));
+
+					// prettier-ignore
+					this.urlForm.addControl('url', this.formBuilder.control(value.url, [Validators.required, this.helperService.getCustomValidator('url-link')]));
+
+					/** Mark as touched */
+
+					Object.keys(value).forEach((key: string) => {
+						if (!!value[key]) {
+							this.urlForm.get(key).markAsTouched();
+						}
+					});
+
+					break;
+				}
+				default: {
+					break;
+				}
+			}
+
+			this.urlFormControl = markdownControl;
+			this.urlFormModal = true;
 		} else {
-			this.setControl(control);
+			this.getTextareaValue(markdownControl);
 		}
 	}
 
-	setValue(value: string): void {
-		const selectionStart: number = this.textarea.selectionStart;
+	getTextarea(textAreaElement: HTMLTextAreaElement): MarkdownTextarea {
+		const { selectionStart, selectionEnd, value } = textAreaElement;
 
-		this.textarea.value = value;
-		this.textarea.dispatchEvent(new Event('input', { bubbles: true }));
-		this.textarea.selectionEnd = selectionStart;
-		this.textarea.focus();
+		return {
+			selection: value.substring(selectionStart, selectionEnd).trim(),
+			selectionStart,
+			selectionEnd,
+			value
+		};
 	}
 
-	setControl(control: MarkdownControl): void {
-		// prettier-ignore
-		const { selectionStart, selectionEnd, positionBefore, positionAfter, value } = this.markdownService.getTextarea(this.textarea);
+	// prettier-ignore
+	getTextareaValue(markdownControl: MarkdownControl, urlForm?: FormGroup): void {
+		const markdownTextarea: MarkdownTextarea = this.getTextarea(this.textarea);
 
-		let start: number = selectionStart;
-		let end: number = selectionEnd;
+		const getControlHandler = (markdownControl: MarkdownControl): string => {
+			// prettier-ignore
+			const placeholder: string = markdownControl.key.split('-').pop().toUpperCase();
 
-		if (start === end) {
-			if (!positionBefore.space && !positionAfter.space) {
-				start -= positionBefore.text.length;
-				end += positionAfter.text.length;
-			}
-		}
+			switch (markdownControl.key) {
+				case 'heading-h1':
+				case 'heading-h2':
+				case 'heading-h3':
+				case 'heading-h4':
+					if (!!markdownTextarea.selection) {
+						// prettier-ignore
+						const value: string = markdownControl.handler(markdownTextarea.selection);
 
-		const valueHandler = (): string => {
-			const url: string = this.urlForm.get('url').value;
+						return '\n\n' + value + '\n\n';
+					}
 
-			if (!!url.length) {
-				this.urlFormControl = undefined;
-				this.urlForm.reset();
-
-				this.onCloseUrlForm();
-			}
-
-			switch (control.key) {
+					return markdownControl.handler(placeholder);
+				case 'formatting-bold':
+				case 'formatting-strikethrough':
+				case 'formatting-italic':
+					// prettier-ignore
+					return markdownControl.handler(markdownTextarea.selection || placeholder);
 				case 'url-youtube':
 				case 'url-gist':
-					return control.handler(url);
 				case 'url-link':
 				case 'url-image':
-					return control.handler(value.substring(start, end), url);
+					return markdownControl.handler(urlForm.value);
 				default:
-					return control.handler(value.substring(start, end));
+					return '';
 			}
 		};
 
+		const getValue = (): string => {
+			const selectionStart: number = markdownTextarea.selectionStart;
+			const selectionEnd: number = markdownTextarea.selectionEnd;
+
+			const left: string = markdownTextarea.value.substring(0, selectionStart);
+			const right: string = markdownTextarea.value.substring(selectionEnd);
+
+			return left + getControlHandler(markdownControl) + right;
+		};
+
+		this.setTextareaValue(getValue());
+	}
+
+	setTextareaValue(value: string): void {
+		const difference: number = value.length - this.textarea.value.length;
+
+		const selectionStart: number = this.textarea.selectionStart + difference;
+		const selectionEnd: number = this.textarea.selectionEnd + difference;
+
+		this.textarea.value = value;
+		this.textarea.dispatchEvent(new Event('input', { bubbles: true }));
+
 		// prettier-ignore
-		this.setValue(value.substring(0, start) + valueHandler() + value.substring(end));
+		this.textarea.selectionStart = selectionStart !== selectionEnd ? selectionEnd : selectionStart;
+		this.textarea.selectionEnd = selectionEnd;
+		this.textarea.focus();
 	}
 
 	onSubmitUrlForm(): void {
 		if (this.helperService.getFormValidation(this.urlForm)) {
-			this.setControl(this.urlFormControl);
+			this.getTextareaValue(this.urlFormControl, this.urlForm);
+
+			this.onCloseUrlForm();
 		}
 	}
 
 	onCloseUrlForm(): void {
-		this.urlModal = false;
-		this.urlForm.controls['url'].clearValidators();
-		this.urlForm.reset();
+		Object.keys(this.urlForm.controls).forEach((key: string) => {
+			this.urlForm.removeControl(key);
+		});
+
+		this.urlFormControl = undefined;
+		this.urlFormModal = false;
 	}
 }

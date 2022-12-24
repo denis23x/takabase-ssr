@@ -8,17 +8,7 @@ export interface MarkdownControl {
 	handler(selection?: string, handler?: string): string;
 }
 
-export interface MarkdownPosition {
-	positionBefore: MarkdownPositionLocation;
-	positionAfter: MarkdownPositionLocation;
-}
-
-export interface MarkdownPositionLocation {
-	space: boolean;
-	text: string;
-}
-
-export interface MarkdownTextarea extends MarkdownPosition {
+export interface MarkdownTextarea {
 	selection: string;
 	selectionStart: number;
 	selectionEnd: number;
