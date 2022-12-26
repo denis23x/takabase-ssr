@@ -2,10 +2,10 @@
 
 <ng-container>
 	<!-- TODO: fix colors -->
-	<ul class="flex justify-start items-center space-x-4">
+	<ul class="flex items-center justify-start space-x-4">
 		<li class="block">
 			<a
-				class="block fill-current bg-[#EA4335] text-white rounded-full p-1.5"
+				class="block rounded-full bg-[#EA4335] fill-current p-1.5 text-white"
 				[href]="apiUrl + '/auth/google'"
 				aria-label="Google"
 				target="_self"
@@ -18,7 +18,7 @@
 		</li>
 		<li class="block">
 			<a
-				class="block fill-current bg-white text-[#1877f2] rounded-full"
+				class="block rounded-full bg-white fill-current text-[#1877f2]"
 				[href]="apiUrl + '/auth/facebook'"
 				aria-label="Facebook"
 				target="_self"
@@ -32,7 +32,7 @@
 		</li>
 		<li class="block">
 			<a
-				class="block fill-current bg-white text-[#333333] rounded-full"
+				class="block rounded-full bg-white fill-current text-[#333333]"
 				[href]="apiUrl + '/auth/github'"
 				aria-label="Github"
 				target="_self"

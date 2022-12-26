@@ -1,9 +1,5 @@
 <!-- @format -->
 
-<!-- TODO: https://www.w3schools.com/howto/howto_js_draggable.asp -->
-<!-- TODO: named outlet -->
-<!-- TODO: resizeable -->
-
 <div class="fixed inset-0 bg-neutral-focus/40" (click)="onClick($event)">
-	<ng-content></ng-content>
+	<ng-content select="[slot=content]"></ng-content>
 </div>

@@ -1,15 +1,15 @@
 <!-- @format -->
 
-<section class="md:w-128 mx-auto p-4">
+<section class="mx-auto p-4 md:w-128">
 	<form
-		class="flex flex-col space-y-4 bg-primary-3 border border-primary-4 rounded-md p-4"
+		class="bg-primary-3 border-primary-4 flex flex-col space-y-4 rounded-md border p-4"
 		[formGroup]="registrationForm"
 		(ngSubmit)="onSubmitForm()"
 	>
 		<div class="flex flex-col">
-			<h2 class="text-2xl text-secondary-1 font-medium">Join to Draft</h2>
+			<h2 class="text-secondary-1 text-2xl font-medium">Join to Draft</h2>
 			<div class="flex space-x-1 text-base">
-				<span class="block text-secondary-2">Already have an account?</span>
+				<span class="text-secondary-2 block">Already have an account?</span>
 				<a
 					class="text-info-1 hover:underline"
 					[routerLink]="['../login']"
@@ -17,7 +17,7 @@
 					>Sign in</a
 				>
 			</div>
-			<app-oauth class="block mt-4"></app-oauth>
+			<app-oauth class="mt-4 block"></app-oauth>
 		</div>
 		<fieldset
 			class="flex flex-col space-y-4"
@@ -27,20 +27,20 @@
 				class="flex flex-col space-y-2"
 				*ngIf="registrationForm.get('name') as name"
 			>
-				<label class="block text-secondary-2 text-sm" for="name"
+				<label class="text-secondary-2 block text-sm" for="name"
 					>Username</label
 				>
 				<input
 					id="name"
 					autocomplete="username"
 					type="text"
-					class="form-control bg-primary-2 truncate"
+					class="bg-primary-2 form-control truncate"
 					formControlName="name"
 					placeholder="Username"
 					aria-label="Username"
 				/>
 				<label
-					class="block text-danger-1 text-sm"
+					class="text-danger-1 block text-sm"
 					for="name"
 					*ngIf="name.touched && name.errors"
 					[ngSwitch]="true"
@@ -50,16 +50,12 @@
 					>
 					<ng-container *ngSwitchCase="!!name.errors.minlength"
 						>Min length
-						{{
-							name.errors.minlength["requiredLength"]
-						}}
+						{{ name.errors.minlength["requiredLength"] }}
 						characters</ng-container
 					>
 					<ng-container *ngSwitchCase="!!name.errors.maxlength"
 						>Max length
-						{{
-							name.errors.maxlength["requiredLength"]
-						}}
+						{{ name.errors.maxlength["requiredLength"] }}
 						characters</ng-container
 					>
 				</label>
@@ -68,18 +64,18 @@
 				class="flex flex-col space-y-2"
 				*ngIf="registrationForm.get('email') as email"
 			>
-				<label class="block text-secondary-2 text-sm" for="email">Email</label>
+				<label class="text-secondary-2 block text-sm" for="email">Email</label>
 				<input
 					id="email"
 					autocomplete="username"
 					type="email"
-					class="form-control bg-primary-2 truncate"
+					class="bg-primary-2 form-control truncate"
 					formControlName="email"
 					placeholder="Email"
 					aria-label="Email"
 				/>
 				<label
-					class="block text-danger-1 text-sm"
+					class="text-danger-1 block text-sm"
 					for="email"
 					*ngIf="email.touched && email.errors"
 					[ngSwitch]="true"
@@ -96,7 +92,7 @@
 				class="flex flex-col space-y-2"
 				*ngIf="registrationForm.get('password') as password"
 			>
-				<label class="block text-secondary-2 text-sm" for="password"
+				<label class="text-secondary-2 block text-sm" for="password"
 					>Password</label
 				>
 				<div class="relative" *ngIf="{ value: false } as isVisible">
@@ -104,13 +100,13 @@
 						id="password"
 						autocomplete="new-password"
 						[type]="isVisible.value ? 'text' : 'password'"
-						class="form-control bg-primary-2 pr-10"
+						class="bg-primary-2 form-control pr-10"
 						formControlName="password"
 						placeholder="Password"
 						aria-label="Password"
 					/>
 					<i
-						class="absolute top-0 right-0 fill-current text-secondary-2 opacity-50 cursor-pointer p-2.5"
+						class="text-secondary-2 absolute top-0 right-0 cursor-pointer fill-current p-2.5 opacity-50"
 						*ngIf="password.value.length"
 						(touchstart)="isVisible.value = !isVisible.value"
 						(mouseenter)="isVisible.value = true"
@@ -122,7 +118,7 @@
 					</i>
 				</div>
 				<label
-					class="block text-danger-1 text-sm"
+					class="text-danger-1 block text-sm"
 					for="password"
 					*ngIf="password.touched && password.errors"
 					[ngSwitch]="true"
@@ -134,13 +130,13 @@
 						>Password does not match pattern</ng-container
 					>
 				</label>
-				<label class="block text-secondary-2 text-sm" for="password"
+				<label class="text-secondary-2 block text-sm" for="password"
 					>The password must be 6-32 characters long, must contain at least one
 					number or special character</label
 				>
 			</fieldset>
 			<button
-				class="btn btn-success md w-full"
+				class="md btn btn-success w-full"
 				type="submit"
 				aria-label="Create account"
 				[disabled]="registrationForm.invalid || registrationFormIsSubmitted"

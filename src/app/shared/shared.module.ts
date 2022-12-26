@@ -19,7 +19,8 @@ import {
 	PostDetailComponent,
 	ShareComponent,
 	SnackbarComponent,
-	SvgIconComponent
+	SvgIconComponent,
+	WindowComponent
 } from './components';
 import {
 	AppAuthenticatedDirective,
@@ -42,7 +43,8 @@ const components: any[] = [
 	PostDetailComponent,
 	ShareComponent,
 	SnackbarComponent,
-	SvgIconComponent
+	SvgIconComponent,
+	WindowComponent
 ];
 
 const directives: any[] = [

@@ -4,28 +4,36 @@ import { Injectable } from '@angular/core';
 import { AuthService, HelperService, MarkdownParser, User } from '../../core';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class MarkdownPluginService {
-  constructor(private helperService: HelperService, private authService: AuthService) {}
+	constructor(
+		private helperService: HelperService,
+		private authService: AuthService
+	) {}
 
-  getYoutubeParser(url: string): string {
-    const regex: RegExp = this.helperService.getRegex('url-youtube');
-    const match: RegExpMatchArray | null = url.match(regex);
+	getYoutubeParser(url: string): string {
+		const regex: RegExp = this.helperService.getRegex('url-youtube');
+		const match: RegExpMatchArray | null = url.match(regex);
 
-    if (match) {
-      return match[2];
-    }
+		if (match) {
+			return match[2];
+		}
 
-    return '';
-  }
+		return '';
+	}
 
-  getYoutubeTemplate(service: string, id: string, url: string, options?: any): string {
-    const parameter: number = id.indexOf('?');
-    const src: string = 'https://www.youtube.com/embed/';
+	getYoutubeTemplate(
+		service: string,
+		id: string,
+		url: string,
+		options?: any
+	): string {
+		const parameter: number = id.indexOf('?');
+		const src: string = 'https://www.youtube.com/embed/';
 
-    return `
-      <div class="youtube-iframe">
+		return `
+      <div class="iframe-youtube">
         <iframe
           src="${src + (parameter > -1 ? id.substr(0, parameter) : id)}"
           frameborder="0"
@@ -34,40 +42,48 @@ export class MarkdownPluginService {
         </iframe>
       </div>
     `;
-  }
+	}
 
-  getGithubParser(url: string): string {
-    const regex: RegExp = this.helperService.getRegex('url-gist');
-    const match: RegExpMatchArray | null = url.match(regex);
+	getGithubParser(url: string): string {
+		const regex: RegExp = this.helperService.getRegex('url-gist');
+		const match: RegExpMatchArray | null = url.match(regex);
 
-    if (match) {
-      const username = match[2];
-      const id = match[3];
+		if (match) {
+			const username = match[2];
+			const id = match[3];
 
-      return username + '/' + id;
-    }
+			return username + '/' + id;
+		}
 
-    return '';
-  }
+		return '';
+	}
 
-  getGithubTemplate(service: string, id: string, url: string, options?: any): string {
-    const parameter: number = id.indexOf('?');
-    const src: string = 'https://gist.github.com/';
-    const randomId: string = id + '-' + Date.now() + Math.floor(Math.random() * Date.now());
+	getGithubTemplate(
+		service: string,
+		id: string,
+		url: string,
+		options?: any
+	): string {
+		const parameter: number = id.indexOf('?');
+		const src: string = 'https://gist.github.com/';
+		const randomId: string =
+			id + '-' + Date.now() + Math.floor(Math.random() * Date.now());
 
-    const srcdoc: string = `
+		const srcdoc: string = `
       <html lang='en' translate='no'>
         <head>
           <base target='_parent'>
           <title>Gist</title>
         </head>
         <body>
-          <script src='${src + (parameter > -1 ? id.substr(0, parameter) : id)}.js'></script>
+          <script src='${
+						src + (parameter > -1 ? id.substr(0, parameter) : id)
+					}.js'></script>
         </body>
       </html>
     `;
 
-    const onload: string = `
+		const onload: string = `
       (function(){
         /******************/
         /*** ADD STYLES ***/
@@ -118,7 +134,7 @@ export class MarkdownPluginService {
       }).call(this)
     `;
 
-    return `
+		return `
       <div class="github-iframe">
         <iframe
           id="${randomId}"
@@ -129,88 +145,113 @@ export class MarkdownPluginService {
         </iframe>
       </div>
     `;
-  }
+	}
 
-  embed(md: any, options: any): (state: any, silent: boolean) => boolean {
-    return (state: any, silent: boolean): boolean => {
-      const theState: any = state;
-      const oldPos: number = state.pos;
+	embed(md: any, options: any): (state: any, silent: boolean) => boolean {
+		return (state: any, silent: boolean): boolean => {
+			const theState: any = state;
+			const oldPos: number = state.pos;
 
-      const regex: RegExp = /@\[([a-zA-Z].+)]\([\s]*(.*?)[\s]*[)]/im;
+			const regex: RegExp = /@\[([a-zA-Z].+)]\([\s]*(.*?)[\s]*[)]/im;
 
-      // prettier-ignore
-      const match: RegExpMatchArray | null = regex.exec(state.src.slice(state.pos, state.src.length));
+			// prettier-ignore
+			const match: RegExpMatchArray | null = regex.exec(state.src.slice(state.pos, state.src.length));
 
-      if (!match || match.length < 3) {
-        return false;
-      }
+			if (!match || match.length < 3) {
+				return false;
+			}
 
-      const service: string = match[1].toLowerCase();
-      const markdownParser: MarkdownParser = {
-        ['youtube']: this.getYoutubeParser(match[2]),
-        ['github']: this.getGithubParser(match[2])
-      };
+			const service: string = match[1].toLowerCase();
+			const markdownParser: MarkdownParser = {
+				['youtube']: this.getYoutubeParser(match[2]),
+				['github']: this.getGithubParser(match[2])
+			};
 
-      let id: string;
+			let id: string;
 
-      if (!markdownParser[service]) {
-        return false;
-      } else {
-        id = markdownParser[service];
-      }
+			if (!markdownParser[service]) {
+				return false;
+			} else {
+				id = markdownParser[service];
+			}
 
-      const serviceStart: number = oldPos + 2;
-      const serviceEnd: number = md.helpers.parseLinkLabel(state, oldPos + 1, false);
+			const serviceStart: number = oldPos + 2;
+			const serviceEnd: number = md.helpers.parseLinkLabel(
+				state,
+				oldPos + 1,
+				false
+			);
 
-      // We found the end of the link, and know for a fact it's a valid link;
-      // so all that's left to do is to call tokenizer.
-      if (!silent) {
-        theState.pos = serviceStart;
-        theState.service = theState.src.slice(serviceStart, serviceEnd);
+			// We found the end of the link, and know for a fact it's a valid link;
+			// so all that's left to do is to call tokenizer.
+			if (!silent) {
+				theState.pos = serviceStart;
+				theState.service = theState.src.slice(serviceStart, serviceEnd);
 
-        const newState = new theState.md.inline.State(service, theState.md, theState.env, []);
-        newState.md.inline.tokenize(newState);
+				const newState = new theState.md.inline.State(
+					service,
+					theState.md,
+					theState.env,
+					[]
+				);
+				newState.md.inline.tokenize(newState);
 
-        let token: any;
+				let token: any;
 
-        token = theState.push('iframe', '');
-        token.id = id;
-        token.service = service;
-        token.url = match[2];
-        token.level = theState.level;
-      }
+				token = theState.push('iframe', '');
+				token.id = id;
+				token.service = service;
+				token.url = match[2];
+				token.level = theState.level;
+			}
 
-      theState.pos += theState.src.indexOf(')', theState.pos);
+			theState.pos += theState.src.indexOf(')', theState.pos);
 
-      return true;
-    };
-  }
+			return true;
+		};
+	}
 
-  tokenize(md: any, options: any): (tokens: any, idx: any) => string {
-    return (tokens, idx): string => {
-      const id: string = md.utils.escapeHtml(tokens[idx].id);
-      const service: string = md.utils.escapeHtml(tokens[idx].service).toLowerCase();
+	tokenize(md: any, options: any): (tokens: any, idx: any) => string {
+		return (tokens, idx): string => {
+			const id: string = md.utils.escapeHtml(tokens[idx].id);
+			const service: string = md.utils
+				.escapeHtml(tokens[idx].service)
+				.toLowerCase();
 
-      if (!id.length) {
-        return '';
-      } else {
-        switch (service) {
-          case 'youtube':
-            return this.getYoutubeTemplate(service, id, tokens[idx].url, options);
-          case 'github':
-            return this.getGithubTemplate(service, id, tokens[idx].url, options);
-          default:
-            return '';
-        }
-      }
-    };
-  }
+			if (!id.length) {
+				return '';
+			} else {
+				switch (service) {
+					case 'youtube':
+						return this.getYoutubeTemplate(
+							service,
+							id,
+							tokens[idx].url,
+							options
+						);
+					case 'github':
+						return this.getGithubTemplate(
+							service,
+							id,
+							tokens[idx].url,
+							options
+						);
+					default:
+						return '';
+				}
+			}
+		};
+	}
 
-  insert(md: any, options: any): void {
-    const theOptions: any = options;
-    const theMd: any = md;
+	insert(md: any, options: any): void {
+		const theOptions: any = options;
+		const theMd: any = md;
 
-    theMd.renderer.rules.iframe = this.tokenize(theMd, theOptions);
-    theMd.inline.ruler.before('emphasis', 'iframe', this.embed(theMd, theOptions));
-  }
+		theMd.renderer.rules.iframe = this.tokenize(theMd, theOptions);
+		theMd.inline.ruler.before(
+			'emphasis',
+			'iframe',
+			this.embed(theMd, theOptions)
+		);
+	}
 }

@@ -3,9 +3,9 @@
 <ng-container>
 	<div class="flex flex-col space-y-4 md:space-y-8">
 		<div
-			class="navbar bg-base-100 border border-base-content/20 rounded-box shadow-xl"
+			class="navbar rounded-box border border-base-content/20 bg-base-100 shadow-xl"
 		>
-			<div class="flex-none w-full">
+			<div class="w-full flex-none">
 				<form class="w-full" [formGroup]="searchForm" autocomplete="off">
 					<fieldset
 						class="form-control"
@@ -14,7 +14,7 @@
 						<label class="label" for="search">
 							<div class="indicator">
 								<span
-									class="indicator-item badge badge-error text-xs translate-x-full translate-y-0 w-max"
+									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
 									*ngIf="query.touched && query.errors"
 									[ngSwitch]="true"
 								>
@@ -30,11 +30,11 @@
 								<span class="label-text mr-2">Search</span>
 							</div>
 						</label>
-						<label class="block relative" for="search">
+						<label class="relative block" for="search">
 							<input
 								id="search"
 								type="text"
-								class="input input-bordered truncate w-full pr-12"
+								class="input input-bordered w-full truncate pr-12"
 								[class.input-success]="query.touched && query.value"
 								[class.input-error]="query.touched && query.invalid"
 								formControlName="query"
@@ -42,7 +42,7 @@
 								aria-label="Search"
 							/>
 							<button
-								class="btn btn-sm btn-circle fill-current absolute top-2 right-2"
+								class="btn btn-sm btn-circle absolute top-2 right-2 fill-current"
 								[class.btn-success]="query.touched && query.value"
 								[class.btn-error]="query.touched && query.invalid"
 								[class.btn-ghost]="query.untouched"
@@ -62,7 +62,7 @@
 		</div>
 		<div class="flex flex-col">
 			<nav class="flex px-4">
-				<ul class="tabs space-x-1 translate-y-px" #scrollRoot>
+				<ul class="tabs translate-y-px space-x-1" #scrollRoot>
 					<!-- prettier-ignore -->
 					<li
 						class="tab tab-lg tab-lifted !px-0"
@@ -86,9 +86,9 @@
 				</ul>
 			</nav>
 			<div
-				class="bg-base-100 border border-base-content/20 rounded-box shadow-xl p-4"
+				class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
 			>
-				<div class="bg-base-200 rounded-box p-4">
+				<div class="rounded-box bg-base-200 p-4">
 					<router-outlet></router-outlet>
 				</div>
 			</div>

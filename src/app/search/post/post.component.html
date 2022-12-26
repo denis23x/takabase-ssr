@@ -3,7 +3,7 @@
 <ng-container>
 	<ng-container *ngIf="postList.length; else postListEmptyTemplate">
 		<ul
-			class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 grid-rows-none gap-4"
+			class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4"
 		>
 			<li
 				class="block"
@@ -15,7 +15,7 @@
 			></li>
 		</ul>
 		<button
-			class="btn btn-success md w-full mt-4"
+			class="md btn btn-success mt-4 w-full"
 			type="button"
 			aria-label="Load more"
 			*ngIf="postListHasMore"
@@ -44,7 +44,7 @@
 				</a>
 			</div>
 			<div class="flex" *ngSwitchCase="true">
-				<button class="btn btn-ghost loading">Loading</button>
+				<button class="btn loading btn-ghost">Loading</button>
 			</div>
 		</div>
 	</ng-template>

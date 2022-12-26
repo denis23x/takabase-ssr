@@ -2,14 +2,14 @@
 
 <ng-container>
 	<div
-		class="bg-base-100 border border-base-content/20 rounded-box shadow-xl p-4"
+		class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
 	>
-		<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-box w-full">
+		<div class="rounded-box grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
 			<div
-				class="flex flex-col items-start sm:items-center justify-center space-y-4 rounded-t-box sm:rounded-box bg-base-200 -mx-4 -mt-4 sm:m-0 p-4"
+				class="rounded-t-box -mx-4 -mt-4 flex flex-col items-start justify-center space-y-4 bg-base-200 p-4 sm:rounded-box sm:m-0 sm:items-center"
 			>
-				<h2 class="text-xl text-base-content font-medium">Login via</h2>
-				<app-oauth class="block mt-4"></app-oauth>
+				<h2 class="text-xl font-medium text-base-content">Login via</h2>
+				<app-oauth class="mt-4 block"></app-oauth>
 				<div class="inline text-left sm:text-center">
 					<span class="block text-base-content">Don't have an account?</span>
 					<a
@@ -26,10 +26,10 @@
 				[formGroup]="loginForm"
 				(ngSubmit)="onSubmitForm()"
 			>
-				<h2 class="text-xl text-base-content font-medium">
+				<h2 class="text-xl font-medium text-base-content">
 					Login with credentials
 				</h2>
-				<hr class="border-base-content/20 my-2" />
+				<hr class="my-2 border-base-content/20" />
 				<fieldset
 					class="flex flex-col space-y-4"
 					[disabled]="loginFormIsSubmitted"
@@ -41,7 +41,7 @@
 						<label class="label" for="email">
 							<div class="indicator">
 								<span
-									class="indicator-item badge badge-error text-xs translate-x-full translate-y-0 w-max"
+									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
 									*ngIf="email.touched && email.errors"
 									[ngSwitch]="true"
 								>
@@ -55,12 +55,12 @@
 								<span class="label-text mr-2">Email</span>
 							</div>
 						</label>
-						<label class="block relative" for="email">
+						<label class="relative block" for="email">
 							<input
 								id="email"
 								autocomplete="username"
 								type="email"
-								class="input input-bordered truncate w-full pr-12"
+								class="input input-bordered w-full truncate pr-12"
 								[class.input-success]="email.touched && !email.errors"
 								[class.input-error]="email.touched && email.errors"
 								[class.input-disabled]="loginFormIsSubmitted"
@@ -69,7 +69,7 @@
 								aria-label="Email"
 							/>
 							<button
-								class="btn btn-sm btn-circle fill-current absolute top-2 right-2"
+								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 								[class.btn-success]="email.touched && email.valid"
 								[class.btn-error]="email.touched && email.invalid"
 								[class.btn-ghost]="email.untouched"
@@ -91,7 +91,7 @@
 						<label class="label" for="password">
 							<div class="indicator">
 								<span
-									class="indicator-item badge badge-error text-xs translate-x-full translate-y-0 w-max"
+									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
 									*ngIf="password.touched && password.errors"
 									[ngSwitch]="true"
 								>
@@ -105,12 +105,12 @@
 								<span class="label-text mr-2">Password</span>
 							</div>
 						</label>
-						<label class="block relative" *ngIf="{ value: false } as isVisible">
+						<label class="relative block" *ngIf="{ value: false } as isVisible">
 							<input
 								id="password"
 								autocomplete="current-password"
 								[type]="isVisible.value ? 'text' : 'password'"
-								class="input input-bordered truncate w-full pr-12"
+								class="input input-bordered w-full truncate pr-12"
 								[class.input-success]="password.touched && !password.errors"
 								[class.input-error]="password.touched && password.errors"
 								[class.input-disabled]="loginFormIsSubmitted"
@@ -119,7 +119,7 @@
 								aria-label="Password"
 							/>
 							<button
-								class="btn btn-sm btn-circle fill-current absolute top-2 right-2"
+								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 								[class.btn-success]="password.touched && password.value"
 								[class.btn-error]="password.touched && password.invalid"
 								[class.btn-ghost]="password.untouched"
@@ -138,7 +138,7 @@
 						</label>
 						<label class="label" for="password">
 							<a
-								class="label-text-alt link !link-primary"
+								class="link label-text-alt !link-primary"
 								[routerLink]="['../reset']"
 								aria-label="Forgot password"
 							>

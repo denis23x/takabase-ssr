@@ -1,0 +1,54 @@
+<!-- @format -->
+
+<!-- TODO: https://www.w3schools.com/howto/howto_js_draggable.asp -->
+<!-- TODO: named outlet -->
+<!-- TODO: resizeable -->
+
+<div
+	class="rounded-box absolute top-4 left-4 flex h-auto max-h-[calc(100vh-2rem)] w-full max-w-[calc(100vw-2rem)] flex-col overflow-hidden border border-base-content/20 bg-base-100 shadow-xl md:top-1/2 md:left-1/2 md:max-h-[75vh] md:max-w-[640px] md:-translate-x-1/2 md:-translate-y-1/2"
+>
+	<div
+		class="grid grid-cols-3 gap-2 border-b border-base-content/20 bg-base-200 p-2"
+	>
+		<div class="col-span-1 flex items-center justify-start space-x-2">
+			<button
+				class="btn btn-circle btn-error btn-xs fill-current"
+				type="button"
+				aria-label="Close"
+				title="Close"
+				appSvgIcon
+				[appIcon]="'x-lg'"
+				[appSquare]="'0.75rem'"
+				(click)="closed.emit()"
+			></button>
+			<button
+				class="btn btn-circle btn-warning btn-xs fill-current"
+				type="button"
+				aria-label="Close"
+				title="Close"
+				appSvgIcon
+				[appIcon]="''"
+				[appSquare]="'0.75rem'"
+			></button>
+			<button
+				class="btn btn-circle btn-success btn-xs fill-current"
+				type="button"
+				aria-label="Close"
+				title="Close"
+				appSvgIcon
+				[appIcon]="''"
+				[appSquare]="'0.75rem'"
+			></button>
+		</div>
+		<div class="col-span-1 flex items-center justify-center">
+			<span class="text-xl font-medium text-base-content">Preview</span>
+		</div>
+		<div class="col-span-1 flex items-center justify-end"></div>
+	</div>
+	<div class="flex flex-col overflow-auto px-4">
+		<ng-content select="[slot=content]"></ng-content>
+	</div>
+	<div class="grid border-t border-base-content/20 bg-base-200 p-2">
+		<div class="flex" appShare></div>
+	</div>
+</div>

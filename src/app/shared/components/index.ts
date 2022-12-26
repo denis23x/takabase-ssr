@@ -11,3 +11,4 @@ export * from './post';
 export * from './share/share.component';
 export * from './snackbar/snackbar.component';
 export * from './svg-icon/svg-icon.component';
+export * from './window/window.component';
