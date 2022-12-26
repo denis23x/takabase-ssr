@@ -50,6 +50,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 
 	postForm: FormGroup | undefined;
 	postFormIsSubmitted: boolean = false;
+	preview: boolean = false;
 
 	authUser: User | undefined;
 	authUser$: Subscription | undefined;

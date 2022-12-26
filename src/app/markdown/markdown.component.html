@@ -256,65 +256,14 @@
 				</form>
 			</div>
 			<div class="grid grid-cols-12 gap-4">
-				<div class="block col-span-12 sm:col-span-3">
-					<label for="my-modal-4" class="btn btn-secondary w-full">
-						Preview
-					</label>
-					<input type="checkbox" id="my-modal-4" class="modal-toggle" />
-					<!-- TODO: https://www.w3schools.com/howto/howto_js_draggable.asp -->
-					<!-- TODO: named outlet -->
-					<!-- TODO: resizeable -->
-					<label for="my-modal-4" class="modal cursor-pointer p-4 md:p-8">
-						<div
-							class="flex flex-col bg-base-100 border border-base-content/20 rounded-box shadow-xl w-full max-w-[768px] h-full max-h-[calc(100vh-2rem)] md:max-h-[calc(100vh-4rem)] p-4"
-						>
-							<div class="flex items-center justify-start space-x-4 mb-4">
-								<a
-									class="btn btn-link btn-circle"
-									[routerLink]="['/@' + authUser.name]"
-									[attr.aria-label]="authUser.name"
-									[title]="authUser.name"
-									[appUser]="authUser"
-									appAvatar
-								>
-								</a>
-								<div class="flex flex-col items-start justify-start">
-									<a
-										class="link link-primary"
-										[routerLink]="['/@' + authUser.name]"
-										[attr.aria-label]="authUser.name"
-										[title]="authUser.name"
-									>
-										{{ authUser.name }}
-									</a>
-									<time
-										class="base-content opacity-40 text-sm"
-										[attr.datetime]="authUser.updatedAt"
-									>
-										{{ authUser.updatedAt | dayjs: "fromX" }}
-									</time>
-								</div>
-							</div>
-							<hr class="border-base-content/20" />
-							<div class="relative overflow-auto pr-4">
-								<h2 class="text-2xl text-base-content font-medium my-4">
-									{{ postForm.get("title").value }}
-								</h2>
-								<div class="bg-base-200 rounded-box p-4 mb-8">
-									{{ postForm.get("description").value }}
-								</div>
-								<article
-									id="preview"
-									class="prose prose-img:rounded-box max-w-none"
-								></article>
-							</div>
-							<hr class="border-base-content/20" />
-							<div class="flex items-center justify-start space-x-4 mt-4">
-								<app-share></app-share>
-							</div>
-						</div>
-					</label>
-				</div>
+				<button
+					class="btn btn-secondary col-span-12 sm:col-span-3"
+					type="button"
+					aria-label="Preview"
+					(click)="preview = true"
+				>
+					Preview
+				</button>
 				<button
 					class="btn btn-primary col-span-12 sm:col-span-9"
 					type="button"
@@ -327,4 +276,105 @@
 			</div>
 		</div>
 	</div>
+	<app-overlay [class.hidden]="!preview" (clicked)="preview = false">
+		<div
+			class="flex flex-col bg-base-100 rounded-box overflow-hidden shadow-xl border border-base-content/20 absolute top-4 left-4 md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full max-w-[calc(100vw-2rem)] md:max-w-[640px] h-auto max-h-[calc(100vh-2rem)] md:max-h-[75vh]"
+		>
+			<div
+				class="grid grid-cols-3 gap-2 bg-base-200 border-b border-base-content/20 p-2"
+			>
+				<div class="flex items-center justify-start space-x-2 col-span-1">
+					<button
+						class="btn btn-error btn-xs btn-circle fill-current"
+						type="button"
+						aria-label="Close"
+						title="Close"
+						appSvgIcon
+						[appIcon]="'x-lg'"
+						[appSquare]="'0.75rem'"
+						(click)="preview = false"
+					></button>
+					<button
+						class="btn btn-warning btn-xs btn-circle fill-current"
+						type="button"
+						aria-label="Close"
+						title="Close"
+						appSvgIcon
+						[appIcon]="''"
+						[appSquare]="'0.75rem'"
+					></button>
+					<button
+						class="btn btn-success btn-xs btn-circle fill-current"
+						type="button"
+						aria-label="Close"
+						title="Close"
+						appSvgIcon
+						[appIcon]="''"
+						[appSquare]="'0.75rem'"
+					></button>
+				</div>
+				<div class="flex items-center justify-center col-span-1">
+					<span class="text-xl text-base-content font-medium">Preview</span>
+				</div>
+				<div class="flex items-center justify-end col-span-1"></div>
+			</div>
+			<div class="flex flex-col overflow-auto px-4">
+				<div
+					class="grid grid-cols-12 gap-4 border-b border-base-content/20 pb-4 my-4"
+				>
+					<img
+						class="block object-cover rounded-box w-full h-full col-span-3"
+						[src]="
+							'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png'
+						"
+						[alt]="postForm.get('title').value"
+					/>
+					<div class="flex flex-col col-span-9">
+						<h2 class="text-2xl text-base-content font-medium truncate">
+							{{ postForm.get("title").value }}
+						</h2>
+						<span class="base-content opacity-40 text-sm mb-4">
+							{{ postForm.get("categoryName").value }}
+						</span>
+						<div class="bg-base-200 rounded-box p-4">
+							{{ postForm.get("description").value }}
+						</div>
+					</div>
+				</div>
+				<article
+					id="preview"
+					class="prose prose-img:rounded-box max-w-none"
+				></article>
+				<div
+					class="flex items-center justify-start space-x-4 border-t border-base-content/20 pt-4 my-4"
+				>
+					<a
+						class="btn btn-link btn-circle"
+						[routerLink]="['/@' + authUser.name]"
+						[attr.aria-label]="authUser.name"
+						[title]="authUser.name"
+						[appUser]="authUser"
+						appAvatar
+					>
+					</a>
+					<div class="flex flex-col items-start justify-start">
+						<a
+							class="link link-primary"
+							[routerLink]="['/@' + authUser.name]"
+							[attr.aria-label]="authUser.name"
+							[title]="authUser.name"
+						>
+							{{ authUser.name }}
+						</a>
+						<span class="base-content opacity-40 text-sm">
+							{{ authUser.biography }}
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="grid bg-base-200 border-t border-base-content/20 p-2">
+				<div class="flex" appShare></div>
+			</div>
+		</div>
+	</app-overlay>
 </ng-container>

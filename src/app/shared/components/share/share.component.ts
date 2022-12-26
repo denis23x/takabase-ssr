@@ -8,7 +8,7 @@ import { Share } from '../../../core/models/share.model';
 import { Subscription } from 'rxjs';
 
 @Component({
-	selector: 'app-share',
+	selector: 'app-share, [appShare]',
 	templateUrl: './share.component.html'
 })
 export class ShareComponent implements OnInit, OnDestroy {
