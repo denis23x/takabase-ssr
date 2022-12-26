@@ -33,6 +33,7 @@ import {
 } from 'rxjs';
 import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
 import {
+	AbstractControl,
 	FormBuilder,
 	FormControl,
 	FormGroup,
@@ -234,44 +235,28 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 		const markdownTextarea: MarkdownTextarea = this.getTextarea(this.textarea);
 
 		if (markdownControl.key.includes('url')) {
-			switch (markdownControl.key) {
-				case 'url-link': {
-					/** Inspect value */
+			// prettier-ignore
+			this.urlForm.addControl('url', this.formBuilder.control('', [Validators.required, this.helperService.getCustomValidator(markdownControl.key)]));
 
-					const getValue = (value: string): any => {
-						// prettier-ignore
-						const isUrl: boolean = this.helperService.getRegex('url-link').test(value || '');
-
-						return {
-							title: value,
-							url: isUrl ? value : ''
-						};
-					};
-
-					const value: any = getValue(markdownTextarea.selection);
-
-					/** Add controls */
-
-					// prettier-ignore
-					this.urlForm.addControl('title', this.formBuilder.control(value.title, [Validators.required]));
-
-					// prettier-ignore
-					this.urlForm.addControl('url', this.formBuilder.control(value.url, [Validators.required, this.helperService.getCustomValidator('url-link')]));
-
-					/** Mark as touched */
-
-					Object.keys(value).forEach((key: string) => {
-						if (!!value[key]) {
-							this.urlForm.get(key).markAsTouched();
-						}
-					});
-
-					break;
-				}
-				default: {
-					break;
-				}
+			if (['url-link', 'url-image'].includes(markdownControl.key)) {
+				// prettier-ignore
+				this.urlForm.addControl('title', this.formBuilder.control('', [Validators.required]));
 			}
+
+			const regex: RegExp = this.helperService.getRegex(markdownControl.key);
+			const regexValid: boolean = regex.test(markdownTextarea.selection || '');
+
+			Object.keys(this.urlForm.controls).forEach((key: string) => {
+				const abstractControl: AbstractControl = this.urlForm.get(key);
+
+				if (key === 'title' || (key === 'url' && regexValid)) {
+					abstractControl.setValue(markdownTextarea.selection);
+				}
+
+				if (!!abstractControl.value) {
+					abstractControl.markAsTouched();
+				}
+			});
 
 			this.urlFormControl = markdownControl;
 			this.urlFormModal = true;
@@ -312,7 +297,17 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 					}
 
 					return markdownControl.handler(placeholder);
-				case 'formatting-bold':
+				case 'list-unordered':
+				case 'list-ordered':
+          if (!!markdownTextarea.selection) {
+            // prettier-ignore
+            const value: string = markdownControl.handler(markdownTextarea.selection);
+
+            return '\n\n' + value + '\n\n';
+          }
+
+          return markdownControl.handler(placeholder);
+        case 'formatting-bold':
 				case 'formatting-strikethrough':
 				case 'formatting-italic':
 					// prettier-ignore
@@ -364,9 +359,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	onCloseUrlForm(): void {
-		Object.keys(this.urlForm.controls).forEach((key: string) => {
-			this.urlForm.removeControl(key);
-		});
+		// prettier-ignore
+		Object.keys(this.urlForm.controls).forEach((key: string) => this.urlForm.removeControl(key));
 
 		this.urlFormControl = undefined;
 		this.urlFormModal = false;

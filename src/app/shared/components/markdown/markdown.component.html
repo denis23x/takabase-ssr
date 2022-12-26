@@ -125,51 +125,6 @@
 			</li>
 		</ul>
 	</div>
-	<!--
-
-	<app-overlay *ngIf="urlModal" (closed)="onCloseUrlForm()">
-		<div
-			class="absolute inset-0 flex justify-center items-center pointer-events-none p-4"
-		>
-			<form
-				class="max-h-full max-w-full w-full md:w-128 flex flex-col space-y-4 bg-primary-3 rounded-lg shadow-lg pointer-events-auto p-4"
-				[formGroup]="urlForm"
-				(ngSubmit)="onSubmitUrlForm()"
-				autocomplete="off"
-			>
-				<div class="flex flex-col space-y-2">
-					<button
-						class="btn btn-success md w-full"
-						type="submit"
-						aria-label="Submit"
-						[disabled]="urlForm.invalid || urlFormIsSubmitted"
-					>
-						Submit
-					</button>
-					<ng-container *ngIf="urlFormControl.key === 'url-image'">
-						<div class="flex justify-center items-center">
-							<hr class="border-primary-4 w-full" />
-							<span
-								class="block text-secondary-2 text-sm whitespace-nowrap mx-2"
-								>OR</span
-							>
-							<hr class="border-primary-4 w-full" />
-						</div>
-						<button
-							class="btn btn-info md w-full"
-							type="button"
-							aria-label="Upload"
-						>
-							Upload
-						</button>
-					</ng-container>
-				</div>
-			</form>
-		</div>
-	</app-overlay>
-
--->
-
 	<div
 		class="modal modal-bottom md:modal-middle pointer-events-auto visible opacity-100"
 		*ngIf="urlFormModal"
@@ -181,9 +136,20 @@
 				(ngSubmit)="onSubmitUrlForm()"
 				autocomplete="off"
 			>
-				<h2 class="text-xl text-base-content font-medium">
-					Add {{ urlFormControl.label }}
-				</h2>
+				<div class="flex items-center justify-between">
+					<h2 class="text-xl text-base-content font-medium">
+						Add {{ urlFormControl.label }}
+					</h2>
+					<button
+						class="btn btn-xs"
+						type="button"
+						aria-label="Close"
+						title="Close"
+						(click)="onCloseUrlForm()"
+					>
+						Close
+					</button>
+				</div>
 				<hr class="border-base-content/20 my-2" />
 				<fieldset
 					class="flex flex-col space-y-4"
@@ -280,7 +246,7 @@
 					</fieldset>
 					<fieldset class="form-control">
 						<button
-							class="btn btn-primary w-full"
+							class="btn btn-secondary w-full"
 							[class.loading]="urlFormIsSubmitted"
 							type="submit"
 							aria-label="Login"

@@ -54,16 +54,12 @@ export const MarkdownControlList = (): MarkdownControl[] => [
 	{
 		key: 'list-unordered',
 		label: 'Unordered',
-		handler: (text: string): string => {
-			return text.length ? '\n- ' + text : '\n- List \n';
-		}
+		handler: (value: string): string => '+ ' + value
 	},
 	{
 		key: 'list-ordered',
 		label: 'Ordered',
-		handler: (text: string): string => {
-			return text.length ? '\n1. ' + text : '\n1. Ordered List \n';
-		}
+		handler: (value: string): string => '1. ' + value
 	}
 ];
 
