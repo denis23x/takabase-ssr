@@ -1,12 +1,6 @@
 /** @format */
 
-import {
-	Component,
-	ElementRef,
-	OnDestroy,
-	OnInit,
-	ViewChild
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	PlatformService,
 	HelperService,
@@ -16,7 +10,8 @@ import {
 	PostService,
 	SnackbarService,
 	User,
-	AuthService
+	AuthService,
+	FileCreateDto
 } from '../core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { iif, of, Subscription, switchMap } from 'rxjs';
@@ -31,6 +26,7 @@ import {
 
 interface PostForm {
 	title: FormControl<string>;
+	image: FormControl<string>;
 	description: FormControl<string>;
 	categoryId: FormControl<number>;
 	categoryName: FormControl<string>;
@@ -42,8 +38,6 @@ interface PostForm {
 	templateUrl: './markdown.component.html'
 })
 export class MarkdownComponent implements OnInit, OnDestroy {
-	@ViewChild('categoryNameInput') categoryNameInput: ElementRef | undefined;
-
 	activatedRouteData$: Subscription | undefined;
 
 	category: Category | undefined;
@@ -53,6 +47,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 	postFormIsSubmitted: boolean = false;
 
 	post: Partial<Post> | undefined;
+	postImage: boolean = false;
 	postPreview: boolean = false;
 
 	authUser: User | undefined;
@@ -74,6 +69,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 				Validators.minLength(4),
 				Validators.maxLength(36)
 			]),
+			image: this.formBuilder.control('', []),
 			description: this.formBuilder.control('', [
 				Validators.required,
 				Validators.minLength(4),
@@ -95,7 +91,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 				map((data: Data) => data.data),
 				switchMap(([categoryList, post]: [Category[], Post]) => {
 					// prettier-ignore
-					this.category = categoryList.find((category: Category) => category.id === post.category.id);
+					this.category = categoryList.find((category: Category) => category.id === post?.category.id);
 					this.categoryList = categoryList;
 
 					return of(post);
@@ -125,13 +121,15 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 		[this.activatedRouteData$, this.authUser$].forEach($ => $?.unsubscribe());
 	}
 
+	onChangeImage(fileCreateDto?: FileCreateDto): void {
+		this.postForm.get('image').setValue(fileCreateDto.path);
+	}
+
 	onToggleCategory(toggle: boolean): void {
 		const abstractControl: AbstractControl = this.postForm.get('categoryName');
 
 		if (!toggle && !abstractControl.value) {
 			abstractControl.setErrors({ required: true });
-
-			this.categoryNameInput.nativeElement.blur();
 		}
 	}
 
@@ -149,7 +147,6 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 
 		this.post = {
 			...postForm,
-			image: null,
 			user: this.authUser,
 			category: this.category
 		};

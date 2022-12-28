@@ -133,7 +133,7 @@
 		>
 			<form
 				#urlFormElement
-				class="my-4 flex flex-col rounded-none bg-base-100"
+				class="my-4 flex flex-col bg-base-100"
 				[formGroup]="urlForm"
 				(ngSubmit)="onSubmitUrlForm()"
 				autocomplete="off"
@@ -164,15 +164,15 @@
 								id="urlFormTitle"
 								type="text"
 								class="input input-bordered w-full truncate pr-12"
-								[class.input-success]="title.touched && !title.errors"
-								[class.input-error]="title.touched && title.errors"
+								[class.input-success]="title.touched && title.valid"
+								[class.input-error]="title.touched && title.invalid"
 								[class.input-disabled]="urlFormIsSubmitted"
 								formControlName="title"
 								placeholder="Type your title"
 								aria-label="Title"
 							/>
 							<button
-								class="btn btn-sm btn-circle absolute top-2 right-2 fill-current"
+								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 								[class.btn-success]="title.touched && title.valid"
 								[class.btn-error]="title.touched && title.invalid"
 								[class.btn-ghost]="title.untouched"
@@ -218,7 +218,7 @@
 								aria-label="URL"
 							/>
 							<button
-								class="btn btn-sm btn-circle absolute top-2 right-2 fill-current"
+								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 								[class.btn-success]="url.touched && url.valid"
 								[class.btn-error]="url.touched && url.invalid"
 								[class.btn-ghost]="url.untouched"

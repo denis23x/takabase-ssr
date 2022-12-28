@@ -1,171 +1,206 @@
 /** @format */
 
 import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewChild
+	AfterViewInit,
+	Component,
+	EventEmitter,
+	OnDestroy,
+	OnInit,
+	Output,
+	ViewChild
 } from '@angular/core';
 import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
-import { FileCreateDto, FileService } from '../../../core';
+import {
+	FileCreateDto,
+	FileGetOneDto,
+	FileService,
+	HelperService
+} from '../../../core';
 import { Subscription } from 'rxjs';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+
+interface UrlForm {
+	url: FormControl<string>;
+}
 
 @Component({
-  selector: 'app-cropper, [appCropper]',
-  templateUrl: './cropper.component.html'
+	selector: 'app-cropper, [appCropper]',
+	templateUrl: './cropper.component.html'
 })
 export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('cropperContent') cropperContent: ElementRef | undefined;
-  @ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent | undefined;
+	// prettier-ignore
+	@ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent | undefined;
 
-  @Output() closed: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Output() submitted: EventEmitter<FileCreateDto> = new EventEmitter<FileCreateDto>();
+	// prettier-ignore
+	@Output() submitted: EventEmitter<FileCreateDto> = new EventEmitter<FileCreateDto>();
+	@Output() closed: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  @Input()
-  set appFile(file: File) {
-    this.cropperFile = file;
-  }
+	cropperFile: File = undefined;
+	cropperBase64: string = undefined;
+	cropperBackgroundIsDraggable: boolean = false;
 
-  cropperFile: File = undefined;
-  cropperBase64: string = undefined;
-  cropperIsScrollable: boolean = false;
-  cropperBackgroundIsDraggable: boolean = false;
+	imageTransform$: Subscription | undefined;
+	imageTransform: ImageTransform = {
+		scale: 1,
+		rotate: 0,
+		flipH: false,
+		flipV: false,
+		translateH: 0,
+		translateV: 0
+	};
 
-  imageTransform$: Subscription | undefined;
-  imageTransform: ImageTransform = {
-    scale: 1,
-    rotate: 0,
-    flipH: false,
-    flipV: false,
-    translateH: 0,
-    translateV: 0
-  };
+	cropperPositionInitial: CropperPosition = undefined;
+	cropperPosition: CropperPosition = {
+		x1: 0,
+		y1: 0,
+		x2: 0,
+		y2: 0
+	};
 
-  cropperPositionInitial: CropperPosition = undefined;
-  cropperPosition: CropperPosition = {
-    x1: 0,
-    y1: 0,
-    x2: 0,
-    y2: 0
-  };
+	urlForm: FormGroup | undefined;
+	urlFormIsSubmitted: boolean = false;
 
-  constructor(private fileService: FileService) {}
+	constructor(
+		private formBuilder: FormBuilder,
+		private helperService: HelperService,
+		private fileService: FileService
+	) {
+		this.urlForm = this.formBuilder.group<UrlForm>({
+			url: this.formBuilder.control('', [
+				this.helperService.getCustomValidator('url-image')
+			])
+		});
+	}
 
-  ngOnInit(): void {}
+	ngOnInit(): void {}
 
-  ngAfterViewInit(): void {
-    // prettier-ignore
-    this.imageTransform$ = this.imageCropper.transformChange.subscribe((imageTransform: ImageTransform) => {
+	ngAfterViewInit(): void {
+		// prettier-ignore
+		this.imageTransform$ = this.imageCropper.transformChange.subscribe((imageTransform: ImageTransform) => {
       this.imageTransform = imageTransform;
     });
-  }
+	}
 
-  ngOnDestroy(): void {
-    [this.imageTransform$].forEach($ => $?.unsubscribe());
-  }
+	ngOnDestroy(): void {
+		[this.imageTransform$].forEach($ => $?.unsubscribe());
+	}
 
-  onImageCropped(imageCroppedEvent: ImageCroppedEvent): void {
-    this.cropperBase64 = imageCroppedEvent.base64;
+	onSubmitFile(event: Event): void {
+		const inputElement: HTMLInputElement = event.target as HTMLInputElement;
 
-    if (!this.cropperPositionInitial) {
-      this.cropperPositionInitial = imageCroppedEvent.cropperPosition;
-    }
+		this.cropperFile = inputElement.files.item(0);
+	}
 
-    /** Set cropperIsScrollable */
+	onSubmitUrlForm(): void {
+		if (this.helperService.getFormValidation(this.urlForm)) {
+			this.urlFormIsSubmitted = true;
 
-    const content: HTMLElement = this.cropperContent.nativeElement;
-    const contentFirstChild: HTMLElement = content.firstChild as HTMLElement;
-    const contentFirstChildMargin: number = 32;
+			const fileGetOneDto: FileGetOneDto = {
+				...this.urlForm.value
+			};
 
-    // prettier-ignore
-    this.cropperIsScrollable = content.clientHeight - contentFirstChildMargin < contentFirstChild.clientHeight;
-  }
+			this.fileService.getOne(fileGetOneDto).subscribe({
+				next: (file: File) => {
+					this.cropperFile = file;
 
-  onRotate(direction: boolean): void {
-    this.imageTransform = {
-      ...this.imageTransform,
-      rotate: direction ? this.imageTransform.rotate + 15 : this.imageTransform.rotate - 15
-    };
-  }
+					this.urlFormIsSubmitted = false;
+				},
+				error: () => (this.urlFormIsSubmitted = false)
+			});
+		}
+	}
 
-  onFlip(direction: boolean): void {
-    if (direction) {
-      this.imageTransform = {
-        ...this.imageTransform,
-        flipV: !this.imageTransform.flipV
-      };
-    } else {
-      this.imageTransform = {
-        ...this.imageTransform,
-        flipH: !this.imageTransform.flipH
-      };
-    }
-  }
+	onImageCropped(imageCroppedEvent: ImageCroppedEvent): void {
+		this.cropperBase64 = imageCroppedEvent.base64;
 
-  onZoom(direction: boolean): void {
-    this.imageTransform = {
-      ...this.imageTransform,
-      // prettier-ignore
-      scale: direction ? this.imageTransform.scale + 1 : this.imageTransform.scale > 1 ? this.imageTransform.scale - 1 : 1
-    };
-  }
+		if (!this.cropperPositionInitial) {
+			this.cropperPositionInitial = imageCroppedEvent.cropperPosition;
+		}
+	}
 
-  onReset(): void {
-    this.imageTransform = {
-      scale: 1,
-      rotate: 0,
-      flipH: false,
-      flipV: false,
-      translateH: 0,
-      translateV: 0
-    };
+	onRotate(direction: boolean): void {
+		this.imageTransform = {
+			...this.imageTransform,
+			rotate: direction
+				? this.imageTransform.rotate + 15
+				: this.imageTransform.rotate - 15
+		};
+	}
 
-    this.cropperPosition = {
-      ...this.cropperPositionInitial
-    };
-  }
+	onFlip(direction: boolean): void {
+		if (direction) {
+			this.imageTransform = {
+				...this.imageTransform,
+				flipV: !this.imageTransform.flipV
+			};
+		} else {
+			this.imageTransform = {
+				...this.imageTransform,
+				flipH: !this.imageTransform.flipH
+			};
+		}
+	}
 
-  onClose(): void {
-    this.cropperFile = undefined;
-    this.cropperBase64 = undefined;
+	onZoom(direction: boolean): void {
+		this.imageTransform = {
+			...this.imageTransform,
+			// prettier-ignore
+			scale: direction ? this.imageTransform.scale + 1 : this.imageTransform.scale > 1 ? this.imageTransform.scale - 1 : 1
+		};
+	}
 
-    this.onReset();
+	onReset(): void {
+		this.imageTransform = {
+			scale: 1,
+			rotate: 0,
+			flipH: false,
+			flipV: false,
+			translateH: 0,
+			translateV: 0
+		};
 
-    this.closed.emit(false);
-  }
+		this.cropperPosition = {
+			...this.cropperPositionInitial
+		};
+	}
 
-  async base64ToFile(base64: string, filename: string, mimeType: string): Promise<File> {
-    const response: Response = await fetch(base64);
-    const arrayBuffer: ArrayBuffer = await response.arrayBuffer();
+	onClose(): void {
+		this.cropperFile = undefined;
+		this.cropperBase64 = undefined;
 
-    return new File([arrayBuffer], filename, { type: mimeType });
-  }
+		this.onReset();
 
-  async onSubmitCropper(): Promise<void> {
-    const file: File = await this.base64ToFile(
-      this.cropperBase64,
-      this.cropperFile.name,
-      this.cropperFile.type
-    );
+		this.closed.emit(false);
+	}
 
-    const formData: FormData = new FormData();
+	// prettier-ignore
+	async base64ToFile(base64: string, filename: string, mimeType: string): Promise<File> {
+		const response: Response = await fetch(base64);
+		const arrayBuffer: ArrayBuffer = await response.arrayBuffer();
 
-    formData.append('avatars', file);
+		return new File([arrayBuffer], filename, { type: mimeType });
+	}
 
-    this.fileService.create(formData).subscribe({
-      next: (fileCreateDto: FileCreateDto) => {
-        this.submitted.emit(fileCreateDto);
+	async onSubmitCropper(): Promise<void> {
+		const file: File = await this.base64ToFile(
+			this.cropperBase64,
+			this.cropperFile.name,
+			this.cropperFile.type
+		);
 
-        this.onClose();
-      },
-      error: (error: any) => console.error(error)
-    });
-  }
+		const formData: FormData = new FormData();
+
+		formData.append('avatars', file);
+
+		this.fileService.create(formData).subscribe({
+			next: (fileCreateDto: FileCreateDto) => {
+				this.submitted.emit(fileCreateDto);
+
+				this.onClose();
+			},
+			error: (error: any) => console.error(error)
+		});
+	}
 }

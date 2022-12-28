@@ -1,112 +1,162 @@
-<section class="bg-primary-3 border border-primary-4 rounded-md w-full p-4">
-  <form
-    class="block"
-    [formGroup]="avatarForm"
-    (ngSubmit)="onSubmitAvatarForm()"
-    autocomplete="off">
-    <fieldset class="flex items-start justify-start space-x-4 border-b border-primary-4 pb-4 mb-4" [disabled]="avatarFormIsSubmitted">
-      <figure
-        class="flex border border-primary-4 overflow-hidden rounded-md cursor-pointer h-24 w-24"
-        appAvatar
-        [appUser]="user"
-        (click)="avatarInput.click()">
-      </figure>
-      <fieldset class="flex flex-1 flex-col space-y-2" *ngIf="avatarForm.get('url') as url">
-        <div class="flex items-center justify-between text-sm">
-          <label class="block text-secondary-2" for="url">Avatar</label>
-          <button
-            *ngIf="user.avatar"
-            class="text-danger-1 hover:underline"
-            type="button"
-            aria-label="Delete"
-            (click)="onUpdateAvatar()">Delete
-          </button>
-        </div>
-        <div class="relative">
-          <input
-            id="url"
-            type="text"
-            class="form-control bg-primary-2 truncate pr-10"
-            formControlName="url"
-            placeholder="URL address"
-            aria-label="Url">
-          <ng-container *ngIf="url.value?.length" [ngSwitch]="!!avatarFormIsSubmitted">
-            <button
-              *ngSwitchCase="false"
-              class="absolute top-px right-px rounded-r-md fill-current opacity-50 hover:opacity-100 text-secondary-1 p-2.5"
-              type="submit"
-              aria-label="Download"
-              appSvgIcon
-              [appIcon]="'download'"
-              [appSquare]="'1.25rem'">
-            </button>
-            <span
-              *ngSwitchCase="true"
-              class="absolute top-3 right-3 block border-2 border-transparent border-b-2 border-b-secondary-1 rounded-full opacity-50 pointer-events-none animate-spin w-5 h-5">
-            </span>
-          </ng-container>
-        </div>
-        <label class="block text-danger-1 text-sm" for="url" *ngIf="url.touched && url.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="!!url.errors.customValidator">Url does not match pattern</ng-container>
-        </label>
-        <label class="block text-secondary-2 text-sm" for="url">Accept only *.png, *.jpg files</label>
-      </fieldset>
-      <fieldset class="flex flex-1 hidden">
-        <input
-          type="file"
-          accept="image/jpeg, image/jpg, image/png"
-          aria-label="Hidden"
-          (change)="onShowCropper($event)"
-          #avatarInput>
-      </fieldset>
-    </fieldset>
-    <app-cropper
-      *ngIf="cropperModal"
-      [appFile]="cropperFile"
-      (closed)="onCloseCropper()"
-      (submitted)="onUpdateAvatar($event)">
-    </app-cropper>
-  </form>
-  <form
-    class="block"
-    [formGroup]="accountForm"
-    (ngSubmit)="onSubmitForm()"
-    autocomplete="off">
-    <fieldset class="flex flex-col space-y-4" [disabled]="accountFormIsSubmitted">
-      <fieldset *ngIf="accountForm.get('name') as name">
-        <label class="block text-secondary-2 text-sm" for="name">Name</label>
-        <input
-          id="name"
-          type="text"
-          class="form-control bg-primary-2 truncate my-2"
-          formControlName="name"
-          placeholder="Name"
-          aria-label="Name">
-        <label class="block text-sm text-danger-1" for="name" *ngIf="name.touched && name.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="!!name.errors.required">Required</ng-container>
-        </label>
-      </fieldset>
-      <fieldset *ngIf="accountForm.get('biography') as biography">
-        <label class="block text-secondary-2 text-sm" for="biography">Biography</label>
-        <textarea
-          id="biography"
-          type="text"
-          rows="6"
-          class="form-control bg-primary-2 my-2"
-          formControlName="biography"
-          placeholder="Biography"
-          aria-label="Biography">
-        </textarea>
-        <label class="block text-sm text-danger-1" for="biography" *ngIf="biography.touched && biography.errors" [ngSwitch]="true">
-          <ng-container *ngSwitchCase="!!biography.errors.required">Required</ng-container>
-        </label>
-      </fieldset>
-      <button
-        class="btn btn-success md w-full"
-        type="submit"
-        aria-label="Submit"
-        [disabled]="accountForm.invalid || accountFormIsSubmitted">Submit
-      </button>
-    </fieldset>
-  </form>
+<!-- @format -->
+
+<section class="bg-primary-3 border-primary-4 w-full rounded-md border p-4">
+	<form
+		class="block"
+		[formGroup]="avatarForm"
+		(ngSubmit)="onSubmitAvatarForm()"
+		autocomplete="off"
+	>
+		<fieldset
+			class="border-primary-4 mb-4 flex items-start justify-start space-x-4 border-b pb-4"
+			[disabled]="avatarFormIsSubmitted"
+		>
+			<figure
+				class="border-primary-4 flex h-24 w-24 cursor-pointer overflow-hidden rounded-md border"
+				appAvatar
+				[appUser]="user"
+				(click)="avatarInput.click()"
+			></figure>
+			<fieldset
+				class="flex flex-1 flex-col space-y-2"
+				*ngIf="avatarForm.get('url') as url"
+			>
+				<div class="flex items-center justify-between text-sm">
+					<label class="text-secondary-2 block" for="url">Avatar</label>
+					<button
+						*ngIf="user.avatar"
+						class="text-danger-1 hover:underline"
+						type="button"
+						aria-label="Delete"
+						(click)="onUpdateAvatar()"
+					>
+						Delete
+					</button>
+				</div>
+				<div class="relative">
+					<input
+						id="url"
+						type="text"
+						class="bg-primary-2 form-control truncate pr-10"
+						formControlName="url"
+						placeholder="URL address"
+						aria-label="Url"
+					/>
+					<ng-container
+						*ngIf="url.value?.length"
+						[ngSwitch]="!!avatarFormIsSubmitted"
+					>
+						<button
+							*ngSwitchCase="false"
+							class="text-secondary-1 absolute top-px right-px rounded-r-md fill-current p-2.5 opacity-50 hover:opacity-100"
+							type="submit"
+							aria-label="Download"
+							appSvgIcon
+							[appIcon]="'download'"
+							[appSquare]="'1.25rem'"
+						></button>
+						<span
+							*ngSwitchCase="true"
+							class="border-b-secondary-1 pointer-events-none absolute top-3 right-3 block h-5 w-5 animate-spin rounded-full border-2 border-b-2 border-transparent opacity-50"
+						>
+						</span>
+					</ng-container>
+				</div>
+				<label
+					class="text-danger-1 block text-sm"
+					for="url"
+					*ngIf="url.touched && url.errors"
+					[ngSwitch]="true"
+				>
+					<ng-container *ngSwitchCase="!!url.errors.customValidator"
+						>Url does not match pattern</ng-container
+					>
+				</label>
+				<label class="text-secondary-2 block text-sm" for="url"
+					>Accept only *.png, *.jpg files</label
+				>
+			</fieldset>
+			<fieldset class="flex hidden flex-1">
+				<input
+					type="file"
+					accept="image/jpeg, image/jpg, image/png"
+					aria-label="Hidden"
+					(change)="onShowCropper($event)"
+					#avatarInput
+				/>
+			</fieldset>
+		</fieldset>
+		<!--    <app-cropper-->
+		<!--      *ngIf="cropperModal"-->
+		<!--      [appFile]="cropperFile"-->
+		<!--      (closed)="onCloseCropper()"-->
+		<!--      (submitted)="onUpdateAvatar($event)">-->
+		<!--    </app-cropper>-->
+	</form>
+	<form
+		class="block"
+		[formGroup]="accountForm"
+		(ngSubmit)="onSubmitForm()"
+		autocomplete="off"
+	>
+		<fieldset
+			class="flex flex-col space-y-4"
+			[disabled]="accountFormIsSubmitted"
+		>
+			<fieldset *ngIf="accountForm.get('name') as name">
+				<label class="text-secondary-2 block text-sm" for="name">Name</label>
+				<input
+					id="name"
+					type="text"
+					class="bg-primary-2 form-control my-2 truncate"
+					formControlName="name"
+					placeholder="Name"
+					aria-label="Name"
+				/>
+				<label
+					class="text-danger-1 block text-sm"
+					for="name"
+					*ngIf="name.touched && name.errors"
+					[ngSwitch]="true"
+				>
+					<ng-container *ngSwitchCase="!!name.errors.required"
+						>Required</ng-container
+					>
+				</label>
+			</fieldset>
+			<fieldset *ngIf="accountForm.get('biography') as biography">
+				<label class="text-secondary-2 block text-sm" for="biography"
+					>Biography</label
+				>
+				<textarea
+					id="biography"
+					type="text"
+					rows="6"
+					class="bg-primary-2 form-control my-2"
+					formControlName="biography"
+					placeholder="Biography"
+					aria-label="Biography"
+				>
+				</textarea>
+				<label
+					class="text-danger-1 block text-sm"
+					for="biography"
+					*ngIf="biography.touched && biography.errors"
+					[ngSwitch]="true"
+				>
+					<ng-container *ngSwitchCase="!!biography.errors.required"
+						>Required</ng-container
+					>
+				</label>
+			</fieldset>
+			<button
+				class="md btn btn-success w-full"
+				type="submit"
+				aria-label="Submit"
+				[disabled]="accountForm.invalid || accountFormIsSubmitted"
+			>
+				Submit
+			</button>
+		</fieldset>
+	</form>
 </section>

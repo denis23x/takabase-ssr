@@ -12,7 +12,7 @@
 	>
 		<div class="col-span-1 flex items-center justify-start space-x-2">
 			<button
-				class="btn btn-circle btn-error btn-xs fill-current"
+				class="btn btn-error btn-circle btn-xs fill-current"
 				type="button"
 				aria-label="Close"
 				title="Close"
@@ -22,7 +22,7 @@
 				(click)="closed.emit()"
 			></button>
 			<button
-				class="btn btn-circle btn-warning btn-xs fill-current"
+				class="btn btn-warning btn-circle btn-xs fill-current"
 				type="button"
 				aria-label="Close"
 				title="Close"
@@ -31,7 +31,7 @@
 				[appSquare]="'0.75rem'"
 			></button>
 			<button
-				class="btn btn-circle btn-success btn-xs fill-current"
+				class="btn btn-success btn-circle btn-xs fill-current"
 				type="button"
 				aria-label="Close"
 				title="Close"
@@ -45,10 +45,12 @@
 		</div>
 		<div class="col-span-1 flex items-center justify-end"></div>
 	</div>
-	<div class="flex flex-col overflow-auto px-4">
+	<div class="flex flex-col overflow-auto">
 		<ng-content select="[slot=content]"></ng-content>
 	</div>
-	<div class="grid border-t border-base-content/20 bg-base-200 p-2">
+	<div
+		class="grid border-t border-base-content/20 bg-base-200 p-2 empty:hidden"
+	>
 		<ng-content select="[slot=footer]"></ng-content>
 	</div>
 </div>
