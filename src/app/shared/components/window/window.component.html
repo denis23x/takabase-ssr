@@ -5,7 +5,7 @@
 <!-- TODO: resizeable -->
 
 <div
-	class="rounded-box absolute top-4 left-4 flex h-auto max-h-[calc(100vh-2rem)] w-full max-w-[calc(100vw-2rem)] flex-col overflow-hidden border border-base-content/20 bg-base-100 shadow-xl md:top-1/2 md:left-1/2 md:max-h-[75vh] md:max-w-[640px] md:-translate-x-1/2 md:-translate-y-1/2"
+	class="rounded-box absolute left-4 top-1/2 flex h-auto max-h-[calc(100vh-2rem)] w-full max-w-[calc(100vw-2rem)] -translate-y-1/2 flex-col overflow-hidden border border-base-content/20 bg-base-100 shadow-xl md:left-1/2 md:max-h-[75vh] md:max-w-[640px] md:-translate-x-1/2"
 >
 	<div
 		class="grid grid-cols-3 gap-2 border-b border-base-content/20 bg-base-200 p-2"
@@ -41,7 +41,7 @@
 			></button>
 		</div>
 		<div class="col-span-1 flex items-center justify-center">
-			<span class="text-xl font-medium text-base-content">Preview</span>
+			<span class="text-xl font-medium text-base-content">{{ title }}</span>
 		</div>
 		<div class="col-span-1 flex items-center justify-end"></div>
 	</div>
@@ -49,6 +49,6 @@
 		<ng-content select="[slot=content]"></ng-content>
 	</div>
 	<div class="grid border-t border-base-content/20 bg-base-200 p-2">
-		<div class="flex" appShare></div>
+		<ng-content select="[slot=footer]"></ng-content>
 	</div>
 </div>

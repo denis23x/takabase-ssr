@@ -3,6 +3,7 @@
 import {
 	Component,
 	EventEmitter,
+	Input,
 	OnDestroy,
 	OnInit,
 	Output
@@ -13,7 +14,14 @@ import {
 	templateUrl: 'window.component.html'
 })
 export class WindowComponent implements OnInit, OnDestroy {
+	@Input()
+	set appTitle(title: string) {
+		this.title = title;
+	}
+
 	@Output() closed: EventEmitter<void> = new EventEmitter<void>();
+
+	title: string | undefined;
 
 	constructor() {}
 

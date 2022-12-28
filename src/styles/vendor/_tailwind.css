@@ -3,13 +3,16 @@
 @import "~tailwindcss/utilities.css";
 @import "~tailwindcss/variants.css";
 
-/* TODO: prose styles */
 @layer utilities {
   .prose :where(iframe):not(:where([class~="not-prose"] *)) {
-    @apply aspect-video w-full h-auto
+    @apply rounded-box aspect-video w-full h-auto
   }
 
   .prose :where(img):not(:where([class~="not-prose"] *)) {
     @apply rounded-box w-full h-auto
+  }
+
+  .prose :where(a):not(:where([class~="not-prose"] *)) {
+    @apply link link-primary after:content-['\279A'] after:inline-block after:px-1
   }
 }

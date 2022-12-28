@@ -46,11 +46,14 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 
 	activatedRouteData$: Subscription | undefined;
 
+	category: Category | undefined;
 	categoryList: Category[] = [];
 
 	postForm: FormGroup | undefined;
 	postFormIsSubmitted: boolean = false;
-	preview: boolean = false;
+
+	post: Partial<Post> | undefined;
+	postPreview: boolean = false;
 
 	authUser: User | undefined;
 	authUser$: Subscription | undefined;
@@ -91,6 +94,8 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 			.pipe(
 				map((data: Data) => data.data),
 				switchMap(([categoryList, post]: [Category[], Post]) => {
+					// prettier-ignore
+					this.category = categoryList.find((category: Category) => category.id === post.category.id);
 					this.categoryList = categoryList;
 
 					return of(post);
@@ -131,10 +136,25 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 	}
 
 	onChangeCategory(category: Category): void {
+		this.category = category;
+
 		this.postForm.patchValue({
 			categoryId: category.id,
 			categoryName: category.name
 		});
+	}
+
+	onPreviewPost(toggle: boolean): void {
+		const { categoryId, categoryName, ...postForm } = this.postForm.value;
+
+		this.post = {
+			...postForm,
+			image: null,
+			user: this.authUser,
+			category: this.category
+		};
+
+		this.postPreview = toggle;
 	}
 
 	onSubmitPostForm(): void {

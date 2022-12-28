@@ -260,7 +260,7 @@
 					class="btn btn-secondary col-span-12 sm:col-span-3"
 					type="button"
 					aria-label="Preview"
-					(click)="preview = true"
+					(click)="onPreviewPost(true)"
 				>
 					Preview
 				</button>
@@ -276,58 +276,65 @@
 			</div>
 		</div>
 	</div>
-	<app-overlay [class.hidden]="!preview" (clicked)="preview = false">
-		<app-window (closed)="preview = false" slot="content">
+	<app-overlay [class.hidden]="!postPreview" (clicked)="onPreviewPost(false)">
+		<app-window
+			[appTitle]="'Preview'"
+			(closed)="onPreviewPost(false)"
+			slot="content"
+		>
 			<ng-container slot="content">
 				<div
 					class="my-4 grid grid-cols-12 gap-4 border-b border-base-content/20 pb-4"
+					*ngIf="!!post"
 				>
 					<img
 						class="rounded-box col-span-3 block h-full w-full object-cover"
-						[src]="
-							'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png'
-						"
-						[alt]="postForm.get('title').value"
+						[src]="post.image"
+						[alt]="post.title"
 					/>
 					<div class="col-span-9 flex flex-col">
 						<h2 class="truncate text-2xl font-medium text-base-content">
-							{{ postForm.get("title").value }}
+							{{ post.title }}
 						</h2>
 						<span class="base-content mb-4 text-sm opacity-40">
-							{{ postForm.get("categoryName").value }}
+							{{ post.category.name }}
 						</span>
 						<div class="rounded-box bg-base-200 p-4">
-							{{ postForm.get("description").value }}
+							{{ post.description }}
 						</div>
 					</div>
 				</div>
 				<article id="preview" class="prose max-w-none"></article>
 				<div
 					class="my-4 flex items-center justify-start space-x-4 border-t border-base-content/20 pt-4"
+					*ngIf="!!post"
 				>
 					<a
-						class="btn btn-circle btn-link"
-						[routerLink]="['/@' + authUser.name]"
-						[attr.aria-label]="authUser.name"
-						[title]="authUser.name"
-						[appUser]="authUser"
+						class="btn btn-link btn-circle"
+						[routerLink]="['/@' + post.user.name]"
+						[attr.aria-label]="post.user.name"
+						[title]="post.user.name"
+						[appUser]="post.user"
 						appAvatar
 					>
 					</a>
 					<div class="flex flex-col items-start justify-start">
 						<a
 							class="link link-primary"
-							[routerLink]="['/@' + authUser.name]"
-							[attr.aria-label]="authUser.name"
-							[title]="authUser.name"
+							[routerLink]="['/@' + post.user.name]"
+							[attr.aria-label]="post.user.name"
+							[title]="post.user.name"
 						>
-							{{ authUser.name }}
+							{{ post.user.name }}
 						</a>
 						<span class="base-content text-sm opacity-40">
-							{{ authUser.biography }}
+							{{ post.user.biography }}
 						</span>
 					</div>
 				</div>
+			</ng-container>
+			<ng-container slot="footer">
+				<div class="pointer-events-none flex opacity-10" appShare></div>
 			</ng-container>
 		</app-window>
 	</app-overlay>

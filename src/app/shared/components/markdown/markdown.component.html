@@ -3,7 +3,7 @@
 <ng-container>
 	<div class="overflow-auto" #controlListElement>
 		<ul
-			class="menu menu-horizontal bg-base-100 rounded-box border border-base-content/20"
+			class="menu rounded-box menu-horizontal border border-base-content/20 bg-base-100"
 		>
 			<li
 				class="inline-block"
@@ -33,12 +33,12 @@
 						slot="target"
 					></button>
 					<ul
-						class="menu shadow bg-base-100 border border-base-content/20 rounded-box min-w-fit mt-2 p-2"
+						class="menu rounded-box mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
 						slot="content"
 					>
 						<li class="flex w-full" *ngFor="let control of controlListHeading">
 							<button
-								class="text-base-content active:text-primary-content whitespace-nowrap w-full"
+								class="w-full whitespace-nowrap text-base-content active:text-primary-content"
 								type="button"
 								[attr.aria-label]="control.label"
 								(click)="onMarkdownControl(control)"
@@ -63,7 +63,7 @@
 						slot="target"
 					></button>
 					<ul
-						class="menu shadow bg-base-100 border border-base-content/20 rounded-box min-w-fit mt-2 p-2"
+						class="menu rounded-box mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
 						slot="content"
 					>
 						<li
@@ -71,7 +71,7 @@
 							*ngFor="let control of controlListFormatting"
 						>
 							<button
-								class="text-base-content active:text-primary-content whitespace-nowrap w-full"
+								class="w-full whitespace-nowrap text-base-content active:text-primary-content"
 								type="button"
 								[attr.aria-label]="control.label"
 								(click)="onMarkdownControl(control)"
@@ -96,12 +96,12 @@
 						slot="target"
 					></button>
 					<ul
-						class="menu shadow bg-base-100 border border-base-content/20 rounded-box min-w-fit mt-2 p-2"
+						class="menu rounded-box mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
 						slot="content"
 					>
 						<li class="flex w-full" *ngFor="let control of controlListList">
 							<button
-								class="text-base-content active:text-primary-content whitespace-nowrap w-full"
+								class="w-full whitespace-nowrap text-base-content active:text-primary-content"
 								type="button"
 								[attr.aria-label]="control.label"
 								[attr.title]="control.label"
@@ -125,32 +125,21 @@
 			</li>
 		</ul>
 	</div>
-	<div
-		class="modal modal-bottom md:modal-middle pointer-events-auto visible opacity-100"
-		*ngIf="urlFormModal"
-	>
-		<div class="modal-box translate-y-0">
+	<app-overlay [class.hidden]="!urlFormModal" (clicked)="urlFormModal = false">
+		<app-window
+			[appTitle]="'Insert ' + urlFormControl?.label"
+			(closed)="urlFormModal = false"
+			slot="content"
+		>
 			<form
-				class="flex flex-col rounded-none bg-base-100"
+				#urlFormElement
+				class="my-4 flex flex-col rounded-none bg-base-100"
 				[formGroup]="urlForm"
 				(ngSubmit)="onSubmitUrlForm()"
 				autocomplete="off"
+				slot="content"
 			>
-				<div class="flex items-center justify-between">
-					<h2 class="text-xl text-base-content font-medium">
-						Add {{ urlFormControl.label }}
-					</h2>
-					<button
-						class="btn btn-xs"
-						type="button"
-						aria-label="Close"
-						title="Close"
-						(click)="onCloseUrlForm()"
-					>
-						Close
-					</button>
-				</div>
-				<hr class="border-base-content/20 my-2" />
+				<div class="rounded-box mb-4 bg-base-200 p-4">Paste ads</div>
 				<fieldset
 					class="flex flex-col space-y-4"
 					[disabled]="urlFormIsSubmitted"
@@ -159,7 +148,7 @@
 						<label class="label" for="urlFormTitle">
 							<div class="indicator">
 								<span
-									class="indicator-item badge badge-error text-xs translate-x-full translate-y-0 w-max"
+									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
 									*ngIf="title.touched && title.errors"
 									[ngSwitch]="true"
 								>
@@ -170,11 +159,11 @@
 								<span class="label-text mr-2">Title</span>
 							</div>
 						</label>
-						<label class="block relative" for="urlFormTitle">
+						<label class="relative block" for="urlFormTitle">
 							<input
 								id="urlFormTitle"
 								type="text"
-								class="input input-bordered truncate w-full pr-12"
+								class="input input-bordered w-full truncate pr-12"
 								[class.input-success]="title.touched && !title.errors"
 								[class.input-error]="title.touched && title.errors"
 								[class.input-disabled]="urlFormIsSubmitted"
@@ -183,7 +172,7 @@
 								aria-label="Title"
 							/>
 							<button
-								class="btn btn-sm btn-circle fill-current absolute top-2 right-2"
+								class="btn btn-sm btn-circle absolute top-2 right-2 fill-current"
 								[class.btn-success]="title.touched && title.valid"
 								[class.btn-error]="title.touched && title.invalid"
 								[class.btn-ghost]="title.untouched"
@@ -202,7 +191,7 @@
 						<label class="label" for="urlFormUrl">
 							<div class="indicator">
 								<span
-									class="indicator-item badge badge-error text-xs translate-x-full translate-y-0 w-max"
+									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
 									*ngIf="url.touched && url.errors"
 									[ngSwitch]="true"
 								>
@@ -216,11 +205,11 @@
 								<span class="label-text mr-2">URL</span>
 							</div>
 						</label>
-						<label class="block relative" for="urlFormUrl">
+						<label class="relative block" for="urlFormUrl">
 							<input
 								id="urlFormUrl"
 								type="text"
-								class="input input-bordered truncate w-full pr-12"
+								class="input input-bordered w-full truncate pr-12"
 								[class.input-success]="url.touched && !url.errors"
 								[class.input-error]="url.touched && url.errors"
 								[class.input-disabled]="urlFormIsSubmitted"
@@ -229,7 +218,7 @@
 								aria-label="URL"
 							/>
 							<button
-								class="btn btn-sm btn-circle fill-current absolute top-2 right-2"
+								class="btn btn-sm btn-circle absolute top-2 right-2 fill-current"
 								[class.btn-success]="url.touched && url.valid"
 								[class.btn-error]="url.touched && url.invalid"
 								[class.btn-ghost]="url.untouched"
@@ -244,19 +233,19 @@
 							></button>
 						</label>
 					</fieldset>
-					<fieldset class="form-control">
-						<button
-							class="btn btn-secondary w-full"
-							[class.loading]="urlFormIsSubmitted"
-							type="submit"
-							aria-label="Login"
-							[disabled]="urlForm.invalid || urlFormIsSubmitted"
-						>
-							Insert
-						</button>
-					</fieldset>
 				</fieldset>
 			</form>
-		</div>
-	</div>
+			<button
+				class="btn btn-secondary w-full"
+				[class.loading]="urlFormIsSubmitted"
+				type="button"
+				aria-label="Submit"
+				[disabled]="urlForm.invalid || urlFormIsSubmitted"
+				(click)="urlFormElement.requestSubmit()"
+				slot="footer"
+			>
+				Submit
+			</button>
+		</app-window>
+	</app-overlay>
 </ng-container>
