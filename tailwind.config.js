@@ -42,13 +42,6 @@ module.exports = {
       scale: {
         "-1": "-1",
       },
-      saturate: {
-        75: ".75",
-      },
-      gridTemplateColumns: {
-        ["posts"]: "repeat(auto-fill, minmax(theme('width.40'), 1fr))",
-        ["users"]: "repeat(auto-fill, minmax(theme('width.60'), 1fr))",
-      },
       screens: {
         ["mouse"]: {
           raw: "(hover: hover) and (pointer: fine)",
@@ -56,18 +49,6 @@ module.exports = {
         ["touch"]: {
           raw: "(hover: none) and (pointer: coarse)",
         },
-        ["xs"]: "375px",
-      },
-      spacing: {
-        128: "32rem",
-        192: "48rem",
-        256: "64rem",
-      },
-      maxWidth: {
-        64: "16rem",
-        128: "32rem",
-        192: "48rem",
-        256: "64rem",
       },
     },
   },
