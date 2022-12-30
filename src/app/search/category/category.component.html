@@ -32,14 +32,15 @@
 			class="bg-primary-3 text-secondary-1 border-primary-4 my-4 rounded-md border px-3 py-2"
 			[ngSwitch]="categoryListLoading"
 		>
-			<span class="block" *ngSwitchDefault
-				>No categories were found
+			<span class="block" *ngSwitchDefault>
+				No categories were found
 				<a
 					class="text-info-1 hover:underline"
-					[routerLink]="['/create']"
 					aria-label="Create post"
-					>try to create new one</a
+					[routerLink]="['/create']"
 				>
+					try to create new one
+				</a>
 			</span>
 			<span class="block" *ngSwitchCase="true">Loading</span>
 		</div>

@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs';
 import { Post, PostGetAllDto, PostService } from '../../core';
 import { map, skip, tap } from 'rxjs/operators';
 
-// TODO: move to service
 // prettier-ignore
 export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto => {
   const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');

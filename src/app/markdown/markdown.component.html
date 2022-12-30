@@ -287,58 +287,8 @@
 			[appTitle]="'Preview'"
 			(closed)="onPreviewPost(false)"
 		>
-			<ng-container slot="content">
-				<div class="px-4">
-					<div
-						class="my-4 grid grid-cols-12 gap-4 border-b border-base-content/20 pb-4"
-						*ngIf="!!post"
-					>
-						<img
-							class="rounded-box col-span-3 block h-full w-full object-cover"
-							[src]="post.image"
-							[alt]="post.name"
-						/>
-						<div class="col-span-9 flex flex-col">
-							<h2 class="truncate text-2xl font-medium text-base-content">
-								{{ post.name }}
-							</h2>
-							<span class="base-content mb-4 text-sm opacity-40">
-								{{ post.category.name }}
-							</span>
-							<div class="rounded-box bg-base-200 p-4">
-								{{ post.description }}
-							</div>
-						</div>
-					</div>
-					<article class="prose max-w-none" id="postFormPreview"></article>
-					<div
-						class="my-4 flex items-center justify-start space-x-4 border-t border-base-content/20 pt-4"
-						*ngIf="!!post"
-					>
-						<a
-							class="btn btn-link btn-circle"
-							appAvatar
-							[routerLink]="['/@' + post.user.name]"
-							[attr.aria-label]="post.user.name"
-							[title]="post.user.name"
-							[appUser]="post.user"
-						>
-						</a>
-						<div class="flex flex-col items-start justify-start">
-							<a
-								class="link link-primary"
-								[routerLink]="['/@' + post.user.name]"
-								[attr.aria-label]="post.user.name"
-								[title]="post.user.name"
-							>
-								{{ post.user.name }}
-							</a>
-							<span class="base-content text-sm opacity-40">
-								{{ post.user.description }}
-							</span>
-						</div>
-					</div>
-				</div>
+			<ng-container slot="content" *ngIf="!!post">
+				<app-post-detail [appPost]="post"></app-post-detail>
 			</ng-container>
 			<ng-container slot="footer">
 				<div class="pointer-events-none flex opacity-10" appShare></div>
@@ -359,4 +309,5 @@
 			</app-cropper>
 		</app-window>
 	</app-overlay>
+	<article class="prose max-w-none" id="postFormPreview"></article>
 </ng-container>

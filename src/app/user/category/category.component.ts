@@ -3,67 +3,41 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Data } from '@angular/router';
 import { Subscription } from 'rxjs';
-import {
-	Category,
-	Post,
-	PostGetAllDto,
-	PostService,
-	User
-} from '../../../../core';
+import { Category, Post, PostGetAllDto, PostService, User } from '../../core';
 import { map, skip, tap } from 'rxjs/operators';
 
 // prettier-ignore
 export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto => {
-  switch (activatedRouteSnapshot.parent.routeConfig.component.name) {
-    case 'UserComponent': {
-      const [user]: [User, Category[]] = activatedRouteSnapshot.parent.data.data;
+  const [user]: [User, Category[]] = activatedRouteSnapshot.parent.data.data;
 
-      postGetAllDto = {
-        ...postGetAllDto,
-        userId: user.id
-      };
+  postGetAllDto = {
+    ...postGetAllDto,
+    userId: user.id
+  };
 
-      const categoryId: number = Number(activatedRouteSnapshot.paramMap.get('categoryId'));
+  const categoryId: number = Number(activatedRouteSnapshot.paramMap.get('categoryId'));
 
-      if (categoryId) {
-        postGetAllDto = {
-          ...postGetAllDto,
-          categoryId
-        };
-      }
-
-      return postGetAllDto;
-    }
-    case 'SearchComponent': {
-      const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
-
-      if (!!name.length) {
-        postGetAllDto = {
-          ...postGetAllDto,
-          name
-        };
-      }
-
-      return postGetAllDto;
-    }
-    default: {
-      return postGetAllDto;
-    }
+  if (categoryId) {
+    postGetAllDto = {
+      ...postGetAllDto,
+      categoryId
+    };
   }
+
+  return postGetAllDto;
 };
 
 @Component({
-	selector: 'app-category-detail',
+	selector: 'app-user-category',
 	templateUrl: './category.component.html'
 })
-export class CategoryDetailComponent implements OnInit, OnDestroy {
+export class UserCategoryComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
 
 	page: number = 1;
-	size: number = 10;
+	size: number = 20;
 
-	postPath: string;
 	postList: Post[] = [];
 	postListLoading: boolean = false;
 	postListHasMore: boolean = false;
@@ -74,16 +48,12 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
-		// TODO: this is the error!!!
-		// prettier-ignore
-		this.postPath = this.activatedRoute.snapshot.parent.routeConfig.component.name === 'UserComponent' ? 'posts' : './';
-
 		this.activatedRouteData$ = this.activatedRoute.data
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
 				next: (postList: Post[]) => {
 					this.page = 1;
-					this.size = 10;
+					this.size = 20;
 
 					this.postList = postList;
 					this.postListLoading = false;
@@ -97,7 +67,7 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
 				skip(1),
 				tap(() => {
 					this.page = 1;
-					this.size = 10;
+					this.size = 20;
 
 					this.postList = [];
 					this.postListLoading = true;
@@ -110,11 +80,10 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
 			});
 	}
 
+	// prettier-ignore
 	ngOnDestroy(): void {
-		[this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ =>
-			$?.unsubscribe()
-		);
-	}
+    [this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
+  }
 
 	getPostList(concat: boolean): void {
 		let postGetAllDto: PostGetAllDto = {

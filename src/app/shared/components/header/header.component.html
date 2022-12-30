@@ -2,11 +2,11 @@
 
 <ng-container>
 	<header
-		class="navbar border border-base-content/20 bg-base-100 shadow-xl rounded-box"
+		class="navbar rounded-box border border-base-content/20 bg-base-100 shadow-xl"
 	>
 		<div class="navbar-start">
 			<div class="dropdown">
-				<label tabindex="0" class="btn btn-ghost btn-circle">
+				<label class="btn btn-circle btn-ghost" tabindex="0">
 					<button
 						class="block fill-current p-2"
 						type="button"
@@ -17,23 +17,14 @@
 					></button>
 				</label>
 				<ul
+					class="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
 					tabindex="0"
-					class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
 				>
 					<li><a>Homepage</a></li>
 					<li><a>Portfolio</a></li>
 					<li><a>About</a></li>
-					<li class="block">
-						<a
-							class="block whitespace-nowrap w-full py-2 px-4"
-							[routerLink]="['/settings']"
-							aria-label="Settings"
-						>
-							Settings
-						</a>
-					</li>
 					<li
-						class="block cursor-pointer whitespace-nowrap w-full py-2 px-4"
+						class="block w-full cursor-pointer whitespace-nowrap py-2 px-4"
 						(click)="onLogout()"
 					>
 						Logout
@@ -43,61 +34,61 @@
 		</div>
 		<div class="navbar-center">
 			<a
-				class="btn btn-ghost normal-case text-xl"
-				[routerLink]="['/']"
-				aria-label="Draft"
+				class="btn btn-ghost text-xl normal-case"
 				title="Draft"
+				aria-label="Draft"
+				[routerLink]="['/']"
 			>
 				Draft
 			</a>
 		</div>
 		<div class="navbar-end">
 			<ng-container *appAuthenticated="false">
-				<nav class="flex justify-end items-center space-x-4">
+				<nav class="flex items-center justify-end space-x-4">
 					<a
 						class="btn btn-primary"
-						[routerLink]="['/auth/login']"
-						aria-label="Login"
 						title="Login"
+						aria-label="Login"
+						[routerLink]="['/auth/login']"
 					>
 						Login
 					</a>
 				</nav>
 			</ng-container>
 			<ng-container *appAuthenticated="true">
-				<nav class="flex justify-end items-center space-x-2" *ngIf="!!authUser">
+				<nav class="flex items-center justify-end space-x-2" *ngIf="!!authUser">
 					<a
-						class="btn btn-ghost btn-circle fill-current"
+						class="btn btn-circle btn-ghost fill-current"
+						title="Create post"
+						aria-label="Create post"
+						appSvgIcon
 						[routerLink]="['/create']"
 						[routerLinkActive]="['btn-active']"
 						[routerLinkActiveOptions]="{ exact: true }"
-						aria-label="Create post"
-						title="Create post"
-						appSvgIcon
 						[appIcon]="'file-earmark-plus'"
 						[appSquare]="'1.5em'"
 						[appViewBox]="'0 0 14 14'"
 					>
 					</a>
 					<a
-						class="btn btn-ghost btn-circle fill-current"
+						class="btn btn-circle btn-ghost fill-current"
+						title="Search"
+						aria-label="Search"
+						appSvgIcon
 						[routerLink]="['/search']"
 						[routerLinkActive]="['btn-active']"
-						aria-label="Search"
-						title="Search"
-						appSvgIcon
 						[appIcon]="'search'"
 						[appSquare]="'1.5em'"
 						[appViewBox]="'0 0 14 14'"
 					>
 					</a>
 					<a
-						class="btn btn-link btn-circle"
+						class="btn btn-circle btn-link"
+						appAvatar
 						[routerLink]="['/@' + authUser.name]"
 						[attr.aria-label]="authUser.name"
 						[title]="authUser.name"
 						[appUser]="authUser"
-						appAvatar
 					>
 					</a>
 				</nav>

@@ -1,0 +1,50 @@
+<!-- @format -->
+
+<ng-container>
+	<ng-container *ngIf="postList.length; else postListEmptyTemplate">
+		<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3">
+			<li
+				class="block"
+				appPostCard
+				*ngFor="let post of postList"
+				[ngClass]="post.image ? 'row-span-6' : 'row-span-3'"
+				[appPost]="post"
+				[appPostPath]="'posts'"
+			></li>
+		</ul>
+		<button
+			class="md btn btn-success mt-4 w-full"
+			type="button"
+			aria-label="Load more"
+			*ngIf="postListHasMore"
+			(click)="onPostListLoadMore()"
+		>
+			Load more
+		</button>
+	</ng-container>
+	<ng-template #postListEmptyTemplate>
+		<div class="flex items-center justify-center" [ngSwitch]="postListLoading">
+			<div class="flex items-center justify-center space-x-4" *ngSwitchDefault>
+				<span class="block text-xl">Not found</span>
+				<a
+					class="btn btn-primary gap-2"
+					title="Create post"
+					aria-label="Create post"
+					[routerLink]="['/create']"
+				>
+					<i
+						class="fill-current"
+						appSvgIcon
+						[appIcon]="'file-earmark-plus'"
+						[appSquare]="'1.5em'"
+					></i>
+					Create post
+				</a>
+			</div>
+			<div class="flex" *ngSwitchCase="true">
+				<button class="btn loading btn-ghost">Loading</button>
+			</div>
+		</div>
+	</ng-template>
+	<router-outlet></router-outlet>
+</ng-container>

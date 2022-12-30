@@ -46,7 +46,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 	postForm: FormGroup | undefined;
 	postFormIsSubmitted: boolean = false;
 
-	post: Partial<Post> | undefined;
+	post: Post | undefined;
 	postImage: boolean = false;
 	postPreview: boolean = false;
 
