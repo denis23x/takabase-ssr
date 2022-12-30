@@ -2,36 +2,36 @@
 
 <ng-container>
 	<ng-container *ngIf="userList.length; else userListEmptyTemplate">
-		<ul class="grid-cols-users grid grid-flow-row-dense gap-4 py-4">
-			<li class="block" *ngFor="let user of userList">
+		<ul
+			class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4"
+		>
+			<li *ngFor="let user of userList">
 				<div
-					class="bg-primary-3 border-primary-4 flex items-center justify-start space-x-4 rounded-md border p-4"
+					class="rounded-box grid justify-items-center border border-base-content/20 bg-base-100 p-4 shadow-xl"
 				>
 					<a
-						class="border-primary-4 flex h-16 w-16 overflow-hidden rounded-md border"
+						class="flex w-32"
 						appAvatar
 						[routerLink]="['/@' + user.name]"
 						[attr.aria-label]="user.name"
 						[appUser]="user"
 					>
 					</a>
-					<div class="flex flex-1 flex-col overflow-hidden">
-						<a
-							class="text-info-1 block truncate hover:underline"
-							[routerLink]="['/@' + user.name]"
-							[attr.aria-label]="user.name"
-						>
-							{{ user.name }}
-						</a>
-						<span class="text-secondary-2 block text-sm line-clamp-2">
-							{{ user.description || (user.createdAt | dayjs: "fromX") }}
-						</span>
-					</div>
+					<a
+						class="link link-hover mb-4 w-full truncate text-center text-xl font-bold"
+						[routerLink]="['/@' + user.name]"
+						[attr.aria-label]="user.name"
+					>
+						{{ user.name }}
+					</a>
+					<p class="rounded-box bg-base-200 p-4">
+						<span class="line-clamp-2">{{ user.description }}</span>
+					</p>
 				</div>
 			</li>
 		</ul>
 		<button
-			class="md btn btn-success mb-4 w-full"
+			class="btn btn-primary mt-4 w-full"
 			type="button"
 			aria-label="Load more"
 			*ngIf="userListHasMore"
@@ -41,22 +41,24 @@
 		</button>
 	</ng-container>
 	<ng-template #userListEmptyTemplate>
-		<div
-			class="bg-primary-3 text-secondary-1 border-primary-4 my-4 rounded-md border px-3 py-2"
-			[ngSwitch]="userListLoading"
-		>
-			<span class="block" *ngSwitchDefault>
-				No users were found
-				<a
-					class="text-info-1 hover:underline"
-					aria-label="Register user"
-					[routerLink]="['/auth/registration']"
-				>
-					try to register new one
-				</a>
-			</span>
-			<span class="block" *ngSwitchCase="true">Loading</span>
-		</div>
+		<ng-container [ngSwitch]="userListLoading">
+			<div class="grid justify-items-center gap-4" *ngSwitchDefault>
+				<i
+					class="fill-current text-base-content"
+					appSvgIcon
+					[appIcon]="'robot'"
+					[appSquare]="'3em'"
+				></i>
+				<p class="text-xl font-medium">
+					<span class="text-base-content">Users</span>
+					<span class="text-error"> not found</span>
+				</p>
+			</div>
+			<div class="grid justify-items-center" *ngSwitchCase="true">
+				<progress class="progress progress-primary my-5 w-56"></progress>
+				<span class="text-xl font-medium text-base-content">Loading</span>
+			</div>
+		</ng-container>
 	</ng-template>
 	<router-outlet></router-outlet>
 </ng-container>

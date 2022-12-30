@@ -1,47 +1,59 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="grid grid-cols-12 items-start gap-4">
-		<aside
+	<div class="grid grid-cols-1 gap-y-4 md:gap-y-8">
+		<header
 			class="rounded-box col-span-3 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 			*ngIf="!!user"
 		>
-			<div class="flex flex-col space-y-4">
-				<div class="flex flex-col space-y-4">
-					<div class="flex" appAvatar [appUser]="user"></div>
-					<div class="flex flex-col">
-						<span class="text-secondary-1 block truncate">
-							{{ user.name }}
-						</span>
-						<time
-							class="text-secondary-2 text-sm opacity-50"
-							[attr.datetime]="user.createdAt | dayjs: 'format':'YYYY-M-D'"
-						>
-							registered {{ user.createdAt | dayjs: "fromX" }}
-						</time>
-					</div>
-				</div>
-				<p
-					class="rounded-box bg-base-200 p-4"
-					[ngClass]="user.description ? 'text-secondary-1' : 'text-secondary-2'"
-					[innerHTML]="user.description || 'User does not have description'"
-				></p>
-				<a
-					class="block w-full whitespace-nowrap py-2 px-4"
-					aria-label="Settings"
-					[routerLink]="['/settings']"
+			<div class="grid w-full grid-cols-12 gap-4 bg-base-100">
+				<div
+					class="hidden sm:col-span-2 sm:flex"
+					appAvatar
+					[appUser]="user"
+				></div>
+				<div
+					class="col-span-12 flex flex-col items-start justify-start space-y-4 sm:col-span-10"
 				>
-					Settings
-				</a>
+					<div class="flex w-full items-center justify-between">
+						<div class="flex flex-col">
+							<span class="text-xl font-bold text-base-content">
+								{{ user.name }}
+							</span>
+							<time
+								class="text-secondary-2 text-sm opacity-50"
+								[attr.datetime]="user.createdAt | dayjs: 'format':'YYYY-M-D'"
+							>
+								registered {{ user.createdAt | dayjs: "fromX" }}
+							</time>
+						</div>
+						<a
+							class="btn btn-primary"
+							aria-label="Settings"
+							[routerLink]="['/settings']"
+						>
+							Settings
+						</a>
+					</div>
+					<p
+						class="rounded-box h-full w-full bg-base-200 p-4"
+						[ngClass]="
+							user.description ? 'text-secondary-1' : 'text-secondary-2'
+						"
+						[innerHTML]="user.description || 'User does not have description'"
+					></p>
+				</div>
 			</div>
-		</aside>
-		<div class="col-span-9">
-			<nav class="flex px-4">
-				<ul class="tabs translate-y-px space-x-1" #scrollRoot>
-					<!-- prettier-ignore -->
+		</header>
+		<div class="grid">
+			<nav class="grid w-full px-4">
+				<ul
+					class="tabs translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg"
+					#scrollRoot
+				>
 					<li
 						class="tab tab-lifted tab-lg !px-0"
-						[ngClass]="routerLinkActive.isActive ? 'tab-active' : 'h-10 bg-base-200'"
+						[ngClass]="routerLinkActive.isActive ? 'tab-active' : 'bg-base-200'"
 					>
 						<a
 							class="block px-4"
@@ -54,34 +66,33 @@
 							All
 						</a>
 					</li>
-					<!-- prettier-ignore -->
 					<li
-            class="tab tab-lg tab-lifted !px-0"
-            [ngClass]="routerLinkActive.isActive ? 'tab-active' : 'bg-base-200 h-10'"
-            *ngFor="let category of categoryList"
-          >
-            <a
-              class="block px-4"
-              appScrollIntoView
-              [appRoot]="scrollRoot"
-              [appActive]="routerLinkActive.isActive"
-              [routerLink]="['./category', category.id]"
-              [routerLinkActive]="''"
-              [attr.aria-label]="category.name"
-              #routerLinkActive="routerLinkActive"
-            >
-              {{ category.name }}
-            </a>
-          </li>
+						class="tab tab-lifted tab-lg !px-0"
+						*ngFor="let category of categoryList"
+						[ngClass]="routerLinkActive.isActive ? 'tab-active' : 'bg-base-200'"
+					>
+						<a
+							class="block px-4"
+							appScrollIntoView
+							#routerLinkActive="routerLinkActive"
+							[appRoot]="scrollRoot"
+							[appActive]="routerLinkActive.isActive"
+							[routerLink]="['./category', category.id]"
+							[routerLinkActive]="''"
+							[attr.aria-label]="category.name"
+						>
+							{{ category.name }}
+						</a>
+					</li>
 				</ul>
 			</nav>
-			<div
+			<section
 				class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
 			>
 				<div class="rounded-box bg-base-200 p-4">
 					<router-outlet></router-outlet>
 				</div>
-			</div>
+			</section>
 		</div>
 	</div>
 	<ng-template #categoryListEmptyTemplate>

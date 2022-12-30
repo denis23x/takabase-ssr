@@ -2,23 +2,31 @@
 
 <ng-container>
 	<ng-container *ngIf="categoryList.length; else categoryListEmptyTemplate">
-		<ul class="-m-2 flex flex-wrap py-4">
-			<li class="flex p-2" *ngFor="let category of categoryList">
+		<ul
+			class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4"
+		>
+			<li *ngFor="let category of categoryList">
 				<div
-					class="bg-primary-3 border-primary-4 flex flex-col space-y-4 overflow-hidden rounded-md border p-4"
+					class="rounded-box grid border border-base-content/20 bg-base-100 p-4 shadow-xl"
 				>
 					<a
-						class="text-secondary-1 text-info-1 hover:underline"
+						class="link link-hover text-xl font-bold"
 						[routerLink]="['/@' + category.user.name, 'category', category.id]"
 						[attr.aria-label]="category.name"
-						>{{ category.name }}
+					>
+						{{ category.name }}
 					</a>
-					<span class="text-secondary-2 text-sm">{{ category.user.name }}</span>
+					<span class="mb-4 text-sm text-base-content/50">
+						{{ category.user.name }}
+					</span>
+					<p class="rounded-box bg-base-200 p-4">
+						<span class="line-clamp-2">{{ category.description }}</span>
+					</p>
 				</div>
 			</li>
 		</ul>
 		<button
-			class="md btn btn-success mb-4 block w-full"
+			class="btn btn-primary mt-4 w-full"
 			type="button"
 			aria-label="Load more"
 			*ngIf="categoryListHasMore"
@@ -28,21 +36,23 @@
 		</button>
 	</ng-container>
 	<ng-template #categoryListEmptyTemplate>
-		<div
-			class="bg-primary-3 text-secondary-1 border-primary-4 my-4 rounded-md border px-3 py-2"
-			[ngSwitch]="categoryListLoading"
-		>
-			<span class="block" *ngSwitchDefault>
-				No categories were found
-				<a
-					class="text-info-1 hover:underline"
-					aria-label="Create post"
-					[routerLink]="['/create']"
-				>
-					try to create new one
-				</a>
-			</span>
-			<span class="block" *ngSwitchCase="true">Loading</span>
-		</div>
+		<ng-container [ngSwitch]="categoryListLoading">
+			<div class="grid justify-items-center gap-4" *ngSwitchDefault>
+				<i
+					class="fill-current text-base-content"
+					appSvgIcon
+					[appIcon]="'robot'"
+					[appSquare]="'3em'"
+				></i>
+				<p class="text-xl font-medium">
+					<span class="text-base-content">Categories</span>
+					<span class="text-error"> not found</span>
+				</p>
+			</div>
+			<div class="grid justify-items-center" *ngSwitchCase="true">
+				<progress class="progress progress-primary my-5 w-56"></progress>
+				<span class="text-xl font-medium text-base-content">Loading</span>
+			</div>
+		</ng-container>
 	</ng-template>
 </ng-container>

@@ -54,19 +54,19 @@ export class SearchComponent implements OnInit, OnDestroy {
 
 		this.searchForm$ = this.searchForm.valueChanges
 			.pipe(
-				debounceTime(500),
+				debounceTime(400),
 				filter(() => this.searchForm.valid)
 			)
 			.subscribe({
 				next: () => {
-					let { query = '' } = this.searchForm.value;
-
-					!query.length && (query = null);
+					let value: any = this.searchForm.value;
 
 					this.router
 						.navigate([], {
 							relativeTo: this.activatedRoute,
-							queryParams: { query },
+							queryParams: {
+								query: value.query || null
+							},
 							queryParamsHandling: 'merge'
 						})
 						.then(() => console.debug('Route changed'));

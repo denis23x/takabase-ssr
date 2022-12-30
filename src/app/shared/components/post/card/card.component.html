@@ -6,12 +6,12 @@
 	>
 		<figure *ngIf="post.image">
 			<a
-				[routerLink]="[postPath, post.id]"
+				[routerLink]="[path, post.id]"
 				[queryParamsHandling]="'preserve'"
 				[attr.aria-label]="post.name"
 			>
 				<img
-					class="object-cover object-center"
+					class="w-full object-cover object-center"
 					loading="lazy"
 					[src]="post.image"
 					[alt]="post.name"
@@ -21,15 +21,15 @@
 		<div class="flex h-full w-full flex-col p-4">
 			<a
 				class="link link-hover mb-2 text-xl font-bold line-clamp-2"
-				[routerLink]="[postPath, post.id]"
+				[routerLink]="[path, post.id]"
 				[queryParamsHandling]="'preserve'"
 				[attr.aria-label]="post.name"
 			>
 				{{ post.name }}
 			</a>
-			<p class="base-content mb-2 line-clamp-4">{{ post.description }}</p>
+			<p class="mb-2 text-base-content line-clamp-4">{{ post.description }}</p>
 			<time
-				class="base-content !mt-auto text-sm opacity-40"
+				class="!mt-auto text-sm text-base-content/50"
 				[attr.datetime]="post.updatedAt"
 			>
 				{{ post.updatedAt | dayjs: "fromX" }}

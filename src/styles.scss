@@ -61,3 +61,27 @@
   }
 }
 
+* {
+  @screen mouse {
+    $color-track: hsl(var(--b2));
+    $color-thumb: hsl(var(--b3));
+
+    scrollbar-color: $color-thumb $color-track;
+
+    &::-webkit-scrollbar {
+      @apply w-1.5 h-1.5 cursor-default;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: $color-track;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $color-thumb;
+    }
+
+    &::-webkit-scrollbar-corner {
+      background: $color-track;
+    }
+  }
+}
