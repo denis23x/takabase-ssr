@@ -1,37 +1,39 @@
 <!-- @format -->
 
-<article
-	class="flex flex-col bg-base-100 border border-base-content/20 shadow-xl rounded-box overflow-hidden w-full h-full"
->
-	<figure *ngIf="post.image">
-		<a
-			[routerLink]="[postPath, post.id]"
-			[queryParamsHandling]="'preserve'"
-			[attr.aria-label]="post.title"
-		>
-			<img
-				class="object-cover object-center"
-				loading="lazy"
-				[src]="post.image"
-				[alt]="post.title"
-			/>
-		</a>
-	</figure>
-	<div class="flex flex-col w-full h-full p-4">
-		<a
-			class="text-xl font-bold link link-hover line-clamp-2 mb-2"
-			[routerLink]="[postPath, post.id]"
-			[queryParamsHandling]="'preserve'"
-			[attr.aria-label]="post.title"
-		>
-			{{ post.title }}
-		</a>
-		<p class="base-content line-clamp-4 mb-2">{{ post.description }}</p>
-		<time
-			class="base-content opacity-40 text-sm !mt-auto"
-			[attr.datetime]="post.updatedAt"
-		>
-			{{ post.updatedAt | dayjs: "fromX" }}
-		</time>
-	</div>
-</article>
+<ng-container>
+	<article
+		class="rounded-box flex h-full w-full flex-col overflow-hidden border border-base-content/20 bg-base-100 shadow-xl"
+	>
+		<figure *ngIf="post.image">
+			<a
+				[routerLink]="[postPath, post.id]"
+				[queryParamsHandling]="'preserve'"
+				[attr.aria-label]="post.name"
+			>
+				<img
+					class="object-cover object-center"
+					loading="lazy"
+					[src]="post.image"
+					[alt]="post.name"
+				/>
+			</a>
+		</figure>
+		<div class="flex h-full w-full flex-col p-4">
+			<a
+				class="link link-hover mb-2 text-xl font-bold line-clamp-2"
+				[routerLink]="[postPath, post.id]"
+				[queryParamsHandling]="'preserve'"
+				[attr.aria-label]="post.name"
+			>
+				{{ post.name }}
+			</a>
+			<p class="base-content mb-2 line-clamp-4">{{ post.description }}</p>
+			<time
+				class="base-content !mt-auto text-sm opacity-40"
+				[attr.datetime]="post.updatedAt"
+			>
+				{{ post.updatedAt | dayjs: "fromX" }}
+			</time>
+		</div>
+	</article>
+</ng-container>

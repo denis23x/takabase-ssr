@@ -5,26 +5,26 @@ import { Session } from './session.model';
 import { Post } from './post.model';
 
 export interface User {
-  id: number;
-  name: string;
-  biography: string | null;
-  posts?: Post[];
-  categories?: Category[];
-  avatar: string | null;
-  email?: string;
-  sessions: Session[];
-  accessToken?: string;
-  settings?: UserSettings;
-  createdAt: string;
-  updatedAt: string;
+	id: number;
+	name: string;
+	description: string | null;
+	posts?: Post[];
+	categories?: Category[];
+	avatar: string | null;
+	email?: string;
+	sessions: Session[];
+	accessToken?: string;
+	settings?: UserSettings;
+	createdAt: string;
+	updatedAt: string;
 }
 
 export interface UserSettings {
-  theme: UserSettingsTheme;
+	theme: UserSettingsTheme;
 }
 
 export enum UserSettingsTheme {
-  AUTO = 'AUTO',
-  LIGHT = 'LIGHT',
-  DARK = 'DARK'
+	AUTO = 'AUTO',
+	LIGHT = 'LIGHT',
+	DARK = 'DARK'
 }

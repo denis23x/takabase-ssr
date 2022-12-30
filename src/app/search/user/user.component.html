@@ -1,43 +1,62 @@
+<!-- @format -->
+
 <ng-container>
-  <ng-container *ngIf="userList.length; else userListEmptyTemplate;">
-    <ul class="grid gap-4 grid-cols-users grid-flow-row-dense py-4">
-      <li class="block" *ngFor="let user of userList">
-        <div class="flex items-center justify-start space-x-4 bg-primary-3 border border-primary-4 rounded-md p-4">
-          <a
-            class="flex border border-primary-4 overflow-hidden rounded-md w-16 h-16"
-            [routerLink]="['/@' + user.name]"
-            [attr.aria-label]="user.name"
-            [appUser]="user"
-            appAvatar>
-          </a>
-          <div class="flex flex-1 flex-col overflow-hidden">
-            <a
-              class="block text-info-1 hover:underline truncate"
-              [routerLink]="['/@' + user.name]"
-              [attr.aria-label]="user.name">{{user.name}}
-            </a>
-            <span class="block text-secondary-2 text-sm line-clamp-2">{{user.biography || (user.createdAt | dayjs : 'fromX')}}</span>
-          </div>
-        </div>
-      </li>
-    </ul>
-    <button
-      class="btn btn-success md w-full mb-4"
-      type="button"
-      aria-label="Load more"
-      *ngIf="userListHasMore"
-      (click)="onUserListLoadMore()">Load more
-    </button>
-  </ng-container>
-  <ng-template #userListEmptyTemplate>
-    <div
-      class="bg-primary-3 text-secondary-1 border border-primary-4 rounded-md px-3 py-2 my-4"
-      [ngSwitch]="userListLoading">
-      <span class="block" *ngSwitchDefault>No users were found
-        <a class="text-info-1 hover:underline" [routerLink]="['/auth/registration']" aria-label="Register user">try to register new one</a>
-      </span>
-      <span class="block" *ngSwitchCase="true">Loading</span>
-    </div>
-  </ng-template>
-  <router-outlet></router-outlet>
+	<ng-container *ngIf="userList.length; else userListEmptyTemplate">
+		<ul class="grid-cols-users grid grid-flow-row-dense gap-4 py-4">
+			<li class="block" *ngFor="let user of userList">
+				<div
+					class="bg-primary-3 border-primary-4 flex items-center justify-start space-x-4 rounded-md border p-4"
+				>
+					<a
+						class="border-primary-4 flex h-16 w-16 overflow-hidden rounded-md border"
+						appAvatar
+						[routerLink]="['/@' + user.name]"
+						[attr.aria-label]="user.name"
+						[appUser]="user"
+					>
+					</a>
+					<div class="flex flex-1 flex-col overflow-hidden">
+						<a
+							class="text-info-1 block truncate hover:underline"
+							[routerLink]="['/@' + user.name]"
+							[attr.aria-label]="user.name"
+						>
+							{{ user.name }}
+						</a>
+						<span class="text-secondary-2 block text-sm line-clamp-2">
+							{{ user.description || (user.createdAt | dayjs: "fromX") }}
+						</span>
+					</div>
+				</div>
+			</li>
+		</ul>
+		<button
+			class="md btn btn-success mb-4 w-full"
+			type="button"
+			aria-label="Load more"
+			*ngIf="userListHasMore"
+			(click)="onUserListLoadMore()"
+		>
+			Load more
+		</button>
+	</ng-container>
+	<ng-template #userListEmptyTemplate>
+		<div
+			class="bg-primary-3 text-secondary-1 border-primary-4 my-4 rounded-md border px-3 py-2"
+			[ngSwitch]="userListLoading"
+		>
+			<span class="block" *ngSwitchDefault>
+				No users were found
+				<a
+					class="text-info-1 hover:underline"
+					aria-label="Register user"
+					[routerLink]="['/auth/registration']"
+				>
+					try to register new one
+				</a>
+			</span>
+			<span class="block" *ngSwitchCase="true">Loading</span>
+		</div>
+	</ng-template>
+	<router-outlet></router-outlet>
 </ng-container>

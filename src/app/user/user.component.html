@@ -1,177 +1,246 @@
-<section class="page-user grid md:gap-x-4 px-4">
-  <aside class="aside">
-    <div class="sticky top-0 py-4" *ngIf="!!user">
-      <div class="flex flex-col space-y-4 bg-primary-3 border border-primary-4 rounded-md p-4" >
-        <div class="flex items-center md:items-start space-x-4 md:space-x-0 md:space-y-4 md:flex-col">
-          <div class="flex border border-primary-4 overflow-hidden rounded-md h-16 w-16 md:h-44 md:w-44" [appUser]="user" appAvatar></div>
-          <div class="flex flex-col flex-1">
-            <div class="grid">
-              <span class="block text-secondary-1 truncate">{{user.name}}</span>
-            </div>
-            <time
-              class="text-secondary-2 text-sm"
-              [attr.datetime]="user.createdAt | dayjs : 'format' : 'YYYY-M-D'">registered {{user.createdAt | dayjs : 'fromX'}}
-            </time>
-          </div>
-        </div>
-        <p
-          class="border-t border-primary-4 pt-4"
-          [ngClass]="user.biography ? 'text-secondary-1' : 'text-secondary-2'"
-          [innerHTML]="user.biography || 'User does not have biography'"></p>
-      </div>
-    </div>
-  </aside>
-  <div class="view grid grid-cols-1 grid-rows-1 self-start">
-    <header class="header bg-primary-2 border-b border-t md:border-t-0 border-primary-4 z-20 sticky -top-px pt-4">
-      <nav class="flex justify-between items-stretch border border-primary-4 bg-primary-3 rounded-md">
-        <ng-container *ngIf="categoryList.length; else categoryListEmptyTemplate;">
-          <ul class="flex justify-start items-center overflow-auto px-1" #scrollRoot>
-            <li class="inline-block">
-              <a
-                class="block text-secondary-1 hover:text-info-1 hover:underline p-2"
-                [routerLink]="['.']"
-                [routerLinkActive]="'text-info-1'"
-                [routerLinkActiveOptions]="{ exact: true }"
-                aria-label="All">All
-              </a>
-            </li>
-            <li class="inline-block" *ngFor="let category of categoryList">
-              <a
-                class="block text-secondary-1 hover:text-info-1 hover:underline whitespace-nowrap p-2"
-                appScrollIntoView
-                [appRoot]="scrollRoot"
-                [appActive]="rla.isActive"
-                [routerLink]="['./category', category.id]"
-                [routerLinkActive]="'text-info-1'"
-                [attr.aria-label]="category.name"
-                #rla="routerLinkActive">{{category.name}}
-              </a>
-            </li>
-          </ul>
-          <app-dropdown
-            class="flex relative"
-            *ngIf="{ value: false } as active"
-            (toggled)="active.value = $event">
-            <button
-              class="block fill-current bg-primary-2 text-secondary-1 hover:text-info-1 border-l border-primary-4 rounded-r-md p-2.5"
-              [class.text-info-1]="active.value"
-              type="button"
-              aria-label="Menu"
-              appSvgIcon
-              [appIcon]="'folder2-open'"
-              [appSquare]="'1.25rem'"
-              slot="toggle">
-            </button>
-            <div class="absolute z-30 top-full right-0 flex flex-col items-end -mt-2" slot="content">
-              <div class="w-3 overflow-hidden inline-block mx-3.5">
-                <div class="h-2 w-2 bg-primary-2 rotate-45 origin-bottom-left"></div>
-              </div>
-              <ul class="flex flex-col bg-primary-2 rounded-md shadow-lg py-2" [ngSwitch]="authUser?.id === user.id">
-                <ng-container *ngSwitchCase="true">
-                  <li class="block">
-                    <button
-                      class="text-secondary-1 text-left hover:text-info-1 hover:bg-primary-1 hover:underline whitespace-nowrap w-full py-2 px-4"
-                      type="button"
-                      aria-label="Create"
-                      (click)="categoryModal = 'create'">Create
-                    </button>
-                  </li>
-                  <ng-container *ngIf="category">
-                    <li class="block">
-                      <button
-                        class="text-secondary-1 text-left hover:bg-primary-1 group whitespace-nowrap w-full py-2 px-4"
-                        type="button"
-                        [attr.aria-label]="'Edit: ' + category.name"
-                        (click)="categoryModal = 'edit'">Edit:
-                        <span class="text-info-1 group-hover:underline">{{category.name}}</span>
-                      </button>
-                    </li>
-                  </ng-container>
-                </ng-container>
-                <ng-container *ngSwitchCase="false">
-                  <li class="block">
-                    <a
-                      class="block text-secondary-1 hover:text-info-1 hover:underline hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
-                      [routerLink]="['.']"
-                      aria-label="Bad content">Bad content
-                    </a>
-                  </li>
-                </ng-container>
-              </ul>
-            </div>
-          </app-dropdown>
-        </ng-container>
-      </nav>
-      <div class="flex items-center justify-between p-2">
-        <div class="flex items-center justify-start space-x-1">
-          <i class="fill-current text-secondary-2 -scale-x-1" appSvgIcon [appIcon]="'filter-left'" [appSquare]="'1.25rem'"></i>
-          <span class="block text-sm text-secondary-2">Sorting:</span>
-          <app-dropdown
-            class="flex relative"
-            *ngIf="{ value: false } as active"
-            (toggled)="active.value = $event">
-            <button
-              class="block text-sm text-secondary-1 hover:text-info-1"
-              [class.text-info-1]="active.value"
-              type="button"
-              aria-label="Sorting"
-              slot="toggle">Newest
-            </button>
-            <div class="absolute z-30 top-full left-0 flex flex-col items-start" slot="content">
-              <div class="w-3 overflow-hidden inline-block mx-3.5">
-                <div class="h-2 w-2 bg-primary-2 rotate-45 origin-bottom-left"></div>
-              </div>
-              <ul class="flex flex-col bg-primary-2 rounded-md shadow-lg py-2">
-                <li class="block">
-                  <button
-                    class="text-secondary-1 text-left hover:text-info-1 hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
-                    type="button"
-                    aria-label="Newest">Newest
-                  </button>
-                </li>
-                <li class="block">
-                  <button
-                    class="text-secondary-1 text-left hover:text-info-1 hover:bg-primary-1 whitespace-nowrap w-full py-2 px-4"
-                    type="button"
-                    aria-label="Oldest">Oldest
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </app-dropdown>
-        </div>
-        <button
-          class="block text-sm text-secondary-1 hover:text-info-1"
-          type="button"
-          aria-label="Help">Help
-        </button>
-      </div>
-    </header>
-    <div class="content">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-  <ng-template #categoryListEmptyTemplate>
-    <div class="text-secondary-1 px-3 py-2">No categories were found
-      <button
-        class="text-info-1 hover:underline"
-        type="button"
-        aria-label="Create category"
-        (click)="categoryModal = 'create'">you need to create at least one
-      </button>
-    </div>
-  </ng-template>
-  <ng-container [ngSwitch]="categoryModal">
-    <app-category-create
-      *ngSwitchCase="'create'"
-      (submitted)="onSubmitCategoryForm($event)"
-      (closed)="categoryModal = undefined">
-    </app-category-create>
-    <app-category-edit
-      *ngSwitchCase="'edit'"
-      [appCategory]="category"
-      (submitted)="onSubmitCategoryForm($event)"
-      (closed)="categoryModal = undefined">
-    </app-category-edit>
-  </ng-container>
+<!-- @format -->
+
+<section class="page-user grid px-4 md:gap-x-4">
+	<aside class="aside">
+		<div class="sticky top-0 py-4" *ngIf="!!user">
+			<div
+				class="bg-primary-3 border-primary-4 flex flex-col space-y-4 rounded-md border p-4"
+			>
+				<div
+					class="flex items-center space-x-4 md:flex-col md:items-start md:space-x-0 md:space-y-4"
+				>
+					<div
+						class="border-primary-4 flex h-16 w-16 overflow-hidden rounded-md border md:h-44 md:w-44"
+						appAvatar
+						[appUser]="user"
+					></div>
+					<div class="flex flex-1 flex-col">
+						<div class="grid">
+							<span class="text-secondary-1 block truncate">
+								{{ user.name }}
+							</span>
+						</div>
+						<time
+							class="text-secondary-2 text-sm"
+							[attr.datetime]="user.createdAt | dayjs: 'format':'YYYY-M-D'"
+						>
+							registered {{ user.createdAt | dayjs: "fromX" }}
+						</time>
+					</div>
+				</div>
+				<p
+					class="border-primary-4 border-t pt-4"
+					[ngClass]="user.description ? 'text-secondary-1' : 'text-secondary-2'"
+					[innerHTML]="user.description || 'User does not have description'"
+				></p>
+			</div>
+		</div>
+	</aside>
+	<div class="view grid grid-cols-1 grid-rows-1 self-start">
+		<header
+			class="header bg-primary-2 border-primary-4 sticky -top-px z-20 border-b border-t pt-4 md:border-t-0"
+		>
+			<nav
+				class="border-primary-4 bg-primary-3 flex items-stretch justify-between rounded-md border"
+			>
+				<ng-container
+					*ngIf="categoryList.length; else categoryListEmptyTemplate"
+				>
+					<ul
+						class="flex items-center justify-start overflow-auto px-1"
+						#scrollRoot
+					>
+						<li class="inline-block">
+							<a
+								class="text-secondary-1 hover:text-info-1 block p-2 hover:underline"
+								aria-label="All"
+								[routerLink]="['.']"
+								[routerLinkActive]="'text-info-1'"
+								[routerLinkActiveOptions]="{ exact: true }"
+							>
+								All
+							</a>
+						</li>
+						<li class="inline-block" *ngFor="let category of categoryList">
+							<a
+								class="text-secondary-1 hover:text-info-1 block whitespace-nowrap p-2 hover:underline"
+								appScrollIntoView
+								#rla="routerLinkActive"
+								[appRoot]="scrollRoot"
+								[appActive]="rla.isActive"
+								[routerLink]="['./category', category.id]"
+								[routerLinkActive]="'text-info-1'"
+								[attr.aria-label]="category.name"
+							>
+								{{ category.name }}
+							</a>
+						</li>
+					</ul>
+					<app-dropdown
+						class="relative flex"
+						*ngIf="{ value: false } as active"
+						(toggled)="active.value = $event"
+					>
+						<button
+							class="bg-primary-2 text-secondary-1 hover:text-info-1 border-primary-4 block rounded-r-md border-l fill-current p-2.5"
+							type="button"
+							aria-label="Menu"
+							appSvgIcon
+							slot="toggle"
+							[class.text-info-1]="active.value"
+							[appIcon]="'folder2-open'"
+							[appSquare]="'1.25rem'"
+						></button>
+						<div
+							class="absolute top-full right-0 z-30 -mt-2 flex flex-col items-end"
+							slot="content"
+						>
+							<div class="mx-3.5 inline-block w-3 overflow-hidden">
+								<div
+									class="bg-primary-2 h-2 w-2 origin-bottom-left rotate-45"
+								></div>
+							</div>
+							<ul
+								class="bg-primary-2 flex flex-col rounded-md py-2 shadow-lg"
+								[ngSwitch]="authUser?.id === user.id"
+							>
+								<ng-container *ngSwitchCase="true">
+									<li class="block">
+										<button
+											class="text-secondary-1 hover:text-info-1 hover:bg-primary-1 w-full whitespace-nowrap py-2 px-4 text-left hover:underline"
+											type="button"
+											aria-label="Create"
+											(click)="categoryModal = 'create'"
+										>
+											Create
+										</button>
+									</li>
+									<ng-container *ngIf="category">
+										<li class="block">
+											<button
+												class="text-secondary-1 hover:bg-primary-1 group w-full whitespace-nowrap py-2 px-4 text-left"
+												type="button"
+												[attr.aria-label]="'Edit: ' + category.name"
+												(click)="categoryModal = 'edit'"
+											>
+												Edit:
+												<span class="text-info-1 group-hover:underline">
+													{{ category.name }}
+												</span>
+											</button>
+										</li>
+									</ng-container>
+								</ng-container>
+								<ng-container *ngSwitchCase="false">
+									<li class="block">
+										<a
+											class="text-secondary-1 hover:text-info-1 hover:bg-primary-1 block w-full whitespace-nowrap py-2 px-4 hover:underline"
+											aria-label="Bad content"
+											[routerLink]="['.']"
+										>
+											Bad content
+										</a>
+									</li>
+								</ng-container>
+							</ul>
+						</div>
+					</app-dropdown>
+				</ng-container>
+			</nav>
+			<div class="flex items-center justify-between p-2">
+				<div class="flex items-center justify-start space-x-1">
+					<i
+						class="text-secondary-2 -scale-x-1 fill-current"
+						appSvgIcon
+						[appIcon]="'filter-left'"
+						[appSquare]="'1.25rem'"
+					></i>
+					<span class="text-secondary-2 block text-sm">Sorting:</span>
+					<app-dropdown
+						class="relative flex"
+						*ngIf="{ value: false } as active"
+						(toggled)="active.value = $event"
+					>
+						<button
+							class="text-secondary-1 hover:text-info-1 block text-sm"
+							type="button"
+							aria-label="Sorting"
+							slot="toggle"
+							[class.text-info-1]="active.value"
+						>
+							Newest
+						</button>
+						<div
+							class="absolute top-full left-0 z-30 flex flex-col items-start"
+							slot="content"
+						>
+							<div class="mx-3.5 inline-block w-3 overflow-hidden">
+								<div
+									class="bg-primary-2 h-2 w-2 origin-bottom-left rotate-45"
+								></div>
+							</div>
+							<ul class="bg-primary-2 flex flex-col rounded-md py-2 shadow-lg">
+								<li class="block">
+									<button
+										class="text-secondary-1 hover:text-info-1 hover:bg-primary-1 w-full whitespace-nowrap py-2 px-4 text-left"
+										type="button"
+										aria-label="Newest"
+									>
+										Newest
+									</button>
+								</li>
+								<li class="block">
+									<button
+										class="text-secondary-1 hover:text-info-1 hover:bg-primary-1 w-full whitespace-nowrap py-2 px-4 text-left"
+										type="button"
+										aria-label="Oldest"
+									>
+										Oldest
+									</button>
+								</li>
+							</ul>
+						</div>
+					</app-dropdown>
+				</div>
+				<button
+					class="text-secondary-1 hover:text-info-1 block text-sm"
+					type="button"
+					aria-label="Help"
+				>
+					Help
+				</button>
+			</div>
+		</header>
+		<div class="content">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+	<ng-template #categoryListEmptyTemplate>
+		<div class="text-secondary-1 px-3 py-2">
+			No categories were found
+			<button
+				class="text-info-1 hover:underline"
+				type="button"
+				aria-label="Create category"
+				(click)="categoryModal = 'create'"
+			>
+				you need to create at least one
+			</button>
+		</div>
+	</ng-template>
+	<ng-container [ngSwitch]="categoryModal">
+		<app-category-create
+			*ngSwitchCase="'create'"
+			(submitted)="onSubmitCategoryForm($event)"
+			(closed)="categoryModal = undefined"
+		>
+		</app-category-create>
+		<app-category-edit
+			*ngSwitchCase="'edit'"
+			[appCategory]="category"
+			(submitted)="onSubmitCategoryForm($event)"
+			(closed)="categoryModal = undefined"
+		>
+		</app-category-edit>
+	</ng-container>
 </section>

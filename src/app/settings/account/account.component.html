@@ -3,9 +3,9 @@
 <section class="bg-primary-3 border-primary-4 w-full rounded-md border p-4">
 	<form
 		class="block"
+		autocomplete="off"
 		[formGroup]="avatarForm"
 		(ngSubmit)="onSubmitAvatarForm()"
-		autocomplete="off"
 	>
 		<fieldset
 			class="border-primary-4 mb-4 flex items-start justify-start space-x-4 border-b pb-4"
@@ -24,10 +24,10 @@
 				<div class="flex items-center justify-between text-sm">
 					<label class="text-secondary-2 block" for="url">Avatar</label>
 					<button
-						*ngIf="user.avatar"
 						class="text-danger-1 hover:underline"
 						type="button"
 						aria-label="Delete"
+						*ngIf="user.avatar"
 						(click)="onUpdateAvatar()"
 					>
 						Delete
@@ -35,29 +35,29 @@
 				</div>
 				<div class="relative">
 					<input
+						class="bg-primary-2 form-control truncate pr-10"
 						id="url"
 						type="text"
-						class="bg-primary-2 form-control truncate pr-10"
+						aria-label="Url"
 						formControlName="url"
 						placeholder="URL address"
-						aria-label="Url"
 					/>
 					<ng-container
 						*ngIf="url.value?.length"
 						[ngSwitch]="!!avatarFormIsSubmitted"
 					>
 						<button
-							*ngSwitchCase="false"
 							class="text-secondary-1 absolute top-px right-px rounded-r-md fill-current p-2.5 opacity-50 hover:opacity-100"
 							type="submit"
 							aria-label="Download"
 							appSvgIcon
+							*ngSwitchCase="false"
 							[appIcon]="'download'"
 							[appSquare]="'1.25rem'"
 						></button>
 						<span
-							*ngSwitchCase="true"
 							class="border-b-secondary-1 pointer-events-none absolute top-3 right-3 block h-5 w-5 animate-spin rounded-full border-2 border-b-2 border-transparent opacity-50"
+							*ngSwitchCase="true"
 						>
 						</span>
 					</ng-container>
@@ -68,21 +68,21 @@
 					*ngIf="url.touched && url.errors"
 					[ngSwitch]="true"
 				>
-					<ng-container *ngSwitchCase="!!url.errors.customValidator"
-						>Url does not match pattern</ng-container
-					>
+					<ng-container *ngSwitchCase="!!url.errors.customValidator">
+						Url does not match pattern
+					</ng-container>
 				</label>
-				<label class="text-secondary-2 block text-sm" for="url"
-					>Accept only *.png, *.jpg files</label
-				>
+				<label class="text-secondary-2 block text-sm" for="url">
+					Accept only *.png, *.jpg files
+				</label>
 			</fieldset>
 			<fieldset class="flex hidden flex-1">
 				<input
 					type="file"
-					accept="image/jpeg, image/jpg, image/png"
 					aria-label="Hidden"
-					(change)="onShowCropper($event)"
+					accept="image/jpeg, image/jpg, image/png"
 					#avatarInput
+					(change)="onShowCropper($event)"
 				/>
 			</fieldset>
 		</fieldset>
@@ -95,9 +95,9 @@
 	</form>
 	<form
 		class="block"
+		autocomplete="off"
 		[formGroup]="accountForm"
 		(ngSubmit)="onSubmitForm()"
-		autocomplete="off"
 	>
 		<fieldset
 			class="flex flex-col space-y-4"
@@ -106,12 +106,12 @@
 			<fieldset *ngIf="accountForm.get('name') as name">
 				<label class="text-secondary-2 block text-sm" for="name">Name</label>
 				<input
+					class="bg-primary-2 form-control my-2 truncate"
 					id="name"
 					type="text"
-					class="bg-primary-2 form-control my-2 truncate"
+					aria-label="Name"
 					formControlName="name"
 					placeholder="Name"
-					aria-label="Name"
 				/>
 				<label
 					class="text-danger-1 block text-sm"
@@ -119,34 +119,34 @@
 					*ngIf="name.touched && name.errors"
 					[ngSwitch]="true"
 				>
-					<ng-container *ngSwitchCase="!!name.errors.required"
-						>Required</ng-container
-					>
+					<ng-container *ngSwitchCase="!!name.errors.required">
+						Required
+					</ng-container>
 				</label>
 			</fieldset>
-			<fieldset *ngIf="accountForm.get('biography') as biography">
-				<label class="text-secondary-2 block text-sm" for="biography"
-					>Biography</label
-				>
+			<fieldset *ngIf="accountForm.get('description') as description">
+				<label class="text-secondary-2 block text-sm" for="description">
+					Description
+				</label>
 				<textarea
-					id="biography"
-					type="text"
-					rows="6"
 					class="bg-primary-2 form-control my-2"
-					formControlName="biography"
-					placeholder="Biography"
-					aria-label="Biography"
+					id="description"
+					type="text"
+					aria-label="Description"
+					rows="6"
+					formControlName="description"
+					placeholder="Description"
 				>
 				</textarea>
 				<label
 					class="text-danger-1 block text-sm"
-					for="biography"
-					*ngIf="biography.touched && biography.errors"
+					for="description"
+					*ngIf="description.touched && description.errors"
 					[ngSwitch]="true"
 				>
-					<ng-container *ngSwitchCase="!!biography.errors.required"
-						>Required</ng-container
-					>
+					<ng-container *ngSwitchCase="!!description.errors.required">
+						Required
+					</ng-container>
 				</label>
 			</fieldset>
 			<button

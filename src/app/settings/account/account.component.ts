@@ -34,7 +34,7 @@ interface AvatarForm {
 
 interface AccountForm {
 	name: FormControl<string>;
-	biography: FormControl<string>;
+	description: FormControl<string>;
 }
 
 @Component({
@@ -74,7 +74,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 		this.accountForm = this.formBuilder.group<AccountForm>({
 			name: this.formBuilder.control('', [Validators.required]),
-			biography: this.formBuilder.control('', [])
+			description: this.formBuilder.control('', [])
 		});
 	}
 

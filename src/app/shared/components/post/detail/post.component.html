@@ -2,37 +2,39 @@
 
 <app-overlay (clicked)="onClose()">
 	<section
-		class="absolute inset-0 flex justify-center items-center pointer-events-none p-4"
+		class="pointer-events-none absolute inset-0 flex items-center justify-center p-4"
 	>
 		<div
-			class="max-h-full max-w-full md:w-192 flex flex-col space-y-4 bg-primary-3 rounded-lg shadow-lg pointer-events-auto p-4"
+			class="md:w-192 bg-primary-3 pointer-events-auto flex max-h-full max-w-full flex-col space-y-4 rounded-lg p-4 shadow-lg"
 		>
-			<header class="flex justify-between items-center">
+			<header class="flex items-center justify-between">
 				<div class="flex items-center justify-start space-x-4">
 					<a
-						class="flex border border-primary-4 overflow-hidden rounded-md w-10 h-10"
+						class="border-primary-4 flex h-10 w-10 overflow-hidden rounded-md border"
+						appAvatar
 						[routerLink]="['/@' + post.user.name]"
 						[attr.aria-label]="post.user.name"
 						[appUser]="post.user"
-						appAvatar
 					>
 					</a>
 					<div class="flex flex-col items-start justify-start">
 						<a
-							class="text-info-1 hover:underline whitespace-nowrap text-ellipsis overflow-hidden"
+							class="text-info-1 overflow-hidden text-ellipsis whitespace-nowrap hover:underline"
 							[routerLink]="['/@' + post.user.name]"
 							[attr.aria-label]="post.user.name"
-							>{{ post.user.name }}
+						>
+							{{ post.user.name }}
 						</a>
 						<time
 							class="text-secondary-2 text-sm"
 							[attr.datetime]="post.updatedAt"
-							>{{ post.updatedAt | dayjs: "fromX" }}
+						>
+							{{ post.updatedAt | dayjs: "fromX" }}
 						</time>
 					</div>
 				</div>
 				<button
-					class="fill-current opacity-25 hover:opacity-100 text-secondary-1 hover:text-danger-1 p-2"
+					class="text-secondary-1 hover:text-danger-1 fill-current p-2 opacity-25 hover:opacity-100"
 					type="button"
 					aria-label="Close"
 					appSvgIcon
@@ -41,52 +43,53 @@
 					(click)="onClose()"
 				></button>
 			</header>
-			<div class="border-y border-primary-4 overflow-auto pr-4">
+			<div class="border-primary-4 overflow-auto border-y pr-4">
 				<a
-					class="block text-info-1 my-10"
-					[routerLink]="['/edit', post.id]"
+					class="text-info-1 my-10 block"
 					*ngIf="post.user.id === authUser?.id"
-					>Edit this post
+					[routerLink]="['/edit', post.id]"
+				>
+					Edit this post
 				</a>
-				<div class="text-2xl text-secondary-1 font-medium my-4">
-					{{ post.title }}
+				<div class="text-secondary-1 my-4 text-2xl font-medium">
+					{{ post.name }}
 				</div>
 				<article class="markdown-html my-4" #article>
-					{{ post.body | markdown: article }}
+					{{ post.markdown | markdown: article }}
 				</article>
 			</div>
 			<footer class="flex items-center justify-between">
 				<app-dropdown
-					class="flex relative"
+					class="relative flex"
 					*ngIf="{ value: false } as active"
 					(toggled)="active.value = $event"
 				>
 					<button
-						class="block fill-current text-secondary-1 hover:text-info-1 p-2"
-						[class.text-info-1]="active.value"
+						class="text-secondary-1 hover:text-info-1 block fill-current p-2"
 						type="button"
-						aria-label="Share"
 						title="Share"
+						aria-label="Share"
 						appSvgIcon
-						[appIcon]="'share-fill'"
 						slot="toggle"
+						[class.text-info-1]="active.value"
+						[appIcon]="'share-fill'"
 					></button>
 					<div
-						class="absolute z-30 bottom-full left-0 flex flex-col items-start -mt-1"
+						class="absolute bottom-full left-0 z-30 -mt-1 flex flex-col items-start"
 						slot="content"
 					>
-						<div class="flex bg-primary-2 rounded-md shadow-lg px-2">
+						<div class="bg-primary-2 flex rounded-md px-2 shadow-lg">
 							<app-share></app-share>
 						</div>
-						<div class="w-3 overflow-hidden inline-block mx-3">
+						<div class="mx-3 inline-block w-3 overflow-hidden">
 							<div
-								class="h-2 w-2 bg-primary-2 -rotate-45 origin-top-left"
+								class="bg-primary-2 h-2 w-2 origin-top-left -rotate-45"
 							></div>
 						</div>
 					</div>
 				</app-dropdown>
 				<button
-					class="block text-secondary-1 hover:text-danger-1 p-2"
+					class="text-secondary-1 hover:text-danger-1 block p-2"
 					type="button"
 					aria-label="Report"
 					*ngIf="post.user.id !== authUser?.id"

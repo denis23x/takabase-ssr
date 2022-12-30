@@ -66,7 +66,7 @@ export class ShareComponent implements OnInit, OnDestroy {
 		switch (share) {
 			case 'facebook': {
 				return {
-					t: post.title,
+					t: post.name,
 					u: this.shareUrl
 				};
 			}
@@ -74,8 +74,8 @@ export class ShareComponent implements OnInit, OnDestroy {
 				return {
 					mini: true,
 					url: this.shareUrl,
-					title: post.title,
-					summary: post.body,
+					title: post.name,
+					summary: post.description,
 					source: this.shareUrl
 				};
 			}
@@ -83,26 +83,26 @@ export class ShareComponent implements OnInit, OnDestroy {
 				return {
 					url: this.shareUrl,
 					media: this.shareUrl,
-					description: post.title
+					description: post.name
 				};
 			}
 			case 'reddit': {
 				return {
 					url: this.shareUrl,
 					resubmit: true,
-					title: post.title
+					title: post.name
 				};
 			}
 			case 'telegram': {
 				return {
 					url: this.shareUrl,
-					text: post.title
+					text: post.name
 				};
 			}
 			case 'twitter': {
 				return {
 					url: this.shareUrl,
-					text: post.title
+					text: post.name
 					// via: '',
 					// hashtags: ''
 				};

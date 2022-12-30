@@ -25,12 +25,12 @@ import {
 } from '@angular/forms';
 
 interface PostForm {
-	title: FormControl<string>;
+	name: FormControl<string>;
 	image: FormControl<string>;
 	description: FormControl<string>;
 	categoryId: FormControl<number>;
 	categoryName: FormControl<string>;
-	body: FormControl<string>;
+	markdown: FormControl<string>;
 }
 
 @Component({
@@ -64,7 +64,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 		private authService: AuthService
 	) {
 		this.postForm = this.formBuilder.group<PostForm>({
-			title: this.formBuilder.control('', [
+			name: this.formBuilder.control('', [
 				Validators.required,
 				Validators.minLength(4),
 				Validators.maxLength(36)
@@ -77,7 +77,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 			]),
 			categoryId: this.formBuilder.control(null, [Validators.required]),
 			categoryName: this.formBuilder.control('', []),
-			body: this.formBuilder.control('', [
+			markdown: this.formBuilder.control('', [
 				Validators.required,
 				Validators.minLength(24),
 				Validators.maxLength(7200)

@@ -5,9 +5,9 @@ import { Category } from './category.model';
 
 export interface Post {
 	id: number;
-	title: string;
+	name: string;
 	description: string;
-	body: string;
+	markdown: string;
 	image: string | null;
 	user: User;
 	category: Category;

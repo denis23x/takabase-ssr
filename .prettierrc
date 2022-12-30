@@ -22,7 +22,30 @@
         "useTabs": true,
         "bracketSameLine": false,
         "singleQuote": false,
-        "insertPragma": true
+        "insertPragma": true,
+        "attributeGroups": [
+          "$CLASS",
+          "$ID",
+          "$NAME",
+          "$DATA",
+          "$SRC",
+          "$FOR",
+          "$TYPE",
+          "$HREF",
+          "$VALUE",
+          "$TITLE",
+          "$ALT",
+          "$ROLE",
+          "$ARIA",
+          "$DEFAULT",
+          "$ANGULAR_ELEMENT_REF",
+          "$ANGULAR_STRUCTURAL_DIRECTIVE",
+          "$ANGULAR_ANIMATION",
+          "$ANGULAR_ANIMATION_INPUT",
+          "$ANGULAR_TWO_WAY_BINDING",
+          "$ANGULAR_INPUT",
+          "$ANGULAR_OUTPUT"
+        ]
       }
     }
   ]

@@ -1,8 +1,9 @@
 /** @format */
 
 export interface PostCreateDto {
-  title: string;
-  body: string;
-  image?: string;
-  categoryId: number;
+	name: string;
+	description: string;
+	markdown: string;
+	image?: string;
+	categoryId: number;
 }
