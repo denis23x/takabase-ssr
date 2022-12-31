@@ -1,54 +1,43 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="grid grid-cols-1 gap-y-4 md:gap-y-8">
+	<div class="flex flex-col space-y-4 md:space-y-8">
 		<header
-			class="rounded-box col-span-3 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-			*ngIf="!!user"
+			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
-			<div class="grid w-full grid-cols-12 gap-4 bg-base-100">
-				<div
-					class="hidden sm:col-span-2 sm:flex"
-					appAvatar
-					[appUser]="user"
-				></div>
-				<div
-					class="col-span-12 flex flex-col items-start justify-start space-y-4 sm:col-span-10"
-				>
-					<div class="flex w-full items-center justify-between">
-						<div class="flex flex-col">
-							<span class="text-xl font-bold text-base-content">
-								{{ user.name }}
-							</span>
-							<time
-								class="text-secondary-2 text-sm opacity-50"
-								[attr.datetime]="user.createdAt | dayjs: 'format':'YYYY-M-D'"
-							>
-								registered {{ user.createdAt | dayjs: "fromX" }}
-							</time>
-						</div>
-						<a
-							class="btn btn-primary"
-							aria-label="Settings"
-							[routerLink]="['/settings']"
+			<div class="flex w-full items-center justify-between gap-4">
+				<div class="flex items-center justify-start gap-4">
+					<div class="flex w-12" appAvatar [appUser]="user"></div>
+					<div class="flex flex-col">
+						<span class="truncate text-xl font-bold text-base-content">
+							{{ user.name }}
+						</span>
+						<time
+							class="text-sm text-base-content/50"
+							[attr.datetime]="user.createdAt | dayjs: 'format':'YYYY-M-D'"
 						>
-							Settings
-						</a>
+							registered {{ user.createdAt | dayjs: "fromX" }}
+						</time>
 					</div>
-					<p
-						class="rounded-box h-full w-full bg-base-200 p-4"
-						[ngClass]="
-							user.description ? 'text-secondary-1' : 'text-secondary-2'
-						"
-						[innerHTML]="user.description || 'User does not have description'"
-					></p>
+				</div>
+				<div class="flex items-center justify-end gap-4">
+					<a
+						class="btn btn-primary"
+						aria-label="Settings"
+						[routerLink]="['/settings']"
+					>
+						Settings
+					</a>
 				</div>
 			</div>
+			<p class="rounded-box w-full bg-base-200 p-4 text-base-content">
+				{{ user.description || "User does not have description" }}
+			</p>
 		</header>
-		<div class="grid">
-			<nav class="grid w-full px-4">
+		<div class="flex flex-col">
+			<nav class="block px-4">
 				<ul
-					class="tabs translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg"
+					class="tabs w-full translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg"
 					#scrollRoot
 				>
 					<li
@@ -95,17 +84,4 @@
 			</section>
 		</div>
 	</div>
-	<ng-template #categoryListEmptyTemplate>
-		<div class="text-secondary-1 px-3 py-2">
-			No categories were found
-			<button
-				class="text-info-1 hover:underline"
-				type="button"
-				aria-label="Create category"
-				(click)="categoryModal = 'create'"
-			>
-				you need to create at least one
-			</button>
-		</div>
-	</ng-template>
 </ng-container>

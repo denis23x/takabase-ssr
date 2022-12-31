@@ -3,26 +3,28 @@
 <ng-container>
 	<ng-container *ngIf="categoryList.length; else categoryListEmptyTemplate">
 		<ul
-			class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4"
+			class="grid grid-cols-1 grid-rows-none gap-4 sm:grid-cols-2 lg:grid-cols-3"
 		>
-			<li *ngFor="let category of categoryList">
-				<div
-					class="rounded-box grid border border-base-content/20 bg-base-100 p-4 shadow-xl"
-				>
+			<li
+				class="rounded-box flex flex-col space-y-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+				*ngFor="let category of categoryList"
+			>
+				<div class="flex flex-col">
+					<!-- prettier-ignore -->
 					<a
-						class="link link-hover text-xl font-bold"
-						[routerLink]="['/@' + category.user.name, 'category', category.id]"
-						[attr.aria-label]="category.name"
-					>
-						{{ category.name }}
-					</a>
-					<span class="mb-4 text-sm text-base-content/50">
+            class="link link-hover text-xl font-bold"
+            [routerLink]="['/@' + category.user.name, 'category', category.id]"
+            [attr.aria-label]="category.name"
+          >
+            {{ category.name }}
+          </a>
+					<span class="text-sm text-base-content/50">
 						{{ category.user.name }}
 					</span>
-					<p class="rounded-box bg-base-200 p-4">
-						<span class="line-clamp-2">{{ category.description }}</span>
-					</p>
 				</div>
+				<p class="rounded-box bg-base-200 p-4">
+					<span class="line-clamp-2">{{ category.description }}</span>
+				</p>
 			</li>
 		</ul>
 		<button
@@ -37,19 +39,29 @@
 	</ng-container>
 	<ng-template #categoryListEmptyTemplate>
 		<ng-container [ngSwitch]="categoryListLoading">
-			<div class="grid justify-items-center gap-4" *ngSwitchDefault>
+			<div class="flex flex-col items-center space-y-4" *ngSwitchDefault>
 				<i
 					class="fill-current text-base-content"
 					appSvgIcon
 					[appIcon]="'robot'"
 					[appSquare]="'3em'"
 				></i>
-				<p class="text-xl font-medium">
-					<span class="text-base-content">Categories</span>
-					<span class="text-error"> not found</span>
-				</p>
+				<div class="text-center">
+					<p class="text-xl font-medium">
+						<span class="text-base-content">Categories</span>
+						<span class="text-error"> not found</span>
+					</p>
+					<a
+						class="link link-primary text-sm"
+						title="Create post"
+						aria-label="Create post"
+						[routerLink]="['/create']"
+					>
+						Create your category
+					</a>
+				</div>
 			</div>
-			<div class="grid justify-items-center" *ngSwitchCase="true">
+			<div class="flex flex-col items-center" *ngSwitchCase="true">
 				<progress class="progress progress-primary my-5 w-56"></progress>
 				<span class="text-xl font-medium text-base-content">Loading</span>
 			</div>

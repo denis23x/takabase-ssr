@@ -287,12 +287,15 @@
 			[appTitle]="'Preview'"
 			(closed)="onPreviewPost(false)"
 		>
-			<ng-container slot="content" *ngIf="!!post">
-				<app-post-detail [appPost]="post"></app-post-detail>
-			</ng-container>
-			<ng-container slot="footer">
-				<div class="pointer-events-none flex opacity-10" appShare></div>
-			</ng-container>
+			<app-post-detail
+				slot="content"
+				*ngIf="post"
+				[appPost]="post"
+			></app-post-detail>
+			<app-share
+				class="pointer-events-none flex opacity-10"
+				slot="footer"
+			></app-share>
 		</app-window>
 	</app-overlay>
 	<app-overlay [class.hidden]="!postImage" (clicked)="postImage = false">

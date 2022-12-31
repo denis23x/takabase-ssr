@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html data-theme="light" lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<title>Draftnow</title>
@@ -38,17 +38,17 @@
 		<meta name="og:email" content="mail@draftnow.app" />
 		<meta name="og:region" content="EN" />
 
-		<link rel="icon" type="image/x-icon" href="favicon.ico" />
-		<link rel="manifest" href="manifest.webmanifest" />
-		<link rel="prefetch" href="assets/icons/sprite.svg" as="image" />
+		<link type="image/x-icon" href="favicon.ico" rel="icon" />
+		<link href="manifest.webmanifest" rel="manifest" />
+		<link href="assets/icons/sprite.svg" rel="prefetch" as="image" />
 	</head>
 	<body class="bg-primary-2">
-		<noscript
-			>Please enable JavaScript to continue using this application</noscript
+		<noscript>
+			Please enable JavaScript to continue using this application</noscript
 		>
 		<div
+			class="text-secondary-2 fixed flex h-full w-full items-center justify-center"
 			id="loader"
-			class="fixed flex items-center justify-center text-secondary-2 w-full h-full"
 		>
 			Loading
 		</div>

@@ -3,30 +3,34 @@
 <ng-container>
 	<ng-container *ngIf="userList.length; else userListEmptyTemplate">
 		<ul
-			class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4"
+			class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
 		>
-			<li *ngFor="let user of userList">
-				<div
-					class="rounded-box grid justify-items-center border border-base-content/20 bg-base-100 p-4 shadow-xl"
+			<li
+				class="rounded-box flex flex-col space-y-2 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+				*ngFor="let user of userList"
+			>
+				<a
+					class="flex"
+					appAvatar
+					[routerLink]="['/@' + user.name]"
+					[attr.aria-label]="user.name"
+					[appUser]="user"
 				>
+				</a>
+				<div class="flex flex-col text-center">
 					<a
-						class="flex w-32"
-						appAvatar
-						[routerLink]="['/@' + user.name]"
-						[attr.aria-label]="user.name"
-						[appUser]="user"
-					>
-					</a>
-					<a
-						class="link link-hover mb-4 w-full truncate text-center text-xl font-bold"
+						class="link link-hover w-full truncate text-xl font-bold"
 						[routerLink]="['/@' + user.name]"
 						[attr.aria-label]="user.name"
 					>
 						{{ user.name }}
 					</a>
-					<p class="rounded-box bg-base-200 p-4">
-						<span class="line-clamp-2">{{ user.description }}</span>
-					</p>
+					<time
+						class="text-sm text-base-content/50"
+						[attr.datetime]="user.createdAt | dayjs: 'format':'YYYY-M-D'"
+					>
+						{{ user.createdAt | dayjs: "fromX" }}
+					</time>
 				</div>
 			</li>
 		</ul>
@@ -42,19 +46,29 @@
 	</ng-container>
 	<ng-template #userListEmptyTemplate>
 		<ng-container [ngSwitch]="userListLoading">
-			<div class="grid justify-items-center gap-4" *ngSwitchDefault>
+			<div class="flex flex-col items-center space-y-4" *ngSwitchDefault>
 				<i
 					class="fill-current text-base-content"
 					appSvgIcon
 					[appIcon]="'robot'"
 					[appSquare]="'3em'"
 				></i>
-				<p class="text-xl font-medium">
-					<span class="text-base-content">Users</span>
-					<span class="text-error"> not found</span>
-				</p>
+				<div class="text-center">
+					<p class="text-xl font-medium">
+						<span class="text-base-content">Users</span>
+						<span class="text-error"> not found</span>
+					</p>
+					<a
+						class="link link-primary text-sm"
+						title="Create post"
+						aria-label="Create post"
+						[routerLink]="['/auth/registration']"
+					>
+						Register new user
+					</a>
+				</div>
 			</div>
-			<div class="grid justify-items-center" *ngSwitchCase="true">
+			<div class="flex flex-col items-center" *ngSwitchCase="true">
 				<progress class="progress progress-primary my-5 w-56"></progress>
 				<span class="text-xl font-medium text-base-content">Loading</span>
 			</div>

@@ -8,35 +8,39 @@ import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class SearchCategoryResolverService {
-  constructor(private router: Router, private categoryService: CategoryService) {}
+	constructor(
+		private router: Router,
+		private categoryService: CategoryService
+	) {}
 
-  resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Category[]> {
-    let categoryGetAllDto: CategoryGetAllDto = {
-      page: 1,
-      size: 10,
-      scope: ['user']
-    };
+	// prettier-ignore
+	resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Category[]> {
+		let categoryGetAllDto: CategoryGetAllDto = {
+			page: 1,
+			size: 20,
+			scope: ['user']
+		};
 
-    const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
+		const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
 
-    if (!!name.length) {
-      categoryGetAllDto = {
-        ...categoryGetAllDto,
-        name
-      };
-    }
+		if (!!name.length) {
+			categoryGetAllDto = {
+				...categoryGetAllDto,
+				name
+			};
+		}
 
-    return this.categoryService.getAll(categoryGetAllDto).pipe(
-      catchError((httpErrorResponse: HttpErrorResponse) => {
-        this.router
-          .navigate(['/exception', httpErrorResponse.status])
-          .then(() => console.debug('Route changed'));
+		return this.categoryService.getAll(categoryGetAllDto).pipe(
+			catchError((httpErrorResponse: HttpErrorResponse) => {
+				this.router
+					.navigate(['/exception', httpErrorResponse.status])
+					.then(() => console.debug('Route changed'));
 
-        return throwError(() => httpErrorResponse);
-      })
-    );
-  }
+				return throwError(() => httpErrorResponse);
+			})
+		);
+	}
 }

@@ -63,7 +63,7 @@
 
 * {
   @screen mouse {
-    $color-track: hsl(var(--b2));
+    $color-track: hsl(var(--b1));
     $color-thumb: hsl(var(--b3));
 
     scrollbar-color: $color-thumb $color-track;
