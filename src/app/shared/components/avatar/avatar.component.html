@@ -2,11 +2,9 @@
 
 <ng-container>
 	<div class="avatar">
-		<div [ngClass]="avatarClassList">
-			<figure
-				class="inline [&>svg]:h-full [&>svg]:w-full"
-				[innerHTML]="avatar | sanitizer: 'html'"
-			></figure>
-		</div>
+		<div
+			class="inline rounded-full [&>svg]:h-full [&>svg]:w-full"
+			[innerHTML]="avatarHTML | sanitizer: 'html'"
+		></div>
 	</div>
 </ng-container>

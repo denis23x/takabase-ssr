@@ -2,16 +2,16 @@
 
 <ng-container>
 	<ul
-		class="fixed right-0 bottom-0 flex flex-col space-y-5 items-end justify-end max-w-lg p-8 z-40"
+		class="fixed right-0 bottom-0 z-40 flex max-w-lg flex-col items-end justify-end space-y-5 p-8"
 	>
 		<li
 			class="alert shadow-lg"
-			[ngClass]="snack.options.classList"
 			*ngFor="let snack of snackbarList"
+			[ngClass]="snack.options.classList"
 			(click)="onClose(snack.uuid)"
 		>
-			<div class="flex flex-col items-start justify-start w-full">
-				<span class="block font-bold capitalize" *ngIf="snack.title">
+			<div class="flex w-full flex-col items-start justify-start">
+				<span class="block font-bold capitalize" *ngIf="!!snack.title">
 					{{ snack.title }}
 				</span>
 				<div class="first-letter:capitalize">{{ snack.message }}</div>

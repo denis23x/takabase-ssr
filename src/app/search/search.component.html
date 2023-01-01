@@ -11,7 +11,7 @@
 						<div class="indicator">
 							<span
 								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="query.touched && query.errors"
+								*ngIf="query.touched && !!query.errors"
 								[ngSwitch]="true"
 							>
 								<!-- prettier-ignore -->
@@ -43,7 +43,7 @@
 							title="Clear query"
 							aria-label="Clear query"
 							appSvgIcon
-							*ngIf="query.value.length"
+							*ngIf="!!query.value.length"
 							[class.btn-success]="query.touched && query.value"
 							[class.btn-error]="query.touched && query.invalid"
 							[class.btn-ghost]="query.untouched"

@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<ng-container *ngIf="postList.length; else postListEmptyTemplate">
+	<ng-container *ngIf="!!postList.length; else postListEmptyTemplate">
 		<ul
 			class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4"
 		>
@@ -11,7 +11,7 @@
 				*ngFor="let post of postList"
 				[ngClass]="post.image ? 'row-span-6' : 'row-span-3'"
 				[appPost]="post"
-				[appPath]="'posts'"
+				[appPath]="'post'"
 			></li>
 		</ul>
 		<button

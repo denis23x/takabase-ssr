@@ -14,8 +14,8 @@
 					<span class="block text-base-content">Don't have an account?</span>
 					<a
 						class="link link-primary"
-						[routerLink]="['../registration']"
 						aria-label="Join now"
+						[routerLink]="['../registration']"
 					>
 						Registration
 					</a>
@@ -42,7 +42,7 @@
 							<div class="indicator">
 								<span
 									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="email.touched && email.errors"
+									*ngIf="email.touched && !!email.errors"
 									[ngSwitch]="true"
 								>
 									<ng-container *ngSwitchCase="!!email.errors.required">
@@ -57,27 +57,27 @@
 						</label>
 						<label class="relative block" for="email">
 							<input
-								id="email"
-								autocomplete="username"
-								type="email"
 								class="input input-bordered w-full truncate pr-12"
+								id="email"
+								type="email"
+								aria-label="Email"
+								autocomplete="username"
+								formControlName="email"
+								placeholder="Type your Email"
 								[class.input-success]="email.touched && email.valid"
 								[class.input-error]="email.touched && email.invalid"
 								[class.input-disabled]="loginFormIsSubmitted"
-								formControlName="email"
-								placeholder="Type your Email"
-								aria-label="Email"
 							/>
 							<button
 								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+								type="button"
+								title="Clear"
+								aria-label="Clear"
+								appSvgIcon
+								*ngIf="!!email.value.length"
 								[class.btn-success]="email.touched && email.valid"
 								[class.btn-error]="email.touched && email.invalid"
 								[class.btn-ghost]="email.untouched"
-								type="button"
-								*ngIf="email.value.length"
-								aria-label="Clear"
-								title="Clear"
-								appSvgIcon
 								[appIcon]="'x'"
 								[appSquare]="'1.75rem'"
 								(click)="email.setValue('')"
@@ -92,7 +92,7 @@
 							<div class="indicator">
 								<span
 									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="password.touched && password.errors"
+									*ngIf="password.touched && !!password.errors"
 									[ngSwitch]="true"
 								>
 									<ng-container *ngSwitchCase="!!password.errors.required">
@@ -107,39 +107,39 @@
 						</label>
 						<label class="relative block" *ngIf="{ value: false } as isVisible">
 							<input
-								id="password"
-								autocomplete="current-password"
-								[type]="isVisible.value ? 'text' : 'password'"
 								class="input input-bordered w-full truncate pr-12"
+								id="password"
+								aria-label="Password"
+								autocomplete="current-password"
+								formControlName="password"
+								placeholder="Type your password"
+								[type]="isVisible.value ? 'text' : 'password'"
 								[class.input-success]="password.touched && password.valid"
 								[class.input-error]="password.touched && password.invalid"
 								[class.input-disabled]="loginFormIsSubmitted"
-								formControlName="password"
-								placeholder="Type your password"
-								aria-label="Password"
 							/>
 							<button
 								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+								type="button"
+								title="Password"
+								aria-label="Password"
+								appSvgIcon
+								*ngIf="!!password.value.length"
 								[class.btn-success]="password.touched && password.value"
 								[class.btn-error]="password.touched && password.invalid"
 								[class.btn-ghost]="password.untouched"
-								type="button"
-								*ngIf="password.value.length"
+								[appIcon]="'incognito'"
+								[appSquare]="'1.5em'"
 								(touchstart)="isVisible.value = !isVisible.value"
 								(mouseenter)="isVisible.value = true"
 								(mouseleave)="isVisible.value = false"
-								aria-label="Password"
-								title="Password"
-								appSvgIcon
-								[appIcon]="'incognito'"
-								[appSquare]="'1.5em'"
 							></button>
 						</label>
 						<label class="label" for="password">
 							<a
 								class="link label-text-alt !link-primary"
-								[routerLink]="['../reset']"
 								aria-label="Forgot password"
+								[routerLink]="['../reset']"
 							>
 								Forgot password?
 							</a>
@@ -148,9 +148,9 @@
 					<fieldset class="form-control">
 						<button
 							class="btn btn-primary w-full"
-							[class.loading]="loginFormIsSubmitted"
 							type="submit"
 							aria-label="Login"
+							[class.loading]="loginFormIsSubmitted"
 							[disabled]="loginForm.invalid || loginFormIsSubmitted"
 						>
 							Login

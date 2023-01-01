@@ -15,7 +15,7 @@
 					[src]="image.value"
 				/>
 				<button
-					class="btn btn-primary btn-outline w-full"
+					class="btn btn-outline btn-primary w-full"
 					type="button"
 					title="Image"
 					aria-label="Image"
@@ -43,7 +43,7 @@
 							<div class="indicator">
 								<span
 									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="name.touched && name.errors"
+									*ngIf="name.touched && !!name.errors"
 									[ngSwitch]="true"
 								>
 									<ng-container *ngSwitchCase="!!name.errors.required">
@@ -79,7 +79,7 @@
 								title="Clear"
 								aria-label="Clear"
 								appSvgIcon
-								*ngIf="name.value.length"
+								*ngIf="!!name.value.length"
 								[class.btn-success]="name.touched && name.valid"
 								[class.btn-error]="name.touched && name.invalid"
 								[class.btn-ghost]="name.untouched"
@@ -97,7 +97,7 @@
 							<div class="indicator">
 								<span
 									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="categoryName.touched && categoryName.errors"
+									*ngIf="categoryName.touched && !!categoryName.errors"
 									[ngSwitch]="true"
 								>
 									<!-- prettier-ignore -->
@@ -152,7 +152,7 @@
 							<div class="indicator">
 								<span
 									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="description.touched && description.errors"
+									*ngIf="description.touched && !!description.errors"
 									[ngSwitch]="true"
 								>
 									<ng-container *ngSwitchCase="!!description.errors.required">
@@ -188,7 +188,7 @@
 								title="Clear"
 								aria-label="Clear"
 								appSvgIcon
-								*ngIf="description.value.length"
+								*ngIf="!!description.value.length"
 								[class.btn-success]="description.touched && description.valid"
 								[class.btn-error]="description.touched && description.invalid"
 								[class.btn-ghost]="description.untouched"
@@ -219,7 +219,7 @@
 							<div class="indicator">
 								<span
 									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="markdown.touched && markdown.errors"
+									*ngIf="markdown.touched && !!markdown.errors"
 									[ngSwitch]="true"
 								>
 									<ng-container *ngSwitchCase="!!markdown.errors.required">
@@ -239,7 +239,7 @@
 							<span
 								class="label-text-alt"
 								[class.text-success]="markdown.touched && !markdown.errors"
-								[class.text-error]="markdown.touched && markdown.errors"
+								[class.text-error]="markdown.touched && !!markdown.errors"
 							>
 								{{ markdown.value.length }}/7200
 							</span>
@@ -252,7 +252,7 @@
 							formControlName="markdown"
 							[rows]="8"
 							[class.textarea-success]="markdown.touched && !markdown.errors"
-							[class.textarea-error]="markdown.touched && markdown.errors"
+							[class.textarea-error]="markdown.touched && !!markdown.errors"
 							[class.textarea-disabled]="postFormIsSubmitted"
 						>
               {{ markdown.value }}
@@ -289,7 +289,7 @@
 		>
 			<app-post-detail
 				slot="content"
-				*ngIf="post"
+				*ngIf="!!post"
 				[appPost]="post"
 			></app-post-detail>
 			<app-share

@@ -17,7 +17,7 @@
 			<div class="grid w-full grid-cols-12 gap-4 py-4">
 				<img
 					class="rounded-box col-span-3 block h-full w-full object-cover"
-					*ngIf="post.image"
+					*ngIf="!!post.image"
 					[src]="post.image"
 					[alt]="post.name"
 				/>
@@ -50,7 +50,7 @@
 				*ngIf="authUser?.id !== post.user.id"
 			>
 				<a
-					class="btn btn-circle btn-link"
+					class="btn btn-link btn-circle"
 					appAvatar
 					[routerLink]="['/@' + post.user.name]"
 					[attr.aria-label]="post.user.name"

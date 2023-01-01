@@ -11,35 +11,32 @@ import { User } from '../../../core';
 export class AvatarComponent implements OnInit {
 	@Input()
 	set appUser(user: User) {
-		this.user = user;
+		this.avatarHTML = user.avatar
+			? this.getAvatar(user)
+			: this.getJdenticon(user);
 	}
 
 	constructor() {}
 
-	user: User | undefined;
-
-	avatar: string | undefined;
-	avatarClassList: string[] = ['rounded-full'];
+	avatarHTML: string | undefined;
 	avatarSize: number = 256;
 
-	ngOnInit(): void {
-		this.avatar = this.user.avatar ? this.getAvatar() : this.getJdenticon();
-	}
+	ngOnInit(): void {}
 
-	getAvatar(): string {
+	getAvatar(user: User): string {
 		return `
       <img
         loading="lazy"
         width="${this.avatarSize}"
         height="${this.avatarSize}"
-        src="${this.user.avatar}"
-        alt="${this.user.name}"
+        src="${user.avatar}"
+        alt="${user.name}"
       >
     `;
 	}
 
-	getJdenticon(): string {
-		return toSvg(this.user.name, this.avatarSize, {
+	getJdenticon(user: User): string {
+		return toSvg(user.name, this.avatarSize, {
 			backColor: '#00000000',
 			padding: 0
 		});

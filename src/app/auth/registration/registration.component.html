@@ -1,6 +1,6 @@
 <!-- @format -->
 
-<section class="mx-auto p-4 md:w-128">
+<section class="md:w-128 mx-auto p-4">
 	<form
 		class="bg-primary-3 border-primary-4 flex flex-col space-y-4 rounded-md border p-4"
 		[formGroup]="registrationForm"
@@ -12,8 +12,8 @@
 				<span class="text-secondary-2 block">Already have an account?</span>
 				<a
 					class="text-info-1 hover:underline"
-					[routerLink]="['../login']"
 					aria-label="Sign in"
+					[routerLink]="['../login']"
 					>Sign in</a
 				>
 			</div>
@@ -31,18 +31,18 @@
 					>Username</label
 				>
 				<input
-					id="name"
-					autocomplete="username"
-					type="text"
 					class="bg-primary-2 form-control truncate"
+					id="name"
+					type="text"
+					aria-label="Username"
+					autocomplete="username"
 					formControlName="name"
 					placeholder="Username"
-					aria-label="Username"
 				/>
 				<label
 					class="text-danger-1 block text-sm"
 					for="name"
-					*ngIf="name.touched && name.errors"
+					*ngIf="name.touched && !!name.errors"
 					[ngSwitch]="true"
 				>
 					<ng-container *ngSwitchCase="!!name.errors.required"
@@ -66,18 +66,18 @@
 			>
 				<label class="text-secondary-2 block text-sm" for="email">Email</label>
 				<input
-					id="email"
-					autocomplete="username"
-					type="email"
 					class="bg-primary-2 form-control truncate"
+					id="email"
+					type="email"
+					aria-label="Email"
+					autocomplete="username"
 					formControlName="email"
 					placeholder="Email"
-					aria-label="Email"
 				/>
 				<label
 					class="text-danger-1 block text-sm"
 					for="email"
-					*ngIf="email.touched && email.errors"
+					*ngIf="email.touched && !!email.errors"
 					[ngSwitch]="true"
 				>
 					<ng-container *ngSwitchCase="!!email.errors.required"
@@ -97,30 +97,30 @@
 				>
 				<div class="relative" *ngIf="{ value: false } as isVisible">
 					<input
-						id="password"
-						autocomplete="new-password"
-						[type]="isVisible.value ? 'text' : 'password'"
 						class="bg-primary-2 form-control pr-10"
+						id="password"
+						aria-label="Password"
+						autocomplete="new-password"
 						formControlName="password"
 						placeholder="Password"
-						aria-label="Password"
+						[type]="isVisible.value ? 'text' : 'password'"
 					/>
 					<i
 						class="text-secondary-2 absolute top-0 right-0 cursor-pointer fill-current p-2.5 opacity-50"
-						*ngIf="password.value.length"
+						appSvgIcon
+						*ngIf="!!password.value.length"
+						[appIcon]="isVisible.value ? 'eye' : 'eye-slash'"
+						[appSquare]="'1.35rem'"
 						(touchstart)="isVisible.value = !isVisible.value"
 						(mouseenter)="isVisible.value = true"
 						(mouseleave)="isVisible.value = false"
-						appSvgIcon
-						[appIcon]="isVisible.value ? 'eye' : 'eye-slash'"
-						[appSquare]="'1.35rem'"
 					>
 					</i>
 				</div>
 				<label
 					class="text-danger-1 block text-sm"
 					for="password"
-					*ngIf="password.touched && password.errors"
+					*ngIf="password.touched && !!password.errors"
 					[ngSwitch]="true"
 				>
 					<ng-container *ngSwitchCase="!!password.errors.required"

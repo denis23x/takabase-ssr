@@ -7,18 +7,18 @@
 		>
 			<li
 				class="inline-block"
-				[class.disabled]="disabled.value"
 				*ngIf="{ value: history$.getValue().length <= 1 } as disabled"
+				[class.disabled]="disabled.value"
 			>
 				<button
 					class="fill-current"
-					[class.pointer-events-none]="disabled.value"
 					type="button"
-					aria-label="Undo"
 					title="Undo"
-					(click)="onBack()"
+					aria-label="Undo"
 					appSvgIcon
+					[class.pointer-events-none]="disabled.value"
 					[appIcon]="'arrow-left'"
+					(click)="onBack()"
 				></button>
 			</li>
 			<li class="inline-block">
@@ -26,11 +26,11 @@
 					<button
 						class="fill-current p-3"
 						type="button"
-						aria-label="Heading"
 						title="Heading"
+						aria-label="Heading"
 						appSvgIcon
-						[appIcon]="'type-h1'"
 						slot="target"
+						[appIcon]="'type-h1'"
 					></button>
 					<ul
 						class="menu rounded-box mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
@@ -56,11 +56,11 @@
 					<button
 						class="fill-current p-3"
 						type="button"
-						aria-label="Formatting"
 						title="Formatting"
+						aria-label="Formatting"
 						appSvgIcon
-						[appIcon]="'type-bold'"
 						slot="target"
+						[appIcon]="'type-bold'"
 					></button>
 					<ul
 						class="menu rounded-box mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
@@ -89,11 +89,11 @@
 					<button
 						class="fill-current p-3"
 						type="button"
-						aria-label="List"
 						title="List"
+						aria-label="List"
 						appSvgIcon
-						[appIcon]="'list-ul'"
 						slot="target"
+						[appIcon]="'list-ul'"
 					></button>
 					<ul
 						class="menu rounded-box mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
@@ -116,28 +116,28 @@
 			<li class="inline-block" *ngFor="let control of controlListUrl">
 				<button
 					class="fill-current"
+					appSvgIcon
 					[attr.aria-label]="control.label"
 					[attr.title]="control.label"
-					(click)="onMarkdownControl(control)"
-					appSvgIcon
 					[appIcon]="control.icon"
+					(click)="onMarkdownControl(control)"
 				></button>
 			</li>
 		</ul>
 	</div>
 	<app-overlay [class.hidden]="!urlFormModal" (clicked)="urlFormModal = false">
 		<app-window
+			slot="content"
 			[appTitle]="'Insert ' + urlFormControl?.label"
 			(closed)="urlFormModal = false"
-			slot="content"
 		>
 			<form
-				#urlFormElement
 				class="my-4 flex flex-col bg-base-100"
-				[formGroup]="urlForm"
-				(ngSubmit)="onSubmitUrlForm()"
 				autocomplete="off"
 				slot="content"
+				#urlFormElement
+				[formGroup]="urlForm"
+				(ngSubmit)="onSubmitUrlForm()"
 			>
 				<div class="rounded-box mb-4 bg-base-200 p-4">Paste ads</div>
 				<fieldset
@@ -149,7 +149,7 @@
 							<div class="indicator">
 								<span
 									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="title.touched && title.errors"
+									*ngIf="title.touched && !!title.errors"
 									[ngSwitch]="true"
 								>
 									<ng-container *ngSwitchCase="!!title.errors.required">
@@ -161,26 +161,26 @@
 						</label>
 						<label class="relative block" for="urlFormTitle">
 							<input
+								class="input input-bordered w-full truncate pr-12"
 								id="urlFormTitle"
 								type="text"
-								class="input input-bordered w-full truncate pr-12"
+								aria-label="Title"
+								formControlName="title"
+								placeholder="Type your title"
 								[class.input-success]="title.touched && title.valid"
 								[class.input-error]="title.touched && title.invalid"
 								[class.input-disabled]="urlFormIsSubmitted"
-								formControlName="title"
-								placeholder="Type your title"
-								aria-label="Title"
 							/>
 							<button
 								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+								type="button"
+								title="Clear"
+								aria-label="Clear"
+								appSvgIcon
+								*ngIf="!!title.value.length"
 								[class.btn-success]="title.touched && title.valid"
 								[class.btn-error]="title.touched && title.invalid"
 								[class.btn-ghost]="title.untouched"
-								type="button"
-								*ngIf="title.value.length"
-								aria-label="Clear"
-								title="Clear"
-								appSvgIcon
 								[appIcon]="'x'"
 								[appSquare]="'1.75rem'"
 								(click)="title.setValue('')"
@@ -192,7 +192,7 @@
 							<div class="indicator">
 								<span
 									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="url.touched && url.errors"
+									*ngIf="url.touched && !!url.errors"
 									[ngSwitch]="true"
 								>
 									<ng-container *ngSwitchCase="!!url.errors.required">
@@ -207,26 +207,26 @@
 						</label>
 						<label class="relative block" for="urlFormUrl">
 							<input
+								class="input input-bordered w-full truncate pr-12"
 								id="urlFormUrl"
 								type="text"
-								class="input input-bordered w-full truncate pr-12"
-								[class.input-success]="url.touched && !url.errors"
-								[class.input-error]="url.touched && url.errors"
-								[class.input-disabled]="urlFormIsSubmitted"
+								aria-label="URL"
 								formControlName="url"
 								placeholder="Paste your URL"
-								aria-label="URL"
+								[class.input-success]="url.touched && !url.errors"
+								[class.input-error]="url.touched && !!url.errors"
+								[class.input-disabled]="urlFormIsSubmitted"
 							/>
 							<button
 								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+								type="button"
+								title="Clear"
+								aria-label="Clear"
+								appSvgIcon
+								*ngIf="!!url.value.length"
 								[class.btn-success]="url.touched && url.valid"
 								[class.btn-error]="url.touched && url.invalid"
 								[class.btn-ghost]="url.untouched"
-								type="button"
-								*ngIf="url.value.length"
-								aria-label="Clear"
-								title="Clear"
-								appSvgIcon
 								[appIcon]="'x'"
 								[appSquare]="'1.75rem'"
 								(click)="url.setValue('')"
@@ -237,12 +237,12 @@
 			</form>
 			<button
 				class="btn btn-secondary w-full"
-				[class.loading]="urlFormIsSubmitted"
 				type="button"
 				aria-label="Submit"
+				slot="footer"
+				[class.loading]="urlFormIsSubmitted"
 				[disabled]="urlForm.invalid || urlFormIsSubmitted"
 				(click)="urlFormElement.requestSubmit()"
-				slot="footer"
 			>
 				Submit
 			</button>

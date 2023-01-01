@@ -27,7 +27,7 @@
 						class="text-danger-1 hover:underline"
 						type="button"
 						aria-label="Delete"
-						*ngIf="user.avatar"
+						*ngIf="!!user.avatar"
 						(click)="onUpdateAvatar()"
 					>
 						Delete
@@ -43,7 +43,7 @@
 						placeholder="URL address"
 					/>
 					<ng-container
-						*ngIf="url.value?.length"
+						*ngIf="!!url.value?.length"
 						[ngSwitch]="!!avatarFormIsSubmitted"
 					>
 						<button
@@ -65,7 +65,7 @@
 				<label
 					class="text-danger-1 block text-sm"
 					for="url"
-					*ngIf="url.touched && url.errors"
+					*ngIf="url.touched && !!url.errors"
 					[ngSwitch]="true"
 				>
 					<ng-container *ngSwitchCase="!!url.errors.customValidator">
@@ -116,7 +116,7 @@
 				<label
 					class="text-danger-1 block text-sm"
 					for="name"
-					*ngIf="name.touched && name.errors"
+					*ngIf="name.touched && !!name.errors"
 					[ngSwitch]="true"
 				>
 					<ng-container *ngSwitchCase="!!name.errors.required">
@@ -141,7 +141,7 @@
 				<label
 					class="text-danger-1 block text-sm"
 					for="description"
-					*ngIf="description.touched && description.errors"
+					*ngIf="description.touched && !!description.errors"
 					[ngSwitch]="true"
 				>
 					<ng-container *ngSwitchCase="!!description.errors.required">

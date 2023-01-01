@@ -24,6 +24,7 @@
 					<a
 						class="btn btn-primary"
 						aria-label="Settings"
+						*ngIf="authUser?.id === user.id"
 						[routerLink]="['/settings']"
 					>
 						Settings
@@ -79,6 +80,12 @@
 				class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
 			>
 				<div class="rounded-box bg-base-200 p-4">
+					<p
+						class="rounded-box mb-4 w-full border border-base-content/20 bg-base-100 p-4 text-base-content"
+						*ngIf="!!category"
+					>
+						{{ category.description || "Category does not have description" }}
+					</p>
 					<router-outlet></router-outlet>
 				</div>
 			</section>

@@ -25,12 +25,12 @@ const routes: Routes = [
 				},
 				children: [
 					{
-						path: 'posts',
+						path: 'post',
 						redirectTo: '',
 						pathMatch: 'full'
 					},
 					{
-						path: 'posts/:postId',
+						path: 'post/:postId',
 						component: UserPostDetailComponent,
 						resolve: {
 							data: UserPostDetailResolverService
@@ -51,12 +51,12 @@ const routes: Routes = [
 				},
 				children: [
 					{
-						path: 'posts',
+						path: 'post',
 						redirectTo: '',
 						pathMatch: 'full'
 					},
 					{
-						path: 'posts/:postId',
+						path: 'post/:postId',
 						component: UserPostDetailComponent,
 						resolve: {
 							data: UserPostDetailResolverService

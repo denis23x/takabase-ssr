@@ -4,7 +4,7 @@
 	<article
 		class="rounded-box flex h-full w-full flex-col overflow-hidden border border-base-content/20 bg-base-100 shadow-xl"
 	>
-		<figure *ngIf="post.image">
+		<figure *ngIf="!!post.image">
 			<a
 				[routerLink]="[path, post.id]"
 				[queryParamsHandling]="'preserve'"

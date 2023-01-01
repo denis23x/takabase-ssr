@@ -175,7 +175,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 				next: (post: Post) => {
 					// prettier-ignore
 					this.router
-            .navigate(['/@' + post.user.name, 'category', post.category.id, 'posts', post.id])
+            .navigate(['/@' + post.user.name, 'category', post.category.id, 'post', post.id])
             .then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
 				},
 				error: () => (this.postFormIsSubmitted = false)

@@ -1,6 +1,6 @@
 <!-- @format -->
 
-<section class="mx-auto p-4 md:w-128">
+<section class="md:w-128 mx-auto p-4">
 	<form
 		class="bg-primary-3 border-primary-4 flex flex-col space-y-4 rounded-md border p-4"
 		[formGroup]="resetForm"
@@ -12,8 +12,8 @@
 				<span class="text-secondary-2 block">Remembered password?</span>
 				<a
 					class="text-info-1 hover:underline"
-					[routerLink]="['../login']"
 					aria-label="Try login"
+					[routerLink]="['../login']"
 					>Try login</a
 				>
 			</div>
@@ -25,18 +25,18 @@
 			>
 				<label class="text-secondary-2 block text-sm" for="email">Email</label>
 				<input
-					id="email"
-					autocomplete="username"
-					type="email"
 					class="bg-primary-2 form-control truncate"
+					id="email"
+					type="email"
+					aria-label="Email"
+					autocomplete="username"
 					formControlName="email"
 					placeholder="Email"
-					aria-label="Email"
 				/>
 				<label
 					class="text-danger-1 block text-sm"
 					for="email"
-					*ngIf="email.touched && email.errors"
+					*ngIf="email.touched && !!email.errors"
 					[ngSwitch]="true"
 				>
 					<ng-container *ngSwitchCase="!!email.errors.required"

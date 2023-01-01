@@ -3,11 +3,11 @@
 <ng-container>
 	<div class="flex flex-col p-4">
 		<form
-			#urlFormDenis
 			class="block"
+			autocomplete="off"
+			#urlFormDenis
 			[formGroup]="urlForm"
 			(ngSubmit)="onSubmitUrlForm()"
-			autocomplete="off"
 		>
 			<div class="rounded-box mb-4 bg-base-200 p-4">
 				Specify and crop your post image, you can paste a URL from internet and
@@ -19,7 +19,7 @@
 						<div class="indicator">
 							<span
 								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="url.touched && url.errors"
+								*ngIf="url.touched && !!url.errors"
 								[ngSwitch]="true"
 							>
 								<ng-container *ngSwitchCase="!!url.errors.required">
@@ -34,25 +34,25 @@
 					</label>
 					<label class="relative block" for="urlFormUrl">
 						<input
+							class="input input-bordered w-full truncate"
 							id="urlFormUrl"
 							type="text"
-							class="input input-bordered w-full truncate"
+							aria-label="Url"
+							formControlName="url"
+							placeholder="Paste your URL"
 							[class.pr-32]="url.touched && url.valid"
 							[class.input-success]="url.touched && url.value"
 							[class.input-error]="url.touched && url.invalid"
 							[class.input-disabled]="urlFormIsSubmitted"
-							formControlName="url"
-							placeholder="Paste your URL"
-							aria-label="Url"
 						/>
 						<button
 							class="btn btn-sm absolute top-2 right-2 fill-current"
+							type="button"
+							aria-label="Download"
+							*ngIf="url.valid && !!url.value.length"
 							[class.btn-success]="url.touched && url.value"
 							[class.btn-error]="url.touched && url.invalid"
 							[class.btn-ghost]="url.untouched"
-							type="button"
-							*ngIf="url.valid && url.value.length"
-							aria-label="Download"
 							(click)="urlFormDenis.requestSubmit()"
 						>
 							Download
@@ -65,14 +65,14 @@
 						<span class="label-text-alt">Accept only *.png, *.jpg files</span>
 					</label>
 					<input
+						class="file-input file-input-bordered w-full truncate"
 						id="urlFormFile"
 						type="file"
-						class="file-input file-input-bordered w-full truncate"
+						aria-label="Hidden"
+						accept="image/jpeg, image/jpg, image/png"
 						[class.file-input-success]="true"
 						[class.file-input-error]="false"
 						[class.file-input-disabled]="urlFormIsSubmitted"
-						accept="image/jpeg, image/jpg, image/png"
-						aria-label="Hidden"
 						(change)="onSubmitFile($event)"
 					/>
 				</fieldset>
@@ -103,11 +103,11 @@
 					<li class="inline-block">
 						<button
 							class="fill-current"
-							[ngClass]="{ 'text-info-1': cropperBackgroundIsDraggable }"
 							type="button"
-							aria-label="Move"
 							title="Move"
+							aria-label="Move"
 							appSvgIcon
+							[ngClass]="{ 'text-info-1': cropperBackgroundIsDraggable }"
 							[appIcon]="'arrows-move'"
 							(click)="
 								cropperBackgroundIsDraggable = !cropperBackgroundIsDraggable
@@ -118,8 +118,8 @@
 						<button
 							class="-scale-x-1 fill-current"
 							type="button"
-							aria-label="Rotate counterclockwise"
 							title="Rotate counterclockwise"
+							aria-label="Rotate counterclockwise"
 							appSvgIcon
 							[appIcon]="'arrow-clockwise'"
 							(click)="onRotate(false)"
@@ -129,8 +129,8 @@
 						<button
 							class="fill-current"
 							type="button"
-							aria-label="Rotate clockwise"
 							title="Rotate clockwise"
+							aria-label="Rotate clockwise"
 							appSvgIcon
 							[appIcon]="'arrow-clockwise'"
 							(click)="onRotate(true)"
@@ -140,8 +140,8 @@
 						<button
 							class="rotate-90 fill-current"
 							type="button"
-							aria-label="Flip horizontal"
 							title="Flip horizontal"
+							aria-label="Flip horizontal"
 							appSvgIcon
 							[appIcon]="'symmetry-vertical'"
 							(click)="onFlip(true)"
@@ -151,8 +151,8 @@
 						<button
 							class="fill-current"
 							type="button"
-							aria-label="Flip vertical"
 							title="Flip vertical"
+							aria-label="Flip vertical"
 							appSvgIcon
 							[appIcon]="'symmetry-vertical'"
 							(click)="onFlip(false)"
@@ -162,8 +162,8 @@
 						<button
 							class="fill-current"
 							type="button"
-							aria-label="Zoom in"
 							title="Zoom in"
+							aria-label="Zoom in"
 							appSvgIcon
 							[appIcon]="'zoom-in'"
 							(click)="onZoom(true)"
@@ -173,8 +173,8 @@
 						<button
 							class="fill-current"
 							type="button"
-							aria-label="Zoom out"
 							title="Zoom out"
+							aria-label="Zoom out"
 							appSvgIcon
 							[appIcon]="'zoom-out'"
 							(click)="onZoom(false)"
