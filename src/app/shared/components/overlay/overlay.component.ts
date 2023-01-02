@@ -4,54 +4,44 @@ import {
 	Component,
 	EventEmitter,
 	HostListener,
-	OnDestroy,
+	Input,
 	OnInit,
 	Output
 } from '@angular/core';
-import { HelperService, PlatformService } from '../../../core';
+import { UiService } from '../../../core';
 
 @Component({
 	selector: 'app-overlay, [appOverlay]',
 	templateUrl: 'overlay.component.html'
 })
-export class OverlayComponent implements OnInit, OnDestroy {
+export class OverlayComponent implements OnInit {
 	@Output() clicked: EventEmitter<void> = new EventEmitter<void>();
+	@Output() escaped: EventEmitter<void> = new EventEmitter<void>();
+
+	@Input()
+	set appToggle(toggle: boolean) {
+		this.uiService.setOverlay(toggle);
+
+		this.overlayToggle = toggle;
+	}
 
 	@HostListener('document:keyup.esc', ['$event'])
-	onEsc(keyboardEvent: KeyboardEvent): void {
-		const uuidList: string[] = this.platformService.overlayUUIDList.getValue();
+	onEsc(): void {
+		this.uiService.setOverlay(false);
 
-		if (uuidList[uuidList.length - 1] === this.uuid) {
-			this.clicked.emit();
-		}
+		this.escaped.emit();
 	}
 
-	uuid: string | undefined;
+	overlayToggle: boolean = false;
+	overlayUUID: string | undefined;
 
-	constructor(
-		private platformService: PlatformService,
-		private helperService: HelperService
-	) {}
+	constructor(private uiService: UiService) {}
 
-	ngOnInit(): void {
-		this.uuid = this.helperService.getUUID();
-
-		this.platformService.setScrollToggle(true);
-
-		// prettier-ignore
-		this.platformService.overlayUUIDList.next(this.platformService.overlayUUIDList.getValue().concat(this.uuid));
-	}
-
-	ngOnDestroy(): void {
-		this.platformService.setScrollToggle(false);
-
-		// prettier-ignore
-		this.platformService.overlayUUIDList.next(this.platformService.overlayUUIDList.getValue().filter((uuid: string) => uuid !== this.uuid));
-	}
+	ngOnInit(): void {}
 
 	onClick(mouseEvent: MouseEvent): void {
 		if (mouseEvent.target === mouseEvent.currentTarget) {
-			this.platformService.setScrollToggle(false);
+			this.uiService.setOverlay(false);
 
 			this.clicked.emit();
 		}

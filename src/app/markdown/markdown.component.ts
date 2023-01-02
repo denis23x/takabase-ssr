@@ -123,6 +123,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 
 	onSubmitCropper(fileCreateDto?: FileCreateDto): void {
 		this.postForm.get('image').setValue(fileCreateDto.path);
+		this.postImage = false;
 	}
 
 	onToggleCategory(toggle: boolean): void {
@@ -142,7 +143,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	onPreviewPost(toggle: boolean): void {
+	onPreviewPost(): void {
 		const { categoryId, categoryName, ...postForm } = this.postForm.value;
 
 		this.post = {
@@ -151,7 +152,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 			category: this.category
 		};
 
-		this.postPreview = toggle;
+		this.postPreview = true;
 	}
 
 	onSubmitPostForm(): void {

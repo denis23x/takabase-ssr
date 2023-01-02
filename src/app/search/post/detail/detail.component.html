@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<app-overlay (clicked)="onClose()">
+	<app-overlay [appToggle]="true" (clicked)="onClose()" (escaped)="onClose()">
 		<app-window slot="content" [appTitle]="'View'" (closed)="onClose()">
 			<app-post-detail slot="content" [appPost]="post"></app-post-detail>
 			<app-share slot="footer"></app-share>

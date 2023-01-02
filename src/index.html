@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <!DOCTYPE html>
-<html data-theme="light" lang="en">
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<title>Draftnow</title>
@@ -10,10 +10,8 @@
 		<meta name="theme-color" content="#1976d2" />
 		<meta name="viewport" content="width=425, initial-scale=1" />
 
-		<meta
-			name="keywords"
-			content="draft, post, make, share, markdown, youtube, gist, code, snippets"
-		/>
+		<!-- prettier-ignore -->
+		<meta name="keywords" content="draft, post, make, share, markdown, youtube, snippets" />
 		<meta name="title" content="Draftnow" />
 		<meta name="subtitle" content="A powerful tool for everyone" />
 		<meta name="description" content="Simplest note taking app" />
@@ -42,10 +40,10 @@
 		<link href="manifest.webmanifest" rel="manifest" />
 		<link href="assets/icons/sprite.svg" rel="prefetch" as="image" />
 	</head>
-	<body class="bg-primary-2">
+	<body>
 		<noscript>
-			Please enable JavaScript to continue using this application</noscript
-		>
+			Please enable JavaScript to continue using this application
+		</noscript>
 		<div
 			class="text-secondary-2 fixed flex h-full w-full items-center justify-center"
 			id="loader"
@@ -54,4 +52,11 @@
 		</div>
 		<app-root></app-root>
 	</body>
+	<script type="application/javascript">
+		const theme = localStorage.getItem("theme")
+
+		if (!!theme && theme !== "") {
+			document.documentElement.setAttribute("data-theme", theme)
+		}
+	</script>
 </html>

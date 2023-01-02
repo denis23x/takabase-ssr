@@ -134,6 +134,8 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitCropper(fileCreateDto?: FileCreateDto): void {
+		this.postImage = false;
+
 		const userUpdateDto: UserUpdateDto = {
 			avatar: fileCreateDto?.path || null
 		};

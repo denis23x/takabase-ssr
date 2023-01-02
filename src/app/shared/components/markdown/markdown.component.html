@@ -125,21 +125,28 @@
 			</li>
 		</ul>
 	</div>
-	<app-overlay [class.hidden]="!urlFormModal" (clicked)="urlFormModal = false">
+	<app-overlay
+		[appToggle]="urlFormModal"
+		(clicked)="onCloseUrlForm()"
+		(escaped)="onCloseUrlForm()"
+	>
 		<app-window
 			slot="content"
 			[appTitle]="'Insert ' + urlFormControl?.label"
-			(closed)="urlFormModal = false"
+			(closed)="onCloseUrlForm()"
 		>
 			<form
-				class="my-4 flex flex-col bg-base-100"
+				class="flex flex-col bg-base-100 p-4"
 				autocomplete="off"
 				slot="content"
 				#urlFormElement
 				[formGroup]="urlForm"
 				(ngSubmit)="onSubmitUrlForm()"
 			>
-				<div class="rounded-box mb-4 bg-base-200 p-4">Paste ads</div>
+				<div class="rounded-box mb-4 bg-base-200 p-4">
+					Specify your link paste a URL from internet and add optional title for
+					it
+				</div>
 				<fieldset
 					class="flex flex-col space-y-4"
 					[disabled]="urlFormIsSubmitted"
@@ -159,7 +166,7 @@
 								<span class="label-text mr-2">Title</span>
 							</div>
 						</label>
-						<label class="relative block" for="urlFormTitle">
+						<div class="relative">
 							<input
 								class="input input-bordered w-full truncate pr-12"
 								id="urlFormTitle"
@@ -185,7 +192,7 @@
 								[appSquare]="'1.75rem'"
 								(click)="title.setValue('')"
 							></button>
-						</label>
+						</div>
 					</fieldset>
 					<fieldset class="form-control" *ngIf="urlForm.get('url') as url">
 						<label class="label" for="urlFormUrl">
@@ -205,7 +212,7 @@
 								<span class="label-text mr-2">URL</span>
 							</div>
 						</label>
-						<label class="relative block" for="urlFormUrl">
+						<div class="relative">
 							<input
 								class="input input-bordered w-full truncate pr-12"
 								id="urlFormUrl"
@@ -231,21 +238,22 @@
 								[appSquare]="'1.75rem'"
 								(click)="url.setValue('')"
 							></button>
-						</label>
+						</div>
+					</fieldset>
+					<fieldset class="form-control">
+						<button
+							class="btn btn-secondary w-full"
+							type="button"
+							aria-label="Submit"
+							[class.loading]="urlFormIsSubmitted"
+							[disabled]="urlForm.invalid || urlFormIsSubmitted"
+							(click)="urlFormElement.requestSubmit()"
+						>
+							Submit
+						</button>
 					</fieldset>
 				</fieldset>
 			</form>
-			<button
-				class="btn btn-secondary w-full"
-				type="button"
-				aria-label="Submit"
-				slot="footer"
-				[class.loading]="urlFormIsSubmitted"
-				[disabled]="urlForm.invalid || urlFormIsSubmitted"
-				(click)="urlFormElement.requestSubmit()"
-			>
-				Submit
-			</button>
 		</app-window>
 	</app-overlay>
 </ng-container>

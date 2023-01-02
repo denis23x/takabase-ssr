@@ -36,7 +36,6 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	// prettier-ignore
 	@Output() submitted: EventEmitter<FileCreateDto> = new EventEmitter<FileCreateDto>();
-	@Output() closed: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	cropperFile: File = undefined;
 	cropperBase64: string = undefined;
@@ -178,8 +177,6 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.cropperBase64 = undefined;
 
 		this.onReset();
-
-		this.closed.emit(false);
 	}
 
 	// prettier-ignore

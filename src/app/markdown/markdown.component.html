@@ -265,7 +265,7 @@
 					class="btn btn-secondary col-span-12 sm:col-span-3"
 					type="button"
 					aria-label="Preview"
-					(click)="onPreviewPost(true)"
+					(click)="onPreviewPost()"
 				>
 					Preview
 				</button>
@@ -281,34 +281,34 @@
 			</div>
 		</div>
 	</div>
-	<app-overlay [class.hidden]="!postPreview" (clicked)="onPreviewPost(false)">
+	<app-overlay
+		[appToggle]="postPreview"
+		(clicked)="postPreview = false"
+		(escaped)="postPreview = false"
+	>
 		<app-window
 			slot="content"
 			[appTitle]="'Preview'"
-			(closed)="onPreviewPost(false)"
+			(closed)="postPreview = false"
 		>
-			<app-post-detail
-				slot="content"
-				*ngIf="!!post"
-				[appPost]="post"
-			></app-post-detail>
+			<app-post-detail slot="content" [appPost]="post"></app-post-detail>
 			<app-share
 				class="pointer-events-none flex opacity-10"
 				slot="footer"
 			></app-share>
 		</app-window>
 	</app-overlay>
-	<app-overlay [class.hidden]="!postImage" (clicked)="postImage = false">
+	<app-overlay
+		[appToggle]="postImage"
+		(clicked)="postImage = false"
+		(escaped)="postImage = false"
+	>
 		<app-window
 			slot="content"
 			[appTitle]="'Image'"
 			(closed)="postImage = false"
 		>
-			<app-cropper
-				slot="content"
-				(closed)="postImage = false"
-				(submitted)="onSubmitCropper($event)"
-			>
+			<app-cropper slot="content" (submitted)="onSubmitCropper($event)">
 			</app-cropper>
 		</app-window>
 	</app-overlay>

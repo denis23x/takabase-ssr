@@ -21,7 +21,7 @@
 					</div>
 				</div>
 				<button
-					class="btn btn-outline btn-primary"
+					class="btn btn-primary btn-outline"
 					type="button"
 					title="Image"
 					aria-label="Image"
@@ -360,17 +360,17 @@
 			</form>
 		</div>
 	</div>
-	<app-overlay [class.hidden]="!postImage" (clicked)="postImage = false">
+	<app-overlay
+		[appToggle]="postImage"
+		(clicked)="postImage = false"
+		(escaped)="postImage = false"
+	>
 		<app-window
 			slot="content"
 			[appTitle]="'Image'"
 			(closed)="postImage = false"
 		>
-			<app-cropper
-				slot="content"
-				(closed)="postImage = false"
-				(submitted)="onSubmitCropper($event)"
-			>
+			<app-cropper slot="content" (submitted)="onSubmitCropper($event)">
 			</app-cropper>
 		</app-window>
 	</app-overlay>

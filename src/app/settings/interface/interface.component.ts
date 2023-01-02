@@ -9,13 +9,7 @@ import {
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import {
-	AuthService,
-	Category,
-	User,
-	UserService,
-	UserUpdateDto
-} from '../../core';
+import { AuthService, User, UserService, UserUpdateDto } from '../../core';
 import { ActivatedRoute, Data } from '@angular/router';
 
 interface ThemeForm {
@@ -87,28 +81,26 @@ export class SettingsInterfaceComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
-		// this.themeForm$ = this.themeForm.valueChanges.subscribe({
-		// 	next: (value: any) => {
-		// 		const userUpdateDto: UserUpdateDto = {
-		// 			settings: value
-		// 		};
-		//
-		// 		this.userService.update(this.user.id, userUpdateDto).subscribe({
-		// 			next: (user: User) => this.authService.setUser(user),
-		// 			error: (error: any) => console.error(error)
-		// 		});
-		// 	},
-		// 	error: (error: any) => console.error(error)
-		// });
+		this.themeForm$ = this.themeForm.valueChanges.subscribe({
+			next: (value: any) => {
+				const userUpdateDto: UserUpdateDto = {
+					settings: value
+				};
+
+				this.userService.update(this.user.id, userUpdateDto).subscribe({
+					next: (user: User) => this.authService.setUser(user),
+					error: (error: any) => console.error(error)
+				});
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	ngOnDestroy(): void {
 		[this.activatedRouteData$, this.themeForm$].forEach($ => $?.unsubscribe());
 	}
 
-	onChangeCategory(theme: string): void {
+	onChangeTheme(theme: string): void {
 		this.themeForm.patchValue({ theme });
-
-		console.log(theme);
 	}
 }

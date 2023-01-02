@@ -12,4 +12,5 @@ export * from './platform.service';
 export * from './post.service';
 export * from './snackbar.service';
 export * from './title.service';
+export * from './ui.service';
 export * from './user.service';

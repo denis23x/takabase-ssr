@@ -12,9 +12,9 @@ import {
 	User,
 	UserService,
 	PlatformService,
-	SnackbarService
+	SnackbarService,
+	UiService
 } from '../index';
-import { environment } from '../../../environments/environment';
 import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
 
 @Injectable({
@@ -31,7 +31,8 @@ export class AuthService {
 		private localStorageService: LocalStorageService,
 		private platformService: PlatformService,
 		private router: Router,
-		private snackbarService: SnackbarService
+		private snackbarService: SnackbarService,
+		private uiService: UiService
 	) {}
 
 	getFingerprint(): Observable<string> {
@@ -97,10 +98,12 @@ export class AuthService {
 	onLogout(logoutDto?: LogoutDto): Observable<User> {
 		return this.getFingerprint().pipe(
 			switchMap((fingerprint: string) => {
-				return this.apiService.post('/auth/logout', {
-					...logoutDto,
-					fingerprint
-				});
+				return this.apiService
+					.post('/auth/logout', {
+						...logoutDto,
+						fingerprint
+					})
+					.pipe(tap(() => this.removeUser()));
 			})
 		);
 	}
@@ -123,7 +126,7 @@ export class AuthService {
 		if (!!user) {
 			return of(user);
 		} else {
-			if (this.localStorageService.getItem(environment.USER_ACCESS_TOKEN)) {
+			if (this.localStorageService.getItem('token')) {
 				return this.apiService
 					.get('/auth/me', { scope: ['settings'] })
 					.pipe(tap((user: User) => this.setUser(user)));
@@ -136,24 +139,31 @@ export class AuthService {
 	setUser(user: User): Observable<void> {
 		this.user.next(user);
 
+		/** Set token */
+
 		if (!!user.accessToken) {
-			// prettier-ignore
-			this.localStorageService.setItem(environment.USER_ACCESS_TOKEN, user.accessToken);
+			this.localStorageService.setItem('token', user.accessToken);
 		}
 
+		/** Set settings */
+
 		if (!!user.settings) {
-			this.platformService.setSettings(this.user.getValue());
+			this.uiService.setTheme(user.settings.theme);
 		}
 
 		return of(null);
 	}
 
 	removeUser(): Observable<void> {
-		this.platformService.removeSettings(this.user.getValue());
-
-		this.localStorageService.removeItem(environment.USER_ACCESS_TOKEN);
-
 		this.user.next(undefined);
+
+		/** Remove token */
+
+		this.localStorageService.removeItem('token');
+
+		/** Remove settings */
+
+		this.uiService.setTheme();
 
 		return of(null);
 	}
