@@ -20,8 +20,6 @@ import {
 	HelperService,
 	SnackbarService,
 	UserUpdateDto,
-	FileService,
-	FileGetOneDto,
 	FileCreateDto
 } from '../../core';
 import { map, tap } from 'rxjs/operators';
@@ -35,6 +33,15 @@ interface AvatarForm {
 interface AccountForm {
 	name: FormControl<string>;
 	description: FormControl<string>;
+}
+
+interface EmailForm {
+	email: FormControl<string>;
+}
+
+interface PasswordForm {
+	passwordOld: FormControl<string>;
+	passwordNew: FormControl<string>;
 }
 
 @Component({
@@ -54,8 +61,13 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	accountForm: FormGroup | undefined;
 	accountFormIsSubmitted: boolean = false;
 
-	cropperFile: File | undefined;
-	cropperModal: boolean = false;
+	emailForm: FormGroup | undefined;
+	emailFormIsSubmitted: boolean = false;
+
+	passwordForm: FormGroup | undefined;
+	passwordFormIsSubmitted: boolean = false;
+
+	postImage: boolean = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -63,8 +75,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		private activatedRoute: ActivatedRoute,
 		private userService: UserService,
 		private authService: AuthService,
-		private snackbarService: SnackbarService,
-		private fileService: FileService
+		private snackbarService: SnackbarService
 	) {
 		this.avatarForm = this.formBuilder.group<AvatarForm>({
 			url: this.formBuilder.control('', [
@@ -73,8 +84,33 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		});
 
 		this.accountForm = this.formBuilder.group<AccountForm>({
-			name: this.formBuilder.control('', [Validators.required]),
-			description: this.formBuilder.control('', [])
+			name: this.formBuilder.control('', [
+				Validators.required,
+				Validators.minLength(4),
+				Validators.maxLength(24)
+			]),
+			description: this.formBuilder.control('', [
+				Validators.minLength(4),
+				Validators.maxLength(255)
+			])
+		});
+
+		this.emailForm = this.formBuilder.group<EmailForm>({
+			email: this.formBuilder.control('', [
+				Validators.required,
+				Validators.email
+			])
+		});
+
+		this.passwordForm = this.formBuilder.group<PasswordForm>({
+			passwordOld: this.formBuilder.control('', [
+				Validators.required,
+				Validators.pattern(this.helperService.getRegex('password'))
+			]),
+			passwordNew: this.formBuilder.control('', [
+				Validators.required,
+				Validators.pattern(this.helperService.getRegex('password'))
+			])
 		});
 	}
 
@@ -85,7 +121,10 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				tap((user: User) => (this.user = user))
 			)
 			.subscribe({
-				next: (user: User) => this.accountForm.patchValue(user),
+				next: (user: User) => {
+					this.accountForm.patchValue(user);
+					this.emailForm.patchValue(user);
+				},
 				error: (error: any) => console.error(error)
 			});
 	}
@@ -94,26 +133,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
 	}
 
-	onSubmitAvatarForm(): void {
-		if (this.helperService.getFormValidation(this.avatarForm)) {
-			this.avatarFormIsSubmitted = true;
-
-			const fileGetOneDto: FileGetOneDto = {
-				...this.avatarForm.value
-			};
-
-			this.fileService.getOne(fileGetOneDto).subscribe({
-				next: (file: File) => {
-					this.onShowCropper(undefined, file);
-
-					this.avatarFormIsSubmitted = false;
-				},
-				error: () => (this.avatarFormIsSubmitted = false)
-			});
-		}
-	}
-
-	onUpdateAvatar(fileCreateDto?: FileCreateDto): void {
+	onSubmitCropper(fileCreateDto?: FileCreateDto): void {
 		const userUpdateDto: UserUpdateDto = {
 			avatar: fileCreateDto?.path || null
 		};
@@ -131,27 +151,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	onShowCropper(event?: Event, file?: File): void {
-		const inputElement: HTMLInputElement = event
-			? (event.target as HTMLInputElement)
-			: undefined;
-
-		this.cropperFile = inputElement ? inputElement.files.item(0) : file;
-		this.cropperModal = true;
-
-		this.avatarForm.reset();
-	}
-
-	onCloseCropper(): void {
-		this.cropperFile = undefined;
-		this.cropperModal = false;
-
-		/** Rest avatarInput value */
-
-		this.avatarInput.nativeElement.value = '';
-	}
-
-	onSubmitForm(): void {
+	onSubmitAccountForm(): void {
 		if (this.helperService.getFormValidation(this.accountForm)) {
 			this.accountFormIsSubmitted = true;
 
@@ -171,6 +171,18 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				},
 				error: () => (this.accountFormIsSubmitted = false)
 			});
+		}
+	}
+
+	onSubmitEmailForm(): void {
+		if (this.helperService.getFormValidation(this.emailForm)) {
+			this.emailFormIsSubmitted = true;
+		}
+	}
+
+	onSubmitPasswordForm(): void {
+		if (this.helperService.getFormValidation(this.passwordForm)) {
+			this.passwordFormIsSubmitted = true;
 		}
 	}
 }

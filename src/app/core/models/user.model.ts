@@ -20,11 +20,5 @@ export interface User {
 }
 
 export interface UserSettings {
-	theme: UserSettingsTheme;
-}
-
-export enum UserSettingsTheme {
-	AUTO = 'AUTO',
-	LIGHT = 'LIGHT',
-	DARK = 'DARK'
+	theme: string;
 }

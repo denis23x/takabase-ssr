@@ -21,8 +21,9 @@ import {
 import { Subscription } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
-interface UrlForm {
+interface ImageForm {
 	url: FormControl<string>;
+	name: FormControl<string>;
 }
 
 @Component({
@@ -59,18 +60,19 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		y2: 0
 	};
 
-	urlForm: FormGroup | undefined;
-	urlFormIsSubmitted: boolean = false;
+	imageForm: FormGroup | undefined;
+	imageFormIsSubmitted: boolean = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
 		private fileService: FileService
 	) {
-		this.urlForm = this.formBuilder.group<UrlForm>({
+		this.imageForm = this.formBuilder.group<ImageForm>({
 			url: this.formBuilder.control('', [
 				this.helperService.getCustomValidator('url-image')
-			])
+			]),
+			name: this.formBuilder.control('', [])
 		});
 	}
 
@@ -88,26 +90,31 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	onSubmitFile(event: Event): void {
-		const inputElement: HTMLInputElement = event.target as HTMLInputElement;
+		if (this.helperService.getFormValidation(this.imageForm)) {
+			const inputElement: HTMLInputElement = event.target as HTMLInputElement;
+			const file: File = inputElement.files.item(0);
 
-		this.cropperFile = inputElement.files.item(0);
+			this.cropperFile = file;
+
+			this.imageForm.patchValue(this.cropperFile);
+		}
 	}
 
-	onSubmitUrlForm(): void {
-		if (this.helperService.getFormValidation(this.urlForm)) {
-			this.urlFormIsSubmitted = true;
+	onSubmitUrl(): void {
+		if (this.helperService.getFormValidation(this.imageForm)) {
+			this.imageFormIsSubmitted = true;
 
 			const fileGetOneDto: FileGetOneDto = {
-				...this.urlForm.value
+				...this.imageForm.value
 			};
 
 			this.fileService.getOne(fileGetOneDto).subscribe({
 				next: (file: File) => {
 					this.cropperFile = file;
 
-					this.urlFormIsSubmitted = false;
+					this.imageFormIsSubmitted = false;
 				},
-				error: () => (this.urlFormIsSubmitted = false)
+				error: () => (this.imageFormIsSubmitted = false)
 			});
 		}
 	}

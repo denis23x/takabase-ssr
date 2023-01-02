@@ -6,16 +6,19 @@
 			class="block"
 			autocomplete="off"
 			#urlFormDenis
-			[formGroup]="urlForm"
-			(ngSubmit)="onSubmitUrlForm()"
+			[formGroup]="imageForm"
+			(ngSubmit)="onSubmitUrl()"
 		>
 			<div class="rounded-box mb-4 bg-base-200 p-4">
-				Specify and crop your post image, you can paste a URL from internet and
-				press download or choose the file from your device
+				Specify and crop your image, you can paste a URL from internet and press
+				download or choose the file from your device
 			</div>
-			<fieldset class="flex flex-col space-y-4" [disabled]="urlFormIsSubmitted">
-				<fieldset class="form-control" *ngIf="urlForm.get('url') as url">
-					<label class="label" for="urlFormUrl">
+			<fieldset
+				class="flex flex-col space-y-4"
+				[disabled]="imageFormIsSubmitted"
+			>
+				<fieldset class="form-control" *ngIf="imageForm.get('url') as url">
+					<label class="label" for="imageFormUrl">
 						<div class="indicator">
 							<span
 								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
@@ -32,47 +35,47 @@
 							<span class="label-text mr-2">URL</span>
 						</div>
 					</label>
-					<label class="relative block" for="urlFormUrl">
+					<div class="relative">
 						<input
-							class="input input-bordered w-full truncate"
-							id="urlFormUrl"
+							class="input input-bordered w-full truncate pr-32"
+							id="imageFormUrl"
 							type="text"
 							aria-label="Url"
 							formControlName="url"
 							placeholder="Paste your URL"
-							[class.pr-32]="url.touched && url.valid"
 							[class.input-success]="url.touched && url.value"
 							[class.input-error]="url.touched && url.invalid"
-							[class.input-disabled]="urlFormIsSubmitted"
+							[class.input-disabled]="imageFormIsSubmitted"
 						/>
 						<button
 							class="btn btn-sm absolute top-2 right-2 fill-current"
 							type="button"
 							aria-label="Download"
-							*ngIf="url.valid && !!url.value.length"
 							[class.btn-success]="url.touched && url.value"
 							[class.btn-error]="url.touched && url.invalid"
 							[class.btn-ghost]="url.untouched"
+							[class.btn-disabled]="imageFormIsSubmitted || !url.value"
 							(click)="urlFormDenis.requestSubmit()"
 						>
 							Download
 						</button>
-					</label>
+					</div>
 				</fieldset>
-				<fieldset class="form-control">
-					<label class="label" for="urlFormUrl">
+				<fieldset class="form-control" *ngIf="imageForm.get('name') as name">
+					<label class="label" for="imageFormName">
 						<span class="label-text">File</span>
 						<span class="label-text-alt">Accept only *.png, *.jpg files</span>
 					</label>
 					<input
 						class="file-input file-input-bordered w-full truncate"
-						id="urlFormFile"
+						id="imageFormName"
 						type="file"
 						aria-label="Hidden"
+						formControlName="name"
 						accept="image/jpeg, image/jpg, image/png"
-						[class.file-input-success]="true"
-						[class.file-input-error]="false"
-						[class.file-input-disabled]="urlFormIsSubmitted"
+						[class.file-input-success]="name.touched && name.value"
+						[class.file-input-error]="name.touched && name.invalid"
+						[class.file-input-disabled]="imageFormIsSubmitted"
 						(change)="onSubmitFile($event)"
 					/>
 				</fieldset>

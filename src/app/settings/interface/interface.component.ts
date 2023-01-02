@@ -1,66 +1,114 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	Validators
+} from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { AuthService, User, UserService, UserUpdateDto } from '../../core';
+import {
+	AuthService,
+	Category,
+	User,
+	UserService,
+	UserUpdateDto
+} from '../../core';
 import { ActivatedRoute, Data } from '@angular/router';
 
 interface ThemeForm {
-  theme: FormControl<string>;
+	theme: FormControl<string>;
 }
 
 @Component({
-  selector: 'app-settings-interface',
-  templateUrl: './interface.component.html'
+	selector: 'app-settings-interface',
+	templateUrl: './interface.component.html'
 })
 export class SettingsInterfaceComponent implements OnInit, OnDestroy {
-  activatedRouteData$: Subscription | undefined;
+	activatedRouteData$: Subscription | undefined;
 
-  user: User | undefined;
+	user: User | undefined;
 
-  themeForm: FormGroup | undefined;
-  themeForm$: Subscription | undefined;
+	themeForm: FormGroup | undefined;
+	themeForm$: Subscription | undefined;
+	themeFormList: string[] = [
+		'light',
+		'dark',
+		'cupcake',
+		'bumblebee',
+		'emerald',
+		'corporate',
+		'synthwave',
+		'retro',
+		'cyberpunk',
+		'valentine',
+		'halloween',
+		'garden',
+		'forest',
+		'aqua',
+		'lofi',
+		'pastel',
+		'fantasy',
+		'wireframe',
+		'black',
+		'luxury',
+		'dracula',
+		'cmyk',
+		'autumn',
+		'business',
+		'acid',
+		'lemonade',
+		'night',
+		'coffee',
+		'winter'
+	];
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private userService: UserService,
-    private authService: AuthService,
-    private activatedRoute: ActivatedRoute
-  ) {
-    this.themeForm = this.formBuilder.group<ThemeForm>({
-      theme: this.formBuilder.control('AUTO', [Validators.required])
-    });
-  }
+	constructor(
+		private formBuilder: FormBuilder,
+		private userService: UserService,
+		private authService: AuthService,
+		private activatedRoute: ActivatedRoute
+	) {
+		this.themeForm = this.formBuilder.group<ThemeForm>({
+			theme: this.formBuilder.control('AUTO', [Validators.required])
+		});
+	}
 
-  ngOnInit(): void {
-    this.activatedRouteData$ = this.activatedRoute.parent?.data
-      .pipe(
-        map((data: Data) => data.data),
-        tap((user: User) => (this.user = user))
-      )
-      .subscribe({
-        next: (user: User) => this.themeForm.patchValue(user.settings),
-        error: (error: any) => console.error(error)
-      });
+	ngOnInit(): void {
+		this.activatedRouteData$ = this.activatedRoute.parent?.data
+			.pipe(
+				map((data: Data) => data.data),
+				tap((user: User) => (this.user = user))
+			)
+			.subscribe({
+				next: (user: User) => this.themeForm.patchValue(user.settings),
+				error: (error: any) => console.error(error)
+			});
 
-    this.themeForm$ = this.themeForm.valueChanges.subscribe({
-      next: (value: any) => {
-        const userUpdateDto: UserUpdateDto = {
-          settings: value
-        };
+		// this.themeForm$ = this.themeForm.valueChanges.subscribe({
+		// 	next: (value: any) => {
+		// 		const userUpdateDto: UserUpdateDto = {
+		// 			settings: value
+		// 		};
+		//
+		// 		this.userService.update(this.user.id, userUpdateDto).subscribe({
+		// 			next: (user: User) => this.authService.setUser(user),
+		// 			error: (error: any) => console.error(error)
+		// 		});
+		// 	},
+		// 	error: (error: any) => console.error(error)
+		// });
+	}
 
-        this.userService.update(this.user.id, userUpdateDto).subscribe({
-          next: (user: User) => this.authService.setUser(user),
-          error: (error: any) => console.error(error)
-        });
-      },
-      error: (error: any) => console.error(error)
-    });
-  }
+	ngOnDestroy(): void {
+		[this.activatedRouteData$, this.themeForm$].forEach($ => $?.unsubscribe());
+	}
 
-  ngOnDestroy(): void {
-    [this.activatedRouteData$, this.themeForm$].forEach($ => $?.unsubscribe());
-  }
+	onChangeCategory(theme: string): void {
+		this.themeForm.patchValue({ theme });
+
+		console.log(theme);
+	}
 }

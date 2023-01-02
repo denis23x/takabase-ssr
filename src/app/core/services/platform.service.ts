@@ -10,7 +10,7 @@ import {
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, EMPTY, fromEvent, Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { User, UserSettingsTheme } from '../models';
+import { User } from '../models';
 
 /**
  * Window provider is based on

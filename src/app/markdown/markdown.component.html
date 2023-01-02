@@ -15,7 +15,7 @@
 					[src]="image.value"
 				/>
 				<button
-					class="btn btn-outline btn-primary w-full"
+					class="btn btn-primary btn-outline w-full"
 					type="button"
 					title="Image"
 					aria-label="Image"
@@ -307,7 +307,7 @@
 			<app-cropper
 				slot="content"
 				(closed)="postImage = false"
-				(submitted)="onChangeImage($event)"
+				(submitted)="onSubmitCropper($event)"
 			>
 			</app-cropper>
 		</app-window>

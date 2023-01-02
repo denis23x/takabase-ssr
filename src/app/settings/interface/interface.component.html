@@ -1,62 +1,119 @@
-<section class="bg-primary-3 flex flex-col space-y-4 border border-primary-4 rounded-md w-full p-4">
-  <form class="flex flex-col space-y-4 space-y-reverse border-b border-primary-4" [formGroup]="themeForm" autocomplete="off">
-    <div class="text-secondary-1">Color theme</div>
-    <div class="text-secondary-2 text-sm">The user might indicate this preference through an operating system setting (e.g. light or dark mode) or a browser settings</div>
-    <ul
-      class="flex items-center border border-primary-4 rounded-md divide-x divide-primary-4 overflow-hidden"
-      *ngIf="themeForm.get('theme') as themeControl">
-      <li class="block w-full" *ngFor="let theme of ['AUTO', 'DARK', 'LIGHT']">
-        <fieldset class="text-secondary-1 group">
-          <label
-            class="flex justify-center cursor-pointer relative py-2 px-3"
-            *ngIf="{ value: themeControl.value === theme } as active">
-            <i
-              class="relative z-10 flex items-center justify-center fill-current"
-              [class.text-warning-1]="active.value"
-              appSvgIcon
-              [appIcon]="(theme === 'DARK' ? 'moon' : 'sun').concat(active.value ? '-fill' : '')"
-              *ngIf="theme !== 'AUTO'">
-            </i>
-            <input
-              type="radio"
-              class="hidden"
+<!-- @format -->
+
+<ng-container>
+	<div class="flex items-start justify-between gap-4">
+		<form
+			class="rounded-box flex w-full flex-1 flex-col border border-base-content/20 bg-base-100 p-4"
+			autocomplete="off"
+			[formGroup]="themeForm"
+		>
+			<h2 class="text-xl font-medium text-base-content">Theme</h2>
+			<hr class="my-2 border-base-content/20" />
+			<fieldset class="flex flex-col space-y-4" [disabled]="false">
+				<fieldset class="form-control" *ngIf="themeForm.get('theme') as theme">
+					<label class="label" for="themeFormTheme">
+						<span class="label-text">Theme</span>
+					</label>
+					<div appDropdown>
+						<!-- prettier-ignore -->
+						<input
+              class="input input-bordered w-full cursor-pointer truncate"
+              id="themeFormTheme"
+              type="text"
+              aria-label="Theme"
+              placeholder="Select theme"
               formControlName="theme"
-              [value]="theme"
-              [attr.aria-label]="theme">
-            <span
-              class="text-sm whitespace-nowrap z-10"
-              [class.text-info-1]="active.value"
-              *ngIf="theme === 'AUTO'">Auto detect
-            </span>
-            <ng-container *ngIf="(active.value ? 'opacity-25' : 'opacity-0') as classList">
-              <div class="absolute inset-0 bg-primary-4 group-hover:opacity-25" [ngClass]="classList"></div>
-            </ng-container>
-          </label>
-        </fieldset>
-      </li>
-    </ul>
-  </form>
-<!--  <form-->
-<!--    class="flex flex-col "-->
-<!--    [formGroup]="additionalSearchForm"-->
-<!--    autocomplete="off">-->
-<!--    <div class="text-secondary-1">Additional search</div>-->
-<!--    <div class="text-secondary-2 text-sm mb-4">Adds extra search on the search page in a separate spoiler at the bottom of the page</div>-->
-<!--    <div class="border border-primary-4 rounded-md px-4">-->
-<!--      <ng-container *ngFor="let search of ['users', 'categories']; let odd = odd">-->
-<!--        <div class="flex items-center justify-between py-4" [ngClass]="{ 'border-b border-primary-4': !odd }">-->
-<!--          <div class="text-secondary-1 capitalize">{{search}}</div>-->
-<!--          <fieldset class="form-control-toggle" *ngIf="additionalSearchForm.get(search) as searchControl">-->
-<!--            <label [for]="search" class="relative flex items-center justify-between cursor-pointer w-full">-->
-<!--              <input [id]="search" type="checkbox" class="hidden" [formControlName]="search" [attr.aria-label]="search">-->
-<!--              <ng-container *ngIf="(searchControl.value ? 'bg-success-1' : 'bg-primary-4 opacity-50') as classList">-->
-<!--                <div class="block w-11 h-6 rounded-full" [ngClass]="classList"></div>-->
-<!--              </ng-container>-->
-<!--              <div class="dot absolute left-0.5 top-0.5 w-5 h-5 bg-primary-3 rounded-full"></div>-->
-<!--            </label>-->
-<!--          </fieldset>-->
-<!--        </div>-->
-<!--      </ng-container>-->
-<!--    </div>-->
+              slot="target"
+              readonly
+              [class.input-success]="theme.touched && theme.value"
+              [class.input-error]="theme.touched && theme.invalid"
+              [class.input-disabled]="false"
+            />
+						<ul
+							class="menu rounded-box mt-2 max-h-64 flex-nowrap overflow-y-auto border border-base-content/20 bg-base-100 p-2 shadow"
+							slot="content"
+						>
+							<li
+								class="flex w-full overflow-hidden"
+								*ngFor="let themeValue of themeFormList"
+							>
+								<button
+									class="block w-full truncate text-left"
+									type="button"
+									[class.active]="theme.value === themeValue"
+									[attr.aria-label]="themeValue"
+									(click)="onChangeCategory(themeValue)"
+								>
+									{{ themeValue }}
+								</button>
+							</li>
+						</ul>
+					</div>
+				</fieldset>
+			</fieldset>
+		</form>
+	</div>
+</ng-container>
+
+<!--<section class="bg-primary-3 flex flex-col space-y-4 border border-primary-4 rounded-md w-full p-4">-->
+<!--  <form class="flex flex-col space-y-4 space-y-reverse border-b border-primary-4" [formGroup]="themeForm" autocomplete="off">-->
+<!--    <div class="text-secondary-1">Color theme</div>-->
+<!--    <div class="text-secondary-2 text-sm">The user might indicate this preference through an operating system setting (e.g. light or dark mode) or a browser settings</div>-->
+<!--    <ul-->
+<!--      class="flex items-center border border-primary-4 rounded-md divide-x divide-primary-4 overflow-hidden"-->
+<!--      *ngIf="themeForm.get('theme') as themeControl">-->
+<!--      <li class="block w-full" *ngFor="let theme of ['AUTO', 'DARK', 'LIGHT']">-->
+<!--        <fieldset class="text-secondary-1 group">-->
+<!--          <label-->
+<!--            class="flex justify-center cursor-pointer relative py-2 px-3"-->
+<!--            *ngIf="{ value: themeControl.value === theme } as active">-->
+<!--            <i-->
+<!--              class="relative z-10 flex items-center justify-center fill-current"-->
+<!--              [class.text-warning-1]="active.value"-->
+<!--              appSvgIcon-->
+<!--              [appIcon]="(theme === 'DARK' ? 'moon' : 'sun').concat(active.value ? '-fill' : '')"-->
+<!--              *ngIf="theme !== 'AUTO'">-->
+<!--            </i>-->
+<!--            <input-->
+<!--              type="radio"-->
+<!--              class="hidden"-->
+<!--              formControlName="theme"-->
+<!--              [value]="theme"-->
+<!--              [attr.aria-label]="theme">-->
+<!--            <span-->
+<!--              class="text-sm whitespace-nowrap z-10"-->
+<!--              [class.text-info-1]="active.value"-->
+<!--              *ngIf="theme === 'AUTO'">Auto detect-->
+<!--            </span>-->
+<!--            <ng-container *ngIf="(active.value ? 'opacity-25' : 'opacity-0') as classList">-->
+<!--              <div class="absolute inset-0 bg-primary-4 group-hover:opacity-25" [ngClass]="classList"></div>-->
+<!--            </ng-container>-->
+<!--          </label>-->
+<!--        </fieldset>-->
+<!--      </li>-->
+<!--    </ul>-->
 <!--  </form>-->
-</section>
+<!--&lt;!&ndash;  <form&ndash;&gt;-->
+<!--&lt;!&ndash;    class="flex flex-col "&ndash;&gt;-->
+<!--&lt;!&ndash;    [formGroup]="additionalSearchForm"&ndash;&gt;-->
+<!--&lt;!&ndash;    autocomplete="off">&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="text-secondary-1">Additional search</div>&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="text-secondary-2 text-sm mb-4">Adds extra search on the search page in a separate spoiler at the bottom of the page</div>&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="border border-primary-4 rounded-md px-4">&ndash;&gt;-->
+<!--&lt;!&ndash;      <ng-container *ngFor="let search of ['users', 'categories']; let odd = odd">&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="flex items-center justify-between py-4" [ngClass]="{ 'border-b border-primary-4': !odd }">&ndash;&gt;-->
+<!--&lt;!&ndash;          <div class="text-secondary-1 capitalize">{{search}}</div>&ndash;&gt;-->
+<!--&lt;!&ndash;          <fieldset class="form-control-toggle" *ngIf="additionalSearchForm.get(search) as searchControl">&ndash;&gt;-->
+<!--&lt;!&ndash;            <label [for]="search" class="relative flex items-center justify-between cursor-pointer w-full">&ndash;&gt;-->
+<!--&lt;!&ndash;              <input [id]="search" type="checkbox" class="hidden" [formControlName]="search" [attr.aria-label]="search">&ndash;&gt;-->
+<!--&lt;!&ndash;              <ng-container *ngIf="(searchControl.value ? 'bg-success-1' : 'bg-primary-4 opacity-50') as classList">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="block w-11 h-6 rounded-full" [ngClass]="classList"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;              </ng-container>&ndash;&gt;-->
+<!--&lt;!&ndash;              <div class="dot absolute left-0.5 top-0.5 w-5 h-5 bg-primary-3 rounded-full"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </label>&ndash;&gt;-->
+<!--&lt;!&ndash;          </fieldset>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;      </ng-container>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;  </form>&ndash;&gt;-->
+<!--</section>-->

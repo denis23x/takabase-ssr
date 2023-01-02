@@ -121,7 +121,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 		[this.activatedRouteData$, this.authUser$].forEach($ => $?.unsubscribe());
 	}
 
-	onChangeImage(fileCreateDto?: FileCreateDto): void {
+	onSubmitCropper(fileCreateDto?: FileCreateDto): void {
 		this.postForm.get('image').setValue(fileCreateDto.path);
 	}
 

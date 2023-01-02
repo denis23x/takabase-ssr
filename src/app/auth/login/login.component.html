@@ -24,7 +24,7 @@
 			<form
 				class="flex flex-col rounded-none bg-base-100"
 				[formGroup]="loginForm"
-				(ngSubmit)="onSubmitForm()"
+				(ngSubmit)="onSubmitLoginForm()"
 			>
 				<h2 class="text-xl font-medium text-base-content">
 					Login with credentials
@@ -38,7 +38,7 @@
 						class="form-control"
 						*ngIf="loginForm.get('email') as email"
 					>
-						<label class="label" for="email">
+						<label class="label" for="loginFormEmail">
 							<div class="indicator">
 								<span
 									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
@@ -55,10 +55,10 @@
 								<span class="label-text mr-2">Email</span>
 							</div>
 						</label>
-						<label class="relative block" for="email">
+						<div class="relative">
 							<input
 								class="input input-bordered w-full truncate pr-12"
-								id="email"
+								id="loginFormEmail"
 								type="email"
 								aria-label="Email"
 								autocomplete="username"
@@ -82,13 +82,13 @@
 								[appSquare]="'1.75rem'"
 								(click)="email.setValue('')"
 							></button>
-						</label>
+						</div>
 					</fieldset>
 					<fieldset
 						class="form-control"
 						*ngIf="loginForm.get('password') as password"
 					>
-						<label class="label" for="password">
+						<label class="label" for="loginFormPassword">
 							<div class="indicator">
 								<span
 									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
@@ -105,10 +105,10 @@
 								<span class="label-text mr-2">Password</span>
 							</div>
 						</label>
-						<label class="relative block" *ngIf="{ value: false } as isVisible">
+						<div class="relative" *ngIf="{ value: false } as isVisible">
 							<input
 								class="input input-bordered w-full truncate pr-12"
-								id="password"
+								id="loginFormPassword"
 								aria-label="Password"
 								autocomplete="current-password"
 								formControlName="password"
@@ -134,8 +134,8 @@
 								(mouseenter)="isVisible.value = true"
 								(mouseleave)="isVisible.value = false"
 							></button>
-						</label>
-						<label class="label" for="password">
+						</div>
+						<label class="label" for="loginFormPassword">
 							<a
 								class="link label-text-alt !link-primary"
 								aria-label="Forgot password"
