@@ -122,8 +122,8 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitCropper(fileCreateDto?: FileCreateDto): void {
-		this.postForm.get('image').setValue(fileCreateDto.path);
 		this.postImage = false;
+		this.postForm.get('image').setValue(fileCreateDto.path);
 	}
 
 	onToggleCategory(toggle: boolean): void {

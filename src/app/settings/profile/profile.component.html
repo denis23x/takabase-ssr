@@ -1,0 +1,171 @@
+<!-- @format -->
+
+<ng-container>
+	<div class="flex flex-col items-start justify-start gap-4">
+		<form
+			class="rounded-box flex w-full flex-col border border-base-content/20 bg-base-100 p-4"
+			autocomplete="off"
+			[formGroup]="profileForm"
+			(ngSubmit)="onSubmitProfileForm()"
+		>
+			<h2 class="text-xl font-medium text-base-content">Profile settings</h2>
+			<hr class="my-2 border-base-content/20" />
+			<div class="flex w-full items-center justify-between gap-4 py-4">
+				<div class="flex items-center justify-start gap-4">
+					<div class="flex w-12" appAvatar [appUser]="authUser"></div>
+					<div class="flex flex-col">
+						<span class="truncate text-xl font-bold text-base-content">
+							{{ authUser.name }}
+						</span>
+						<time
+							class="text-sm text-base-content/50"
+							[attr.datetime]="authUser.createdAt | dayjs: 'format':'YYYY-M-D'"
+						>
+							registered {{ authUser.createdAt | dayjs: "fromX" }}
+						</time>
+					</div>
+				</div>
+				<button
+					class="btn btn-outline btn-primary"
+					type="button"
+					title="Image"
+					aria-label="Image"
+					(click)="profileImage = true"
+				>
+					Image
+				</button>
+			</div>
+			<hr class="my-2 border-base-content/20" />
+			<fieldset
+				class="flex flex-col space-y-4"
+				[disabled]="profileFormIsSubmitted"
+			>
+				<fieldset class="form-control" *ngIf="profileForm.get('name') as name">
+					<label class="label" for="profileFormName">
+						<div class="indicator">
+							<span
+								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="name.touched && !!name.errors"
+								[ngSwitch]="true"
+							>
+								<ng-container *ngSwitchCase="!!name.errors.required">
+									Required
+								</ng-container>
+								<!-- prettier-ignore -->
+								<ng-container *ngSwitchCase="!!name.errors.minlength">
+                  Min length {{ name.errors.minlength["requiredLength"] }} characters
+                </ng-container>
+								<!-- prettier-ignore -->
+								<ng-container *ngSwitchCase="!!name.errors.maxlength">
+                  Max length {{ name.errors.maxlength["requiredLength"] }} characters
+                </ng-container>
+							</span>
+							<span class="label-text mr-2">Name</span>
+						</div>
+					</label>
+					<div class="relative">
+						<input
+							class="input input-bordered w-full truncate pr-12"
+							id="profileFormName"
+							type="text"
+							aria-label="Name"
+							formControlName="name"
+							placeholder="Type your name"
+							[class.input-success]="name.touched && name.valid"
+							[class.input-error]="name.touched && name.invalid"
+							[class.input-disabled]="profileFormIsSubmitted"
+						/>
+						<button
+							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+							type="button"
+							title="Clear"
+							aria-label="Clear"
+							appSvgIcon
+							*ngIf="!!name.value.length"
+							[class.btn-success]="name.touched && name.valid"
+							[class.btn-error]="name.touched && name.invalid"
+							[class.btn-ghost]="name.untouched"
+							[appIcon]="'x'"
+							[appSquare]="'1.75rem'"
+							(click)="name.setValue('')"
+						></button>
+					</div>
+				</fieldset>
+				<fieldset
+					class="form-control"
+					*ngIf="profileForm.get('description') as description"
+				>
+					<label class="label" for="profileFormDescription">
+						<div class="indicator">
+							<span
+								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="description.touched && !!description.errors"
+								[ngSwitch]="true"
+							>
+								<ng-container *ngSwitchCase="!!description.errors.required">
+									Required
+								</ng-container>
+								<!-- prettier-ignore -->
+								<ng-container *ngSwitchCase="!!description.errors.minlength">
+                  Min length {{ description.errors.minlength["requiredLength"] }} characters
+                </ng-container>
+								<!-- prettier-ignore -->
+								<ng-container *ngSwitchCase="!!description.errors.maxlength">
+                  Max length {{ description.errors.maxlength["requiredLength"] }} characters
+                </ng-container>
+							</span>
+							<span class="label-text mr-2">Description</span>
+						</div>
+						<span
+							class="label-text-alt flex items-center"
+							[class.text-success]="description.touched && !description.errors"
+							[class.text-error]="description.touched && !!description.errors"
+						>
+							{{ description.value.length }}/255
+						</span>
+					</label>
+					<!-- prettier-ignore -->
+					<textarea
+						class="textarea textarea-bordered w-full"
+						id="profileFormDescription"
+						aria-label="Description"
+						placeholder="Type post description"
+						formControlName="description"
+						[rows]="4"
+            [class.font-mono]="authUser.settings.monospace"
+						[class.textarea-success]="description.touched && !description.errors"
+						[class.textarea-error]="description.touched && !!description.errors"
+						[class.textarea-disabled]="profileFormIsSubmitted"
+					>
+            {{ description.value }}
+          </textarea>
+				</fieldset>
+				<fieldset class="form-control">
+					<button
+						class="btn btn-primary w-full"
+						type="submit"
+						aria-label="Login"
+						[class.loading]="profileFormIsSubmitted"
+						[disabled]="profileForm.invalid || profileFormIsSubmitted"
+					>
+						Update
+					</button>
+				</fieldset>
+			</fieldset>
+		</form>
+	</div>
+	<app-overlay
+		[appToggle]="profileImage"
+		(clicked)="profileImage = false"
+		(escaped)="profileImage = false"
+	>
+		<app-window
+			slot="content"
+			[appTitle]="'Image'"
+			(closed)="profileImage = false"
+		>
+			<app-cropper slot="content" (submitted)="onSubmitCropper($event)">
+			</app-cropper>
+		</app-window>
+	</app-overlay>
+</ng-container>

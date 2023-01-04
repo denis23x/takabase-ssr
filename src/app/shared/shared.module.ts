@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import {
 	AvatarComponent,
+	BackgroundComponent,
 	CategoryCreateComponent,
 	CategoryEditComponent,
 	CropperComponent,
@@ -30,6 +31,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 
 const components: any[] = [
 	AvatarComponent,
+	BackgroundComponent,
 	CategoryCreateComponent,
 	CategoryEditComponent,
 	CropperComponent,

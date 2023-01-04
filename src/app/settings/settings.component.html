@@ -8,9 +8,10 @@
 					class="tabs w-full translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg"
 					#scrollRoot
 				>
+					<!-- prettier-ignore -->
 					<li
 						class="tab tab-lifted tab-lg !px-0"
-						*ngFor="let link of ['Account', 'Interface', 'Security']"
+						*ngFor="let link of ['Profile', 'Account', 'Appearance', 'Security']"
 						[ngClass]="routerLinkActive.isActive ? 'tab-active' : 'bg-base-200'"
 					>
 						<a

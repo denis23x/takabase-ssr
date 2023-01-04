@@ -1,0 +1,129 @@
+<!-- @format -->
+
+<ng-container>
+	<div class="flex flex-col items-start justify-start gap-4">
+		<form
+			class="rounded-box flex w-full flex-col border border-base-content/20 bg-base-100 p-4"
+			autocomplete="off"
+			[formGroup]="appearanceForm"
+		>
+			<h2 class="text-xl font-medium text-base-content">Appearance settings</h2>
+			<hr class="my-2 border-base-content/20" />
+			<fieldset
+				class="flex w-full flex-col gap-4"
+				[disabled]="appearanceIsSubmitted"
+			>
+				<div
+					class="flex w-full flex-col items-start justify-between gap-4 sm:flex-row"
+				>
+					<fieldset
+						class="form-control w-full"
+						*ngIf="appearanceForm.get('theme') as theme"
+					>
+						<label class="label" for="appearanceFormTheme">
+							<span class="label-text">Theme</span>
+						</label>
+						<div appDropdown>
+							<input
+								class="input input-bordered w-full cursor-pointer truncate"
+								id="appearanceFormTheme"
+								type="text"
+								aria-label="Theme"
+								placeholder="Select theme"
+								formControlName="theme"
+								slot="target"
+								readonly
+								[class.input-success]="theme.touched && theme.value"
+								[class.input-error]="theme.touched && theme.invalid"
+								[class.input-disabled]="appearanceIsSubmitted"
+							/>
+							<ul
+								class="menu rounded-box mt-2 max-h-64 flex-nowrap overflow-y-auto border border-base-content/20 bg-base-100 p-2 shadow"
+								slot="content"
+							>
+								<li
+									class="flex w-full overflow-hidden"
+									*ngFor="let themeValue of themeList"
+								>
+									<button
+										class="block w-full truncate text-left"
+										type="button"
+										[class.active]="theme.value === themeValue"
+										[attr.aria-label]="themeValue"
+										(click)="onChangeTheme(themeValue)"
+									>
+										{{ themeValue }}
+									</button>
+								</li>
+							</ul>
+						</div>
+					</fieldset>
+					<fieldset
+						class="form-control w-full"
+						*ngIf="appearanceForm.get('language') as language"
+					>
+						<label class="label" for="appearanceFormLanguage">
+							<span class="label-text">Language</span>
+						</label>
+						<div appDropdown>
+							<input
+								class="input input-bordered w-full cursor-pointer truncate"
+								id="appearanceFormLanguage"
+								type="text"
+								aria-label="Language"
+								placeholder="Select language"
+								formControlName="language"
+								slot="target"
+								readonly
+								[class.input-success]="language.touched && language.value"
+								[class.input-error]="language.touched && language.invalid"
+								[class.input-disabled]="appearanceIsSubmitted"
+							/>
+							<ul
+								class="menu rounded-box mt-2 max-h-64 flex-nowrap overflow-y-auto border border-base-content/20 bg-base-100 p-2 shadow"
+								slot="content"
+							>
+								<li
+									class="flex w-full overflow-hidden"
+									*ngFor="let languageValue of languageList"
+								>
+									<button
+										class="block w-full truncate text-left"
+										type="button"
+										[class.active]="language.value === languageValue"
+										[attr.aria-label]="languageValue"
+										(click)="onChangeLanguage(languageValue)"
+									>
+										{{ languageValue }}
+									</button>
+								</li>
+							</ul>
+						</div>
+					</fieldset>
+				</div>
+				<fieldset
+					class="form-control"
+					*ngIf="appearanceForm.get('monospace') as monospace"
+				>
+					<label
+						class="label rounded-box cursor-pointer bg-base-200 p-4"
+						for="appearanceFormMonospace"
+					>
+						<span class="label-text">
+							Use a fixed-width (monospace) font when editing Markdown
+						</span>
+						<input
+							class="toggle"
+							id="appearanceFormMonospace"
+							type="checkbox"
+							aria-label="Monospace"
+							formControlName="monospace"
+							[class.toggle-success]="monospace.touched && monospace.value"
+							[class.toggle-disabled]="appearanceIsSubmitted"
+						/>
+					</label>
+				</fieldset>
+			</fieldset>
+		</form>
+	</div>
+</ng-container>

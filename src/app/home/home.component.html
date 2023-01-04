@@ -1,201 +1,92 @@
 <!-- @format -->
 
-<section
-	class="mx-auto grid max-w-128 grid-cols-1 gap-8 p-4 lg:max-w-256 lg:grid-cols-2"
->
-	<div
-		class="order-1 col-span-1 flex w-full items-center justify-start lg:order-1 lg:col-span-2"
-	>
-		<p
-			class="bg-primary-3 text-secondary-1 border-primary-4 w-full rounded-md border p-4"
+<ng-container>
+	<div class="flex flex-col space-y-4 md:space-y-8">
+		<header
+			class="rounded-box w-full border border-base-content/20 bg-base-100 p-4"
 		>
-			Work in progress, some features may not working properly, feel free to
-			give me feedback
-		</p>
-	</div>
-	<div class="order-3 flex w-full lg:order-2">
-		<ul
-			class="bg-primary-3 border-primary-4 grid grid-cols-2 rounded-md border"
-		>
-			<li
-				class="border-primary-4 flex flex-col items-center justify-start border-b border-r p-4 text-center"
-			>
-				<i
-					class="text-secondary-1 fill-current p-4"
-					appSvgIcon
-					[appIcon]="'heart'"
-					[appSquare]="'2rem'"
-				></i>
-				<span class="text-secondary-1 block">
-					Absent direct messages and comments, no likes pursuit
-				</span>
-			</li>
-			<li
-				class="border-primary-4 flex flex-col items-center justify-start border-b p-4 text-center"
-			>
-				<i
-					class="text-secondary-1 fill-current p-4"
-					appSvgIcon
-					[appIcon]="'markdown'"
-					[appSquare]="'2rem'"
-				></i>
-				<span class="text-secondary-1 block">
-					Rich Markdown editor with media embed and emoji
-				</span>
-			</li>
-			<li
-				class="border-primary-4 flex flex-col items-center justify-start border-r p-4 p-4 text-center"
-			>
-				<i
-					class="text-secondary-1 fill-current p-4"
-					appSvgIcon
-					[appIcon]="'gem'"
-					[appSquare]="'2rem'"
-				></i>
-				<span class="text-secondary-1 block">
-					Super light web app with full mobile devices support
-				</span>
-			</li>
-			<li class="flex flex-col items-center justify-start p-4 text-center">
-				<i
-					class="text-secondary-1 fill-current p-4"
-					appSvgIcon
-					[appIcon]="'fingerprint'"
-					[appSquare]="'2rem'"
-				></i>
-				<span class="text-secondary-1 block">
-					Well protected, don't worry about your sensitive info
-				</span>
-			</li>
-		</ul>
-	</div>
-	<div class="order-2 flex w-full flex-col justify-center space-y-8 lg:order-3">
-		<h2 class="text-secondary-1 text-5xl font-medium">Just save your posts</h2>
-		<div class="flex flex-col">
-			<h2 class="text-secondary-1 text-2xl font-medium">
-				Without annoying background
-			</h2>
-			<p class="text-secondary-2 block">
-				You don't need no more to chat or comment or whatever, just focus on
-				your interests
-			</p>
-		</div>
-		<div class="flex flex-col space-y-4 lg:flex-row lg:space-y-0 lg:space-x-4">
-			<a
-				class="md btn btn-info w-full text-center lg:w-fit"
-				[routerLink]="['/search']"
-				aria-label="Search post"
-			>
-				Search post
-			</a>
-			<ng-container *appAuthenticated="false">
-				<a
-					class="md btn btn-success w-full text-center lg:w-fit"
-					[routerLink]="['/auth/registration']"
-					aria-label="Join to Draft"
-				>
-					Join to Draft
-				</a>
-			</ng-container>
-		</div>
-	</div>
-	<div
-		class="bg-primary-3 border-primary-4 order-4 flex w-full rounded-md border p-4 lg:order-4"
-	>
-		<div
-			class="flex flex-col items-start justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-8"
-		>
-			<div class="flex flex-col">
-				<h2 class="text-secondary-1 whitespace-nowrap text-2xl font-medium">
-					Pet project
-				</h2>
-				<a
-					class="text-info-1 block"
-					href="https://t.me/denis23x"
-					target="_blank"
-					rel="nofollow"
-					aria-label="Contact me"
-				>
-					Contact me
-				</a>
+			<div class="hero rounded-box bg-base-200">
+				<div class="hero-content text-center">
+					<div class="max-w-md">
+						<h1 class="text-5xl font-bold">Just write</h1>
+						<p class="py-6">
+							Without annoying background, you don't need no more to chat or
+							comment or whatever, just focus on your interests
+						</p>
+						<a class="btn btn-primary" [routerLink]="['/search']">
+							Get Started
+						</a>
+					</div>
+				</div>
 			</div>
-			<ul class="flex items-center justify-center xs:space-x-4">
-				<li class="block">
-					<a
-						href="https://angular.io/"
-						target="_blank"
-						rel="nofollow"
-						aria-label="Angular"
-					>
-						<img
-							class="block h-16 w-16"
-							loading="lazy"
-							src="assets/logos/angular.svg"
-							alt="Angular"
-						/>
-					</a>
-				</li>
-				<li class="block">
-					<a
-						href="https://tailwindcss.com/"
-						target="_blank"
-						rel="nofollow"
-						aria-label="Tailwind"
-					>
-						<img
-							class="block h-16 w-16"
-							loading="lazy"
-							src="assets/logos/tailwind.svg"
-							alt="Tailwind"
-						/>
-					</a>
-				</li>
-				<li class="block">
-					<a
-						href="https://nestjs.com/"
-						target="_blank"
-						rel="nofollow"
-						aria-label="Nest"
-					>
-						<img
-							class="block h-16 w-16"
-							loading="lazy"
-							src="assets/logos/nest.svg"
-							alt="Nest"
-						/>
-					</a>
-				</li>
-				<li class="block">
-					<a
-						href="https://www.prisma.io/"
-						target="_blank"
-						rel="nofollow"
-						aria-label="Prisma"
-					>
-						<img
-							class="block h-16 w-16"
-							loading="lazy"
-							src="assets/logos/prisma.svg"
-							alt="Prisma"
-						/>
-					</a>
-				</li>
-			</ul>
-		</div>
+		</header>
+		<article class="flex w-full gap-4">
+			<div class="card card-compact bg-base-100 shadow-xl">
+				<div class="card-body items-center text-center">
+					<h2 class="card-title">
+						<i
+							class="fill-current p-4 text-base-content"
+							appSvgIcon
+							[appIcon]="'heart'"
+							[appSquare]="'2rem'"
+						></i>
+					</h2>
+					<p class="rounded-box bg-base-200 p-4">
+						Absent direct messages and comments, no likes pursuit
+					</p>
+				</div>
+			</div>
+			<div class="card-compact card bg-base-100 shadow-xl">
+				<div class="card-body items-center text-center">
+					<h2 class="card-title">
+						<i
+							class="fill-current p-4 text-base-content"
+							appSvgIcon
+							[appIcon]="'markdown'"
+							[appSquare]="'2rem'"
+						></i>
+					</h2>
+					<p class="rounded-box bg-base-200 p-4">
+						Rich Markdown editor with media embed and emoji
+					</p>
+				</div>
+			</div>
+			<div class="card-compact card bg-base-100 shadow-xl">
+				<div class="card-body items-center text-center">
+					<h2 class="card-title">
+						<i
+							class="fill-current p-4 text-base-content"
+							appSvgIcon
+							[appIcon]="'gem'"
+							[appSquare]="'2rem'"
+						></i>
+					</h2>
+					<p class="rounded-box bg-base-200 p-4">
+						Super light web app with full mobile devices support
+					</p>
+				</div>
+			</div>
+		</article>
+		<footer class="footer rounded-box bg-base-100 p-10 text-base-content">
+			<div>
+				<span class="footer-title">Looking for</span>
+				<a class="link link-hover">Translators</a>
+				<a class="link link-hover">SMM</a>
+			</div>
+			<div>
+				<span class="footer-title">Project</span>
+				<a class="link link-hover">About</a>
+				<a class="link link-hover">Buy Me a Coffee</a>
+			</div>
+			<div>
+				<span class="footer-title">Backend</span>
+				<a class="link link-hover">Github</a>
+				<a class="link link-hover">API</a>
+			</div>
+			<div>
+				<span class="footer-title">Frontend</span>
+				<a class="link link-hover">Github</a>
+			</div>
+		</footer>
 	</div>
-	<div class="order-5 flex w-full items-center justify-start lg:order-5">
-		<a
-			class="block"
-			href="https://www.buymeacoffee.com/damage23xs"
-			target="_blank"
-			rel="nofollow"
-		>
-			<img
-				class="block w-64"
-				loading="lazy"
-				src="assets/logos/buymeacoffee.svg"
-				alt="Buy Me a Coffee"
-			/>
-		</a>
-	</div>
-</section>
+</ng-container>

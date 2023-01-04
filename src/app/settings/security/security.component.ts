@@ -1,9 +1,10 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import {
 	AuthService,
+	HelperService,
 	LogoutDto,
 	Session,
 	SnackbarService,
@@ -11,6 +12,7 @@ import {
 } from '../../core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
 	selector: 'app-settings-security',
@@ -19,12 +21,12 @@ import { Subscription } from 'rxjs';
 export class SettingsSecurityComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 
-	user: User | undefined;
-
-	sessionCurrent: Session | undefined;
-	sessionList: Session[] = [];
+	authUser: User | undefined;
+	authUser$: Subscription | undefined;
 
 	constructor(
+		private formBuilder: FormBuilder,
+		private helperService: HelperService,
 		private activatedRoute: ActivatedRoute,
 		private authService: AuthService,
 		private router: Router,
@@ -33,24 +35,9 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.activatedRouteData$ = this.activatedRoute.parent?.data
-			.pipe(
-				map((data: Data) => data.data),
-				switchMap((user: User) => {
-					this.user = user;
-
-					return this.authService.getFingerprint();
-				})
-			)
+			.pipe(map((data: Data) => data.data))
 			.subscribe({
-				next: (fingerprint: string) => {
-					// prettier-ignore
-					const [sessionCurrent, ...sessionList]: Session[] = this.user.sessions.sort((session: Session) => {
-            return session.fingerprint === fingerprint ? -1 : 1;
-          });
-
-					this.sessionCurrent = sessionCurrent;
-					this.sessionList = sessionList;
-				},
+				next: (user: User) => (this.authUser = user),
 				error: (error: any) => console.error(error)
 			});
 	}
@@ -59,18 +46,19 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
 		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
 	}
 
-	onSessionTerminate(id: number): void {
+	onLogout(session: Session): void {
 		const logoutDto: LogoutDto = {
-			id
+			id: session.id
 		};
 
 		this.authService.onLogout(logoutDto).subscribe({
 			next: () => {
-				this.sessionList = this.sessionList.filter((session: Session) => {
-					return session.id !== id;
-				});
+				// prettier-ignore
+				this.authUser.sessions = this.authUser.sessions.filter((session: Session) => {
+          return session.id !== logoutDto.id;
+        });
 
-				this.snackbarService.success(null, 'Session terminated');
+				this.snackbarService.success(null, 'Logout successful');
 			},
 			error: (error: any) => console.error(error)
 		});
