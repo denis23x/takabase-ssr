@@ -9,7 +9,7 @@ import {
 	Validators
 } from '@angular/forms';
 import { debounceTime, filter, map } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 interface SearchForm {
 	query: FormControl<string>;
@@ -24,6 +24,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
 	searchForm: FormGroup | undefined;
 	searchForm$: Subscription | undefined;
+	searchFormIsSubmitted: boolean = false;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -77,5 +78,14 @@ export class SearchComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[this.routeQueryParams$, this.searchForm$].forEach($ => $?.unsubscribe());
+	}
+
+	onRouterOutletActivate(event: any): void {
+		// prettier-ignore
+		const isLoading: Observable<boolean> = event.categoryListLoading || event.postListLoading || event.userListLoading
+
+		isLoading.subscribe((isSubmitted: boolean) => {
+			this.searchFormIsSubmitted = isSubmitted;
+		});
 	}
 }

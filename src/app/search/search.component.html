@@ -6,7 +6,11 @@
 			class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
 			<form autocomplete="off" [formGroup]="searchForm">
-				<fieldset class="form-control" *ngIf="searchForm.get('query') as query">
+				<fieldset
+					class="form-control"
+					*ngIf="searchForm.get('query') as query"
+					[disabled]="searchFormIsSubmitted"
+				>
 					<label class="label" for="searchFormSearch">
 						<div class="indicator">
 							<span
@@ -36,6 +40,7 @@
 							placeholder="Type keywords"
 							[class.input-success]="query.touched && query.value"
 							[class.input-error]="query.touched && query.invalid"
+							[class.input-disabled]="searchFormIsSubmitted"
 						/>
 						<button
 							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
@@ -47,6 +52,7 @@
 							[class.btn-success]="query.touched && query.value"
 							[class.btn-error]="query.touched && query.invalid"
 							[class.btn-ghost]="query.untouched"
+							[class.btn-disabled]="searchFormIsSubmitted"
 							[appIcon]="'x'"
 							[appSquare]="'1.75rem'"
 							(click)="query.setValue('')"
@@ -86,7 +92,9 @@
 				class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
 			>
 				<div class="rounded-box bg-base-200 p-4">
-					<router-outlet></router-outlet>
+					<router-outlet
+						(activate)="onRouterOutletActivate($event)"
+					></router-outlet>
 				</div>
 			</section>
 		</div>

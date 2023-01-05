@@ -2,7 +2,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Data } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { Post, PostGetAllDto, PostService } from '../../core';
 import { map, skip, tap } from 'rxjs/operators';
 
@@ -32,8 +32,10 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 	size: number = 20;
 
 	postList: Post[] = [];
-	postListLoading: boolean = false;
 	postListHasMore: boolean = false;
+
+	// prettier-ignore
+	postListLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -45,11 +47,7 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
 				next: (postList: Post[]) => {
-					this.page = 1;
-					this.size = 20;
-
 					this.postList = postList;
-					this.postListLoading = false;
 					this.postListHasMore = postList.length === this.size;
 				},
 				error: (error: any) => console.error(error)
@@ -63,8 +61,9 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 					this.size = 20;
 
 					this.postList = [];
-					this.postListLoading = true;
 					this.postListHasMore = false;
+
+					this.postListLoading.next(true);
 				})
 			)
 			.subscribe({
@@ -73,8 +72,8 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 			});
 	}
 
-	// prettier-ignore
 	ngOnDestroy(): void {
+		// prettier-ignore
 		[this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
 	}
 
@@ -92,8 +91,9 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 		this.postService.getAll(postGetAllDto).subscribe({
 			next: (postList: Post[]) => {
 				this.postList = concat ? this.postList.concat(postList) : postList;
-				this.postListLoading = false;
 				this.postListHasMore = postList.length === this.size;
+
+				this.postListLoading.next(false);
 			},
 			error: (error: any) => console.error(error)
 		});

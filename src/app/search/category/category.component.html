@@ -38,7 +38,7 @@
 		</button>
 	</ng-container>
 	<ng-template #categoryListEmptyTemplate>
-		<ng-container [ngSwitch]="categoryListLoading">
+		<ng-container [ngSwitch]="categoryListLoading | async">
 			<div class="flex flex-col items-center space-y-4" *ngSwitchDefault>
 				<i
 					class="fill-current text-base-content"
