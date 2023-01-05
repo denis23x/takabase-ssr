@@ -163,7 +163,7 @@ export class AuthService {
 
 		/** Remove settings */
 
-		this.uiService.setTheme();
+		this.uiService.setTheme(null);
 
 		return of(null);
 	}

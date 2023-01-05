@@ -45,7 +45,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	profileForm: FormGroup | undefined;
 	profileFormIsSubmitted: boolean = false;
-	profileImage: boolean = false;
+	profileFormAvatarToggle: boolean = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -87,10 +87,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitCropper(fileCreateDto: FileCreateDto): void {
-		this.profileImage = false;
+		this.profileFormAvatarToggle = false;
 
 		const userUpdateDto: UserUpdateDto = {
-			avatar: fileCreateDto?.path || null
+			avatar: fileCreateDto.path
 		};
 
 		this.userService.update(this.authUser.id, userUpdateDto).subscribe({

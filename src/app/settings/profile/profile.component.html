@@ -26,11 +26,15 @@
 					</div>
 				</div>
 				<button
-					class="btn btn-outline btn-primary"
+					class="btn"
 					type="button"
 					title="Image"
 					aria-label="Image"
-					(click)="profileImage = true"
+					[class.btn-success]="!!authUser.avatar"
+					[class.btn-primary]="!authUser.avatar"
+					[class.btn-disabled]="profileFormIsSubmitted"
+					[class.btn-outline]="!profileFormIsSubmitted"
+					(click)="profileFormAvatarToggle = true"
 				>
 					Image
 				</button>
@@ -85,6 +89,7 @@
 							[class.btn-success]="name.touched && name.valid"
 							[class.btn-error]="name.touched && name.invalid"
 							[class.btn-ghost]="name.untouched"
+							[class.btn-disabled]="profileFormIsSubmitted"
 							[appIcon]="'x'"
 							[appSquare]="'1.75rem'"
 							(click)="name.setValue('')"
@@ -116,10 +121,12 @@
 							</span>
 							<span class="label-text mr-2">Description</span>
 						</div>
+						<!-- prettier-ignore -->
 						<span
 							class="label-text-alt flex items-center"
-							[class.text-success]="description.touched && !description.errors"
-							[class.text-error]="description.touched && !!description.errors"
+							[class.text-base-content]="profileFormIsSubmitted"
+							[class.text-success]="!profileFormIsSubmitted && description.touched && !description.errors"
+							[class.text-error]="!profileFormIsSubmitted && description.touched && !!description.errors"
 						>
 							{{ description.value.length }}/255
 						</span>
@@ -132,7 +139,6 @@
 						placeholder="Type post description"
 						formControlName="description"
 						[rows]="4"
-            [class.font-mono]="authUser.settings.monospace"
 						[class.textarea-success]="description.touched && !description.errors"
 						[class.textarea-error]="description.touched && !!description.errors"
 						[class.textarea-disabled]="profileFormIsSubmitted"
@@ -144,7 +150,7 @@
 					<button
 						class="btn btn-primary w-full"
 						type="submit"
-						aria-label="Login"
+						aria-label="Update"
 						[class.loading]="profileFormIsSubmitted"
 						[disabled]="profileForm.invalid || profileFormIsSubmitted"
 					>
@@ -155,14 +161,14 @@
 		</form>
 	</div>
 	<app-overlay
-		[appToggle]="profileImage"
-		(clicked)="profileImage = false"
-		(escaped)="profileImage = false"
+		[appToggle]="profileFormAvatarToggle"
+		(clicked)="profileFormAvatarToggle = false"
+		(escaped)="profileFormAvatarToggle = false"
 	>
 		<app-window
 			slot="content"
 			[appTitle]="'Image'"
-			(closed)="profileImage = false"
+			(closed)="profileFormAvatarToggle = false"
 		>
 			<app-cropper slot="content" (submitted)="onSubmitCropper($event)">
 			</app-cropper>

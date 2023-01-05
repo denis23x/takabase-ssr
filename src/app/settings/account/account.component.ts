@@ -1,12 +1,6 @@
 /** @format */
 
-import {
-	Component,
-	ElementRef,
-	OnDestroy,
-	OnInit,
-	ViewChild
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -23,8 +17,11 @@ interface EmailForm {
 }
 
 interface PasswordForm {
-	passwordOld: FormControl<string>;
-	passwordNew: FormControl<string>;
+	password: FormControl<string>;
+}
+
+interface ConfirmationForm {
+	password: FormControl<string>;
 }
 
 @Component({
@@ -32,8 +29,6 @@ interface PasswordForm {
 	templateUrl: './account.component.html'
 })
 export class SettingsAccountComponent implements OnInit, OnDestroy {
-	@ViewChild('avatarInput') avatarInput: ElementRef | undefined;
-
 	activatedRouteData$: Subscription | undefined;
 
 	authUser: User | undefined;
@@ -44,6 +39,10 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 	passwordForm: FormGroup | undefined;
 	passwordFormIsSubmitted: boolean = false;
+
+	confirmationForm: FormGroup | undefined;
+	confirmationFormIsSubmitted: boolean = false;
+	confirmationFormToggle: boolean = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -56,13 +55,14 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				Validators.email
 			])
 		});
-
 		this.passwordForm = this.formBuilder.group<PasswordForm>({
-			passwordOld: this.formBuilder.control('', [
+			password: this.formBuilder.control('', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
-			]),
-			passwordNew: this.formBuilder.control('', [
+			])
+		});
+		this.confirmationForm = this.formBuilder.group<ConfirmationForm>({
+			password: this.formBuilder.control('', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
 			])
@@ -73,12 +73,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		this.activatedRouteData$ = this.activatedRoute.parent.data
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
-				next: (user: User) => {
-					this.authUser = user;
-
-					this.emailForm.patchValue(user);
-					this.emailForm.markAllAsTouched();
-				},
+				next: (user: User) => (this.authUser = user),
 				error: (error: any) => console.error(error)
 			});
 	}
@@ -90,12 +85,38 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	onSubmitEmailForm(): void {
 		if (this.helperService.getFormValidation(this.emailForm)) {
 			this.emailFormIsSubmitted = true;
+
+			this.onToggleConfirmationForm(true);
 		}
 	}
 
 	onSubmitPasswordForm(): void {
 		if (this.helperService.getFormValidation(this.passwordForm)) {
 			this.passwordFormIsSubmitted = true;
+
+			this.onToggleConfirmationForm(true);
+		}
+	}
+
+	onToggleConfirmationForm(toggle: boolean): void {
+		this.confirmationFormToggle = toggle;
+
+		/** Reset submit when close confirmation */
+
+		if (!this.confirmationFormToggle) {
+			if (!!this.emailFormIsSubmitted) {
+				this.emailFormIsSubmitted = false;
+			}
+
+			if (!!this.passwordFormIsSubmitted) {
+				this.passwordFormIsSubmitted = false;
+			}
+		}
+	}
+
+	onSubmitConfirmationForm(): void {
+		if (this.helperService.getFormValidation(this.confirmationForm)) {
+			this.confirmationFormIsSubmitted = true;
 		}
 	}
 }

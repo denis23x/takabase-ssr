@@ -20,7 +20,7 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				redirectTo: 'account',
+				redirectTo: 'profile',
 				pathMatch: 'full'
 			},
 			{

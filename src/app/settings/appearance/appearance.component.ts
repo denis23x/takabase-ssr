@@ -32,7 +32,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	appearanceForm$: Subscription | undefined;
 	appearanceIsSubmitted: boolean | false;
 
-	themeList: string[] = [
+	appearanceThemeList: string[] = [
 		'light',
 		'dark',
 		'cupcake',
@@ -64,7 +64,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		'winter'
 	];
 
-	languageList: string[] = ['English', 'Italian', 'French'];
+	appearanceLanguageList: string[] = ['English', 'Italian', 'French'];
 
 	constructor(
 		private formBuilder: FormBuilder,

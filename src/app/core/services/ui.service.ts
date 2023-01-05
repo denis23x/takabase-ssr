@@ -30,7 +30,7 @@ export class UiService {
 		}
 	}
 
-	setTheme(theme?: string): void {
+	setTheme(theme: string | null): void {
 		if (this.platformService.isBrowser()) {
 			if (!!theme) {
 				this.localStorageService.setItem('theme', theme);
