@@ -4,10 +4,10 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { UserComponent } from './user.component';
 import { UserResolverService } from './user-resolver.service';
-import { UserCategoryComponent } from './category/category.component';
-import { UserCategoryResolverService } from './category/category-resolver.service';
 import { UserPostDetailComponent } from './post/detail/detail.component';
 import { UserPostDetailResolverService } from './post/detail/detail-resolver.service';
+import { UserPostComponent } from './post/post.component';
+import { UserPostResolverService } from './post/post-resolver.service';
 
 const routes: Routes = [
 	{
@@ -19,9 +19,9 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				component: UserCategoryComponent,
+				component: UserPostComponent,
 				resolve: {
-					data: UserCategoryResolverService
+					data: UserPostResolverService
 				},
 				children: [
 					{
@@ -45,9 +45,9 @@ const routes: Routes = [
 			},
 			{
 				path: 'category/:categoryId',
-				component: UserCategoryComponent,
+				component: UserPostComponent,
 				resolve: {
-					data: UserCategoryResolverService
+					data: UserPostResolverService
 				},
 				children: [
 					{

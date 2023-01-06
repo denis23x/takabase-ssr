@@ -290,11 +290,16 @@
 		<app-window
 			slot="content"
 			[appTitle]="'Preview'"
+			[appButtons]="['close', 'fullscreen']"
 			(closed)="postPreview = false"
 		>
-			<app-post-detail slot="content" [appPost]="post"></app-post-detail>
+			<app-post-detail
+				class="h-full"
+				slot="content"
+				[appPost]="post"
+			></app-post-detail>
 			<app-share
-				class="pointer-events-none flex opacity-10"
+				class="pointer-events-none flex bg-base-200 p-2 opacity-50"
 				slot="footer"
 			></app-share>
 		</app-window>
@@ -309,7 +314,11 @@
 			[appTitle]="'Image'"
 			(closed)="postImage = false"
 		>
-			<app-cropper slot="content" (submitted)="onSubmitCropper($event)">
+			<app-cropper
+				slot="content"
+				[appField]="'images'"
+				(submitted)="onSubmitCropper($event)"
+			>
 			</app-cropper>
 		</app-window>
 	</app-overlay>

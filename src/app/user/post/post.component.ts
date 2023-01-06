@@ -29,9 +29,9 @@ export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, activatedRouteSna
 
 @Component({
 	selector: 'app-user-category',
-	templateUrl: './category.component.html'
+	templateUrl: './post.component.html'
 })
-export class UserCategoryComponent implements OnInit, OnDestroy {
+export class UserPostComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
 

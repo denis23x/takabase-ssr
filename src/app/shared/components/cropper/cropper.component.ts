@@ -4,6 +4,7 @@ import {
 	AfterViewInit,
 	Component,
 	EventEmitter,
+	Input,
 	OnDestroy,
 	OnInit,
 	Output,
@@ -16,7 +17,8 @@ import {
 	FileCreateDto,
 	FileGetOneDto,
 	FileService,
-	HelperService
+	HelperService,
+	User
 } from '../../../core';
 import { Subscription } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -34,9 +36,15 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent | undefined;
 
+	@Input()
+	set appField(field: string) {
+		this.cropperField = field;
+	}
+
 	// prettier-ignore
 	@Output() submitted: EventEmitter<FileCreateDto> = new EventEmitter<FileCreateDto>();
 
+	cropperField: string | undefined;
 	cropperFile: File = undefined;
 	cropperBase64: string = undefined;
 	cropperBackgroundIsDraggable: boolean = false;
@@ -196,7 +204,7 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 
 		const formData: FormData = new FormData();
 
-		formData.append('avatars', file);
+		formData.append(this.cropperField, file);
 
 		this.fileService.create(formData).subscribe({
 			next: (fileCreateDto: FileCreateDto) => {

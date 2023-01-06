@@ -114,7 +114,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 				this.authService.setUser(this.authUser);
 
-				this.snackbarService.success(null, 'Avatar updated');
+				this.snackbarService.success('Success', 'Avatar has been updated');
 			},
 			error: (error: any) => console.error(error)
 		});
@@ -139,7 +139,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 					this.authService.setUser(this.authUser);
 
-					this.snackbarService.success(null, 'Information updated');
+					// prettier-ignore
+					this.snackbarService.success('Success', 'Information has been updated');
 
 					this.profileFormIsSubmitted = false;
 				},

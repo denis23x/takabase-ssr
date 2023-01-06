@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <ng-container *ngIf="!!post">
-	<div class="flex flex-col items-start justify-start space-y-4 px-4">
+	<div class="flex h-full flex-col items-start justify-start space-y-4 px-4">
 		<header
 			class="flex w-full flex-col items-start justify-start border-b border-base-content/20"
 		>
@@ -39,7 +39,7 @@
 				</div>
 			</div>
 		</header>
-		<article class="prose max-w-none" #article>
+		<article class="prose h-full max-w-none" #article>
 			{{ post?.markdown || "No post markdown" | markdown: article }}
 		</article>
 		<footer

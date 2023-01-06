@@ -6,12 +6,12 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PostService, PostGetAllDto, Post } from '../../core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { getPostGetAllDto } from './category.component';
+import { getPostGetAllDto } from './post.component';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class UserCategoryResolverService {
+export class UserPostResolverService {
 	constructor(private postService: PostService, private router: Router) {}
 
 	resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Post[]> {

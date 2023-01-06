@@ -175,7 +175,11 @@
 			[appTitle]="'Image'"
 			(closed)="profileFormAvatarToggle = false"
 		>
-			<app-cropper slot="content" (submitted)="onSubmitCropper($event)">
+			<app-cropper
+				slot="content"
+				[appField]="'avatars'"
+				(submitted)="onSubmitCropper($event)"
+			>
 			</app-cropper>
 		</app-window>
 	</app-overlay>
