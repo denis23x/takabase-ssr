@@ -8,6 +8,8 @@ import {
 	OnInit,
 	Output
 } from '@angular/core';
+import { AuthService, User } from '../../../core';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-window, [appWindow]',
@@ -23,9 +25,19 @@ export class WindowComponent implements OnInit, OnDestroy {
 
 	title: string | undefined;
 
-	constructor() {}
+	authUser: User | undefined;
+	authUser$: Subscription | undefined;
 
-	ngOnInit(): void {}
+	constructor(private authService: AuthService) {}
 
-	ngOnDestroy(): void {}
+	ngOnInit(): void {
+		this.authUser$ = this.authService.user.subscribe({
+			next: (user: User) => (this.authUser = user),
+			error: (error: any) => console.error(error)
+		});
+	}
+
+	ngOnDestroy(): void {
+		[this.authUser$].forEach($ => $?.unsubscribe());
+	}
 }

@@ -7,14 +7,14 @@
 			autocomplete="off"
 			[formGroup]="appearanceForm"
 		>
-			<h2 class="text-xl font-medium text-base-content">Appearance settings</h2>
+			<h2 class="text-xl font-medium text-base-content">User interface</h2>
 			<hr class="my-2 border-base-content/20" />
 			<fieldset
 				class="flex w-full flex-col gap-4"
 				[disabled]="appearanceIsSubmitted"
 			>
 				<div
-					class="flex w-full flex-col items-start justify-between gap-4 sm:flex-row"
+					class="flex w-full flex-col items-start gap-4 sm:flex-row sm:justify-between"
 				>
 					<fieldset
 						class="form-control w-full"
@@ -101,28 +101,57 @@
 						</div>
 					</fieldset>
 				</div>
-				<fieldset
-					class="form-control"
-					*ngIf="appearanceForm.get('monospace') as monospace"
-				>
-					<label
-						class="label rounded-box cursor-pointer bg-base-200 p-4"
-						for="appearanceFormMonospace"
+				<div class="flex w-full flex-col">
+					<fieldset
+						class="form-control"
+						*ngIf="appearanceForm.get('monospace') as monospace"
 					>
-						<span class="label-text">
-							Use a fixed-width (monospace) font when editing Markdown
-						</span>
-						<input
-							class="toggle"
-							id="appearanceFormMonospace"
-							type="checkbox"
-							aria-label="Monospace"
-							formControlName="monospace"
-							[class.toggle-success]="monospace.touched && monospace.value"
-							[class.toggle-disabled]="appearanceIsSubmitted"
-						/>
-					</label>
-				</fieldset>
+						<label class="label cursor-pointer" for="appearanceFormMonospace">
+							<span class="label-text">
+								Use a fixed-width (monospace) font when editing Markdown
+							</span>
+							<input
+								class="toggle"
+								id="appearanceFormMonospace"
+								type="checkbox"
+								aria-label="Monospace"
+								formControlName="monospace"
+								[class.toggle-success]="monospace.touched && monospace.value"
+								[class.toggle-disabled]="appearanceIsSubmitted"
+							/>
+						</label>
+					</fieldset>
+					<hr class="my-2 border-base-content/20" />
+					<fieldset
+						class="form-control"
+						*ngIf="appearanceForm.get('buttons') as buttons"
+					>
+						<label class="label cursor-pointer" for="appearanceFormButtons">
+							<span class="label-text">
+								Position of caption buttons (minimize, restore, maximize)
+							</span>
+							<div class="btn-group">
+								<button
+									class="btn btn-success btn-sm"
+									type="button"
+									*ngFor="let buttonsValue of appearanceButtonsList"
+									[class.btn-outline]="buttons.value !== buttonsValue"
+									[class.btn-inline]="buttons.value === buttonsValue"
+									(click)="buttons.setValue(buttonsValue)"
+								>
+									{{ buttonsValue }}
+								</button>
+							</div>
+							<input
+								class="hidden"
+								id="appearanceFormButtons"
+								type="text"
+								aria-label="Buttons"
+								formControlName="buttons"
+							/>
+						</label>
+					</fieldset>
+				</div>
 			</fieldset>
 		</form>
 	</div>

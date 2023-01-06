@@ -19,7 +19,7 @@
 				</a>
 				<div class="flex flex-col text-center">
 					<a
-						class="link link-hover w-full truncate text-xl font-bold"
+						class="link w-full truncate text-xl font-bold"
 						[routerLink]="['/@' + user.name]"
 						[attr.aria-label]="user.name"
 					>
@@ -59,7 +59,7 @@
 						<span class="text-error"> not found</span>
 					</p>
 					<a
-						class="link link-primary text-sm"
+						class="link text-sm"
 						title="Create post"
 						aria-label="Create post"
 						[routerLink]="['/auth/registration']"

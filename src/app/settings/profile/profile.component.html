@@ -8,7 +8,7 @@
 			[formGroup]="profileForm"
 			(ngSubmit)="onSubmitProfileForm()"
 		>
-			<h2 class="text-xl font-medium text-base-content">Profile settings</h2>
+			<h2 class="text-xl font-medium text-base-content">Public profile</h2>
 			<hr class="my-2 border-base-content/20" />
 			<div class="flex w-full items-center justify-between gap-4 py-4">
 				<div class="flex items-center justify-start gap-4">
@@ -96,6 +96,10 @@
 						></button>
 					</div>
 				</fieldset>
+				<p class="rounded-box mt-2 mb-4 bg-base-200 p-4">
+					Change the name will set the <b>@{{ authUser.name }}</b> user profile
+					not more available by direct link
+				</p>
 				<fieldset
 					class="form-control"
 					*ngIf="profileForm.get('description') as description"
@@ -147,12 +151,13 @@
           </textarea>
 				</fieldset>
 				<fieldset class="form-control">
+					<!-- prettier-ignore -->
 					<button
 						class="btn btn-primary w-full"
 						type="submit"
 						aria-label="Update"
 						[class.loading]="profileFormIsSubmitted"
-						[disabled]="profileForm.invalid || profileFormIsSubmitted"
+						[disabled]="profileForm.invalid || profileFormIsSubmitted || profileFormIsPristine"
 					>
 						Update
 					</button>

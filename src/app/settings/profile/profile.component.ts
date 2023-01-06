@@ -22,7 +22,7 @@ import {
 	UserUpdateDto,
 	FileCreateDto
 } from '../../core';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { ActivatedRoute, Data } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -44,6 +44,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	authUser$: Subscription | undefined;
 
 	profileForm: FormGroup | undefined;
+	profileForm$: Subscription | undefined;
+	profileFormIsPristine: boolean = false;
 	profileFormIsSubmitted: boolean = false;
 	profileFormAvatarToggle: boolean = false;
 
@@ -62,6 +64,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				Validators.maxLength(24)
 			]),
 			description: this.formBuilder.control('', [
+				Validators.required,
 				Validators.minLength(4),
 				Validators.maxLength(255)
 			])
@@ -80,10 +83,19 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				},
 				error: (error: any) => console.error(error)
 			});
+
+		this.profileForm$ = this.profileForm.valueChanges
+			.pipe(startWith(this.profileForm.value))
+			.subscribe((value: any) => {
+				this.profileFormIsPristine = Object.keys(value).every((key: string) => {
+					return value[key] === this.authUser[key];
+				});
+			});
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
+		// prettier-ignore
+		[this.activatedRouteData$, this.profileForm$].forEach($ => $?.unsubscribe());
 	}
 
 	onSubmitCropper(fileCreateDto: FileCreateDto): void {
@@ -118,6 +130,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 			this.userService.update(this.authUser.id, userUpdateDto).subscribe({
 				next: (user: User) => {
+					this.profileFormIsPristine = true;
+
 					this.authUser = {
 						...user,
 						settings: this.authUser.settings
@@ -126,9 +140,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 					this.authService.setUser(this.authUser);
 
 					this.snackbarService.success(null, 'Information updated');
+
+					this.profileFormIsSubmitted = false;
 				},
-				error: (error: any) => console.error(error),
-				complete: () => (this.profileFormIsSubmitted = false)
+				error: () => (this.profileFormIsSubmitted = false)
 			});
 		}
 	}

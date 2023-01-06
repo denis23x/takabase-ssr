@@ -10,40 +10,23 @@
 	<header
 		class="grid grid-cols-3 gap-2 border-b border-base-content/20 bg-base-200 p-2"
 	>
-		<div class="col-span-1 flex items-center justify-start space-x-2">
-			<button
-				class="btn btn-circle btn-error btn-xs fill-current"
-				type="button"
-				title="Close"
-				aria-label="Close"
-				appSvgIcon
-				[appIcon]="'x-lg'"
-				[appSquare]="'0.75rem'"
-				(click)="closed.emit()"
-			></button>
-			<button
-				class="btn btn-circle btn-warning btn-xs fill-current"
-				type="button"
-				title="Close"
-				aria-label="Close"
-				appSvgIcon
-				[appIcon]="''"
-				[appSquare]="'0.75rem'"
-			></button>
-			<button
-				class="btn btn-circle btn-success btn-xs fill-current"
-				type="button"
-				title="Close"
-				aria-label="Close"
-				appSvgIcon
-				[appIcon]="''"
-				[appSquare]="'0.75rem'"
-			></button>
+		<div class="col-span-1 flex flex-row items-center justify-start space-x-2">
+			<ng-container
+				*ngIf="authUser.settings.buttons === 'left'"
+				[ngTemplateOutlet]="windowButtons"
+			></ng-container>
 		</div>
 		<div class="col-span-1 flex items-center justify-center">
 			<span class="text-xl font-medium text-base-content">{{ title }}</span>
 		</div>
-		<div class="col-span-1 flex items-center justify-end"></div>
+		<div
+			class="col-span-1 flex flex-row-reverse items-center justify-start space-x-2 space-x-reverse"
+		>
+			<ng-container
+				*ngIf="authUser.settings.buttons === 'right'"
+				[ngTemplateOutlet]="windowButtons"
+			></ng-container>
+		</div>
 	</header>
 	<section class="flex flex-col overflow-auto">
 		<ng-content select="[slot=content]"></ng-content>
@@ -51,4 +34,34 @@
 	<footer class="border-t border-base-content/20 bg-base-200 p-2 empty:hidden">
 		<ng-content select="[slot=footer]"></ng-content>
 	</footer>
+	<ng-template #windowButtons>
+		<button
+			class="btn btn-error btn-circle btn-xs fill-current"
+			type="button"
+			title="Close"
+			aria-label="Close"
+			appSvgIcon
+			[appIcon]="'x-lg'"
+			[appSquare]="'0.75rem'"
+			(click)="closed.emit()"
+		></button>
+		<button
+			class="btn btn-warning btn-circle btn-xs fill-current"
+			type="button"
+			title="Close"
+			aria-label="Close"
+			appSvgIcon
+			[appIcon]="''"
+			[appSquare]="'0.75rem'"
+		></button>
+		<button
+			class="btn btn-success btn-circle btn-xs fill-current"
+			type="button"
+			title="Close"
+			aria-label="Close"
+			appSvgIcon
+			[appIcon]="''"
+			[appSquare]="'0.75rem'"
+		></button>
+	</ng-template>
 </div>

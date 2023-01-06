@@ -12,7 +12,7 @@
 				<div class="flex flex-col">
 					<!-- prettier-ignore -->
 					<a
-            class="link link-hover text-xl font-bold"
+            class="link text-xl font-bold"
             [routerLink]="['/@' + category.user.name, 'category', category.id]"
             [attr.aria-label]="category.name"
           >
@@ -52,7 +52,7 @@
 						<span class="text-error"> not found</span>
 					</p>
 					<a
-						class="link link-primary text-sm"
+						class="link text-sm"
 						title="Create post"
 						aria-label="Create post"
 						[routerLink]="['/create']"

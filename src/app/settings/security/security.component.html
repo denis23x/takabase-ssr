@@ -36,14 +36,15 @@
 						</div>
 					</div>
 					<button
-						class="btn btn-error"
+						class="btn btn-error btn-circle btn-sm fill-current"
 						type="button"
-						title="Logout"
-						aria-label="Logout"
+						title="Terminate"
+						aria-label="Terminate"
+						appSvgIcon
+						[appIcon]="'x'"
+						[appSquare]="'1.75rem'"
 						(click)="onLogout(session)"
-					>
-						Logout
-					</button>
+					></button>
 				</li>
 			</ul>
 		</div>

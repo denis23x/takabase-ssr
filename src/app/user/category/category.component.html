@@ -25,28 +25,34 @@
 		</button>
 	</ng-container>
 	<ng-template #postListEmptyTemplate>
-		<div class="flex items-center justify-center" [ngSwitch]="postListLoading">
-			<div class="flex items-center justify-center space-x-4" *ngSwitchDefault>
-				<span class="block text-xl">Not found</span>
-				<a
-					class="btn btn-primary gap-2"
-					title="Create post"
-					aria-label="Create post"
-					[routerLink]="['/create']"
-				>
-					<i
-						class="fill-current"
-						appSvgIcon
-						[appIcon]="'file-earmark-plus'"
-						[appSquare]="'1.5em'"
-					></i>
-					Create post
-				</a>
+		<ng-container [ngSwitch]="postListLoading">
+			<div class="flex flex-col items-center space-y-4" *ngSwitchDefault>
+				<i
+					class="fill-current text-base-content"
+					appSvgIcon
+					[appIcon]="'robot'"
+					[appSquare]="'3em'"
+				></i>
+				<div class="text-center">
+					<p class="text-xl font-medium">
+						<span class="text-base-content">Posts</span>
+						<span class="text-error"> not found</span>
+					</p>
+					<a
+						class="link text-sm"
+						title="Create post"
+						aria-label="Create post"
+						[routerLink]="['/create']"
+					>
+						Create your post
+					</a>
+				</div>
 			</div>
-			<div class="flex" *ngSwitchCase="true">
-				<button class="btn loading btn-ghost">Loading</button>
+			<div class="flex flex-col items-center" *ngSwitchCase="true">
+				<progress class="progress progress-primary my-5 w-56"></progress>
+				<span class="text-xl font-medium text-base-content">Loading</span>
 			</div>
-		</div>
+		</ng-container>
 	</ng-template>
 	<router-outlet></router-outlet>
 </ng-container>

@@ -16,6 +16,7 @@ interface AppearanceForm {
 	theme: FormControl<string>;
 	language: FormControl<string>;
 	monospace: FormControl<boolean>;
+	buttons: FormControl<string>;
 }
 
 @Component({
@@ -63,8 +64,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		'coffee',
 		'winter'
 	];
-
 	appearanceLanguageList: string[] = ['English', 'Italian', 'French'];
+	appearanceButtonsList: string[] = ['left', 'right'];
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -75,7 +76,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		this.appearanceForm = this.formBuilder.group<AppearanceForm>({
 			theme: this.formBuilder.control('', [Validators.required]),
 			language: this.formBuilder.control('', [Validators.required]),
-			monospace: this.formBuilder.control(false, [])
+			monospace: this.formBuilder.control(null, [Validators.required]),
+			buttons: this.formBuilder.control('', [Validators.required])
 		});
 	}
 
@@ -101,9 +103,12 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 				};
 
 				this.userService.update(this.authUser.id, userUpdateDto).subscribe({
-					next: (user: User) => this.authService.setUser(user),
-					error: (error: any) => console.error(error),
-					complete: () => (this.appearanceIsSubmitted = false)
+					next: (user: User) => {
+						this.authService.setUser(user);
+
+						this.appearanceIsSubmitted = false;
+					},
+					error: () => (this.appearanceIsSubmitted = false)
 				});
 			},
 			error: (error: any) => console.error(error)

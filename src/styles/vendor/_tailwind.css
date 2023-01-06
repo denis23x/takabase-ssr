@@ -13,7 +13,7 @@
   }
 
   .prose :where(a):not(:where([class~="not-prose"] *)) {
-    @apply link link-primary after:content-['\279A'] after:inline-block after:px-1
+    @apply link after:content-['\279A'] after:inline-block after:px-1
   }
 }
 
