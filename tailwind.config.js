@@ -2,6 +2,15 @@ module.exports = {
   mode: "jit",
   content: ["./src/**/*.html"],
   safelist: [
+    /** SNACKBAR  */
+
+    "alert-info",
+    "alert-success",
+    "alert-warning",
+    "alert-error",
+
+    /** MARKDOWN  */
+
     "text-xs",
     "text-sm",
     "text-base",
@@ -10,10 +19,6 @@ module.exports = {
     "text-2xl",
     "text-3xl",
     "text-4xl",
-    "alert-info",
-    "alert-success",
-    "alert-warning",
-    "alert-error",
     "font-thin",
     "font-extralight",
     "font-light",
@@ -29,6 +34,19 @@ module.exports = {
     "no-underline",
     "italic",
     "not-italic",
+
+    /** WINDOW  */
+
+    "left-4",
+    "top-1/2",
+    "h-auto",
+    "max-h-[calc(100vh-2rem)]",
+    "max-w-[calc(100vw-2rem)]",
+    "-translate-y-1/2",
+    "md:left-1/2",
+    "md:max-h-[75vh]",
+    "md:max-w-[640px]",
+    "md:-translate-x-1/2",
   ],
   theme: {
     cursor: {

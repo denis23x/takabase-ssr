@@ -1,9 +1,15 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="overflow-auto" #controlListElement>
+	<div
+		class="rounded-btn flex overflow-auto border-base-content/20"
+		#controlListElement
+		[class.pointer-events-none]="controlListDisabled"
+		[class.border]="!controlListDisabled"
+	>
 		<ul
-			class="menu rounded-btn menu-horizontal border border-base-content/20 bg-base-100"
+			class="menu rounded-btn menu-horizontal flex-nowrap bg-base-100"
+			[class.bg-base-300]="controlListDisabled"
 		>
 			<li
 				class="inline-block"
@@ -21,7 +27,7 @@
 					(click)="onBack()"
 				></button>
 			</li>
-			<li class="inline-block">
+			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div class="flex p-0" appDropdown #dropdownHeading>
 					<button
 						class="fill-current p-3"
@@ -51,7 +57,7 @@
 					</ul>
 				</div>
 			</li>
-			<li class="inline-block">
+			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div class="flex p-0" appDropdown #dropdownFormatting>
 					<button
 						class="fill-current p-3"
@@ -84,7 +90,7 @@
 					</ul>
 				</div>
 			</li>
-			<li class="inline-block">
+			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div class="flex p-0" appDropdown #dropdownList>
 					<button
 						class="fill-current p-3"
@@ -113,7 +119,11 @@
 					</ul>
 				</div>
 			</li>
-			<li class="inline-block" *ngFor="let control of controlListUrl">
+			<li
+				class="inline-block"
+				*ngFor="let control of controlListUrl"
+				[class.disabled]="controlListDisabled"
+			>
 				<button
 					class="fill-current"
 					appSvgIcon

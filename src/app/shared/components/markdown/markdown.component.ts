@@ -68,6 +68,11 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	@Input()
+	set appDisabled(disabled: boolean) {
+		this.controlListDisabled = disabled;
+	}
+
+	@Input()
 	set appTextareaId(markdownId: string) {
 		this.textareaId = markdownId;
 	}
@@ -82,6 +87,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	controlListList: MarkdownControl[] = MarkdownControlList();
 	controlListUrl: MarkdownControl[] = MarkdownControlUrl();
 	controlListScroll$: Subscription | undefined;
+	controlListDisabled: boolean = false;
 
 	scrollSync: boolean = false;
 	scrollSync$: Subscription | undefined;

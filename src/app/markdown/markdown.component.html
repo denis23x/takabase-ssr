@@ -15,11 +15,15 @@
 					[src]="image.value"
 				/>
 				<button
-					class="btn btn-outline btn-primary w-full"
+					class="btn"
 					type="button"
 					title="Image"
 					aria-label="Image"
-					(click)="postImage = true"
+					[class.btn-success]="!!image.value"
+					[class.btn-primary]="!image.value"
+					[class.btn-disabled]="postFormIsSubmitted"
+					[class.btn-outline]="!postFormIsSubmitted"
+					(click)="postFormImage = true"
 				>
 					Image
 				</button>
@@ -83,6 +87,7 @@
 								[class.btn-success]="name.touched && name.valid"
 								[class.btn-error]="name.touched && name.invalid"
 								[class.btn-ghost]="name.untouched"
+								[class.btn-disabled]="postFormIsSubmitted"
 								[appIcon]="'x'"
 								[appSquare]="'1.75rem'"
 								(click)="name.setValue('')"
@@ -192,6 +197,7 @@
 								[class.btn-success]="description.touched && description.valid"
 								[class.btn-error]="description.touched && description.invalid"
 								[class.btn-ghost]="description.untouched"
+								[class.btn-disabled]="postFormIsSubmitted"
 								[appIcon]="'x'"
 								[appSquare]="'1.75rem'"
 								(click)="description.setValue('')"
@@ -206,58 +212,66 @@
 		>
 			<div class="rounded-box flex flex-col space-y-4 bg-base-200 p-4">
 				<div
+					class="flex"
 					appMarkdown
 					[appTextareaId]="'postFormTextarea'"
 					[appPreviewId]="'postFormPreview'"
+					[appScrollSync]="false"
+					[appDisabled]="postFormIsSubmitted"
 				></div>
 				<form class="block" autocomplete="off" [formGroup]="postForm">
-					<fieldset
-						class="form-control"
-						*ngIf="postForm.get('markdown') as markdown"
-					>
-						<label class="label" for="postFormTextarea">
-							<div class="indicator">
-								<span
-									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="markdown.touched && !!markdown.errors"
-									[ngSwitch]="true"
-								>
-									<ng-container *ngSwitchCase="!!markdown.errors.required">
-										Required
-									</ng-container>
-									<!-- prettier-ignore -->
-									<ng-container *ngSwitchCase="!!markdown.errors.minlength">
-                    Min length {{ markdown.errors.minlength["requiredLength"] }} characters
-                  </ng-container>
-									<!-- prettier-ignore -->
-									<ng-container *ngSwitchCase="!!markdown.errors.maxlength">
-                    Max length {{ markdown.errors.maxlength["requiredLength"] }} characters
-                  </ng-container>
-								</span>
-								<span class="label-text mr-2">Markdown</span>
-							</div>
-							<span
-								class="label-text-alt"
-								[class.text-success]="markdown.touched && !markdown.errors"
-								[class.text-error]="markdown.touched && !!markdown.errors"
-							>
-								{{ markdown.value.length }}/7200
-							</span>
-						</label>
-						<textarea
-							class="textarea textarea-bordered w-full"
-							id="postFormTextarea"
-							aria-label="Markdown"
-							placeholder="Type post markdown"
-							formControlName="markdown"
-							[rows]="8"
-							[class.font-mono]="authUser.settings.monospace"
-							[class.textarea-success]="markdown.touched && !markdown.errors"
-							[class.textarea-error]="markdown.touched && !!markdown.errors"
-							[class.textarea-disabled]="postFormIsSubmitted"
+					<fieldset class="flex flex-col" [disabled]="postFormIsSubmitted">
+						<fieldset
+							class="form-control"
+							*ngIf="postForm.get('markdown') as markdown"
 						>
-              {{ markdown.value }}
-            </textarea>
+							<label class="label" for="postFormTextarea">
+								<div class="indicator">
+									<span
+										class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+										*ngIf="markdown.touched && !!markdown.errors"
+										[ngSwitch]="true"
+									>
+										<ng-container *ngSwitchCase="!!markdown.errors.required">
+											Required
+										</ng-container>
+										<!-- prettier-ignore -->
+										<ng-container *ngSwitchCase="!!markdown.errors.minlength">
+                      Min length {{ markdown.errors.minlength["requiredLength"] }} characters
+                    </ng-container>
+										<!-- prettier-ignore -->
+										<ng-container *ngSwitchCase="!!markdown.errors.maxlength">
+                      Max length {{ markdown.errors.maxlength["requiredLength"] }} characters
+                    </ng-container>
+									</span>
+									<span class="label-text mr-2">Markdown</span>
+								</div>
+								<!-- prettier-ignore -->
+								<span
+                  class="label-text-alt"
+                  [class.text-base-content]="postFormIsSubmitted"
+                  [class.text-success]="!postFormIsSubmitted && markdown.touched && !markdown.errors"
+                  [class.text-error]="!postFormIsSubmitted && markdown.touched && !!markdown.errors"
+                >
+                  {{ markdown.value.length }}/7200
+                </span>
+							</label>
+							<textarea
+								class="textarea textarea-bordered w-full"
+								id="postFormTextarea"
+								aria-label="Markdown"
+								placeholder="Type post markdown"
+								formControlName="markdown"
+								[rows]="8"
+								[class.font-mono]="authUser.settings.monospace"
+								[class.textarea-success]="markdown.touched && !markdown.errors"
+								[class.textarea-error]="markdown.touched && !!markdown.errors"
+								[class.textarea-disabled]="postFormIsSubmitted"
+								[class.bg-base-300]="postFormIsSubmitted"
+							>
+                {{ markdown.value }}
+              </textarea>
+						</fieldset>
 					</fieldset>
 				</form>
 			</div>
@@ -266,6 +280,7 @@
 					class="btn btn-secondary col-span-12 sm:col-span-3"
 					type="button"
 					aria-label="Preview"
+					[disabled]="postForm.invalid || postFormIsSubmitted"
 					(click)="onPreviewPost()"
 				>
 					Preview
@@ -274,7 +289,8 @@
 					class="btn btn-primary col-span-12 sm:col-span-9"
 					type="button"
 					aria-label="Submit"
-					[disabled]="postForm.invalid"
+					[class.loading]="postFormIsSubmitted"
+					[disabled]="postForm.invalid || postFormIsSubmitted"
 					(click)="onSubmitPostForm()"
 				>
 					Submit
@@ -283,15 +299,15 @@
 		</div>
 	</div>
 	<app-overlay
-		[appToggle]="postPreview"
-		(clicked)="postPreview = false"
-		(escaped)="postPreview = false"
+		[appToggle]="postFormPreview"
+		(clicked)="postFormPreview = false"
+		(escaped)="postFormPreview = false"
 	>
 		<app-window
 			slot="content"
 			[appTitle]="'Preview'"
 			[appButtons]="['close', 'fullscreen']"
-			(closed)="postPreview = false"
+			(closed)="postFormPreview = false"
 		>
 			<app-post-detail
 				class="h-full"
@@ -305,14 +321,14 @@
 		</app-window>
 	</app-overlay>
 	<app-overlay
-		[appToggle]="postImage"
-		(clicked)="postImage = false"
-		(escaped)="postImage = false"
+		[appToggle]="postFormImage"
+		(clicked)="postFormImage = false"
+		(escaped)="postFormImage = false"
 	>
 		<app-window
 			slot="content"
 			[appTitle]="'Image'"
-			(closed)="postImage = false"
+			(closed)="postFormImage = false"
 		>
 			<app-cropper
 				slot="content"
@@ -322,5 +338,5 @@
 			</app-cropper>
 		</app-window>
 	</app-overlay>
-	<article class="prose max-w-none" id="postFormPreview"></article>
+	<article class="prose hidden max-w-none" id="postFormPreview"></article>
 </ng-container>

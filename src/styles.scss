@@ -4,18 +4,6 @@
 
 @import "styles/vendor/_tailwind.css";
 
-/* https://sass-guidelin.es */
-
-//@import "styles/components/buttons";
-//@import "styles/components/inputs";
-//@import "styles/components/markdown";
-//
-//@import "styles/layout/scrollbars";
-//@import "styles/layout/utilities";
-//
-//@import "styles/pages/create";
-//@import "styles/pages/user";
-
 .ngx-cropper {
   --cropper-overlay-color: hsl(var(--b3));
 
@@ -88,6 +76,7 @@
 
 *:disabled {
   pointer-events: none;
+  user-select: none;
 }
 
 body {

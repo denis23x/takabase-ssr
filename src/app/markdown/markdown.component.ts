@@ -43,12 +43,11 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 	category: Category | undefined;
 	categoryList: Category[] = [];
 
+	post: Post | undefined;
 	postForm: FormGroup | undefined;
 	postFormIsSubmitted: boolean = false;
-
-	post: Post | undefined;
-	postImage: boolean = false;
-	postPreview: boolean = false;
+	postFormImage: boolean = false;
+	postFormPreview: boolean = false;
 
 	authUser: User | undefined;
 	authUser$: Subscription | undefined;
@@ -122,7 +121,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitCropper(fileCreateDto?: FileCreateDto): void {
-		this.postImage = false;
+		this.postFormImage = false;
 		this.postForm.get('image').setValue(fileCreateDto.path);
 	}
 
@@ -152,7 +151,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 			category: this.category
 		};
 
-		this.postPreview = true;
+		this.postFormPreview = true;
 	}
 
 	onSubmitPostForm(): void {
