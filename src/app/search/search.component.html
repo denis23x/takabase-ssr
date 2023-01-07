@@ -91,11 +91,9 @@
 			<section
 				class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
 			>
-				<div class="rounded-box bg-base-200 p-4">
-					<router-outlet
-						(activate)="onRouterOutletActivate($event)"
-					></router-outlet>
-				</div>
+				<router-outlet
+					(activate)="onRouterOutletActivate($event)"
+				></router-outlet>
 			</section>
 		</div>
 	</div>

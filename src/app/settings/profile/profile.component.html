@@ -3,7 +3,7 @@
 <ng-container>
 	<div class="flex flex-col items-start justify-start gap-4">
 		<form
-			class="rounded-box flex w-full flex-col border border-base-content/20 bg-base-100 p-4"
+			class="rounded-box flex w-full flex-col"
 			autocomplete="off"
 			[formGroup]="profileForm"
 			(ngSubmit)="onSubmitProfileForm()"
@@ -175,12 +175,14 @@
 			[appTitle]="'Image'"
 			(closed)="profileFormAvatarToggle = false"
 		>
-			<app-cropper
-				slot="content"
-				[appField]="'avatars'"
-				(submitted)="onSubmitCropper($event)"
-			>
-			</app-cropper>
+			<ng-container slot="content" *ngIf="profileFormAvatarToggle">
+				<app-cropper
+					[appField]="'avatars'"
+					[appRound]="true"
+					(submitted)="onSubmitCropper($event)"
+				>
+				</app-cropper>
+			</ng-container>
 		</app-window>
 	</app-overlay>
 </ng-container>

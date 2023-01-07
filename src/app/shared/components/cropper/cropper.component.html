@@ -1,21 +1,11 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="flex flex-col p-4">
-		<form
-			class="block"
-			autocomplete="off"
-			#urlFormDenis
-			[formGroup]="imageForm"
-			(ngSubmit)="onSubmitUrl()"
-		>
-			<div class="rounded-box mb-4 bg-base-200 p-4">
-				Specify and crop your image, you can paste a URL from internet and press
-				download or choose the file from your device
-			</div>
+	<div class="flex flex-col space-y-4 p-4">
+		<form class="block" autocomplete="off" [formGroup]="imageForm">
 			<fieldset
 				class="flex flex-col space-y-4"
-				[disabled]="imageFormIsSubmitted"
+				[disabled]="imageFormIsSubmitted || cropperIsSubmitted"
 			>
 				<fieldset class="form-control" *ngIf="imageForm.get('url') as url">
 					<label class="label" for="imageFormUrl">
@@ -32,12 +22,25 @@
 									Url does not match pattern
 								</ng-container>
 							</span>
-							<span class="label-text mr-2">URL</span>
+							<span class="label-text mr-2">File</span>
 						</div>
+						<span class="label-text-alt">Accept only *.png, *.jpg files</span>
 					</label>
 					<div class="relative">
+						<button
+							class="btn no-animation absolute top-0 left-0 rounded-r-none"
+							type="button"
+							aria-label="Browse"
+							[class.btn-success]="url.touched && url.value"
+							[class.btn-error]="url.touched && url.invalid"
+							[class.btn-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
+							(click)="imageFormFile.click()"
+						>
+							Browse
+						</button>
+						<!-- prettier-ignore -->
 						<input
-							class="input input-bordered w-full truncate pr-32"
+							class="input input-bordered w-full truncate pl-28 pr-12"
 							id="imageFormUrl"
 							type="text"
 							aria-label="Url"
@@ -45,79 +48,79 @@
 							placeholder="Paste your URL"
 							[class.input-success]="url.touched && url.value"
 							[class.input-error]="url.touched && url.invalid"
-							[class.input-disabled]="imageFormIsSubmitted"
+							[class.input-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
+							(keydown)="onInputUrl($event)"
 						/>
 						<button
-							class="btn btn-sm absolute top-2 right-2 fill-current"
+							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 							type="button"
-							aria-label="Download"
+							title="Clear query"
+							aria-label="Clear query"
+							appSvgIcon
+							*ngIf="!!url.value.length"
 							[class.btn-success]="url.touched && url.value"
 							[class.btn-error]="url.touched && url.invalid"
 							[class.btn-ghost]="url.untouched"
-							[class.btn-disabled]="imageFormIsSubmitted || !url.value"
-							(click)="urlFormDenis.requestSubmit()"
-						>
-							Download
-						</button>
+							[class.btn-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
+							[appIcon]="'x'"
+							[appSquare]="'1.75rem'"
+							(click)="onResetImageForm()"
+						></button>
+						<input
+							class="hidden"
+							type="file"
+							aria-label="File"
+							accept="image/jpeg, image/jpg, image/png"
+							#imageFormFile
+							(change)="onInputFile($event)"
+						/>
 					</div>
 				</fieldset>
-				<fieldset class="form-control" *ngIf="imageForm.get('name') as name">
-					<label class="label" for="imageFormName">
-						<span class="label-text">File</span>
-						<span class="label-text-alt">Accept only *.png, *.jpg files</span>
-					</label>
-					<input
-						class="file-input file-input-bordered w-full truncate"
-						id="imageFormName"
-						type="file"
-						aria-label="Hidden"
-						formControlName="name"
-						accept="image/jpeg, image/jpg, image/png"
-						[class.file-input-success]="name.touched && name.value"
-						[class.file-input-error]="name.touched && name.invalid"
-						[class.file-input-disabled]="imageFormIsSubmitted"
-						(change)="onSubmitFile($event)"
-					/>
-				</fieldset>
+				<p class="rounded-box mb-4 bg-base-200 p-4">
+					Paste your image link from internet or choose the file on your device
+				</p>
 			</fieldset>
 		</form>
-		<div class="my-4">
+		<div class="flex flex-col space-y-4" [class.hidden]="!cropperFile">
 			<image-cropper
 				class="ngx-cropper rounded-box !p-4"
+				[class.ngx-cropper-disabled]="cropperIsSubmitted"
+				[class.ngx-cropper-rounded]="cropperRound"
 				[imageFile]="cropperFile"
+				[format]="'png'"
 				[maintainAspectRatio]="true"
 				[containWithinAspectRatio]="false"
-				[allowMoveImage]="cropperBackgroundIsDraggable"
-				[format]="'png'"
-				[alignImage]="'center'"
 				[resizeToWidth]="256"
 				[resizeToHeight]="256"
-				[transform]="imageTransform"
 				[cropper]="cropperPosition"
+				[roundCropper]="cropperRound"
+				[alignImage]="'center'"
+				[transform]="imageTransform"
+				[allowMoveImage]="cropperBackgroundIsDraggable"
 				(imageCropped)="onImageCropped($event)"
 			>
 			</image-cropper>
-		</div>
-		<div class="flex flex-col space-y-4">
-			<div class="flex items-center justify-between">
+			<div class="flex items-center justify-between space-x-4">
 				<ul
 					class="menu rounded-btn menu-horizontal flex-nowrap overflow-x-auto overflow-y-hidden border border-base-content/20 bg-base-100"
+					[class.pointer-events-none]="cropperIsSubmitted"
+					[class.border]="!cropperIsSubmitted"
+					[class.bg-base-200]="cropperIsSubmitted"
 				>
-					<li class="inline-block">
+					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
+						<!-- prettier-ignore -->
 						<button
 							class="fill-current"
 							type="button"
 							title="Move"
 							aria-label="Move"
 							appSvgIcon
-							[ngClass]="{ 'text-info-1': cropperBackgroundIsDraggable }"
 							[appIcon]="'arrows-move'"
-							(click)="
-								cropperBackgroundIsDraggable = !cropperBackgroundIsDraggable
-							"
+							[class.active]="cropperBackgroundIsDraggable"
+							(click)="cropperBackgroundIsDraggable = !cropperBackgroundIsDraggable"
 						></button>
 					</li>
-					<li class="inline-block">
+					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
 							class="-scale-x-1 fill-current"
 							type="button"
@@ -125,10 +128,10 @@
 							aria-label="Rotate counterclockwise"
 							appSvgIcon
 							[appIcon]="'arrow-clockwise'"
-							(click)="onRotate(false)"
+							(click)="onImageRotate(false)"
 						></button>
 					</li>
-					<li class="inline-block">
+					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
 							class="fill-current"
 							type="button"
@@ -136,10 +139,10 @@
 							aria-label="Rotate clockwise"
 							appSvgIcon
 							[appIcon]="'arrow-clockwise'"
-							(click)="onRotate(true)"
+							(click)="onImageRotate(true)"
 						></button>
 					</li>
-					<li class="inline-block">
+					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
 							class="fill-current"
 							type="button"
@@ -147,10 +150,10 @@
 							aria-label="Flip horizontal"
 							appSvgIcon
 							[appIcon]="'symmetry-horizontal'"
-							(click)="onFlip(true)"
+							(click)="onImageFlip(true)"
 						></button>
 					</li>
-					<li class="inline-block">
+					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
 							class="fill-current"
 							type="button"
@@ -158,10 +161,10 @@
 							aria-label="Flip vertical"
 							appSvgIcon
 							[appIcon]="'symmetry-vertical'"
-							(click)="onFlip(false)"
+							(click)="onImageFlip(false)"
 						></button>
 					</li>
-					<li class="inline-block">
+					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
 							class="fill-current"
 							type="button"
@@ -169,10 +172,13 @@
 							aria-label="Zoom in"
 							appSvgIcon
 							[appIcon]="'zoom-in'"
-							(click)="onZoom(true)"
+							(click)="onImageZoom(true)"
 						></button>
 					</li>
-					<li class="inline-block">
+					<li
+						class="inline-block"
+						[class.disabled]="cropperIsSubmitted || imageTransform.scale <= 1"
+					>
 						<button
 							class="fill-current"
 							type="button"
@@ -180,27 +186,32 @@
 							aria-label="Zoom out"
 							appSvgIcon
 							[appIcon]="'zoom-out'"
-							(click)="onZoom(false)"
+							(click)="onImageZoom(false)"
 						></button>
 					</li>
 				</ul>
+				<!-- prettier-ignore -->
 				<button
-					class="text-danger-1 py-2 px-3 hover:underline"
+					class="btn btn-error"
 					type="button"
 					aria-label="Reset"
-					(click)="onReset()"
+					[disabled]="imageForm.invalid || imageFormIsSubmitted || cropperIsSubmitted"
+					(click)="onImageReset()"
 				>
 					Reset
 				</button>
 			</div>
-			<button
-				class="btn btn-primary w-full"
-				type="button"
-				aria-label="Submit"
-				(click)="onSubmitCropper()"
-			>
-				Submit
-			</button>
 		</div>
+		<!-- prettier-ignore -->
+		<button
+			class="btn btn-primary w-full"
+			type="button"
+			aria-label="Submit"
+			[class.loading]="imageFormIsSubmitted || cropperIsSubmitted"
+			[disabled]="imageForm.invalid || imageFormIsSubmitted || cropperIsSubmitted"
+			(click)="onSubmitCropper()"
+		>
+			Submit
+		</button>
 	</div>
 </ng-container>

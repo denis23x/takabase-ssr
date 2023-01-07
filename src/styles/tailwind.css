@@ -1,7 +1,7 @@
-@import "~tailwindcss/base.css";
-@import "~tailwindcss/components.css";
-@import "~tailwindcss/utilities.css";
-@import "~tailwindcss/variants.css";
+@import "../../node_modules/tailwindcss/base.css";
+@import "../../node_modules/tailwindcss/components.css";
+@import "../../node_modules/tailwindcss/utilities.css";
+@import "../../node_modules/tailwindcss/variants.css";
 
 @layer utilities {
   .prose :where(iframe):not(:where([class~="not-prose"] *)) {

@@ -2,93 +2,14 @@
 
 /* https://tailwindcss.com/ */
 
-@import "styles/vendor/_tailwind.css";
+@import "styles/tailwind.css";
 
-.ngx-cropper {
-  --cropper-overlay-color: hsl(var(--b3));
+/* https://sass-guidelin.es */
 
-  .ngx-ic-cropper {
-    @apply rounded-box;
+@import "styles/layout/body";
+@import "styles/layout/inputs";
+@import "styles/layout/scrollbars";
 
-    &:after {
-      @apply rounded-box;
+@import "styles/vendor/ngx-cropper";
 
-      border: 0 !important;
-    }
-  }
 
-  .ngx-ic-overlay {
-    @apply rounded-box;
-  }
-
-  .ngx-ic-move {
-    @apply rounded-box;
-
-    border-color: hsl(var(--su)) !important;
-  }
-
-  .ngx-ic-resize {
-    &.ngx-ic-topleft,
-    &.ngx-ic-top,
-    &.ngx-ic-topright,
-    &.ngx-ic-right,
-    &.ngx-ic-bottomright,
-    &.ngx-ic-bottom,
-    &.ngx-ic-bottomleft,
-    &.ngx-ic-left
-    {
-      background: hsl(var(--su));
-      border-radius: 100%;
-      z-index: 2 !important;
-      opacity: 50 !important;
-
-      .ngx-ic-square {
-        visibility: hidden;
-      }
-    }
-  }
-}
-
-* {
-  @screen mouse {
-    $color-track: hsl(var(--b1));
-    $color-thumb: hsl(var(--b3));
-
-    scrollbar-color: $color-thumb $color-track;
-
-    &::-webkit-scrollbar {
-      @apply w-1.5 h-1.5 cursor-default;
-    }
-
-    &::-webkit-scrollbar-track {
-      background-color: $color-track;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: $color-thumb;
-    }
-
-    &::-webkit-scrollbar-corner {
-      background: $color-track;
-    }
-  }
-}
-
-*:disabled {
-  pointer-events: none;
-  user-select: none;
-}
-
-body {
-  &.overlay {
-    @apply overflow-hidden;
-
-    @screen mouse {
-      @apply pr-1.5;
-
-      @-moz-document url-prefix() {
-        @apply pr-3;
-      }
-    }
-  }
-}

@@ -3,7 +3,7 @@
 <ng-container>
 	<div class="flex flex-col items-start justify-start gap-4">
 		<form
-			class="rounded-box flex w-full flex-col border border-base-content/20 bg-base-100 p-4"
+			class="rounded-box flex w-full flex-col"
 			autocomplete="off"
 			[formGroup]="emailForm"
 			(ngSubmit)="onSubmitEmailForm()"
@@ -32,7 +32,12 @@
 							<span class="label-text mr-2">New Email</span>
 						</div>
 						<span class="label-text-alt">
-							<a class="link" [href]="'mailto:' + authUser.email">
+							<a
+								class="link"
+								target="_blank"
+								rel="noopener"
+								[href]="'mailto:' + authUser.email"
+							>
 								{{ authUser.email }}
 							</a>
 						</span>
@@ -79,7 +84,7 @@
 			</fieldset>
 		</form>
 		<form
-			class="rounded-box flex w-full flex-col border border-base-content/20 bg-base-100 p-4"
+			class="rounded-box flex w-full flex-col"
 			autocomplete="off"
 			[formGroup]="passwordForm"
 			(ngSubmit)="onSubmitPasswordForm()"

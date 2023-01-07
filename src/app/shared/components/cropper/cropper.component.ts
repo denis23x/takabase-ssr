@@ -3,6 +3,7 @@
 import {
 	AfterViewInit,
 	Component,
+	ElementRef,
 	EventEmitter,
 	Input,
 	OnDestroy,
@@ -21,11 +22,16 @@ import {
 	User
 } from '../../../core';
 import { Subscription } from 'rxjs';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import {
+	AbstractControl,
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	Validators
+} from '@angular/forms';
 
 interface ImageForm {
 	url: FormControl<string>;
-	name: FormControl<string>;
 }
 
 @Component({
@@ -33,6 +39,8 @@ interface ImageForm {
 	templateUrl: './cropper.component.html'
 })
 export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
+	@ViewChild('imageFormFile') imageFormFile: ElementRef | undefined;
+
 	// prettier-ignore
 	@ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent | undefined;
 
@@ -41,13 +49,16 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.cropperField = field;
 	}
 
+	@Input()
+	set appRound(round: boolean) {
+		this.cropperRound = round;
+	}
+
 	// prettier-ignore
 	@Output() submitted: EventEmitter<FileCreateDto> = new EventEmitter<FileCreateDto>();
 
-	cropperField: string | undefined;
-	cropperFile: File = undefined;
-	cropperBase64: string = undefined;
-	cropperBackgroundIsDraggable: boolean = false;
+	imageForm: FormGroup | undefined;
+	imageFormIsSubmitted: boolean = false;
 
 	imageTransform$: Subscription | undefined;
 	imageTransform: ImageTransform = {
@@ -59,6 +70,13 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		translateV: 0
 	};
 
+	cropperField: string | undefined;
+	cropperFile: File = undefined;
+	cropperRound: boolean = false;
+	cropperBase64: string = undefined;
+	cropperBackgroundIsDraggable: boolean = false;
+	cropperIsSubmitted: boolean = false;
+
 	cropperPositionInitial: CropperPosition = undefined;
 	cropperPosition: CropperPosition = {
 		x1: 0,
@@ -67,19 +85,13 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		y2: 0
 	};
 
-	imageForm: FormGroup | undefined;
-	imageFormIsSubmitted: boolean = false;
-
 	constructor(
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
 		private fileService: FileService
 	) {
 		this.imageForm = this.formBuilder.group<ImageForm>({
-			url: this.formBuilder.control('', [
-				this.helperService.getCustomValidator('url-image')
-			]),
-			name: this.formBuilder.control('', [])
+			url: this.formBuilder.control('', [Validators.required])
 		});
 	}
 
@@ -96,34 +108,73 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		[this.imageTransform$].forEach($ => $?.unsubscribe());
 	}
 
-	onSubmitFile(event: Event): void {
-		if (this.helperService.getFormValidation(this.imageForm)) {
-			const inputElement: HTMLInputElement = event.target as HTMLInputElement;
-			const file: File = inputElement.files.item(0);
+	onInputUrl(keyboardEvent: KeyboardEvent): void {
+		const ctrl: boolean = keyboardEvent.ctrlKey;
 
-			this.cropperFile = file;
+		const c: boolean = keyboardEvent.key.toLowerCase() === 'c';
+		const v: boolean = keyboardEvent.key.toLowerCase() === 'v';
 
-			this.imageForm.patchValue(this.cropperFile);
+		if (!ctrl || (!c && !v)) {
+			keyboardEvent.stopImmediatePropagation();
+			keyboardEvent.stopPropagation();
+			keyboardEvent.preventDefault();
+		} else {
+			this.imageForm
+				.get('url')
+				.setValidators([
+					Validators.required,
+					this.helperService.getCustomValidator('url-image')
+				]);
+
+			const validationTimeout = setTimeout(() => {
+				if (this.helperService.getFormValidation(this.imageForm)) {
+					this.imageFormIsSubmitted = true;
+
+					const fileGetOneDto: FileGetOneDto = {
+						...this.imageForm.value
+					};
+
+					this.fileService.getOne(fileGetOneDto).subscribe({
+						next: (file: File) => {
+							this.cropperPositionInitial = undefined;
+							this.cropperFile = file;
+
+							this.imageFormIsSubmitted = false;
+						},
+						error: () => (this.imageFormIsSubmitted = false)
+					});
+				}
+
+				clearTimeout(validationTimeout);
+			});
 		}
 	}
 
-	onSubmitUrl(): void {
-		if (this.helperService.getFormValidation(this.imageForm)) {
-			this.imageFormIsSubmitted = true;
+	onInputFile(event: Event): void {
+		const inputElement: HTMLInputElement = event.target as HTMLInputElement;
+		const file: File = inputElement.files.item(0);
 
-			const fileGetOneDto: FileGetOneDto = {
-				...this.imageForm.value
-			};
+		this.cropperPositionInitial = undefined;
+		this.cropperFile = file;
 
-			this.fileService.getOne(fileGetOneDto).subscribe({
-				next: (file: File) => {
-					this.cropperFile = file;
+		this.setUpdateAndValidityImageForm(file.name);
+	}
 
-					this.imageFormIsSubmitted = false;
-				},
-				error: () => (this.imageFormIsSubmitted = false)
-			});
-		}
+	onResetImageForm(): void {
+		this.imageFormFile.nativeElement.value = '';
+
+		this.setUpdateAndValidityImageForm('');
+
+		this.onResetCropper();
+	}
+
+	setUpdateAndValidityImageForm(value: string): void {
+		const abstractControl: AbstractControl = this.imageForm.get('url');
+
+		abstractControl.setValue(value);
+		abstractControl.setValidators([Validators.required]);
+		abstractControl.updateValueAndValidity();
+		abstractControl.markAsTouched();
 	}
 
 	onImageCropped(imageCroppedEvent: ImageCroppedEvent): void {
@@ -134,7 +185,7 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 	}
 
-	onRotate(direction: boolean): void {
+	onImageRotate(direction: boolean): void {
 		this.imageTransform = {
 			...this.imageTransform,
 			rotate: direction
@@ -143,7 +194,7 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		};
 	}
 
-	onFlip(direction: boolean): void {
+	onImageFlip(direction: boolean): void {
 		if (direction) {
 			this.imageTransform = {
 				...this.imageTransform,
@@ -157,7 +208,7 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 	}
 
-	onZoom(direction: boolean): void {
+	onImageZoom(direction: boolean): void {
 		this.imageTransform = {
 			...this.imageTransform,
 			// prettier-ignore
@@ -165,7 +216,7 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		};
 	}
 
-	onReset(): void {
+	onImageReset(): void {
 		this.imageTransform = {
 			scale: 1,
 			rotate: 0,
@@ -175,20 +226,22 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 			translateV: 0
 		};
 
+		this.cropperBackgroundIsDraggable = false;
+
 		this.cropperPosition = {
 			...this.cropperPositionInitial
 		};
 	}
 
-	onClose(): void {
+	onResetCropper(): void {
+		this.onImageReset();
+
 		this.cropperFile = undefined;
 		this.cropperBase64 = undefined;
-
-		this.onReset();
 	}
 
 	// prettier-ignore
-	async base64ToFile(base64: string, filename: string, mimeType: string): Promise<File> {
+	async setBase64ToFile(base64: string, filename: string, mimeType: string): Promise<File> {
 		const response: Response = await fetch(base64);
 		const arrayBuffer: ArrayBuffer = await response.arrayBuffer();
 
@@ -196,23 +249,24 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	async onSubmitCropper(): Promise<void> {
-		const file: File = await this.base64ToFile(
-			this.cropperBase64,
-			this.cropperFile.name,
-			this.cropperFile.type
-		);
+		// prettier-ignore
+		const file: File = await this.setBase64ToFile(this.cropperBase64, this.cropperFile.name, this.cropperFile.type);
 
 		const formData: FormData = new FormData();
 
 		formData.append(this.cropperField, file);
 
+		this.cropperIsSubmitted = true;
+
 		this.fileService.create(formData).subscribe({
 			next: (fileCreateDto: FileCreateDto) => {
-				this.submitted.emit(fileCreateDto);
+				this.cropperIsSubmitted = false;
 
-				this.onClose();
+				this.onResetCropper();
+
+				this.submitted.emit(fileCreateDto);
 			},
-			error: (error: any) => console.error(error)
+			error: () => (this.cropperIsSubmitted = false)
 		});
 	}
 }

@@ -1,0 +1,13 @@
+body {
+  &.overlay {
+    @apply overflow-hidden;
+
+    @screen mouse {
+      @apply pr-1.5;
+
+      @-moz-document url-prefix() {
+        @apply pr-3;
+      }
+    }
+  }
+}

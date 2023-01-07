@@ -210,15 +210,20 @@
 		<div
 			class="rounded-box flex flex-col space-y-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
-			<div class="rounded-box flex flex-col space-y-4 bg-base-200 p-4">
-				<div
-					class="flex"
-					appMarkdown
-					[appTextareaId]="'postFormTextarea'"
-					[appPreviewId]="'postFormPreview'"
-					[appScrollSync]="false"
-					[appDisabled]="postFormIsSubmitted"
-				></div>
+			<div class="rounded-box flex flex-col space-y-4">
+				<div class="flex w-full items-center justify-between space-x-4">
+					<div
+						class="flex overflow-auto"
+						appMarkdown
+						[appTextareaId]="'postFormTextarea'"
+						[appPreviewId]="'postFormPreview'"
+						[appScrollSync]="false"
+						[appDisabled]="postFormIsSubmitted"
+					></div>
+					<button class="btn btn-primary" type="button" aria-label="Fullscreen">
+						Fullscreen
+					</button>
+				</div>
 				<form class="block" autocomplete="off" [formGroup]="postForm">
 					<fieldset class="flex flex-col" [disabled]="postFormIsSubmitted">
 						<fieldset
@@ -277,7 +282,7 @@
 			</div>
 			<div class="grid grid-cols-12 gap-4">
 				<button
-					class="btn btn-secondary col-span-12 sm:col-span-3"
+					class="btn btn-secondary col-span-4 sm:col-span-3"
 					type="button"
 					aria-label="Preview"
 					[disabled]="postForm.invalid || postFormIsSubmitted"
@@ -286,7 +291,7 @@
 					Preview
 				</button>
 				<button
-					class="btn btn-primary col-span-12 sm:col-span-9"
+					class="btn btn-primary col-span-8 sm:col-span-9"
 					type="button"
 					aria-label="Submit"
 					[class.loading]="postFormIsSubmitted"
@@ -330,12 +335,13 @@
 			[appTitle]="'Image'"
 			(closed)="postFormImage = false"
 		>
-			<app-cropper
-				slot="content"
-				[appField]="'images'"
-				(submitted)="onSubmitCropper($event)"
-			>
-			</app-cropper>
+			<ng-container slot="content" *ngIf="postFormImage">
+				<app-cropper
+					[appField]="'images'"
+					(submitted)="onSubmitCropper($event)"
+				>
+				</app-cropper>
+			</ng-container>
 		</app-window>
 	</app-overlay>
 	<article class="prose hidden max-w-none" id="postFormPreview"></article>
