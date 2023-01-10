@@ -13,7 +13,7 @@
 		>
 			<li
 				class="inline-block"
-				*ngIf="{ value: history$.getValue().length <= 1 } as disabled"
+				*ngIf="{ value: textareaHistory$.getValue().length <= 1 } as disabled"
 				[class.disabled]="disabled.value"
 			>
 				<button
@@ -24,13 +24,13 @@
 					appSvgIcon
 					[class.pointer-events-none]="disabled.value"
 					[appIcon]="'arrow-left'"
-					(click)="onBack()"
+					(click)="onMarkdownBack()"
 				></button>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div class="flex p-0" appDropdown #dropdownHeading>
 					<button
-						class="fill-current p-3"
+						class="fill-current py-3 px-4"
 						type="button"
 						title="Heading"
 						aria-label="Heading"
@@ -60,7 +60,7 @@
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div class="flex p-0" appDropdown #dropdownFormatting>
 					<button
-						class="fill-current p-3"
+						class="fill-current py-3 px-4"
 						type="button"
 						title="Formatting"
 						aria-label="Formatting"
@@ -93,7 +93,7 @@
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div class="flex p-0" appDropdown #dropdownList>
 					<button
-						class="fill-current p-3"
+						class="fill-current py-3 px-4"
 						type="button"
 						title="List"
 						aria-label="List"

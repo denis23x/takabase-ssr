@@ -23,15 +23,8 @@ import {
 	MarkdownControlList,
 	MarkdownControlUrl
 } from './markdown-controls';
-import {
-	BehaviorSubject,
-	fromEvent,
-	merge,
-	Subscription,
-	of,
-	EMPTY
-} from 'rxjs';
-import { debounceTime, filter, startWith, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, fromEvent, merge, Subscription, EMPTY } from 'rxjs';
+import { debounceTime, filter, startWith } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -91,17 +84,16 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	scrollSync: boolean = false;
 	scrollSync$: Subscription | undefined;
-	scrollSyncIsBusy: boolean = false;
 
 	textareaInput$: Subscription | undefined;
 	textareaId: string | undefined;
 	textarea: HTMLTextAreaElement | undefined;
+	textareaHistoryToggle: boolean = true;
+	// prettier-ignore
+	textareaHistory$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
 	previewId: string | undefined;
 	preview: HTMLElement | undefined;
-
-	historyRemember: boolean = true;
-	history$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
 	urlForm: FormGroup | undefined;
 	urlFormControl: MarkdownControl | undefined;
@@ -133,13 +125,11 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 					next: () => {
 						this.markdownService.getRender(this.textarea.value, this.preview);
 
-						if (this.historyRemember) {
-							const value: string = this.textarea.value;
-							const history: string[] = this.history$.getValue();
-
-							this.history$.next(value ? history.concat([value]) : []);
+						if (this.textareaHistoryToggle) {
+							// prettier-ignore
+							this.textareaHistory$.next(this.textareaHistory$.getValue().concat([this.textarea.value]));
 						} else {
-							this.historyRemember = true;
+							this.textareaHistoryToggle = true;
 						}
 					},
 					error: (error: any) => console.error(error)
@@ -154,7 +144,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	ngOnDestroy(): void {
 		[
 			this.textareaInput$,
-			this.history$,
+			this.textareaHistory$,
 			this.scrollSync$,
 			this.controlListScroll$
 		].forEach($ => $?.unsubscribe());
@@ -182,59 +172,40 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	setScrollSyncHandler(): void {
-		// prettier-ignore
-		const getScroll = (a: HTMLTextAreaElement | HTMLElement, b: HTMLTextAreaElement | HTMLElement): number => {
-      const aScrollTop: number = a.scrollTop;
-      const aMaxHeight: number = a.scrollHeight - a.clientHeight;
-      const aScrollPosition: number = Math.round((aScrollTop / aMaxHeight) * 100);
-
-      const bMaxHeight: number = b.scrollHeight - b.clientHeight;
-      const bScrollPosition: number = Math.round(bMaxHeight * (aScrollPosition / 100));
-
-      return Number(bScrollPosition);
-    }
+		const getScrollTop = (a: HTMLElement, b: HTMLElement): number => {
+			// prettier-ignore
+			return Math.round((b.scrollHeight - b.clientHeight) * ((a.scrollTop / (a.scrollHeight - a.clientHeight))));
+		};
 
 		this.scrollSync$ = merge(
 			fromEvent(this.textarea, 'scroll'),
 			fromEvent(this.preview, 'scroll')
 		)
-			.pipe(
-				filter(() => this.scrollSync),
-				debounceTime(10),
-				switchMap((event: Event) => {
-					const { id } = event.target as Element;
-					const elementList: string[] = ['textarea', 'preview'];
-
-					return of([
-						this[elementList[+(id === 'preview')]],
-						this[elementList[+(id === 'textarea')]]
-					]);
-				})
-			)
+			.pipe(filter(() => this.scrollSync))
 			.subscribe({
-				next: ([element, target]: HTMLTextAreaElement[] | HTMLElement[]) => {
-					if (!this.scrollSyncIsBusy) {
-						target.scrollTop = getScroll(element, target);
+				next: (event: Event) => {
+					const source: any = event.target;
+
+					if (source.id === this.textarea.id) {
+						this.preview.scrollTop = getScrollTop(this.textarea, this.preview);
 					}
 
-					this.scrollSyncIsBusy = !this.scrollSyncIsBusy;
+					if (source.id === this.preview.id) {
+						this.textarea.scrollTop = getScrollTop(this.preview, this.textarea);
+					}
 				},
 				error: (error: any) => console.error(error)
 			});
 	}
 
-	onBack(): void {
-		this.historyRemember = false;
+	onMarkdownBack(): void {
+		const history: string[] = this.textareaHistory$.getValue().slice(0, -1);
+		const historyValue: string = history[history.length - 1];
 
-		const history: string[] = this.history$.getValue();
+		this.textareaHistory$.next(history);
+		this.textareaHistoryToggle = false;
 
-		history.pop();
-
-		const value: string = history[history.length - 1];
-
-		if (!!value) {
-			this.setTextareaValue(value);
-		}
+		this.setTextareaValue(historyValue);
 	}
 
 	onMarkdownControl(markdownControl: MarkdownControl): void {
