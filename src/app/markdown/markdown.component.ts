@@ -46,11 +46,24 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 	post: Post | undefined;
 	postForm: FormGroup | undefined;
 	postFormIsSubmitted: boolean = false;
-	postFormImage: boolean = false;
-	postFormPreview: boolean = false;
+	postFormToggleImage: boolean = false;
+	postFormTogglePreview: boolean = false;
 
 	authUser: User | undefined;
 	authUser$: Subscription | undefined;
+
+	fullscreenToggle: boolean = false;
+	fullscreenClassList: string[] = [
+		'border',
+		'border-base-content/20',
+		'rounded-box',
+		'shadow-xl'
+	];
+	fullscreenScrollSync: boolean = false;
+	fullscreenDisableTextWrapping: boolean = false;
+	fullscreenHiddenMarkdown: boolean = false;
+	fullscreenHiddenRender: boolean = false;
+	fullscreenHiddenControls: boolean = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -121,7 +134,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitCropper(fileCreateDto?: FileCreateDto): void {
-		this.postFormImage = false;
+		this.postFormToggleImage = false;
 		this.postForm.get('image').setValue(fileCreateDto.path);
 	}
 
@@ -151,7 +164,7 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 			category: this.category
 		};
 
-		this.postFormPreview = true;
+		this.postFormTogglePreview = true;
 	}
 
 	onSubmitPostForm(): void {
@@ -180,6 +193,43 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 				},
 				error: () => (this.postFormIsSubmitted = false)
 			});
+		}
+	}
+
+	onFullscreen(toggle: boolean): void {
+		this.fullscreenToggle = toggle;
+
+		if (this.fullscreenToggle) {
+			this.fullscreenClassList = [
+				'fixed',
+				'top-0',
+				'left-0',
+				'!m-0',
+				'w-full',
+				'h-full'
+			];
+		} else {
+			this.fullscreenClassList = [
+				'border',
+				'border-base-content/20',
+				'rounded-box',
+				'shadow-xl'
+			];
+		}
+	}
+
+	onFullscreenHide(view: string): void {
+		// prettier-ignore
+		if (view === 'fullscreenHiddenMarkdown' || view === 'fullscreenHiddenRender') {
+			const viewOpposite: string = view === 'fullscreenHiddenMarkdown' ? 'fullscreenHiddenRender' : 'fullscreenHiddenMarkdown';
+
+			if (this[viewOpposite]) {
+				this[viewOpposite] = !this[viewOpposite];
+			}
+
+			this[view] = !this[view];
+		} else {
+			this.fullscreenHiddenControls = !this.fullscreenHiddenControls;
 		}
 	}
 }

@@ -23,7 +23,7 @@
 					[class.btn-primary]="!image.value"
 					[class.btn-disabled]="postFormIsSubmitted"
 					[class.btn-outline]="!postFormIsSubmitted"
-					(click)="postFormImage = true"
+					(click)="postFormToggleImage = true"
 				>
 					Image
 				</button>
@@ -208,79 +208,202 @@
 			</form>
 		</div>
 		<div
-			class="rounded-box flex flex-col space-y-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+			class="flex flex-col space-y-4 bg-base-100 p-4"
+			[ngClass]="fullscreenClassList"
 		>
-			<div class="rounded-box flex flex-col space-y-4">
-				<div class="flex w-full items-center justify-between space-x-4">
+			<div
+				class="flex h-full flex-col gap-y-4 overflow-y-auto overflow-x-hidden"
+			>
+				<div
+					class="flex w-full items-center justify-between space-x-4"
+					[class.hidden]="fullscreenHiddenControls"
+				>
 					<div
 						class="flex overflow-auto"
 						appMarkdown
 						[appTextareaId]="'postFormTextarea'"
 						[appPreviewId]="'postFormPreview'"
-						[appScrollSync]="false"
+						[appScrollSync]="fullscreenScrollSync"
 						[appDisabled]="postFormIsSubmitted"
 					></div>
-					<button class="btn btn-primary" type="button" aria-label="Fullscreen">
+					<button
+						class="btn btn-primary"
+						type="button"
+						aria-label="Fullscreen"
+						(click)="onFullscreen(!fullscreenToggle)"
+					>
 						Fullscreen
 					</button>
 				</div>
-				<form class="block" autocomplete="off" [formGroup]="postForm">
-					<fieldset class="flex flex-col" [disabled]="postFormIsSubmitted">
+				<hr
+					class="my-2 border-base-content/20"
+					*ngIf="fullscreenToggle"
+					[class.hidden]="fullscreenHiddenControls"
+				/>
+				<div class="flex h-full flex-col gap-4 overflow-auto sm:flex-row">
+					<form
+						class="flex h-full w-full flex-col overflow-auto"
+						autocomplete="off"
+						[formGroup]="postForm"
+						[class.hidden]="fullscreenToggle && fullscreenHiddenMarkdown"
+					>
 						<fieldset
-							class="form-control"
-							*ngIf="postForm.get('markdown') as markdown"
+							class="flex h-full flex-col"
+							[disabled]="postFormIsSubmitted"
 						>
-							<label class="label" for="postFormTextarea">
-								<div class="indicator">
-									<span
-										class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-										*ngIf="markdown.touched && !!markdown.errors"
-										[ngSwitch]="true"
-									>
-										<ng-container *ngSwitchCase="!!markdown.errors.required">
-											Required
-										</ng-container>
-										<!-- prettier-ignore -->
-										<ng-container *ngSwitchCase="!!markdown.errors.minlength">
-                      Min length {{ markdown.errors.minlength["requiredLength"] }} characters
-                    </ng-container>
-										<!-- prettier-ignore -->
-										<ng-container *ngSwitchCase="!!markdown.errors.maxlength">
-                      Max length {{ markdown.errors.maxlength["requiredLength"] }} characters
-                    </ng-container>
-									</span>
-									<span class="label-text mr-2">Markdown</span>
-								</div>
-								<!-- prettier-ignore -->
-								<span
-                  class="label-text-alt"
-                  [class.text-base-content]="postFormIsSubmitted"
-                  [class.text-success]="!postFormIsSubmitted && markdown.touched && !markdown.errors"
-                  [class.text-error]="!postFormIsSubmitted && markdown.touched && !!markdown.errors"
-                >
-                  {{ markdown.value.length }}/7200
-                </span>
-							</label>
-							<textarea
-								class="textarea textarea-bordered w-full"
-								id="postFormTextarea"
-								aria-label="Markdown"
-								placeholder="Type post markdown"
-								formControlName="markdown"
-								[rows]="8"
-								[class.font-mono]="authUser.settings.monospace"
-								[class.textarea-success]="markdown.touched && !markdown.errors"
-								[class.textarea-error]="markdown.touched && !!markdown.errors"
-								[class.textarea-disabled]="postFormIsSubmitted"
-								[class.bg-base-300]="postFormIsSubmitted"
+							<fieldset
+								class="form-control h-full"
+								*ngIf="postForm.get('markdown') as markdown"
 							>
-                {{ markdown.value }}
-              </textarea>
+								<label class="label" for="postFormTextarea">
+									<div class="indicator">
+										<span
+											class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+											*ngIf="markdown.touched && !!markdown.errors"
+											[ngSwitch]="true"
+										>
+											<ng-container *ngSwitchCase="!!markdown.errors.required">
+												Required
+											</ng-container>
+											<!-- prettier-ignore -->
+											<ng-container *ngSwitchCase="!!markdown.errors.minlength">
+                        Min length {{ markdown.errors.minlength["requiredLength"] }} characters
+                      </ng-container>
+											<!-- prettier-ignore -->
+											<ng-container *ngSwitchCase="!!markdown.errors.maxlength">
+                        Max length {{ markdown.errors.maxlength["requiredLength"] }} characters
+                      </ng-container>
+										</span>
+										<span class="label-text mr-2">Markdown</span>
+									</div>
+									<!-- prettier-ignore -->
+									<span
+                    class="label-text-alt"
+                    [class.text-base-content]="postFormIsSubmitted"
+                    [class.text-success]="!postFormIsSubmitted && markdown.touched && !markdown.errors"
+                    [class.text-error]="!postFormIsSubmitted && markdown.touched && !!markdown.errors"
+                  >
+                    {{ markdown.value.length }}/7200
+                  </span>
+								</label>
+								<!-- prettier-ignore -->
+								<textarea
+									class="textarea textarea-bordered !outline-0 w-full h-full"
+									id="postFormTextarea"
+									aria-label="Markdown"
+									placeholder="Type post markdown"
+									formControlName="markdown"
+									[rows]="8"
+                  [class.whitespace-pre]="fullscreenDisableTextWrapping"
+									[class.font-mono]="authUser.settings.monospace"
+									[class.textarea-success]="markdown.touched && !markdown.errors"
+									[class.textarea-error]="markdown.touched && !!markdown.errors"
+									[class.textarea-disabled]="postFormIsSubmitted"
+									[class.bg-base-300]="postFormIsSubmitted"
+								>
+                  {{ markdown.value }}
+                </textarea>
+							</fieldset>
 						</fieldset>
-					</fieldset>
-				</form>
+					</form>
+					<div
+						class="flex flex-col items-center justify-center"
+						[class.hidden]="!fullscreenToggle"
+					>
+						<ul
+							class="menu rounded-btn menu-horizontal border border-base-content/20 bg-base-100 sm:menu-vertical"
+						>
+							<li class="inline-block">
+								<button
+									type="button"
+									title="Markdown"
+									aria-label="Markdown"
+									[class.active]="fullscreenHiddenRender"
+									(click)="onFullscreenHide('fullscreenHiddenRender')"
+								>
+									<i
+										class="-rotate-90 fill-current sm:rotate-180"
+										appSvgIcon
+										[appIcon]="'arrow-bar-left'"
+									></i>
+								</button>
+							</li>
+							<li class="inline-block">
+								<button
+									class="fill-current"
+									type="button"
+									title="Fullscreen"
+									aria-label="Fullscreen"
+									appSvgIcon
+									[appIcon]="'fullscreen'"
+									[class.active]="fullscreenHiddenControls"
+									(click)="onFullscreenHide('fullscreenHiddenControls')"
+								></button>
+							</li>
+							<li class="inline-block">
+								<button
+									class="fill-current"
+									type="button"
+									title="Scroll sync"
+									aria-label="Scroll sync"
+									appSvgIcon
+									[appIcon]="'mouse'"
+									[class.active]="fullscreenScrollSync"
+									(click)="fullscreenScrollSync = !fullscreenScrollSync"
+								></button>
+							</li>
+							<li class="inline-block">
+								<!-- prettier-ignore -->
+								<button
+									class="fill-current"
+									type="button"
+									title="Disable text wrapping"
+									aria-label="Disable text wrapping"
+									appSvgIcon
+									[appIcon]="'text-wrap'"
+									[class.active]="fullscreenDisableTextWrapping"
+									(click)="fullscreenDisableTextWrapping = !fullscreenDisableTextWrapping"
+								></button>
+							</li>
+							<li class="inline-block">
+								<button
+									type="button"
+									title="Render"
+									aria-label="Render"
+									[class.active]="fullscreenHiddenMarkdown"
+									(click)="onFullscreenHide('fullscreenHiddenMarkdown')"
+								>
+									<i
+										class="rotate-90 fill-current sm:rotate-0"
+										appSvgIcon
+										[appIcon]="'arrow-bar-left'"
+									></i>
+								</button>
+							</li>
+						</ul>
+					</div>
+					<section
+						class="flex h-full w-full flex-col overflow-auto"
+						[class.hidden]="!fullscreenToggle || fullscreenHiddenRender"
+					>
+						<div class="label">
+							<span class="label-text">Render</span>
+						</div>
+						<div
+							class="rounded-btn flex h-full flex-col overflow-auto border border-base-content/20"
+						>
+							<article
+								class="prose max-w-none overflow-auto px-4 py-2"
+								id="postFormPreview"
+							></article>
+						</div>
+					</section>
+				</div>
 			</div>
-			<div class="grid grid-cols-12 gap-4">
+			<div
+				class="grid grid-cols-12 gap-4"
+				[class.hidden]="fullscreenHiddenControls"
+			>
 				<button
 					class="btn btn-secondary col-span-4 sm:col-span-3"
 					type="button"
@@ -304,38 +427,37 @@
 		</div>
 	</div>
 	<app-overlay
-		[appToggle]="postFormPreview"
-		(clicked)="postFormPreview = false"
-		(escaped)="postFormPreview = false"
+		[appToggle]="postFormTogglePreview"
+		(clicked)="postFormTogglePreview = false"
+		(escaped)="postFormTogglePreview = false"
 	>
 		<app-window
 			slot="content"
 			[appTitle]="'Preview'"
 			[appButtons]="['close', 'fullscreen']"
-			(closed)="postFormPreview = false"
+			(closed)="postFormTogglePreview = false"
 		>
 			<app-post-detail
 				class="h-full"
 				slot="content"
 				[appPost]="post"
 			></app-post-detail>
-			<app-share
-				class="pointer-events-none flex bg-base-200 p-2 opacity-50"
-				slot="footer"
-			></app-share>
+			<div class="pointer-events-none flex bg-base-200 p-2" slot="footer">
+				<app-share class="opacity-50"></app-share>
+			</div>
 		</app-window>
 	</app-overlay>
 	<app-overlay
-		[appToggle]="postFormImage"
-		(clicked)="postFormImage = false"
-		(escaped)="postFormImage = false"
+		[appToggle]="postFormToggleImage"
+		(clicked)="postFormToggleImage = false"
+		(escaped)="postFormToggleImage = false"
 	>
 		<app-window
 			slot="content"
 			[appTitle]="'Image'"
-			(closed)="postFormImage = false"
+			(closed)="postFormToggleImage = false"
 		>
-			<ng-container slot="content" *ngIf="postFormImage">
+			<ng-container slot="content" *ngIf="postFormToggleImage">
 				<app-cropper
 					[appField]="'images'"
 					(submitted)="onSubmitCropper($event)"
@@ -344,5 +466,4 @@
 			</ng-container>
 		</app-window>
 	</app-overlay>
-	<article class="prose hidden max-w-none" id="postFormPreview"></article>
 </ng-container>
