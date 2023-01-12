@@ -1,6 +1,6 @@
 module.exports = {
   mode: "jit",
-  content: ["./src/**/*.{ts,html}"],
+  content: ["./src/**/*.html"],
   safelist: [
     /** SNACKBAR  */
 
@@ -34,6 +34,42 @@ module.exports = {
     "no-underline",
     "italic",
     "not-italic",
+
+    /** WINDOW  */
+
+    "w-full",
+    "h-full",
+    "justify-between",
+
+    "left-4",
+    "top-1/2",
+    "h-auto",
+    "max-h-[calc(100vh-2rem)]",
+    "w-full",
+    "max-w-[calc(100vw-2rem)]",
+    "-translate-y-1/2",
+    "border",
+    "border-base-content/20",
+    "md:left-1/2",
+    "md:max-h-[75vh]",
+    "md:max-w-[640px]",
+    "md:-translate-x-1/2",
+    "shadow-xl",
+    "rounded-box",
+
+    /** FULLSCREEN */
+
+    "fixed",
+    "top-0",
+    "left-0",
+    "!m-0",
+    "w-full",
+    "h-full",
+
+    "border",
+    "border-base-content/20",
+    "rounded-box",
+    "shadow-xl",
   ],
   theme: {
     cursor: {

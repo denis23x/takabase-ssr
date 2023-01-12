@@ -34,7 +34,23 @@ export class WindowComponent implements OnInit, OnDestroy {
 	captionButtonsPosition: string = 'left';
 
 	fullscreenToggle: boolean = false;
-	fullscreenClassList: string[] = [];
+	fullscreenClassList: string[] = [
+		'left-4',
+		'top-1/2',
+		'h-auto',
+		'max-h-[calc(100vh-2rem)]',
+		'w-full',
+		'max-w-[calc(100vw-2rem)]',
+		'-translate-y-1/2',
+		'border',
+		'border-base-content/20',
+		'md:left-1/2',
+		'md:max-h-[75vh]',
+		'md:max-w-[640px]',
+		'md:-translate-x-1/2',
+		'shadow-xl',
+		'rounded-box'
+	];
 
 	authUser: User | undefined;
 	authUser$: Subscription | undefined;
@@ -42,8 +58,6 @@ export class WindowComponent implements OnInit, OnDestroy {
 	constructor(private authService: AuthService) {}
 
 	ngOnInit(): void {
-		this.onFullscreen(false);
-
 		this.authUser$ = this.authService.user
 			.pipe(filter((user: User) => !!user))
 			.subscribe({

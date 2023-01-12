@@ -155,6 +155,43 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	onFullscreen(toggle: boolean): void {
+		this.fullscreenToggle = toggle;
+
+		if (this.fullscreenToggle) {
+			this.fullscreenClassList = [
+				'fixed',
+				'top-0',
+				'left-0',
+				'!m-0',
+				'w-full',
+				'h-full'
+			];
+		} else {
+			this.fullscreenClassList = [
+				'border',
+				'border-base-content/20',
+				'rounded-box',
+				'shadow-xl'
+			];
+		}
+	}
+
+	onFullscreenHide(view: string): void {
+		// prettier-ignore
+		if (view === 'fullscreenHiddenMarkdown' || view === 'fullscreenHiddenRender') {
+			const viewOpposite: string = view === 'fullscreenHiddenMarkdown' ? 'fullscreenHiddenRender' : 'fullscreenHiddenMarkdown';
+
+			if (this[viewOpposite]) {
+				this[viewOpposite] = !this[viewOpposite];
+			}
+
+			this[view] = !this[view];
+		} else {
+			this.fullscreenHiddenControls = !this.fullscreenHiddenControls;
+		}
+	}
+
 	onPreviewPost(): void {
 		const { categoryId, categoryName, ...postForm } = this.postForm.value;
 
@@ -193,43 +230,6 @@ export class MarkdownComponent implements OnInit, OnDestroy {
 				},
 				error: () => (this.postFormIsSubmitted = false)
 			});
-		}
-	}
-
-	onFullscreen(toggle: boolean): void {
-		this.fullscreenToggle = toggle;
-
-		if (this.fullscreenToggle) {
-			this.fullscreenClassList = [
-				'fixed',
-				'top-0',
-				'left-0',
-				'!m-0',
-				'w-full',
-				'h-full'
-			];
-		} else {
-			this.fullscreenClassList = [
-				'border',
-				'border-base-content/20',
-				'rounded-box',
-				'shadow-xl'
-			];
-		}
-	}
-
-	onFullscreenHide(view: string): void {
-		// prettier-ignore
-		if (view === 'fullscreenHiddenMarkdown' || view === 'fullscreenHiddenRender') {
-			const viewOpposite: string = view === 'fullscreenHiddenMarkdown' ? 'fullscreenHiddenRender' : 'fullscreenHiddenMarkdown';
-
-			if (this[viewOpposite]) {
-				this[viewOpposite] = !this[viewOpposite];
-			}
-
-			this[view] = !this[view];
-		} else {
-			this.fullscreenHiddenControls = !this.fullscreenHiddenControls;
 		}
 	}
 }
