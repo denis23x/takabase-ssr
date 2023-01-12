@@ -1,6 +1,10 @@
 .ngx-cropper {
   --cropper-overlay-color: hsl(var(--b3));
 
+  .ngx-ic-source-image {
+    @apply inline;
+  }
+
   .ngx-ic-cropper {
     @apply rounded-box;
 

@@ -119,12 +119,13 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 			keyboardEvent.stopPropagation();
 			keyboardEvent.preventDefault();
 		} else {
-			this.imageForm
-				.get('url')
-				.setValidators([
-					Validators.required,
-					this.helperService.getCustomValidator('url-image')
-				]);
+			const abstractControl: AbstractControl = this.imageForm.get('url');
+
+			abstractControl.setValue('');
+			abstractControl.setValidators([
+				Validators.required,
+				this.helperService.getCustomValidator('url-image')
+			]);
 
 			const validationTimeout = setTimeout(() => {
 				if (this.helperService.getFormValidation(this.imageForm)) {

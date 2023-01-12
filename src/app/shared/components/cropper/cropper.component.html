@@ -83,9 +83,10 @@
 			</fieldset>
 		</form>
 		<div class="flex flex-col space-y-4" [class.hidden]="!cropperFile">
+			<!-- prettier-ignore -->
 			<image-cropper
 				class="ngx-cropper rounded-box !p-4"
-				[class.ngx-cropper-disabled]="cropperIsSubmitted"
+				[class.ngx-cropper-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
 				[class.ngx-cropper-rounded]="cropperRound"
 				[imageFile]="cropperFile"
 				[format]="'png'"
