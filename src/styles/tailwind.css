@@ -1,19 +1,3 @@
-@import "../../node_modules/tailwindcss/base.css";
-@import "../../node_modules/tailwindcss/components.css";
-@import "../../node_modules/tailwindcss/utilities.css";
-@import "../../node_modules/tailwindcss/variants.css";
-
-@layer utilities {
-  .prose :where(iframe):not(:where([class~="not-prose"] *)) {
-    @apply rounded-box aspect-video w-full h-auto
-  }
-
-  .prose :where(img):not(:where([class~="not-prose"] *)) {
-    @apply rounded-box w-full h-auto
-  }
-
-  .prose :where(a):not(:where([class~="not-prose"] *)) {
-    @apply link after:content-['\279A'] after:inline-block after:px-1
-  }
-}
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

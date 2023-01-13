@@ -1,0 +1,17 @@
+.prose {
+  :where(iframe):not(:where([class~="not-prose"] *)) {
+    @apply rounded-box aspect-video w-full h-auto;
+  }
+
+  :where(img):not(:where([class~="not-prose"] *)) {
+    @apply rounded-box w-full h-auto;
+  }
+
+  :where(a):not(:where([class~="not-prose"] *)) {
+    @apply link after:content-['\279A'] after:inline-block after:px-1;
+  }
+
+  :where(p):not(:where([class~="not-prose"] *)) {
+    @apply text-ellipsis overflow-hidden;
+  }
+}
