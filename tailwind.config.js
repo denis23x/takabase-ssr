@@ -41,19 +41,18 @@ module.exports = {
     "h-full",
     "justify-between",
 
-    "left-4",
     "top-1/2",
+    "left-1/2",
     "h-auto",
+    "w-auto",
     "max-h-[calc(100vh-2rem)]",
-    "w-full",
     "max-w-[calc(100vw-2rem)]",
     "-translate-y-1/2",
+    "-translate-x-1/2",
     "border",
     "border-base-content/20",
-    "md:left-1/2",
-    "md:max-h-[75vh]",
+    "md:max-h-[80vh]",
     "md:max-w-[640px]",
-    "md:-translate-x-1/2",
     "shadow-xl",
     "rounded-box",
 
@@ -80,6 +79,9 @@ module.exports = {
       ["row-resize"]: "row-resize",
     },
     extend: {
+      width: {
+        window: "calc(100vw - 2rem - 2px)",
+      },
       scale: {
         "-1": "-1",
       },

@@ -486,14 +486,14 @@
 		>
 			<ng-container slot="content" *ngIf="categoryFormToggle">
 				<form
-					class="flex flex-col bg-base-100 p-4"
+					class="flex w-window max-w-[512px] flex-col bg-base-100 p-4"
 					autocomplete="off"
 					slot="content"
 					[formGroup]="categoryForm"
 					(ngSubmit)="onSubmitCategoryForm()"
 				>
 					<p class="rounded-box mb-4 bg-base-200 p-4">
-						You can change category name later
+						You can change category information later
 					</p>
 					<fieldset
 						class="flex flex-col space-y-4"

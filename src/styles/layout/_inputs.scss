@@ -1,3 +1,13 @@
 *:disabled {
   @apply pointer-events-none select-none;
 }
+
+input {
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-transition-delay: 1000000000s;
+    transition-delay: 1000000000s;
+  }
+}

@@ -172,14 +172,15 @@
 			(closed)="onToggleConfirmationForm(false)"
 		>
 			<form
-				class="flex w-full flex-col bg-base-100 p-4"
+				class="flex w-full w-window max-w-[448px] flex-col bg-base-100 p-4"
 				autocomplete="off"
 				slot="content"
 				[formGroup]="confirmationForm"
 				(ngSubmit)="onSubmitConfirmationForm()"
 			>
-				<h2 class="text-xl font-medium text-base-content">Password</h2>
-				<hr class="my-2 border-base-content/20" />
+				<p class="rounded-box mb-4 bg-base-200 p-4">
+					Confirmation will terminate all sessions
+				</p>
 				<fieldset
 					class="flex flex-col space-y-4"
 					[disabled]="confirmationFormIsSubmitted"
@@ -237,9 +238,6 @@
 							></button>
 						</div>
 					</fieldset>
-					<p class="rounded-box mt-2 mb-4 bg-base-200 p-4">
-						Applying this settings will terminate all active sessions
-					</p>
 					<fieldset class="form-control">
 						<!-- prettier-ignore -->
 						<button

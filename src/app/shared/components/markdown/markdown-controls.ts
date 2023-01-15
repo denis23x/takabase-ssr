@@ -84,7 +84,7 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 	},
 	{
 		key: 'url-youtube',
-		label: 'Youtube',
+		label: 'Video',
 		icon: 'youtube',
 		handler: (value: any): string => `@[Youtube](${value.url})`
 	}

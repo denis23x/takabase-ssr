@@ -213,7 +213,7 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.imageTransform = {
 			...this.imageTransform,
 			// prettier-ignore
-			scale: direction ? this.imageTransform.scale + 1 : this.imageTransform.scale > 1 ? this.imageTransform.scale - 1 : 1
+			scale: direction ? this.imageTransform.scale + 0.25 : this.imageTransform.scale > 1 ? this.imageTransform.scale - 0.25 : 1
 		};
 	}
 

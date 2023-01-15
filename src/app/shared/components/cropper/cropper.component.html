@@ -1,8 +1,11 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="flex flex-col space-y-4 p-4">
+	<div class="flex w-window max-w-[512px] flex-col space-y-4 p-4">
 		<form class="block" autocomplete="off" [formGroup]="imageForm">
+			<p class="rounded-box mb-4 bg-base-200 p-4">
+				Browse file on your device or paste link from internet
+			</p>
 			<fieldset
 				class="flex flex-col space-y-4"
 				[disabled]="imageFormIsSubmitted || cropperIsSubmitted"
@@ -46,7 +49,7 @@
 							type="text"
 							aria-label="Url"
 							formControlName="url"
-							placeholder="Paste your URL"
+							placeholder="Paste image URL"
 							[class.input-success]="url.touched && url.value"
 							[class.input-error]="url.touched && url.invalid"
 							[class.input-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
@@ -77,9 +80,6 @@
 						/>
 					</div>
 				</fieldset>
-				<p class="rounded-box mb-4 bg-base-200 p-4">
-					Paste your image link from internet or choose the file on your device
-				</p>
 			</fieldset>
 		</form>
 		<div class="flex flex-col space-y-4" [class.hidden]="!cropperFile">
@@ -102,7 +102,7 @@
 				(imageCropped)="onImageCropped($event)"
 			>
 			</image-cropper>
-			<div class="flex items-center justify-between space-x-4">
+			<div class="flex items-center justify-between gap-4">
 				<ul
 					class="menu rounded-btn menu-horizontal flex-nowrap overflow-x-auto overflow-y-hidden border border-base-content/20 bg-base-100"
 					[class.pointer-events-none]="cropperIsSubmitted"
@@ -112,7 +112,7 @@
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<!-- prettier-ignore -->
 						<button
-							class="fill-current"
+							class="fill-current p-3.5"
 							type="button"
 							title="Move"
 							aria-label="Move"
@@ -124,7 +124,7 @@
 					</li>
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
-							class="-scale-x-1 fill-current"
+							class="-scale-x-1 fill-current p-3.5"
 							type="button"
 							title="Rotate counterclockwise"
 							aria-label="Rotate counterclockwise"
@@ -135,7 +135,7 @@
 					</li>
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
-							class="fill-current"
+							class="fill-current p-3.5"
 							type="button"
 							title="Rotate clockwise"
 							aria-label="Rotate clockwise"
@@ -146,7 +146,7 @@
 					</li>
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
-							class="fill-current"
+							class="fill-current p-3.5"
 							type="button"
 							title="Flip horizontal"
 							aria-label="Flip horizontal"
@@ -157,7 +157,7 @@
 					</li>
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
-							class="fill-current"
+							class="fill-current p-3.5"
 							type="button"
 							title="Flip vertical"
 							aria-label="Flip vertical"
@@ -168,7 +168,7 @@
 					</li>
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
-							class="fill-current"
+							class="fill-current p-3.5"
 							type="button"
 							title="Zoom in"
 							aria-label="Zoom in"
@@ -182,7 +182,7 @@
 						[class.disabled]="cropperIsSubmitted || imageTransform.scale <= 1"
 					>
 						<button
-							class="fill-current"
+							class="fill-current p-3.5"
 							type="button"
 							title="Zoom out"
 							aria-label="Zoom out"
@@ -194,7 +194,7 @@
 				</ul>
 				<!-- prettier-ignore -->
 				<button
-					class="btn btn-error"
+					class="btn btn-error btn-outline"
 					type="button"
 					aria-label="Reset"
 					[disabled]="imageForm.invalid || imageFormIsSubmitted || cropperIsSubmitted"

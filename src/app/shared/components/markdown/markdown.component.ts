@@ -342,4 +342,17 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.urlFormControl = undefined;
 		this.urlFormModal = false;
 	}
+
+	onInputUrl(keyboardEvent: KeyboardEvent): void {
+		const ctrl: boolean = keyboardEvent.ctrlKey;
+
+		const c: boolean = keyboardEvent.key.toLowerCase() === 'c';
+		const v: boolean = keyboardEvent.key.toLowerCase() === 'v';
+
+		if (!ctrl || (!c && !v)) {
+			keyboardEvent.stopImmediatePropagation();
+			keyboardEvent.stopPropagation();
+			keyboardEvent.preventDefault();
+		}
+	}
 }

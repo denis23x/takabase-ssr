@@ -142,21 +142,59 @@
 	>
 		<app-window
 			slot="content"
-			[appTitle]="'Insert ' + urlFormControl?.label"
+			[appTitle]="urlFormControl?.label"
 			(closed)="onCloseUrlForm()"
 		>
 			<form
-				class="flex flex-col bg-base-100 p-4"
+				class="flex w-window max-w-[512px] flex-col bg-base-100 p-4"
 				autocomplete="off"
 				slot="content"
 				#urlFormElement
 				[formGroup]="urlForm"
 				(ngSubmit)="onSubmitUrlForm()"
 			>
-				<div class="rounded-box mb-4 bg-base-200 p-4">
-					Specify your link paste a URL from internet and add optional title for
-					it
-				</div>
+				<ng-container [ngSwitch]="urlFormControl?.key">
+					<p
+						class="rounded-box mb-4 bg-base-200 p-4"
+						*ngSwitchCase="'url-link'"
+					>
+						Paste a URL from internet and add optional title
+					</p>
+					<p
+						class="rounded-box mb-4 bg-base-200 p-4"
+						*ngSwitchCase="'url-image'"
+					>
+						Paste a image URL from internet and add optional title
+					</p>
+					<p
+						class="rounded-box mb-4 bg-base-200 p-4"
+						*ngSwitchCase="'url-gist'"
+					>
+						Paste a gist URL from
+						<a
+							class="link after:inline-block after:px-1 after:content-['\279A']"
+							href="https://gist.github.com/"
+							target="_blank"
+							rel="noopener"
+						>
+							gist.github.com
+						</a>
+					</p>
+					<p
+						class="rounded-box mb-4 bg-base-200 p-4"
+						*ngSwitchCase="'url-youtube'"
+					>
+						Paste a video URL from
+						<a
+							class="link after:inline-block after:px-1 after:content-['\279A']"
+							href="https://www.youtube.com/"
+							target="_blank"
+							rel="noopener"
+						>
+							youtube.com
+						</a>
+					</p>
+				</ng-container>
 				<fieldset
 					class="flex flex-col space-y-4"
 					[disabled]="urlFormIsSubmitted"
@@ -177,13 +215,14 @@
 							</div>
 						</label>
 						<div class="relative">
+							<!-- prettier-ignore -->
 							<input
 								class="input input-bordered w-full truncate pr-12"
 								id="urlFormTitle"
 								type="text"
 								aria-label="Title"
 								formControlName="title"
-								placeholder="Type your title"
+                [attr.placeholder]="'Type ' + urlFormControl.label.toLowerCase() + ' title'"
 								[class.input-success]="title.touched && title.valid"
 								[class.input-error]="title.touched && title.invalid"
 								[class.input-disabled]="urlFormIsSubmitted"
@@ -223,17 +262,19 @@
 							</div>
 						</label>
 						<div class="relative">
+							<!-- prettier-ignore -->
 							<input
 								class="input input-bordered w-full truncate pr-12"
 								id="urlFormUrl"
 								type="text"
 								aria-label="URL"
 								formControlName="url"
-								placeholder="Paste your URL"
+								[attr.placeholder]="'Paste ' + urlFormControl.label.toLowerCase() + ' URL'"
 								[class.input-success]="url.touched && !url.errors"
 								[class.input-error]="url.touched && !!url.errors"
 								[class.input-disabled]="urlFormIsSubmitted"
-							/>
+                (keydown)="onInputUrl($event)"
+              />
 							<button
 								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 								type="button"
