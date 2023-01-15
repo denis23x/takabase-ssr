@@ -2,10 +2,10 @@
 
 <ng-container>
 	<div
-		class="rounded-btn flex overflow-auto border-base-content/20"
+		class="rounded-btn flex overflow-auto border border-base-content/20"
 		#controlListElement
 		[class.pointer-events-none]="controlListDisabled"
-		[class.border]="!controlListDisabled"
+		[class.border-transparent]="controlListDisabled"
 	>
 		<ul
 			class="menu rounded-btn menu-horizontal flex-nowrap bg-base-100"
@@ -222,6 +222,7 @@
 								type="text"
 								aria-label="Title"
 								formControlName="title"
+                appInputTrimWhitespace
                 [attr.placeholder]="'Type ' + urlFormControl.label.toLowerCase() + ' title'"
 								[class.input-success]="title.touched && title.valid"
 								[class.input-error]="title.touched && title.invalid"
@@ -269,11 +270,11 @@
 								type="text"
 								aria-label="URL"
 								formControlName="url"
+                appInputOnlyPaste
 								[attr.placeholder]="'Paste ' + urlFormControl.label.toLowerCase() + ' URL'"
 								[class.input-success]="url.touched && !url.errors"
 								[class.input-error]="url.touched && !!url.errors"
 								[class.input-disabled]="urlFormIsSubmitted"
-                (keydown)="onInputUrl($event)"
               />
 							<button
 								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"

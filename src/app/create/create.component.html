@@ -7,11 +7,11 @@
 		>
 			<div class="flex items-center gap-4">
 				<figure
-					class="rounded-btn relative overflow-hidden border-base-content/20"
+					class="rounded-btn relative overflow-hidden border border-base-content/20"
 					*ngIf="postForm.get('image') as image"
 					[class.pointer-events-none]="postFormIsSubmitted"
 					[class.bg-base-200]="postFormIsSubmitted"
-					[class.border]="!postFormIsSubmitted"
+					[class.border-transparent]="postFormIsSubmitted"
 					[class.border-success]="!postFormIsSubmitted && image.value"
 				>
 					<img
@@ -85,6 +85,7 @@
 								aria-label="Name"
 								placeholder="Type post name"
 								formControlName="name"
+								appInputTrimWhitespace
 								[class.input-success]="name.touched && name.valid"
 								[class.input-error]="name.touched && name.invalid"
 								[class.input-disabled]="postFormIsSubmitted"
@@ -207,6 +208,7 @@
 								aria-label="Description"
 								placeholder="Type post description"
 								formControlName="description"
+								appInputTrimWhitespace
 								[class.input-success]="description.touched && description.valid"
 								[class.input-error]="description.touched && description.invalid"
 								[class.input-disabled]="postFormIsSubmitted"
@@ -533,6 +535,7 @@
 									aria-label="Name"
 									formControlName="name"
 									placeholder="Type category name"
+									appInputTrimWhitespace
 									[class.input-success]="name.touched && name.valid"
 									[class.input-error]="name.touched && name.invalid"
 									[class.input-disabled]="categoryFormIsSubmitted"

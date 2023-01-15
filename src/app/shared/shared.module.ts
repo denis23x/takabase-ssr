@@ -24,6 +24,8 @@ import {
 } from './components';
 import {
 	AppAuthenticatedDirective,
+	AppInputOnlyPasteDirective,
+	AppInputTrimWhitespaceDirective,
 	AppScrollIntoViewDirective
 } from './directives';
 import { DayjsPipe, MarkdownPipe, SanitizerPipe } from './pipes';
@@ -49,6 +51,8 @@ const components: any[] = [
 
 const directives: any[] = [
 	AppAuthenticatedDirective,
+	AppInputOnlyPasteDirective,
+	AppInputTrimWhitespaceDirective,
 	AppScrollIntoViewDirective
 ];
 

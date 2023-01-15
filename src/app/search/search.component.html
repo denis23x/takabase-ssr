@@ -38,6 +38,7 @@
 							aria-label="Search"
 							formControlName="query"
 							placeholder="Type keywords"
+							appInputTrimWhitespace
 							[class.input-success]="query.touched && query.value"
 							[class.input-error]="query.touched && query.invalid"
 							[class.input-disabled]="searchFormIsSubmitted"

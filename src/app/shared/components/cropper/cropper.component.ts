@@ -108,47 +108,36 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		[this.imageTransform$].forEach($ => $?.unsubscribe());
 	}
 
-	onInputUrl(keyboardEvent: KeyboardEvent): void {
-		const ctrl: boolean = keyboardEvent.ctrlKey;
+	onInputUrl(): void {
+		const abstractControl: AbstractControl = this.imageForm.get('url');
 
-		const c: boolean = keyboardEvent.key.toLowerCase() === 'c';
-		const v: boolean = keyboardEvent.key.toLowerCase() === 'v';
+		abstractControl.setValue('');
+		abstractControl.setValidators([
+			Validators.required,
+			this.helperService.getCustomValidator('url-image')
+		]);
 
-		if (!ctrl || (!c && !v)) {
-			keyboardEvent.stopImmediatePropagation();
-			keyboardEvent.stopPropagation();
-			keyboardEvent.preventDefault();
-		} else {
-			const abstractControl: AbstractControl = this.imageForm.get('url');
+		const validationTimeout = setTimeout(() => {
+			if (this.helperService.getFormValidation(this.imageForm)) {
+				this.imageFormIsSubmitted = true;
 
-			abstractControl.setValue('');
-			abstractControl.setValidators([
-				Validators.required,
-				this.helperService.getCustomValidator('url-image')
-			]);
+				const fileGetOneDto: FileGetOneDto = {
+					...this.imageForm.value
+				};
 
-			const validationTimeout = setTimeout(() => {
-				if (this.helperService.getFormValidation(this.imageForm)) {
-					this.imageFormIsSubmitted = true;
+				this.fileService.getOne(fileGetOneDto).subscribe({
+					next: (file: File) => {
+						this.cropperPositionInitial = undefined;
+						this.cropperFile = file;
 
-					const fileGetOneDto: FileGetOneDto = {
-						...this.imageForm.value
-					};
+						this.imageFormIsSubmitted = false;
+					},
+					error: () => (this.imageFormIsSubmitted = false)
+				});
+			}
 
-					this.fileService.getOne(fileGetOneDto).subscribe({
-						next: (file: File) => {
-							this.cropperPositionInitial = undefined;
-							this.cropperFile = file;
-
-							this.imageFormIsSubmitted = false;
-						},
-						error: () => (this.imageFormIsSubmitted = false)
-					});
-				}
-
-				clearTimeout(validationTimeout);
-			});
-		}
+			clearTimeout(validationTimeout);
+		});
 	}
 
 	onInputFile(event: Event): void {

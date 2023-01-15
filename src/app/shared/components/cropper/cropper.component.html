@@ -50,10 +50,11 @@
 							aria-label="Url"
 							formControlName="url"
 							placeholder="Paste image URL"
+              appInputOnlyPaste
 							[class.input-success]="url.touched && url.value"
 							[class.input-error]="url.touched && url.invalid"
 							[class.input-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
-							(keydown)="onInputUrl($event)"
+							(keydown)="onInputUrl()"
 						/>
 						<button
 							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
@@ -106,7 +107,7 @@
 				<ul
 					class="menu rounded-btn menu-horizontal flex-nowrap overflow-x-auto overflow-y-hidden border border-base-content/20 bg-base-100"
 					[class.pointer-events-none]="cropperIsSubmitted"
-					[class.border]="!cropperIsSubmitted"
+					[class.border-transparent]="cropperIsSubmitted"
 					[class.bg-base-200]="cropperIsSubmitted"
 				>
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">

@@ -73,6 +73,7 @@
 							aria-label="Name"
 							formControlName="name"
 							placeholder="Type your name"
+							appInputTrimWhitespace
 							[class.input-success]="name.touched && name.valid"
 							[class.input-error]="name.touched && name.invalid"
 							[class.input-disabled]="profileFormIsSubmitted"
