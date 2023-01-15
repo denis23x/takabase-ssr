@@ -11,7 +11,9 @@ import {
 	SnackbarService,
 	User,
 	AuthService,
-	FileCreateDto
+	FileCreateDto,
+	CategoryCreateDto,
+	CategoryService
 } from '../core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { iif, of, Subscription, switchMap } from 'rxjs';
@@ -33,6 +35,11 @@ interface PostForm {
 	markdown: FormControl<string>;
 }
 
+interface CategoryForm {
+	name: FormControl<string>;
+	description: FormControl<string>;
+}
+
 @Component({
 	selector: 'app-markdown',
 	templateUrl: './create.component.html'
@@ -42,12 +49,15 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	category: Category | undefined;
 	categoryList: Category[] = [];
+	categoryForm: FormGroup | undefined;
+	categoryFormIsSubmitted: boolean = false;
+	categoryFormToggle: boolean = false;
 
 	post: Post | undefined;
 	postForm: FormGroup | undefined;
 	postFormIsSubmitted: boolean = false;
-	postFormToggleImage: boolean = false;
-	postFormTogglePreview: boolean = false;
+	postFormImageToggle: boolean = false;
+	postFormPreviewToggle: boolean = false;
 
 	authUser: User | undefined;
 	authUser$: Subscription | undefined;
@@ -73,7 +83,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 		private helperService: HelperService,
 		private postService: PostService,
 		private snackbarService: SnackbarService,
-		private authService: AuthService
+		private authService: AuthService,
+		private categoryService: CategoryService
 	) {
 		this.postForm = this.formBuilder.group<PostForm>({
 			name: this.formBuilder.control('', [
@@ -93,6 +104,19 @@ export class CreateComponent implements OnInit, OnDestroy {
 				Validators.required,
 				Validators.minLength(24),
 				Validators.maxLength(7200)
+			])
+		});
+
+		this.categoryForm = this.formBuilder.group<CategoryForm>({
+			name: this.formBuilder.control('', [
+				Validators.required,
+				Validators.minLength(4),
+				Validators.maxLength(24)
+			]),
+			description: this.formBuilder.control('', [
+				Validators.required,
+				Validators.minLength(4),
+				Validators.maxLength(255)
 			])
 		});
 	}
@@ -131,11 +155,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[this.activatedRouteData$, this.authUser$].forEach($ => $?.unsubscribe());
-	}
-
-	onSubmitCropper(fileCreateDto?: FileCreateDto): void {
-		this.postFormToggleImage = false;
-		this.postForm.get('image').setValue(fileCreateDto.path);
 	}
 
 	onToggleCategory(toggle: boolean): void {
@@ -201,7 +220,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			category: this.category
 		};
 
-		this.postFormTogglePreview = true;
+		this.postFormPreviewToggle = true;
 	}
 
 	onSubmitPostForm(): void {
@@ -229,6 +248,30 @@ export class CreateComponent implements OnInit, OnDestroy {
             .then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
 				},
 				error: () => (this.postFormIsSubmitted = false)
+			});
+		}
+	}
+
+	onSubmitPostFormImage(fileCreateDto?: FileCreateDto): void {
+		this.postFormImageToggle = false;
+		this.postForm.get('image').setValue(fileCreateDto.path);
+	}
+
+	onSubmitCategoryForm(): void {
+		if (this.helperService.getFormValidation(this.categoryForm)) {
+			this.categoryFormIsSubmitted = true;
+
+			const categoryCreateDto: CategoryCreateDto = {
+				...this.categoryForm.value
+			};
+
+			this.categoryService.create(categoryCreateDto).subscribe({
+				next: (category: Category) => {
+					this.snackbarService.success('Cheers!', 'Category created');
+
+					this.categoryFormIsSubmitted = false;
+				},
+				error: () => (this.categoryFormIsSubmitted = false)
 			});
 		}
 	}

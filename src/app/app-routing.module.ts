@@ -12,48 +12,75 @@ import { CanMatchPrivateGuard, CanMatchPublicGuard } from './core';
 const routes: Routes = [
 	{
 		path: '',
-		loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
+		loadChildren: () => {
+			return import('./home/home.module').then(m => m.HomeModule);
+		}
 	},
 	{
 		path: 'auth',
-		loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+		loadChildren: () => {
+			return import('./auth/auth.module').then(m => m.AuthModule);
+		},
 		canMatch: [CanMatchPublicGuard]
 	},
 	{
-		matcher: (url: UrlSegment[]) => {
-			const [path]: UrlSegment[] = url;
+		matcher: (urlSegment: UrlSegment[]) => {
+			if (urlSegment.length === 1) {
+				if (urlSegment[0].path === 'create') {
+					return {
+						consumed: urlSegment.slice(0, 1)
+					};
+				}
+			}
 
-			// prettier-ignore
-			return ['create', 'edit'].includes(path.path) ? { consumed: url.slice(0, 1) } : null;
+			if (urlSegment.length === 2) {
+				if (urlSegment[0].path === 'edit' && !!Number(urlSegment[1].path)) {
+					return {
+						consumed: urlSegment.slice(0, 1)
+					};
+				}
+			}
+
+			return null;
 		},
-		// prettier-ignore
-		loadChildren: () => import('./create/create.module').then(m => m.CreateModule),
+		loadChildren: () => {
+			return import('./create/create.module').then(m => m.CreateModule);
+		},
 		canMatch: [CanMatchPrivateGuard]
 	},
 	{
 		path: 'exception',
-		// prettier-ignore
-		loadChildren: () => import('./exception/exception.module').then(m => m.ExceptionModule)
+		loadChildren: () => {
+			// prettier-ignore
+			return import('./exception/exception.module').then(m => m.ExceptionModule);
+		}
 	},
 	{
 		path: 'search',
-		// prettier-ignore
-		loadChildren: () => import('./search/search.module').then(m => m.SearchModule)
+		loadChildren: () => {
+			return import('./search/search.module').then(m => m.SearchModule);
+		}
 	},
 	{
 		path: 'settings',
-		// prettier-ignore
-		loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule),
+		loadChildren: () => {
+			return import('./settings/settings.module').then(m => m.SettingsModule);
+		},
 		canMatch: [CanMatchPrivateGuard]
 	},
 	{
-		matcher: (url: UrlSegment[]) => {
-			const [path]: UrlSegment[] = url;
+		matcher: (urlSegment: UrlSegment[]) => {
+			if (urlSegment[0].path.match(/^@\w+$/gm)) {
+				return {
+					consumed: urlSegment.slice(0, 1)
+				};
+			}
 
-			// prettier-ignore
-			return path.path.match(/^@[\w\.]+$/gm) ? { consumed: url.slice(0, 1) } : null;
+			return null;
 		},
-		loadChildren: () => import('./user/user.module').then(m => m.UserModule)
+		loadChildren: () => {
+			return import('./user/user.module').then(m => m.UserModule);
+		}
 	},
 	{
 		path: '**',
