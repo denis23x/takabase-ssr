@@ -7,34 +7,39 @@
 		>
 			<div class="flex items-center gap-4">
 				<figure
-					class="rounded-box relative cursor-pointer overflow-hidden border border-base-content/20"
+					class="rounded-btn relative overflow-hidden border-base-content/20"
 					*ngIf="postForm.get('image') as image"
 					[class.pointer-events-none]="postFormIsSubmitted"
-					(click)="postFormToggleImage = true"
+					[class.bg-base-200]="postFormIsSubmitted"
+					[class.border]="!postFormIsSubmitted"
+					[class.border-success]="!postFormIsSubmitted && image.value"
 				>
 					<img
-						class="aspect-square h-28 w-28 object-cover sm:h-48 sm:w-48"
+						class="aspect-square h-20 w-20 cursor-pointer object-cover sm:h-44 sm:w-44"
 						alt="Image"
 						[class.invisible]="!image.value"
 						[class.opacity-50]="postFormIsSubmitted"
 						[class.saturate-0]="postFormIsSubmitted"
 						[src]="image.value"
+						(click)="postFormToggleImage = true"
 					/>
-					<figcaption
-						class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-						[class.invisible]="image.value"
+					<div
+						class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+						*ngIf="!image.value"
 					>
-						<i
-							class="fill-current text-base-content opacity-10"
+						<button
+							class="btn btn-ghost btn-circle fill-current transition-none"
 							appSvgIcon
-							[appIcon]="'image'"
-							[appSquare]="'4rem'"
-						></i>
-					</figcaption>
+							[appIcon]="'plus'"
+							[appSquare]="'1.75rem'"
+							[class.btn-disabled]="postFormIsSubmitted"
+							(click)="postFormToggleImage = true"
+						></button>
+					</div>
 				</figure>
 				<div class="flex flex-col sm:hidden">
-					<span class="text-xl font-medium text-base-content">Image</span>
-					<p class="text-base text-base-content/50">Upload post image</p>
+					<span class="text-base-content">Image</span>
+					<p class="text-base-content/50">Upload post image</p>
 				</div>
 			</div>
 			<form
@@ -43,7 +48,7 @@
 				[formGroup]="postForm"
 			>
 				<fieldset
-					class="grid grid-cols-12 gap-4"
+					class="grid grid-cols-12 gap-y-2.5 gap-x-4"
 					[disabled]="postFormIsSubmitted"
 				>
 					<fieldset
@@ -157,13 +162,14 @@
 							</div>
 						</fieldset>
 						<button
-							class="btn btn-outline btn-success fill-current"
+							class="btn btn-success fill-current p-3"
 							type="button"
 							aria-label="Create"
 							appSvgIcon
-							[appIcon]="'file-earmark-plus'"
-							[appSquare]="'1.5em'"
-							[appViewBox]="'0 0 14 14'"
+							[appIcon]="'folder-plus'"
+							[appSquare]="'1.375rem'"
+							[class.btn-outline]="!postFormIsSubmitted"
+							[class.btn-disabled]="postFormIsSubmitted"
 						></button>
 					</div>
 					<fieldset
@@ -333,6 +339,7 @@
 						>
 							<li class="inline-block">
 								<button
+									class="p-3.5"
 									type="button"
 									title="Markdown"
 									aria-label="Markdown"
@@ -348,7 +355,7 @@
 							</li>
 							<li class="inline-block">
 								<button
-									class="fill-current"
+									class="fill-current p-3.5"
 									type="button"
 									title="Fullscreen"
 									aria-label="Fullscreen"
@@ -360,7 +367,7 @@
 							</li>
 							<li class="inline-block">
 								<button
-									class="fill-current"
+									class="fill-current p-3.5"
 									type="button"
 									title="Scroll sync"
 									aria-label="Scroll sync"
@@ -373,7 +380,7 @@
 							<li class="inline-block">
 								<!-- prettier-ignore -->
 								<button
-									class="fill-current"
+									class="fill-current p-3.5"
 									type="button"
 									title="Disable text wrapping"
 									aria-label="Disable text wrapping"
@@ -385,6 +392,7 @@
 							</li>
 							<li class="inline-block">
 								<button
+									class="p-3.5"
 									type="button"
 									title="Render"
 									aria-label="Render"

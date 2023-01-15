@@ -19,7 +19,7 @@ import {
 @Injectable({
 	providedIn: 'root'
 })
-export class MarkdownResolverService {
+export class CreateResolverService {
 	constructor(
 		private authService: AuthService,
 		private categoryService: CategoryService,

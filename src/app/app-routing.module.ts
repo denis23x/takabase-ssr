@@ -7,12 +7,7 @@ import {
 	Routes,
 	UrlSegment
 } from '@angular/router';
-import {
-	CanLoadPrivateGuard,
-	CanLoadPublicGuard,
-	CanActivatePrivateGuard,
-	CanActivatePublicGuard
-} from './core';
+import { CanMatchPrivateGuard, CanMatchPublicGuard } from './core';
 
 const routes: Routes = [
 	{
@@ -22,46 +17,41 @@ const routes: Routes = [
 	{
 		path: 'auth',
 		loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
-		canLoad: [CanLoadPublicGuard],
-		canActivate: [CanActivatePublicGuard]
+		canMatch: [CanMatchPublicGuard]
 	},
 	{
 		matcher: (url: UrlSegment[]) => {
 			const [path]: UrlSegment[] = url;
 
-			return ['create', 'edit'].includes(path.path)
-				? { consumed: url.slice(0, 1) }
-				: null;
+			// prettier-ignore
+			return ['create', 'edit'].includes(path.path) ? { consumed: url.slice(0, 1) } : null;
 		},
-		loadChildren: () =>
-			import('./markdown/markdown.module').then(m => m.MarkdownModule),
-		canLoad: [CanLoadPrivateGuard],
-		canActivate: [CanActivatePrivateGuard]
+		// prettier-ignore
+		loadChildren: () => import('./create/create.module').then(m => m.CreateModule),
+		canMatch: [CanMatchPrivateGuard]
 	},
 	{
 		path: 'exception',
-		loadChildren: () =>
-			import('./exception/exception.module').then(m => m.ExceptionModule)
+		// prettier-ignore
+		loadChildren: () => import('./exception/exception.module').then(m => m.ExceptionModule)
 	},
 	{
 		path: 'search',
-		loadChildren: () =>
-			import('./search/search.module').then(m => m.SearchModule)
+		// prettier-ignore
+		loadChildren: () => import('./search/search.module').then(m => m.SearchModule)
 	},
 	{
 		path: 'settings',
-		loadChildren: () =>
-			import('./settings/settings.module').then(m => m.SettingsModule),
-		canLoad: [CanLoadPrivateGuard],
-		canActivate: [CanActivatePrivateGuard]
+		// prettier-ignore
+		loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule),
+		canMatch: [CanMatchPrivateGuard]
 	},
 	{
 		matcher: (url: UrlSegment[]) => {
 			const [path]: UrlSegment[] = url;
 
-			return path.path.match(/^@[\w\.]+$/gm)
-				? { consumed: url.slice(0, 1) }
-				: null;
+			// prettier-ignore
+			return path.path.match(/^@[\w\.]+$/gm) ? { consumed: url.slice(0, 1) } : null;
 		},
 		loadChildren: () => import('./user/user.module').then(m => m.UserModule)
 	},

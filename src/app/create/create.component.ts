@@ -35,9 +35,9 @@ interface PostForm {
 
 @Component({
 	selector: 'app-markdown',
-	templateUrl: './markdown.component.html'
+	templateUrl: './create.component.html'
 })
-export class MarkdownComponent implements OnInit, OnDestroy {
+export class CreateComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 
 	category: Category | undefined;

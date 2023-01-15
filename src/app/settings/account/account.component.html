@@ -8,8 +8,6 @@
 			[formGroup]="emailForm"
 			(ngSubmit)="onSubmitEmailForm()"
 		>
-			<h2 class="text-xl font-medium text-base-content">Email</h2>
-			<hr class="my-2 border-base-content/20" />
 			<fieldset
 				class="flex flex-col space-y-4"
 				[disabled]="emailFormIsSubmitted"
@@ -89,8 +87,6 @@
 			[formGroup]="passwordForm"
 			(ngSubmit)="onSubmitPasswordForm()"
 		>
-			<h2 class="text-xl font-medium text-base-content">Password</h2>
-			<hr class="my-2 border-base-content/20" />
 			<fieldset
 				class="flex flex-col space-y-4"
 				[disabled]="passwordFormIsSubmitted"

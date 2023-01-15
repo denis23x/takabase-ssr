@@ -2,22 +2,22 @@
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MarkdownComponent } from './markdown.component';
-import { MarkdownResolverService } from './markdown-resolver.service';
+import { CreateComponent } from './create.component';
+import { CreateResolverService } from './create-resolver.service';
 
 const routes: Routes = [
 	{
 		path: '',
-		component: MarkdownComponent,
+		component: CreateComponent,
 		resolve: {
-			data: MarkdownResolverService
+			data: CreateResolverService
 		}
 	},
 	{
 		path: ':postId',
-		component: MarkdownComponent,
+		component: CreateComponent,
 		resolve: {
-			data: MarkdownResolverService
+			data: CreateResolverService
 		}
 	}
 ];
@@ -26,4 +26,4 @@ const routes: Routes = [
 	imports: [RouterModule.forChild(routes)],
 	exports: [RouterModule]
 })
-export class MarkdownRoutingModule {}
+export class CreateRoutingModule {}
