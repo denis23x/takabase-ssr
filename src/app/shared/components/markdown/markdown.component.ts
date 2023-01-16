@@ -213,11 +213,11 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
 		if (markdownControl.key.includes('url')) {
 			// prettier-ignore
-			this.urlForm.addControl('url', this.formBuilder.control('', [Validators.required, this.helperService.getCustomValidator(markdownControl.key)]));
+			this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required, this.helperService.getCustomValidator(markdownControl.key)]));
 
 			if (['url-link', 'url-image'].includes(markdownControl.key)) {
 				// prettier-ignore
-				this.urlForm.addControl('title', this.formBuilder.control('', [Validators.required]));
+				this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', [Validators.required]));
 			}
 
 			const regex: RegExp = this.helperService.getRegex(markdownControl.key);

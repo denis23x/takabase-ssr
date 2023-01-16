@@ -74,10 +74,10 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.appearanceForm = this.formBuilder.group<AppearanceForm>({
-			theme: this.formBuilder.control('', [Validators.required]),
-			language: this.formBuilder.control('', [Validators.required]),
+			theme: this.formBuilder.nonNullable.control('', [Validators.required]),
+			language: this.formBuilder.nonNullable.control('', [Validators.required]),
 			monospace: this.formBuilder.control(null, [Validators.required]),
-			buttons: this.formBuilder.control('', [Validators.required])
+			buttons: this.formBuilder.nonNullable.control('', [Validators.required])
 		});
 	}
 

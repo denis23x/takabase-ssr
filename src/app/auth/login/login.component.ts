@@ -37,11 +37,11 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 		private meta: Meta
 	) {
 		this.loginForm = this.formBuilder.group<LoginForm>({
-			email: this.formBuilder.control('', [
+			email: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.email
 			]),
-			password: this.formBuilder.control('', [
+			password: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
 			])

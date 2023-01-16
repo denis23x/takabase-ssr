@@ -26,7 +26,7 @@ export class AuthResetComponent implements OnInit {
 		private helperService: HelperService
 	) {
 		this.resetForm = this.formBuilder.group<ResetForm>({
-			email: this.formBuilder.control('', [
+			email: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.email
 			])

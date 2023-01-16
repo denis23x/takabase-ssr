@@ -40,16 +40,16 @@ export class AuthRegistrationComponent implements OnInit {
 		private helperService: HelperService
 	) {
 		this.registrationForm = this.formBuilder.group<RegistrationForm>({
-			name: this.formBuilder.control('', [
+			name: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
 				Validators.maxLength(24)
 			]),
-			email: this.formBuilder.control('', [
+			email: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.email
 			]),
-			password: this.formBuilder.control('', [
+			password: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
 			])

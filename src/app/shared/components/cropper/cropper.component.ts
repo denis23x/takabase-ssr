@@ -91,7 +91,7 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		private fileService: FileService
 	) {
 		this.imageForm = this.formBuilder.group<ImageForm>({
-			url: this.formBuilder.control('', [Validators.required])
+			url: this.formBuilder.nonNullable.control('', [Validators.required])
 		});
 	}
 

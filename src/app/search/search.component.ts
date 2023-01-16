@@ -32,7 +32,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 		private formBuilder: FormBuilder
 	) {
 		this.searchForm = this.formBuilder.group<SearchForm>({
-			query: this.formBuilder.control('', [
+			query: this.formBuilder.nonNullable.control('', [
 				Validators.minLength(4),
 				Validators.maxLength(24)
 			])

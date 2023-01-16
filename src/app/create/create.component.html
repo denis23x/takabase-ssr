@@ -154,7 +154,7 @@
 											type="button"
 											[class.active]="categoryName.value === category.name"
 											[attr.aria-label]="category.name"
-											(click)="onChangeCategory(category)"
+											(click)="onSelectCategory(category)"
 										>
 											{{ category.name }}
 										</button>
@@ -171,7 +171,7 @@
 							[appSquare]="'1.375rem'"
 							[class.btn-outline]="!postFormIsSubmitted"
 							[class.btn-disabled]="postFormIsSubmitted"
-							(click)="categoryFormToggle = true"
+							(click)="onToggleCategoryForm(true)"
 						></button>
 					</div>
 					<fieldset
@@ -466,11 +466,9 @@
 			[appButtons]="['close', 'fullscreen']"
 			(closed)="postFormPreviewToggle = false"
 		>
-			<app-post-detail
-				class="h-full"
-				slot="content"
-				[appPost]="post"
-			></app-post-detail>
+			<ng-container slot="content">
+				<app-post-detail class="h-full" [appPost]="post"></app-post-detail>
+			</ng-container>
 			<div class="pointer-events-none flex bg-base-200 p-2" slot="footer">
 				<app-share class="opacity-50"></app-share>
 			</div>
@@ -478,15 +476,15 @@
 	</app-overlay>
 	<app-overlay
 		[appToggle]="categoryFormToggle"
-		(clicked)="categoryFormToggle = false"
-		(escaped)="categoryFormToggle = false"
+		(clicked)="onToggleCategoryForm(false)"
+		(escaped)="onToggleCategoryForm(false)"
 	>
 		<app-window
 			slot="content"
 			[appTitle]="'Category'"
-			(closed)="categoryFormToggle = false"
+			(closed)="onToggleCategoryForm(false)"
 		>
-			<ng-container slot="content" *ngIf="categoryFormToggle">
+			<ng-container slot="content">
 				<form
 					class="flex w-window max-w-[512px] flex-col bg-base-100 p-4"
 					autocomplete="off"
@@ -550,6 +548,7 @@
 									[class.btn-success]="name.touched && name.valid"
 									[class.btn-error]="name.touched && name.invalid"
 									[class.btn-ghost]="name.untouched"
+									[class.btn-disabled]="categoryFormIsSubmitted"
 									[appIcon]="'x'"
 									[appSquare]="'1.75rem'"
 									(click)="name.setValue('')"

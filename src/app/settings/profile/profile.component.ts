@@ -58,12 +58,12 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		private snackbarService: SnackbarService
 	) {
 		this.profileForm = this.formBuilder.group<ProfileForm>({
-			name: this.formBuilder.control('', [
+			name: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
 				Validators.maxLength(24)
 			]),
-			description: this.formBuilder.control('', [
+			description: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
 				Validators.maxLength(255)

@@ -50,19 +50,19 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		private activatedRoute: ActivatedRoute
 	) {
 		this.emailForm = this.formBuilder.group<EmailForm>({
-			email: this.formBuilder.control('', [
+			email: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.email
 			])
 		});
 		this.passwordForm = this.formBuilder.group<PasswordForm>({
-			password: this.formBuilder.control('', [
+			password: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
 			])
 		});
 		this.confirmationForm = this.formBuilder.group<ConfirmationForm>({
-			password: this.formBuilder.control('', [
+			password: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
 			])

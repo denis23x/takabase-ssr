@@ -53,7 +53,7 @@ export class CategoryEditComponent implements OnInit {
 	) {
 		this.categoryForm = this.formBuilder.group<CategoryForm>({
 			id: this.formBuilder.control(null, [Validators.required]),
-			name: this.formBuilder.control('', [
+			name: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
 				Validators.maxLength(24)

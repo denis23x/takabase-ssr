@@ -87,20 +87,20 @@ export class CreateComponent implements OnInit, OnDestroy {
 		private categoryService: CategoryService
 	) {
 		this.postForm = this.formBuilder.group<PostForm>({
-			name: this.formBuilder.control('', [
+			name: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
 				Validators.maxLength(36)
 			]),
-			image: this.formBuilder.control('', []),
-			description: this.formBuilder.control('', [
+			image: this.formBuilder.nonNullable.control('', []),
+			description: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
 				Validators.maxLength(255)
 			]),
 			categoryId: this.formBuilder.control(null, [Validators.required]),
-			categoryName: this.formBuilder.control('', []),
-			markdown: this.formBuilder.control('', [
+			categoryName: this.formBuilder.nonNullable.control('', []),
+			markdown: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(24),
 				Validators.maxLength(7200)
@@ -108,12 +108,12 @@ export class CreateComponent implements OnInit, OnDestroy {
 		});
 
 		this.categoryForm = this.formBuilder.group<CategoryForm>({
-			name: this.formBuilder.control('', [
+			name: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
 				Validators.maxLength(24)
 			]),
-			description: this.formBuilder.control('', [
+			description: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
 				Validators.maxLength(255)
@@ -165,13 +165,20 @@ export class CreateComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onChangeCategory(category: Category): void {
+	onToggleCategoryForm(toggle: boolean): void {
+		this.categoryFormToggle = toggle;
+		this.categoryForm.reset();
+	}
+
+	onSelectCategory(category: Category): void {
 		this.category = category;
 
 		this.postForm.patchValue({
-			categoryId: category.id,
-			categoryName: category.name
+			categoryId: this.category.id,
+			categoryName: this.category.name
 		});
+
+		this.postForm.get('categoryName').markAsTouched();
 	}
 
 	onFullscreen(toggle: boolean): void {
@@ -233,9 +240,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 				...this.postForm.value
 			};
 
-			// @ts-ignore
-			delete postCreateDto.categoryName;
-
 			iif(
 				() => !!postId,
 				this.postService.update(postId, postCreateDto),
@@ -269,7 +273,11 @@ export class CreateComponent implements OnInit, OnDestroy {
 				next: (category: Category) => {
 					this.snackbarService.success('Cheers!', 'Category created');
 
+					this.categoryList.unshift(category);
 					this.categoryFormIsSubmitted = false;
+
+					this.onSelectCategory(category);
+					this.onToggleCategoryForm(false);
 				},
 				error: () => (this.categoryFormIsSubmitted = false)
 			});
