@@ -46,7 +46,7 @@
 						[ngClass]="routerLinkActive.isActive ? 'tab-active' : 'bg-base-200'"
 					>
 						<a
-							class="block px-4"
+							class="block whitespace-nowrap px-4"
 							aria-label="All"
 							#routerLinkActive="routerLinkActive"
 							[routerLink]="['.']"
@@ -62,7 +62,7 @@
 						[ngClass]="routerLinkActive.isActive ? 'tab-active' : 'bg-base-200'"
 					>
 						<a
-							class="block px-4"
+							class="block whitespace-nowrap px-4"
 							appScrollIntoView
 							#routerLinkActive="routerLinkActive"
 							[appRoot]="scrollRoot"
