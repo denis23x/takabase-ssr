@@ -123,7 +123,7 @@ export class ShareComponent implements OnInit, OnDestroy {
 			const window: Window = this.platformService.getWindow();
 
 			window.navigator.clipboard.writeText(this.shareUrl).then(() => {
-				this.snackbarService.success('Success', 'Post URL has been copied');
+				this.snackbarService.success(null, 'Post URL has been copied');
 			});
 		}
 	}

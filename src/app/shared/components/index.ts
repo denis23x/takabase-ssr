@@ -2,7 +2,6 @@
 
 export * from './avatar/avatar.component';
 export * from './background/background.component';
-export * from './category';
 export * from './cropper/cropper.component';
 export * from './dropdown/dropdown.component';
 export * from './header/header.component';

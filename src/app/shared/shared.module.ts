@@ -8,7 +8,6 @@ import { RouterModule } from '@angular/router';
 import {
 	AvatarComponent,
 	BackgroundComponent,
-	CategoryEditComponent,
 	CropperComponent,
 	DropdownComponent,
 	HeaderComponent,
@@ -34,7 +33,6 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 const components: any[] = [
 	AvatarComponent,
 	BackgroundComponent,
-	CategoryEditComponent,
 	CropperComponent,
 	DropdownComponent,
 	HeaderComponent,

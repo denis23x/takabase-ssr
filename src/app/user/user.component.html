@@ -23,6 +23,7 @@
 				<div class="flex items-center justify-end gap-4">
 					<a
 						class="btn btn-primary"
+						title="Settings"
 						aria-label="Settings"
 						*ngIf="authUser?.id === user.id"
 						[routerLink]="['/settings']"
@@ -32,7 +33,7 @@
 				</div>
 			</div>
 			<p class="rounded-box w-full bg-base-200 p-4 text-base-content">
-				{{ user.description || "User does not have description" }}
+				{{ user.description }}
 			</p>
 		</header>
 		<div class="flex flex-col">
@@ -79,14 +80,194 @@
 			<section
 				class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
 			>
-				<p
-					class="rounded-box mb-4 w-full bg-base-200 p-4 text-base-content"
+				<div
+					class="mb-4 flex w-full flex-col items-stretch justify-between gap-4"
 					*ngIf="!!category"
 				>
-					{{ category.description || "Category does not have description" }}
-				</p>
+					<div class="flex w-full items-center justify-between gap-4">
+						<div class="flex items-center justify-start gap-4">
+							<button
+								class="btn btn-ghost bg-base-200 fill-current p-3"
+								type="button"
+								title="Category"
+								aria-label="Category"
+								appSvgIcon
+								[appIcon]="'folder'"
+								[appSquare]="'1.375rem'"
+							></button>
+							<div class="flex flex-col">
+								<span class="block truncate font-bold text-base-content">
+									{{ category.name }}
+								</span>
+								<!-- prettier-ignore -->
+								<time
+									class="text-sm text-base-content/50"
+									[attr.datetime]="category.createdAt | dayjs: 'format':'YYYY-M-D'"
+								>
+									created {{ category.createdAt | dayjs: "fromX" }}
+								</time>
+							</div>
+						</div>
+						<button
+							class="btn btn-primary"
+							title="Edit"
+							aria-label="Edit"
+							*ngIf="authUser?.id === user.id"
+							(click)="onToggleCategoryForm(true)"
+						>
+							Edit
+						</button>
+					</div>
+					<p class="rounded-box w-full bg-base-200 p-4 text-base-content">
+						{{ category.description }}
+					</p>
+				</div>
 				<router-outlet></router-outlet>
 			</section>
 		</div>
 	</div>
+	<app-overlay
+		[appToggle]="categoryFormToggle"
+		(clicked)="onToggleCategoryForm(false)"
+		(escaped)="onToggleCategoryForm(false)"
+	>
+		<app-window
+			slot="content"
+			[appTitle]="'Category'"
+			(closed)="onToggleCategoryForm(false)"
+		>
+			<ng-container slot="content">
+				<form
+					class="flex w-window max-w-[512px] flex-col bg-base-100 p-4"
+					autocomplete="off"
+					slot="content"
+					[formGroup]="categoryForm"
+					(ngSubmit)="onSubmitCategoryForm()"
+				>
+					<fieldset
+						class="flex flex-col space-y-4"
+						[disabled]="categoryFormIsSubmitted"
+					>
+						<fieldset
+							class="form-control"
+							*ngIf="categoryForm.get('name') as name"
+						>
+							<label class="label" for="categoryFormName">
+								<div class="indicator">
+									<span
+										class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+										*ngIf="name.touched && !!name.errors"
+										[ngSwitch]="true"
+									>
+										<ng-container *ngSwitchCase="!!name.errors.required">
+											Required
+										</ng-container>
+										<!-- prettier-ignore -->
+										<ng-container *ngSwitchCase="!!name.errors.minlength">
+											Min length {{ name.errors.minlength["requiredLength"] }} characters
+                    </ng-container>
+										<!-- prettier-ignore -->
+										<ng-container *ngSwitchCase="!!name.errors.maxlength">
+											Max length {{ name.errors.maxlength["requiredLength"] }} characters
+                    </ng-container>
+									</span>
+									<span class="label-text mr-2">Name</span>
+								</div>
+							</label>
+							<div class="relative">
+								<input
+									class="input input-bordered w-full truncate pr-12"
+									id="categoryFormName"
+									type="text"
+									aria-label="Name"
+									formControlName="name"
+									placeholder="Type category name"
+									appInputTrimWhitespace
+									[class.input-success]="name.touched && name.valid"
+									[class.input-error]="name.touched && name.invalid"
+									[class.input-disabled]="categoryFormIsSubmitted"
+								/>
+								<button
+									class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+									type="button"
+									title="Clear"
+									aria-label="Clear"
+									appSvgIcon
+									*ngIf="!!name.value.length"
+									[class.btn-success]="name.touched && name.valid"
+									[class.btn-error]="name.touched && name.invalid"
+									[class.btn-ghost]="name.untouched"
+									[class.btn-disabled]="categoryFormIsSubmitted"
+									[appIcon]="'x'"
+									[appSquare]="'1.75rem'"
+									(click)="name.setValue('')"
+								></button>
+							</div>
+						</fieldset>
+						<fieldset
+							class="form-control"
+							*ngIf="categoryForm.get('description') as description"
+						>
+							<label class="label" for="categoryFormDescription">
+								<div class="indicator">
+									<span
+										class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+										*ngIf="description.touched && !!description.errors"
+										[ngSwitch]="true"
+									>
+										<ng-container *ngSwitchCase="!!description.errors.required">
+											Required
+										</ng-container>
+										<!-- prettier-ignore -->
+										<ng-container *ngSwitchCase="!!description.errors.minlength">
+                      Min length {{ description.errors.minlength["requiredLength"] }} characters
+                    </ng-container>
+										<!-- prettier-ignore -->
+										<ng-container *ngSwitchCase="!!description.errors.maxlength">
+                      Max length {{ description.errors.maxlength["requiredLength"] }} characters
+                    </ng-container>
+									</span>
+									<span class="label-text mr-2">Description</span>
+								</div>
+								<!-- prettier-ignore -->
+								<span
+                  class="label-text-alt flex items-center"
+                  [class.text-base-content]="categoryFormIsSubmitted"
+                  [class.text-success]="!categoryFormIsSubmitted && description.touched && !description.errors"
+                  [class.text-error]="!categoryFormIsSubmitted && description.touched && !!description.errors"
+                >
+                  {{ description.value.length }}/255
+                </span>
+							</label>
+							<!-- prettier-ignore -->
+							<textarea
+                class="textarea textarea-bordered w-full"
+                id="categoryFormDescription"
+                aria-label="Description"
+                placeholder="Type category description"
+                formControlName="description"
+                [rows]="4"
+                [class.textarea-success]="description.touched && !description.errors"
+                [class.textarea-error]="description.touched && !!description.errors"
+                [class.textarea-disabled]="categoryFormIsSubmitted"
+              >
+                {{ description.value }}
+              </textarea>
+						</fieldset>
+						<fieldset class="form-control">
+							<button
+								class="btn btn-secondary w-full"
+								type="submit"
+								aria-label="Submit"
+								[class.loading]="categoryFormIsSubmitted"
+								[disabled]="categoryForm.invalid || categoryFormIsSubmitted"
+							>
+								Submit
+							</button>
+						</fieldset>
+					</fieldset>
+				</form>
+			</ng-container>
+		</app-window>
+	</app-overlay>
 </ng-container>

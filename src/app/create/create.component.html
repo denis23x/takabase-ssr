@@ -29,6 +29,8 @@
 					>
 						<button
 							class="btn btn-ghost btn-circle fill-current transition-none"
+							title="Image"
+							aria-label="Image"
 							appSvgIcon
 							[appIcon]="'plus'"
 							[appSquare]="'1.75rem'"
@@ -165,6 +167,7 @@
 						<button
 							class="btn btn-success fill-current p-3"
 							type="button"
+							title="Create"
 							aria-label="Create"
 							appSvgIcon
 							[appIcon]="'folder-plus'"
@@ -255,6 +258,7 @@
 					<button
 						class="btn btn-primary !outline-0"
 						type="button"
+						title="Fullscreen"
 						aria-label="Fullscreen"
 						[disabled]="postFormIsSubmitted"
 						(click)="onFullscreen(!fullscreenToggle)"
@@ -436,6 +440,7 @@
 				<button
 					class="btn btn-secondary col-span-4 sm:col-span-3"
 					type="button"
+					title="Preview"
 					aria-label="Preview"
 					[disabled]="postForm.invalid || postFormIsSubmitted"
 					(click)="onPreviewPost()"
@@ -445,6 +450,7 @@
 				<button
 					class="btn btn-primary col-span-8 sm:col-span-9"
 					type="button"
+					title="Submit"
 					aria-label="Submit"
 					[class.loading]="postFormIsSubmitted"
 					[disabled]="postForm.invalid || postFormIsSubmitted"
