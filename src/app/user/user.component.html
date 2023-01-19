@@ -231,7 +231,7 @@
 								</div>
 								<!-- prettier-ignore -->
 								<span
-                  class="label-text-alt flex items-center"
+                  class="label-text-alt"
                   [class.text-base-content]="categoryFormIsSubmitted"
                   [class.text-success]="!categoryFormIsSubmitted && description.touched && !description.errors"
                   [class.text-error]="!categoryFormIsSubmitted && description.touched && !!description.errors"
@@ -254,15 +254,26 @@
                 {{ description.value }}
               </textarea>
 						</fieldset>
-						<fieldset class="form-control">
+						<fieldset class="form-control grid grid-cols-12 gap-4">
+							<!-- prettier-ignore -->
 							<button
-								class="btn btn-secondary w-full"
+								class="btn btn-success col-span-12"
 								type="submit"
 								aria-label="Submit"
 								[class.loading]="categoryFormIsSubmitted"
-								[disabled]="categoryForm.invalid || categoryFormIsSubmitted"
+								[disabled]="categoryForm.invalid || categoryFormIsSubmitted || categoryFormIsPristine"
 							>
 								Submit
+							</button>
+							<button
+								class="btn btn-error col-span-12"
+								type="button"
+								title="Delete"
+								aria-label="Delete"
+								[class.btn-outline]="!categoryFormIsSubmitted"
+								[disabled]="categoryFormIsSubmitted"
+							>
+								Delete
 							</button>
 						</fieldset>
 					</fieldset>

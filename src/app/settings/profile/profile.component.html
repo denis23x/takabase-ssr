@@ -126,7 +126,7 @@
 						</div>
 						<!-- prettier-ignore -->
 						<span
-							class="label-text-alt flex items-center"
+							class="label-text-alt"
 							[class.text-base-content]="profileFormIsSubmitted"
 							[class.text-success]="!profileFormIsSubmitted && description.touched && !description.errors"
 							[class.text-error]="!profileFormIsSubmitted && description.touched && !!description.errors"
@@ -152,13 +152,14 @@
 				<fieldset class="form-control">
 					<!-- prettier-ignore -->
 					<button
-						class="btn btn-primary w-full"
+						class="btn btn-success w-full"
 						type="submit"
-						aria-label="Update"
+						title="Submit"
+						aria-label="Submit"
 						[class.loading]="profileFormIsSubmitted"
 						[disabled]="profileForm.invalid || profileFormIsSubmitted || profileFormIsPristine"
 					>
-						Update
+						Submit
 					</button>
 				</fieldset>
 			</fieldset>

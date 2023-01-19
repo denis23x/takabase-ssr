@@ -29,16 +29,14 @@
 							</span>
 							<span class="label-text mr-2">New Email</span>
 						</div>
-						<span class="label-text-alt">
-							<a
-								class="link"
-								target="_blank"
-								rel="noopener"
-								[href]="'mailto:' + authUser.email"
-							>
-								{{ authUser.email }}
-							</a>
-						</span>
+						<a
+							class="link label-text-alt"
+							target="_blank"
+							rel="noopener"
+							[href]="'mailto:' + authUser.email"
+						>
+							{{ authUser.email }}
+						</a>
 					</label>
 					<div class="relative">
 						<input
@@ -71,8 +69,9 @@
 				</fieldset>
 				<fieldset class="form-control">
 					<button
-						class="btn btn-primary w-full"
+						class="btn btn-success w-full"
 						type="submit"
+						title="Submit"
 						aria-label="Submit"
 						[disabled]="emailForm.invalid || emailFormIsSubmitted"
 					>
@@ -150,8 +149,9 @@
 				</p>
 				<fieldset class="form-control">
 					<button
-						class="btn btn-primary w-full"
+						class="btn btn-success w-full"
 						type="submit"
+						title="Submit"
 						aria-label="Submit"
 						[disabled]="passwordForm.invalid || passwordFormIsSubmitted"
 					>
@@ -241,13 +241,14 @@
 					<fieldset class="form-control">
 						<!-- prettier-ignore -->
 						<button
-							class="btn btn-primary w-full"
+							class="btn btn-success w-full"
 							type="submit"
-							aria-label="Confirm"
+							title="Submit"
+							aria-label="Submit"
 							[class.loading]="confirmationFormIsSubmitted"
 							[disabled]="confirmationForm.invalid || confirmationFormIsSubmitted"
 						>
-              Confirm
+              Submit
 						</button>
 					</fieldset>
 				</fieldset>

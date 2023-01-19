@@ -100,6 +100,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 	onToggleConfirmationForm(toggle: boolean): void {
 		this.confirmationFormToggle = toggle;
+		this.confirmationForm.reset();
 
 		/** Reset submit when close confirmation */
 

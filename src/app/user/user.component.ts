@@ -49,6 +49,8 @@ export class UserComponent implements OnInit, OnDestroy {
 	category: Category | undefined;
 	categoryList: Category[] = [];
 	categoryForm: FormGroup | undefined;
+	categoryForm$: Subscription | undefined;
+	categoryFormIsPristine: boolean = false;
 	categoryFormIsSubmitted: boolean = false;
 	categoryFormToggle: boolean = false;
 
@@ -122,6 +124,20 @@ export class UserComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
+		this.categoryForm$ = this.categoryForm.valueChanges
+			.pipe(
+				startWith(this.categoryForm.value),
+				filter(() => !!this.category)
+			)
+			.subscribe({
+				next: (value: any) => {
+					// prettier-ignore
+					this.categoryFormIsPristine = Object.keys(value).every((key: string) => {
+            return value[key] === this.category[key];
+          });
+				}
+			});
+
 		this.authUser$ = this.authService.user.subscribe({
 			next: (user: User) => (this.authUser = user),
 			error: (error: any) => console.error(error)
@@ -129,9 +145,12 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteData$, this.routeEvents$, this.authUser$].forEach($ =>
-			$?.unsubscribe()
-		);
+		[
+			this.activatedRouteData$,
+			this.routeEvents$,
+			this.categoryForm$,
+			this.authUser$
+		].forEach($ => $?.unsubscribe());
 	}
 
 	onToggleCategoryForm(toggle: boolean): void {

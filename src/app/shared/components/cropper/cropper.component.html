@@ -2,10 +2,11 @@
 
 <ng-container>
 	<div class="flex w-window max-w-[512px] flex-col space-y-4 p-4">
-		<form class="block" autocomplete="off" [formGroup]="imageForm">
-			<p class="rounded-box mb-4 bg-base-200 p-4">
-				Browse file on your device or paste link from internet
-			</p>
+		<form
+			class="flex flex-col space-y-4"
+			autocomplete="off"
+			[formGroup]="imageForm"
+		>
 			<fieldset
 				class="flex flex-col space-y-4"
 				[disabled]="imageFormIsSubmitted || cropperIsSubmitted"
@@ -25,52 +26,41 @@
 									Url does not match pattern
 								</ng-container>
 							</span>
-							<span class="label-text mr-2">File</span>
+							<span class="label-text mr-2">Image</span>
 						</div>
-						<span class="label-text-alt">Accept only *.png, *.jpg files</span>
 					</label>
-					<div class="relative">
-						<button
-							class="btn btn-primary no-animation absolute top-0 left-0 rounded-r-none"
-							type="button"
-							title="Browse"
-							aria-label="Browse"
-							[class.btn-success]="url.touched && url.value"
-							[class.btn-error]="url.touched && url.invalid"
-							[class.btn-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
-							(click)="imageFormFile.click()"
-						>
-							Browse
-						</button>
+					<div class="flex items-center justify-between gap-4">
 						<!-- prettier-ignore -->
-						<input
-							class="input input-bordered w-full truncate pl-28 pr-12"
-							id="imageFormUrl"
-							type="text"
-							aria-label="Url"
-							formControlName="url"
-							placeholder="Paste image URL"
-              appInputOnlyPaste
-							[class.input-success]="url.touched && url.value"
-							[class.input-error]="url.touched && url.invalid"
-							[class.input-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
-							(keydown)="onInputUrl()"
-						/>
-						<button
-							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
-							type="button"
-							title="Clear query"
-							aria-label="Clear query"
-							appSvgIcon
-							*ngIf="!!url.value.length"
-							[class.btn-success]="url.touched && url.value"
-							[class.btn-error]="url.touched && url.invalid"
-							[class.btn-ghost]="url.untouched"
-							[class.btn-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
-							[appIcon]="'x'"
-							[appSquare]="'1.75rem'"
-							(click)="onResetImageForm()"
-						></button>
+						<div class="relative w-full">
+              <input
+                class="input input-bordered w-full truncate pr-12"
+                id="imageFormUrl"
+                type="text"
+                aria-label="Url"
+                formControlName="url"
+                placeholder="Paste image URL"
+                appInputOnlyPaste
+                [class.input-success]="url.touched && url.value"
+                [class.input-error]="url.touched && url.invalid"
+                [class.input-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
+                (keydown)="onInputUrl()"
+              />
+              <button
+                class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+                type="button"
+                title="Clear query"
+                aria-label="Clear query"
+                appSvgIcon
+                *ngIf="!!url.value.length"
+                [class.btn-success]="url.touched && url.value"
+                [class.btn-error]="url.touched && url.invalid"
+                [class.btn-ghost]="url.untouched"
+                [class.btn-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
+                [appIcon]="'x'"
+                [appSquare]="'1.75rem'"
+                (click)="onResetImageForm()"
+              ></button>
+            </div>
 						<input
 							class="hidden"
 							type="file"
@@ -79,9 +69,25 @@
 							#imageFormFile
 							(change)="onInputFile($event)"
 						/>
+						<button
+							class="btn btn-primary"
+							type="button"
+							title="Browse"
+							aria-label="Browse"
+							[class.btn-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
+							(click)="imageFormFile.click()"
+						>
+							Browse
+						</button>
 					</div>
+					<label class="label" for="imageFormUrl">
+						<span class="label-text-alt">Accept only *.png, *.jpg files</span>
+					</label>
 				</fieldset>
 			</fieldset>
+			<p class="rounded-box bg-base-200 p-4">
+				Browse file on your device or paste link from internet
+			</p>
 		</form>
 		<div class="flex flex-col space-y-4" [class.hidden]="!cropperFile">
 			<!-- prettier-ignore -->
@@ -147,12 +153,12 @@
 					</li>
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
-							class="fill-current p-3.5"
+							class="rotate-90 fill-current p-3.5"
 							type="button"
 							title="Flip horizontal"
 							aria-label="Flip horizontal"
 							appSvgIcon
-							[appIcon]="'symmetry-horizontal'"
+							[appIcon]="'symmetry-vertical'"
 							(click)="onImageFlip(true)"
 						></button>
 					</li>
@@ -195,7 +201,7 @@
 				</ul>
 				<!-- prettier-ignore -->
 				<button
-					class="btn btn-error btn-outline"
+					class="btn btn-error btn-outline flex-1"
 					type="button"
 					aria-label="Reset"
 					[disabled]="imageForm.invalid || imageFormIsSubmitted || cropperIsSubmitted"
@@ -204,17 +210,18 @@
 					Reset
 				</button>
 			</div>
+			<!-- prettier-ignore -->
+			<button
+        class="btn btn-success w-full"
+        type="button"
+        title="Submit"
+        aria-label="Submit"
+        [class.loading]="imageFormIsSubmitted || cropperIsSubmitted"
+        [disabled]="imageForm.invalid || imageFormIsSubmitted || cropperIsSubmitted"
+        (click)="onSubmitCropper()"
+      >
+        Submit
+      </button>
 		</div>
-		<!-- prettier-ignore -->
-		<button
-			class="btn btn-primary w-full"
-			type="button"
-			aria-label="Submit"
-			[class.loading]="imageFormIsSubmitted || cropperIsSubmitted"
-			[disabled]="imageForm.invalid || imageFormIsSubmitted || cropperIsSubmitted"
-			(click)="onSubmitCropper()"
-		>
-			Submit
-		</button>
 	</div>
 </ng-container>

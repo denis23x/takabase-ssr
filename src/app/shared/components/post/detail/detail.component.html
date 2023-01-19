@@ -16,15 +16,15 @@
 					Edit
 				</a>
 			</div>
-			<div class="grid w-full grid-cols-12 gap-4 py-4">
+			<div class="flex w-full gap-4 py-4">
 				<img
-					class="rounded-box col-span-3 block h-full w-full object-cover"
+					class="rounded-box aspect-square h-20 w-20 cursor-pointer object-cover sm:h-44 sm:w-44"
 					*ngIf="!!post.image"
 					[src]="post.image"
 					[alt]="post.name"
 				/>
 				<div
-					class="flex flex-col space-y-4"
+					class="flex w-full flex-col space-y-4 overflow-hidden"
 					[ngClass]="!!post.image ? 'col-span-9' : 'col-span-12'"
 				>
 					<div class="flex flex-col">
@@ -35,9 +35,9 @@
 							{{ post.category.name }}
 						</span>
 					</div>
-					<div class="rounded-box bg-base-200 p-4">
+					<p class="rounded-box bg-base-200 p-4">
 						{{ post.description }}
-					</div>
+					</p>
 				</div>
 			</div>
 		</header>

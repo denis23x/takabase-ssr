@@ -17,7 +17,7 @@ import {
 } from '../core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { iif, of, Subscription, switchMap } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, startWith } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -55,9 +55,12 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	post: Post | undefined;
 	postForm: FormGroup | undefined;
+	postForm$: Subscription | undefined;
+	postFormIsPristine: boolean = false;
 	postFormIsSubmitted: boolean = false;
 	postFormImageToggle: boolean = false;
 	postFormPreviewToggle: boolean = false;
+	postFormPreviewPost: Post | undefined;
 
 	authUser: User | undefined;
 	authUser$: Subscription | undefined;
@@ -136,15 +139,38 @@ export class CreateComponent implements OnInit, OnDestroy {
 			)
 			.subscribe({
 				next: (post: Post) => {
+					this.post = post;
+
 					this.postForm.patchValue({
-						...post,
-						categoryId: post.category.id,
-						categoryName: post.category.name
+						...this.post,
+						categoryId: this.post.category.id,
+						categoryName: this.post.category.name
 					});
 
 					this.postForm.markAllAsTouched();
 				},
 				error: (error: any) => console.error(error)
+			});
+
+		this.postForm$ = this.postForm.valueChanges
+			.pipe(
+				startWith(this.postForm.value),
+				filter(() => !!this.post)
+			)
+			.subscribe({
+				next: (value: any) => {
+					this.postFormIsPristine = Object.keys(value).every((key: string) => {
+						if (key === 'categoryId') {
+							return value[key] === this.post.category.id;
+						}
+
+						if (key === 'categoryName') {
+							return value[key] === this.post.category.name;
+						}
+
+						return value[key] === this.post[key];
+					});
+				}
 			});
 
 		this.authUser$ = this.authService.user.subscribe({
@@ -154,7 +180,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteData$, this.authUser$].forEach($ => $?.unsubscribe());
+		// prettier-ignore
+		[this.activatedRouteData$, this.postForm$, this.authUser$].forEach($ => $?.unsubscribe());
 	}
 
 	onToggleCategory(toggle: boolean): void {
@@ -168,6 +195,16 @@ export class CreateComponent implements OnInit, OnDestroy {
 	onToggleCategoryForm(toggle: boolean): void {
 		this.categoryFormToggle = toggle;
 		this.categoryForm.reset();
+	}
+
+	onTogglePreviewPost(): void {
+		this.postFormPreviewPost = {
+			...this.postForm.value,
+			user: this.authUser,
+			category: this.category
+		};
+
+		this.postFormPreviewToggle = true;
 	}
 
 	onSelectCategory(category: Category): void {
@@ -216,18 +253,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 		} else {
 			this.fullscreenHiddenControls = !this.fullscreenHiddenControls;
 		}
-	}
-
-	onPreviewPost(): void {
-		const { categoryId, categoryName, ...postForm } = this.postForm.value;
-
-		this.post = {
-			...postForm,
-			user: this.authUser,
-			category: this.category
-		};
-
-		this.postFormPreviewToggle = true;
 	}
 
 	onSubmitPostForm(): void {

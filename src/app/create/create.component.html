@@ -165,7 +165,7 @@
 							</div>
 						</fieldset>
 						<button
-							class="btn btn-success fill-current p-3"
+							class="btn btn-primary fill-current p-3"
 							type="button"
 							title="Create"
 							aria-label="Create"
@@ -260,6 +260,7 @@
 						type="button"
 						title="Fullscreen"
 						aria-label="Fullscreen"
+						[class.btn-outline]="!postFormIsSubmitted && !fullscreenToggle"
 						[disabled]="postFormIsSubmitted"
 						(click)="onFullscreen(!fullscreenToggle)"
 					>
@@ -437,26 +438,39 @@
 				class="grid grid-cols-12 gap-4"
 				[class.hidden]="fullscreenHiddenControls"
 			>
+				<!-- prettier-ignore -->
 				<button
-					class="btn btn-secondary col-span-4 sm:col-span-3"
+					class="btn btn-success col-span-4 sm:col-span-3"
 					type="button"
 					title="Preview"
 					aria-label="Preview"
-					[disabled]="postForm.invalid || postFormIsSubmitted"
-					(click)="onPreviewPost()"
+					[class.btn-outline]="postForm.valid && !postFormIsSubmitted && !postFormIsPristine"
+					[disabled]="postForm.invalid || postFormIsSubmitted || postFormIsPristine"
+					(click)="onTogglePreviewPost()"
 				>
 					Preview
 				</button>
+				<!-- prettier-ignore -->
 				<button
-					class="btn btn-primary col-span-8 sm:col-span-9"
+					class="btn btn-success col-span-8 sm:col-span-9"
 					type="button"
 					title="Submit"
 					aria-label="Submit"
 					[class.loading]="postFormIsSubmitted"
-					[disabled]="postForm.invalid || postFormIsSubmitted"
+					[disabled]="postForm.invalid || postFormIsSubmitted || postFormIsPristine"
 					(click)="onSubmitPostForm()"
 				>
 					Submit
+				</button>
+				<button
+					class="btn btn-error col-span-12"
+					type="button"
+					title="Delete"
+					aria-label="Delete"
+					[class.btn-outline]="!postFormIsSubmitted"
+					[disabled]="postFormIsSubmitted"
+				>
+					Delete
 				</button>
 			</div>
 		</div>
@@ -473,7 +487,10 @@
 			(closed)="postFormPreviewToggle = false"
 		>
 			<ng-container slot="content">
-				<app-post-detail class="h-full" [appPost]="post"></app-post-detail>
+				<app-post-detail
+					class="h-full"
+					[appPost]="postFormPreviewPost"
+				></app-post-detail>
 			</ng-container>
 			<div class="pointer-events-none flex bg-base-200 p-2" slot="footer">
 				<app-share class="opacity-50"></app-share>
@@ -588,7 +605,7 @@
 								</div>
 								<!-- prettier-ignore -->
 								<span
-                  class="label-text-alt flex items-center"
+                  class="label-text-alt"
                   [class.text-base-content]="categoryFormIsSubmitted"
                   [class.text-success]="!categoryFormIsSubmitted && description.touched && !description.errors"
                   [class.text-error]="!categoryFormIsSubmitted && description.touched && !!description.errors"
@@ -613,7 +630,7 @@
 						</fieldset>
 						<fieldset class="form-control">
 							<button
-								class="btn btn-secondary w-full"
+								class="btn btn-success w-full"
 								type="submit"
 								aria-label="Submit"
 								[class.loading]="categoryFormIsSubmitted"

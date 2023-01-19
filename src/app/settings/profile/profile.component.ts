@@ -86,10 +86,13 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 		this.profileForm$ = this.profileForm.valueChanges
 			.pipe(startWith(this.profileForm.value))
-			.subscribe((value: any) => {
-				this.profileFormIsPristine = Object.keys(value).every((key: string) => {
-					return value[key] === this.authUser[key];
-				});
+			.subscribe({
+				next: (value: any) => {
+					// prettier-ignore
+					this.profileFormIsPristine = Object.keys(value).every((key: string) => {
+            return value[key] === this.authUser[key];
+          });
+				}
 			});
 	}
 
