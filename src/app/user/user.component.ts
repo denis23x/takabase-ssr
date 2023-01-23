@@ -22,15 +22,21 @@ import {
 } from '../core';
 import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import {
+	AbstractControl,
 	FormBuilder,
 	FormControl,
 	FormGroup,
 	Validators
 } from '@angular/forms';
 
-interface CategoryForm {
+interface CategoryEditForm {
 	name: FormControl<string>;
 	description: FormControl<string>;
+}
+
+interface CategoryDeleteForm {
+	name: FormControl<string>;
+	categoryId: FormControl<number>;
 }
 
 @Component({
@@ -48,11 +54,17 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	category: Category | undefined;
 	categoryList: Category[] = [];
-	categoryForm: FormGroup | undefined;
-	categoryForm$: Subscription | undefined;
-	categoryFormIsPristine: boolean = false;
-	categoryFormIsSubmitted: boolean = false;
-	categoryFormToggle: boolean = false;
+
+	categoryEditForm: FormGroup | undefined;
+	categoryEditForm$: Subscription | undefined;
+	categoryEditFormIsPristine: boolean = false;
+	categoryEditFormIsSubmitted: boolean = false;
+	categoryEditFormToggle: boolean = false;
+
+	categoryDeleteForm: FormGroup | undefined;
+	categoryDeleteForm$: Subscription | undefined;
+	categoryDeleteFormIsSubmitted: boolean = false;
+	categoryDeleteFormToggle: boolean = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -64,7 +76,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		private snackbarService: SnackbarService,
 		private titleService: TitleService
 	) {
-		this.categoryForm = this.formBuilder.group<CategoryForm>({
+		this.categoryEditForm = this.formBuilder.group<CategoryEditForm>({
 			name: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
@@ -75,6 +87,11 @@ export class UserComponent implements OnInit, OnDestroy {
 				Validators.minLength(4),
 				Validators.maxLength(255)
 			])
+		});
+
+		this.categoryDeleteForm = this.formBuilder.group<CategoryDeleteForm>({
+			name: this.formBuilder.nonNullable.control('', []),
+			categoryId: this.formBuilder.control(null, [])
 		});
 	}
 
@@ -124,15 +141,15 @@ export class UserComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
-		this.categoryForm$ = this.categoryForm.valueChanges
+		this.categoryEditForm$ = this.categoryEditForm.valueChanges
 			.pipe(
-				startWith(this.categoryForm.value),
+				startWith(this.categoryEditForm.value),
 				filter(() => !!this.category)
 			)
 			.subscribe({
 				next: (value: any) => {
 					// prettier-ignore
-					this.categoryFormIsPristine = Object.keys(value).every((key: string) => {
+					this.categoryEditFormIsPristine = Object.keys(value).every((key: string) => {
             return value[key] === this.category[key];
           });
 				}
@@ -148,27 +165,48 @@ export class UserComponent implements OnInit, OnDestroy {
 		[
 			this.activatedRouteData$,
 			this.routeEvents$,
-			this.categoryForm$,
+			this.categoryEditForm$,
 			this.authUser$
 		].forEach($ => $?.unsubscribe());
 	}
 
-	onToggleCategoryForm(toggle: boolean): void {
-		this.categoryFormToggle = toggle;
-		this.categoryForm.reset(this.category);
-		this.categoryForm.markAllAsTouched();
+	onToggleCategoryEditForm(toggle: boolean): void {
+		this.categoryEditFormToggle = toggle;
+
+		if (this.categoryEditFormToggle) {
+			this.categoryEditForm.patchValue(this.category);
+			this.categoryEditForm.markAllAsTouched();
+		} else {
+			this.categoryEditForm.reset();
+		}
 	}
 
-	onSubmitCategoryForm(): void {
-		if (this.helperService.getFormValidation(this.categoryForm)) {
-			this.categoryFormIsSubmitted = true;
+	onToggleCategoryDeleteForm(toggle: boolean): void {
+		this.categoryDeleteFormToggle = toggle;
+
+		// prettier-ignore
+		if (this.categoryDeleteFormToggle) {
+			const abstractControl: AbstractControl = this.categoryDeleteForm.get('name');
+
+			abstractControl.setValidators([
+				Validators.required,
+				Validators.pattern(this.helperService.getRegex('exact', this.category.name))
+			]);
+
+			abstractControl.updateValueAndValidity();
+		} else {
+      this.categoryDeleteForm.reset();
+    }
+	}
+
+	onSubmitCategoryEditForm(): void {
+		if (this.helperService.getFormValidation(this.categoryEditForm)) {
+			this.categoryEditFormIsSubmitted = true;
 
 			const categoryId: number = this.category.id;
 			const categoryUpdateDto: CategoryUpdateDto = {
-				...this.categoryForm.value
+				...this.categoryEditForm.value
 			};
-
-			// this.categoryService.delete(categoryId),
 
 			this.categoryService.update(categoryId, categoryUpdateDto).subscribe({
 				next: (category: Category) => {
@@ -176,18 +214,45 @@ export class UserComponent implements OnInit, OnDestroy {
 
 					this.category = category;
 					this.categoryList = this.categoryList.map((category: Category) => {
-						if (category.id === this.category.id) {
-							return this.category;
-						} else {
-							return category;
-						}
+						return category.id === this.category.id ? this.category : category;
 					});
 
-					this.categoryFormIsSubmitted = false;
+					this.categoryEditFormIsSubmitted = false;
 
-					this.onToggleCategoryForm(false);
+					this.onToggleCategoryEditForm(false);
 				},
-				error: () => (this.categoryFormIsSubmitted = false)
+				error: () => (this.categoryEditFormIsSubmitted = false)
+			});
+		}
+	}
+
+	onSubmitCategoryDeleteForm(): void {
+		if (this.helperService.getFormValidation(this.categoryDeleteForm)) {
+			this.categoryDeleteFormIsSubmitted = true;
+
+			const categoryId: number = this.category.id;
+			const denis: any = {
+				...this.categoryDeleteForm.value
+			};
+
+			this.categoryService.delete(categoryId, denis).subscribe({
+				next: (category: Category) => {
+					this.router.navigateByUrl('/@' + this.user.name).then(() => {
+						this.snackbarService.success(null, 'Category deleted');
+
+						this.category = category;
+
+						// prettier-ignore
+						this.categoryList = this.categoryList.filter((category: Category) => category.id !== this.category.id);
+						this.category = undefined;
+
+						this.categoryDeleteFormIsSubmitted = false;
+
+						this.onToggleCategoryDeleteForm(false);
+						this.onToggleCategoryEditForm(false);
+					});
+				},
+				error: () => (this.categoryDeleteFormIsSubmitted = false)
 			});
 		}
 	}

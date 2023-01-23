@@ -1,16 +1,13 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { AuthService, HelperService, MarkdownParser, User } from '../../core';
+import { HelperService, MarkdownParser } from '../../core';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class MarkdownPluginService {
-	constructor(
-		private helperService: HelperService,
-		private authService: AuthService
-	) {}
+	constructor(private helperService: HelperService) {}
 
 	getYoutubeParser(url: string): string {
 		const regex: RegExp = this.helperService.getRegex('url-youtube');
@@ -23,12 +20,8 @@ export class MarkdownPluginService {
 		return '';
 	}
 
-	getYoutubeTemplate(
-		service: string,
-		id: string,
-		url: string,
-		options?: any
-	): string {
+	// prettier-ignore
+	getYoutubeTemplate(service: string, id: string, url: string, options?: any): string {
 		const parameter: number = id.indexOf('?');
 		const src: string = 'https://www.youtube.com/embed/';
 
@@ -58,16 +51,13 @@ export class MarkdownPluginService {
 		return '';
 	}
 
-	getGithubTemplate(
-		service: string,
-		id: string,
-		url: string,
-		options?: any
-	): string {
+	// prettier-ignore
+	getGithubTemplate(service: string, id: string, url: string, options?: any): string {
 		const parameter: number = id.indexOf('?');
 		const src: string = 'https://gist.github.com/';
-		const randomId: string =
-			id + '-' + Date.now() + Math.floor(Math.random() * Date.now());
+
+    // prettier-ignore
+		const randomId: string = id + '-' + Date.now() + Math.floor(Math.random() * Date.now());
 
 		const srcdoc: string = `
       <html lang='en' translate='no'>
@@ -176,11 +166,9 @@ export class MarkdownPluginService {
 			}
 
 			const serviceStart: number = oldPos + 2;
-			const serviceEnd: number = md.helpers.parseLinkLabel(
-				state,
-				oldPos + 1,
-				false
-			);
+
+			// prettier-ignore
+			const serviceEnd: number = md.helpers.parseLinkLabel(state, oldPos + 1, false);
 
 			// We found the end of the link, and know for a fact it's a valid link;
 			// so all that's left to do is to call tokenizer.
@@ -188,12 +176,9 @@ export class MarkdownPluginService {
 				theState.pos = serviceStart;
 				theState.service = theState.src.slice(serviceStart, serviceEnd);
 
-				const newState = new theState.md.inline.State(
-					service,
-					theState.md,
-					theState.env,
-					[]
-				);
+				// prettier-ignore
+				const newState = new theState.md.inline.State(service, theState.md, theState.env, []);
+
 				newState.md.inline.tokenize(newState);
 
 				let token: any;
@@ -214,28 +199,20 @@ export class MarkdownPluginService {
 	tokenize(md: any, options: any): (tokens: any, idx: any) => string {
 		return (tokens, idx): string => {
 			const id: string = md.utils.escapeHtml(tokens[idx].id);
-			const service: string = md.utils
-				.escapeHtml(tokens[idx].service)
-				.toLowerCase();
+
+			// prettier-ignore
+			const service: string = md.utils.escapeHtml(tokens[idx].service).toLowerCase();
 
 			if (!id.length) {
 				return '';
 			} else {
 				switch (service) {
 					case 'youtube':
-						return this.getYoutubeTemplate(
-							service,
-							id,
-							tokens[idx].url,
-							options
-						);
+						// prettier-ignore
+						return this.getYoutubeTemplate(service, id, tokens[idx].url, options);
 					case 'github':
-						return this.getGithubTemplate(
-							service,
-							id,
-							tokens[idx].url,
-							options
-						);
+						// prettier-ignore
+						return this.getGithubTemplate(service, id, tokens[idx].url, options);
 					default:
 						return '';
 				}
@@ -248,10 +225,8 @@ export class MarkdownPluginService {
 		const theMd: any = md;
 
 		theMd.renderer.rules.iframe = this.tokenize(theMd, theOptions);
-		theMd.inline.ruler.before(
-			'emphasis',
-			'iframe',
-			this.embed(theMd, theOptions)
-		);
+
+		// prettier-ignore
+		theMd.inline.ruler.before('emphasis', 'iframe', this.embed(theMd, theOptions));
 	}
 }

@@ -11,6 +11,9 @@
 				class="flex flex-col space-y-4"
 				[disabled]="imageFormIsSubmitted || cropperIsSubmitted"
 			>
+				<p class="alert">
+					Browse file on your device or paste link from internet
+				</p>
 				<fieldset class="form-control" *ngIf="imageForm.get('url') as url">
 					<label class="label" for="imageFormUrl">
 						<div class="indicator">
@@ -23,7 +26,7 @@
 									Required
 								</ng-container>
 								<ng-container *ngSwitchCase="!!url.errors.customValidator">
-									Url does not match pattern
+									Url does not correct
 								</ng-container>
 							</span>
 							<span class="label-text mr-2">Image</span>
@@ -85,9 +88,6 @@
 					</label>
 				</fieldset>
 			</fieldset>
-			<p class="rounded-box bg-base-200 p-4">
-				Browse file on your device or paste link from internet
-			</p>
 		</form>
 		<div class="flex flex-col space-y-4" [class.hidden]="!cropperFile">
 			<!-- prettier-ignore -->
@@ -111,7 +111,7 @@
 			</image-cropper>
 			<div class="flex items-center justify-between gap-4">
 				<ul
-					class="menu rounded-btn menu-horizontal flex-nowrap overflow-x-auto overflow-y-hidden border border-base-content/20 bg-base-100"
+					class="menu rounded-btn menu-horizontal flex-nowrap overflow-x-auto overflow-y-hidden border border-base-content/20"
 					[class.pointer-events-none]="cropperIsSubmitted"
 					[class.border-transparent]="cropperIsSubmitted"
 					[class.bg-base-200]="cropperIsSubmitted"

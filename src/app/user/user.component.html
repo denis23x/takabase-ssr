@@ -32,7 +32,7 @@
 					</a>
 				</div>
 			</div>
-			<p class="rounded-box w-full bg-base-200 p-4 text-base-content">
+			<p class="alert w-full">
 				{{ user.description }}
 			</p>
 		</header>
@@ -113,12 +113,12 @@
 							title="Edit"
 							aria-label="Edit"
 							*ngIf="authUser?.id === user.id"
-							(click)="onToggleCategoryForm(true)"
+							(click)="onToggleCategoryEditForm(true)"
 						>
 							Edit
 						</button>
 					</div>
-					<p class="rounded-box w-full bg-base-200 p-4 text-base-content">
+					<p class="alert w-full">
 						{{ category.description }}
 					</p>
 				</div>
@@ -127,32 +127,32 @@
 		</div>
 	</div>
 	<app-overlay
-		[appToggle]="categoryFormToggle"
-		(clicked)="onToggleCategoryForm(false)"
-		(escaped)="onToggleCategoryForm(false)"
+		[appToggle]="categoryEditFormToggle"
+		(clicked)="onToggleCategoryEditForm(false)"
+		(escaped)="onToggleCategoryEditForm(false)"
 	>
 		<app-window
 			slot="content"
 			[appTitle]="'Category'"
-			(closed)="onToggleCategoryForm(false)"
+			(closed)="onToggleCategoryEditForm(false)"
 		>
 			<ng-container slot="content">
 				<form
-					class="flex w-window max-w-[512px] flex-col bg-base-100 p-4"
+					class="flex w-window max-w-[512px] flex-col p-4"
 					autocomplete="off"
 					slot="content"
-					[formGroup]="categoryForm"
-					(ngSubmit)="onSubmitCategoryForm()"
+					[formGroup]="categoryEditForm"
+					(ngSubmit)="onSubmitCategoryEditForm()"
 				>
 					<fieldset
 						class="flex flex-col space-y-4"
-						[disabled]="categoryFormIsSubmitted"
+						[disabled]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
 					>
 						<fieldset
 							class="form-control"
-							*ngIf="categoryForm.get('name') as name"
+							*ngIf="categoryEditForm.get('name') as name"
 						>
-							<label class="label" for="categoryFormName">
+							<label class="label" for="categoryEditFormName">
 								<div class="indicator">
 									<span
 										class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
@@ -174,10 +174,11 @@
 									<span class="label-text mr-2">Name</span>
 								</div>
 							</label>
+							<!-- prettier-ignore -->
 							<div class="relative">
 								<input
 									class="input input-bordered w-full truncate pr-12"
-									id="categoryFormName"
+									id="categoryEditFormName"
 									type="text"
 									aria-label="Name"
 									formControlName="name"
@@ -185,7 +186,7 @@
 									appInputTrimWhitespace
 									[class.input-success]="name.touched && name.valid"
 									[class.input-error]="name.touched && name.invalid"
-									[class.input-disabled]="categoryFormIsSubmitted"
+									[class.input-disabled]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
 								/>
 								<button
 									class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
@@ -197,7 +198,7 @@
 									[class.btn-success]="name.touched && name.valid"
 									[class.btn-error]="name.touched && name.invalid"
 									[class.btn-ghost]="name.untouched"
-									[class.btn-disabled]="categoryFormIsSubmitted"
+									[class.btn-disabled]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
 									[appIcon]="'x'"
 									[appSquare]="'1.75rem'"
 									(click)="name.setValue('')"
@@ -206,9 +207,9 @@
 						</fieldset>
 						<fieldset
 							class="form-control"
-							*ngIf="categoryForm.get('description') as description"
+							*ngIf="categoryEditForm.get('description') as description"
 						>
-							<label class="label" for="categoryFormDescription">
+							<label class="label" for="categoryEditFormDescription">
 								<div class="indicator">
 									<span
 										class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
@@ -232,9 +233,9 @@
 								<!-- prettier-ignore -->
 								<span
                   class="label-text-alt"
-                  [class.text-base-content]="categoryFormIsSubmitted"
-                  [class.text-success]="!categoryFormIsSubmitted && description.touched && !description.errors"
-                  [class.text-error]="!categoryFormIsSubmitted && description.touched && !!description.errors"
+                  [class.text-base-content]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
+                  [class.text-success]="!categoryEditFormIsSubmitted && !categoryDeleteFormToggle && description.touched && !description.errors"
+                  [class.text-error]="!categoryEditFormIsSubmitted && !categoryDeleteFormToggle && description.touched && !!description.errors"
                 >
                   {{ description.value.length }}/255
                 </span>
@@ -242,38 +243,179 @@
 							<!-- prettier-ignore -->
 							<textarea
                 class="textarea textarea-bordered w-full"
-                id="categoryFormDescription"
+                id="categoryEditFormDescription"
                 aria-label="Description"
                 placeholder="Type category description"
                 formControlName="description"
                 [rows]="4"
                 [class.textarea-success]="description.touched && !description.errors"
                 [class.textarea-error]="description.touched && !!description.errors"
-                [class.textarea-disabled]="categoryFormIsSubmitted"
+                [class.textarea-disabled]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
               >
                 {{ description.value }}
               </textarea>
 						</fieldset>
-						<fieldset class="form-control grid grid-cols-12 gap-4">
-							<!-- prettier-ignore -->
+						<!-- prettier-ignore -->
+						<fieldset class="form-control gap-4">
 							<button
-								class="btn btn-success col-span-12"
+								class="btn btn-success"
 								type="submit"
 								aria-label="Submit"
-								[class.loading]="categoryFormIsSubmitted"
-								[disabled]="categoryForm.invalid || categoryFormIsSubmitted || categoryFormIsPristine"
+								[class.loading]="categoryEditFormIsSubmitted"
+								[disabled]="categoryEditForm.invalid || categoryEditFormIsSubmitted || categoryEditFormIsPristine || categoryDeleteFormToggle"
 							>
 								Submit
 							</button>
 							<button
-								class="btn btn-error col-span-12"
+								class="btn btn-error"
 								type="button"
 								title="Delete"
 								aria-label="Delete"
-								[class.btn-outline]="!categoryFormIsSubmitted"
-								[disabled]="categoryFormIsSubmitted"
+								[class.btn-outline]="!categoryEditFormIsSubmitted && !categoryDeleteFormToggle"
+								[disabled]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
+								(click)="onToggleCategoryDeleteForm(true)"
 							>
 								Delete
+							</button>
+						</fieldset>
+					</fieldset>
+				</form>
+			</ng-container>
+		</app-window>
+	</app-overlay>
+	<app-overlay
+		[appToggle]="categoryDeleteFormToggle"
+		(clicked)="onToggleCategoryDeleteForm(false)"
+		(escaped)="onToggleCategoryDeleteForm(false)"
+	>
+		<app-window
+			slot="content"
+			[appTitle]="'Confirmation'"
+			(closed)="onToggleCategoryDeleteForm(false)"
+		>
+			<ng-container slot="content">
+				<form
+					class="flex w-window max-w-[448px] flex-col space-y-4 p-4"
+					autocomplete="off"
+					slot="content"
+					[formGroup]="categoryDeleteForm"
+					(ngSubmit)="onSubmitCategoryDeleteForm()"
+				>
+					<p class="alert">This action cannot be undone.</p>
+					<fieldset
+						class="flex flex-col space-y-4"
+						[disabled]="categoryDeleteFormIsSubmitted"
+					>
+						<fieldset
+							class="form-control"
+							*ngIf="categoryDeleteForm.get('name') as name"
+						>
+							<label class="label" for="categoryDeleteFormName">
+								<div class="indicator">
+									<span
+										class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+										*ngIf="name.touched && !!name.errors"
+										[ngSwitch]="true"
+									>
+										<ng-container *ngSwitchCase="!!name.errors.required">
+											Required
+										</ng-container>
+										<ng-container *ngSwitchCase="!!name.errors.pattern">
+											Incorrect name
+										</ng-container>
+									</span>
+									<span class="label-text mr-2">
+										Please type
+										<span class="font-bold">{{ category?.name }}</span>
+										to confirm
+									</span>
+								</div>
+							</label>
+							<div class="relative">
+								<input
+									class="input input-bordered w-full truncate pr-12"
+									id="categoryDeleteFormName"
+									type="text"
+									aria-label="Name"
+									formControlName="name"
+									placeholder="Type category name"
+									appInputTrimWhitespace
+									[class.input-success]="name.touched && name.valid"
+									[class.input-error]="name.touched && name.invalid"
+									[class.input-disabled]="categoryDeleteFormIsSubmitted"
+								/>
+								<button
+									class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+									type="button"
+									title="Clear"
+									aria-label="Clear"
+									appSvgIcon
+									*ngIf="!!name.value.length"
+									[class.btn-success]="name.touched && name.valid"
+									[class.btn-error]="name.touched && name.invalid"
+									[class.btn-ghost]="name.untouched"
+									[class.btn-disabled]="categoryDeleteFormIsSubmitted"
+									[appIcon]="'x'"
+									[appSquare]="'1.75rem'"
+									(click)="name.setValue('')"
+								></button>
+							</div>
+						</fieldset>
+						<fieldset
+							class="form-control"
+							*ngIf="categoryDeleteForm.get('categoryId') as categoryId"
+						>
+							<label class="label">
+								<div class="indicator">
+									<span
+										class="badge indicator-item badge-success w-max translate-x-full translate-y-0 text-xs"
+									>
+										Optional
+									</span>
+									<span class="label-text mr-2">
+										Move post categories to another category
+									</span>
+								</div>
+							</label>
+							<ul
+								class="menu rounded-btn menu-compact max-h-44 flex-nowrap overflow-y-auto border border-base-content/20 p-2"
+								*ngIf="category as categoryActive"
+								[class.border-success]="categoryId.value"
+							>
+								<ng-container *ngFor="let category of categoryList">
+									<li *ngIf="categoryActive.id !== category.id">
+										<label
+											class="label cursor-pointer px-2 active:bg-base-content/10"
+											[for]="'categoryDeleteFormCategoryId' + category.id"
+										>
+											<span class="label-text">{{ category.name }}</span>
+											<!-- prettier-ignore -->
+											<input
+                        class="radio"
+                        type="radio"
+                        title="Category"
+                        aria-label="Category"
+                        formControlName="categoryId"
+                        [id]="'categoryDeleteFormCategoryId' + category.id"
+                        [class.radio-success]="categoryId.value === category.id && !categoryDeleteFormIsSubmitted"
+                        [value]="category.id"
+                      />
+										</label>
+									</li>
+								</ng-container>
+							</ul>
+						</fieldset>
+						<fieldset class="form-control">
+							<!-- prettier-ignore -->
+							<button
+								class="btn btn-success"
+								type="submit"
+								title="Submit"
+								aria-label="Submit"
+								[class.loading]="categoryDeleteFormIsSubmitted"
+								[disabled]="categoryDeleteForm.invalid || categoryDeleteFormIsSubmitted"
+							>
+								Submit
 							</button>
 						</fieldset>
 					</fieldset>

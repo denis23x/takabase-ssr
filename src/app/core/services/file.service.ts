@@ -6,16 +6,18 @@ import { ApiService } from '../services';
 import { FileCreateDto, FileGetOneDto } from '../dto';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class FileService {
-  constructor(private apiService: ApiService) {}
+	constructor(private apiService: ApiService) {}
 
-  create(formData: FormData): Observable<FileCreateDto> {
-    return this.apiService.post('/files', formData);
-  }
+	create(formData: FormData): Observable<FileCreateDto> {
+		return this.apiService.post('/files', formData);
+	}
 
-  getOne(fileGetOneDto: FileGetOneDto): Observable<File> {
-    return this.apiService.get('/files', fileGetOneDto, { responseType: 'blob' });
-  }
+	getOne(fileGetOneDto: FileGetOneDto): Observable<File> {
+		return this.apiService.get('/files', fileGetOneDto, {
+			responseType: 'blob'
+		});
+	}
 }
