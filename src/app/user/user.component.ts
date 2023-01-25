@@ -11,11 +11,13 @@ import {
 } from '@angular/router';
 import { EMPTY, of, Subscription } from 'rxjs';
 import {
+	Post,
 	User,
-	Category,
 	AuthService,
 	TitleService,
 	HelperService,
+	Category,
+	CategoryDeleteDto,
 	CategoryUpdateDto,
 	CategoryService,
 	SnackbarService
@@ -45,12 +47,16 @@ interface CategoryDeleteForm {
 })
 export class UserComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
+	activatedRouteFirstChildData$: Subscription | undefined;
 	routeEvents$: Subscription | undefined;
 
 	user: User | undefined;
 
 	authUser: User | undefined;
 	authUser$: Subscription | undefined;
+
+	post: Post | undefined;
+	postList: Post[] = [];
 
 	category: Category | undefined;
 	categoryList: Category[] = [];
@@ -109,6 +115,13 @@ export class UserComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
+		this.activatedRouteFirstChildData$ = this.activatedRoute.firstChild.data
+			.pipe(map((data: Data) => data.data))
+			.subscribe({
+				next: (postList: Post[]) => (this.postList = postList),
+				error: (error: any) => console.error(error)
+			});
+
 		this.routeEvents$ = this.router.events
 			.pipe(
 				// prettier-ignore
@@ -164,6 +177,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		[
 			this.activatedRouteData$,
+			this.activatedRouteFirstChildData$,
 			this.routeEvents$,
 			this.categoryEditForm$,
 			this.authUser$
@@ -231,13 +245,20 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.categoryDeleteFormIsSubmitted = true;
 
 			const categoryId: number = this.category.id;
-			const denis: any = {
-				...this.categoryDeleteForm.value
-			};
+			const categoryDeleteDto: CategoryDeleteDto = {};
+			const categoryDeleteRedirect: string[] = ['/@' + this.user.name];
 
-			this.categoryService.delete(categoryId, denis).subscribe({
+			// prettier-ignore
+			const abstractControl: AbstractControl = this.categoryDeleteForm.get('categoryId');
+
+			if (!!abstractControl.value) {
+				categoryDeleteDto.categoryId = abstractControl.value;
+				categoryDeleteRedirect.push('category', abstractControl.value);
+			}
+
+			this.categoryService.delete(categoryId, categoryDeleteDto).subscribe({
 				next: (category: Category) => {
-					this.router.navigateByUrl('/@' + this.user.name).then(() => {
+					this.router.navigate(categoryDeleteRedirect).then(() => {
 						this.snackbarService.success(null, 'Category deleted');
 
 						this.category = category;

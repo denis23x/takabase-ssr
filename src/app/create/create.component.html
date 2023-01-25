@@ -149,6 +149,7 @@
 								<ul
 									class="menu rounded-box mt-2 max-h-64 flex-nowrap overflow-y-auto border border-base-content/20 bg-base-100 p-2 shadow"
 									slot="content"
+									[class.hidden]="!categoryList.length"
 								>
 									<li class="flex w-full" *ngFor="let category of categoryList">
 										<button
@@ -165,7 +166,7 @@
 							</div>
 						</fieldset>
 						<button
-							class="btn btn-primary fill-current p-3"
+							class="btn btn-success fill-current p-3"
 							type="button"
 							title="Create"
 							aria-label="Create"
@@ -440,7 +441,7 @@
 			>
 				<!-- prettier-ignore -->
 				<button
-					class="btn btn-success col-span-4 sm:col-span-3"
+					class="btn btn-primary col-span-4 sm:col-span-3"
 					type="button"
 					title="Preview"
 					aria-label="Preview"

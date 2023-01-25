@@ -6,6 +6,7 @@ import { ApiService } from '../services';
 import { Category } from '../models';
 import {
 	CategoryCreateDto,
+	CategoryDeleteDto,
 	CategoryGetAllDto,
 	CategoryUpdateDto
 } from '../dto';
@@ -33,7 +34,8 @@ export class CategoryService {
 		return this.apiService.put('/categories/' + id, categoryUpdateDto);
 	}
 
-	delete(id: number, denis: any): Observable<Category> {
-		return this.apiService.delete('/categories/' + id, denis);
+	// prettier-ignore
+	delete(id: number, categoryDeleteDto: CategoryDeleteDto): Observable<Category> {
+		return this.apiService.delete('/categories/' + id, categoryDeleteDto);
 	}
 }

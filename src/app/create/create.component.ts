@@ -187,8 +187,14 @@ export class CreateComponent implements OnInit, OnDestroy {
 	onToggleCategory(toggle: boolean): void {
 		const abstractControl: AbstractControl = this.postForm.get('categoryName');
 
-		if (!toggle && !abstractControl.value) {
-			abstractControl.setErrors({ required: true });
+		if (this.categoryList.length) {
+			if (!toggle && !abstractControl.value) {
+				abstractControl.setErrors({ required: true });
+			}
+		} else {
+			if (!!toggle) {
+				this.onToggleCategoryForm(true);
+			}
 		}
 	}
 

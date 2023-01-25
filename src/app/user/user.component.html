@@ -361,50 +361,52 @@
 								></button>
 							</div>
 						</fieldset>
-						<fieldset
-							class="form-control"
-							*ngIf="categoryDeleteForm.get('categoryId') as categoryId"
-						>
-							<label class="label">
-								<div class="indicator">
-									<span
-										class="badge indicator-item badge-success w-max translate-x-full translate-y-0 text-xs"
-									>
-										Optional
-									</span>
-									<span class="label-text mr-2">
-										Move post categories to another category
-									</span>
-								</div>
-							</label>
-							<ul
-								class="menu rounded-btn menu-compact max-h-44 flex-nowrap overflow-y-auto border border-base-content/20 p-2"
-								*ngIf="category as categoryActive"
-								[class.border-success]="categoryId.value"
+						<ng-container *ngIf="postList.length && categoryList.length > 1">
+							<fieldset
+								class="form-control"
+								*ngIf="categoryDeleteForm.get('categoryId') as categoryId"
 							>
-								<ng-container *ngFor="let category of categoryList">
-									<li *ngIf="categoryActive.id !== category.id">
-										<label
-											class="label cursor-pointer px-2 active:bg-base-content/10"
-											[for]="'categoryDeleteFormCategoryId' + category.id"
+								<label class="label">
+									<div class="indicator">
+										<span
+											class="badge indicator-item badge-success w-max translate-x-full translate-y-0 text-xs"
 										>
-											<span class="label-text">{{ category.name }}</span>
-											<!-- prettier-ignore -->
-											<input
-                        class="radio"
-                        type="radio"
-                        title="Category"
-                        aria-label="Category"
-                        formControlName="categoryId"
-                        [id]="'categoryDeleteFormCategoryId' + category.id"
-                        [class.radio-success]="categoryId.value === category.id && !categoryDeleteFormIsSubmitted"
-                        [value]="category.id"
-                      />
-										</label>
-									</li>
-								</ng-container>
-							</ul>
-						</fieldset>
+											Optional
+										</span>
+										<span class="label-text mr-2">
+											Move post categories to another category
+										</span>
+									</div>
+								</label>
+								<ul
+									class="menu rounded-btn menu-compact max-h-44 flex-nowrap overflow-y-auto border border-base-content/20 p-2"
+									*ngIf="category as categoryActive"
+									[class.border-success]="categoryId.value"
+								>
+									<ng-container *ngFor="let category of categoryList">
+										<li *ngIf="categoryActive.id !== category.id">
+											<label
+												class="label cursor-pointer px-2 active:bg-base-content/10"
+												[for]="'categoryDeleteFormCategoryId' + category.id"
+											>
+												<span class="label-text">{{ category.name }}</span>
+												<!-- prettier-ignore -->
+												<input
+                          class="radio"
+                          type="radio"
+                          title="Category"
+                          aria-label="Category"
+                          formControlName="categoryId"
+                          [id]="'categoryDeleteFormCategoryId' + category.id"
+                          [class.radio-success]="categoryId.value === category.id && !categoryDeleteFormIsSubmitted"
+                          [value]="category.id"
+                        />
+											</label>
+										</li>
+									</ng-container>
+								</ul>
+							</fieldset>
+						</ng-container>
 						<fieldset class="form-control">
 							<!-- prettier-ignore -->
 							<button
