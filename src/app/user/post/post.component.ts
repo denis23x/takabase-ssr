@@ -1,31 +1,10 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, Data } from '@angular/router';
+import { ActivatedRoute, Data } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Category, Post, PostGetAllDto, PostService, User } from '../../core';
+import { Post, PostGetAllDto, PostService } from '../../core';
 import { map, skip, tap } from 'rxjs/operators';
-
-// prettier-ignore
-export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto => {
-  const [user]: [User, Category[]] = activatedRouteSnapshot.parent.data.data;
-
-  postGetAllDto = {
-    ...postGetAllDto,
-    userId: user.id
-  };
-
-  const categoryId: number = Number(activatedRouteSnapshot.paramMap.get('categoryId'));
-
-  if (categoryId) {
-    postGetAllDto = {
-      ...postGetAllDto,
-      categoryId
-    };
-  }
-
-  return postGetAllDto;
-};
 
 @Component({
 	selector: 'app-user-category',
@@ -92,8 +71,9 @@ export class UserPostComponent implements OnInit, OnDestroy {
 			scope: ['user', 'category']
 		};
 
+		// prettier-ignore
 		postGetAllDto = {
-			...getPostGetAllDto(postGetAllDto, this.activatedRoute.snapshot)
+			...this.postService.getUserPostGetAllDto(postGetAllDto, this.activatedRoute.snapshot)
 		};
 
 		this.postService.getAll(postGetAllDto).subscribe({

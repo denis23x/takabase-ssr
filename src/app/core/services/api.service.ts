@@ -34,7 +34,7 @@ export class ApiService {
 		const getDuration = (requestError: RequestError): number => {
 			return typeof requestError.message === 'object'
 				? requestError.message.length * 4000
-				: 5000;
+				: 4000;
 		};
 
 		// prettier-ignore

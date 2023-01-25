@@ -6,7 +6,6 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PostService, PostGetAllDto, Post } from '../../core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { getPostGetAllDto } from './post.component';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,8 +20,9 @@ export class SearchPostResolverService {
 			scope: ['user', 'category']
 		};
 
+		// prettier-ignore
 		postGetAllDto = {
-			...getPostGetAllDto(postGetAllDto, activatedRouteSnapshot)
+			...this.postService.getSearchPostGetAllDto(postGetAllDto, activatedRouteSnapshot)
 		};
 
 		return this.postService.getAll(postGetAllDto).pipe(

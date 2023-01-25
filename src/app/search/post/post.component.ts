@@ -1,24 +1,10 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, Data } from '@angular/router';
+import { ActivatedRoute, Data } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { Post, PostGetAllDto, PostService } from '../../core';
 import { map, skip, tap } from 'rxjs/operators';
-
-// prettier-ignore
-export const getPostGetAllDto = (postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto => {
-  const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
-
-  if (!!name.length) {
-    postGetAllDto = {
-      ...postGetAllDto,
-      name
-    };
-  }
-
-  return postGetAllDto;
-};
 
 @Component({
 	selector: 'app-search-post',
@@ -84,8 +70,9 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 			scope: ['user', 'category']
 		};
 
+		// prettier-ignore
 		postGetAllDto = {
-			...getPostGetAllDto(postGetAllDto, this.activatedRoute.snapshot)
+			...this.postService.getSearchPostGetAllDto(postGetAllDto, this.activatedRoute.snapshot)
 		};
 
 		this.postService.getAll(postGetAllDto).subscribe({
