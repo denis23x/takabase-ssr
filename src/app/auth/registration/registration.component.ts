@@ -80,7 +80,7 @@ export class AuthRegistrationComponent implements OnInit {
 				)
 				.subscribe({
 					// prettier-ignore
-					next: (user: User) => this.router.navigate(['/@' + user.name]).then(() => console.debug('Route changed')),
+					next: (user: User) => this.router.navigate([this.userService.getUserUrl(user)]).then(() => console.debug('Route changed')),
 					error: () => (this.registrationFormIsSubmitted = false)
 				});
 		}

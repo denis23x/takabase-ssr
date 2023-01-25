@@ -8,7 +8,13 @@ import {
 	Validators
 } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { AuthService, LoginDto, HelperService, User } from '../../core';
+import {
+	AuthService,
+	LoginDto,
+	HelperService,
+	User,
+	UserService
+} from '../../core';
 import { filter } from 'rxjs/operators';
 import { Meta } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
@@ -34,7 +40,8 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 		private authService: AuthService,
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
-		private meta: Meta
+		private meta: Meta,
+		private userService: UserService
 	) {
 		this.loginForm = this.formBuilder.group<LoginForm>({
 			email: this.formBuilder.nonNullable.control('', [
@@ -83,7 +90,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
 		this.authService.onLogin(loginDto).subscribe({
 			// prettier-ignore
-			next: (user: User) => this.router.navigate(['/@' + user.name]).then(() => console.debug('Route changed')),
+			next: (user: User) => this.router.navigate([this.userService.getUserUrl(user)]).then(() => console.debug('Route changed')),
 			error: () => (this.loginFormIsSubmitted = false)
 		});
 	}

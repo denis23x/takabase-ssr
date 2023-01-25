@@ -13,7 +13,7 @@
 					<!-- prettier-ignore -->
 					<a
             class="link text-xl font-bold"
-            [routerLink]="['/@' + category.user.name, 'category', category.id]"
+            [routerLink]="[(category.user | userUrl), 'category', category.id]"
             [attr.aria-label]="category.name"
           >
             {{ category.name }}

@@ -20,7 +20,8 @@ import {
 	CategoryDeleteDto,
 	CategoryUpdateDto,
 	CategoryService,
-	SnackbarService
+	SnackbarService,
+	UserService
 } from '../core';
 import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import {
@@ -80,7 +81,8 @@ export class UserComponent implements OnInit, OnDestroy {
 		private authService: AuthService,
 		private categoryService: CategoryService,
 		private snackbarService: SnackbarService,
-		private titleService: TitleService
+		private titleService: TitleService,
+		private userService: UserService
 	) {
 		this.categoryEditForm = this.formBuilder.group<CategoryEditForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -246,7 +248,9 @@ export class UserComponent implements OnInit, OnDestroy {
 
 			const categoryId: number = this.category.id;
 			const categoryDeleteDto: CategoryDeleteDto = {};
-			const categoryDeleteRedirect: string[] = ['/@' + this.user.name];
+
+			// prettier-ignore
+			const categoryDeleteRedirect: string[] = [this.userService.getUserUrl(this.user)];
 
 			// prettier-ignore
 			const abstractControl: AbstractControl = this.categoryDeleteForm.get('categoryId');

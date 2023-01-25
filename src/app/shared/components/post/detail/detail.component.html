@@ -54,7 +54,7 @@
 				<a
 					class="btn btn-link btn-circle"
 					appAvatar
-					[routerLink]="['/@' + post.user.name]"
+					[routerLink]="[post.user | userUrl]"
 					[attr.aria-label]="post.user.name"
 					[title]="post.user.name"
 					[appUser]="post.user"
@@ -63,7 +63,7 @@
 				<div class="flex flex-col items-start justify-start">
 					<a
 						class="link"
-						[routerLink]="['/@' + post.user.name]"
+						[routerLink]="[post.user | userUrl]"
 						[attr.aria-label]="post.user.name"
 						[title]="post.user.name"
 					>

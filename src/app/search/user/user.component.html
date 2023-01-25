@@ -12,7 +12,7 @@
 				<a
 					class="flex"
 					appAvatar
-					[routerLink]="['/@' + user.name]"
+					[routerLink]="[user | userUrl]"
 					[attr.aria-label]="user.name"
 					[appUser]="user"
 				>
@@ -20,7 +20,7 @@
 				<div class="flex flex-col text-center">
 					<a
 						class="link w-full truncate text-xl font-bold"
-						[routerLink]="['/@' + user.name]"
+						[routerLink]="[user | userUrl]"
 						[attr.aria-label]="user.name"
 					>
 						{{ user.name }}

@@ -13,7 +13,8 @@ import {
 	AuthService,
 	FileCreateDto,
 	CategoryCreateDto,
-	CategoryService
+	CategoryService,
+	UserService
 } from '../core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { iif, of, Subscription, switchMap } from 'rxjs';
@@ -87,7 +88,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 		private postService: PostService,
 		private snackbarService: SnackbarService,
 		private authService: AuthService,
-		private categoryService: CategoryService
+		private categoryService: CategoryService,
+		private userService: UserService
 	) {
 		this.postForm = this.formBuilder.group<PostForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -279,7 +281,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 				next: (post: Post) => {
 					// prettier-ignore
 					this.router
-            .navigate(['/@' + post.user.name, 'category', post.category.id, 'post', post.id])
+            .navigate([this.userService.getUserUrl(post.user), 'category', post.category.id, 'post', post.id])
             .then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
 				},
 				error: () => (this.postFormIsSubmitted = false)

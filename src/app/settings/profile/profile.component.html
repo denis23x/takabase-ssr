@@ -97,7 +97,9 @@
 				</fieldset>
 				<p class="alert inline">
 					Change the name will set the
-					<span class="inline font-bold">@{{ authUser.name }}</span>
+					<span class="inline font-bold">
+						{{ (authUser | userUrl).substring(1) }}
+					</span>
 					user profile not more available by direct link
 				</p>
 				<fieldset

@@ -27,7 +27,7 @@ import {
 	AppInputTrimWhitespaceDirective,
 	AppScrollIntoViewDirective
 } from './directives';
-import { DayjsPipe, MarkdownPipe, SanitizerPipe } from './pipes';
+import { DayjsPipe, MarkdownPipe, SanitizerPipe, UserUrlPipe } from './pipes';
 import { ImageCropperModule } from 'ngx-image-cropper';
 
 const components: any[] = [
@@ -54,7 +54,7 @@ const directives: any[] = [
 	AppScrollIntoViewDirective
 ];
 
-const pipes: any[] = [DayjsPipe, MarkdownPipe, SanitizerPipe];
+const pipes: any[] = [DayjsPipe, MarkdownPipe, SanitizerPipe, UserUrlPipe];
 
 @NgModule({
 	imports: [

@@ -7,32 +7,38 @@ import { User } from '../models';
 import { MeDto, RegistrationDto, UserGetAllDto, UserUpdateDto } from '../dto';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class UserService {
-  constructor(private apiService: ApiService) {}
+	constructor(private apiService: ApiService) {}
 
-  getMe(meDto: MeDto): Observable<User> {
-    return this.apiService.get('/auth/me', meDto);
-  }
+	getUserUrl(user: User): string {
+		return ['/@', user.name].join('');
+	}
 
-  create(registrationDto: RegistrationDto): Observable<User> {
-    return this.apiService.post('/auth/registration', registrationDto);
-  }
+	getMe(meDto: MeDto): Observable<User> {
+		return this.apiService.get('/auth/me', meDto);
+	}
 
-  getAll(userGetAllDto?: UserGetAllDto): Observable<User[]> {
-    return this.apiService.get('/users', userGetAllDto);
-  }
+	/** REST */
 
-  getOne(id: number): Observable<User> {
-    return this.apiService.get('/users/' + id);
-  }
+	create(registrationDto: RegistrationDto): Observable<User> {
+		return this.apiService.post('/auth/registration', registrationDto);
+	}
 
-  update(id: number, userUpdateDto: UserUpdateDto): Observable<User> {
-    return this.apiService.put('/users/' + id, userUpdateDto);
-  }
+	getAll(userGetAllDto?: UserGetAllDto): Observable<User[]> {
+		return this.apiService.get('/users', userGetAllDto);
+	}
 
-  deleteMe(): Observable<User> {
-    return this.apiService.delete('/users/me');
-  }
+	getOne(id: number): Observable<User> {
+		return this.apiService.get('/users/' + id);
+	}
+
+	update(id: number, userUpdateDto: UserUpdateDto): Observable<User> {
+		return this.apiService.put('/users/' + id, userUpdateDto);
+	}
+
+	deleteMe(): Observable<User> {
+		return this.apiService.delete('/users/me');
+	}
 }

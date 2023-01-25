@@ -6,7 +6,7 @@
 	>
 		<div class="navbar-start">
 			<div class="dropdown">
-				<label class="btn btn-circle btn-ghost" tabindex="0">
+				<label class="btn btn-ghost btn-circle" tabindex="0">
 					<button
 						class="block fill-current p-2"
 						type="button"
@@ -58,7 +58,7 @@
 			<ng-container *appAuthenticated="true">
 				<nav class="flex items-center justify-end space-x-2" *ngIf="!!authUser">
 					<a
-						class="btn btn-circle btn-ghost fill-current"
+						class="btn btn-ghost btn-circle fill-current"
 						title="Create post"
 						aria-label="Create post"
 						appSvgIcon
@@ -71,7 +71,7 @@
 					>
 					</a>
 					<a
-						class="btn btn-circle btn-ghost fill-current"
+						class="btn btn-ghost btn-circle fill-current"
 						title="Search"
 						aria-label="Search"
 						appSvgIcon
@@ -83,9 +83,9 @@
 					>
 					</a>
 					<a
-						class="btn btn-circle btn-link"
+						class="btn btn-link btn-circle"
 						appAvatar
-						[routerLink]="['/@' + authUser.name]"
+						[routerLink]="[authUser | userUrl]"
 						[attr.aria-label]="authUser.name"
 						[title]="authUser.name"
 						[appUser]="authUser"
