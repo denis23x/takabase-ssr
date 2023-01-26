@@ -15,7 +15,7 @@ export class SearchUserComponent implements OnInit, OnDestroy {
 	activatedRouteQueryParams$: Subscription | undefined;
 
 	page: number = 1;
-	size: number = 10;
+	size: number = 20;
 
 	userList: User[] = [];
 	userListHasMore: boolean = false;
@@ -45,7 +45,7 @@ export class SearchUserComponent implements OnInit, OnDestroy {
 				skip(1),
 				tap(() => {
 					this.page = 1;
-					this.size = 10;
+					this.size = 20;
 
 					this.userList = [];
 					this.userListHasMore = false;

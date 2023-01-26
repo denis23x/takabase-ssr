@@ -15,7 +15,7 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
 	activatedRouteQueryParams$: Subscription | undefined;
 
 	page: number = 1;
-	size: number = 10;
+	size: number = 20;
 
 	categoryList: Category[] = [];
 	categoryListHasMore: boolean = false;
@@ -45,7 +45,7 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
 				skip(1),
 				tap(() => {
 					this.page = 1;
-					this.size = 10;
+					this.size = 20;
 
 					this.categoryList = [];
 					this.categoryListHasMore = false;

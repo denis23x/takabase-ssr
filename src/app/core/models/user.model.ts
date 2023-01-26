@@ -13,7 +13,7 @@ export interface User {
 	avatar: string | null;
 	email?: string;
 	sessions: Session[];
-	accessToken?: string;
+	token?: string;
 	settings?: UserSettings;
 	createdAt: string;
 	updatedAt: string;

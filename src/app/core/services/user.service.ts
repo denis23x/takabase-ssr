@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../services';
 import { User } from '../models';
-import { MeDto, RegistrationDto, UserGetAllDto, UserUpdateDto } from '../dto';
+import { UserCreateDto, UserGetAllDto, UserUpdateDto } from '../dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -16,14 +16,10 @@ export class UserService {
 		return ['/@', user.name].join('');
 	}
 
-	getMe(meDto: MeDto): Observable<User> {
-		return this.apiService.get('/auth/me', meDto);
-	}
-
 	/** REST */
 
-	create(registrationDto: RegistrationDto): Observable<User> {
-		return this.apiService.post('/auth/registration', registrationDto);
+	create(userCreateDto: UserCreateDto): Observable<User> {
+		return this.apiService.post('/users', userCreateDto);
 	}
 
 	getAll(userGetAllDto?: UserGetAllDto): Observable<User[]> {
