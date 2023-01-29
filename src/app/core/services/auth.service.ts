@@ -87,8 +87,7 @@ export class AuthService {
 				return this.apiService
 					.post('/auth/login', {
 						...loginDto,
-						fingerprint,
-						scope: ['settings']
+						fingerprint
 					})
 					.pipe(tap((user: User) => this.setUser(user)));
 			})
@@ -126,10 +125,8 @@ export class AuthService {
 		if (!!user) {
 			return of(user);
 		} else {
-			if (this.localStorageService.getItem('token')) {
-				return this.apiService
-					.get('/auth/me', { scope: ['settings'] })
-					.pipe(tap((user: User) => this.setUser(user)));
+			if (this.localStorageService.getItem('authed')) {
+				return this.onRefresh();
 			} else {
 				return of(undefined);
 			}
@@ -141,8 +138,8 @@ export class AuthService {
 
 		/** Set token */
 
-		if (!!user.accessToken) {
-			this.localStorageService.setItem('token', user.accessToken);
+		if (!!user.token) {
+			this.localStorageService.setItem('authed', String(1));
 		}
 
 		/** Set settings */
@@ -159,7 +156,7 @@ export class AuthService {
 
 		/** Remove token */
 
-		this.localStorageService.removeItem('token');
+		this.localStorageService.removeItem('authed');
 
 		/** Remove settings */
 

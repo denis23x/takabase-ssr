@@ -10,7 +10,7 @@ import {
 import { Router } from '@angular/router';
 import {
 	AuthService,
-	RegistrationDto,
+	UserCreateDto,
 	LoginDto,
 	HelperService,
 	User,
@@ -62,17 +62,17 @@ export class AuthRegistrationComponent implements OnInit {
 		if (this.helperService.getFormValidation(this.registrationForm)) {
 			this.registrationFormIsSubmitted = true;
 
-			const registrationDto: RegistrationDto = {
+			const userCreateDto: UserCreateDto = {
 				...this.registrationForm.value
 			};
 
 			this.userService
-				.create(registrationDto)
+				.create(userCreateDto)
 				.pipe(
 					switchMap((user: User) => {
 						const loginDto: LoginDto = {
-							email: registrationDto.email,
-							password: registrationDto.password
+							email: userCreateDto.email,
+							password: userCreateDto.password
 						};
 
 						return this.authService.onLogin(loginDto);

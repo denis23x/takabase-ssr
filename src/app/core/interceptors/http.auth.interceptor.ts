@@ -10,7 +10,7 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { LocalStorageService } from '../services';
-import { AuthService, RequestHeaders } from '../../core';
+import { AuthService, RequestHeaders, User } from '../../core';
 import { catchError, switchMap } from 'rxjs/operators';
 
 @Injectable()
@@ -20,8 +20,10 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 		private authService: AuthService
 	) {}
 
-	private getToken(): string {
-		return this.localStorageService.getItem('token');
+	private getToken(): string | undefined {
+		const user: User = this.authService.user.getValue();
+
+		return user?.token;
 	}
 
 	private setRequestHeaders(request: HttpRequest<any>): HttpRequest<any> {

@@ -15,15 +15,12 @@
 						<div class="flex flex-col leading-tight">
 							<p class="inline text-base-content">
 								<span class="inline">
-									{{ session.ua.os.name || "Undefined OS name" }}
-								</span>
-								<span class="inline text-sm">
-									({{ session.ua.browser.name }})
+									{{ session.ua }}
 								</span>
 							</p>
 							<p class="inline text-sm text-base-content/50">
 								<span class="inline">
-									{{ session.ip.country || "Undefined location" }}
+									{{ session.ip }}
 								</span>
 								<time class="inline" [attr.datetime]="session.createdAt">
 									{{ session.createdAt | dayjs: "fromX" }}
