@@ -9,16 +9,12 @@ import {
 	HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { LocalStorageService } from '../services';
 import { AuthService, RequestHeaders, User } from '../../core';
 import { catchError, switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class HttpAuthInterceptor implements HttpInterceptor {
-	constructor(
-		private localStorageService: LocalStorageService,
-		private authService: AuthService
-	) {}
+	constructor(private authService: AuthService) {}
 
 	private getToken(): string | undefined {
 		const user: User = this.authService.user.getValue();

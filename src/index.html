@@ -55,7 +55,19 @@
 		<app-root></app-root>
 	</body>
 	<script type="application/javascript">
-		const theme = localStorage.getItem("theme")
+		function getCookie(cookieName) {
+			let result = {}
+
+			document.cookie.split(";").forEach(function (cookie) {
+				let [key, value] = cookie.split("=")
+
+				result[key.trim()] = value
+			})
+
+			return result[cookieName]
+		}
+
+		const theme = getCookie("theme")
 
 		if (!!theme && theme !== "") {
 			document.documentElement.setAttribute("data-theme", theme)

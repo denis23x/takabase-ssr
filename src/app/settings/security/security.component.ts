@@ -11,7 +11,7 @@ import {
 	User
 } from '../../core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
-import { Subscription, switchMap, throwError } from 'rxjs';
+import { Subscription, throwError } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -48,41 +48,56 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
 	}
 
 	onLogout(session: Session): void {
-		const logoutDto: LogoutDto = {
-			id: session.id
-		};
+		this.authService.getFingerprint().subscribe({
+			next: (fingerprint: string) => {
+				if (session.fingerprint === fingerprint) {
+					this.authService
+						.onLogout()
+						.pipe(
+							catchError((httpErrorResponse: HttpErrorResponse) => {
+								this.router
+									.navigate(['/exception', httpErrorResponse.status])
+									.then(() => console.debug('Route changed'));
 
-		this.authService
-			.onLogout(logoutDto)
-			.pipe(
-				switchMap(() => this.authService.getFingerprint()),
-				catchError((httpErrorResponse: HttpErrorResponse) => {
-					this.router
-						.navigate(['/exception', httpErrorResponse.status])
-						.then(() => console.debug('Route changed'));
+								return throwError(() => httpErrorResponse);
+							})
+						)
+						.subscribe({
+							next: () => {
+								this.router
+									.navigateByUrl('/')
+									.then(() => console.debug('Route changed'));
+							}
+						});
+				} else {
+					const logoutDto: LogoutDto = {
+						id: session.id
+					};
 
-					return throwError(() => httpErrorResponse);
-				})
-			)
-			.subscribe({
-				next: (fingerprint: string) => {
-					// prettier-ignore
-					this.authUser.sessions = this.authUser.sessions.filter((session: Session) => {
-            return session.id !== logoutDto.id;
-          });
+					this.authService
+						.onLogout(logoutDto, false)
+						.pipe(
+							catchError((httpErrorResponse: HttpErrorResponse) => {
+								this.router
+									.navigate(['/exception', httpErrorResponse.status])
+									.then(() => console.debug('Route changed'));
 
-					// prettier-ignore
-					this.snackbarService.success(null, 'Session was successful terminated');
+								return throwError(() => httpErrorResponse);
+							})
+						)
+						.subscribe({
+							next: () => {
+								// prettier-ignore
+								this.authUser.sessions = this.authUser.sessions.filter((session: Session) => {
+                  return session.id !== logoutDto.id;
+                });
 
-					/** If current session add redirect */
-
-					if (session.fingerprint === fingerprint) {
-						this.router
-							.navigateByUrl('/')
-							.then(() => console.debug('Route changed'));
-					}
-				},
-				error: (error: any) => console.error(error)
-			});
+								// prettier-ignore
+								this.snackbarService.success(null, 'Session was successfully terminated');
+							}
+						});
+				}
+			}
+		});
 	}
 }

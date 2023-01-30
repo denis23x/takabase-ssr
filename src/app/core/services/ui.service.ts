@@ -2,15 +2,15 @@
 
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { LocalStorageService } from './local-storage.service';
 import { PlatformService } from './platform.service';
+import { CookieService } from './cookie.service';
 
 @Injectable()
 export class UiService {
 	constructor(
 		@Inject(DOCUMENT)
 		private document: Document,
-		private localStorageService: LocalStorageService,
+		private cookieService: CookieService,
 		private platformService: PlatformService
 	) {}
 
@@ -33,10 +33,10 @@ export class UiService {
 	setTheme(theme: string | null): void {
 		if (this.platformService.isBrowser()) {
 			if (!!theme) {
-				this.localStorageService.setItem('theme', theme);
+				this.cookieService.setItem('theme', theme);
 				this.document.documentElement.setAttribute('data-theme', theme);
 			} else {
-				this.localStorageService.removeItem('theme');
+				this.cookieService.removeItem('theme');
 				this.document.documentElement.removeAttribute('data-theme');
 			}
 		}

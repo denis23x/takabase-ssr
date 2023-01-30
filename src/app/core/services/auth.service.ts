@@ -8,12 +8,12 @@ import {
 	ApiService,
 	LoginDto,
 	LogoutDto,
-	LocalStorageService,
 	User,
 	UserService,
 	PlatformService,
 	SnackbarService,
-	UiService
+	UiService,
+	CookieService
 } from '../index';
 import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
 
@@ -28,7 +28,7 @@ export class AuthService {
 	constructor(
 		private apiService: ApiService,
 		private userService: UserService,
-		private localStorageService: LocalStorageService,
+		private cookieService: CookieService,
 		private platformService: PlatformService,
 		private router: Router,
 		private snackbarService: SnackbarService,
@@ -94,7 +94,8 @@ export class AuthService {
 		);
 	}
 
-	onLogout(logoutDto?: LogoutDto): Observable<User> {
+	// prettier-ignore
+	onLogout(logoutDto?: LogoutDto, removeUser: boolean = true): Observable<void> {
 		return this.getFingerprint().pipe(
 			switchMap((fingerprint: string) => {
 				return this.apiService
@@ -102,7 +103,7 @@ export class AuthService {
 						...logoutDto,
 						fingerprint
 					})
-					.pipe(tap(() => this.removeUser()));
+					.pipe(tap(() => removeUser && this.removeUser()));
 			})
 		);
 	}
@@ -125,7 +126,7 @@ export class AuthService {
 		if (!!user) {
 			return of(user);
 		} else {
-			if (this.localStorageService.getItem('authed')) {
+			if (this.cookieService.getItem('authed')) {
 				return this.onRefresh();
 			} else {
 				return of(undefined);
@@ -134,12 +135,15 @@ export class AuthService {
 	}
 
 	setUser(user: User): Observable<void> {
-		this.user.next(user);
+		this.user.next({
+			...this.user.getValue(),
+			...user
+		});
 
 		/** Set token */
 
 		if (!!user.token) {
-			this.localStorageService.setItem('authed', String(1));
+			this.cookieService.setItem('authed', String(1));
 		}
 
 		/** Set settings */
@@ -156,7 +160,7 @@ export class AuthService {
 
 		/** Remove token */
 
-		this.localStorageService.removeItem('authed');
+		this.cookieService.removeItem('authed');
 
 		/** Remove settings */
 
