@@ -10,17 +10,16 @@ export class CookieService {
 		private document: Document
 	) {}
 
-	// prettier-ignore
 	getItem(key: string): any {
-    let result = {}
+		let result = {};
 
-    this.document.cookie.split(";").forEach(function (cookie) {
-      let [key, value] = cookie.split("=")
+		this.document.cookie.split(';').forEach(function (cookie) {
+			let [key, value] = cookie.split('=');
 
-      result[key.trim()] = value
-    })
+			result[key.trim()] = value;
+		});
 
-    return result[key]
+		return result[key];
 	}
 
 	setItem(key: string, value: string, options?: any): void {

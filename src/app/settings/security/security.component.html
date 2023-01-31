@@ -3,29 +3,77 @@
 <ng-container>
 	<div class="flex flex-col items-start justify-start gap-4">
 		<div class="rounded-box flex w-full flex-col space-y-4">
+			<div
+				class="rounded-box flex flex-col space-y-4"
+				*ngIf="!!sessionActive?.uaParsed"
+			>
+				<div class="flex items-center justify-between gap-4">
+					<div class="breadcrumbs p-0">
+						<ul class="flex">
+							<li class="flex text-base-content">
+								{{ sessionActive.uaParsed?.os.name }}
+							</li>
+							<li class="flex text-base-content/50">
+								{{ sessionActive.uaParsed?.browser.name }}
+							</li>
+						</ul>
+					</div>
+					<a
+						class="link whitespace-nowrap text-sm after:inline-block after:px-1 after:content-['\279A']"
+						target="_blank"
+						rel="noopener"
+						[href]="sessionGeolocation + sessionActive.ip"
+					>
+						Geolocation lookup
+					</a>
+				</div>
+				<button
+					class="btn btn-outline btn-error w-full"
+					type="button"
+					title="Logout"
+					aria-label="Logout"
+					(click)="onLogout()"
+				>
+					Logout
+				</button>
+			</div>
 			<p class="alert">
 				Control safety of your account, logout from old unused sessions
 			</p>
-			<ul class="rounded-box border border-base-content/20">
+			<ul
+				class="rounded-box border border-base-content/20"
+				*ngIf="!!sessionActiveList.length; else sessionActiveListEmptyTemplate"
+			>
 				<li
 					class="flex items-center justify-between gap-4 border-b border-base-content/20 p-4 last:border-b-0"
-					*ngFor="let session of authUser.sessions"
+					*ngFor="let session of sessionActiveList"
 				>
-					<div class="flex items-center justify-start gap-4">
-						<div class="flex flex-col leading-tight">
-							<p class="inline text-base-content">
-								<span class="inline">
-									{{ session.ua }}
-								</span>
-							</p>
-							<p class="inline text-sm text-base-content/50">
-								<span class="inline">
-									{{ session.ip }}
-								</span>
-								<time class="inline" [attr.datetime]="session.createdAt">
-									{{ session.createdAt | dayjs: "fromX" }}
-								</time>
-							</p>
+					<div class="flex flex-col">
+						<div class="breadcrumbs p-0">
+							<ul class="flex">
+								<li class="flex text-base-content">
+									{{ session.uaParsed.os.name }}
+								</li>
+								<li class="flex text-base-content/50">
+									{{ session.uaParsed.browser.name }}
+								</li>
+							</ul>
+						</div>
+						<div class="flex gap-2 text-sm">
+							<a
+								class="link whitespace-nowrap"
+								target="_blank"
+								rel="noopener"
+								[href]="'https://get.geojs.io/v1/ip/geo/' + session.ip"
+							>
+								{{ session.ip }}
+							</a>
+							<time
+								class="text-base-content/50"
+								[attr.datetime]="session.createdAt"
+							>
+								{{ session.createdAt | dayjs: "fromX" }}
+							</time>
 						</div>
 					</div>
 					<button
@@ -36,10 +84,26 @@
 						appSvgIcon
 						[appIcon]="'x'"
 						[appSquare]="'1.75rem'"
-						(click)="onLogout(session)"
+						(click)="onTerminate(session)"
 					></button>
 				</li>
 			</ul>
 		</div>
 	</div>
+	<ng-template #sessionActiveListEmptyTemplate>
+		<div class="flex flex-col items-center space-y-4">
+			<i
+				class="fill-current text-base-content"
+				appSvgIcon
+				[appIcon]="'robot'"
+				[appSquare]="'3em'"
+			></i>
+			<div class="text-center">
+				<p class="text-xl font-medium">
+					<span class="text-success">No extra</span>
+					<span class="text-base-content"> sessions</span>
+				</p>
+			</div>
+		</div>
+	</ng-template>
 </ng-container>
