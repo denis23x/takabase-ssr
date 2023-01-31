@@ -118,7 +118,8 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
 
 					// prettier-ignore
 					this.snackbarService.success(null, 'Session was successfully terminated');
-				}
+				},
+				error: (error: any) => console.error(error)
 			});
 	}
 }

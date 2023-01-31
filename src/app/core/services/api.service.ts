@@ -7,14 +7,12 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SnackbarService } from './snackbar.service';
 import { RequestError } from '../models';
-import { Router } from '@angular/router';
 
 @Injectable()
 export class ApiService {
 	constructor(
 		private httpClient: HttpClient,
-		private snackbarService: SnackbarService,
-		private router: Router
+		private snackbarService: SnackbarService
 	) {}
 
 	setUrl(url: string): string {
@@ -22,14 +20,6 @@ export class ApiService {
 	}
 
 	setError(httpErrorResponse: HttpErrorResponse): Observable<never> {
-		if ([401].includes(httpErrorResponse.status)) {
-			if (httpErrorResponse.url.endsWith('auth/refresh')) {
-				this.router
-					.navigate(['/exception', httpErrorResponse.status])
-					.then(() => console.debug('Route changed'));
-			}
-		}
-
 		const getMessage = (requestError: RequestError): string => {
 			switch (typeof requestError.message) {
 				case 'string':

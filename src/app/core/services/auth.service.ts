@@ -1,8 +1,8 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, from, of } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { Observable, BehaviorSubject, from, of, throwError } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import {
 	ApiService,
@@ -16,6 +16,7 @@ import {
 	CookieService
 } from '../index';
 import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
 	providedIn: 'root'
@@ -75,6 +76,13 @@ export class AuthService {
 				});
 
 				return of(false);
+			}),
+			catchError((httpErrorResponse: HttpErrorResponse) => {
+				this.router
+					.navigate(['/exception', 401])
+					.then(() => console.debug('Route changed'));
+
+				return throwError(() => httpErrorResponse);
 			})
 		);
 	}
