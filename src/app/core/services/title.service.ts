@@ -7,38 +7,69 @@ import { Title } from '@angular/platform-browser';
 	providedIn: 'root'
 })
 export class TitleService {
-	titleValue: string = 'Draftnow';
 	titleDelimiter: string = ' - ';
-	titleDelimiterMain: string = ' | ';
+
+	titlePostfix: string = 'Draftnow';
+	titlePostfixDelimiter: string = ' | ';
 
 	constructor(private title: Title) {}
 
-	setTitle(title: string): void {
-		this.title.setTitle([this.titleValue, title].join(this.titleDelimiterMain));
+	setTitle(title: string | null | undefined): void {
+		if (!!title) {
+			// prettier-ignore
+			this.title.setTitle([title, this.titlePostfix].join(this.titlePostfixDelimiter));
+		} else {
+			this.title.setTitle(this.titlePostfix);
+		}
 	}
 
-	appendTitle(titleNext: string): void {
-		// prettier-ignore
-		this.title.setTitle([this.title.getTitle(), titleNext].join(this.titleDelimiter));
+	getTitle(): string {
+		return this.title.getTitle().split(this.titlePostfixDelimiter).shift();
 	}
 
-	updateTitle(titlePrevious: string, titleNext: string): void {
-		const title: string = this.title
-			.getTitle()
-			.split(this.titleDelimiter)
-			.map((title: string) => (title === titlePrevious ? titleNext : title))
-			.join(this.titleDelimiter);
-
-		this.title.setTitle(title);
+	appendTitle(title: string | null | undefined): void {
+		if (!!title) {
+			this.setTitle([this.getTitle(), title].join(this.titleDelimiter));
+		} else {
+			this.setTitle(this.getTitle());
+		}
 	}
 
-	deleteTitle(titlePrevious: string): void {
-		const title: string = this.title
-			.getTitle()
-			.split(this.titleDelimiter)
-			.filter((title: string) => title !== titlePrevious)
-			.join(this.titleDelimiter);
-
-		this.title.setTitle(title);
-	}
+	// updateTitleLast(titleNext: string): void {
+	// 	const title: string = this.getTitle()
+	// 		.split(this.titleDelimiter)
+	// 		.map((title: string, key: number, asd: string[]) =>
+	// 			asd.length - 1 === key ? titleNext : title
+	// 		)
+	// 		.join(this.titleDelimiter);
+	//
+	// 	this.setTitle(title);
+	// }
+	//
+	// updateTitleReplace(previous: string, next: string | null | undefined): void {
+	// 	if (!!next) {
+	// 		this.setTitle(
+	// 			this.getTitle()
+	// 				.split(this.titleDelimiter)
+	// 				.map((title: string) => (title === previous ? next : title))
+	// 				.join(this.titleDelimiter)
+	// 		);
+	// 	} else {
+	// 		this.setTitle(
+	// 			this.getTitle()
+	// 				.split(this.titleDelimiter)
+	// 				.filter((title: string) => title !== previous)
+	// 				.join(this.titleDelimiter)
+	// 		);
+	// 	}
+	// }
+	//
+	// deleteTitle(titlePrevious: string): void {
+	// 	const title: string = this.getTitle()
+	// 		.split(this.titleDelimiter)
+	// 		.filter((title: string) => title !== titlePrevious)
+	// 		.join(this.titleDelimiter);
+	//
+	// 	this.setTitle(title);
+	// }
 }
