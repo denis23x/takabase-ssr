@@ -70,7 +70,7 @@ const routes: Routes = [
 	},
 	{
 		matcher: (urlSegment: UrlSegment[]) => {
-			if (urlSegment[0].path.match(/^@\w+$/gm)) {
+			if (urlSegment[0].path.match(/^@\S+$/gm)) {
 				return {
 					consumed: urlSegment.slice(0, 1)
 				};
