@@ -16,7 +16,6 @@ import {
 	UserService
 } from '../../core';
 import { filter } from 'rxjs/operators';
-import { Meta } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 
 interface LoginForm {
@@ -40,7 +39,6 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 		private authService: AuthService,
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
-		private meta: Meta,
 		private userService: UserService
 	) {
 		this.loginForm = this.formBuilder.group<LoginForm>({
@@ -56,9 +54,6 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.meta.addTag({ name: 'title', content: 'my login title' });
-		this.meta.addTag({ name: 'description', content: 'my login description' });
-
 		this.activatedRouteData$ = this.activatedRoute.queryParams
 			.pipe(
 				filter((params: Params) => {
