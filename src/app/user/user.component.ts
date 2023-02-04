@@ -112,7 +112,8 @@ export class UserComponent implements OnInit, OnDestroy {
 
 					this.categoryList = categoryList;
 
-					this.titleService.setTitle(this.user.name);
+					// prettier-ignore
+					this.titleService.setTitle(this.userService.getUserUrl(this.user).substring(1));
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -124,9 +125,9 @@ export class UserComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
+		// prettier-ignore
 		this.routeEvents$ = this.router.events
 			.pipe(
-				// prettier-ignore
 				filter((routerEvent: RouterEvent) => routerEvent instanceof NavigationEnd),
 				startWith(EMPTY),
 				switchMap(() => of(this.activatedRoute.snapshot.firstChild.params)),
@@ -134,24 +135,12 @@ export class UserComponent implements OnInit, OnDestroy {
 			)
 			.subscribe({
 				next: (categoryId: string | undefined) => {
-					// prettier-ignore
-					const category: Category | undefined = this.categoryList.find((category: Category) => {
-            return category.id === Number(categoryId);
-          });
+					this.category = this.categoryList.find((category: Category) => {
+						return category.id === Number(categoryId);
+					});
 
-					/** Title handler */
-
-					if (!!category) {
-						if (!!this.category) {
-							this.titleService.updateTitle(this.category.name, category.name);
-						} else {
-							this.titleService.appendTitle(category.name);
-						}
-					} else {
-						this.titleService.setTitle(this.user.name);
-					}
-
-					this.category = category;
+					this.titleService.setTitle(this.userService.getUserUrl(this.user).substring(1));
+					this.titleService.appendTitle(this.category?.name);
 				},
 				error: (error: any) => console.error(error)
 			});

@@ -7,7 +7,12 @@ import {
 	OnDestroy,
 	OnInit
 } from '@angular/core';
-import { AuthService, PlatformService, TitleService } from './core';
+import {
+	AuthService,
+	MetaService,
+	PlatformService,
+	TitleService
+} from './core';
 import { DOCUMENT } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { Event as RouterEvent, NavigationEnd, Router } from '@angular/router';
@@ -26,7 +31,8 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 		private authService: AuthService,
 		private platformService: PlatformService,
 		private router: Router,
-		private titleService: TitleService
+		private titleService: TitleService,
+		private metaService: MetaService
 	) {}
 
 	ngOnInit(): void {
@@ -42,6 +48,27 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 				next: () => this.titleService.setTitle(null),
 				error: (error: any) => console.error(error)
 			});
+
+		this.metaService.setOpenGraph({
+			['og:title']: 'denis',
+			['og:description']: 'denis',
+			['og:type']: 'denis',
+			['og:url']: 'denis',
+			['og:locale']: 'denis',
+			['og:image']: 'denis',
+			['og:image:alt']: 'denis',
+			['og:image:type']: 'denis',
+			['og:site_name']: 'denis'
+		});
+
+		this.metaService.setTwitter({
+			['twitter:card']: 'denis',
+			['twitter:site']: 'denis',
+			['twitter:title']: 'denis',
+			['twitter:description']: 'denis',
+			['twitter:image']: 'denis',
+			['twitter:image:alt']: 'denis'
+		});
 	}
 
 	ngAfterViewInit(): void {
