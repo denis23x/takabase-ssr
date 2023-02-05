@@ -9,7 +9,7 @@ import { Title } from '@angular/platform-browser';
 export class TitleService {
 	titleDelimiter: string = ' - ';
 
-	titlePostfix: string = 'Draftnow';
+	titlePostfix: string = 'Draft';
 	titlePostfixDelimiter: string = ' | ';
 
 	constructor(private title: Title) {}

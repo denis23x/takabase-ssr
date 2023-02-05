@@ -4,61 +4,92 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { MetaOpenGraph, MetaService, MetaTwitter } from '../core';
 
 @Component({
-  templateUrl: './exception.component.html'
+	templateUrl: './exception.component.html'
 })
 export class ExceptionComponent implements OnInit, OnDestroy {
-  activatedRouteData$: Subscription | undefined;
+	activatedRouteData$: Subscription | undefined;
 
-  statusCode: number | undefined;
-  statusCodeMap: number[][] = [
-    [100, 199],
-    [200, 299],
-    [300, 399],
-    [400, 499],
-    [500, 599]
-  ];
+	statusCode: number | undefined;
+	statusCodeMap: number[][] = [
+		[100, 199],
+		[200, 299],
+		[300, 399],
+		[400, 499],
+		[500, 599]
+	];
 
-  message: string | undefined;
-  messageMap: string[] = [
-    'Information message',
-    'Success',
-    'Redirect',
-    'Client error',
-    'Server error'
-  ];
+	message: string | undefined;
+	messageMap: string[] = [
+		'Information message',
+		'Success',
+		'Redirect',
+		'Client error',
+		'Server error'
+	];
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router) {}
+	constructor(
+		private activatedRoute: ActivatedRoute,
+		private router: Router,
+		private metaService: MetaService
+	) {}
 
-  ngOnInit(): void {
-    this.activatedRouteData$ = this.activatedRoute.params
-      .pipe(map((data: Data) => data.status))
-      .subscribe({
-        next: (status: string) => {
-          const statusCode: number = Number(status);
-          const message: string = this.getMessageMap(statusCode);
+	ngOnInit(): void {
+		this.activatedRouteData$ = this.activatedRoute.params
+			.pipe(map((data: Data) => data.status))
+			.subscribe({
+				next: (status: string) => {
+					const statusCode: number = Number(status);
+					const message: string = this.getMessageMap(statusCode);
 
-          if (!statusCode || !message) {
-            this.router.navigate([[], 520]).then(() => console.debug('Route changed'));
-          }
+					if (!statusCode || !message) {
+						this.router
+							.navigate([[], 520])
+							.then(() => console.debug('Route changed'));
+					}
 
-          this.statusCode = statusCode;
-          this.message = message;
-        },
-        error: (error: any) => console.error(error)
-      });
-  }
+					this.statusCode = statusCode;
+					this.message = message;
 
-  ngOnDestroy(): void {
-    [this.activatedRouteData$].forEach($ => $?.unsubscribe());
-  }
+					this.setMeta();
+				},
+				error: (error: any) => console.error(error)
+			});
+	}
 
-  getMessageMap(status: number): string | undefined {
-    const index: number = this.statusCodeMap.findIndex(([min, max]: number[]) => {
-      return min <= status === status < max;
-    });
+	ngOnDestroy(): void {
+		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
+	}
 
-    return this.messageMap[index];
-  }
+	setMeta(): void {
+		const title: string = this.message;
+
+		// prettier-ignore
+		const description: string = 'Oops! It looks like you\'ve landed on an error page on Draft';
+
+		const metaOpenGraph: MetaOpenGraph = {
+			['og:title']: title,
+			['og:description']: description,
+			['og:type']: 'website'
+		};
+
+		const metaTwitter: MetaTwitter = {
+			['twitter:title']: title,
+			['twitter:description']: description
+		};
+
+		this.metaService.setMeta(metaOpenGraph, metaTwitter);
+	}
+
+	getMessageMap(status: number): string | undefined {
+		const index: number = this.statusCodeMap.findIndex(
+			([min, max]: number[]) => {
+				return min <= status === status < max;
+			}
+		);
+
+		return this.messageMap[index];
+	}
 }

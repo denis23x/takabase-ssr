@@ -2,8 +2,8 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService, SnackbarService } from '../services';
-import { Category, Post, User } from '../models';
+import { ApiService, SnackbarService, UserService } from '../services';
+import { Category, MetaOpenGraph, MetaTwitter, Post, User } from '../models';
 import {
 	PostCreateDto,
 	PostGetAllDto,
@@ -19,11 +19,12 @@ export class PostService {
 	constructor(
 		private apiService: ApiService,
 		private router: Router,
-		private snackbarService: SnackbarService
+		private snackbarService: SnackbarService,
+		private userService: UserService
 	) {}
 
 	// prettier-ignore
-	getUserPostGetAllDto = (postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto => {
+	getUserPostGetAllDto(postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto {
 		const [user, categoryList]: [User, Category[]] = activatedRouteSnapshot.parent.data.data;
 
 		postGetAllDto = {
@@ -49,10 +50,10 @@ export class PostService {
 		}
 
 		return postGetAllDto;
-	};
+	}
 
 	// prettier-ignore
-	getSearchPostGetAllDto = (postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto => {
+	getSearchPostGetAllDto(postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto {
     const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
 
     if (!!name.length) {
@@ -63,7 +64,34 @@ export class PostService {
     }
 
     return postGetAllDto;
-  };
+  }
+
+	getPostMeta(post: Post): any {
+		const metaOpenGraph: MetaOpenGraph = {
+			['og:title']: post.name,
+			['og:description']: post.description,
+			['og:type']: 'article',
+			['article:published_time']: post.createdAt,
+			['article:modified_time']: post.updatedAt,
+			['article:author']: this.userService.getUserUrl(post.user).substring(1),
+			['article:section']: post.category.name,
+			['og:image']: post.image,
+			['og:image:alt']: post.name,
+			['og:image:type']: 'image/png'
+		};
+
+		const metaTwitter: MetaTwitter = {
+			['twitter:title']: post.name,
+			['twitter:description']: post.description,
+			['twitter:image']: post.image,
+			['twitter:image:alt']: post.name
+		};
+
+		return {
+			metaOpenGraph,
+			metaTwitter
+		};
+	}
 
 	/** REST */
 

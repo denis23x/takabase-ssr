@@ -3,7 +3,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { Post, PostGetAllDto, PostService } from '../../core';
+import {
+	MetaOpenGraph,
+	MetaService,
+	MetaTwitter,
+	Post,
+	PostGetAllDto,
+	PostService
+} from '../../core';
 import { map, skip, tap } from 'rxjs/operators';
 
 @Component({
@@ -25,7 +32,8 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
-		private postService: PostService
+		private postService: PostService,
+		private metaService: MetaService
 	) {}
 
 	ngOnInit(): void {
@@ -56,11 +64,33 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 				next: () => this.getPostList(false),
 				error: (error: any) => console.error(error)
 			});
+
+		this.setMeta();
 	}
 
 	ngOnDestroy(): void {
 		// prettier-ignore
 		[this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
+	}
+
+	setMeta(): void {
+		const title: string = 'Search posts';
+
+		// prettier-ignore
+		const description: string = 'Use our search function to find what you\'re looking for on Draft';
+
+		const metaOpenGraph: MetaOpenGraph = {
+			['og:title']: title,
+			['og:description']: description,
+			['og:type']: 'website'
+		};
+
+		const metaTwitter: MetaTwitter = {
+			['twitter:title']: title,
+			['twitter:description']: description
+		};
+
+		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
 	getPostList(concat: boolean): void {

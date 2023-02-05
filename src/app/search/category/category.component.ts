@@ -4,7 +4,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { map, skip, tap } from 'rxjs/operators';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { CategoryService, Category, CategoryGetAllDto } from '../../core';
+import {
+	CategoryService,
+	Category,
+	CategoryGetAllDto,
+	MetaService,
+	MetaOpenGraph,
+	MetaTwitter
+} from '../../core';
 
 @Component({
 	selector: 'app-search-category',
@@ -26,7 +33,8 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
-		private categoryService: CategoryService
+		private categoryService: CategoryService,
+		private metaService: MetaService
 	) {}
 
 	ngOnInit(): void {
@@ -57,11 +65,33 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
 				next: () => this.getCategoryList(false),
 				error: (error: any) => console.error(error)
 			});
+
+		this.setMeta();
 	}
 
 	ngOnDestroy(): void {
 		// prettier-ignore
 		[this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
+	}
+
+	setMeta(): void {
+		const title: string = 'Search categories';
+
+		// prettier-ignore
+		const description: string = 'Use our search function to find what you\'re looking for on Draft';
+
+		const metaOpenGraph: MetaOpenGraph = {
+			['og:title']: title,
+			['og:description']: description,
+			['og:type']: 'website'
+		};
+
+		const metaTwitter: MetaTwitter = {
+			['twitter:title']: title,
+			['twitter:description']: description
+		};
+
+		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
 	getCategoryList(concat: boolean): void {
