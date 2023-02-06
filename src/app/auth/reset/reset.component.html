@@ -1,63 +1,81 @@
 <!-- @format -->
 
-<section class="md:w-128 mx-auto p-4">
+<!-- @format -->
+
+<ng-container>
 	<form
-		class="bg-primary-3 border-primary-4 flex flex-col space-y-4 rounded-md border p-4"
+		class="flex flex-col"
 		[formGroup]="resetForm"
 		(ngSubmit)="onSubmitResetForm()"
 	>
-		<div class="flex flex-col">
-			<h2 class="text-secondary-1 text-2xl font-medium">Password reset</h2>
-			<div class="flex space-x-1 text-base">
-				<span class="text-secondary-2 block">Remembered password?</span>
-				<a
-					class="text-info-1 hover:underline"
-					aria-label="Try login"
-					[routerLink]="['../login']"
-					>Try login</a
-				>
-			</div>
-		</div>
 		<fieldset class="flex flex-col space-y-4" [disabled]="resetFormIsSubmitted">
-			<fieldset
-				class="flex flex-col space-y-2"
-				*ngIf="resetForm.get('email') as email"
-			>
-				<label class="text-secondary-2 block text-sm" for="email">Email</label>
-				<input
-					class="bg-primary-2 form-control truncate"
-					id="email"
-					type="email"
-					aria-label="Email"
-					autocomplete="username"
-					formControlName="email"
-					placeholder="Email"
-				/>
-				<label
-					class="text-danger-1 block text-sm"
-					for="email"
-					*ngIf="email.touched && !!email.errors"
-					[ngSwitch]="true"
-				>
-					<ng-container *ngSwitchCase="!!email.errors.required"
-						>Required</ng-container
-					>
-					<ng-container *ngSwitchCase="!!email.errors.email"
-						>Email must be a real email address</ng-container
-					>
+			<fieldset class="form-control" *ngIf="resetForm.get('email') as email">
+				<label class="label" for="resetFormEmail">
+					<div class="indicator">
+						<span
+							class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+							*ngIf="email.touched && !!email.errors"
+							[ngSwitch]="true"
+						>
+							<ng-container *ngSwitchCase="!!email.errors.required">
+								Required
+							</ng-container>
+							<ng-container *ngSwitchCase="!!email.errors.email">
+								Email must be a real email address
+							</ng-container>
+						</span>
+						<span class="label-text mr-2">Email</span>
+					</div>
 				</label>
-				<label class="text-secondary-2 block text-sm" for="email"
-					>We will send an email with further instructions</label
-				>
+				<div class="relative">
+					<input
+						class="input input-bordered w-full truncate pr-12"
+						id="resetFormEmail"
+						type="email"
+						aria-label="Email"
+						autocomplete="username"
+						formControlName="email"
+						placeholder="Type your Email"
+						[class.input-success]="email.touched && email.valid"
+						[class.input-error]="email.touched && email.invalid"
+						[class.input-disabled]="resetFormIsSubmitted"
+					/>
+					<button
+						class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+						type="button"
+						title="Clear"
+						aria-label="Clear"
+						appSvgIcon
+						*ngIf="!!email.value.length"
+						[class.btn-success]="email.touched && email.valid"
+						[class.btn-error]="email.touched && email.invalid"
+						[class.btn-ghost]="email.untouched"
+						[appIcon]="'x'"
+						[appSquare]="'1.75rem'"
+						(click)="email.setValue('')"
+					></button>
+				</div>
 			</fieldset>
-			<button
-				class="md btn btn-success w-full"
-				type="submit"
-				aria-label="Reset"
-				[disabled]="resetForm.invalid || resetFormIsSubmitted"
-			>
-				Reset
-			</button>
+			<fieldset class="form-control">
+				<button
+					class="btn btn-success w-full"
+					type="submit"
+					aria-label="Reset"
+					[class.loading]="resetFormIsSubmitted"
+					[disabled]="resetForm.invalid || resetFormIsSubmitted"
+				>
+					Reset
+				</button>
+			</fieldset>
+			<fieldset class="form-control">
+				<a
+					class="btn btn-primary btn-outline w-full"
+					aria-label="Login"
+					[routerLink]="'/login'"
+				>
+					Login
+				</a>
+			</fieldset>
 		</fieldset>
 	</form>
-</section>
+</ng-container>

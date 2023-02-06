@@ -1,0 +1,57 @@
+<!-- @format -->
+
+<ng-container>
+	<div
+		class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
+	>
+		<div class="rounded-box flex w-full flex-col gap-4">
+			<ul class="flex items-center justify-start space-x-4">
+				<li class="block">
+					<a
+						class="block rounded-full bg-[#EA4335] fill-current p-1.5 text-white"
+						title="Google"
+						aria-label="Google"
+						target="_self"
+						rel="noopener"
+						appSvgIcon
+						[href]="apiUrl + '/auth/google'"
+						[appIcon]="'google'"
+					>
+					</a>
+				</li>
+				<li class="block">
+					<a
+						class="block rounded-full bg-white fill-current text-[#1877f2]"
+						title="Facebook"
+						aria-label="Facebook"
+						target="_self"
+						rel="noopener"
+						appSvgIcon
+						appSquare="32"
+						[href]="apiUrl + '/auth/facebook'"
+						[appIcon]="'facebook'"
+					>
+					</a>
+				</li>
+				<li class="block">
+					<a
+						class="block rounded-full bg-white fill-current text-[#333333]"
+						title="Github"
+						aria-label="Github"
+						target="_self"
+						rel="noopener"
+						appSvgIcon
+						appSquare="32"
+						[href]="apiUrl + '/auth/github'"
+						[appIcon]="'github'"
+					>
+					</a>
+				</li>
+			</ul>
+			<hr class="my-0 border-base-content/20" />
+			<div class="flex flex-col">
+				<router-outlet></router-outlet>
+			</div>
+		</div>
+	</div>
+</ng-container>

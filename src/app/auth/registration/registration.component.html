@@ -1,149 +1,196 @@
 <!-- @format -->
 
-<section class="md:w-128 mx-auto p-4">
+<ng-container>
 	<form
-		class="bg-primary-3 border-primary-4 flex flex-col space-y-4 rounded-md border p-4"
+		class="flex flex-col"
 		[formGroup]="registrationForm"
 		(ngSubmit)="onSubmitRegistrationForm()"
 	>
-		<div class="flex flex-col">
-			<h2 class="text-secondary-1 text-2xl font-medium">Join to Draft</h2>
-			<div class="flex space-x-1 text-base">
-				<span class="text-secondary-2 block">Already have an account?</span>
-				<a
-					class="text-info-1 hover:underline"
-					aria-label="Sign in"
-					[routerLink]="['../login']"
-					>Sign in</a
-				>
-			</div>
-			<app-oauth class="mt-4 block"></app-oauth>
-		</div>
 		<fieldset
 			class="flex flex-col space-y-4"
 			[disabled]="registrationFormIsSubmitted"
 		>
 			<fieldset
-				class="flex flex-col space-y-2"
+				class="form-control"
 				*ngIf="registrationForm.get('name') as name"
 			>
-				<label class="text-secondary-2 block text-sm" for="name"
-					>Username</label
-				>
-				<input
-					class="bg-primary-2 form-control truncate"
-					id="name"
-					type="text"
-					aria-label="Username"
-					autocomplete="username"
-					formControlName="name"
-					placeholder="Username"
-					appInputTrimWhitespace
-				/>
-				<label
-					class="text-danger-1 block text-sm"
-					for="name"
-					*ngIf="name.touched && !!name.errors"
-					[ngSwitch]="true"
-				>
-					<ng-container *ngSwitchCase="!!name.errors.required"
-						>Required</ng-container
-					>
-					<ng-container *ngSwitchCase="!!name.errors.minlength"
-						>Min length
-						{{ name.errors.minlength["requiredLength"] }}
-						characters</ng-container
-					>
-					<ng-container *ngSwitchCase="!!name.errors.maxlength"
-						>Max length
-						{{ name.errors.maxlength["requiredLength"] }}
-						characters</ng-container
-					>
+				<label class="label" for="registrationFormName">
+					<div class="indicator">
+						<span
+							class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+							*ngIf="name.touched && !!name.errors"
+							[ngSwitch]="true"
+						>
+							<ng-container *ngSwitchCase="!!name.errors.required">
+								Required
+							</ng-container>
+							<!-- prettier-ignore -->
+							<ng-container *ngSwitchCase="!!name.errors.minlength">
+								Min length {{ name.errors.minlength["requiredLength"] }} characters
+							</ng-container>
+							<!-- prettier-ignore -->
+							<ng-container *ngSwitchCase="!!name.errors.maxlength">
+								Max length {{ name.errors.maxlength["requiredLength"] }} characters
+							</ng-container>
+						</span>
+						<span class="label-text mr-2">Name</span>
+					</div>
 				</label>
+				<div class="relative">
+					<input
+						class="input input-bordered w-full truncate pr-12"
+						id="registrationFormName"
+						type="text"
+						aria-label="Name"
+						autocomplete="username"
+						formControlName="name"
+						placeholder="Type your name"
+						[class.input-success]="name.touched && name.valid"
+						[class.input-error]="name.touched && name.invalid"
+						[class.input-disabled]="registrationFormIsSubmitted"
+					/>
+					<button
+						class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+						type="button"
+						title="Clear"
+						aria-label="Clear"
+						appSvgIcon
+						*ngIf="!!name.value.length"
+						[class.btn-success]="name.touched && name.valid"
+						[class.btn-error]="name.touched && name.invalid"
+						[class.btn-ghost]="name.untouched"
+						[appIcon]="'x'"
+						[appSquare]="'1.75rem'"
+						(click)="name.setValue('')"
+					></button>
+				</div>
 			</fieldset>
 			<fieldset
-				class="flex flex-col space-y-2"
+				class="form-control"
 				*ngIf="registrationForm.get('email') as email"
 			>
-				<label class="text-secondary-2 block text-sm" for="email">Email</label>
-				<input
-					class="bg-primary-2 form-control truncate"
-					id="email"
-					type="email"
-					aria-label="Email"
-					autocomplete="username"
-					formControlName="email"
-					placeholder="Email"
-				/>
-				<label
-					class="text-danger-1 block text-sm"
-					for="email"
-					*ngIf="email.touched && !!email.errors"
-					[ngSwitch]="true"
-				>
-					<ng-container *ngSwitchCase="!!email.errors.required"
-						>Required</ng-container
-					>
-					<ng-container *ngSwitchCase="!!email.errors.email"
-						>Email must be a real email address</ng-container
-					>
+				<label class="label" for="registrationFormEmail">
+					<div class="indicator">
+						<span
+							class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+							*ngIf="email.touched && !!email.errors"
+							[ngSwitch]="true"
+						>
+							<ng-container *ngSwitchCase="!!email.errors.required">
+								Required
+							</ng-container>
+							<ng-container *ngSwitchCase="!!email.errors.email">
+								Email must be a real email address
+							</ng-container>
+						</span>
+						<span class="label-text mr-2">Email</span>
+					</div>
 				</label>
+				<div class="relative">
+					<input
+						class="input input-bordered w-full truncate pr-12"
+						id="registrationFormEmail"
+						type="email"
+						aria-label="Email"
+						autocomplete="username"
+						formControlName="email"
+						placeholder="Type your Email"
+						[class.input-success]="email.touched && email.valid"
+						[class.input-error]="email.touched && email.invalid"
+						[class.input-disabled]="registrationFormIsSubmitted"
+					/>
+					<button
+						class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+						type="button"
+						title="Clear"
+						aria-label="Clear"
+						appSvgIcon
+						*ngIf="!!email.value.length"
+						[class.btn-success]="email.touched && email.valid"
+						[class.btn-error]="email.touched && email.invalid"
+						[class.btn-ghost]="email.untouched"
+						[appIcon]="'x'"
+						[appSquare]="'1.75rem'"
+						(click)="email.setValue('')"
+					></button>
+				</div>
 			</fieldset>
 			<fieldset
-				class="flex flex-col space-y-2"
+				class="form-control"
 				*ngIf="registrationForm.get('password') as password"
 			>
-				<label class="text-secondary-2 block text-sm" for="password"
-					>Password</label
-				>
+				<label class="label" for="registrationFormPassword">
+					<div class="indicator">
+						<span
+							class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+							*ngIf="password.touched && !!password.errors"
+							[ngSwitch]="true"
+						>
+							<ng-container *ngSwitchCase="!!password.errors.required">
+								Required
+							</ng-container>
+							<ng-container *ngSwitchCase="!!password.errors.pattern">
+								Password does not match pattern
+							</ng-container>
+						</span>
+						<span class="label-text mr-2">Password</span>
+					</div>
+				</label>
 				<div class="relative" *ngIf="{ value: false } as isVisible">
 					<input
-						class="bg-primary-2 form-control pr-10"
-						id="password"
+						class="input input-bordered w-full truncate pr-12"
+						id="registrationFormPassword"
 						aria-label="Password"
-						autocomplete="new-password"
+						autocomplete="current-password"
 						formControlName="password"
-						placeholder="Password"
+						placeholder="Type your password"
 						[type]="isVisible.value ? 'text' : 'password'"
+						[class.input-success]="password.touched && password.valid"
+						[class.input-error]="password.touched && password.invalid"
+						[class.input-disabled]="registrationFormIsSubmitted"
 					/>
-					<i
-						class="text-secondary-2 absolute top-0 right-0 cursor-pointer fill-current p-2.5 opacity-50"
+					<button
+						class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+						type="button"
+						title="Password"
+						aria-label="Password"
 						appSvgIcon
 						*ngIf="!!password.value.length"
-						[appIcon]="isVisible.value ? 'eye' : 'eye-slash'"
-						[appSquare]="'1.35rem'"
+						[class.btn-success]="password.touched && password.value"
+						[class.btn-error]="password.touched && password.invalid"
+						[class.btn-ghost]="password.untouched"
+						[appIcon]="'incognito'"
+						[appSquare]="'1.5em'"
 						(touchstart)="isVisible.value = !isVisible.value"
 						(mouseenter)="isVisible.value = true"
 						(mouseleave)="isVisible.value = false"
-					>
-					</i>
+					></button>
 				</div>
-				<label
-					class="text-danger-1 block text-sm"
-					for="password"
-					*ngIf="password.touched && !!password.errors"
-					[ngSwitch]="true"
-				>
-					<ng-container *ngSwitchCase="!!password.errors.required"
-						>Required</ng-container
-					>
-					<ng-container *ngSwitchCase="!!password.errors.pattern"
-						>Password does not match pattern</ng-container
-					>
-				</label>
-				<label class="text-secondary-2 block text-sm" for="password"
-					>The password must be 6-32 characters long, must contain at least one
-					number or special character</label
-				>
 			</fieldset>
-			<button
-				class="md btn btn-success w-full"
-				type="submit"
-				aria-label="Create account"
-				[disabled]="registrationForm.invalid || registrationFormIsSubmitted"
-			>
-				Create account
-			</button>
+			<p class="alert">
+				The password must be 6-32 characters long, must contain at least one
+				number or special character
+			</p>
+			<fieldset class="form-control">
+				<button
+					class="btn btn-success w-full"
+					type="submit"
+					aria-label="Registration"
+					[class.loading]="registrationFormIsSubmitted"
+					[disabled]="registrationForm.invalid || registrationFormIsSubmitted"
+				>
+					Registration
+				</button>
+			</fieldset>
+			<fieldset class="form-control">
+				<a
+					class="btn btn-outline btn-primary w-full"
+					aria-label="Login"
+					[routerLink]="'/login'"
+				>
+					Login
+				</a>
+			</fieldset>
 		</fieldset>
 	</form>
-</section>
+</ng-container>

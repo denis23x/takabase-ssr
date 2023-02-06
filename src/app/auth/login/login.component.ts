@@ -17,6 +17,7 @@ import {
 } from '../../core';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { SharedModule } from '../../shared';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -24,6 +25,8 @@ interface LoginForm {
 }
 
 @Component({
+	standalone: true,
+	imports: [SharedModule],
 	selector: 'app-auth-login',
 	templateUrl: './login.component.html'
 })
@@ -84,8 +87,11 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 		};
 
 		this.authService.onLogin(loginDto).subscribe({
-			// prettier-ignore
-			next: (user: User) => this.router.navigate([this.userService.getUserUrl(user)]).then(() => console.debug('Route changed')),
+			next: (user: User) => {
+				this.router
+					.navigate([this.userService.getUserUrl(user)])
+					.then(() => console.debug('Route changed'));
+			},
 			error: () => (this.loginFormIsSubmitted = false)
 		});
 	}

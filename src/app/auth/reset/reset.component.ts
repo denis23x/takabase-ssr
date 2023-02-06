@@ -8,12 +8,15 @@ import {
 	Validators
 } from '@angular/forms';
 import { HelperService } from '../../core';
+import { SharedModule } from '../../shared';
 
 interface ResetForm {
 	email: FormControl<string>;
 }
 
 @Component({
+	standalone: true,
+	imports: [SharedModule],
 	selector: 'app-auth-reset',
 	templateUrl: './reset.component.html'
 })

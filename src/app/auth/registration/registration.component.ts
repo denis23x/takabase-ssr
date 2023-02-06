@@ -17,6 +17,7 @@ import {
 	UserService
 } from '../../core';
 import { switchMap } from 'rxjs/operators';
+import { SharedModule } from '../../shared';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -25,6 +26,8 @@ interface RegistrationForm {
 }
 
 @Component({
+	standalone: true,
+	imports: [SharedModule],
 	selector: 'app-auth-registration',
 	templateUrl: './registration.component.html'
 })
@@ -79,8 +82,11 @@ export class AuthRegistrationComponent implements OnInit {
 					})
 				)
 				.subscribe({
-					// prettier-ignore
-					next: (user: User) => this.router.navigate([this.userService.getUserUrl(user)]).then(() => console.debug('Route changed')),
+					next: (user: User) => {
+						this.router
+							.navigate([this.userService.getUserUrl(user)])
+							.then(() => console.debug('Route changed'));
+					},
 					error: () => (this.registrationFormIsSubmitted = false)
 				});
 		}

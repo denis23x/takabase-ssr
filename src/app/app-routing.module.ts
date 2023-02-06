@@ -17,11 +17,52 @@ const routes: Routes = [
 		}
 	},
 	{
-		path: 'auth',
-		loadChildren: () => {
-			return import('./auth/auth.module').then(m => m.AuthModule);
+		path: 'login',
+		loadComponent: () => {
+			return import('./auth/auth.component').then(m => m.AuthComponent);
 		},
-		canMatch: [CanMatchPublicGuard]
+		canMatch: [CanMatchPublicGuard],
+		children: [
+			{
+				path: '',
+				// prettier-ignore
+				loadComponent: () => {
+          return import('./auth/login/login.component').then(m => m.AuthLoginComponent);
+        }
+			}
+		]
+	},
+	{
+		path: 'registration',
+		loadComponent: () => {
+			return import('./auth/auth.component').then(m => m.AuthComponent);
+		},
+		canMatch: [CanMatchPublicGuard],
+		children: [
+			{
+				path: '',
+				// prettier-ignore
+				loadComponent: () => {
+          return import('./auth/registration/registration.component').then(m => m.AuthRegistrationComponent);
+        }
+			}
+		]
+	},
+	{
+		path: 'reset',
+		loadComponent: () => {
+			return import('./auth/auth.component').then(m => m.AuthComponent);
+		},
+		canMatch: [CanMatchPublicGuard],
+		children: [
+			{
+				path: '',
+				// prettier-ignore
+				loadComponent: () => {
+          return import('./auth/reset/reset.component').then(m => m.AuthResetComponent);
+        }
+			}
+		]
 	},
 	{
 		matcher: (urlSegment: UrlSegment[]) => {
@@ -50,8 +91,8 @@ const routes: Routes = [
 	},
 	{
 		path: 'exception',
+		// prettier-ignore
 		loadChildren: () => {
-			// prettier-ignore
 			return import('./exception/exception.module').then(m => m.ExceptionModule);
 		}
 	},

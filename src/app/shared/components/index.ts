@@ -6,7 +6,6 @@ export * from './cropper/cropper.component';
 export * from './dropdown/dropdown.component';
 export * from './header/header.component';
 export * from './markdown/markdown.component';
-export * from './oauth/oauth.component';
 export * from './overlay/overlay.component';
 export * from './post';
 export * from './share/share.component';
