@@ -8,7 +8,8 @@ import {
 	Post,
 	PostGetOneDto,
 	User,
-	Category
+	Category,
+	ApiService
 } from '../../../core';
 import { catchError, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -17,11 +18,24 @@ import { HttpErrorResponse } from '@angular/common/http';
 	providedIn: 'root'
 })
 export class UserPostDetailResolverService {
-	constructor(private router: Router, private postService: PostService) {}
+	constructor(
+		private apiService: ApiService,
+		private router: Router,
+		private postService: PostService
+	) {}
 
+	// prettier-ignore
 	resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Post> {
-		// prettier-ignore
 		const postId: number = Number(activatedRouteSnapshot.paramMap.get('postId'));
+
+    if (Number.isNaN(postId)) {
+      return this.apiService.setErrorRedirect({
+        status: 404,
+        error: {
+          message: 'Not found'
+        }
+      });
+    }
 
 		const postGetOneDto: PostGetOneDto = {
 			scope: ['user', 'category']
@@ -37,12 +51,12 @@ export class UserPostDetailResolverService {
 					const user: User = [...data].shift();
 
 					if (user.id !== post.user.id) {
-						return throwError(() => {
-							return {
-								status: 403,
-								message: 'Forbidden'
-							};
-						});
+            return this.apiService.setErrorRedirect({
+              status: 404,
+              error: {
+                message: 'Not found'
+              }
+            });
 					}
 				}
 

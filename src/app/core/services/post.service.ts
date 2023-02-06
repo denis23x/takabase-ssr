@@ -34,6 +34,15 @@ export class PostService {
 
 		const categoryId: number = Number(activatedRouteSnapshot.paramMap.get('categoryId'));
 
+    if (Number.isNaN(categoryId)) {
+      this.apiService.setErrorRedirect({
+        status: 404,
+        error: {
+          message: 'Not found'
+        }
+      })
+    }
+
 		if (categoryId) {
 			const category: Category | undefined = categoryList.find((category: Category) => category.id === categoryId);
 
@@ -43,9 +52,12 @@ export class PostService {
 					categoryId
 				};
 			} else {
-				this.router
-					.navigate(['/exception', 404])
-					.then(() => this.snackbarService.danger('Error', 'Not found'));
+        this.apiService.setErrorRedirect({
+          status: 404,
+          error: {
+            message: 'Not found'
+          }
+        })
 			}
 		}
 

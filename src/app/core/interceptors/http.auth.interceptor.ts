@@ -9,7 +9,7 @@ import {
 	HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { AuthService, RequestHeaders, User } from '../../core';
+import { AuthService, User } from '../../core';
 import { catchError, switchMap } from 'rxjs/operators';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 	}
 
 	private setRequestHeaders(request: HttpRequest<any>): HttpRequest<any> {
-		const requestHeaders: RequestHeaders = {};
+		const requestHeaders: any = {};
 
 		const token: string = this.getToken();
 

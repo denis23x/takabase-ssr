@@ -6,6 +6,7 @@ import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, first, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
+	ApiService,
 	AuthService,
 	Category,
 	CategoryGetAllDto,
@@ -21,6 +22,7 @@ import {
 })
 export class CreateResolverService {
 	constructor(
+		private apiService: ApiService,
 		private authService: AuthService,
 		private categoryService: CategoryService,
 		private postService: PostService,
@@ -31,7 +33,16 @@ export class CreateResolverService {
 	resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<(Category[] | Post)[]> {
 		const postId: number = Number(activatedRouteSnapshot.paramMap.get('postId'));
 
-		return this.authService.user.pipe(first()).pipe(
+    if (Number.isNaN(postId)) {
+      return this.apiService.setErrorRedirect({
+        status: 404,
+        error: {
+          message: 'Not found'
+        }
+      });
+    }
+
+    return this.authService.user.pipe(first()).pipe(
 			switchMap((user: User) => {
 				const categoryList$ = (): Observable<Category[]> => {
 					const categoryGetAllDto: CategoryGetAllDto = {
@@ -51,12 +62,12 @@ export class CreateResolverService {
 					return this.postService.getOne(postId, postGetOneDto).pipe(
 						switchMap((post: Post) => {
 							if (user.id !== post.user.id) {
-								return throwError(() => {
-									return {
-										status: 403,
-										message: 'Forbidden'
-									};
-								});
+                return this.apiService.setErrorRedirect({
+                  status: 404,
+                  error: {
+                    message: 'Not found'
+                  }
+                });
 							}
 
 							return of(post);
@@ -64,7 +75,7 @@ export class CreateResolverService {
 					);
 				};
 
-				const forkJoin$ = (): Observable<Category[] | Post>[] => {
+				const observable$ = (): Observable<Category[] | Post>[] => {
 					if (!!postId) {
 						return [categoryList$(), post$()];
 					} else {
@@ -72,7 +83,7 @@ export class CreateResolverService {
 					}
 				};
 
-				return forkJoin(forkJoin$());
+				return forkJoin(observable$());
 			}),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				this.router

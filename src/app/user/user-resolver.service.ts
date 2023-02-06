@@ -10,7 +10,8 @@ import {
 	UserGetAllDto,
 	CategoryService,
 	CategoryGetAllDto,
-	Category
+	Category,
+	ApiService
 } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -19,6 +20,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class UserResolverService {
 	constructor(
+		private apiService: ApiService,
 		private userService: UserService,
 		private categoryService: CategoryService,
 		private router: Router
@@ -38,12 +40,12 @@ export class UserResolverService {
 		return this.userService.getAll(userGetAllDto).pipe(
 			switchMap((userList: User[]) => {
 				if (!userList.length) {
-					return throwError(() => {
-						return {
-							status: 404,
-							message: 'Not found'
-						};
-					});
+					return this.apiService.setErrorRedirect({
+            status: 404,
+            error: {
+              message: 'Not found'
+            }
+          });
 				}
 
 				return of(userList.shift());
