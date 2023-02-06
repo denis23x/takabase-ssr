@@ -5,9 +5,10 @@ import {
 	FormBuilder,
 	FormControl,
 	FormGroup,
+	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import {
 	AuthService,
 	LoginDto,
@@ -17,7 +18,8 @@ import {
 } from '../../core';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { SharedModule } from '../../shared';
+import { SvgIconComponent } from '../../shared';
+import { CommonModule } from '@angular/common';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -26,7 +28,7 @@ interface LoginForm {
 
 @Component({
 	standalone: true,
-	imports: [SharedModule],
+	imports: [CommonModule, RouterModule, ReactiveFormsModule, SvgIconComponent],
 	selector: 'app-auth-login',
 	templateUrl: './login.component.html'
 })

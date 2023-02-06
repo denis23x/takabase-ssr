@@ -3,30 +3,34 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '../core';
 import { map } from 'rxjs/operators';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { AppScrollIntoViewDirective } from '../shared';
 
 @Component({
-  selector: 'app-settings',
-  templateUrl: './settings.component.html'
+	standalone: true,
+	imports: [CommonModule, RouterModule, AppScrollIntoViewDirective],
+	selector: 'app-settings',
+	templateUrl: './settings.component.html'
 })
 export class SettingsComponent implements OnInit, OnDestroy {
-  activatedRouteData$: Subscription | undefined;
+	activatedRouteData$: Subscription | undefined;
 
-  user: User | undefined;
+	user: User | undefined;
 
-  constructor(private activatedRoute: ActivatedRoute) {}
+	constructor(private activatedRoute: ActivatedRoute) {}
 
-  ngOnInit() {
-    this.activatedRouteData$ = this.activatedRoute.data
-      .pipe(map((data: Data) => data.data))
-      .subscribe({
-        next: (user: User) => (this.user = user),
-        error: (error: any) => console.error(error)
-      });
-  }
+	ngOnInit() {
+		this.activatedRouteData$ = this.activatedRoute.data
+			.pipe(map((data: Data) => data.data))
+			.subscribe({
+				next: (user: User) => (this.user = user),
+				error: (error: any) => console.error(error)
+			});
+	}
 
-  ngOnDestroy(): void {
-    [this.activatedRouteData$].forEach($ => $?.unsubscribe());
-  }
+	ngOnDestroy(): void {
+		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
+	}
 }

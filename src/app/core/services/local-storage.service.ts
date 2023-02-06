@@ -3,33 +3,35 @@
 import { Injectable } from '@angular/core';
 import { PlatformService } from './platform.service';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class LocalStorageService {
-  constructor(private platformService: PlatformService) {}
+	constructor(private platformService: PlatformService) {}
 
-  getItem(item: string): string {
-    if (this.platformService.isBrowser()) {
-      const window: Window = this.platformService.getWindow();
+	getItem(item: string): string {
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
 
-      return window.localStorage.getItem(item);
-    }
+			return window.localStorage.getItem(item);
+		}
 
-    return '';
-  }
+		return '';
+	}
 
-  setItem(key: string, value: string): void {
-    if (this.platformService.isBrowser()) {
-      const window: Window = this.platformService.getWindow();
+	setItem(key: string, value: string): void {
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
 
-      window.localStorage.setItem(key, value);
-    }
-  }
+			window.localStorage.setItem(key, value);
+		}
+	}
 
-  removeItem(item: string): void {
-    if (this.platformService.isBrowser()) {
-      const window: Window = this.platformService.getWindow();
+	removeItem(item: string): void {
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
 
-      window.localStorage.removeItem(item);
-    }
-  }
+			window.localStorage.removeItem(item);
+		}
+	}
 }

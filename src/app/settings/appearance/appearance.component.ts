@@ -5,12 +5,15 @@ import {
 	FormBuilder,
 	FormControl,
 	FormGroup,
+	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService, User, UserService, UserUpdateDto } from '../../core';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute, Data, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { DropdownComponent } from '../../shared';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
@@ -20,6 +23,8 @@ interface AppearanceForm {
 }
 
 @Component({
+	standalone: true,
+	imports: [CommonModule, RouterModule, ReactiveFormsModule, DropdownComponent],
 	selector: 'app-settings-appearance',
 	templateUrl: './appearance.component.html'
 })

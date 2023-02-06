@@ -6,8 +6,11 @@ import { ActivatedRoute, Data, Params } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { Share } from '../../../core/models/share.model';
 import { Subscription } from 'rxjs';
+import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
 @Component({
+	standalone: true,
+	imports: [SvgIconComponent],
 	selector: 'app-share, [appShare]',
 	templateUrl: './share.component.html'
 })

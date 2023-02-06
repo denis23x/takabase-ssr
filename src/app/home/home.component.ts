@@ -2,8 +2,12 @@
 
 import { Component, OnInit } from '@angular/core';
 import { MetaOpenGraph, MetaService, MetaTwitter } from '../core';
+import { SvgIconComponent } from '../shared';
+import { RouterModule } from '@angular/router';
 
 @Component({
+	standalone: true,
+	imports: [RouterModule, SvgIconComponent],
 	selector: 'app-home',
 	templateUrl: './home.component.html'
 })

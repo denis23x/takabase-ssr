@@ -4,6 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { User, UserService } from '../../core';
 
 @Pipe({
+	standalone: true,
 	name: 'userUrl'
 })
 export class UserUrlPipe implements PipeTransform {

@@ -5,10 +5,13 @@ import {
 	FormBuilder,
 	FormControl,
 	FormGroup,
+	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
 import { HelperService } from '../../core';
-import { SharedModule } from '../../shared';
+import { SvgIconComponent } from '../../shared';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 interface ResetForm {
 	email: FormControl<string>;
@@ -16,7 +19,7 @@ interface ResetForm {
 
 @Component({
 	standalone: true,
-	imports: [SharedModule],
+	imports: [CommonModule, RouterModule, ReactiveFormsModule, SvgIconComponent],
 	selector: 'app-auth-reset',
 	templateUrl: './reset.component.html'
 })

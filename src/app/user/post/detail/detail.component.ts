@@ -11,8 +11,21 @@ import {
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Data, Router } from '@angular/router';
+import {
+	OverlayComponent,
+	PostDetailComponent,
+	ShareComponent,
+	WindowComponent
+} from '../../../shared';
 
 @Component({
+	standalone: true,
+	imports: [
+		OverlayComponent,
+		WindowComponent,
+		PostDetailComponent,
+		ShareComponent
+	],
 	selector: 'app-user-post-detail',
 	templateUrl: './detail.component.html'
 })

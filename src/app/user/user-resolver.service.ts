@@ -26,7 +26,7 @@ export class UserResolverService {
 
 	// prettier-ignore
 	resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<[User, Category[]]> {
-		const [path]: UrlSegment[] = activatedRouteSnapshot.parent.url;
+		const [path]: UrlSegment[] = activatedRouteSnapshot.url;
 
 		const name: string = path.path;
 

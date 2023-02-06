@@ -11,11 +11,13 @@ import {
 	ViewChild
 } from '@angular/core';
 import { fromEvent, merge, Subscription } from 'rxjs';
-import { DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { PlatformService } from '../../../core';
 
 @Component({
+	standalone: true,
+	imports: [CommonModule],
 	selector: 'app-dropdown, [appDropdown]',
 	templateUrl: './dropdown.component.html'
 })

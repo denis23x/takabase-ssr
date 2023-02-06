@@ -11,7 +11,11 @@ import {
 	Output,
 	ViewChild
 } from '@angular/core';
-import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
+import {
+	ImageCroppedEvent,
+	ImageCropperComponent,
+	ImageCropperModule
+} from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
 import {
@@ -27,14 +31,24 @@ import {
 	FormBuilder,
 	FormControl,
 	FormGroup,
+	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
 interface ImageForm {
 	url: FormControl<string>;
 }
 
 @Component({
+	standalone: true,
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		ImageCropperModule,
+		SvgIconComponent
+	],
 	selector: 'app-cropper, [appCropper]',
 	templateUrl: './cropper.component.html'
 })

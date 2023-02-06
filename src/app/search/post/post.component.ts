@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import {
 	MetaOpenGraph,
@@ -12,8 +12,12 @@ import {
 	PostService
 } from '../../core';
 import { map, skip, tap } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { PostCardComponent, SvgIconComponent } from '../../shared';
 
 @Component({
+	standalone: true,
+	imports: [CommonModule, RouterModule, SvgIconComponent, PostCardComponent],
 	selector: 'app-search-post',
 	templateUrl: './post.component.html'
 })

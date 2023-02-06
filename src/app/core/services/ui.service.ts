@@ -5,7 +5,9 @@ import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
 import { CookieService } from './cookie.service';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class UiService {
 	constructor(
 		@Inject(DOCUMENT)

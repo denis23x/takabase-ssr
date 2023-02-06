@@ -11,6 +11,7 @@ import {
 	FormBuilder,
 	FormControl,
 	FormGroup,
+	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
 import {
@@ -23,8 +24,19 @@ import {
 	FileCreateDto
 } from '../../core';
 import { map, startWith } from 'rxjs/operators';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import {
+	AppInputTrimWhitespaceDirective,
+	AvatarComponent,
+	CropperComponent,
+	DayjsPipe,
+	OverlayComponent,
+	SvgIconComponent,
+	UserUrlPipe,
+	WindowComponent
+} from '../../shared';
 
 interface ProfileForm {
 	name: FormControl<string>;
@@ -32,6 +44,20 @@ interface ProfileForm {
 }
 
 @Component({
+	standalone: true,
+	imports: [
+		CommonModule,
+		RouterModule,
+		ReactiveFormsModule,
+		SvgIconComponent,
+		OverlayComponent,
+		AvatarComponent,
+		CropperComponent,
+		WindowComponent,
+		DayjsPipe,
+		AppInputTrimWhitespaceDirective,
+		UserUrlPipe
+	],
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'
 })

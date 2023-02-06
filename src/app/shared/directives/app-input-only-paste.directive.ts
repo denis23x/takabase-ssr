@@ -3,6 +3,7 @@
 import { Directive, HostListener, OnInit } from '@angular/core';
 
 @Directive({
+	standalone: true,
 	selector: '[appInputOnlyPaste]'
 })
 export class AppInputOnlyPasteDirective implements OnInit {

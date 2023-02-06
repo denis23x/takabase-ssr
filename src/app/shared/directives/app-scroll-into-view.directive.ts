@@ -4,46 +4,50 @@ import { Directive, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { PlatformService } from '../../core';
 
 @Directive({
-  selector: '[appScrollIntoView]'
+	standalone: true,
+	selector: '[appScrollIntoView]'
 })
 export class AppScrollIntoViewDirective implements OnInit, OnDestroy {
-  @Input()
-  set appRoot(rootHTMLElement: HTMLElement) {
-    this.rootHTMLElement = rootHTMLElement;
-  }
+	@Input()
+	set appRoot(rootHTMLElement: HTMLElement) {
+		this.rootHTMLElement = rootHTMLElement;
+	}
 
-  @Input()
-  set appActive(active: boolean) {
-    this.active = active;
-  }
+	@Input()
+	set appActive(active: boolean) {
+		this.active = active;
+	}
 
-  intersectionObserver: IntersectionObserver | undefined;
+	intersectionObserver: IntersectionObserver | undefined;
 
-  rootHTMLElement: HTMLElement | undefined;
+	rootHTMLElement: HTMLElement | undefined;
 
-  active: boolean = false;
+	active: boolean = false;
 
-  constructor(private elementRef: ElementRef, private platformService: PlatformService) {}
+	constructor(
+		private elementRef: ElementRef,
+		private platformService: PlatformService
+	) {}
 
-  ngOnInit(): void {
-    if (this.platformService.isBrowser()) {
-      const options: IntersectionObserverInit = {
-        root: this.rootHTMLElement,
-        threshold: 1
-      };
+	ngOnInit(): void {
+		if (this.platformService.isBrowser()) {
+			const options: IntersectionObserverInit = {
+				root: this.rootHTMLElement,
+				threshold: 1
+			};
 
-      // prettier-ignore
-      this.intersectionObserver = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
+			// prettier-ignore
+			this.intersectionObserver = new IntersectionObserver((entries: IntersectionObserverEntry[]) => {
         entries.forEach((entry: IntersectionObserverEntry) => {
           return (this.active && !entry.isIntersecting && entry.target.scrollIntoView({ block: 'nearest' }));
         })
       }, options);
 
-      this.intersectionObserver.observe(this.elementRef.nativeElement);
-    }
-  }
+			this.intersectionObserver.observe(this.elementRef.nativeElement);
+		}
+	}
 
-  ngOnDestroy(): void {
-    [this.intersectionObserver].forEach($ => $?.disconnect());
-  }
+	ngOnDestroy(): void {
+		[this.intersectionObserver].forEach($ => $?.disconnect());
+	}
 }

@@ -10,13 +10,17 @@ import {
 	SnackbarService,
 	User
 } from '../../core';
-import { ActivatedRoute, Data, Router } from '@angular/router';
+import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
 import { Subscription, throwError } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { UAParser } from 'ua-parser-js';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { DayjsPipe, SvgIconComponent } from '../../shared';
 
 @Component({
+	standalone: true,
+	imports: [CommonModule, RouterModule, SvgIconComponent, DayjsPipe],
 	selector: 'app-settings-security',
 	templateUrl: './security.component.html'
 })

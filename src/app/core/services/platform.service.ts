@@ -10,7 +10,9 @@ import { isPlatformBrowser } from '@angular/common';
 
 const getWindow = (): Window => window;
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class PlatformService {
 	constructor(
 		@Inject(PLATFORM_ID)

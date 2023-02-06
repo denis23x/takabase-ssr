@@ -11,6 +11,7 @@ import {
 import { UiService } from '../../../core';
 
 @Component({
+	standalone: true,
 	selector: 'app-overlay, [appOverlay]',
 	templateUrl: 'overlay.component.html'
 })

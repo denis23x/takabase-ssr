@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, Router } from '@angular/router';
+import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
 import { map, skip, tap } from 'rxjs/operators';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import {
@@ -12,8 +12,24 @@ import {
 	MetaOpenGraph,
 	MetaTwitter
 } from '../../core';
+import { CommonModule } from '@angular/common';
+import {
+	AvatarComponent,
+	DayjsPipe,
+	SvgIconComponent,
+	UserUrlPipe
+} from '../../shared';
 
 @Component({
+	standalone: true,
+	imports: [
+		CommonModule,
+		RouterModule,
+		AvatarComponent,
+		SvgIconComponent,
+		UserUrlPipe,
+		DayjsPipe
+	],
 	selector: 'app-search-user',
 	templateUrl: './user.component.html'
 })

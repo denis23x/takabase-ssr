@@ -11,8 +11,12 @@ import {
 import { AuthService, User } from '../../../core';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
+	standalone: true,
+	imports: [CommonModule, SvgIconComponent],
 	selector: 'app-window, [appWindow]',
 	templateUrl: 'window.component.html'
 })

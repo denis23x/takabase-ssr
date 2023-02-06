@@ -8,7 +8,9 @@ import { catchError, map } from 'rxjs/operators';
 import { SnackbarService } from './snackbar.service';
 import { RequestError } from '../models';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class ApiService {
 	constructor(
 		private httpClient: HttpClient,

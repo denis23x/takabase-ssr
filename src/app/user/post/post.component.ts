@@ -1,12 +1,16 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Post, PostGetAllDto, PostService } from '../../core';
 import { map, skip, tap } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { PostCardComponent, SvgIconComponent } from '../../shared';
 
 @Component({
+	standalone: true,
+	imports: [CommonModule, RouterModule, PostCardComponent, SvgIconComponent],
 	selector: 'app-user-category',
 	templateUrl: './post.component.html'
 })

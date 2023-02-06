@@ -3,9 +3,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { toSvg } from 'jdenticon';
 import { User } from '../../../core';
+import { SanitizerPipe } from '../../pipes';
 
 @Component({
+	standalone: true,
 	selector: 'app-avatar, [appAvatar]',
+	imports: [SanitizerPipe],
 	templateUrl: './avatar.component.html'
 })
 export class AvatarComponent implements OnInit {

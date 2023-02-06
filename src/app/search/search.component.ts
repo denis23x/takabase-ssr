@@ -1,21 +1,37 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import {
 	FormBuilder,
 	FormControl,
 	FormGroup,
+	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
 import { debounceTime, filter, map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import {
+	AppInputTrimWhitespaceDirective,
+	AppScrollIntoViewDirective,
+	SvgIconComponent
+} from '../shared';
 
 interface SearchForm {
 	query: FormControl<string>;
 }
 
 @Component({
+	standalone: true,
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		RouterModule,
+		AppInputTrimWhitespaceDirective,
+		SvgIconComponent,
+		AppScrollIntoViewDirective
+	],
 	selector: 'app-search',
 	templateUrl: './search.component.html'
 })

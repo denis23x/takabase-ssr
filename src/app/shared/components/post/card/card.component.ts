@@ -2,8 +2,13 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Post } from '../../../../core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { DayjsPipe } from '../../../pipes';
 
 @Component({
+	standalone: true,
+	imports: [CommonModule, RouterModule, DayjsPipe],
 	selector: 'app-post-card, [appPostCard]',
 	templateUrl: './card.component.html'
 })

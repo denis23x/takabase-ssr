@@ -4,7 +4,9 @@ import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { Snack, SnackDuration, SnackOptions, SnackProgress } from '../models';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class SnackbarService {
 	snackbar$: ReplaySubject<Snack> = new ReplaySubject<Snack>();
 

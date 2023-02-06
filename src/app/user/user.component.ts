@@ -7,7 +7,8 @@ import {
 	Router,
 	Event as RouterEvent,
 	Data,
-	Params
+	Params,
+	RouterModule
 } from '@angular/router';
 import { EMPTY, of, Subscription } from 'rxjs';
 import {
@@ -32,8 +33,19 @@ import {
 	FormBuilder,
 	FormControl,
 	FormGroup,
+	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
+import {
+	AppInputTrimWhitespaceDirective,
+	AppScrollIntoViewDirective,
+	AvatarComponent,
+	DayjsPipe,
+	OverlayComponent,
+	SvgIconComponent,
+	WindowComponent
+} from '../shared';
+import { CommonModule } from '@angular/common';
 
 interface CategoryEditForm {
 	name: FormControl<string>;
@@ -46,6 +58,19 @@ interface CategoryDeleteForm {
 }
 
 @Component({
+	standalone: true,
+	imports: [
+		CommonModule,
+		RouterModule,
+		ReactiveFormsModule,
+		AvatarComponent,
+		DayjsPipe,
+		AppScrollIntoViewDirective,
+		SvgIconComponent,
+		OverlayComponent,
+		WindowComponent,
+		AppInputTrimWhitespaceDirective
+	],
 	selector: 'app-user',
 	templateUrl: './user.component.html'
 })

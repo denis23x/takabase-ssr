@@ -24,8 +24,21 @@ import {
 	FormBuilder,
 	FormControl,
 	FormGroup,
+	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import {
+	AppInputTrimWhitespaceDirective,
+	CropperComponent,
+	DropdownComponent,
+	MarkdownComponent,
+	OverlayComponent,
+	PostDetailComponent,
+	ShareComponent,
+	SvgIconComponent,
+	WindowComponent
+} from '../shared';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -42,7 +55,21 @@ interface CategoryForm {
 }
 
 @Component({
+	standalone: true,
 	selector: 'app-markdown',
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		SvgIconComponent,
+		AppInputTrimWhitespaceDirective,
+		DropdownComponent,
+		OverlayComponent,
+		WindowComponent,
+		CropperComponent,
+		PostDetailComponent,
+		ShareComponent,
+		MarkdownComponent
+	],
 	templateUrl: './create.component.html'
 })
 export class CreateComponent implements OnInit, OnDestroy {

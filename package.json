@@ -17,7 +17,8 @@
     "ssr:prerender:dev": "ng run draft-ssr:prerender:development",
     "ssr:prerender:prod": "ng run draft-ssr:prerender:production",
     "spite:build": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --stripAttrs class --stripAttrs fill",
-    "node:start": "node dist/draft-ssr/server/main.js"
+    "dist:start": "node dist/draft-ssr/server/main.js",
+    "dist:analyze": "webpack-bundle-analyzer dist/draft-ssr/browser/stats.json"
   },
   "dependencies": {
     "@angular/common": "^15.1.0",
@@ -69,6 +70,7 @@
     "prettier-plugin-tailwindcss": "^0.2.1",
     "svg2sprite-cli": "^2.0.1",
     "tailwindcss": "^3.1.8",
-    "typescript": "~4.9.4"
+    "typescript": "~4.9.4",
+    "webpack-bundle-analyzer": "^4.7.0"
   }
 }

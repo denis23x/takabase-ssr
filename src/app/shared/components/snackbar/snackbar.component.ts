@@ -3,8 +3,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { HelperService, Snack, SnackbarService } from '../../../core';
+import { CommonModule } from '@angular/common';
 
 @Component({
+	standalone: true,
+	imports: [CommonModule],
 	selector: 'app-snackbar',
 	templateUrl: './snackbar.component.html'
 })

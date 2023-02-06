@@ -5,12 +5,19 @@ import {
 	FormBuilder,
 	FormControl,
 	FormGroup,
+	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
 import { User, HelperService } from '../../core';
 import { map } from 'rxjs/operators';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import {
+	OverlayComponent,
+	SvgIconComponent,
+	WindowComponent
+} from '../../shared';
 
 interface EmailForm {
 	email: FormControl<string>;
@@ -25,6 +32,15 @@ interface ConfirmationForm {
 }
 
 @Component({
+	standalone: true,
+	imports: [
+		CommonModule,
+		RouterModule,
+		ReactiveFormsModule,
+		SvgIconComponent,
+		OverlayComponent,
+		WindowComponent
+	],
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'
 })

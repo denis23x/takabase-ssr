@@ -5,9 +5,10 @@ import {
 	FormBuilder,
 	FormControl,
 	FormGroup,
+	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import {
 	AuthService,
 	UserCreateDto,
@@ -17,7 +18,8 @@ import {
 	UserService
 } from '../../core';
 import { switchMap } from 'rxjs/operators';
-import { SharedModule } from '../../shared';
+import { SvgIconComponent } from '../../shared';
+import { CommonModule } from '@angular/common';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -27,7 +29,7 @@ interface RegistrationForm {
 
 @Component({
 	standalone: true,
-	imports: [SharedModule],
+	imports: [CommonModule, RouterModule, ReactiveFormsModule, SvgIconComponent],
 	selector: 'app-auth-registration',
 	templateUrl: './registration.component.html'
 })

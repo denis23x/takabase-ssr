@@ -9,7 +9,9 @@ import {
 } from '@angular/forms';
 import { PlatformService } from './platform.service';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class HelperService {
 	constructor(private platformService: PlatformService) {}
 

@@ -30,10 +30,18 @@ import {
 	FormBuilder,
 	FormControl,
 	FormGroup,
+	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { DropdownComponent } from '../dropdown/dropdown.component';
+import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { OverlayComponent } from '../overlay/overlay.component';
+import { WindowComponent } from '../window/window.component';
+import {
+	AppInputOnlyPasteDirective,
+	AppInputTrimWhitespaceDirective
+} from '../../directives';
 
 interface UrlForm {
 	title?: FormControl<string>;
@@ -44,6 +52,17 @@ interface UrlForm {
 /** https://markdown-it.github.io/ */
 
 @Component({
+	standalone: true,
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		SvgIconComponent,
+		DropdownComponent,
+		OverlayComponent,
+		WindowComponent,
+		AppInputTrimWhitespaceDirective,
+		AppInputOnlyPasteDirective
+	],
 	selector: 'app-markdown, [appMarkdown]',
 	templateUrl: './markdown.component.html'
 })

@@ -2,11 +2,13 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { ActivatedRoute, Data, Router } from '@angular/router';
+import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MetaOpenGraph, MetaService, MetaTwitter } from '../core';
 
 @Component({
+	standalone: true,
+	imports: [RouterModule],
 	templateUrl: './exception.component.html'
 })
 export class ExceptionComponent implements OnInit, OnDestroy {

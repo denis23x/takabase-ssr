@@ -3,8 +3,21 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AuthService, Post, User } from '../../../../core';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { AvatarComponent } from '../../avatar/avatar.component';
+import { DayjsPipe, MarkdownPipe, UserUrlPipe } from '../../../pipes';
 
 @Component({
+	standalone: true,
+	imports: [
+		CommonModule,
+		RouterModule,
+		AvatarComponent,
+		MarkdownPipe,
+		UserUrlPipe,
+		DayjsPipe
+	],
 	selector: 'app-post-detail, [appPostDetail]',
 	templateUrl: './detail.component.html'
 })
