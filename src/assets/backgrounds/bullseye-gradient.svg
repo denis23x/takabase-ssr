@@ -1,0 +1,12 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%' viewBox='0 0 800 800' preserveAspectRatio='xMidYMid slice'>
+  <rect fill='hsl(var(--pf))' width='800' height='800'/>
+  <g fill-opacity='1'>
+    <circle style="filter: brightness(0.75)" fill='hsl(var(--pf))'  cx='400' cy='400' r='600'/>
+    <circle style="filter: brightness(0.80)" fill='hsl(var(--pf))'  cx='400' cy='400' r='500'/>
+    <circle style="filter: brightness(0.85)" fill='hsl(var(--pf))'  cx='400' cy='400' r='400'/>
+    <circle style="filter: brightness(0.90)" fill='hsl(var(--pf))'  cx='400' cy='400' r='300'/>
+    <circle style="filter: brightness(0.95)" fill='hsl(var(--pf))'  cx='400' cy='400' r='200'/>
+    <circle style="filter: brightness(1.00)" fill='hsl(var(--pf))'  cx='400' cy='400' r='100'/>
+  </g>
+</svg>
+W
