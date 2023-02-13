@@ -17,6 +17,7 @@ import { DropdownComponent } from '../../shared';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
+	background: FormControl<string>;
 	language: FormControl<string>;
 	monospace: FormControl<boolean>;
 	buttons: FormControl<string>;
@@ -69,7 +70,29 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		'coffee',
 		'winter'
 	];
+
+	appearanceBackgroundList: string[] = [
+		'abstract-envelope',
+		'abstract-timekeeper',
+		'bullseye-gradient',
+		'confetti-doodles',
+		'cornered-stairs',
+		'dalmatian-spots',
+		'diagonal-stripes',
+		'diamond-sunset',
+		'endless-constellation',
+		'liquid-cheese',
+		'pattern-randomized',
+		'repeating-triangles',
+		'slanted-gradient',
+		'subtle-prism',
+		'sun-tornado',
+		'tortoise-shell',
+		'zig-zag'
+	];
+
 	appearanceLanguageList: string[] = ['English', 'Italian', 'French'];
+
 	appearanceButtonsList: string[] = ['left', 'right'];
 
 	constructor(
@@ -78,8 +101,10 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		private authService: AuthService,
 		private activatedRoute: ActivatedRoute
 	) {
+		// prettier-ignore
 		this.appearanceForm = this.formBuilder.group<AppearanceForm>({
 			theme: this.formBuilder.nonNullable.control('', [Validators.required]),
+			background: this.formBuilder.nonNullable.control('', [Validators.required]),
 			language: this.formBuilder.nonNullable.control('', [Validators.required]),
 			monospace: this.formBuilder.control(null, [Validators.required]),
 			buttons: this.formBuilder.nonNullable.control('', [Validators.required])
@@ -127,6 +152,10 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 	onChangeTheme(theme: string): void {
 		this.appearanceForm.patchValue({ theme });
+	}
+
+	onChangeBackground(background: string): void {
+		this.appearanceForm.patchValue({ background });
 	}
 
 	onChangeLanguage(language: string): void {

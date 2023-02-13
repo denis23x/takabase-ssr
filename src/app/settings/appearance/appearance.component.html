@@ -58,6 +58,60 @@
 					</fieldset>
 					<fieldset
 						class="form-control w-full"
+						*ngIf="appearanceForm.get('background') as background"
+					>
+						<label class="label" for="appearanceFormBackground">
+							<span class="label-text">Background</span>
+							<a
+								class="link label-text-alt"
+								href="https://www.svgbackgrounds.com/"
+								rel="noopener"
+								target="_blank"
+							>
+								svgbackgrounds.com
+							</a>
+						</label>
+						<div appDropdown>
+							<input
+								class="input input-bordered w-full cursor-pointer truncate"
+								id="appearanceFormBackground"
+								type="text"
+								aria-label="Background"
+								placeholder="Select Background"
+								formControlName="background"
+								slot="target"
+								readonly
+								[class.input-success]="background.touched && background.value"
+								[class.input-error]="background.touched && background.invalid"
+								[class.input-disabled]="appearanceIsSubmitted"
+							/>
+							<ul
+								class="menu rounded-box mt-2 max-h-64 flex-nowrap overflow-y-auto border border-base-content/20 bg-base-100 p-2 shadow"
+								slot="content"
+							>
+								<li
+									class="flex w-full overflow-hidden"
+									*ngFor="let backgroundValue of appearanceBackgroundList"
+								>
+									<button
+										class="block w-full truncate text-left"
+										type="button"
+										[class.active]="background.value === backgroundValue"
+										[attr.aria-label]="backgroundValue"
+										(click)="onChangeBackground(backgroundValue)"
+									>
+										{{ backgroundValue }}
+									</button>
+								</li>
+							</ul>
+						</div>
+					</fieldset>
+				</div>
+				<div
+					class="flex w-full flex-col items-start gap-4 sm:flex-row sm:justify-between"
+				>
+					<fieldset
+						class="form-control w-full"
 						*ngIf="appearanceForm.get('language') as language"
 					>
 						<label class="label" for="appearanceFormLanguage">

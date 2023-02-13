@@ -21,6 +21,7 @@ export interface User {
 
 export interface UserSettings {
 	theme: string;
+	background: string;
 	language: string;
 	monospace: boolean;
 	buttons: string;

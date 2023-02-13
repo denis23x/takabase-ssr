@@ -2,42 +2,45 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeValue } from '@angular/platform-browser';
-import { PlatformService } from '../../core';
-import DOMPurify from 'dompurify';
+import DOMPurify, { Config } from 'dompurify';
 
 @Pipe({
 	standalone: true,
 	name: 'sanitizer'
 })
 export class SanitizerPipe implements PipeTransform {
-	constructor(
-		protected sanitizer: DomSanitizer,
-		private platformService: PlatformService
-	) {}
+	constructor(protected domSanitizer: DomSanitizer) {}
 
-	transform(value: string, context: string = 'html'): SafeValue | null {
-		if (this.platformService.isBrowser()) {
-			return this.bypassSecurityTrust(context, DOMPurify.sanitize(value));
-		}
-
-		return null;
+	// prettier-ignore
+	transform(value: string, context: string, extra?: string): SafeValue | null {
+    return this.bypassSecurityTrust(context, String(DOMPurify.sanitize(value, this.getConfig(context, extra))));
 	}
 
-	private bypassSecurityTrust(
-		context: string,
-		value: string
-	): SafeValue | null {
+	private getConfig(context: string, extra?: string): Config {
+		/** Allow to use "use" tag in SVG background */
+
+		if (!!extra && extra === 'svg') {
+			return {
+				ADD_TAGS: ['use']
+			};
+		}
+
+		return {};
+	}
+
+	// prettier-ignore
+	private bypassSecurityTrust(context: string, value: string): SafeValue | null {
 		switch (context) {
 			case 'html':
-				return this.sanitizer.bypassSecurityTrustHtml(value);
+				return this.domSanitizer.bypassSecurityTrustHtml(value);
 			case 'style':
-				return this.sanitizer.bypassSecurityTrustStyle(value);
+				return this.domSanitizer.bypassSecurityTrustStyle(value);
 			case 'script':
-				return this.sanitizer.bypassSecurityTrustScript(value);
+				return this.domSanitizer.bypassSecurityTrustScript(value);
 			case 'url':
-				return this.sanitizer.bypassSecurityTrustUrl(value);
+				return this.domSanitizer.bypassSecurityTrustUrl(value);
 			case 'resource-url':
-				return this.sanitizer.bypassSecurityTrustResourceUrl(value);
+				return this.domSanitizer.bypassSecurityTrustResourceUrl(value);
 			default:
 				throw new Error('Invalid security context specified: ' + context);
 		}
