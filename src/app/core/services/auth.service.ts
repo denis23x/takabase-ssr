@@ -9,8 +9,6 @@ import {
 	LoginDto,
 	LogoutDto,
 	User,
-	UserService,
-	PlatformService,
 	SnackbarService,
 	UiService,
 	CookieService
@@ -28,9 +26,7 @@ export class AuthService {
 
 	constructor(
 		private apiService: ApiService,
-		private userService: UserService,
 		private cookieService: CookieService,
-		private platformService: PlatformService,
 		private router: Router,
 		private snackbarService: SnackbarService,
 		private uiService: UiService

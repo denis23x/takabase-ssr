@@ -33,14 +33,12 @@ export class UiService {
 	}
 
 	setTheme(theme: string | null): void {
-		if (this.platformService.isBrowser()) {
-			if (!!theme) {
-				this.cookieService.setItem('theme', theme);
-				this.document.documentElement.setAttribute('data-theme', theme);
-			} else {
-				this.cookieService.removeItem('theme');
-				this.document.documentElement.removeAttribute('data-theme');
-			}
+		if (!!theme) {
+			this.cookieService.setItem('theme', theme);
+			this.document.documentElement.setAttribute('data-theme', theme);
+		} else {
+			this.cookieService.removeItem('theme');
+			this.document.documentElement.removeAttribute('data-theme');
 		}
 	}
 }
