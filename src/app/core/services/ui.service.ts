@@ -34,6 +34,14 @@ export class UiService {
 		}
 	}
 
+	setLoader(toggle: boolean): void {
+		if (!!toggle) {
+			// this.document.querySelector('[data-loader]').remove();
+		} else {
+			this.document.querySelector('[data-loader]').remove();
+		}
+	}
+
 	setTheme(theme: string | null): void {
 		if (!!theme) {
 			this.cookieService.setItem('theme', theme);
@@ -45,6 +53,12 @@ export class UiService {
 	}
 
 	setBackground(background: string | null): void {
+		if (!!background) {
+			this.cookieService.setItem('background', background);
+		} else {
+			this.cookieService.removeItem('background');
+		}
+
 		// prettier-ignore
 		const backgroundElement: HTMLElement = this.document.querySelector('[data-background]');
 

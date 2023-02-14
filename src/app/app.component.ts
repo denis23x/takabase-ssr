@@ -1,14 +1,7 @@
 /** @format */
 
-import {
-	AfterViewInit,
-	Component,
-	Inject,
-	OnDestroy,
-	OnInit
-} from '@angular/core';
-import { AuthService, PlatformService, TitleService } from './core';
-import { DOCUMENT } from '@angular/common';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AuthService, TitleService, UiService } from './core';
 import { filter } from 'rxjs/operators';
 import { Event as RouterEvent, NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -21,12 +14,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 	routeEvents$: Subscription | undefined;
 
 	constructor(
-		@Inject(DOCUMENT)
-		private document: Document,
 		private authService: AuthService,
-		private platformService: PlatformService,
 		private router: Router,
-		private titleService: TitleService
+		private titleService: TitleService,
+		private uiService: UiService
 	) {}
 
 	ngOnInit(): void {
@@ -45,9 +36,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	ngAfterViewInit(): void {
-		if (this.platformService.isBrowser()) {
-			this.document.body.querySelector('#loader').remove();
-		}
+		this.uiService.setLoader(false);
 	}
 
 	ngOnDestroy(): void {

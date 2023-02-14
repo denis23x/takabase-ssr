@@ -33,7 +33,7 @@
 		</noscript>
 		<div
 			class="fixed z-[2] flex h-full w-full items-center justify-center bg-base-100"
-			id="loader"
+			data-loader
 		>
 			<span class="rounded-box bg-base-200 p-4 text-base-content">
 				Loading
@@ -226,6 +226,12 @@
 
 		if (!!theme && theme !== "") {
 			document.documentElement.setAttribute("data-theme", theme)
+		}
+
+		const background = getCookie("background")
+
+		if (!!background && background !== "") {
+			document.querySelector("[data-background]").innerHTML = ""
 		}
 	</script>
 </html>
