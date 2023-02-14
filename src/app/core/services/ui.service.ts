@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
 import { CookieService } from './cookie.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,7 +14,8 @@ export class UiService {
 		@Inject(DOCUMENT)
 		private document: Document,
 		private cookieService: CookieService,
-		private platformService: PlatformService
+		private platformService: PlatformService,
+		private httpClient: HttpClient
 	) {}
 
 	setOverlay(toggle: boolean): void {
@@ -40,5 +42,17 @@ export class UiService {
 			this.cookieService.removeItem('theme');
 			this.document.documentElement.removeAttribute('data-theme');
 		}
+	}
+
+	setBackground(background: string | null): void {
+		// prettier-ignore
+		const backgroundElement: HTMLElement = this.document.querySelector('[data-background]');
+
+		// prettier-ignore
+		this.httpClient
+			.get('/assets/backgrounds/' + (background || 'pattern-randomized') + '.svg', {
+				responseType: 'text'
+			})
+			.subscribe((svg: string) => (backgroundElement.innerHTML = svg));
 	}
 }

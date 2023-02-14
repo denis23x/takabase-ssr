@@ -154,6 +154,7 @@ export class AuthService {
 
 		if (!!user.settings) {
 			this.uiService.setTheme(user.settings.theme);
+			this.uiService.setBackground(user.settings.background);
 		}
 
 		return of(null);
@@ -169,6 +170,7 @@ export class AuthService {
 		/** Remove settings */
 
 		this.uiService.setTheme(null);
+		this.uiService.setBackground(null);
 
 		return of(null);
 	}
