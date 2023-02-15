@@ -133,6 +133,32 @@
 					(click)="onMarkdownControl(control)"
 				></button>
 			</li>
+			<li class="inline-block">
+				<div class="flex p-0" appDropdown #dropdownEmojiMart>
+					<button
+						class="fill-current p-3.5"
+						type="button"
+						appSvgIcon
+						slot="target"
+						[attr.aria-label]="controlListEmojiMart.label"
+						[attr.title]="controlListEmojiMart.label"
+						[appIcon]="controlListEmojiMart.icon"
+					></button>
+					<div
+						class="menu rounded-box mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
+						slot="content"
+					>
+						<emoji-mart
+							[emojiSize]="24"
+							[showPreview]="false"
+							[emojiTooltip]="true"
+							[virtualize]="false"
+							[isNative]="true"
+							(emojiClick)="onMarkdownControlEmoji($event)"
+						></emoji-mart>
+					</div>
+				</div>
+			</li>
 		</ul>
 	</div>
 	<app-overlay

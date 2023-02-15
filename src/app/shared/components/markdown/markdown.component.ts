@@ -21,7 +21,8 @@ import {
 	MarkdownControlHeading,
 	MarkdownControlFormatting,
 	MarkdownControlList,
-	MarkdownControlUrl
+	MarkdownControlUrl,
+	MarkdownControlEmojiMart
 } from './markdown-controls';
 import { BehaviorSubject, fromEvent, merge, Subscription, EMPTY } from 'rxjs';
 import { debounceTime, filter, startWith } from 'rxjs/operators';
@@ -42,6 +43,8 @@ import {
 	AppInputOnlyPasteDirective,
 	AppInputTrimWhitespaceDirective
 } from '../../directives';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 
 interface UrlForm {
 	title?: FormControl<string>;
@@ -61,7 +64,8 @@ interface UrlForm {
 		OverlayComponent,
 		WindowComponent,
 		AppInputTrimWhitespaceDirective,
-		AppInputOnlyPasteDirective
+		AppInputOnlyPasteDirective,
+		PickerModule
 	],
 	selector: 'app-markdown, [appMarkdown]',
 	templateUrl: './markdown.component.html'
@@ -73,6 +77,9 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild('dropdownFormatting') dropdownFormatting: DropdownComponent | undefined;
 	@ViewChild('dropdownList') dropdownList: DropdownComponent | undefined;
+
+	// prettier-ignore
+	@ViewChild('dropdownEmojiMart') dropdownEmojiMart: DropdownComponent | undefined;
 
 	@Input()
 	set appScrollSync(scrollSync: boolean) {
@@ -98,6 +105,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	controlListFormatting: MarkdownControl[] = MarkdownControlFormatting();
 	controlListList: MarkdownControl[] = MarkdownControlList();
 	controlListUrl: MarkdownControl[] = MarkdownControlUrl();
+	controlListEmojiMart: MarkdownControl = MarkdownControlEmojiMart();
 	controlListScroll$: Subscription | undefined;
 	controlListDisabled: boolean = false;
 
@@ -173,7 +181,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 		const dropdownComponentList: DropdownComponent[] = [
 			this.dropdownHeading,
 			this.dropdownFormatting,
-			this.dropdownList
+			this.dropdownList,
+			this.dropdownEmojiMart
 		];
 
 		// prettier-ignore
@@ -261,6 +270,12 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 	}
 
+	onMarkdownControlEmoji(emojiEvent: EmojiEvent): void {
+		this.controlListEmojiMart.handler = (): string => emojiEvent.emoji.colons;
+
+		this.onMarkdownControl(this.controlListEmojiMart);
+	}
+
 	getTextarea(textAreaElement: HTMLTextAreaElement): MarkdownTextarea {
 		const { selectionStart, selectionEnd, value } = textAreaElement;
 
@@ -313,6 +328,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 				case 'url-link':
 				case 'url-image':
 					return markdownControl.handler(urlForm.value);
+        case 'emoji-mart':
+          return markdownControl.handler();
 				default:
 					return '';
 			}

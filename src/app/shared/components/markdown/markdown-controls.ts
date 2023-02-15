@@ -90,6 +90,13 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 	}
 ];
 
+export const MarkdownControlEmojiMart = (): MarkdownControl => ({
+	key: 'emoji-mart',
+	label: 'Emoji',
+	icon: 'emoji-heart-eyes',
+	handler: (): string => ''
+});
+
 // TODO: add controls
 // export const MarkdownControlRest = (): MarkdownControl[] => [
 //   {

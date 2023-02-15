@@ -4,10 +4,11 @@ import { Component, OnInit } from '@angular/core';
 import { MetaOpenGraph, MetaService, MetaTwitter } from '../core';
 import { SvgIconComponent } from '../shared';
 import { RouterModule } from '@angular/router';
+import { EmojiModule } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, SvgIconComponent],
+	imports: [RouterModule, SvgIconComponent, EmojiModule],
 	selector: 'app-home',
 	templateUrl: './home.component.html'
 })

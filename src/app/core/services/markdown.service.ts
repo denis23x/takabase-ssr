@@ -5,6 +5,7 @@ import { DOCUMENT } from '@angular/common';
 import { MarkdownPluginService } from './markdown-plugin.service';
 import MarkdownIt from 'markdown-it';
 import MarkdownItIncrementalDOM from 'markdown-it-incremental-dom';
+import emoji from 'markdown-it-emoji';
 import * as IncrementalDOM from 'incremental-dom';
 import * as mila from 'markdown-it-link-attributes';
 import Prism from 'prismjs';
@@ -43,13 +44,18 @@ export class MarkdownService {
 			}
 		})
 		.use((md: any, options: any) => this.markdownPlugin.insert(md, options))
+		.use(emoji)
 		.use(MarkdownItIncrementalDOM, IncrementalDOM);
 
 	constructor(
 		@Inject(DOCUMENT)
 		private document: Document,
 		private markdownPlugin: MarkdownPluginService
-	) {}
+	) {
+		this.markdown.renderer.rules.emoji = function (token, idx) {
+			return `<span class="text-2xl">${token[idx].content}</span>`;
+		};
+	}
 
 	getHighlightCss(): void {
 		const cssId: string = 'prismjs-css';
