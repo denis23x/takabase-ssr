@@ -2,8 +2,8 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { toSvg } from 'jdenticon';
-import { User } from '../../../core';
 import { SanitizerPipe } from '../../pipes/sanitizer.pipe';
+import { User } from '../../../core/models/user.model';
 
 @Component({
 	standalone: true,

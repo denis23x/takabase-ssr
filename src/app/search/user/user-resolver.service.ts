@@ -2,10 +2,12 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { UserService, User, UserGetAllDto } from '../../core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+import { UserService } from '../../core/services/user.service';
+import { User } from '../../core/models/user.model';
+import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 
 @Injectable({
 	providedIn: 'root'

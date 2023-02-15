@@ -4,16 +4,14 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, UrlSegment } from '@angular/router';
 import { Observable, of, throwError, zip } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
-import {
-	User,
-	UserService,
-	UserGetAllDto,
-	CategoryService,
-	CategoryGetAllDto,
-	Category,
-	ApiService
-} from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ApiService } from '../core/services/api.service';
+import { UserService } from '../core/services/user.service';
+import { CategoryService } from '../core/services/category.service';
+import { User } from '../core/models/user.model';
+import { Category } from '../core/models/category.model';
+import { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
+import { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
 
 @Injectable({
 	providedIn: 'root'

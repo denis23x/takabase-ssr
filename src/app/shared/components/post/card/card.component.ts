@@ -1,10 +1,10 @@
 /** @format */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { Post } from '../../../../core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
+import { Post } from '../../../../core/models/post.model';
 
 @Component({
 	standalone: true,

@@ -18,13 +18,6 @@ import {
 } from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
-import {
-	FileCreateDto,
-	FileGetOneDto,
-	FileService,
-	HelperService,
-	User
-} from '../../../core';
 import { Subscription } from 'rxjs';
 import {
 	AbstractControl,
@@ -36,6 +29,10 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { FileCreateDto } from '../../../core/dto/file/file-create.dto';
+import { HelperService } from '../../../core/services/helper.service';
+import { FileService } from '../../../core/services/file.service';
+import { FileGetOneDto } from '../../../core/dto/file/file-get-one.dto';
 
 interface ImageForm {
 	url: FormControl<string>;

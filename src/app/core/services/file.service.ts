@@ -2,8 +2,9 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService } from '../services';
-import { FileCreateDto, FileGetOneDto } from '../dto';
+import { ApiService } from './api.service';
+import { FileCreateDto } from '../dto/file/file-create.dto';
+import { FileGetOneDto } from '../dto/file/file-get-one.dto';
 
 @Injectable({
 	providedIn: 'root'

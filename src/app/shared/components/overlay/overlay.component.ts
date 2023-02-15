@@ -8,7 +8,7 @@ import {
 	OnInit,
 	Output
 } from '@angular/core';
-import { UiService } from '../../../core';
+import { UiService } from '../../../core/services/ui.service';
 
 @Component({
 	standalone: true,

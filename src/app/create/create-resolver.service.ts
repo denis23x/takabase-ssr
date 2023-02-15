@@ -5,17 +5,15 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { forkJoin, Observable, of, throwError } from 'rxjs';
 import { catchError, first, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import {
-	ApiService,
-	AuthService,
-	Category,
-	CategoryGetAllDto,
-	CategoryService,
-	Post,
-	PostGetOneDto,
-	PostService,
-	User
-} from '../core';
+import { ApiService } from '../core/services/api.service';
+import { AuthService } from '../core/services/auth.service';
+import { CategoryService } from '../core/services/category.service';
+import { PostService } from '../core/services/post.service';
+import { Category } from '../core/models/category.model';
+import { Post } from '../core/models/post.model';
+import { User } from '../core/models/user.model';
+import { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
+import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
 
 @Injectable({
 	providedIn: 'root'

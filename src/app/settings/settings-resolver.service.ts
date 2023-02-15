@@ -3,9 +3,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, switchMap, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthService, User, UserGetOneDto, UserService } from '../core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { UserService } from '../core/services/user.service';
+import { AuthService } from '../core/services/auth.service';
+import { User } from '../core/models/user.model';
+import { UserGetOneDto } from '../core/dto/user/user-get-one.dto';
 
 @Injectable({
 	providedIn: 'root'

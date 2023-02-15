@@ -1,7 +1,8 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { HelperService, MarkdownParser } from '../../core';
+import { HelperService } from './helper.service';
+import { MarkdownParser } from '../models/markdown.model';
 
 @Injectable({
 	providedIn: 'root'

@@ -4,17 +4,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
 import { map, skip, tap } from 'rxjs/operators';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import {
-	CategoryService,
-	Category,
-	CategoryGetAllDto,
-	MetaService,
-	MetaOpenGraph,
-	MetaTwitter
-} from '../../core';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
 import { UserUrlPipe } from '../../shared/pipes/user-url.pipe';
+import { Category } from '../../core/models/category.model';
+import { CategoryService } from '../../core/services/category.service';
+import { MetaService } from '../../core/services/meta.service';
+import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
+import { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto';
 
 @Component({
 	standalone: true,

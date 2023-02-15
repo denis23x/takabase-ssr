@@ -2,8 +2,10 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { HelperService, Snack, SnackbarService } from '../../../core';
 import { CommonModule } from '@angular/common';
+import { Snack } from '../../../core/models/snack.model';
+import { SnackbarService } from '../../../core/services/snackbar.service';
+import { HelperService } from '../../../core/services/helper.service';
 
 @Component({
 	standalone: true,

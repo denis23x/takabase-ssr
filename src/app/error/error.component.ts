@@ -4,8 +4,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { MetaOpenGraph, MetaService, MetaTwitter } from '../core';
 import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
+import { MetaService } from '../core/services/meta.service';
+import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 
 @Component({
 	standalone: true,

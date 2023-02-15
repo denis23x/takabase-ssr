@@ -2,10 +2,12 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { CategoryService, Category, CategoryGetAllDto } from '../../core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CategoryService } from '../../core/services/category.service';
+import { Category } from '../../core/models/category.model';
+import { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto';
 
 @Injectable({
 	providedIn: 'root'

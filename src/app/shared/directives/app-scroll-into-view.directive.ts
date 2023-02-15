@@ -1,7 +1,7 @@
 /** @format */
 
 import { Directive, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { PlatformService } from '../../core';
+import { PlatformService } from '../../core/services/platform.service';
 
 @Directive({
 	standalone: true,

@@ -2,7 +2,12 @@
 
 import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { Snack, SnackDuration, SnackOptions, SnackProgress } from '../models';
+import {
+	Snack,
+	SnackDuration,
+	SnackOptions,
+	SnackProgress
+} from '../models/snack.model';
 
 @Injectable({
 	providedIn: 'root'

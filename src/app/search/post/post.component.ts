@@ -3,18 +3,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import {
-	MetaOpenGraph,
-	MetaService,
-	MetaTwitter,
-	Post,
-	PostGetAllDto,
-	PostService
-} from '../../core';
 import { map, skip, tap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
 import { PostCardComponent } from '../../shared/components/post/card/card.component';
+import { Post } from '../../core/models/post.model';
+import { PostService } from '../../core/services/post.service';
+import { MetaService } from '../../core/services/meta.service';
+import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
+import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 
 @Component({
 	standalone: true,

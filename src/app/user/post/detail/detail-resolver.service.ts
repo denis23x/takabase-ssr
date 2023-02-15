@@ -3,16 +3,14 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
-import {
-	PostService,
-	Post,
-	PostGetOneDto,
-	User,
-	Category,
-	ApiService
-} from '../../../core';
 import { catchError, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ApiService } from '../../../core/services/api.service';
+import { PostService } from '../../../core/services/post.service';
+import { Post } from '../../../core/models/post.model';
+import { PostGetOneDto } from '../../../core/dto/post/post-get-one.dto';
+import { User } from '../../../core/models/user.model';
+import { Category } from '../../../core/models/category.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -43,8 +41,8 @@ export class UserPostDetailResolverService {
 
 		return this.postService.getOne(postId, postGetOneDto).pipe(
 			switchMap((post: Post) => {
-				const data: [User, Category[]] | undefined =
-					activatedRouteSnapshot.parent.parent.data.data;
+        // prettier-ignore
+				const data: [User, Category[]] | undefined = activatedRouteSnapshot.parent.parent.data.data;
 
 				if (!!data) {
 					// @ts-ignore

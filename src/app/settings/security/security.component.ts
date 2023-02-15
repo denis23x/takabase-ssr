@@ -2,14 +2,6 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import {
-	AuthService,
-	HelperService,
-	LogoutDto,
-	Session,
-	SnackbarService,
-	User
-} from '../../core';
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
 import { Subscription, throwError } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
@@ -18,6 +10,12 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
 import { DayjsPipe } from '../../shared/pipes/dayjs.pipe';
+import { Session } from '../../core/models/session.model';
+import { HelperService } from '../../core/services/helper.service';
+import { AuthService } from '../../core/services/auth.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
+import { User } from '../../core/models/user.model';
+import { LogoutDto } from '../../core/dto/auth/logout.dto';
 
 @Component({
 	standalone: true,

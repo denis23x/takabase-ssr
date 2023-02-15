@@ -2,15 +2,18 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService, SnackbarService, UserService } from '../services';
-import { Category, MetaOpenGraph, MetaTwitter, Post, User } from '../models';
-import {
-	PostCreateDto,
-	PostGetAllDto,
-	PostGetOneDto,
-	PostUpdateDto
-} from '../dto';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ApiService } from './api.service';
+import { SnackbarService } from './snackbar.service';
+import { UserService } from './user.service';
+import { PostGetAllDto } from '../dto/post/post-get-all.dto';
+import { User } from '../models/user.model';
+import { Category } from '../models/category.model';
+import { Post } from '../models/post.model';
+import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
+import { PostCreateDto } from '../dto/post/post-create.dto';
+import { PostGetOneDto } from '../dto/post/post-get-one.dto';
+import { PostUpdateDto } from '../dto/post/post-update.dto';
 
 @Injectable({
 	providedIn: 'root'

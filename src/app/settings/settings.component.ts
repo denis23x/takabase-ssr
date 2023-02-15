@@ -1,12 +1,12 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { User } from '../core';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
+import { User } from '../core/models/user.model';
 
 @Component({
 	standalone: true,

@@ -14,15 +14,6 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import {
-	AuthService,
-	User,
-	UserService,
-	HelperService,
-	SnackbarService,
-	UserUpdateDto,
-	FileCreateDto
-} from '../../core';
 import { map, startWith } from 'rxjs/operators';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -35,6 +26,13 @@ import { WindowComponent } from '../../shared/components/window/window.component
 import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
 import { DayjsPipe } from '../../shared/pipes/dayjs.pipe';
 import { UserUrlPipe } from '../../shared/pipes/user-url.pipe';
+import { User } from '../../core/models/user.model';
+import { HelperService } from '../../core/services/helper.service';
+import { UserService } from '../../core/services/user.service';
+import { AuthService } from '../../core/services/auth.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
+import { FileCreateDto } from '../../core/dto/file/file-create.dto';
+import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 
 interface ProfileForm {
 	name: FormControl<string>;

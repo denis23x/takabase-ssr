@@ -9,17 +9,15 @@ import {
 	Validators
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import {
-	AuthService,
-	UserCreateDto,
-	LoginDto,
-	HelperService,
-	User,
-	UserService
-} from '../../core';
 import { switchMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
+import { AuthService } from '../../core/services/auth.service';
+import { UserService } from '../../core/services/user.service';
+import { HelperService } from '../../core/services/helper.service';
+import { UserCreateDto } from '../../core/dto/user/user-create.dto';
+import { User } from '../../core/models/user.model';
+import { LoginDto } from '../../core/dto/auth/login.dto';
 
 interface RegistrationForm {
 	name: FormControl<string>;

@@ -4,17 +4,15 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, from, of, throwError } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import {
-	ApiService,
-	LoginDto,
-	LogoutDto,
-	User,
-	SnackbarService,
-	UiService,
-	CookieService
-} from '../index';
 import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { User } from '../models/user.model';
+import { ApiService } from './api.service';
+import { CookieService } from './cookie.service';
+import { SnackbarService } from './snackbar.service';
+import { UiService } from './ui.service';
+import { LoginDto } from '../dto/auth/login.dto';
+import { LogoutDto } from '../dto/auth/logout.dto';
 
 @Injectable({
 	providedIn: 'root'

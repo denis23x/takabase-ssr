@@ -5,8 +5,8 @@ import { Meta, MetaDefinition } from '@angular/platform-browser';
 import { filter, first, tap } from 'rxjs/operators';
 import { Event as RouterEvent, NavigationEnd, Router } from '@angular/router';
 import { PlatformService } from './platform.service';
-import { MetaOpenGraph, MetaTwitter } from '../models';
 import { DOCUMENT } from '@angular/common';
+import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
 
 @Injectable({
 	providedIn: 'root'

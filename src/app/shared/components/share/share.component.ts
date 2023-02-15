@@ -1,12 +1,14 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { PlatformService, Post, SnackbarService } from '../../../core';
 import { ActivatedRoute, Data, Params } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { Share } from '../../../core/models/share.model';
 import { Subscription } from 'rxjs';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { PlatformService } from '../../../core/services/platform.service';
+import { SnackbarService } from '../../../core/services/snackbar.service';
+import { Post } from '../../../core/models/post.model';
 
 @Component({
 	standalone: true,

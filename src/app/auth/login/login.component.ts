@@ -9,17 +9,15 @@ import {
 	Validators
 } from '@angular/forms';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import {
-	AuthService,
-	LoginDto,
-	HelperService,
-	User,
-	UserService
-} from '../../core';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
+import { AuthService } from '../../core/services/auth.service';
+import { HelperService } from '../../core/services/helper.service';
+import { UserService } from '../../core/services/user.service';
+import { LoginDto } from '../../core/dto/auth/login.dto';
+import { User } from '../../core/models/user.model';
 
 interface LoginForm {
 	email: FormControl<string>;

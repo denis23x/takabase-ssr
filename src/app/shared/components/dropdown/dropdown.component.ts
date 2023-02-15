@@ -14,7 +14,7 @@ import {
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { filter } from 'rxjs/operators';
-import { PlatformService } from '../../../core';
+import { PlatformService } from '../../../core/services/platform.service';
 
 @Component({
 	standalone: true,

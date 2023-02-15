@@ -10,10 +10,13 @@ import {
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AuthService, User, UserService, UserUpdateDto } from '../../core';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
+import { User } from '../../core/models/user.model';
+import { UserService } from '../../core/services/user.service';
+import { AuthService } from '../../core/services/auth.service';
+import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 
 interface AppearanceForm {
 	theme: FormControl<string>;

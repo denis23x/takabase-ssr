@@ -1,10 +1,12 @@
 /** @format */
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthService, TitleService, UiService } from './core';
 import { filter } from 'rxjs/operators';
 import { Event as RouterEvent, NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AuthService } from './core/services/auth.service';
+import { TitleService } from './core/services/title.service';
+import { UiService } from './core/services/ui.service';
 
 @Component({
 	selector: 'app-root',

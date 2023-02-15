@@ -9,8 +9,9 @@ import {
 	HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { AuthService, User } from '../../core';
 import { catchError, switchMap } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
+import { User } from '../models/user.model';
 
 @Injectable()
 export class HttpAuthInterceptor implements HttpInterceptor {

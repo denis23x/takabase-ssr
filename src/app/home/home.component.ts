@@ -1,10 +1,11 @@
 /** @format */
 
 import { Component, OnInit } from '@angular/core';
-import { MetaOpenGraph, MetaService, MetaTwitter } from '../core';
 import { RouterModule } from '@angular/router';
 import { EmojiModule } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
+import { MetaService } from '../core/services/meta.service';
+import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 
 @Component({
 	standalone: true,

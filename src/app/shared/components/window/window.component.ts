@@ -8,11 +8,12 @@ import {
 	OnInit,
 	Output
 } from '@angular/core';
-import { AuthService, User } from '../../../core';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { CommonModule } from '@angular/common';
+import { User } from '../../../core/models/user.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
 	standalone: true,

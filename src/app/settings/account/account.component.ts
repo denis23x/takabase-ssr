@@ -8,7 +8,6 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { User, HelperService } from '../../core';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -16,6 +15,8 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
 import { OverlayComponent } from '../../shared/components/overlay/overlay.component';
 import { WindowComponent } from '../../shared/components/window/window.component';
+import { User } from '../../core/models/user.model';
+import { HelperService } from '../../core/services/helper.service';
 
 interface EmailForm {
 	email: FormControl<string>;

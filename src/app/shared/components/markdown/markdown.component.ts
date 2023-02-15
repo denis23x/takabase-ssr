@@ -11,13 +11,6 @@ import {
 	ViewChild
 } from '@angular/core';
 import {
-	MarkdownControl,
-	MarkdownService,
-	HelperService,
-	PlatformService,
-	MarkdownTextarea
-} from '../../../core';
-import {
 	MarkdownControlHeading,
 	MarkdownControlFormatting,
 	MarkdownControlList,
@@ -43,6 +36,13 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
+import {
+	MarkdownControl,
+	MarkdownTextarea
+} from '../../../core/models/markdown.model';
+import { MarkdownService } from '../../../core/services/markdown.service';
+import { PlatformService } from '../../../core/services/platform.service';
+import { HelperService } from '../../../core/services/helper.service';
 
 interface UrlForm {
 	title?: FormControl<string>;

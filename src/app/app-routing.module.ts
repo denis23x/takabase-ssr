@@ -7,7 +7,6 @@ import {
 	Routes,
 	UrlSegment
 } from '@angular/router';
-import { CanMatchPrivateGuard, CanMatchPublicGuard } from './core';
 import { SettingsResolverService } from './settings/settings-resolver.service';
 import { CreateResolverService } from './create/create-resolver.service';
 import { SearchPostResolverService } from './search/post/post-resolver.service';
@@ -17,6 +16,8 @@ import { SearchUserResolverService } from './search/user/user-resolver.service';
 import { UserResolverService } from './user/user-resolver.service';
 import { UserPostResolverService } from './user/post/post-resolver.service';
 import { UserPostDetailResolverService } from './user/post/detail/detail-resolver.service';
+import { CanMatchPublicGuard } from './core/guards/public-guard.service';
+import { CanMatchPrivateGuard } from './core/guards/private-guard.service';
 
 const routes: Routes = [
 	{

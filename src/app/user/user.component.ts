@@ -11,22 +11,6 @@ import {
 	RouterModule
 } from '@angular/router';
 import { EMPTY, of, Subscription } from 'rxjs';
-import {
-	Post,
-	User,
-	AuthService,
-	TitleService,
-	HelperService,
-	Category,
-	CategoryDeleteDto,
-	CategoryUpdateDto,
-	CategoryService,
-	SnackbarService,
-	UserService,
-	MetaService,
-	MetaOpenGraph,
-	MetaTwitter
-} from '../core';
 import { filter, map, startWith, switchMap } from 'rxjs/operators';
 import {
 	AbstractControl,
@@ -44,6 +28,19 @@ import { OverlayComponent } from '../shared/components/overlay/overlay.component
 import { WindowComponent } from '../shared/components/window/window.component';
 import { AppInputTrimWhitespaceDirective } from '../shared/directives/app-input-trim-whitespace.directive';
 import { DayjsPipe } from '../shared/pipes/dayjs.pipe';
+import { User } from '../core/models/user.model';
+import { Post } from '../core/models/post.model';
+import { Category } from '../core/models/category.model';
+import { HelperService } from '../core/services/helper.service';
+import { AuthService } from '../core/services/auth.service';
+import { CategoryService } from '../core/services/category.service';
+import { SnackbarService } from '../core/services/snackbar.service';
+import { TitleService } from '../core/services/title.service';
+import { UserService } from '../core/services/user.service';
+import { MetaService } from '../core/services/meta.service';
+import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
+import { CategoryUpdateDto } from '../core/dto/category/category-update.dto';
+import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
 
 interface CategoryEditForm {
 	name: FormControl<string>;

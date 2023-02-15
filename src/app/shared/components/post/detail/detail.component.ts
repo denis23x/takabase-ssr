@@ -1,7 +1,6 @@
 /** @format */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { AuthService, Post, User } from '../../../../core';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -9,6 +8,9 @@ import { AvatarComponent } from '../../avatar/avatar.component';
 import { MarkdownPipe } from '../../../pipes/markdown.pipe';
 import { UserUrlPipe } from '../../../pipes/user-url.pipe';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
+import { Post } from '../../../../core/models/post.model';
+import { User } from '../../../../core/models/user.model';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
 	standalone: true,

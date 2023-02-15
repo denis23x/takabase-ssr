@@ -1,13 +1,6 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-	MetaOpenGraph,
-	MetaService,
-	MetaTwitter,
-	Post,
-	PostService
-} from '../../../core';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Data, Router } from '@angular/router';
@@ -15,6 +8,10 @@ import { OverlayComponent } from '../../../shared/components/overlay/overlay.com
 import { WindowComponent } from '../../../shared/components/window/window.component';
 import { ShareComponent } from '../../../shared/components/share/share.component';
 import { PostDetailComponent } from '../../../shared/components/post/detail/detail.component';
+import { Post } from '../../../core/models/post.model';
+import { MetaService } from '../../../core/services/meta.service';
+import { PostService } from '../../../core/services/post.service';
+import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 
 @Component({
 	standalone: true,

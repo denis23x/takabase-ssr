@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { CanMatch } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from '../services';
+import { AuthService } from '../services/auth.service';
 
 @Injectable({
 	providedIn: 'root'

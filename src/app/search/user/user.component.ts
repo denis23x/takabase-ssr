@@ -4,19 +4,16 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
 import { map, skip, tap } from 'rxjs/operators';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import {
-	User,
-	UserService,
-	UserGetAllDto,
-	MetaService,
-	MetaOpenGraph,
-	MetaTwitter
-} from '../../core';
 import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
 import { UserUrlPipe } from '../../shared/pipes/user-url.pipe';
 import { DayjsPipe } from '../../shared/pipes/dayjs.pipe';
+import { User } from '../../core/models/user.model';
+import { UserService } from '../../core/services/user.service';
+import { MetaService } from '../../core/services/meta.service';
+import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
+import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 
 @Component({
 	standalone: true,

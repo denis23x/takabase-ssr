@@ -1,7 +1,8 @@
 /** @format */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { User, UserService } from '../../core';
+import { UserService } from '../../core/services/user.service';
+import { User } from '../../core/models/user.model';
 
 @Pipe({
 	standalone: true,
