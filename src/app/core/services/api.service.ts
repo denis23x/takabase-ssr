@@ -58,7 +58,7 @@ export class ApiService {
 	setErrorRedirect(httpErrorResponse: Partial<HttpErrorResponse>): Observable<any> {
 		return from(
 			this.router
-				.navigate(['/exception', httpErrorResponse.status])
+				.navigate(['/error', httpErrorResponse.status])
 				.then(() => this.setError(httpErrorResponse as HttpErrorResponse))
 		);
 	}

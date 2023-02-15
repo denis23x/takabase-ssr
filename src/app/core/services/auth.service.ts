@@ -51,7 +51,7 @@ export class AuthService {
 					return of(true);
 				}
 
-				this.router.navigate(['/exception', 403]).then(() => {
+				this.router.navigate(['/error', 403]).then(() => {
 					this.snackbarService.warning('Forbidden', 'Access denied');
 				});
 
@@ -67,7 +67,7 @@ export class AuthService {
 					return of(true);
 				}
 
-				this.router.navigate(['/exception', 401]).then(() => {
+				this.router.navigate(['/error', 401]).then(() => {
 					this.snackbarService.warning('Unauthorized', 'Login to continue');
 				});
 
@@ -75,7 +75,7 @@ export class AuthService {
 			}),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				this.router
-					.navigate(['/exception', 401])
+					.navigate(['/error', 401])
 					.then(() => console.debug('Route changed'));
 
 				return throwError(() => httpErrorResponse);

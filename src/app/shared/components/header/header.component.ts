@@ -2,10 +2,8 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { Subscription, throwError } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AuthService, User } from '../../../core';
-import { catchError } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { AppAuthenticatedDirective } from '../../directives';
 import { UserUrlPipe } from '../../pipes';
@@ -40,27 +38,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[this.authUser$].forEach($ => $?.unsubscribe());
-	}
-
-	onLogout(): void {
-		this.authService
-			.onLogout()
-			.pipe(
-				catchError((httpErrorResponse: HttpErrorResponse) => {
-					this.router
-						.navigate(['/exception', httpErrorResponse.status])
-						.then(() => console.debug('Route changed'));
-
-					return throwError(() => httpErrorResponse);
-				})
-			)
-			.subscribe({
-				next: () => {
-					this.router
-						.navigateByUrl('/')
-						.then(() => console.debug('Route changed'));
-				},
-				error: (error: any) => console.error(error)
-			});
 	}
 }

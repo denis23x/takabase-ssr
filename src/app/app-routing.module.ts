@@ -274,16 +274,16 @@ const routes: Routes = [
 		]
 	},
 	{
-		path: 'exception/:status',
+		path: 'error/:status',
 		loadComponent: () => {
 			// prettier-ignore
-			return import('./exception/exception.component').then(m => m.ExceptionComponent);
+			return import('./error/error.component').then(m => m.ErrorComponent);
 		}
 	},
 	{
 		path: '**',
 		pathMatch: 'full',
-		redirectTo: '/exception/404'
+		redirectTo: '/error/404'
 	}
 ];
 

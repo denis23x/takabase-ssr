@@ -5,13 +5,14 @@ import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MetaOpenGraph, MetaService, MetaTwitter } from '../core';
+import { SvgIconComponent } from '../shared';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule],
-	templateUrl: './exception.component.html'
+	imports: [RouterModule, SvgIconComponent],
+	templateUrl: './error.component.html'
 })
-export class ExceptionComponent implements OnInit, OnDestroy {
+export class ErrorComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 
 	statusCode: number | undefined;

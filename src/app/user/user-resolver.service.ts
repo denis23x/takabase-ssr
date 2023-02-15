@@ -61,7 +61,7 @@ export class UserResolverService {
 			}),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				this.router
-					.navigate(['/exception', httpErrorResponse.status])
+					.navigate(['/error', httpErrorResponse.status])
 					.then(() => console.debug('Route changed'));
 
 				return throwError(() => httpErrorResponse);

@@ -5,32 +5,17 @@
 		class="navbar rounded-box border border-base-content/20 bg-base-100 shadow-xl"
 	>
 		<div class="navbar-start">
-			<div class="dropdown">
-				<label class="btn btn-ghost btn-circle" tabindex="0">
-					<button
-						class="block fill-current p-2"
-						type="button"
-						aria-label="Menu"
-						appSvgIcon
-						[appIcon]="'three-dots-vertical'"
-						[appSquare]="'1.5em'"
-					></button>
-				</label>
-				<ul
-					class="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
-					tabindex="0"
-				>
-					<li><a>Homepage</a></li>
-					<li><a>Portfolio</a></li>
-					<li><a>About</a></li>
-					<li
-						class="block w-full cursor-pointer whitespace-nowrap py-2 px-4"
-						(click)="onLogout()"
-					>
-						Logout
-					</li>
-				</ul>
-			</div>
+			<a
+				class="btn btn-ghost btn-circle fill-current"
+				title="Bug"
+				aria-label="Bug"
+				appSvgIcon
+				[routerLink]="['/']"
+				[appIcon]="'bug'"
+				[appSquare]="'1.5em'"
+				[appViewBox]="'0 0 16 16'"
+			>
+			</a>
 		</div>
 		<div class="navbar-center">
 			<a
