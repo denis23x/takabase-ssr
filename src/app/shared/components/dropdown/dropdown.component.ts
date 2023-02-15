@@ -5,6 +5,7 @@ import {
 	ElementRef,
 	EventEmitter,
 	Inject,
+	Input,
 	OnDestroy,
 	OnInit,
 	Output,
@@ -27,6 +28,11 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
 	@Output() toggled: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+	@Input()
+	set appCloseOnContentClick(dropdownStateCloseOnContentClick: boolean) {
+		this.dropdownStateCloseOnContentClick = dropdownStateCloseOnContentClick;
+	}
+
 	windowClick$: Subscription | undefined;
 	windowAction$: Subscription | undefined;
 
@@ -34,6 +40,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 	dropdownStateStyle: Object = {
 		display: 'none'
 	};
+	dropdownStateCloseOnContentClick: boolean = true;
 
 	constructor(
 		@Inject(DOCUMENT)
@@ -60,7 +67,9 @@ export class DropdownComponent implements OnInit, OnDestroy {
 					this.setStateStyle(!this.dropdownState);
 				} else if (!!this.dropdownState) {
 					if (content) {
-						this.setStateStyle(false);
+						if (this.dropdownStateCloseOnContentClick) {
+							this.setStateStyle(false);
+						}
 					} else if (!target && !content) {
 						this.setStateStyle(false);
 					}

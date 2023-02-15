@@ -134,7 +134,14 @@
 				></button>
 			</li>
 			<li class="inline-block">
-				<div class="flex p-0" appDropdown #dropdownEmojiMart>
+				<div
+					class="flex p-0"
+					appDropdown
+					#dropdownEmojiMart
+					*ngIf="{ value: false } as toggle"
+					[appCloseOnContentClick]="false"
+					(toggled)="toggle.value = $event"
+				>
 					<button
 						class="fill-current p-3.5"
 						type="button"
@@ -144,16 +151,18 @@
 						[attr.title]="controlListEmojiMart.label"
 						[appIcon]="controlListEmojiMart.icon"
 					></button>
-					<div
-						class="menu rounded-box mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
-						slot="content"
-					>
+					<div class="menu mt-2 min-w-fit shadow" slot="content">
 						<emoji-mart
+							class="flex"
+							*ngIf="toggle.value"
+							[exclude]="['flags']"
 							[emojiSize]="24"
+							[perLine]="8"
+							[totalFrequentLines]="2"
+							[isNative]="true"
+							[sheetSize]="32"
 							[showPreview]="false"
 							[emojiTooltip]="true"
-							[virtualize]="false"
-							[isNative]="true"
 							(emojiClick)="onMarkdownControlEmoji($event)"
 						></emoji-mart>
 					</div>

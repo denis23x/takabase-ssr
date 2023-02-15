@@ -1,1 +1,65 @@
 @import '@ctrl/ngx-emoji-mart/picker';
+
+.emoji-mart {
+  font-family: inherit;
+
+  @apply text-base-content rounded-xl border border-base-content/20 bg-base-100 overflow-hidden;
+}
+
+.emoji-mart-bar {
+  @apply border-base-content/20;
+}
+
+.emoji-mart-anchors {
+  @apply px-2;
+}
+
+.emoji-mart-anchor {
+  @apply text-base-content flex items-center justify-center;
+}
+
+.emoji-mart-anchor:hover,
+.emoji-mart-anchor:focus,
+.emoji-mart-anchor-selected {
+  @apply text-primary bg-base-content/10 #{!important};
+}
+
+.emoji-mart-anchor-selected .emoji-mart-anchor-bar {
+  @apply bg-primary #{!important};
+}
+
+.emoji-mart-search {
+  @apply mt-2 px-2;
+}
+
+.emoji-mart-search input {
+  @apply border-base-content/20 rounded-btn h-12 px-4 font-normal bg-base-100;
+}
+
+.emoji-mart-search-icon {
+  @apply hidden;
+}
+
+.emoji-mart-category {
+  @apply pl-2 pr-1;
+}
+
+.emoji-mart-category .emoji-mart-emoji:hover:before {
+  @apply bg-base-content/10;
+}
+
+.emoji-mart-category-label span {
+  @apply bg-base-100 px-1.5 py-2 text-sm border-b border-base-content/20 mb-2;
+}
+
+.emoji-mart-no-results {
+  @apply text-base-content;
+}
+
+.emoji-mart-emoji.emoji-mart-emoji-native span {
+  @apply flex items-center justify-center #{!important};
+}
+
+.emoji-mart-scroll {
+  @apply px-0 #{!important};
+}
