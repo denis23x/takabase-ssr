@@ -39,12 +39,10 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { OverlayComponent } from '../overlay/overlay.component';
 import { WindowComponent } from '../window/window.component';
-import {
-	AppInputOnlyPasteDirective,
-	AppInputTrimWhitespaceDirective
-} from '../../directives';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
+import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
+import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
 
 interface UrlForm {
 	title?: FormControl<string>;

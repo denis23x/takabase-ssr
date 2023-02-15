@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { AppScrollIntoViewDirective } from '../shared';
+import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
 
 @Component({
 	standalone: true,

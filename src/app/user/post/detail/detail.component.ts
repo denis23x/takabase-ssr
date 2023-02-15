@@ -11,12 +11,10 @@ import {
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Data, Router } from '@angular/router';
-import {
-	OverlayComponent,
-	PostDetailComponent,
-	ShareComponent,
-	WindowComponent
-} from '../../../shared';
+import { OverlayComponent } from '../../../shared/components/overlay/overlay.component';
+import { WindowComponent } from '../../../shared/components/window/window.component';
+import { ShareComponent } from '../../../shared/components/share/share.component';
+import { PostDetailComponent } from '../../../shared/components/post/detail/detail.component';
 
 @Component({
 	standalone: true,

@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MetaOpenGraph, MetaService, MetaTwitter } from '../core';
-import { SvgIconComponent } from '../shared';
+import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
 
 @Component({
 	standalone: true,

@@ -27,16 +27,14 @@ import { map, startWith } from 'rxjs/operators';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import {
-	AppInputTrimWhitespaceDirective,
-	AvatarComponent,
-	CropperComponent,
-	DayjsPipe,
-	OverlayComponent,
-	SvgIconComponent,
-	UserUrlPipe,
-	WindowComponent
-} from '../../shared';
+import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
+import { OverlayComponent } from '../../shared/components/overlay/overlay.component';
+import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
+import { CropperComponent } from '../../shared/components/cropper/cropper.component';
+import { WindowComponent } from '../../shared/components/window/window.component';
+import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
+import { DayjsPipe } from '../../shared/pipes/dayjs.pipe';
+import { UserUrlPipe } from '../../shared/pipes/user-url.pipe';
 
 interface ProfileForm {
 	name: FormControl<string>;

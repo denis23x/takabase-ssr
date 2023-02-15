@@ -6,7 +6,8 @@ import { Subscription } from 'rxjs';
 import { Post, PostGetAllDto, PostService } from '../../core';
 import { map, skip, tap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
-import { PostCardComponent, SvgIconComponent } from '../../shared';
+import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
+import { PostCardComponent } from '../../shared/components/post/card/card.component';
 
 @Component({
 	standalone: true,

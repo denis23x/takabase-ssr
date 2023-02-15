@@ -13,12 +13,10 @@ import {
 	MetaTwitter
 } from '../../core';
 import { CommonModule } from '@angular/common';
-import {
-	AvatarComponent,
-	DayjsPipe,
-	SvgIconComponent,
-	UserUrlPipe
-} from '../../shared';
+import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
+import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
+import { UserUrlPipe } from '../../shared/pipes/user-url.pipe';
+import { DayjsPipe } from '../../shared/pipes/dayjs.pipe';
 
 @Component({
 	standalone: true,

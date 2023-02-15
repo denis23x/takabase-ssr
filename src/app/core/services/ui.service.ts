@@ -38,7 +38,7 @@ export class UiService {
 		if (!!toggle) {
 			// this.document.querySelector('[data-loader]').remove();
 		} else {
-			this.document.querySelector('[data-loader]').remove();
+			this.document.querySelector('[data-loader]')?.remove();
 		}
 	}
 

@@ -18,8 +18,8 @@ import {
 } from '../../core';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { SvgIconComponent } from '../../shared';
 import { CommonModule } from '@angular/common';
+import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
 
 interface LoginForm {
 	email: FormControl<string>;

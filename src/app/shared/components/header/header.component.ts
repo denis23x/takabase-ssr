@@ -5,10 +5,10 @@ import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService, User } from '../../../core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { AppAuthenticatedDirective } from '../../directives';
-import { UserUrlPipe } from '../../pipes';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { CommonModule } from '@angular/common';
+import { AppAuthenticatedDirective } from '../../directives/app-authenticated.directive';
+import { UserUrlPipe } from '../../pipes/user-url.pipe';
 
 @Component({
 	standalone: true,

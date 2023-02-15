@@ -18,8 +18,8 @@ import {
 	UserService
 } from '../../core';
 import { switchMap } from 'rxjs/operators';
-import { SvgIconComponent } from '../../shared';
 import { CommonModule } from '@angular/common';
+import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
 
 interface RegistrationForm {
 	name: FormControl<string>;

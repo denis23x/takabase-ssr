@@ -13,7 +13,7 @@ import { map } from 'rxjs/operators';
 import { AuthService, User, UserService, UserUpdateDto } from '../../core';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { DropdownComponent } from '../../shared';
+import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
 
 interface AppearanceForm {
 	theme: FormControl<string>;

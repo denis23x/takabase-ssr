@@ -6,7 +6,9 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../../avatar/avatar.component';
-import { DayjsPipe, MarkdownPipe, UserUrlPipe } from '../../../pipes';
+import { MarkdownPipe } from '../../../pipes/markdown.pipe';
+import { UserUrlPipe } from '../../../pipes/user-url.pipe';
+import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 
 @Component({
 	standalone: true,

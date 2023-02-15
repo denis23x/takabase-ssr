@@ -16,7 +16,8 @@ import { FormBuilder } from '@angular/forms';
 import { UAParser } from 'ua-parser-js';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { DayjsPipe, SvgIconComponent } from '../../shared';
+import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
+import { DayjsPipe } from '../../shared/pipes/dayjs.pipe';
 
 @Component({
 	standalone: true,

@@ -36,16 +36,14 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import {
-	AppInputTrimWhitespaceDirective,
-	AppScrollIntoViewDirective,
-	AvatarComponent,
-	DayjsPipe,
-	OverlayComponent,
-	SvgIconComponent,
-	WindowComponent
-} from '../shared';
 import { CommonModule } from '@angular/common';
+import { AvatarComponent } from '../shared/components/avatar/avatar.component';
+import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
+import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
+import { OverlayComponent } from '../shared/components/overlay/overlay.component';
+import { WindowComponent } from '../shared/components/window/window.component';
+import { AppInputTrimWhitespaceDirective } from '../shared/directives/app-input-trim-whitespace.directive';
+import { DayjsPipe } from '../shared/pipes/dayjs.pipe';
 
 interface CategoryEditForm {
 	name: FormControl<string>;

@@ -13,11 +13,9 @@ import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import {
-	OverlayComponent,
-	SvgIconComponent,
-	WindowComponent
-} from '../../shared';
+import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
+import { OverlayComponent } from '../../shared/components/overlay/overlay.component';
+import { WindowComponent } from '../../shared/components/window/window.component';
 
 interface EmailForm {
 	email: FormControl<string>;

@@ -13,7 +13,8 @@ import {
 	MetaTwitter
 } from '../../core';
 import { CommonModule } from '@angular/common';
-import { SvgIconComponent, UserUrlPipe } from '../../shared';
+import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
+import { UserUrlPipe } from '../../shared/pipes/user-url.pipe';
 
 @Component({
 	standalone: true,

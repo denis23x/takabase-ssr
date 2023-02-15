@@ -28,17 +28,15 @@ import {
 	Validators
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import {
-	AppInputTrimWhitespaceDirective,
-	CropperComponent,
-	DropdownComponent,
-	MarkdownComponent,
-	OverlayComponent,
-	PostDetailComponent,
-	ShareComponent,
-	SvgIconComponent,
-	WindowComponent
-} from '../shared';
+import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
+import { AppInputTrimWhitespaceDirective } from '../shared/directives/app-input-trim-whitespace.directive';
+import { DropdownComponent } from '../shared/components/dropdown/dropdown.component';
+import { OverlayComponent } from '../shared/components/overlay/overlay.component';
+import { WindowComponent } from '../shared/components/window/window.component';
+import { CropperComponent } from '../shared/components/cropper/cropper.component';
+import { ShareComponent } from '../shared/components/share/share.component';
+import { MarkdownComponent } from '../shared/components/markdown/markdown.component';
+import { PostDetailComponent } from '../shared/components/post/detail/detail.component';
 
 interface PostForm {
 	name: FormControl<string>;

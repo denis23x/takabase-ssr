@@ -12,11 +12,9 @@ import {
 import { debounceTime, filter, map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import {
-	AppInputTrimWhitespaceDirective,
-	AppScrollIntoViewDirective,
-	SvgIconComponent
-} from '../shared';
+import { AppInputTrimWhitespaceDirective } from '../shared/directives/app-input-trim-whitespace.directive';
+import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
+import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
 
 interface SearchForm {
 	query: FormControl<string>;

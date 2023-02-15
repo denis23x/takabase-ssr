@@ -4,11 +4,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HeaderComponent, SnackbarComponent } from './shared';
 import { HttpAuthInterceptor } from './core';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HeaderComponent } from './shared/components/header/header.component';
+import { SnackbarComponent } from './shared/components/snackbar/snackbar.component';
 
 @NgModule({
 	declarations: [AppComponent],

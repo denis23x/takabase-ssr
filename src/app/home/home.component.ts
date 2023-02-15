@@ -2,9 +2,9 @@
 
 import { Component, OnInit } from '@angular/core';
 import { MetaOpenGraph, MetaService, MetaTwitter } from '../core';
-import { SvgIconComponent } from '../shared';
 import { RouterModule } from '@angular/router';
 import { EmojiModule } from '@ctrl/ngx-emoji-mart/ngx-emoji';
+import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
 
 @Component({
 	standalone: true,

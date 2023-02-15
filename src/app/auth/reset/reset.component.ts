@@ -9,9 +9,9 @@ import {
 	Validators
 } from '@angular/forms';
 import { HelperService } from '../../core';
-import { SvgIconComponent } from '../../shared';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
 
 interface ResetForm {
 	email: FormControl<string>;

@@ -3,7 +3,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { toSvg } from 'jdenticon';
 import { User } from '../../../core';
-import { SanitizerPipe } from '../../pipes';
+import { SanitizerPipe } from '../../pipes/sanitizer.pipe';
 
 @Component({
 	standalone: true,

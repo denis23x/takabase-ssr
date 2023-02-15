@@ -25,6 +25,7 @@
               "incremental-dom",
               "prismjs",
               "dompurify",
+              "markdown-it-emoji",
               "markdown-it-incremental-dom",
               "markdown-it-link-attributes"
             ],
