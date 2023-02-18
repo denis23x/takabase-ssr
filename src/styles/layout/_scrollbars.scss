@@ -6,7 +6,7 @@
     scrollbar-color: $color-thumb $color-track;
 
     &::-webkit-scrollbar {
-      @apply w-1.5 h-1.5 cursor-default;
+      @apply w-2 h-2 cursor-default;
     }
 
     &::-webkit-scrollbar-track {

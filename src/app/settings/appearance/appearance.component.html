@@ -35,25 +35,30 @@
 								[class.input-error]="theme.touched && theme.invalid"
 								[class.input-disabled]="appearanceIsSubmitted"
 							/>
-							<ul
-								class="menu rounded-box mt-2 max-h-64 flex-nowrap overflow-y-auto border border-base-content/20 bg-base-100 p-2 shadow"
+							<div
+								class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
 								slot="content"
 							>
-								<li
-									class="flex w-full"
-									*ngFor="let themeValue of appearanceThemeList"
+								<ul
+									class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
 								>
-									<button
-										class="block w-full truncate text-left"
-										type="button"
-										[class.active]="theme.value === themeValue"
-										[attr.aria-label]="themeValue"
-										(click)="onChangeTheme(themeValue)"
+									<li
+										class="flex w-full"
+										*ngFor="let themeValue of appearanceThemeList"
 									>
-										{{ themeValue }}
-									</button>
-								</li>
-							</ul>
+										<!-- prettier-ignore -->
+										<button
+                      class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+											type="button"
+                      [ngClass]="{ 'bg-success text-success-content': theme.value === themeValue }"
+											[attr.aria-label]="themeValue"
+											(click)="onChangeTheme(themeValue)"
+										>
+											{{ themeValue }}
+										</button>
+									</li>
+								</ul>
+							</div>
 						</div>
 					</fieldset>
 					<fieldset
@@ -85,25 +90,30 @@
 								[class.input-error]="background.touched && background.invalid"
 								[class.input-disabled]="appearanceIsSubmitted"
 							/>
-							<ul
-								class="menu rounded-box mt-2 max-h-64 flex-nowrap overflow-y-auto border border-base-content/20 bg-base-100 p-2 shadow"
+							<div
+								class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
 								slot="content"
 							>
-								<li
-									class="flex w-full overflow-hidden"
-									*ngFor="let backgroundValue of appearanceBackgroundList"
+								<ul
+									class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
 								>
-									<button
-										class="block w-full truncate text-left"
-										type="button"
-										[class.active]="background.value === backgroundValue"
-										[attr.aria-label]="backgroundValue"
-										(click)="onChangeBackground(backgroundValue)"
+									<li
+										class="flex w-full overflow-hidden"
+										*ngFor="let backgroundValue of appearanceBackgroundList"
 									>
-										{{ backgroundValue }}
-									</button>
-								</li>
-							</ul>
+										<!-- prettier-ignore -->
+										<button
+                      class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+											type="button"
+                      [ngClass]="{ 'bg-success text-success-content': background.value === backgroundValue }"
+											[attr.aria-label]="backgroundValue"
+											(click)="onChangeBackground(backgroundValue)"
+										>
+											{{ backgroundValue }}
+										</button>
+									</li>
+								</ul>
+							</div>
 						</div>
 					</fieldset>
 				</div>
@@ -131,25 +141,30 @@
 								[class.input-error]="language.touched && language.invalid"
 								[class.input-disabled]="appearanceIsSubmitted"
 							/>
-							<ul
-								class="menu rounded-box mt-2 max-h-64 flex-nowrap overflow-y-auto border border-base-content/20 bg-base-100 p-2 shadow"
+							<div
+								class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
 								slot="content"
 							>
-								<li
-									class="flex w-full overflow-hidden"
-									*ngFor="let languageValue of appearanceLanguageList"
+								<ul
+									class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
 								>
-									<button
-										class="block w-full truncate text-left"
-										type="button"
-										[class.active]="language.value === languageValue"
-										[attr.aria-label]="languageValue"
-										(click)="onChangeLanguage(languageValue)"
+									<li
+										class="flex w-full overflow-hidden"
+										*ngFor="let languageValue of appearanceLanguageList"
 									>
-										{{ languageValue }}
-									</button>
-								</li>
-							</ul>
+										<!-- prettier-ignore -->
+										<button
+                      class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+											type="button"
+                      [ngClass]="{ 'bg-success text-success-content': language.value === languageValue }"
+											[attr.aria-label]="languageValue"
+											(click)="onChangeLanguage(languageValue)"
+										>
+											{{ languageValue }}
+										</button>
+									</li>
+								</ul>
+							</div>
 						</div>
 					</fieldset>
 				</div>

@@ -146,23 +146,30 @@
                   [class.input-error]="categoryName.touched && categoryName.invalid"
                   [class.input-disabled]="postFormIsSubmitted"
                 />
-								<ul
-									class="menu rounded-box mt-2 max-h-64 flex-nowrap overflow-y-auto border border-base-content/20 bg-base-100 p-2 shadow"
+								<div
+									class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
 									slot="content"
-									[class.hidden]="!categoryList.length"
 								>
-									<li class="flex w-full" *ngFor="let category of categoryList">
-										<button
-											class="block w-full truncate text-left"
-											type="button"
-											[class.active]="categoryName.value === category.name"
-											[attr.aria-label]="category.name"
-											(click)="onSelectCategory(category)"
+									<ul
+										class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
+									>
+										<li
+											class="flex w-full"
+											*ngFor="let category of categoryList"
 										>
-											{{ category.name }}
-										</button>
-									</li>
-								</ul>
+											<!-- prettier-ignore -->
+											<button
+												class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+												type="button"
+												[ngClass]="{ 'bg-success text-success-content': categoryName.value === category.name }"
+												[attr.aria-label]="category.name"
+												(click)="onSelectCategory(category)"
+											>
+												{{ category.name }}
+											</button>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</fieldset>
 						<button
@@ -468,6 +475,7 @@
 					type="button"
 					title="Delete"
 					aria-label="Delete"
+					*ngIf="!!post"
 					[class.btn-outline]="!postFormIsSubmitted"
 					[disabled]="postFormIsSubmitted"
 				>

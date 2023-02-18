@@ -17,7 +17,7 @@
 				[class.disabled]="disabled.value"
 			>
 				<button
-					class="fill-current p-3.5"
+					class="fill-current p-3.5 active:bg-error active:text-error-content"
 					type="button"
 					title="Undo"
 					aria-label="Undo"
@@ -28,7 +28,14 @@
 				></button>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
-				<div class="flex p-0" appDropdown #dropdownHeading>
+				<div
+					class="flex p-0 active:bg-base-content/10 active:text-base-content"
+					appDropdown
+					#dropdownHeading
+					*ngIf="{ value: false } as toggle"
+					[ngClass]="{ 'bg-base-content/10 text-base-content': toggle.value }"
+					(toggled)="toggle.value = $event"
+				>
 					<button
 						class="fill-current p-3.5"
 						type="button"
@@ -39,12 +46,12 @@
 						[appIcon]="'type-h1'"
 					></button>
 					<ul
-						class="menu rounded-box mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
+						class="menu rounded-btn mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
 						slot="content"
 					>
 						<li class="flex w-full" *ngFor="let control of controlListHeading">
 							<button
-								class="w-full whitespace-nowrap text-base-content active:text-primary-content"
+								class="w-full whitespace-nowrap text-base-content active:bg-success active:text-success-content"
 								type="button"
 								[attr.aria-label]="control.label"
 								(click)="onMarkdownControl(control)"
@@ -58,7 +65,14 @@
 				</div>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
-				<div class="flex p-0" appDropdown #dropdownFormatting>
+				<div
+					class="flex p-0 active:bg-base-content/10 active:text-base-content"
+					appDropdown
+					#dropdownFormatting
+					*ngIf="{ value: false } as toggle"
+					[ngClass]="{ 'bg-base-content/10 text-base-content': toggle.value }"
+					(toggled)="toggle.value = $event"
+				>
 					<button
 						class="fill-current p-3.5"
 						type="button"
@@ -69,7 +83,7 @@
 						[appIcon]="'type-bold'"
 					></button>
 					<ul
-						class="menu rounded-box mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
+						class="menu rounded-btn mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
 						slot="content"
 					>
 						<li
@@ -77,7 +91,7 @@
 							*ngFor="let control of controlListFormatting"
 						>
 							<button
-								class="w-full whitespace-nowrap text-base-content active:text-primary-content"
+								class="w-full whitespace-nowrap text-base-content active:bg-success active:text-success-content"
 								type="button"
 								[attr.aria-label]="control.label"
 								(click)="onMarkdownControl(control)"
@@ -91,7 +105,14 @@
 				</div>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
-				<div class="flex p-0" appDropdown #dropdownList>
+				<div
+					class="flex p-0 active:bg-base-content/10 active:text-base-content"
+					appDropdown
+					#dropdownList
+					*ngIf="{ value: false } as toggle"
+					[ngClass]="{ 'bg-base-content/10 text-base-content': toggle.value }"
+					(toggled)="toggle.value = $event"
+				>
 					<button
 						class="fill-current p-3.5"
 						type="button"
@@ -102,12 +123,12 @@
 						[appIcon]="'list-ul'"
 					></button>
 					<ul
-						class="menu rounded-box mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
+						class="menu rounded-btn mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
 						slot="content"
 					>
 						<li class="flex w-full" *ngFor="let control of controlListList">
 							<button
-								class="w-full whitespace-nowrap text-base-content active:text-primary-content"
+								class="w-full whitespace-nowrap text-base-content active:bg-success active:text-success-content"
 								type="button"
 								[attr.aria-label]="control.label"
 								[attr.title]="control.label"
@@ -125,7 +146,7 @@
 				[class.disabled]="controlListDisabled"
 			>
 				<button
-					class="fill-current p-3.5"
+					class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
 					appSvgIcon
 					[attr.aria-label]="control.label"
 					[attr.title]="control.label"
@@ -135,10 +156,11 @@
 			</li>
 			<li class="inline-block">
 				<div
-					class="flex p-0"
+					class="flex p-0 active:bg-base-content/10 active:text-base-content"
 					appDropdown
 					#dropdownEmojiMart
 					*ngIf="{ value: false } as toggle"
+					[ngClass]="{ 'bg-base-content/10 text-base-content': toggle.value }"
 					[appCloseOnContentClick]="false"
 					(toggled)="toggle.value = $event"
 				>
@@ -151,21 +173,11 @@
 						[attr.title]="controlListEmojiMart.label"
 						[appIcon]="controlListEmojiMart.icon"
 					></button>
-					<div class="menu mt-2 min-w-fit shadow" slot="content">
-						<emoji-mart
-							class="flex"
-							*ngIf="toggle.value"
-							[exclude]="['flags']"
-							[emojiSize]="24"
-							[perLine]="8"
-							[totalFrequentLines]="2"
-							[isNative]="true"
-							[sheetSize]="32"
-							[showPreview]="false"
-							[emojiTooltip]="true"
-							(emojiClick)="onMarkdownControlEmoji($event)"
-						></emoji-mart>
-					</div>
+					<div
+						class="menu rounded-btn mt-2 min-w-fit overflow-hidden border border-base-content/20 bg-base-100 shadow"
+						id="emojiMartPicker"
+						slot="content"
+					></div>
 				</div>
 			</li>
 		</ul>
@@ -188,23 +200,17 @@
 				[formGroup]="urlForm"
 				(ngSubmit)="onSubmitUrlForm()"
 			>
-				<ng-container [ngSwitch]="urlFormControl?.key">
-					<p
-						class="rounded-box mb-4 bg-base-200 p-4"
-						*ngSwitchCase="'url-link'"
-					>
+				<p
+					class="rounded-box mb-4 bg-base-200 p-4"
+					[ngSwitch]="urlFormControl?.key"
+				>
+					<ng-container *ngSwitchCase="'url-link'">
 						Paste a URL from internet and add optional title
-					</p>
-					<p
-						class="rounded-box mb-4 bg-base-200 p-4"
-						*ngSwitchCase="'url-image'"
-					>
+					</ng-container>
+					<ng-container *ngSwitchCase="'url-image'">
 						Paste a image URL from internet and add optional title
-					</p>
-					<p
-						class="rounded-box mb-4 bg-base-200 p-4"
-						*ngSwitchCase="'url-gist'"
-					>
+					</ng-container>
+					<ng-container *ngSwitchCase="'url-gist'">
 						Paste a gist URL from
 						<a
 							class="link whitespace-nowrap after:inline-block after:px-1 after:content-['\279A']"
@@ -214,11 +220,8 @@
 						>
 							gist.github.com
 						</a>
-					</p>
-					<p
-						class="rounded-box mb-4 bg-base-200 p-4"
-						*ngSwitchCase="'url-youtube'"
-					>
+					</ng-container>
+					<ng-container *ngSwitchCase="'url-youtube'">
 						Paste a video URL from
 						<a
 							class="link whitespace-nowrap after:inline-block after:px-1 after:content-['\279A']"
@@ -228,8 +231,8 @@
 						>
 							youtube.com
 						</a>
-					</p>
-				</ng-container>
+					</ng-container>
+				</p>
 				<fieldset
 					class="flex flex-col space-y-4"
 					[disabled]="urlFormIsSubmitted"

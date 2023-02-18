@@ -119,19 +119,19 @@
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<!-- prettier-ignore -->
 						<button
-							class="fill-current p-3.5"
+							class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
 							type="button"
 							title="Move"
 							aria-label="Move"
 							appSvgIcon
 							[appIcon]="'arrows-move'"
-							[class.active]="cropperBackgroundIsDraggable"
+              [ngClass]="{ 'bg-success text-success-content' : cropperBackgroundIsDraggable }"
 							(click)="cropperBackgroundIsDraggable = !cropperBackgroundIsDraggable"
 						></button>
 					</li>
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
-							class="-scale-x-1 fill-current p-3.5"
+							class="-scale-x-1 fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
 							type="button"
 							title="Rotate counterclockwise"
 							aria-label="Rotate counterclockwise"
@@ -142,7 +142,7 @@
 					</li>
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
-							class="fill-current p-3.5"
+							class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
 							type="button"
 							title="Rotate clockwise"
 							aria-label="Rotate clockwise"
@@ -153,7 +153,7 @@
 					</li>
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
-							class="rotate-90 fill-current p-3.5"
+							class="rotate-90 fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
 							type="button"
 							title="Flip horizontal"
 							aria-label="Flip horizontal"
@@ -164,7 +164,7 @@
 					</li>
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
-							class="fill-current p-3.5"
+							class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
 							type="button"
 							title="Flip vertical"
 							aria-label="Flip vertical"
@@ -175,7 +175,7 @@
 					</li>
 					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
 						<button
-							class="fill-current p-3.5"
+							class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
 							type="button"
 							title="Zoom in"
 							aria-label="Zoom in"
@@ -189,7 +189,7 @@
 						[class.disabled]="cropperIsSubmitted || imageTransform.scale <= 1"
 					>
 						<button
-							class="fill-current p-3.5"
+							class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
 							type="button"
 							title="Zoom out"
 							aria-label="Zoom out"

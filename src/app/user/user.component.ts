@@ -312,20 +312,21 @@ export class UserComponent implements OnInit, OnDestroy {
 
 			this.categoryService.delete(categoryId, categoryDeleteDto).subscribe({
 				next: (category: Category) => {
-					this.router.navigate(categoryDeleteRedirect).then(() => {
-						this.snackbarService.success(null, 'Category deleted');
+					this.snackbarService.success(null, 'Category deleted');
 
-						this.category = category;
-
-						// prettier-ignore
-						this.categoryList = this.categoryList.filter((category: Category) => category.id !== this.category.id);
-						this.category = undefined;
-
-						this.categoryDeleteFormIsSubmitted = false;
-
-						this.onToggleCategoryDeleteForm(false);
-						this.onToggleCategoryEditForm(false);
+					this.category = undefined;
+					this.categoryList = this.categoryList.filter((category: Category) => {
+						return category.id !== categoryId;
 					});
+
+					this.categoryDeleteFormIsSubmitted = false;
+
+					this.onToggleCategoryDeleteForm(false);
+					this.onToggleCategoryEditForm(false);
+
+					this.router
+						.navigate(categoryDeleteRedirect)
+						.then(() => console.debug('Route changed'));
 				},
 				error: () => (this.categoryDeleteFormIsSubmitted = false)
 			});

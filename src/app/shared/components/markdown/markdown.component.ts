@@ -32,8 +32,6 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { OverlayComponent } from '../overlay/overlay.component';
 import { WindowComponent } from '../window/window.component';
-import { PickerModule } from '@ctrl/ngx-emoji-mart';
-import { EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
 import {
@@ -62,8 +60,7 @@ interface UrlForm {
 		OverlayComponent,
 		WindowComponent,
 		AppInputTrimWhitespaceDirective,
-		AppInputOnlyPasteDirective,
-		PickerModule
+		AppInputOnlyPasteDirective
 	],
 	selector: 'app-markdown, [appMarkdown]',
 	templateUrl: './markdown.component.html'
@@ -161,6 +158,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 				});
 		}
 
+		this.setEmojiMart();
+
 		this.setDropdownHandler();
 
 		this.setScrollSyncHandler();
@@ -173,6 +172,105 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.scrollSync$,
 			this.controlListScroll$
 		].forEach($ => $?.unsubscribe());
+	}
+
+	setEmojiMart(): void {
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
+			/** https://www.30secondsofcode.org/js/s/hsl-to-rgb */
+
+			const convertHSLToRGB = (h: number, s: number, l: number): number[] => {
+				s /= 100;
+				l /= 100;
+
+				const k = (n: number): number => (n + h / 30) % 12;
+
+				const a: number = s * Math.min(l, 1 - l);
+
+				// prettier-ignore
+				const f = (n: number): number => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+
+				return [
+					Math.round(255 * f(0)),
+					Math.round(255 * f(8)),
+					Math.round(255 * f(4))
+				];
+			};
+
+			/** Prepare theme colors */
+
+			const getCSSPropertyValue = (variable: string): string[] => {
+				return window
+					.getComputedStyle(this.document.documentElement)
+					.getPropertyValue(variable)
+					.trim()
+					.split(/\s/g);
+			};
+
+			// prettier-ignore
+			const setCSSProperty = (property: string, propertyValue: string): void => {
+        this.document.documentElement.style.setProperty(property, propertyValue);
+      };
+
+			const variablesCSSMap: any[] = [
+				{
+					nameHSL: '--p',
+					nameRGB: '--p-converted-to-rgb',
+					nameWithComma: false
+				},
+				{
+					nameHSL: '--b1',
+					nameRGB: '--b1-converted-to-rgb',
+					nameWithComma: false
+				},
+				{
+					nameHSL: '--bc',
+					nameRGB: '--bc-converted-to-rgb',
+					nameWithComma: false
+				},
+				{
+					nameHSL: '--bc',
+					nameRGB: '--bc-converted-to-rgb-with-comma',
+					nameWithComma: true
+				}
+			];
+
+			variablesCSSMap.forEach((variable: any) => {
+				// prettier-ignore
+				const [h, s, l]: number[] = getCSSPropertyValue(variable.nameHSL).map((value: string) => Number(value.replace('%', '')));
+				const [r, g, b]: number[] = convertHSLToRGB(h, s, l);
+
+				const property: string = variable.nameRGB;
+
+				// prettier-ignore
+				const propertyValue: string = [r, g, b].join(variable.nameWithComma ? ',' : ' ');
+
+				setCSSProperty(property, propertyValue);
+			});
+
+			/** Init Emoji Mart */
+
+			// @ts-ignore
+			const emojiMartPicker: any = new window.EmojiMart.Picker({
+				/** https://github.com/rickstaa/github-emoji-picker */
+
+				// prettier-ignore
+				data: async () => fetch('/assets/github_emojis.json').then((response: Response) => response.json()),
+				onEmojiSelect: (event: any) => {
+					this.onMarkdownControl({
+						...this.controlListEmojiMart,
+						handler: () => event.shortcodes
+					});
+				},
+				maxFrequentRows: 3,
+				set: 'native'
+			});
+
+			this.document
+				.getElementById('emojiMartPicker')
+				.appendChild(emojiMartPicker);
+		}
 	}
 
 	setDropdownHandler(): void {
@@ -266,12 +364,6 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 		} else {
 			this.getTextareaValue(markdownControl);
 		}
-	}
-
-	onMarkdownControlEmoji(emojiEvent: EmojiEvent): void {
-		this.controlListEmojiMart.handler = (): string => emojiEvent.emoji.colons;
-
-		this.onMarkdownControl(this.controlListEmojiMart);
 	}
 
 	getTextarea(textAreaElement: HTMLTextAreaElement): MarkdownTextarea {

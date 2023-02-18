@@ -33,6 +33,7 @@ import { FileCreateDto } from '../../../core/dto/file/file-create.dto';
 import { HelperService } from '../../../core/services/helper.service';
 import { FileService } from '../../../core/services/file.service';
 import { FileGetOneDto } from '../../../core/dto/file/file-get-one.dto';
+import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -44,7 +45,8 @@ interface ImageForm {
 		CommonModule,
 		ReactiveFormsModule,
 		ImageCropperModule,
-		SvgIconComponent
+		SvgIconComponent,
+		AppInputOnlyPasteDirective
 	],
 	selector: 'app-cropper, [appCropper]',
 	templateUrl: './cropper.component.html'

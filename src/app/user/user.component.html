@@ -368,49 +368,51 @@
 							>
 								<label class="label">
 									<div class="indicator">
+										<span class="label-text mr-2">
+											Move category posts to another category
+										</span>
 										<span
 											class="badge indicator-item badge-success w-max translate-x-full translate-y-0 text-xs"
 										>
 											Optional
 										</span>
-										<span class="label-text mr-2">
-											Move post categories to another category
-										</span>
 									</div>
 								</label>
-								<ul
-									class="menu rounded-btn menu-compact max-h-44 flex-nowrap overflow-y-auto border border-base-content/20 p-2"
-									*ngIf="category as categoryActive"
+								<div
+									class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
+									slot="content"
 									[class.border-success]="categoryId.value"
 								>
-									<ng-container *ngFor="let category of categoryList">
-										<li *ngIf="categoryActive.id !== category.id">
-											<label
-												class="label cursor-pointer px-2 active:bg-base-content/10"
-												[for]="'categoryDeleteFormCategoryId' + category.id"
-											>
-												<span class="label-text">{{ category.name }}</span>
+									<ul
+										class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
+										*ngIf="category as categoryActive"
+									>
+										<ng-container *ngFor="let category of categoryList">
+											<li *ngIf="category.id !== categoryActive.id">
 												<!-- prettier-ignore -->
-												<input
-                          class="radio"
-                          type="radio"
-                          title="Category"
-                          aria-label="Category"
-                          formControlName="categoryId"
-                          [id]="'categoryDeleteFormCategoryId' + category.id"
-                          [class.radio-success]="categoryId.value === category.id && !categoryDeleteFormIsSubmitted"
-                          [value]="category.id"
-                        />
-											</label>
-										</li>
-									</ng-container>
-								</ul>
+												<button
+                          class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+                          type="button"
+                          [ngClass]="{ 'bg-success text-success-content': categoryId.value === category.id && !categoryDeleteFormIsSubmitted }"
+                          [attr.aria-label]="category.name"
+                          (click)="categoryId.patchValue(category.id)"
+                        >
+                          {{ category.name }}
+                        </button>
+											</li>
+										</ng-container>
+									</ul>
+								</div>
 							</fieldset>
 						</ng-container>
-						<fieldset class="form-control">
+						<fieldset
+							class="form-control"
+							*ngIf="categoryDeleteForm.get('categoryId') as categoryId"
+						>
 							<!-- prettier-ignore -->
 							<button
-								class="btn btn-success"
+								class="btn"
+                [ngClass]="!!categoryId.value ? 'btn-success' : 'btn-error'"
 								type="submit"
 								title="Submit"
 								aria-label="Submit"
