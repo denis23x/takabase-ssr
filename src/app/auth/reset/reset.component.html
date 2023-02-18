@@ -51,6 +51,7 @@
 						[class.btn-success]="email.touched && email.valid"
 						[class.btn-error]="email.touched && email.invalid"
 						[class.btn-ghost]="email.untouched"
+						[class.btn-disabled]="resetFormIsSubmitted"
 						[appIcon]="'x'"
 						[appSquare]="'1.75rem'"
 						(click)="email.setValue('')"

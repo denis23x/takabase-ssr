@@ -70,7 +70,12 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 				})
 			)
 			.subscribe({
-				next: (params: Params) => this.onLogin(params),
+				next: (params: Params) => {
+					this.loginForm.get('email').setValue(params.email);
+					this.loginForm.get('email').markAsTouched();
+
+					this.onLogin(params);
+				},
 				error: (error: any) => console.error(error)
 			});
 	}
