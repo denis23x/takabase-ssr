@@ -1,12 +1,7 @@
 /** @format */
 
 import { NgModule } from '@angular/core';
-import {
-	PreloadAllModules,
-	RouterModule,
-	Routes,
-	UrlSegment
-} from '@angular/router';
+import { RouterModule, Routes, UrlSegment } from '@angular/router';
 import { SettingsResolverService } from './settings/settings-resolver.service';
 import { CreateResolverService } from './create/create-resolver.service';
 import { SearchPostResolverService } from './search/post/post-resolver.service';
@@ -291,8 +286,7 @@ const routes: Routes = [
 @NgModule({
 	imports: [
 		RouterModule.forRoot(routes, {
-			// preloadingStrategy: PreloadAllModules,
-			// initialNavigation: 'enabledBlocking'
+			initialNavigation: 'enabledBlocking'
 		})
 	],
 	exports: [RouterModule]
