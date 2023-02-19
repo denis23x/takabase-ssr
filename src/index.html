@@ -80,10 +80,15 @@
 
 		/** Background */
 
-		// const background = getCookie("background")
-		//
-		// if (!!background && background !== "") {
-		// 	document.querySelector("[data-background]").innerHTML = ""
-		// }
+		const background = getCookie("background")
+
+		if (!!background && background !== "") {
+			// prettier-ignore
+			fetch("/assets/backgrounds/" + background + ".svg", {
+				cache: "force-cache",
+			})
+				.then((response) => response.text())
+				.then((svg) => document.querySelector("[data-background]").innerHTML = svg)
+		}
 	</script>
 </html>
