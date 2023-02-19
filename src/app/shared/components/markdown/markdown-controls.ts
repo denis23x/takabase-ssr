@@ -47,6 +47,12 @@ export const MarkdownControlFormatting = (): MarkdownControl[] => [
 		label: 'Italic',
 		classList: ['italic'],
 		handler: (value: string): string => '_' + value + '_'
+	},
+	{
+		key: 'formatting-mark',
+		label: 'Mark',
+		classList: ['bg-primary text-primary-content p-1 !rounded'],
+		handler: (value: string): string => '==' + value + '=='
 	}
 ];
 
@@ -54,12 +60,17 @@ export const MarkdownControlList = (): MarkdownControl[] => [
 	{
 		key: 'list-unordered',
 		label: 'Unordered',
-		handler: (value: string): string => '+ ' + value
+		handler: (value: string): string => '- ' + value
 	},
 	{
 		key: 'list-ordered',
 		label: 'Ordered',
 		handler: (value: string): string => '1. ' + value
+	},
+	{
+		key: 'list-task',
+		label: 'Task',
+		handler: (value: string): string => '- [x] ' + value
 	}
 ];
 

@@ -8,6 +8,9 @@ import MarkdownItIncrementalDOM from 'markdown-it-incremental-dom';
 import emoji from 'markdown-it-emoji';
 import * as IncrementalDOM from 'incremental-dom';
 import * as mila from 'markdown-it-link-attributes';
+import smartArrows from 'markdown-it-smartarrows';
+import task from 'markdown-it-tasks';
+import mark from 'markdown-it-mark';
 import Prism from 'prismjs';
 import 'prismjs/plugins/autolinker/prism-autolinker.min.js';
 import 'prismjs/plugins/autoloader/prism-autoloader.min.js';
@@ -58,6 +61,18 @@ export class MarkdownService {
 					target: '_blank',
 					rel: 'noopener'
 				}
+			})
+			.use(mark)
+			.use(smartArrows)
+			.use(task, {
+				enabled: false,
+				label: true,
+				labelAfter: false,
+				containerClass: 'form-control',
+				itemClass: 'label !m-0',
+				// prettier-ignore
+				inputClass: 'checkbox inline-block align-middle -translate-y-0.5 !my-0 !mr-4',
+				labelClass: 'inline-block !m-0'
 			})
 			.use((md: any, options: any) => this.markdownPlugin.insert(md, options))
 			.use(emoji)

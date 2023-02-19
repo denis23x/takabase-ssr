@@ -69,6 +69,13 @@ module.exports = {
     "border-base-content/20",
     "rounded-box",
     "shadow-xl",
+    "bg-primary",
+    "text-primary-content",
+    "align-middle",
+    "-translate-y-0.5",
+    "!rounded",
+    "!my-0",
+    "!mr-4",
   ],
   theme: {
     cursor: {

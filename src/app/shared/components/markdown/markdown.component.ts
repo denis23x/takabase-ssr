@@ -400,6 +400,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 					return markdownControl.handler(placeholder);
 				case 'list-unordered':
 				case 'list-ordered':
+				case 'list-task':
           if (!!markdownTextarea.selection) {
             // prettier-ignore
             const value: string = markdownControl.handler(markdownTextarea.selection);
@@ -411,6 +412,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
         case 'formatting-bold':
 				case 'formatting-strikethrough':
 				case 'formatting-italic':
+				case 'formatting-mark':
 					// prettier-ignore
 					return markdownControl.handler(markdownTextarea.selection || placeholder);
 				case 'url-youtube':

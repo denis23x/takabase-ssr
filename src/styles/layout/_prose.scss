@@ -14,4 +14,24 @@
   :where(p):not(:where([class~="not-prose"] *)) {
     @apply text-ellipsis overflow-hidden;
   }
+
+  :where(ul):not(:where([class~="not-prose"] *)) {
+    @apply marker:text-info;
+
+    &.form-control {
+      @apply list-none p-0;
+    }
+  }
+
+  :where(ol):not(:where([class~="not-prose"] *)) {
+    @apply marker:font-medium;
+  }
+
+  :where(mark):not(:where([class~="not-prose"] *)) {
+    @apply bg-primary text-primary-content p-1 rounded;
+
+    * {
+      @apply text-primary-content;
+    }
+  }
 }
