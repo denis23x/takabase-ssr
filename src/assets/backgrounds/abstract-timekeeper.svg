@@ -1,7 +1,7 @@
 <svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%' viewBox='0 0 2000 1500' preserveAspectRatio='xMidYMid slice'>
-  <rect fill='hsl(var(--p))' width='2000' height='1500' />
+  <rect fill='hsl(var(--b1))' width='2000' height='1500' />
   <defs>
-    <circle stroke='hsl(var(--pf))' vector-effect='non-scaling-stroke' id='a' fill='none' stroke-width='5' r='315' />
+    <circle stroke='hsl(var(--b2))' vector-effect='non-scaling-stroke' id='a' fill='none' stroke-width='5' r='315' />
     <use id='f' href='#a' stroke-dasharray='100 100 100 9999' />
     <use id='b' href='#a' stroke-dasharray='250 250 250 250 250 9999' />
     <use id='e' href='#a' stroke-dasharray='1000 500 1000 500 9999' />

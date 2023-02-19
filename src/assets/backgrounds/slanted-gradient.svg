@@ -1,10 +1,10 @@
 <svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%' viewBox='0 0 1600 800' preserveAspectRatio='xMidYMid slice'>
-  <rect fill='hsl(var(--pf))' width='1600' height='800'/>
+  <rect fill='hsl(var(--b3))' width='1600' height='800'/>
   <g fill-opacity='1'>
-    <polygon style="filter: brightness(0.85)" fill='hsl(var(--pf))' points='1600 160 0 460 0 350 1600 50'/>
-    <polygon style="filter: brightness(0.80)" fill='hsl(var(--pf))' points='1600 260 0 560 0 450 1600 150'/>
-    <polygon style="filter: brightness(0.75)" fill='hsl(var(--pf))' points='1600 360 0 660 0 550 1600 250'/>
-    <polygon style="filter: brightness(0.70)" fill='hsl(var(--pf))' points='1600 460 0 760 0 650 1600 350'/>
-    <polygon style="filter: brightness(0.50)" fill='hsl(var(--pf))' points='1600 800 0 800 0 750 1600 450'/>
+    <polygon style="filter: brightness(0.85)" fill='hsl(var(--b3))' points='1600 160 0 460 0 350 1600 50'/>
+    <polygon style="filter: brightness(0.80)" fill='hsl(var(--b3))' points='1600 260 0 560 0 450 1600 150'/>
+    <polygon style="filter: brightness(0.75)" fill='hsl(var(--b3))' points='1600 360 0 660 0 550 1600 250'/>
+    <polygon style="filter: brightness(0.70)" fill='hsl(var(--b3))' points='1600 460 0 760 0 650 1600 350'/>
+    <polygon style="filter: brightness(0.50)" fill='hsl(var(--b3))' points='1600 800 0 800 0 750 1600 450'/>
   </g>
 </svg>

@@ -64,7 +64,7 @@ export class UiService {
 
 		// prettier-ignore
 		this.httpClient
-			.get('/assets/backgrounds/' + (background || 'pattern-randomized') + '.svg', {
+			.get('/assets/backgrounds/' + (background || 'slanted-gradient') + '.svg', {
 				responseType: 'text'
 			})
 			.subscribe((svg: string) => (backgroundElement.innerHTML = svg));

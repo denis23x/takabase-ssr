@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width='100%' height='100%' viewBox='0 0 1600 800' preserveAspectRatio='xMidYMid slice'>
   <pattern id="p" width="160" height="160" patternUnits="userSpaceOnUse">
-    <rect fill='hsl(var(--p))' width='160' height='160' />
+    <rect fill='hsl(var(--b2))' width='160' height='160' />
     <g fill-opacity='1'>
-      <polygon fill='hsl(var(--pf))' points='160 80 80 0 0 0 160 160' />
-      <polygon fill='hsl(var(--pf))' points='0 80 0 160 80 160' />
+      <polygon fill='hsl(var(--b3))' points='160 80 80 0 0 0 160 160' />
+      <polygon fill='hsl(var(--b3))' points='0 80 0 160 80 160' />
     </g>
   </pattern>
   <rect fill="url(#p)" width="100%" height="100%"/>
