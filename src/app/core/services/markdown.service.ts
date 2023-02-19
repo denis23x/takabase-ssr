@@ -13,6 +13,7 @@ import 'prismjs/plugins/autolinker/prism-autolinker.min.js';
 import 'prismjs/plugins/autoloader/prism-autoloader.min.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.min.js';
 import 'prismjs/plugins/match-braces/prism-match-braces.min.js';
+import { environment } from '../../../environments/environment';
 
 Prism.manual = true;
 Prism.plugins.autoloader.languages_path = '/assets/grammars/';
@@ -45,7 +46,7 @@ export class MarkdownService {
           return `<pre class="line-numbers language-${language}"><code class="language-${language} match-braces rainbow-braces">${value}</code></pre>`;
         };
 
-				if (!!language && language === 'ts') {
+				if (!!language && environment.grammars.includes(language)) {
 					return prismTemplate(value, language);
 				}
 

@@ -17,6 +17,7 @@ import { User } from '../../core/models/user.model';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
+import { environment } from '../../../environments/environment';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
@@ -42,57 +43,9 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	appearanceForm$: Subscription | undefined;
 	appearanceIsSubmitted: boolean | false;
 
-	appearanceThemeList: string[] = [
-		'light',
-		'dark',
-		'cupcake',
-		'bumblebee',
-		'emerald',
-		'corporate',
-		'synthwave',
-		'retro',
-		'cyberpunk',
-		'valentine',
-		'halloween',
-		'garden',
-		'forest',
-		'aqua',
-		'lofi',
-		'pastel',
-		'fantasy',
-		'wireframe',
-		'black',
-		'luxury',
-		'dracula',
-		'cmyk',
-		'autumn',
-		'business',
-		'acid',
-		'lemonade',
-		'night',
-		'coffee',
-		'winter'
-	];
+	appearanceThemeList: string[] = environment.themes.sort();
 
-	appearanceBackgroundList: string[] = [
-		'abstract-envelope',
-		'abstract-timekeeper',
-		'bullseye-gradient',
-		'confetti-doodles',
-		'cornered-stairs',
-		'dalmatian-spots',
-		'diagonal-stripes',
-		'diamond-sunset',
-		'endless-constellation',
-		'liquid-cheese',
-		'pattern-randomized',
-		'repeating-triangles',
-		'slanted-gradient',
-		'subtle-prism',
-		'sun-tornado',
-		'tortoise-shell',
-		'zig-zag'
-	];
+	appearanceBackgroundList: string[] = environment.backgrounds.sort();
 
 	appearanceLanguageList: string[] = ['English', 'Italian', 'French'];
 
