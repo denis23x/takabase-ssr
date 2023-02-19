@@ -1,91 +1,78 @@
 /** @format */
 
-import { Inject, Injectable } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { Injectable } from '@angular/core';
 import { MarkdownPluginService } from './markdown-plugin.service';
 import MarkdownIt from 'markdown-it';
+import Token from 'markdown-it/lib/token';
 import MarkdownItIncrementalDOM from 'markdown-it-incremental-dom';
 import emoji from 'markdown-it-emoji';
 import * as IncrementalDOM from 'incremental-dom';
 import * as mila from 'markdown-it-link-attributes';
 import Prism from 'prismjs';
-import 'prismjs/plugins/line-numbers/prism-line-numbers.min';
-import 'prismjs/components/prism-typescript';
-import 'prismjs/components/prism-scss';
+import 'prismjs/plugins/autolinker/prism-autolinker.min.js';
+import 'prismjs/plugins/autoloader/prism-autoloader.min.js';
+import 'prismjs/plugins/line-numbers/prism-line-numbers.min.js';
+import 'prismjs/plugins/match-braces/prism-match-braces.min.js';
+
+Prism.manual = true;
+Prism.plugins.autoloader.languages_path = '/assets/grammars/';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class MarkdownService {
-	private markdown = new MarkdownIt({
-		linkify: true,
-		breaks: true,
-		highlight: (value: string, language: string = 'none'): string => {
-			this.getHighlightCss();
+	markdownIt: MarkdownIt;
 
-			try {
+	constructor(private markdownPlugin: MarkdownPluginService) {}
+
+	getMarkdownIt(): MarkdownIt {
+		if (!!this.markdownIt) {
+			return this.markdownIt;
+		}
+
+		this.markdownIt = new MarkdownIt({
+			html: false,
+			xhtmlOut: false,
+			linkify: true,
+			breaks: true,
+			typographer: true,
+			quotes: '“”‘’',
+			highlight: (value: string, language: string): string => {
 				setTimeout(() => Prism.highlightAll());
 
 				// prettier-ignore
-				const prism = Prism.highlight(value, Prism.languages[language], language);
+				const prismTemplate = (value: string, language: string): string => {
+          return `<pre class="line-numbers language-${language}"><code class="language-${language} match-braces rainbow-braces">${value}</code></pre>`;
+        };
 
-				return this.getHighlightTemplate(prism, language);
-			} catch (error: any) {
-				console.error(error);
-			}
+				if (!!language && language === 'ts') {
+					return prismTemplate(value, language);
+				}
 
-			return this.getHighlightTemplate(this.markdown.utils.escapeHtml(value));
-		}
-	})
-		.use(mila, {
-			attrs: {
-				target: '_blank',
-				rel: 'noopener'
+				return prismTemplate(this.markdownIt.utils.escapeHtml(value), 'plain');
 			}
 		})
-		.use((md: any, options: any) => this.markdownPlugin.insert(md, options))
-		.use(emoji)
-		.use(MarkdownItIncrementalDOM, IncrementalDOM);
+			.use(mila, {
+				attrs: {
+					target: '_blank',
+					rel: 'noopener'
+				}
+			})
+			.use((md: any, options: any) => this.markdownPlugin.insert(md, options))
+			.use(emoji)
+			.use(MarkdownItIncrementalDOM, IncrementalDOM);
 
-	constructor(
-		@Inject(DOCUMENT)
-		private document: Document,
-		private markdownPlugin: MarkdownPluginService
-	) {
-		this.markdown.renderer.rules.emoji = function (token, idx) {
+		this.markdownIt.renderer.rules.emoji = (token: Token[], idx: number) => {
 			return `<span class="text-2xl">${token[idx].content}</span>`;
 		};
-	}
 
-	getHighlightCss(): void {
-		const cssId: string = 'prismjs-css';
-		const cssHref: string = 'prismjs.css';
-
-		if (!this.document.getElementById(cssId)) {
-			// prettier-ignore
-			const head: HTMLHeadElement = this.document.getElementsByTagName('head').item(0);
-			const style: HTMLLinkElement = this.document.createElement('link');
-
-			style.id = cssId;
-			style.rel = 'stylesheet';
-			style.href = cssHref;
-
-			head.appendChild(style);
-		}
-	}
-
-	getHighlightTemplate(value: string, language: string = 'none'): string {
-		const template: string = `
-      <pre class="line-numbers language-${language}">
-        <code class="language-${language}">${value}</code>
-      </pre>
-    `;
-
-		return template.trim();
+		return this.markdownIt;
 	}
 
 	getRender(value: string, element: HTMLElement): void {
+		const markdownIt: any = this.getMarkdownIt();
+
 		// @ts-ignore
-		IncrementalDOM.patch(element, this.markdown.renderToIncrementalDOM(value));
+		IncrementalDOM.patch(element, markdownIt.renderToIncrementalDOM(value));
 	}
 }

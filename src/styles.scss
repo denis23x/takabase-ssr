@@ -14,4 +14,8 @@
 @import "styles/vendor/ngx-cropper";
 @import "styles/vendor/emoji-mart";
 
+@import 'node_modules/prismjs/themes/prism-twilight.css';
 
+@import 'node_modules/prismjs/plugins/autolinker/prism-autolinker.min.css';
+@import 'node_modules/prismjs/plugins/line-numbers/prism-line-numbers.min.css';
+@import 'node_modules/prismjs/plugins/match-braces/prism-match-braces.min.css';
