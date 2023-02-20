@@ -88,16 +88,10 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 		handler: (value: any): string => `![${value.title}](${value.url})`
 	},
 	{
-		key: 'url-gist',
-		label: 'Gist',
-		icon: 'github',
-		handler: (value: any): string => `@[Github](${value.url})`
-	},
-	{
 		key: 'url-youtube',
 		label: 'Video',
 		icon: 'youtube',
-		handler: (value: any): string => `@[Youtube](${value.url})`
+		handler: (value: any): string => `@[youtube](${value.url})`
 	}
 ];
 
@@ -108,7 +102,7 @@ export const MarkdownControlEmojiMart = (): MarkdownControl => ({
 	handler: (): string => ''
 });
 
-// TODO: add controls
+// TODO: add controls, add spoilers, image size
 // export const MarkdownControlRest = (): MarkdownControl[] => [
 //   {
 //     key: 'text-hr',

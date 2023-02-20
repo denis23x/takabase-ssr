@@ -24,8 +24,6 @@ export class HelperService {
 				return new RegExp('^((?=.*\\d)|(?=.*[!@#$%^&*]))(?=.*[a-zA-Z]).{6,32}$');
 			case 'url-youtube':
 				return new RegExp('^https:\\/\\/(www\\.)?youtube\\.com\\/watch\\?v=(\\S{11})\\S*$');
-			case 'url-gist':
-				return new RegExp('^https://(www.)?gist.github.com/(S+)/(S{32})S*$');
 			case 'url-image':
 				return new RegExp('^(https?|ftp)?://(www.)?S+.(jpeg|jpg|png|gif|bmp)S*$');
 			case 'url-link':
@@ -41,7 +39,6 @@ export class HelperService {
 			const valid = (value: string): boolean => {
 				switch (validator) {
 					case 'url-youtube':
-					case 'url-gist':
 					case 'url-image':
 					case 'url-link':
 						return this.getRegex(validator).test(value);

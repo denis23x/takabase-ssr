@@ -1,7 +1,6 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { MarkdownPluginService } from './markdown-plugin.service';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 import MarkdownItIncrementalDOM from 'markdown-it-incremental-dom';
@@ -11,6 +10,7 @@ import * as mila from 'markdown-it-link-attributes';
 import smartArrows from 'markdown-it-smartarrows';
 import task from 'markdown-it-tasks';
 import mark from 'markdown-it-mark';
+import video from 'markdown-it-video';
 import Prism from 'prismjs';
 import 'prismjs/plugins/autolinker/prism-autolinker.min.js';
 import 'prismjs/plugins/autoloader/prism-autoloader.min.js';
@@ -27,7 +27,7 @@ Prism.plugins.autoloader.languages_path = '/assets/grammars/';
 export class MarkdownService {
 	markdownIt: MarkdownIt;
 
-	constructor(private markdownPlugin: MarkdownPluginService) {}
+	constructor() {}
 
 	getMarkdownIt(): MarkdownIt {
 		if (!!this.markdownIt) {
@@ -74,7 +74,7 @@ export class MarkdownService {
 				inputClass: 'checkbox inline-block align-middle -translate-y-0.5 !my-0 !mr-4',
 				labelClass: 'inline-block !m-0'
 			})
-			.use((md: any, options: any) => this.markdownPlugin.insert(md, options))
+			.use(video)
 			.use(emoji)
 			.use(MarkdownItIncrementalDOM, IncrementalDOM);
 

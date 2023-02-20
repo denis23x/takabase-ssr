@@ -416,7 +416,6 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 					// prettier-ignore
 					return markdownControl.handler(markdownTextarea.selection || placeholder);
 				case 'url-youtube':
-				case 'url-gist':
 				case 'url-link':
 				case 'url-image':
 					return markdownControl.handler(urlForm.value);

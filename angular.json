@@ -26,6 +26,10 @@
               "prismjs",
               "dompurify",
               "markdown-it-emoji",
+              "markdown-it-mark",
+              "markdown-it-smartarrows",
+              "markdown-it-tasks",
+              "markdown-it-video",
               "markdown-it-incremental-dom",
               "markdown-it-link-attributes"
             ],
