@@ -22,7 +22,6 @@
           "options": {
             "allowedCommonJsDependencies": [
               "ua-parser-js",
-              "incremental-dom",
               "prismjs",
               "dompurify",
               "markdown-it-emoji",
@@ -30,7 +29,6 @@
               "markdown-it-smartarrows",
               "markdown-it-tasks",
               "markdown-it-video",
-              "markdown-it-incremental-dom",
               "markdown-it-link-attributes"
             ],
             "outputPath": "dist/draft-ssr/browser",

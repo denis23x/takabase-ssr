@@ -3,15 +3,14 @@
 import { Injectable } from '@angular/core';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
-import MarkdownItIncrementalDOM from 'markdown-it-incremental-dom';
 import emoji from 'markdown-it-emoji';
-import * as IncrementalDOM from 'incremental-dom';
-import * as mila from 'markdown-it-link-attributes';
+import mila from 'markdown-it-link-attributes';
 import smartArrows from 'markdown-it-smartarrows';
 import task from 'markdown-it-tasks';
 import mark from 'markdown-it-mark';
 import video from 'markdown-it-video';
 import Prism from 'prismjs';
+import morphdom from 'morphdom';
 import 'prismjs/plugins/autolinker/prism-autolinker.min.js';
 import 'prismjs/plugins/autoloader/prism-autoloader.min.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.min.js';
@@ -75,8 +74,7 @@ export class MarkdownService {
 				labelClass: 'inline-block !m-0'
 			})
 			.use(video)
-			.use(emoji)
-			.use(MarkdownItIncrementalDOM, IncrementalDOM);
+			.use(emoji);
 
 		this.markdownIt.renderer.rules.emoji = (token: Token[], idx: number) => {
 			return `<span class="text-2xl">${token[idx].content}</span>`;
@@ -86,9 +84,17 @@ export class MarkdownService {
 	}
 
 	getRender(value: string, element: HTMLElement): void {
-		const markdownIt: any = this.getMarkdownIt();
+		const makeRender = (): HTMLElement => {
+			const markdownIt: MarkdownIt = this.getMarkdownIt();
+			const render: HTMLElement = element.cloneNode(true) as HTMLElement;
 
-		// @ts-ignore
-		IncrementalDOM.patch(element, markdownIt.renderToIncrementalDOM(value));
+			/** Set markdownIt render */
+
+			render.innerHTML = markdownIt.render(value);
+
+			return render;
+		};
+
+		morphdom(element, makeRender());
 	}
 }
