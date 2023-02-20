@@ -4,7 +4,7 @@
   }
 
   :where(img):not(:where([class~="not-prose"] *)) {
-    @apply rounded-box w-full h-auto;
+    @apply rounded-box w-full h-auto m-0;
   }
 
   :where(a):not(:where([class~="not-prose"] *)) {
@@ -13,6 +13,10 @@
 
   :where(p):not(:where([class~="not-prose"] *)) {
     @apply text-ellipsis overflow-hidden;
+
+    &:empty {
+      @apply hidden;
+    }
   }
 
   :where(ul):not(:where([class~="not-prose"] *)) {
