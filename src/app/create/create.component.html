@@ -17,10 +17,13 @@
 					<img
 						class="aspect-square h-20 w-20 cursor-pointer object-cover sm:h-44 sm:w-44"
 						alt="Image"
+						loading="lazy"
+						width="256"
+						height="256"
 						[class.invisible]="!image.value"
 						[class.opacity-50]="postFormIsSubmitted"
 						[class.saturate-0]="postFormIsSubmitted"
-						[src]="image.value"
+						[ngSrc]="image.value"
 						(click)="postFormImageToggle = true"
 					/>
 					<div

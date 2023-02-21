@@ -1,14 +1,14 @@
 /** @format */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { Post } from '../../../../core/models/post.model';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, DayjsPipe],
+	imports: [CommonModule, RouterModule, DayjsPipe, NgOptimizedImage],
 	selector: 'app-post-card, [appPostCard]',
 	templateUrl: './card.component.html'
 })

@@ -48,7 +48,8 @@ export class MarkdownService {
           return `<pre class="line-numbers language-${language}"><code class="language-${language} match-braces rainbow-braces">${value}</code></pre>`;
         };
 
-				if (!!language && environment.grammars.includes(language)) {
+				// prettier-ignore
+				if (!!language && environment.grammars.includes(language.toLowerCase())) {
 					return prismTemplate(value, language);
 				}
 

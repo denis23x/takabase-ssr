@@ -19,8 +19,11 @@
 			<div class="flex w-full gap-4 py-4">
 				<img
 					class="rounded-box aspect-square h-20 w-20 cursor-pointer object-cover sm:h-44 sm:w-44"
+					loading="lazy"
+					width="256"
+					height="256"
 					*ngIf="!!post.image"
-					[src]="post.image"
+					[ngSrc]="post.image"
 					[alt]="post.name"
 				/>
 				<div

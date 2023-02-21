@@ -12,7 +12,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
 import { AppInputTrimWhitespaceDirective } from '../shared/directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../shared/components/dropdown/dropdown.component';
@@ -64,7 +64,8 @@ interface CategoryForm {
 		CropperComponent,
 		PostDetailComponent,
 		ShareComponent,
-		MarkdownComponent
+		MarkdownComponent,
+		NgOptimizedImage
 	],
 	templateUrl: './create.component.html'
 })

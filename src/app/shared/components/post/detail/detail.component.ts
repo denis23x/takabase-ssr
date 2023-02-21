@@ -2,7 +2,7 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../../avatar/avatar.component';
 import { MarkdownPipe } from '../../../pipes/markdown.pipe';
@@ -20,7 +20,8 @@ import { AuthService } from '../../../../core/services/auth.service';
 		AvatarComponent,
 		MarkdownPipe,
 		UserUrlPipe,
-		DayjsPipe
+		DayjsPipe,
+		NgOptimizedImage
 	],
 	selector: 'app-post-detail, [appPostDetail]',
 	templateUrl: './detail.component.html'

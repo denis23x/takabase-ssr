@@ -13,7 +13,9 @@
 				<img
 					class="aspect-square object-cover object-center"
 					loading="lazy"
-					[src]="post.image"
+					width="256"
+					height="256"
+					[ngSrc]="post.image"
 					[alt]="post.name"
 				/>
 			</a>
