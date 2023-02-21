@@ -5,9 +5,9 @@ import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 import emoji from 'markdown-it-emoji';
 import mila from 'markdown-it-link-attributes';
+import mark from 'markdown-it-mark';
 import smartArrows from 'markdown-it-smartarrows';
 import task from 'markdown-it-tasks';
-import mark from 'markdown-it-mark';
 import video from 'markdown-it-video';
 import Prism from 'prismjs';
 import morphdom from 'morphdom';
@@ -56,6 +56,7 @@ export class MarkdownService {
 				return prismTemplate(this.markdownIt.utils.escapeHtml(value), 'plain');
 			}
 		})
+			.use(emoji)
 			.use(mila, {
 				attrs: {
 					target: '_blank',
@@ -74,8 +75,13 @@ export class MarkdownService {
 				inputClass: 'checkbox inline-block align-middle -translate-y-0.5 !my-0 !mr-4',
 				labelClass: 'inline-block !m-0'
 			})
-			.use(video)
-			.use(emoji);
+			.use(video);
+
+		/** Update Image */
+
+		this.markdownIt.renderer.rules.image = (token: Token[], idx: number) => {
+			return `<img src="${token[idx].attrs[0][1]}" loading="lazy" alt="${token[idx].content}" title="${token[idx].content}">`;
+		};
 
 		/** Update Emoji Mart size */
 

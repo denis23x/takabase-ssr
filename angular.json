@@ -25,11 +25,11 @@
               "prismjs",
               "dompurify",
               "markdown-it-emoji",
+              "markdown-it-link-attributes",
               "markdown-it-mark",
               "markdown-it-smartarrows",
               "markdown-it-tasks",
-              "markdown-it-video",
-              "markdown-it-link-attributes"
+              "markdown-it-video"
             ],
             "outputPath": "dist/draft-ssr/browser",
             "index": "src/index.html",
