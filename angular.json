@@ -46,7 +46,7 @@
               "src/styles.scss",
               {
                 "input": "node_modules/prismjs/themes/prism.min.css",
-                "bundleName": "prism",
+                "bundleName": "prism-default",
                 "inject": false
               },
               {
@@ -55,13 +55,18 @@
                 "inject": false
               },
               {
-                "input": "node_modules/prismjs/themes/prism-dark.min.css",
-                "bundleName": "prism-dark",
+                "input": "node_modules/prism-themes/themes/prism-darcula.css",
+                "bundleName": "prism-darcula",
                 "inject": false
               },
               {
-                "input": "node_modules/prismjs/themes/prism-funky.min.css",
-                "bundleName": "prism-funky",
+                "input": "node_modules/prism-themes/themes/prism-holi-theme.css",
+                "bundleName": "prism-holi-theme",
+                "inject": false
+              },
+              {
+                "input": "node_modules/prism-themes/themes/prism-night-owl.css",
+                "bundleName": "prism-night-owl",
                 "inject": false
               },
               {
@@ -70,8 +75,28 @@
                 "inject": false
               },
               {
+                "input": "node_modules/prism-themes/themes/prism-one-dark.css",
+                "bundleName": "prism-one-dark",
+                "inject": false
+              },
+              {
+                "input": "node_modules/prism-themes/themes/prism-one-light.css",
+                "bundleName": "prism-one-light",
+                "inject": false
+              },
+              {
                 "input": "node_modules/prismjs/themes/prism-solarizedlight.min.css",
                 "bundleName": "prism-solarizedlight",
+                "inject": false
+              },
+              {
+                "input": "node_modules/prism-themes/themes/prism-vs.css",
+                "bundleName": "prism-vs",
+                "inject": false
+              },
+              {
+                "input": "node_modules/prism-themes/themes/prism-synthwave84.css",
+                "bundleName": "prism-synthwave84",
                 "inject": false
               },
               {

@@ -353,12 +353,17 @@ export const environment = {
 		'abstract-envelope'
 	],
 	prism: [
-		'prism',
 		'coy',
-		'dark',
-		'funky',
+		'darcula',
+		'default',
+		'holi-theme',
+		'night-owl',
 		'okaidia',
+		'one-dark',
+		'one-light',
 		'solarizedlight',
+		'vs',
+		'synthwave84',
 		'tomorrow',
 		'twilight'
 	]
