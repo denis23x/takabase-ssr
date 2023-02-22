@@ -69,4 +69,29 @@ export class UiService {
 			})
 			.subscribe((svg: string) => (backgroundElement.innerHTML = svg));
 	}
+
+	setPrism(theme: string | null): void {
+		if (!!theme) {
+			this.cookieService.setItem('prism', theme);
+		} else {
+			this.cookieService.removeItem('prism');
+		}
+
+		// prettier-ignore
+		const linkElement: HTMLLinkElement | null = this.document.getElementById('prism') as HTMLLinkElement;
+
+		if (!!linkElement) {
+			if (!linkElement.href.endsWith(theme + '.css')) {
+				linkElement.href = theme + '.css';
+			}
+		} else {
+			const style: HTMLLinkElement = this.document.createElement('link');
+
+			style.id = 'prism';
+			style.rel = 'stylesheet';
+			style.href = `${theme}.css`;
+
+			this.document.head.appendChild(style);
+		}
+	}
 }

@@ -43,7 +43,47 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              {
+                "input": "node_modules/prismjs/themes/prism.min.css",
+                "bundleName": "prism",
+                "inject": false
+              },
+              {
+                "input": "node_modules/prismjs/themes/prism-coy.min.css",
+                "bundleName": "prism-coy",
+                "inject": false
+              },
+              {
+                "input": "node_modules/prismjs/themes/prism-dark.min.css",
+                "bundleName": "prism-dark",
+                "inject": false
+              },
+              {
+                "input": "node_modules/prismjs/themes/prism-funky.min.css",
+                "bundleName": "prism-funky",
+                "inject": false
+              },
+              {
+                "input": "node_modules/prismjs/themes/prism-okaidia.min.css",
+                "bundleName": "prism-okaidia",
+                "inject": false
+              },
+              {
+                "input": "node_modules/prismjs/themes/prism-solarizedlight.min.css",
+                "bundleName": "prism-solarizedlight",
+                "inject": false
+              },
+              {
+                "input": "node_modules/prismjs/themes/prism-tomorrow.min.css",
+                "bundleName": "prism-tomorrow",
+                "inject": false
+              },
+              {
+                "input": "node_modules/prismjs/themes/prism-twilight.min.css",
+                "bundleName": "prism-twilight",
+                "inject": false
+              }
             ],
             "scripts": [
               {

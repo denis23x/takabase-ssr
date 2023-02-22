@@ -21,7 +21,8 @@ import { environment } from '../../../environments/environment';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
-	background: FormControl<string>;
+	themeBackground: FormControl<string>;
+	themePrism: FormControl<string>;
 	language: FormControl<string>;
 	monospace: FormControl<boolean>;
 	buttons: FormControl<string>;
@@ -44,11 +45,9 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	appearanceIsSubmitted: boolean | false;
 
 	appearanceThemeList: string[] = environment.themes.sort();
-
 	appearanceBackgroundList: string[] = environment.backgrounds.sort();
-
+	appearancePrismList: string[] = environment.prism.sort();
 	appearanceLanguageList: string[] = ['English', 'Italian', 'French'];
-
 	appearanceButtonsList: string[] = ['left', 'right'];
 
 	constructor(
@@ -60,10 +59,11 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		// prettier-ignore
 		this.appearanceForm = this.formBuilder.group<AppearanceForm>({
 			theme: this.formBuilder.nonNullable.control('', [Validators.required]),
-			background: this.formBuilder.nonNullable.control('', [Validators.required]),
-			language: this.formBuilder.nonNullable.control('', [Validators.required]),
-			monospace: this.formBuilder.control(null, [Validators.required]),
-			buttons: this.formBuilder.nonNullable.control('', [Validators.required])
+      themeBackground: this.formBuilder.nonNullable.control('', [Validators.required]),
+      themePrism: this.formBuilder.nonNullable.control('', [Validators.required]),
+      language: this.formBuilder.nonNullable.control('', [Validators.required]),
+      monospace: this.formBuilder.control(null, [Validators.required]),
+      buttons: this.formBuilder.nonNullable.control('', [Validators.required]),
 		});
 	}
 
@@ -104,17 +104,5 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		// prettier-ignore
 		[this.activatedRouteData$, this.appearanceForm$].forEach($ => $?.unsubscribe());
-	}
-
-	onChangeTheme(theme: string): void {
-		this.appearanceForm.patchValue({ theme });
-	}
-
-	onChangeBackground(background: string): void {
-		this.appearanceForm.patchValue({ background });
-	}
-
-	onChangeLanguage(language: string): void {
-		this.appearanceForm.patchValue({ language });
 	}
 }

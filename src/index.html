@@ -90,5 +90,19 @@
 				.then((response) => response.text())
 				.then((svg) => document.querySelector("[data-background]").innerHTML = svg)
 		}
+
+		/** Prism */
+
+		const prism = getCookie("prism")
+
+		if (!!prism && prism !== "") {
+			const style = document.createElement("link")
+
+			style.id = "prism"
+			style.rel = "stylesheet"
+			style.href = `${prism}.css`
+
+			document.head.appendChild(style)
+		}
 	</script>
 </html>

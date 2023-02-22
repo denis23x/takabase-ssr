@@ -351,5 +351,15 @@ export const environment = {
 		'bullseye-gradient',
 		'abstract-timekeeper',
 		'abstract-envelope'
+	],
+	prism: [
+		'prism',
+		'prism-coy',
+		'prism-dark',
+		'prism-funky',
+		'prism-okaidia',
+		'prism-solarizedlight',
+		'prism-tomorrow',
+		'prism-twilight'
 	]
 };

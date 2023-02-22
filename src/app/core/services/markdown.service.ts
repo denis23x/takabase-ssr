@@ -92,16 +92,7 @@ export class MarkdownService {
 		/** Update Youtube Iframe */
 
 		this.markdownIt.renderer.rules.video = (token: any[], idx: number) => {
-			return `
-        <iframe
-          title="YouTube video player"
-          width="640"
-          height="390"
-          src="https://www.youtube-nocookie.com/embed/${token[idx].videoID}"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen>
-        </iframe>
-			`;
+			return `<iframe title="YouTube video player" width="640" height="390" loading="lazy" src="https://www.youtube-nocookie.com/embed/${token[idx].videoID}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
 		};
 
 		return this.markdownIt;

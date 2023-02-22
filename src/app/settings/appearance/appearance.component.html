@@ -52,7 +52,7 @@
 											type="button"
                       [ngClass]="{ 'bg-success text-success-content': theme.value === themeValue }"
 											[attr.aria-label]="themeValue"
-											(click)="onChangeTheme(themeValue)"
+											(click)="theme.setValue(themeValue)"
 										>
 											{{ themeValue }}
 										</button>
@@ -63,7 +63,7 @@
 					</fieldset>
 					<fieldset
 						class="form-control w-full"
-						*ngIf="appearanceForm.get('background') as background"
+						*ngIf="appearanceForm.get('themeBackground') as themeBackground"
 					>
 						<label class="label" for="appearanceFormBackground">
 							<span class="label-text">Background</span>
@@ -77,17 +77,18 @@
 							</a>
 						</label>
 						<div appDropdown>
+							<!-- prettier-ignore -->
 							<input
 								class="input input-bordered w-full cursor-pointer truncate"
 								id="appearanceFormBackground"
 								type="text"
 								aria-label="Background"
 								placeholder="Select Background"
-								formControlName="background"
+								formControlName="themeBackground"
 								slot="target"
 								readonly
-								[class.input-success]="background.touched && background.value"
-								[class.input-error]="background.touched && background.invalid"
+								[class.input-success]="themeBackground.touched && themeBackground.value"
+								[class.input-error]="themeBackground.touched && themeBackground.invalid"
 								[class.input-disabled]="appearanceIsSubmitted"
 							/>
 							<div
@@ -105,9 +106,9 @@
 										<button
                       class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
 											type="button"
-                      [ngClass]="{ 'bg-success text-success-content': background.value === backgroundValue }"
+                      [ngClass]="{ 'bg-success text-success-content': themeBackground.value === backgroundValue }"
 											[attr.aria-label]="backgroundValue"
-											(click)="onChangeBackground(backgroundValue)"
+											(click)="themeBackground.setValue(backgroundValue)"
 										>
 											{{ backgroundValue }}
 										</button>
@@ -120,6 +121,53 @@
 				<div
 					class="flex w-full flex-col items-start gap-4 sm:flex-row sm:justify-between"
 				>
+					<fieldset
+						class="form-control w-full"
+						*ngIf="appearanceForm.get('themePrism') as themePrism"
+					>
+						<label class="label" for="appearanceFormPrism">
+							<span class="label-text">Prism</span>
+						</label>
+						<div appDropdown>
+							<input
+								class="input input-bordered w-full cursor-pointer truncate"
+								id="appearanceFormPrism"
+								type="text"
+								aria-label="Prism"
+								placeholder="Select prism"
+								formControlName="themePrism"
+								slot="target"
+								readonly
+								[class.input-success]="themePrism.touched && themePrism.value"
+								[class.input-error]="themePrism.touched && themePrism.invalid"
+								[class.input-disabled]="appearanceIsSubmitted"
+							/>
+							<div
+								class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
+								slot="content"
+							>
+								<ul
+									class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
+								>
+									<li
+										class="flex w-full overflow-hidden"
+										*ngFor="let prismValue of appearancePrismList"
+									>
+										<!-- prettier-ignore -->
+										<button
+                      class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+                      type="button"
+                      [ngClass]="{ 'bg-success text-success-content': themePrism.value === prismValue }"
+                      [attr.aria-label]="prismValue"
+                      (click)="themePrism.setValue(prismValue)"
+                    >
+                      {{ prismValue }}
+                    </button>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</fieldset>
 					<fieldset
 						class="form-control w-full"
 						*ngIf="appearanceForm.get('language') as language"
@@ -158,7 +206,7 @@
 											type="button"
                       [ngClass]="{ 'bg-success text-success-content': language.value === languageValue }"
 											[attr.aria-label]="languageValue"
-											(click)="onChangeLanguage(languageValue)"
+											(click)="language.setValue(languageValue)"
 										>
 											{{ languageValue }}
 										</button>
