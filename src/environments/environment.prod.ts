@@ -354,12 +354,12 @@ export const environment = {
 	],
 	prism: [
 		'prism',
-		'prism-coy',
-		'prism-dark',
-		'prism-funky',
-		'prism-okaidia',
-		'prism-solarizedlight',
-		'prism-tomorrow',
-		'prism-twilight'
+		'coy',
+		'dark',
+		'funky',
+		'okaidia',
+		'solarizedlight',
+		'tomorrow',
+		'twilight'
 	]
 };

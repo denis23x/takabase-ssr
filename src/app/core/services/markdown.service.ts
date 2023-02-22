@@ -45,7 +45,15 @@ export class MarkdownService {
 
 				// prettier-ignore
 				const prismTemplate = (value: string, language: string): string => {
-          return `<pre class="line-numbers language-${language}"><code class="language-${language} match-braces rainbow-braces">${value}</code></pre>`;
+          const getValue = (): string => {
+            if (language === 'markup') {
+              return `<xmp>${value}</xmp>`;
+            }
+
+            return value;
+          }
+
+          return `<pre class="line-numbers language-${language}"><code class="language-${language} match-braces rainbow-braces">${getValue()}</code></pre>`;
         };
 
 				// prettier-ignore

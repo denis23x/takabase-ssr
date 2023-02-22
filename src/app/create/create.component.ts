@@ -144,7 +144,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			]),
 			description: this.formBuilder.nonNullable.control('', [
 				Validators.required,
-				Validators.minLength(4),
+				Validators.minLength(6),
 				Validators.maxLength(255)
 			])
 		});
