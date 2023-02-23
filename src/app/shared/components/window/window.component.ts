@@ -53,7 +53,8 @@ export class WindowComponent implements OnInit, OnDestroy {
 		'md:max-h-[80vh]',
 		'md:max-w-[640px]',
 		'shadow-xl',
-		'rounded-box'
+		'rounded-box',
+		'blur-none'
 	];
 
 	authUser: User | undefined;
