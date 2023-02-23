@@ -152,6 +152,7 @@
 								<div
 									class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
 									slot="content"
+									[class.hidden]="!categoryList.length"
 								>
 									<ul
 										class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"

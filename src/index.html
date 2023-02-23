@@ -41,7 +41,7 @@
 		</div>
 		<div
 			class="fixed z-[1] h-full min-h-[800px] w-full"
-			data-background="pattern-randomized"
+			data-theme-background="slanted-gradient"
 		>
 			<!-- prettier-ignore -->
 			<svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%' viewBox='0 0 1600 800' preserveAspectRatio='xMidYMid slice'>
@@ -58,6 +58,8 @@
 		<app-root></app-root>
 	</body>
 	<script type="application/javascript">
+		/** Cookie */
+
 		function getCookie(cookieName) {
 			let result = {}
 
@@ -72,37 +74,65 @@
 
 		/** Theme */
 
-		const theme = getCookie("theme")
+		const getThemeValue = () => {
+			const value = getCookie("theme")
 
-		if (!!theme && theme !== "") {
-			document.documentElement.setAttribute("data-theme", theme)
+			if (!!value && value !== "") {
+				return value
+			} else {
+				return "light"
+			}
 		}
+
+		const themeValue = getThemeValue()
+
+		document.documentElement.setAttribute("data-theme", themeValue)
 
 		/** Background */
 
-		const background = getCookie("background")
+		const getBackgroundValue = () => {
+			const value = getCookie("theme-background")
 
-		if (!!background && background !== "") {
-			// prettier-ignore
-			fetch("/assets/backgrounds/" + background + ".svg", {
+			if (!!value && value !== "") {
+				return value
+			} else {
+				return "slanted-gradient"
+			}
+		}
+
+		const backgroundElement = document.querySelector("[data-theme-background]")
+		const backgroundValue = getBackgroundValue()
+
+		if (backgroundElement.dataset.themeBackground !== backgroundValue) {
+			fetch("/assets/backgrounds/" + backgroundValue + ".svg", {
 				cache: "force-cache",
 			})
 				.then((response) => response.text())
-				.then((svg) => document.querySelector("[data-background]").innerHTML = svg)
+				.then((svg) => {
+					backgroundElement.innerHTML = svg
+					backgroundElement.dataset.themeBackground = backgroundValue
+				})
 		}
 
 		/** Prism */
 
-		const prism = getCookie("prism")
+		const getPrismValue = () => {
+			const value = getCookie("theme-prism")
 
-		if (!!prism && prism !== "") {
-			const style = document.createElement("link")
-
-			style.id = "prism"
-			style.rel = "stylesheet"
-			style.href = `${prism}.css`
-
-			document.head.appendChild(style)
+			if (!!value && value !== "") {
+				return value
+			} else {
+				return "default"
+			}
 		}
+
+		const prismElement = document.createElement("link")
+		const prismValue = "prism-" + getPrismValue() + ".css"
+
+		prismElement.rel = "stylesheet"
+		prismElement.href = prismValue
+		prismElement.dataset.themePrism = getPrismValue()
+
+		document.head.appendChild(prismElement)
 	</script>
 </html>

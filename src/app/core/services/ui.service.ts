@@ -45,53 +45,54 @@ export class UiService {
 	setTheme(theme: string | null): void {
 		if (!!theme) {
 			this.cookieService.setItem('theme', theme);
-			this.document.documentElement.setAttribute('data-theme', theme);
 		} else {
 			this.cookieService.removeItem('theme');
-			this.document.documentElement.removeAttribute('data-theme');
+		}
+
+		const themeValue = theme || 'light';
+
+		this.document.documentElement.setAttribute('data-theme', themeValue);
+	}
+
+	setBackground(themeBackground: string | null): void {
+		if (!!themeBackground) {
+			this.cookieService.setItem('theme-background', themeBackground);
+		} else {
+			this.cookieService.removeItem('theme-background');
+		}
+
+		// prettier-ignore
+		const backgroundElement: HTMLElement | null = this.document.querySelector('[data-theme-background]');
+		const backgroundValue = themeBackground || 'slanted-gradient';
+
+		if (backgroundElement.dataset.themeBackground !== backgroundValue) {
+			this.httpClient
+				.get('/assets/backgrounds/' + backgroundValue + '.svg', {
+					responseType: 'text'
+				})
+				.subscribe({
+					next: (svg: string) => {
+						backgroundElement.innerHTML = svg;
+						backgroundElement.dataset.themeBackground = backgroundValue;
+					}
+				});
 		}
 	}
 
-	setBackground(background: string | null): void {
-		if (!!background) {
-			this.cookieService.setItem('background', background);
+	setPrism(themePrism: string | null): void {
+		if (!!themePrism) {
+			this.cookieService.setItem('theme-prism', themePrism);
 		} else {
-			this.cookieService.removeItem('background');
+			this.cookieService.removeItem('theme-prism');
 		}
 
 		// prettier-ignore
-		const backgroundElement: HTMLElement = this.document.querySelector('[data-background]');
+		const prismElement: HTMLLinkElement | null = this.document.querySelector('[data-theme-prism]') as HTMLLinkElement;
+		const prismValue: string = themePrism || 'default';
 
-		// prettier-ignore
-		this.httpClient
-			.get('/assets/backgrounds/' + (background || 'slanted-gradient') + '.svg', {
-				responseType: 'text'
-			})
-			.subscribe((svg: string) => (backgroundElement.innerHTML = svg));
-	}
-
-	setPrism(theme: string | null): void {
-		if (!!theme) {
-			this.cookieService.setItem('prism', theme);
-		} else {
-			this.cookieService.removeItem('prism');
-		}
-
-		// prettier-ignore
-		const linkElement: HTMLLinkElement | null = this.document.getElementById('prism') as HTMLLinkElement;
-
-		if (!!linkElement) {
-			if (!linkElement.href.endsWith(theme + '.css')) {
-				linkElement.href = theme + '.css';
-			}
-		} else {
-			const style: HTMLLinkElement = this.document.createElement('link');
-
-			style.id = 'prism';
-			style.rel = 'stylesheet';
-			style.href = `${theme}.css`;
-
-			this.document.head.appendChild(style);
+		if (prismElement.dataset.themePrism !== prismValue) {
+			prismElement.href = 'prism-' + prismValue + '.css';
+			prismElement.dataset.themePrism = prismValue;
 		}
 	}
 }
