@@ -149,6 +149,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
 					this.titleService.setTitle(this.userService.getUserUrl(this.user).substring(1));
 
+          if (!!this.category) {
+            this.titleService.appendTitle(this.category.name);
+          }
+
 					this.setMeta();
 				},
 				error: (error: any) => console.error(error)

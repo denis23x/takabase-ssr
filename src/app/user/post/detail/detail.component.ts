@@ -41,6 +41,7 @@ export class UserPostDetailComponent implements OnInit, OnDestroy {
 					this.post = post;
 
 					this.postService.setPostMeta(this.post);
+					this.postService.setPostTitle(this.post.name);
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -50,6 +51,7 @@ export class UserPostDetailComponent implements OnInit, OnDestroy {
 		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
 
 		this.postService.removePostMeta();
+		this.postService.removePostTitle();
 	}
 
 	onClose(): void {

@@ -15,22 +15,24 @@ import { PostCreateDto } from '../dto/post/post-create.dto';
 import { PostGetOneDto } from '../dto/post/post-get-one.dto';
 import { PostUpdateDto } from '../dto/post/post-update.dto';
 import { MetaService } from './meta.service';
+import { TitleService } from './title.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class PostService {
-	backupMetaOpenGraph: MetaOpenGraph;
-	backupMetaTwitter: MetaTwitter;
+	backupPostMetaOpenGraph: MetaOpenGraph;
+	backupPostMetaTwitter: MetaTwitter;
 
-	backupTitle: string;
+	backupPostTitle: string;
 
 	constructor(
 		private apiService: ApiService,
 		private router: Router,
 		private snackbarService: SnackbarService,
 		private userService: UserService,
-		private metaService: MetaService
+		private metaService: MetaService,
+		private titleService: TitleService
 	) {}
 
 	/** Resolvers DTO */
@@ -93,8 +95,8 @@ export class PostService {
 	/** Meta */
 
 	setPostMeta(post: Post): void {
-		this.backupMetaOpenGraph = this.metaService.getMetaOpenGraph();
-		this.backupMetaTwitter = this.metaService.getMetaTwitter();
+		this.backupPostMetaOpenGraph = this.metaService.getMetaOpenGraph();
+		this.backupPostMetaTwitter = this.metaService.getMetaTwitter();
 
 		/** Set new meta */
 
@@ -121,15 +123,22 @@ export class PostService {
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
+	// prettier-ignore
 	removePostMeta(): void {
-		this.metaService.setMeta(this.backupMetaOpenGraph, this.backupMetaTwitter);
+		this.metaService.setMeta(this.backupPostMetaOpenGraph, this.backupPostMetaTwitter);
 	}
 
 	/** Title */
 
-	setTitle(title: string): void {}
+	setPostTitle(title: string): void {
+		this.backupPostTitle = this.titleService.getTitle();
 
-	removeTitle(): void {}
+		this.titleService.appendTitle(title);
+	}
+
+	removePostTitle(): void {
+		this.titleService.setTitle(this.backupPostTitle);
+	}
 
 	/** REST */
 
