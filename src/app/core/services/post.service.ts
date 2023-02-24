@@ -20,6 +20,11 @@ import { MetaService } from './meta.service';
 	providedIn: 'root'
 })
 export class PostService {
+	backupMetaOpenGraph: MetaOpenGraph;
+	backupMetaTwitter: MetaTwitter;
+
+	backupTitle: string;
+
 	constructor(
 		private apiService: ApiService,
 		private router: Router,
@@ -27,6 +32,8 @@ export class PostService {
 		private userService: UserService,
 		private metaService: MetaService
 	) {}
+
+	/** Resolvers DTO */
 
 	// prettier-ignore
 	getUserPostGetAllDto(postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto {
@@ -83,7 +90,14 @@ export class PostService {
     return postGetAllDto;
   }
 
-	getPostMeta(post: Post): any {
+	/** Meta */
+
+	setPostMeta(post: Post): void {
+		this.backupMetaOpenGraph = this.metaService.getMetaOpenGraph();
+		this.backupMetaTwitter = this.metaService.getMetaTwitter();
+
+		/** Set new meta */
+
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: post.name,
 			['og:description']: post.description,
@@ -104,20 +118,18 @@ export class PostService {
 			['twitter:image:alt']: post.name
 		};
 
-		return {
-			metaOpenGraph,
-			metaTwitter
-		};
+		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	appendPostMeta(post: Post): void {
-		const postMeta: any = this.getPostMeta(post);
-
-		const metaOpenGraph: MetaOpenGraph = postMeta.metaOpenGraph;
-		const metaTwitter: MetaTwitter = postMeta.metaTwitter;
-
-		this.metaService.appendMeta(metaOpenGraph, metaTwitter);
+	removePostMeta(): void {
+		this.metaService.setMeta(this.backupMetaOpenGraph, this.backupMetaTwitter);
 	}
+
+	/** Title */
+
+	setTitle(title: string): void {}
+
+	removeTitle(): void {}
 
 	/** REST */
 

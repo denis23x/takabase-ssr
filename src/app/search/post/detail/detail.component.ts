@@ -10,7 +10,6 @@ import { ShareComponent } from '../../../shared/components/share/share.component
 import { PostDetailComponent } from '../../../shared/components/post/detail/detail.component';
 import { Post } from '../../../core/models/post.model';
 import { PostService } from '../../../core/services/post.service';
-import { TitleService } from '../../../core/services/title.service';
 
 @Component({
 	standalone: true,
@@ -31,8 +30,7 @@ export class SearchPostDetailComponent implements OnInit, OnDestroy {
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
-		private postService: PostService,
-		private titleService: TitleService
+		private postService: PostService
 	) {}
 
 	ngOnInit(): void {
@@ -42,9 +40,7 @@ export class SearchPostDetailComponent implements OnInit, OnDestroy {
 				next: (post: Post) => {
 					this.post = post;
 
-					this.postService.appendPostMeta(this.post);
-
-					this.titleService.appendTitle(this.post.name);
+					this.postService.setPostMeta(this.post);
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -52,6 +48,8 @@ export class SearchPostDetailComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
+
+		this.postService.removePostMeta();
 	}
 
 	onClose(): void {
