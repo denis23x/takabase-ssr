@@ -3,79 +3,81 @@
 <!-- TODO: https://www.w3schools.com/howto/howto_js_draggable.asp -->
 <!-- TODO: named outlet -->
 
-<div
-	class="absolute flex flex-col overflow-hidden bg-base-100"
-	[ngClass]="fullscreenClassList"
->
-	<ng-container [ngTemplateOutlet]="windowCaption"></ng-container>
-	<header class="flex flex-col empty:hidden">
-		<ng-content select="[slot=header]"></ng-content>
-	</header>
-	<!-- prettier-ignore -->
-	<section class="flex flex-col overflow-auto empty:hidden" [class.h-full]="fullscreenToggle">
+<ng-container>
+	<div
+		class="absolute flex flex-col overflow-hidden bg-base-100"
+		[ngClass]="fullscreenClassList"
+	>
+		<ng-container [ngTemplateOutlet]="windowCaption"></ng-container>
+		<header class="flex flex-col empty:hidden">
+			<ng-content select="[slot=header]"></ng-content>
+		</header>
+		<!-- prettier-ignore -->
+		<section class="flex flex-col overflow-auto empty:hidden" [class.h-full]="fullscreenToggle">
 		<ng-content select="[slot=content]"></ng-content>
 	</section>
-	<footer class="flex flex-col empty:hidden">
-		<ng-content select="[slot=footer]"></ng-content>
-	</footer>
-	<ng-template #windowCaption>
-		<div class="grid grid-cols-3 gap-2 bg-base-200 p-2">
-			<div
-				class="col-span-1 flex flex-row items-center justify-start space-x-2"
-			>
-				<ng-container
-					*ngIf="captionButtonsPosition === 'left'"
-					[ngTemplateOutlet]="windowCaptionButtons"
-				></ng-container>
+		<footer class="flex flex-col empty:hidden">
+			<ng-content select="[slot=footer]"></ng-content>
+		</footer>
+		<ng-template #windowCaption>
+			<div class="grid grid-cols-3 gap-2 bg-base-200 p-2">
+				<div
+					class="col-span-1 flex flex-row items-center justify-start space-x-2"
+				>
+					<ng-container
+						*ngIf="captionButtonsPosition === 'left'"
+						[ngTemplateOutlet]="windowCaptionButtons"
+					></ng-container>
+				</div>
+				<div class="col-span-1 flex items-center justify-center">
+					<span class="text-xl font-medium text-base-content">
+						{{ captionTitle }}
+					</span>
+				</div>
+				<div
+					class="col-span-1 flex flex-row-reverse items-center justify-start space-x-2 space-x-reverse"
+				>
+					<ng-container
+						*ngIf="captionButtonsPosition === 'right'"
+						[ngTemplateOutlet]="windowCaptionButtons"
+					></ng-container>
+				</div>
 			</div>
-			<div class="col-span-1 flex items-center justify-center">
-				<span class="text-xl font-medium text-base-content">
-					{{ captionTitle }}
-				</span>
-			</div>
-			<div
-				class="col-span-1 flex flex-row-reverse items-center justify-start space-x-2 space-x-reverse"
-			>
-				<ng-container
-					*ngIf="captionButtonsPosition === 'right'"
-					[ngTemplateOutlet]="windowCaptionButtons"
-				></ng-container>
-			</div>
-		</div>
-	</ng-template>
-	<ng-template #windowCaptionButtons>
-		<button
-			class="btn btn-error btn-circle btn-xs fill-current"
-			type="button"
-			title="Close"
-			aria-label="Close"
-			appSvgIcon
-			*ngIf="captionButtonsList.includes('close')"
-			[appIcon]="'x'"
-			[appSquare]="'1.4rem'"
-			(click)="onClose()"
-		></button>
-		<button
-			class="btn btn-warning btn-circle btn-xs fill-current"
-			type="button"
-			title="Fullscreen"
-			aria-label="Fullscreen"
-			appSvgIcon
-			*ngIf="captionButtonsList.includes('fullscreen')"
-			[appIcon]="'square'"
-			[appSquare]="'0.75rem'"
-			(click)="onFullscreen(!fullscreenToggle)"
-		></button>
-		<button
-			class="btn btn-success btn-circle btn-xs fill-current"
-			type="button"
-			title="Minimize"
-			aria-label="Minimize"
-			appSvgIcon
-			*ngIf="captionButtonsList.includes('minimize')"
-			[appIcon]="'dash-lg'"
-			[appSquare]="'0.75rem'"
-			[appViewBox]="'0 0 16 4'"
-		></button>
-	</ng-template>
-</div>
+		</ng-template>
+		<ng-template #windowCaptionButtons>
+			<button
+				class="btn btn-error btn-circle btn-xs fill-current"
+				type="button"
+				title="Close"
+				aria-label="Close"
+				appSvgIcon
+				*ngIf="captionButtonsList.includes('close')"
+				[appIcon]="'x'"
+				[appSquare]="'1.4rem'"
+				(click)="onClose()"
+			></button>
+			<button
+				class="btn btn-warning btn-circle btn-xs fill-current"
+				type="button"
+				title="Fullscreen"
+				aria-label="Fullscreen"
+				appSvgIcon
+				*ngIf="captionButtonsList.includes('fullscreen')"
+				[appIcon]="'square'"
+				[appSquare]="'0.75rem'"
+				(click)="onFullscreen(!fullscreenToggle)"
+			></button>
+			<button
+				class="btn btn-success btn-circle btn-xs fill-current"
+				type="button"
+				title="Minimize"
+				aria-label="Minimize"
+				appSvgIcon
+				*ngIf="captionButtonsList.includes('minimize')"
+				[appIcon]="'dash-lg'"
+				[appSquare]="'0.75rem'"
+				[appViewBox]="'0 0 16 4'"
+			></button>
+		</ng-template>
+	</div>
+</ng-container>
