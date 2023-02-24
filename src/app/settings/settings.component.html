@@ -6,7 +6,6 @@
 			<nav class="block px-4">
 				<ul
 					class="tabs w-full translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg"
-					#scrollRoot
 				>
 					<!-- prettier-ignore -->
 					<li
@@ -18,7 +17,6 @@
 							class="flex h-full items-center justify-center whitespace-nowrap px-4"
 							appScrollIntoView
 							#routerLinkActive="routerLinkActive"
-							[appRoot]="scrollRoot"
 							[appActive]="routerLinkActive.isActive"
 							[routerLink]="link.toLowerCase()"
 							[routerLinkActive]="''"

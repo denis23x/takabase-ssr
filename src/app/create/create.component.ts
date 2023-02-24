@@ -35,6 +35,7 @@ import { UserService } from '../core/services/user.service';
 import { PostCreateDto } from '../core/dto/post/post-create.dto';
 import { FileCreateDto } from '../core/dto/file/file-create.dto';
 import { CategoryCreateDto } from '../core/dto/category/category-create.dto';
+import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -65,7 +66,8 @@ interface CategoryForm {
 		PostDetailComponent,
 		ShareComponent,
 		MarkdownComponent,
-		NgOptimizedImage
+		NgOptimizedImage,
+		AppScrollIntoViewDirective
 	],
 	templateUrl: './create.component.html'
 })
