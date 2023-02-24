@@ -110,13 +110,13 @@ export class PostService {
 		};
 	}
 
-	setPostMeta(post: Post): void {
+	appendPostMeta(post: Post): void {
 		const postMeta: any = this.getPostMeta(post);
 
 		const metaOpenGraph: MetaOpenGraph = postMeta.metaOpenGraph;
 		const metaTwitter: MetaTwitter = postMeta.metaTwitter;
 
-		this.metaService.setMeta(metaOpenGraph, metaTwitter);
+		this.metaService.appendMeta(metaOpenGraph, metaTwitter);
 	}
 
 	/** REST */

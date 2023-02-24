@@ -21,15 +21,13 @@ export class TitleService extends TitleStrategy {
 		const title: string | undefined = this.buildTitle(routerState);
 
 		if (title !== undefined) {
-			// prettier-ignore
-			this.title.setTitle([title, this.titlePostfix].join(this.titlePostfixDelimiter));
+			this.title.setTitle(this.getTitleFormatted(title));
 		}
 	}
 
 	setTitle(title: string | null | undefined): void {
 		if (!!title) {
-			// prettier-ignore
-			this.title.setTitle([title, this.titlePostfix].join(this.titlePostfixDelimiter));
+			this.title.setTitle(this.getTitleFormatted(title));
 		} else {
 			this.title.setTitle(this.titlePostfix);
 		}
@@ -39,10 +37,17 @@ export class TitleService extends TitleStrategy {
 		return this.title.getTitle().split(this.titlePostfixDelimiter).shift();
 	}
 
+	getTitleFormatted(title: string, append: boolean = false): string {
+		if (!!append) {
+			return [this.getTitle(), title].reverse().join(this.titleDelimiter);
+		} else {
+			return [title, this.titlePostfix].join(this.titlePostfixDelimiter);
+		}
+	}
+
 	appendTitle(title: string | null | undefined): void {
 		if (!!title) {
-			// prettier-ignore
-			this.setTitle([this.getTitle(), title].reverse().join(this.titleDelimiter));
+			this.setTitle(this.getTitleFormatted(title, true));
 		} else {
 			this.setTitle(this.getTitle());
 		}

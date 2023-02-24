@@ -42,7 +42,7 @@ export class UserPostDetailComponent implements OnInit, OnDestroy {
 				next: (post: Post) => {
 					this.post = post;
 
-					this.postService.setPostMeta(this.post);
+					this.postService.appendPostMeta(this.post);
 
 					this.titleService.appendTitle(this.post.name);
 				},
