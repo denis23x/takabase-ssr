@@ -4,7 +4,9 @@
 	<slot #dropdownTarget>
 		<ng-content select="[slot=target]"></ng-content>
 	</slot>
-	<slot #dropdownContent [ngStyle]="dropdownStateStyle">
-		<ng-content select="[slot=content]"></ng-content>
+	<slot #dropdownContent>
+		<div [ngStyle]="dropdownStateStyle">
+			<ng-content select="[slot=content]"></ng-content>
+		</div>
 	</slot>
 </ng-container>

@@ -18,6 +18,7 @@ import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { environment } from '../../../environments/environment';
+import { AppScrollIntoViewDirective } from '../../shared/directives/app-scroll-into-view.directive';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
@@ -30,7 +31,13 @@ interface AppearanceForm {
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, ReactiveFormsModule, DropdownComponent],
+	imports: [
+		CommonModule,
+		RouterModule,
+		ReactiveFormsModule,
+		DropdownComponent,
+		AppScrollIntoViewDirective
+	],
 	selector: 'app-settings-appearance',
 	templateUrl: './appearance.component.html'
 })

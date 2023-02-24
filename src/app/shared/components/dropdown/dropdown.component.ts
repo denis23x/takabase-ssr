@@ -37,8 +37,10 @@ export class DropdownComponent implements OnInit, OnDestroy {
 	windowAction$: Subscription | undefined;
 
 	dropdownState: boolean = false;
+	// prettier-ignore
 	dropdownStateStyle: Object = {
-		display: 'none'
+    'position': 'fixed',
+    'visibility': 'hidden'
 	};
 	dropdownStateCloseOnContentClick: boolean = true;
 
@@ -106,7 +108,6 @@ export class DropdownComponent implements OnInit, OnDestroy {
 		// prettier-ignore
 		if (this.dropdownState) {
       this.dropdownStateStyle = {
-        'display': 'block',
         'position': 'fixed',
         'width.px': elementRefStyle.width,
         'top.px': elementRefStyle.top + elementRefStyle.height,
@@ -115,7 +116,8 @@ export class DropdownComponent implements OnInit, OnDestroy {
       };
     } else {
       this.dropdownStateStyle = {
-        'display': 'none'
+        'position': 'fixed',
+        'visibility': 'hidden'
       };
     }
 

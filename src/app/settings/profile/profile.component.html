@@ -144,6 +144,7 @@
 						aria-label="Description"
 						placeholder="Type your description"
 						formControlName="description"
+            appInputTrimWhitespace
 						[rows]="4"
 						[class.textarea-success]="description.touched && !description.errors"
 						[class.textarea-error]="description.touched && !!description.errors"

@@ -46,6 +46,7 @@
 							aria-label="Email"
 							formControlName="email"
 							placeholder="Type your new email"
+							appInputTrimWhitespace
 							[class.input-success]="email.touched && email.valid"
 							[class.input-error]="email.touched && email.invalid"
 							[class.input-disabled]="emailFormIsSubmitted"
@@ -120,6 +121,7 @@
 							formControlName="password"
 							autocomplete="new-password"
 							placeholder="Type your new password"
+							appInputTrimWhitespace
 							[type]="isVisible.value ? 'text' : 'password'"
 							[class.input-success]="password.touched && password.valid"
 							[class.input-error]="password.touched && password.invalid"
@@ -213,6 +215,7 @@
 								formControlName="password"
 								autocomplete="new-password"
 								placeholder="Type your current password"
+								appInputTrimWhitespace
 								[type]="isVisible.value ? 'text' : 'password'"
 								[class.input-success]="password.touched && password.valid"
 								[class.input-error]="password.touched && password.invalid"

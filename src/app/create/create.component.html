@@ -166,7 +166,7 @@
 												class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
 												type="button"
                         appScrollIntoView
-                        [appActive]="categoryName.value === category.name"
+                        [appScrollActive]="categoryName.value === category.name"
 												[ngClass]="{ 'bg-success text-success-content': categoryName.value === category.name }"
 												[attr.aria-label]="category.name"
 												(click)="onSelectCategory(category)"

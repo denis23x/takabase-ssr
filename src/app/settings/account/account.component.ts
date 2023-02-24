@@ -17,6 +17,7 @@ import { OverlayComponent } from '../../shared/components/overlay/overlay.compon
 import { WindowComponent } from '../../shared/components/window/window.component';
 import { User } from '../../core/models/user.model';
 import { HelperService } from '../../core/services/helper.service';
+import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
 
 interface EmailForm {
 	email: FormControl<string>;
@@ -38,7 +39,8 @@ interface ConfirmationForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		OverlayComponent,
-		WindowComponent
+		WindowComponent,
+		AppInputTrimWhitespaceDirective
 	],
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'

@@ -8,17 +8,17 @@ import { Directive, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 })
 export class AppScrollIntoViewDirective implements OnInit, OnDestroy {
 	@Input()
-	set appActive(active: boolean) {
-		this.active = active;
+	set appScrollActive(scrollActive: boolean) {
+		this.scrollActive = scrollActive;
 	}
 
-	active: boolean = false;
+	scrollActive: boolean = false;
 
 	constructor(private elementRef: ElementRef) {}
 
 	ngOnInit(): void {
 		setTimeout(() => {
-			if (this.active) {
+			if (this.scrollActive) {
 				this.elementRef.nativeElement.scrollIntoView({
 					behavior: 'auto',
 					inline: 'center',

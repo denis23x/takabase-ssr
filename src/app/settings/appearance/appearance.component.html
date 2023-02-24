@@ -58,6 +58,8 @@
 										<button
 											class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
 											type="button"
+                      appScrollIntoView
+                      [appScrollActive]="theme.value === themeValue"
 											[ngClass]="{ 'bg-success text-success-content': theme.value === themeValue }"
 											[attr.aria-label]="themeValue"
 											(click)="theme.setValue(themeValue)"
@@ -114,6 +116,8 @@
 										<button
                       class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
 											type="button"
+                      appScrollIntoView
+                      [appScrollActive]="themeBackground.value === backgroundValue"
                       [ngClass]="{ 'bg-success text-success-content': themeBackground.value === backgroundValue }"
 											[attr.aria-label]="backgroundValue"
 											(click)="themeBackground.setValue(backgroundValue)"
@@ -173,6 +177,8 @@
 										<button
                       class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
                       type="button"
+                      appScrollIntoView
+                      [appScrollActive]="themePrism.value === prismValue"
                       [ngClass]="{ 'bg-success text-success-content': themePrism.value === prismValue }"
                       [attr.aria-label]="prismValue"
                       (click)="themePrism.setValue(prismValue)"
@@ -220,6 +226,8 @@
 										<button
                       class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
 											type="button"
+                      appScrollIntoView
+                      [appScrollActive]="language.value === languageValue"
                       [ngClass]="{ 'bg-success text-success-content': language.value === languageValue }"
 											[attr.aria-label]="languageValue"
 											(click)="language.setValue(languageValue)"
