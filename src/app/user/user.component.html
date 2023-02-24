@@ -41,9 +41,10 @@
 				<ul
 					class="tabs w-full translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg"
 				>
+					<!-- prettier-ignore -->
 					<li
 						class="tab tab-lifted tab-lg !px-0"
-						[ngClass]="routerLinkActive.isActive ? 'tab-active' : 'bg-base-200'"
+						[ngClass]="routerLinkActive.isActive || !category ? 'tab-active' : 'bg-base-200'"
 					>
 						<a
 							class="block whitespace-nowrap px-4"

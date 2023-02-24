@@ -212,7 +212,7 @@ const routes: Routes = [
 	},
 	{
 		matcher: (urlSegment: UrlSegment[]) => {
-			if (urlSegment[0].path.match(/^@\S+$/gm)) {
+			if (urlSegment.length >= 1 && urlSegment[0].path.match(/^@\S+$/gm)) {
 				return {
 					consumed: urlSegment.slice(0, 1)
 				};
@@ -228,31 +228,9 @@ const routes: Routes = [
 		},
 		children: [
 			{
-				path: '',
-				loadComponent: () => {
-					// prettier-ignore
-					return import('./user/post/post.component').then(m => m.UserPostComponent);
-				},
-				resolve: {
-					data: UserPostResolverService
-				},
-				children: [
-					{
-						path: 'post',
-						redirectTo: '',
-						pathMatch: 'full'
-					},
-					{
-						path: 'post/:postId',
-						loadComponent: () => {
-							// prettier-ignore
-							return import('./user/post/detail/detail.component').then(m => m.UserPostDetailComponent);
-						},
-						resolve: {
-							data: UserPostDetailResolverService
-						}
-					}
-				]
+				path: 'post',
+				redirectTo: '',
+				pathMatch: 'full'
 			},
 			{
 				path: 'category',
@@ -260,20 +238,60 @@ const routes: Routes = [
 				pathMatch: 'full'
 			},
 			{
-				path: 'category/:categoryId',
+				path: 'category/:categoryId/post',
+				redirectTo: 'category/:categoryId',
+				pathMatch: 'full'
+			},
+			{
+				matcher: (urlSegment: UrlSegment[]) => {
+					if (urlSegment.length === 0) {
+						return {
+							consumed: urlSegment
+						};
+					}
+
+					if (urlSegment.length === 2) {
+						if (urlSegment[0].path === 'post') {
+							return {
+								consumed: [],
+								posParams: {
+									postId: new UrlSegment(urlSegment[1].path, {})
+								}
+							};
+						}
+
+						if (urlSegment[0].path === 'category') {
+							return {
+								consumed: urlSegment.slice(0),
+								posParams: {
+									categoryId: new UrlSegment(urlSegment[1].path, {})
+								}
+							};
+						}
+					}
+
+					// prettier-ignore
+					if (urlSegment.length === 4 && urlSegment[0].path === 'category' && urlSegment[2].path === 'post') {
+						return {
+							consumed: urlSegment.slice(0, 2),
+							posParams: {
+								categoryId: new UrlSegment(urlSegment[1].path, {}),
+								postId: new UrlSegment(urlSegment[3].path, {})
+							}
+						};
+					}
+
+					return null;
+				},
 				loadComponent: () => {
 					// prettier-ignore
 					return import('./user/post/post.component').then(m => m.UserPostComponent);
 				},
+				runGuardsAndResolvers: 'pathParamsChange',
 				resolve: {
 					data: UserPostResolverService
 				},
 				children: [
-					{
-						path: 'post',
-						redirectTo: '',
-						pathMatch: 'full'
-					},
 					{
 						path: 'post/:postId',
 						loadComponent: () => {
