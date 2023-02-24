@@ -9,9 +9,7 @@ import { WindowComponent } from '../../../shared/components/window/window.compon
 import { ShareComponent } from '../../../shared/components/share/share.component';
 import { PostDetailComponent } from '../../../shared/components/post/detail/detail.component';
 import { Post } from '../../../core/models/post.model';
-import { MetaService } from '../../../core/services/meta.service';
 import { PostService } from '../../../core/services/post.service';
-import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 import { TitleService } from '../../../core/services/title.service';
 
 @Component({
@@ -33,7 +31,6 @@ export class SearchPostDetailComponent implements OnInit, OnDestroy {
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
-		private metaService: MetaService,
 		private postService: PostService,
 		private titleService: TitleService
 	) {}
@@ -45,25 +42,16 @@ export class SearchPostDetailComponent implements OnInit, OnDestroy {
 				next: (post: Post) => {
 					this.post = post;
 
+					this.postService.setPostMeta(this.post);
+
 					this.titleService.appendTitle(this.post.name);
 				},
 				error: (error: any) => console.error(error)
 			});
-
-		this.setMeta();
 	}
 
 	ngOnDestroy(): void {
 		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
-	}
-
-	setMeta(): void {
-		const postMeta: any = this.postService.getPostMeta(this.post);
-
-		const metaOpenGraph: MetaOpenGraph = postMeta.metaOpenGraph;
-		const metaTwitter: MetaTwitter = postMeta.metaTwitter;
-
-		this.metaService.appendMeta(metaOpenGraph, metaTwitter);
 	}
 
 	onClose(): void {

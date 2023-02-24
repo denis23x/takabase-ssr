@@ -30,7 +30,6 @@ const routes: Routes = [
 	},
 	{
 		path: 'login',
-		title: undefined,
 		loadComponent: () => {
 			return import('./auth/auth.component').then(m => m.AuthComponent);
 		},
@@ -48,7 +47,6 @@ const routes: Routes = [
 	},
 	{
 		path: 'registration',
-		title: undefined,
 		loadComponent: () => {
 			return import('./auth/auth.component').then(m => m.AuthComponent);
 		},
@@ -66,7 +64,6 @@ const routes: Routes = [
 	},
 	{
 		path: 'reset',
-		title: undefined,
 		loadComponent: () => {
 			return import('./auth/auth.component').then(m => m.AuthComponent);
 		},
@@ -74,7 +71,7 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				title: 'Reset',
+				title: 'Reset password',
 				// prettier-ignore
 				loadComponent: () => {
           return import('./auth/reset/reset.component').then(m => m.AuthResetComponent);
@@ -84,7 +81,7 @@ const routes: Routes = [
 	},
 	{
 		path: 'create',
-		title: 'Create',
+		title: 'Create post',
 		loadComponent: () => {
 			return import('./create/create.component').then(m => m.CreateComponent);
 		},
@@ -95,7 +92,7 @@ const routes: Routes = [
 	},
 	{
 		path: 'edit/:postId',
-		title: undefined,
+		title: 'Edit post',
 		loadComponent: () => {
 			return import('./create/create.component').then(m => m.CreateComponent);
 		},
@@ -106,7 +103,6 @@ const routes: Routes = [
 	},
 	{
 		path: 'search',
-		title: undefined,
 		loadComponent: () => {
 			return import('./search/search.component').then(m => m.SearchComponent);
 		},
@@ -129,7 +125,6 @@ const routes: Routes = [
 				children: [
 					{
 						path: ':postId',
-						title: undefined,
 						// prettier-ignore
 						loadComponent: () => {
               return import('./search/post/detail/detail.component').then(m => m.SearchPostDetailComponent);
@@ -166,7 +161,6 @@ const routes: Routes = [
 	},
 	{
 		path: 'settings',
-		title: undefined,
 		// prettier-ignore
 		loadComponent: () => {
       return import('./settings/settings.component').then(m => m.SettingsComponent);
@@ -184,7 +178,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'account',
-				title: 'Account',
+				title: 'Account settings',
 				// prettier-ignore
 				loadComponent: () => {
           return import('./settings/account/account.component').then(m => m.SettingsAccountComponent);
@@ -192,7 +186,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'appearance',
-				title: 'Appearance',
+				title: 'Appearance settings',
 				// prettier-ignore
 				loadComponent: () => {
           return import('./settings/appearance/appearance.component').then(m => m.SettingsAppearanceComponent);
@@ -200,7 +194,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'profile',
-				title: 'Profile',
+				title: 'Profile settings',
 				// prettier-ignore
 				loadComponent: () => {
           return import('./settings/profile/profile.component').then(m => m.SettingsProfileComponent);
@@ -208,7 +202,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'security',
-				title: 'Security',
+				title: 'Security settings',
 				// prettier-ignore
 				loadComponent: () => {
           return import('./settings/security/security.component').then(m => m.SettingsSecurityComponent);
@@ -226,7 +220,6 @@ const routes: Routes = [
 
 			return null;
 		},
-		title: undefined,
 		loadComponent: () => {
 			return import('./user/user.component').then(m => m.UserComponent);
 		},
@@ -236,7 +229,6 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				title: undefined,
 				loadComponent: () => {
 					// prettier-ignore
 					return import('./user/post/post.component').then(m => m.UserPostComponent);
@@ -252,7 +244,6 @@ const routes: Routes = [
 					},
 					{
 						path: 'post/:postId',
-						title: undefined,
 						loadComponent: () => {
 							// prettier-ignore
 							return import('./user/post/detail/detail.component').then(m => m.UserPostDetailComponent);
@@ -270,7 +261,6 @@ const routes: Routes = [
 			},
 			{
 				path: 'category/:categoryId',
-				title: undefined,
 				loadComponent: () => {
 					// prettier-ignore
 					return import('./user/post/post.component').then(m => m.UserPostComponent);
@@ -286,7 +276,6 @@ const routes: Routes = [
 					},
 					{
 						path: 'post/:postId',
-						title: undefined,
 						loadComponent: () => {
 							// prettier-ignore
 							return import('./user/post/detail/detail.component').then(m => m.UserPostDetailComponent);
@@ -301,7 +290,6 @@ const routes: Routes = [
 	},
 	{
 		path: 'error/:status',
-		title: 'Error',
 		loadComponent: () => {
 			// prettier-ignore
 			return import('./error/error.component').then(m => m.ErrorComponent);

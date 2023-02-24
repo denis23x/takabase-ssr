@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
+import { TitleService } from '../core/services/title.service';
 
 @Component({
 	standalone: true,
@@ -37,7 +38,8 @@ export class ErrorComponent implements OnInit, OnDestroy {
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
-		private metaService: MetaService
+		private metaService: MetaService,
+		private titleService: TitleService
 	) {}
 
 	ngOnInit(): void {
@@ -58,6 +60,9 @@ export class ErrorComponent implements OnInit, OnDestroy {
 					this.message = message;
 
 					this.setMeta();
+
+					// prettier-ignore
+					this.titleService.setTitle([this.statusCode, this.message].join(' '));
 				},
 				error: (error: any) => console.error(error)
 			});

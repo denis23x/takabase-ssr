@@ -14,6 +14,7 @@ import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
 import { PostCreateDto } from '../dto/post/post-create.dto';
 import { PostGetOneDto } from '../dto/post/post-get-one.dto';
 import { PostUpdateDto } from '../dto/post/post-update.dto';
+import { MetaService } from './meta.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -23,7 +24,8 @@ export class PostService {
 		private apiService: ApiService,
 		private router: Router,
 		private snackbarService: SnackbarService,
-		private userService: UserService
+		private userService: UserService,
+		private metaService: MetaService
 	) {}
 
 	// prettier-ignore
@@ -106,6 +108,15 @@ export class PostService {
 			metaOpenGraph,
 			metaTwitter
 		};
+	}
+
+	setPostMeta(post: Post): void {
+		const postMeta: any = this.getPostMeta(post);
+
+		const metaOpenGraph: MetaOpenGraph = postMeta.metaOpenGraph;
+		const metaTwitter: MetaTwitter = postMeta.metaTwitter;
+
+		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
 	/** REST */
