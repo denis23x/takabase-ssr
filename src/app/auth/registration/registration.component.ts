@@ -18,6 +18,8 @@ import { HelperService } from '../../core/services/helper.service';
 import { UserCreateDto } from '../../core/dto/user/user-create.dto';
 import { User } from '../../core/models/user.model';
 import { LoginDto } from '../../core/dto/auth/login.dto';
+import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
+import { MetaService } from '../../core/services/meta.service';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -40,7 +42,8 @@ export class AuthRegistrationComponent implements OnInit {
 		private authService: AuthService,
 		private userService: UserService,
 		private formBuilder: FormBuilder,
-		private helperService: HelperService
+		private helperService: HelperService,
+		private metaService: MetaService
 	) {
 		this.registrationForm = this.formBuilder.group<RegistrationForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -59,7 +62,29 @@ export class AuthRegistrationComponent implements OnInit {
 		});
 	}
 
-	ngOnInit(): void {}
+	ngOnInit(): void {
+		this.setMeta();
+	}
+
+	setMeta(): void {
+		const title: string = 'Registration';
+
+		// prettier-ignore
+		const description: string = 'Creating an account with us is quick and easy';
+
+		const metaOpenGraph: MetaOpenGraph = {
+			['og:title']: title,
+			['og:description']: description,
+			['og:type']: 'website'
+		};
+
+		const metaTwitter: MetaTwitter = {
+			['twitter:title']: title,
+			['twitter:description']: description
+		};
+
+		this.metaService.setMeta(metaOpenGraph, metaTwitter);
+	}
 
 	onSubmitRegistrationForm(): void {
 		if (this.helperService.getFormValidation(this.registrationForm)) {

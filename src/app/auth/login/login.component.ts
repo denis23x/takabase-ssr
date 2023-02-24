@@ -18,6 +18,8 @@ import { HelperService } from '../../core/services/helper.service';
 import { UserService } from '../../core/services/user.service';
 import { LoginDto } from '../../core/dto/auth/login.dto';
 import { User } from '../../core/models/user.model';
+import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
+import { MetaService } from '../../core/services/meta.service';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -42,7 +44,8 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 		private authService: AuthService,
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
-		private userService: UserService
+		private userService: UserService,
+		private metaService: MetaService
 	) {
 		this.loginForm = this.formBuilder.group<LoginForm>({
 			email: this.formBuilder.nonNullable.control('', [
@@ -78,10 +81,32 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 				},
 				error: (error: any) => console.error(error)
 			});
+
+		this.setMeta();
 	}
 
 	ngOnDestroy(): void {
 		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
+	}
+
+	setMeta(): void {
+		const title: string = 'Login';
+
+		// prettier-ignore
+		const description: string = 'To access your account, please enter your login credentials below';
+
+		const metaOpenGraph: MetaOpenGraph = {
+			['og:title']: title,
+			['og:description']: description,
+			['og:type']: 'website'
+		};
+
+		const metaTwitter: MetaTwitter = {
+			['twitter:title']: title,
+			['twitter:description']: description
+		};
+
+		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
 	onLogin(value: any): void {

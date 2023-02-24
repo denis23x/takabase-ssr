@@ -12,6 +12,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../core/services/helper.service';
+import { MetaService } from '../../core/services/meta.service';
+import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 
 interface ResetForm {
 	email: FormControl<string>;
@@ -29,7 +31,8 @@ export class AuthResetComponent implements OnInit {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private helperService: HelperService
+		private helperService: HelperService,
+		private metaService: MetaService
 	) {
 		this.resetForm = this.formBuilder.group<ResetForm>({
 			email: this.formBuilder.nonNullable.control('', [
@@ -39,7 +42,29 @@ export class AuthResetComponent implements OnInit {
 		});
 	}
 
-	ngOnInit(): void {}
+	ngOnInit(): void {
+		this.setMeta();
+	}
+
+	setMeta(): void {
+		const title: string = 'Reset password';
+
+		// prettier-ignore
+		const description: string = 'To reset your password, please enter your email address below';
+
+		const metaOpenGraph: MetaOpenGraph = {
+			['og:title']: title,
+			['og:description']: description,
+			['og:type']: 'website'
+		};
+
+		const metaTwitter: MetaTwitter = {
+			['twitter:title']: title,
+			['twitter:description']: description
+		};
+
+		this.metaService.setMeta(metaOpenGraph, metaTwitter);
+	}
 
 	onSubmitResetForm(): void {
 		if (this.helperService.getFormValidation(this.resetForm)) {
