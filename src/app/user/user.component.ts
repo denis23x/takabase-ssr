@@ -1,17 +1,9 @@
 /** @format */
 
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {
-	ActivatedRoute,
-	NavigationEnd,
-	Router,
-	Event as RouterEvent,
-	Data,
-	Params,
-	RouterModule
-} from '@angular/router';
-import { EMPTY, of, Subscription } from 'rxjs';
-import { filter, map, startWith, switchMap } from 'rxjs/operators';
+import { ActivatedRoute, Router, Data, RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { filter, map, startWith } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -72,7 +64,7 @@ interface CategoryDeleteForm {
 export class UserComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 	activatedRouteFirstChildData$: Subscription | undefined;
-	routeEvents$: Subscription | undefined;
+	activatedRouteFirstChildUrl$: Subscription | undefined;
 
 	user: User | undefined;
 
@@ -147,23 +139,17 @@ export class UserComponent implements OnInit, OnDestroy {
 			});
 
 		// prettier-ignore
-		this.routeEvents$ = this.router.events
-			.pipe(
-				filter((routerEvent: RouterEvent) => routerEvent instanceof NavigationEnd),
-				startWith(EMPTY),
-				switchMap(() => of(this.activatedRoute.snapshot.firstChild.params)),
-				map((params: Params) => params.categoryId)
-			)
-			.subscribe({
-				next: (categoryId: string | undefined) => {
+		this.activatedRouteFirstChildUrl$ = this.activatedRoute.firstChild.url.subscribe({
+				next: () => {
+					const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
+
 					this.category = this.categoryList.find((category: Category) => {
 						return category.id === Number(categoryId);
 					});
 
-          this.titleService.setTitle(this.userService.getUserUrl(this.user).substring(1));
-          this.titleService.appendTitle(this.category?.name);
+					this.titleService.setTitle(this.userService.getUserUrl(this.user).substring(1));
 
-          this.setMeta();
+					this.setMeta();
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -192,7 +178,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		[
 			this.activatedRouteData$,
 			this.activatedRouteFirstChildData$,
-			this.routeEvents$,
+			this.activatedRouteFirstChildUrl$,
 			this.categoryEditForm$,
 			this.authUser$
 		].forEach($ => $?.unsubscribe());

@@ -17,20 +17,16 @@ export class TitleService extends TitleStrategy {
 		super();
 	}
 
-	override updateTitle(routerState: RouterStateSnapshot): void {
-		const title: string | undefined = this.buildTitle(routerState);
+	override updateTitle(routerStateSnapshot: RouterStateSnapshot): void {
+		const title: string | undefined = this.buildTitle(routerStateSnapshot);
 
-		if (title !== undefined) {
+		if (!!title) {
 			this.title.setTitle(this.getTitleFormatted(title));
 		}
 	}
 
-	setTitle(title: string | null | undefined): void {
-		if (!!title) {
-			this.title.setTitle(this.getTitleFormatted(title));
-		} else {
-			this.title.setTitle(this.titlePostfix);
-		}
+	setTitle(title: string): void {
+		this.title.setTitle(this.getTitleFormatted(title));
 	}
 
 	getTitle(): string {
@@ -45,11 +41,7 @@ export class TitleService extends TitleStrategy {
 		}
 	}
 
-	appendTitle(title: string | null | undefined): void {
-		if (!!title) {
-			this.setTitle(this.getTitleFormatted(title, true));
-		} else {
-			this.setTitle(this.getTitle());
-		}
+	appendTitle(title: string): void {
+		this.setTitle(this.getTitleFormatted(title, true));
 	}
 }
