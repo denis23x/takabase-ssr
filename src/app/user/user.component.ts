@@ -135,9 +135,6 @@ export class UserComponent implements OnInit, OnDestroy {
 					this.user = user;
 
 					this.categoryList = categoryList;
-
-					// prettier-ignore
-					this.titleService.setTitle(this.userService.getUserUrl(this.user).substring(1));
 				},
 				error: (error: any) => console.error(error)
 			});

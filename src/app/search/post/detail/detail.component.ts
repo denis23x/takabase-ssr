@@ -12,6 +12,7 @@ import { Post } from '../../../core/models/post.model';
 import { MetaService } from '../../../core/services/meta.service';
 import { PostService } from '../../../core/services/post.service';
 import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
+import { TitleService } from '../../../core/services/title.service';
 
 @Component({
 	standalone: true,
@@ -33,14 +34,19 @@ export class SearchPostDetailComponent implements OnInit, OnDestroy {
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
 		private metaService: MetaService,
-		private postService: PostService
+		private postService: PostService,
+		private titleService: TitleService
 	) {}
 
 	ngOnInit(): void {
 		this.activatedRouteData$ = this.activatedRoute.data
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
-				next: (post: Post) => (this.post = post),
+				next: (post: Post) => {
+					this.post = post;
+
+					this.titleService.appendTitle(this.post.name);
+				},
 				error: (error: any) => console.error(error)
 			});
 
