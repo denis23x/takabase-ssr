@@ -147,7 +147,7 @@ export class UserComponent implements OnInit, OnDestroy {
 						return category.id === Number(categoryId);
 					});
 
-					this.titleService.setTitle(this.userService.getUserUrl(this.user).substring(1));
+					this.titleService.setTitle(this.user.name);
 
           if (!!this.category) {
             this.titleService.appendTitle(this.category.name);
@@ -189,8 +189,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	setMeta(): void {
-		// prettier-ignore
-		const username: string = this.userService.getUserUrl(this.user).substring(1);
+		const username: string = this.user.name;
 
 		const title: string = this.category?.name || username;
 

@@ -8,10 +8,10 @@ import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
 	providedIn: 'root'
 })
 export class TitleService extends TitleStrategy {
-	titleDelimiter: string = ' - ';
+	titleDelimiter: string = ' | ';
 
 	titlePostfix: string = 'Draft';
-	titlePostfixDelimiter: string = ' | ';
+	titlePostfixDelimiter: string = ' - ';
 
 	constructor(private readonly title: Title) {
 		super();

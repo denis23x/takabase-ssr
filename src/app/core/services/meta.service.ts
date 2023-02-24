@@ -78,6 +78,21 @@ export class MetaService {
 				['og:locale']: 'en_US',
 				['og:site_name']: 'Draft'
 			};
+
+			/** Image absent case */
+
+			const metaOpenGraphImage: string[] = [
+				'og:image',
+				'og:image:alt',
+				'og:image:type'
+			];
+
+			// prettier-ignore
+			if (metaOpenGraphImage.some((tag: string) => !metaOpenGraph[tag])) {
+				metaOpenGraph['og:image'] = window.location.origin + '/assets/angular.svg';
+				metaOpenGraph['og:image:alt'] = 'Stay up to date with the latest posts and insights from Draft';
+				metaOpenGraph['og:image:type'] = 'image/svg';
+			}
 		}
 
 		Object.keys(metaOpenGraph).forEach((key: string) => {
