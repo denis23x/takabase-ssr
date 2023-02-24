@@ -2,8 +2,6 @@
 
 import { Inject, Injectable } from '@angular/core';
 import { Meta, MetaDefinition } from '@angular/platform-browser';
-import { filter, first, tap } from 'rxjs/operators';
-import { Event as RouterEvent, NavigationEnd, Router } from '@angular/router';
 import { PlatformService } from './platform.service';
 import { DOCUMENT } from '@angular/common';
 import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
@@ -16,7 +14,6 @@ export class MetaService {
 		@Inject(DOCUMENT)
 		private document: Document,
 		private meta: Meta,
-		private router: Router,
 		private platformService: PlatformService
 	) {}
 
@@ -46,13 +43,6 @@ export class MetaService {
 
 		this.setMetaOpenGraph(metaOpenGraph);
 		this.setMetaTwitter(metaTwitter);
-	}
-
-	appendMeta(metaOpenGraph: MetaOpenGraph, metaTwitter: MetaTwitter): void {
-		this.setCanonicalURL();
-
-		this.appendMetaOpenGraph(metaOpenGraph);
-		this.appendMetaTwitter(metaTwitter);
 	}
 
 	/** OpenGraph */
@@ -114,24 +104,6 @@ export class MetaService {
 		});
 	}
 
-	appendMetaOpenGraph(metaOpenGraph: MetaOpenGraph): void {
-		const openGraphTemp: MetaOpenGraph = this.getMetaOpenGraph();
-
-		this.setMetaOpenGraph(metaOpenGraph);
-
-		// prettier-ignore
-		this.router.events
-		  .pipe(
-		    filter((routerEvent: RouterEvent) => routerEvent instanceof NavigationEnd),
-        first(),
-        tap(() => this.removeMetaOpenGraph(metaOpenGraph))
-		  )
-		  .subscribe({
-		    next: () => this.setMetaOpenGraph(openGraphTemp),
-		    error: (error: any) => console.error(error)
-		  });
-	}
-
 	/** Twitter */
 
 	getMetaTwitter(): MetaTwitter {
@@ -189,23 +161,5 @@ export class MetaService {
 		Object.keys(metaTwitter).forEach((key: string) => {
 			this.meta.removeTag("name='" + key + "'");
 		});
-	}
-
-	appendMetaTwitter(metaTwitter: MetaTwitter): void {
-		const metaTwitterTemp: MetaTwitter = this.getMetaTwitter();
-
-		this.setMetaTwitter(metaTwitter);
-
-		// prettier-ignore
-		this.router.events
-      .pipe(
-        filter((routerEvent: RouterEvent) => routerEvent instanceof NavigationEnd),
-        first(),
-        tap(() => this.removeMetaTwitter(metaTwitter))
-      )
-      .subscribe({
-        next: () => this.setMetaTwitter(metaTwitterTemp),
-        error: (error: any) => console.error(error)
-      });
 	}
 }

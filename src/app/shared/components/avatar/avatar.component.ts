@@ -27,15 +27,7 @@ export class AvatarComponent implements OnInit {
 	ngOnInit(): void {}
 
 	getAvatar(user: User): string {
-		return `
-      <img
-        loading="lazy"
-        width="${this.avatarSize}"
-        height="${this.avatarSize}"
-        src="${user.avatar}"
-        alt="${user.name}"
-      >
-    `;
+		return `<img loading="lazy" width="${this.avatarSize}" height="${this.avatarSize}" src="${user.avatar}" alt="${user.name}">`;
 	}
 
 	getJdenticon(user: User): string {
