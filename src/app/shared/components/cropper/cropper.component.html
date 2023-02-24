@@ -11,7 +11,7 @@
 				class="flex flex-col space-y-4"
 				[disabled]="imageFormIsSubmitted || cropperIsSubmitted"
 			>
-				<p class="alert">
+				<p class="alert inline">
 					Browse file on your device or paste link from internet
 				</p>
 				<fieldset class="form-control" *ngIf="imageForm.get('url') as url">

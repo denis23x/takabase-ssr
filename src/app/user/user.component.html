@@ -32,7 +32,7 @@
 					</a>
 				</div>
 			</div>
-			<p class="alert w-full">
+			<p class="alert inline w-full">
 				{{ user.description || "No description" }}
 			</p>
 		</header>
@@ -117,7 +117,7 @@
 							Edit
 						</button>
 					</div>
-					<p class="alert w-full">
+					<p class="alert inline w-full">
 						{{ category.description }}
 					</p>
 				</div>
@@ -300,7 +300,7 @@
 					[formGroup]="categoryDeleteForm"
 					(ngSubmit)="onSubmitCategoryDeleteForm()"
 				>
-					<p class="alert">This action cannot be undone.</p>
+					<p class="alert inline">This action cannot be undone.</p>
 					<fieldset
 						class="flex flex-col space-y-4"
 						[disabled]="categoryDeleteFormIsSubmitted"

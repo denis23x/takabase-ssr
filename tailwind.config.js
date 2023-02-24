@@ -52,7 +52,7 @@ module.exports = {
     "border",
     "border-base-content/20",
     "md:max-h-[80vh]",
-    "md:max-w-[640px]",
+    "md:max-w-[calc(768px-4rem)]",
     "shadow-xl",
     "rounded-box",
     "blur-none",

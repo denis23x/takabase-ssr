@@ -5,7 +5,7 @@
 		class="fixed right-0 bottom-0 z-40 flex max-w-lg flex-col items-end justify-end space-y-5 p-8"
 	>
 		<li
-			class="alert shadow-lg"
+			class="alert items-center shadow-lg"
 			*ngFor="let snack of snackbarList"
 			[ngClass]="snack.options.classList"
 			(click)="onClose(snack.uuid)"

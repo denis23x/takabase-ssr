@@ -6,7 +6,7 @@
 		[formGroup]="resetForm"
 		(ngSubmit)="onSubmitResetForm()"
 	>
-		<p class="alert">Resetting email will terminate all sessions</p>
+		<p class="alert inline">Resetting email will terminate all sessions</p>
 		<fieldset class="flex flex-col space-y-4" [disabled]="resetFormIsSubmitted">
 			<fieldset class="form-control" *ngIf="resetForm.get('email') as email">
 				<label class="label" for="resetFormEmail">

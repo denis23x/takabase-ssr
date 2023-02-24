@@ -146,7 +146,7 @@
 						></button>
 					</div>
 				</fieldset>
-				<p class="alert">
+				<p class="alert inline">
 					The password must be 6-32 characters long, must contain at least one
 					number or special character
 				</p>
@@ -181,7 +181,7 @@
 				[formGroup]="confirmationForm"
 				(ngSubmit)="onSubmitConfirmationForm()"
 			>
-				<p class="alert">Confirmation will terminate all sessions</p>
+				<p class="alert inline">Confirmation will terminate all sessions</p>
 				<fieldset
 					class="flex flex-col space-y-4"
 					[disabled]="confirmationFormIsSubmitted"
