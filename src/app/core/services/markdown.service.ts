@@ -68,7 +68,7 @@ export class MarkdownService {
 			.use(mila, {
 				attrs: {
 					target: '_blank',
-					rel: 'noopener noreferrer'
+					rel: 'ugc noopener noreferrer'
 				}
 			})
 			.use(mark)
