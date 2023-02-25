@@ -1,14 +1,8 @@
-.btn.loading,
-.btn.loading:hover {
-  @apply pointer-events-auto;
-}
-
-.btn-disabled,
-.btn[disabled] {
-  @apply pointer-events-auto cursor-not-allowed no-animation;
-}
-
 input {
+  &:disabled {
+    @apply input-disabled;
+  }
+
   &[type="search"] {
     &::-webkit-search-decoration,
     &::-webkit-search-cancel-button,
@@ -16,5 +10,11 @@ input {
     &::-webkit-search-results-decoration {
       @apply hidden;
     }
+  }
+}
+
+textarea {
+  &:disabled {
+    @apply textarea-disabled;
   }
 }

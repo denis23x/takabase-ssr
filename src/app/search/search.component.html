@@ -41,19 +41,18 @@
 							appInputTrimWhitespace
 							[class.input-success]="query.touched && query.value"
 							[class.input-error]="query.touched && query.invalid"
-							[class.input-disabled]="searchFormIsSubmitted"
+							[disabled]="searchFormIsSubmitted"
 						/>
 						<button
 							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 							type="button"
-							title="Clear query"
 							aria-label="Clear query"
 							appSvgIcon
 							*ngIf="!!query.value.length"
 							[class.btn-success]="query.touched && query.value"
 							[class.btn-error]="query.touched && query.invalid"
 							[class.btn-ghost]="query.untouched"
-							[class.btn-disabled]="searchFormIsSubmitted"
+							[disabled]="searchFormIsSubmitted"
 							[appIcon]="'x'"
 							[appSquare]="'1.75rem'"
 							(click)="query.setValue('')"

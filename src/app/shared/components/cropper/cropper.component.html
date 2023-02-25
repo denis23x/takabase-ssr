@@ -45,20 +45,19 @@
                 appInputOnlyPaste
                 [class.input-success]="url.touched && url.value"
                 [class.input-error]="url.touched && url.invalid"
-                [class.input-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
+                [disabled]="imageFormIsSubmitted || cropperIsSubmitted"
                 (keydown)="onInputUrl()"
               />
               <button
                 class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
                 type="button"
-                title="Clear query"
                 aria-label="Clear query"
                 appSvgIcon
                 *ngIf="!!url.value.length"
                 [class.btn-success]="url.touched && url.value"
                 [class.btn-error]="url.touched && url.invalid"
                 [class.btn-ghost]="url.untouched"
-                [class.btn-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
+                [disabled]="imageFormIsSubmitted || cropperIsSubmitted"
                 [appIcon]="'x'"
                 [appSquare]="'1.75rem'"
                 (click)="onResetImageForm()"
@@ -75,9 +74,8 @@
 						<button
 							class="btn btn-primary"
 							type="button"
-							title="Browse"
 							aria-label="Browse"
-							[class.btn-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
+							[disabled]="imageFormIsSubmitted || cropperIsSubmitted"
 							(click)="imageFormFile.click()"
 						>
 							Browse
@@ -90,120 +88,125 @@
 			</fieldset>
 		</form>
 		<div class="flex flex-col space-y-4" [class.hidden]="!cropperFile">
-			<!-- prettier-ignore -->
-			<image-cropper
-				class="ngx-cropper rounded-box !p-4"
-				[class.ngx-cropper-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
-				[class.ngx-cropper-rounded]="cropperRound"
-				[imageFile]="cropperFile"
-				[format]="'png'"
-				[maintainAspectRatio]="true"
-				[containWithinAspectRatio]="false"
-				[resizeToWidth]="256"
-				[resizeToHeight]="256"
-				[cropper]="cropperPosition"
-				[roundCropper]="cropperRound"
-				[alignImage]="'center'"
-				[transform]="imageTransform"
-				[allowMoveImage]="cropperBackgroundIsDraggable"
-				(imageCropped)="onImageCropped($event)"
-			>
-			</image-cropper>
+			<div [class.cursor-not-allowed]="cropperIsSubmitted">
+				<!-- prettier-ignore -->
+				<image-cropper
+          class="ngx-cropper rounded-box !p-4"
+          [class.ngx-cropper-disabled]="imageFormIsSubmitted || cropperIsSubmitted"
+          [class.ngx-cropper-rounded]="cropperRound"
+          [imageFile]="cropperFile"
+          [format]="'png'"
+          [maintainAspectRatio]="true"
+          [containWithinAspectRatio]="false"
+          [resizeToWidth]="256"
+          [resizeToHeight]="256"
+          [cropper]="cropperPosition"
+          [roundCropper]="cropperRound"
+          [alignImage]="'center'"
+          [transform]="imageTransform"
+          [allowMoveImage]="cropperBackgroundIsDraggable"
+          (imageCropped)="onImageCropped($event)"
+        >
+        </image-cropper>
+			</div>
 			<div class="flex items-center justify-between gap-4">
-				<ul
-					class="menu rounded-btn menu-horizontal flex-nowrap overflow-x-auto overflow-y-hidden border border-base-content/20"
-					[class.pointer-events-none]="cropperIsSubmitted"
-					[class.border-transparent]="cropperIsSubmitted"
-					[class.bg-base-200]="cropperIsSubmitted"
-				>
-					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
-						<!-- prettier-ignore -->
-						<button
-							class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
-							type="button"
-							title="Move"
-							aria-label="Move"
-							appSvgIcon
-							[appIcon]="'arrows-move'"
-              [ngClass]="{ 'bg-success text-success-content' : cropperBackgroundIsDraggable }"
-							(click)="cropperBackgroundIsDraggable = !cropperBackgroundIsDraggable"
-						></button>
-					</li>
-					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
-						<button
-							class="-scale-x-1 fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
-							type="button"
-							title="Rotate counterclockwise"
-							aria-label="Rotate counterclockwise"
-							appSvgIcon
-							[appIcon]="'arrow-clockwise'"
-							(click)="onImageRotate(false)"
-						></button>
-					</li>
-					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
-						<button
-							class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
-							type="button"
-							title="Rotate clockwise"
-							aria-label="Rotate clockwise"
-							appSvgIcon
-							[appIcon]="'arrow-clockwise'"
-							(click)="onImageRotate(true)"
-						></button>
-					</li>
-					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
-						<button
-							class="rotate-90 fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
-							type="button"
-							title="Flip horizontal"
-							aria-label="Flip horizontal"
-							appSvgIcon
-							[appIcon]="'symmetry-vertical'"
-							(click)="onImageFlip(true)"
-						></button>
-					</li>
-					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
-						<button
-							class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
-							type="button"
-							title="Flip vertical"
-							aria-label="Flip vertical"
-							appSvgIcon
-							[appIcon]="'symmetry-vertical'"
-							(click)="onImageFlip(false)"
-						></button>
-					</li>
-					<li class="inline-block" [class.disabled]="cropperIsSubmitted">
-						<button
-							class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
-							type="button"
-							title="Zoom in"
-							aria-label="Zoom in"
-							appSvgIcon
-							[appIcon]="'zoom-in'"
-							(click)="onImageZoom(true)"
-						></button>
-					</li>
-					<li
-						class="inline-block"
-						[class.disabled]="cropperIsSubmitted || imageTransform.scale <= 1"
+				<div [class.cursor-not-allowed]="cropperIsSubmitted">
+					<ul
+						class="menu rounded-btn menu-horizontal flex-nowrap overflow-x-auto overflow-y-hidden border border-base-content/20"
+						[class.pointer-events-none]="cropperIsSubmitted"
+						[class.border-transparent]="cropperIsSubmitted"
+						[class.bg-base-200]="cropperIsSubmitted"
 					>
-						<button
-							class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
-							type="button"
-							title="Zoom out"
-							aria-label="Zoom out"
-							appSvgIcon
-							[appIcon]="'zoom-out'"
-							(click)="onImageZoom(false)"
-						></button>
-					</li>
-				</ul>
+						<li class="inline-block" [class.disabled]="cropperIsSubmitted">
+							<!-- prettier-ignore -->
+							<button
+                class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
+                type="button"
+                title="Move"
+                aria-label="Move"
+                appSvgIcon
+                [appIcon]="'arrows-move'"
+                [ngClass]="{ 'bg-success text-success-content' : cropperBackgroundIsDraggable }"
+                (click)="cropperBackgroundIsDraggable = !cropperBackgroundIsDraggable"
+              ></button>
+						</li>
+						<li class="inline-block" [class.disabled]="cropperIsSubmitted">
+							<button
+								class="-scale-x-1 fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
+								type="button"
+								title="Rotate counterclockwise"
+								aria-label="Rotate counterclockwise"
+								appSvgIcon
+								[appIcon]="'arrow-clockwise'"
+								(click)="onImageRotate(false)"
+							></button>
+						</li>
+						<li class="inline-block" [class.disabled]="cropperIsSubmitted">
+							<button
+								class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
+								type="button"
+								title="Rotate clockwise"
+								aria-label="Rotate clockwise"
+								appSvgIcon
+								[appIcon]="'arrow-clockwise'"
+								(click)="onImageRotate(true)"
+							></button>
+						</li>
+						<li class="inline-block" [class.disabled]="cropperIsSubmitted">
+							<button
+								class="rotate-90 fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
+								type="button"
+								title="Flip horizontal"
+								aria-label="Flip horizontal"
+								appSvgIcon
+								[appIcon]="'symmetry-vertical'"
+								(click)="onImageFlip(true)"
+							></button>
+						</li>
+						<li class="inline-block" [class.disabled]="cropperIsSubmitted">
+							<button
+								class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
+								type="button"
+								title="Flip vertical"
+								aria-label="Flip vertical"
+								appSvgIcon
+								[appIcon]="'symmetry-vertical'"
+								(click)="onImageFlip(false)"
+							></button>
+						</li>
+						<li class="inline-block" [class.disabled]="cropperIsSubmitted">
+							<button
+								class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
+								type="button"
+								title="Zoom in"
+								aria-label="Zoom in"
+								appSvgIcon
+								[appIcon]="'zoom-in'"
+								(click)="onImageZoom(true)"
+							></button>
+						</li>
+						<li
+							class="inline-block"
+							[class.disabled]="cropperIsSubmitted || imageTransform.scale <= 1"
+						>
+							<button
+								class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
+								type="button"
+								title="Zoom out"
+								aria-label="Zoom out"
+								appSvgIcon
+								[appIcon]="'zoom-out'"
+								(click)="onImageZoom(false)"
+							></button>
+						</li>
+					</ul>
+				</div>
 				<!-- prettier-ignore -->
 				<button
-					class="btn btn-error btn-outline flex-1"
+					class="btn btn-error flex-1"
 					type="button"
 					aria-label="Reset"
+          [class.btn-outline]="!imageFormIsSubmitted && !cropperIsSubmitted"
 					[disabled]="imageForm.invalid || imageFormIsSubmitted || cropperIsSubmitted"
 					(click)="onImageReset()"
 				>
@@ -214,7 +217,6 @@
 			<button
         class="btn btn-success w-full"
         type="button"
-        title="Submit"
         aria-label="Submit"
         [class.loading]="imageFormIsSubmitted || cropperIsSubmitted"
         [disabled]="imageForm.invalid || imageFormIsSubmitted || cropperIsSubmitted"

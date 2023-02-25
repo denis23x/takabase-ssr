@@ -89,7 +89,7 @@
 								appInputTrimWhitespace
 								[class.input-success]="name.touched && name.valid"
 								[class.input-error]="name.touched && name.invalid"
-								[class.input-disabled]="postFormIsSubmitted"
+								[disabled]="postFormIsSubmitted"
 							/>
 							<button
 								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
@@ -100,7 +100,7 @@
 								[class.btn-success]="name.touched && name.valid"
 								[class.btn-error]="name.touched && name.invalid"
 								[class.btn-ghost]="name.untouched"
-								[class.btn-disabled]="postFormIsSubmitted"
+								[disabled]="postFormIsSubmitted"
 								[appIcon]="'x'"
 								[appSquare]="'1.75rem'"
 								(click)="name.setValue('')"
@@ -147,7 +147,7 @@
                     readonly
                     [class.input-success]="categoryName.touched && categoryName.value"
                     [class.input-error]="categoryName.touched && categoryName.invalid"
-                    [class.input-disabled]="postFormIsSubmitted"
+                    [disabled]="postFormIsSubmitted"
                   />
 									<div
 										class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
@@ -187,7 +187,7 @@
 							[appIcon]="'folder-plus'"
 							[appSquare]="'1.375rem'"
 							[class.btn-outline]="!postFormIsSubmitted"
-							[class.btn-disabled]="postFormIsSubmitted"
+							[disabled]="postFormIsSubmitted"
 							(click)="onToggleCategoryForm(true)"
 						></button>
 					</div>
@@ -228,7 +228,7 @@
 								appInputTrimWhitespace
 								[class.input-success]="description.touched && description.valid"
 								[class.input-error]="description.touched && description.invalid"
-								[class.input-disabled]="postFormIsSubmitted"
+								[disabled]="postFormIsSubmitted"
 							/>
 							<button
 								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
@@ -239,7 +239,7 @@
 								[class.btn-success]="description.touched && description.valid"
 								[class.btn-error]="description.touched && description.invalid"
 								[class.btn-ghost]="description.untouched"
-								[class.btn-disabled]="postFormIsSubmitted"
+								[disabled]="postFormIsSubmitted"
 								[appIcon]="'x'"
 								[appSquare]="'1.75rem'"
 								(click)="description.setValue('')"
@@ -274,7 +274,6 @@
 						type="button"
 						aria-label="Fullscreen"
 						[class.btn-outline]="!postFormIsSubmitted && !fullscreenToggle"
-						[class.btn-disabled]="postFormIsSubmitted"
 						[disabled]="postFormIsSubmitted"
 						(click)="onFullscreen(!fullscreenToggle)"
 					>
@@ -344,9 +343,9 @@
 									[class.font-mono]="authUser.settings.monospace"
 									[class.textarea-success]="markdown.touched && !markdown.errors"
 									[class.textarea-error]="markdown.touched && !!markdown.errors"
-									[class.textarea-disabled]="postFormIsSubmitted"
 									[class.bg-base-200]="postFormIsSubmitted"
-								>
+                  [disabled]="postFormIsSubmitted"
+                >
                   {{ markdown.value }}
                 </textarea>
 							</fieldset>
@@ -569,7 +568,7 @@
 									appInputTrimWhitespace
 									[class.input-success]="name.touched && name.valid"
 									[class.input-error]="name.touched && name.invalid"
-									[class.input-disabled]="categoryFormIsSubmitted"
+									[disabled]="categoryFormIsSubmitted"
 								/>
 								<button
 									class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
@@ -581,7 +580,7 @@
 									[class.btn-success]="name.touched && name.valid"
 									[class.btn-error]="name.touched && name.invalid"
 									[class.btn-ghost]="name.untouched"
-									[class.btn-disabled]="categoryFormIsSubmitted"
+									[disabled]="categoryFormIsSubmitted"
 									[appIcon]="'x'"
 									[appSquare]="'1.75rem'"
 									(click)="name.setValue('')"
@@ -633,7 +632,7 @@
                 [rows]="4"
                 [class.textarea-success]="description.touched && !description.errors"
                 [class.textarea-error]="description.touched && !!description.errors"
-                [class.textarea-disabled]="categoryFormIsSubmitted"
+                [disabled]="categoryFormIsSubmitted"
               >
                 {{ description.value }}
               </textarea>

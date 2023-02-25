@@ -154,7 +154,7 @@
 					(click)="onMarkdownControl(control)"
 				></button>
 			</li>
-			<li class="inline-block">
+			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
 					class="flex p-0 active:bg-base-content/10 active:text-base-content"
 					appDropdown
@@ -264,18 +264,18 @@
                 [attr.placeholder]="'Type ' + urlFormControl.label.toLowerCase() + ' title'"
 								[class.input-success]="title.touched && title.valid"
 								[class.input-error]="title.touched && title.invalid"
-								[class.input-disabled]="urlFormIsSubmitted"
+								[disabled]="urlFormIsSubmitted"
 							/>
 							<button
 								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 								type="button"
-								title="Clear"
 								aria-label="Clear"
 								appSvgIcon
 								*ngIf="!!title.value.length"
 								[class.btn-success]="title.touched && title.valid"
 								[class.btn-error]="title.touched && title.invalid"
 								[class.btn-ghost]="title.untouched"
+								[disabled]="urlFormIsSubmitted"
 								[appIcon]="'x'"
 								[appSquare]="'1.75rem'"
 								(click)="title.setValue('')"
@@ -312,18 +312,18 @@
 								[attr.placeholder]="'Paste ' + urlFormControl.label.toLowerCase() + ' URL'"
 								[class.input-success]="url.touched && !url.errors"
 								[class.input-error]="url.touched && !!url.errors"
-								[class.input-disabled]="urlFormIsSubmitted"
+								[disabled]="urlFormIsSubmitted"
               />
 							<button
 								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 								type="button"
-								title="Clear"
 								aria-label="Clear"
 								appSvgIcon
 								*ngIf="!!url.value.length"
 								[class.btn-success]="url.touched && url.valid"
 								[class.btn-error]="url.touched && url.invalid"
 								[class.btn-ghost]="url.untouched"
+								[disabled]="urlFormIsSubmitted"
 								[appIcon]="'x'"
 								[appSquare]="'1.75rem'"
 								(click)="url.setValue('')"
@@ -332,7 +332,7 @@
 					</fieldset>
 					<fieldset class="form-control">
 						<button
-							class="btn btn-secondary w-full"
+							class="btn btn-success w-full"
 							type="button"
 							aria-label="Submit"
 							[class.loading]="urlFormIsSubmitted"

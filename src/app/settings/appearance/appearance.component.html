@@ -9,7 +9,7 @@
 		>
 			<fieldset
 				class="flex w-full flex-col gap-4"
-				[disabled]="appearanceIsSubmitted"
+				[disabled]="appearanceFormIsSubmitted"
 			>
 				<div
 					class="flex w-full flex-col items-start gap-4 sm:flex-row sm:justify-between"
@@ -29,45 +29,51 @@
 								daisyui.com
 							</a>
 						</label>
-						<div appDropdown>
-							<input
-								class="input input-bordered w-full cursor-pointer truncate"
-								id="appearanceFormTheme"
-								type="text"
-								aria-label="Theme"
-								placeholder="Select theme"
-								formControlName="theme"
-								slot="target"
-								readonly
-								[class.input-success]="theme.touched && theme.value"
-								[class.input-error]="theme.touched && theme.invalid"
-								[class.input-disabled]="appearanceIsSubmitted"
-							/>
+						<div [class.cursor-not-allowed]="appearanceFormIsSubmitted">
 							<div
-								class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
-								slot="content"
+								appDropdown
+								[class.pointer-events-none]="appearanceFormIsSubmitted"
+								[appCloseOnContentClick]="false"
 							>
-								<ul
-									class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
+								<input
+									class="input input-bordered w-full cursor-pointer truncate"
+									id="appearanceFormTheme"
+									type="text"
+									aria-label="Theme"
+									placeholder="Select theme"
+									formControlName="theme"
+									slot="target"
+									readonly
+									[class.input-success]="theme.touched && theme.value"
+									[class.input-error]="theme.touched && theme.invalid"
+									[disabled]="appearanceFormIsSubmitted"
+								/>
+								<div
+									class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
+									slot="content"
 								>
-									<li
-										class="flex w-full"
-										*ngFor="let themeValue of appearanceThemeList"
+									<ul
+										class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
 									>
-										<!-- prettier-ignore -->
-										<button
-											class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
-											type="button"
-                      appScrollIntoView
-                      [appScrollActive]="theme.value === themeValue"
-											[ngClass]="{ 'bg-success text-success-content': theme.value === themeValue }"
-											[attr.aria-label]="themeValue"
-											(click)="theme.setValue(themeValue)"
+										<li
+											class="flex w-full"
+											*ngFor="let themeValue of appearanceThemeList"
 										>
-											{{ themeValue }}
-										</button>
-									</li>
-								</ul>
+											<!-- prettier-ignore -->
+											<button
+                        class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+                        type="button"
+                        appScrollIntoView
+                        [appScrollActive]="theme.value === themeValue"
+                        [ngClass]="{ 'bg-success text-success-content': theme.value === themeValue }"
+                        [attr.aria-label]="themeValue"
+                        (click)="theme.setValue(themeValue)"
+                      >
+                        {{ themeValue }}
+                      </button>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</fieldset>
@@ -86,46 +92,52 @@
 								svgbackgrounds.com
 							</a>
 						</label>
-						<div appDropdown>
-							<!-- prettier-ignore -->
-							<input
-								class="input input-bordered w-full cursor-pointer truncate"
-								id="appearanceFormBackground"
-								type="text"
-								aria-label="Background"
-								placeholder="Select Background"
-								formControlName="themeBackground"
-								slot="target"
-								readonly
-								[class.input-success]="themeBackground.touched && themeBackground.value"
-								[class.input-error]="themeBackground.touched && themeBackground.invalid"
-								[class.input-disabled]="appearanceIsSubmitted"
-							/>
+						<div [class.cursor-not-allowed]="appearanceFormIsSubmitted">
 							<div
-								class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
-								slot="content"
+								appDropdown
+								[class.pointer-events-none]="appearanceFormIsSubmitted"
+								[appCloseOnContentClick]="false"
 							>
-								<ul
-									class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
+								<!-- prettier-ignore -->
+								<input
+                  class="input input-bordered w-full cursor-pointer truncate"
+                  id="appearanceFormBackground"
+                  type="text"
+                  aria-label="Background"
+                  placeholder="Select Background"
+                  formControlName="themeBackground"
+                  slot="target"
+                  readonly
+                  [class.input-success]="themeBackground.touched && themeBackground.value"
+                  [class.input-error]="themeBackground.touched && themeBackground.invalid"
+                  [disabled]="appearanceFormIsSubmitted"
+                />
+								<div
+									class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
+									slot="content"
 								>
-									<li
-										class="flex w-full overflow-hidden"
-										*ngFor="let backgroundValue of appearanceBackgroundList"
+									<ul
+										class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
 									>
-										<!-- prettier-ignore -->
-										<button
-                      class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
-											type="button"
-                      appScrollIntoView
-                      [appScrollActive]="themeBackground.value === backgroundValue"
-                      [ngClass]="{ 'bg-success text-success-content': themeBackground.value === backgroundValue }"
-											[attr.aria-label]="backgroundValue"
-											(click)="themeBackground.setValue(backgroundValue)"
+										<li
+											class="flex w-full overflow-hidden"
+											*ngFor="let backgroundValue of appearanceBackgroundList"
 										>
-											{{ backgroundValue }}
-										</button>
-									</li>
-								</ul>
+											<!-- prettier-ignore -->
+											<button
+                        class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+                        type="button"
+                        appScrollIntoView
+                        [appScrollActive]="themeBackground.value === backgroundValue"
+                        [ngClass]="{ 'bg-success text-success-content': themeBackground.value === backgroundValue }"
+                        [attr.aria-label]="backgroundValue"
+                        (click)="themeBackground.setValue(backgroundValue)"
+                      >
+                        {{ backgroundValue }}
+                      </button>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</fieldset>
@@ -148,45 +160,51 @@
 								prismjs.com
 							</a>
 						</label>
-						<div appDropdown>
-							<input
-								class="input input-bordered w-full cursor-pointer truncate"
-								id="appearanceFormPrism"
-								type="text"
-								aria-label="Prism"
-								placeholder="Select prism"
-								formControlName="themePrism"
-								slot="target"
-								readonly
-								[class.input-success]="themePrism.touched && themePrism.value"
-								[class.input-error]="themePrism.touched && themePrism.invalid"
-								[class.input-disabled]="appearanceIsSubmitted"
-							/>
+						<div [class.cursor-not-allowed]="appearanceFormIsSubmitted">
 							<div
-								class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
-								slot="content"
+								appDropdown
+								[class.pointer-events-none]="appearanceFormIsSubmitted"
+								[appCloseOnContentClick]="false"
 							>
-								<ul
-									class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
+								<input
+									class="input input-bordered w-full cursor-pointer truncate"
+									id="appearanceFormPrism"
+									type="text"
+									aria-label="Prism"
+									placeholder="Select prism"
+									formControlName="themePrism"
+									slot="target"
+									readonly
+									[class.input-success]="themePrism.touched && themePrism.value"
+									[class.input-error]="themePrism.touched && themePrism.invalid"
+									[disabled]="appearanceFormIsSubmitted"
+								/>
+								<div
+									class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
+									slot="content"
 								>
-									<li
-										class="flex w-full overflow-hidden"
-										*ngFor="let prismValue of appearancePrismList"
+									<ul
+										class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
 									>
-										<!-- prettier-ignore -->
-										<button
-                      class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
-                      type="button"
-                      appScrollIntoView
-                      [appScrollActive]="themePrism.value === prismValue"
-                      [ngClass]="{ 'bg-success text-success-content': themePrism.value === prismValue }"
-                      [attr.aria-label]="prismValue"
-                      (click)="themePrism.setValue(prismValue)"
-                    >
-                      {{ prismValue }}
-                    </button>
-									</li>
-								</ul>
+										<li
+											class="flex w-full overflow-hidden"
+											*ngFor="let prismValue of appearancePrismList"
+										>
+											<!-- prettier-ignore -->
+											<button
+                        class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+                        type="button"
+                        appScrollIntoView
+                        [appScrollActive]="themePrism.value === prismValue"
+                        [ngClass]="{ 'bg-success text-success-content': themePrism.value === prismValue }"
+                        [attr.aria-label]="prismValue"
+                        (click)="themePrism.setValue(prismValue)"
+                      >
+                        {{ prismValue }}
+                      </button>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</fieldset>
@@ -197,45 +215,51 @@
 						<label class="label" for="appearanceFormLanguage">
 							<span class="label-text">Language</span>
 						</label>
-						<div appDropdown>
-							<input
-								class="input input-bordered w-full cursor-pointer truncate"
-								id="appearanceFormLanguage"
-								type="text"
-								aria-label="Language"
-								placeholder="Select language"
-								formControlName="language"
-								slot="target"
-								readonly
-								[class.input-success]="language.touched && language.value"
-								[class.input-error]="language.touched && language.invalid"
-								[class.input-disabled]="appearanceIsSubmitted"
-							/>
+						<div [class.cursor-not-allowed]="appearanceFormIsSubmitted">
 							<div
-								class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
-								slot="content"
+								appDropdown
+								[class.pointer-events-none]="appearanceFormIsSubmitted"
+								[appCloseOnContentClick]="false"
 							>
-								<ul
-									class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
+								<input
+									class="input input-bordered w-full cursor-pointer truncate"
+									id="appearanceFormLanguage"
+									type="text"
+									aria-label="Language"
+									placeholder="Select language"
+									formControlName="language"
+									slot="target"
+									readonly
+									[class.input-success]="language.touched && language.value"
+									[class.input-error]="language.touched && language.invalid"
+									[disabled]="appearanceFormIsSubmitted"
+								/>
+								<div
+									class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
+									slot="content"
 								>
-									<li
-										class="flex w-full overflow-hidden"
-										*ngFor="let languageValue of appearanceLanguageList"
+									<ul
+										class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
 									>
-										<!-- prettier-ignore -->
-										<button
-                      class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
-											type="button"
-                      appScrollIntoView
-                      [appScrollActive]="language.value === languageValue"
-                      [ngClass]="{ 'bg-success text-success-content': language.value === languageValue }"
-											[attr.aria-label]="languageValue"
-											(click)="language.setValue(languageValue)"
+										<li
+											class="flex w-full overflow-hidden"
+											*ngFor="let languageValue of appearanceLanguageList"
 										>
-											{{ languageValue }}
-										</button>
-									</li>
-								</ul>
+											<!-- prettier-ignore -->
+											<button
+                        class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+                        type="button"
+                        appScrollIntoView
+                        [appScrollActive]="language.value === languageValue"
+                        [ngClass]="{ 'bg-success text-success-content': language.value === languageValue }"
+                        [attr.aria-label]="languageValue"
+                        (click)="language.setValue(languageValue)"
+                      >
+                        {{ languageValue }}
+                      </button>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</fieldset>
@@ -256,7 +280,8 @@
 								aria-label="Monospace"
 								formControlName="monospace"
 								[class.toggle-success]="monospace.touched && monospace.value"
-								[class.toggle-disabled]="appearanceIsSubmitted"
+								[class.toggle-disabled]="appearanceFormIsSubmitted"
+								[disabled]="appearanceFormIsSubmitted"
 							/>
 						</label>
 					</fieldset>
@@ -270,12 +295,14 @@
 								Position of caption buttons (close, minimize, maximize)
 							</span>
 							<div class="btn-group">
+								<!-- prettier-ignore -->
 								<button
 									class="btn btn-success btn-sm"
 									type="button"
 									*ngFor="let buttonsValue of appearanceButtonsList"
-									[class.btn-outline]="buttons.value !== buttonsValue"
-									[class.btn-inline]="buttons.value === buttonsValue"
+									[class.btn-outline]="buttons.value !== buttonsValue && !appearanceFormIsSubmitted"
+									[class.btn-inline]="buttons.value === buttonsValue && appearanceFormIsSubmitted"
+									[disabled]="appearanceFormIsSubmitted"
 									(click)="buttons.setValue(buttonsValue)"
 								>
 									{{ buttonsValue }}

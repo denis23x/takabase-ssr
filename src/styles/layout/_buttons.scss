@@ -1,0 +1,9 @@
+.btn.loading,
+.btn.loading:hover {
+  @apply pointer-events-auto;
+}
+
+.btn-disabled,
+.btn[disabled] {
+  @apply pointer-events-auto cursor-not-allowed no-animation;
+}

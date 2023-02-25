@@ -26,12 +26,11 @@
 				<button
 					class="btn"
 					type="button"
-					title="Image"
 					aria-label="Image"
 					[class.btn-success]="!!authUser.avatar"
 					[class.btn-primary]="!authUser.avatar"
-					[class.btn-disabled]="profileFormIsSubmitted"
 					[class.btn-outline]="!profileFormIsSubmitted"
+					[disabled]="profileFormIsSubmitted"
 					(click)="profileFormAvatarToggle = true"
 				>
 					Image
@@ -76,19 +75,18 @@
 							appInputTrimWhitespace
 							[class.input-success]="name.touched && name.valid"
 							[class.input-error]="name.touched && name.invalid"
-							[class.input-disabled]="profileFormIsSubmitted"
+							[disabled]="profileFormIsSubmitted"
 						/>
 						<button
 							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 							type="button"
-							title="Clear"
 							aria-label="Clear"
 							appSvgIcon
 							*ngIf="!!name.value.length"
 							[class.btn-success]="name.touched && name.valid"
 							[class.btn-error]="name.touched && name.invalid"
 							[class.btn-ghost]="name.untouched"
-							[class.btn-disabled]="profileFormIsSubmitted"
+							[disabled]="profileFormIsSubmitted"
 							[appIcon]="'x'"
 							[appSquare]="'1.75rem'"
 							(click)="name.setValue('')"
@@ -148,7 +146,7 @@
 						[rows]="4"
 						[class.textarea-success]="description.touched && !description.errors"
 						[class.textarea-error]="description.touched && !!description.errors"
-						[class.textarea-disabled]="profileFormIsSubmitted"
+						[disabled]="profileFormIsSubmitted"
 					>
             {{ description.value }}
           </textarea>
@@ -158,7 +156,6 @@
 					<button
 						class="btn btn-success w-full"
 						type="submit"
-						title="Submit"
 						aria-label="Submit"
 						[class.loading]="profileFormIsSubmitted"
 						[disabled]="profileForm.invalid || profileFormIsSubmitted || profileFormIsPristine"
@@ -182,7 +179,6 @@
 			<ng-container slot="content" *ngIf="profileFormAvatarToggle">
 				<app-cropper
 					[appField]="'avatars'"
-					[appRound]="true"
 					(submitted)="onSubmitCropper($event)"
 				>
 				</app-cropper>

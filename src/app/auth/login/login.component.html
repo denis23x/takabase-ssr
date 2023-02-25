@@ -40,7 +40,7 @@
 							placeholder="Type your email"
 							[class.input-success]="email.touched && email.valid"
 							[class.input-error]="email.touched && email.invalid"
-							[class.input-disabled]="loginFormIsSubmitted"
+							[disabled]="loginFormIsSubmitted"
 						/>
 						<button
 							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
@@ -51,7 +51,7 @@
 							[class.btn-success]="email.touched && email.valid"
 							[class.btn-error]="email.touched && email.invalid"
 							[class.btn-ghost]="email.untouched"
-							[class.btn-disabled]="loginFormIsSubmitted"
+							[disabled]="loginFormIsSubmitted"
 							[appIcon]="'x'"
 							[appSquare]="'1.75rem'"
 							(click)="email.setValue('')"
@@ -90,7 +90,7 @@
 							[type]="isVisible.value ? 'text' : 'password'"
 							[class.input-success]="password.touched && password.valid"
 							[class.input-error]="password.touched && password.invalid"
-							[class.input-disabled]="loginFormIsSubmitted"
+							[disabled]="loginFormIsSubmitted"
 						/>
 						<button
 							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
@@ -101,7 +101,7 @@
 							[class.btn-success]="password.touched && password.value"
 							[class.btn-error]="password.touched && password.invalid"
 							[class.btn-ghost]="password.untouched"
-							[class.btn-disabled]="loginFormIsSubmitted"
+							[disabled]="loginFormIsSubmitted"
 							[appIcon]="'incognito'"
 							[appSquare]="'1.5em'"
 							(touchstart)="isVisible.value = !isVisible.value"

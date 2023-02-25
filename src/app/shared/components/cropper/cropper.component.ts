@@ -125,10 +125,9 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		const abstractControl: AbstractControl = this.imageForm.get('url');
 
 		abstractControl.setValue('');
-		abstractControl.setValidators([
-			Validators.required,
-			this.helperService.getCustomValidator('url-image')
-		]);
+
+		// prettier-ignore
+		abstractControl.setValidators([Validators.required, this.helperService.getCustomValidator('url-image')]);
 
 		const validationTimeout = setTimeout(() => {
 			if (this.helperService.getFormValidation(this.imageForm)) {

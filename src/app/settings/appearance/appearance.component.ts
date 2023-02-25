@@ -49,7 +49,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 	appearanceForm: FormGroup | undefined;
 	appearanceForm$: Subscription | undefined;
-	appearanceIsSubmitted: boolean | false;
+	appearanceFormIsSubmitted: boolean | false;
 
 	appearanceThemeList: string[] = environment.themes.sort();
 	appearanceBackgroundList: string[] = environment.backgrounds.sort();
@@ -83,13 +83,14 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 					this.appearanceForm.patchValue(user.settings);
 					this.appearanceForm.markAllAsTouched();
+					this.appearanceFormIsSubmitted = true;
 				},
 				error: (error: any) => console.error(error)
 			});
 
 		this.appearanceForm$ = this.appearanceForm.valueChanges.subscribe({
 			next: (value: any) => {
-				this.appearanceIsSubmitted = true;
+				this.appearanceFormIsSubmitted = true;
 
 				const userUpdateDto: UserUpdateDto = {
 					settings: value
@@ -99,9 +100,9 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 					next: (user: User) => {
 						this.authService.setUser(user);
 
-						this.appearanceIsSubmitted = false;
+						this.appearanceFormIsSubmitted = false;
 					},
-					error: () => (this.appearanceIsSubmitted = false)
+					error: () => (this.appearanceFormIsSubmitted = false)
 				});
 			},
 			error: (error: any) => console.error(error)

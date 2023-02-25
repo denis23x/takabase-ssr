@@ -23,7 +23,6 @@
 				<div class="flex items-center justify-end gap-4">
 					<a
 						class="btn btn-primary"
-						title="Settings"
 						aria-label="Settings"
 						*ngIf="authUser?.id === user.id"
 						[routerLink]="['/settings']"
@@ -110,7 +109,6 @@
 						</div>
 						<button
 							class="btn btn-primary"
-							title="Edit"
 							aria-label="Edit"
 							*ngIf="authUser?.id === user.id"
 							(click)="onToggleCategoryEditForm(true)"
@@ -186,19 +184,18 @@
 									appInputTrimWhitespace
 									[class.input-success]="name.touched && name.valid"
 									[class.input-error]="name.touched && name.invalid"
-									[class.input-disabled]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
+									[disabled]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
 								/>
 								<button
 									class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 									type="button"
-									title="Clear"
 									aria-label="Clear"
 									appSvgIcon
 									*ngIf="!!name.value.length"
 									[class.btn-success]="name.touched && name.valid"
 									[class.btn-error]="name.touched && name.invalid"
 									[class.btn-ghost]="name.untouched"
-									[class.btn-disabled]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
+									[disabled]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
 									[appIcon]="'x'"
 									[appSquare]="'1.75rem'"
 									(click)="name.setValue('')"
@@ -250,7 +247,7 @@
                 [rows]="4"
                 [class.textarea-success]="description.touched && !description.errors"
                 [class.textarea-error]="description.touched && !!description.errors"
-                [class.textarea-disabled]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
+                [disabled]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
               >
                 {{ description.value }}
               </textarea>
@@ -269,7 +266,6 @@
 							<button
 								class="btn btn-error"
 								type="button"
-								title="Delete"
 								aria-label="Delete"
 								[class.btn-outline]="!categoryEditFormIsSubmitted && !categoryDeleteFormToggle"
 								[disabled]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
@@ -342,19 +338,18 @@
 									appInputTrimWhitespace
 									[class.input-success]="name.touched && name.valid"
 									[class.input-error]="name.touched && name.invalid"
-									[class.input-disabled]="categoryDeleteFormIsSubmitted"
+									[disabled]="categoryDeleteFormIsSubmitted"
 								/>
 								<button
 									class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 									type="button"
-									title="Clear"
 									aria-label="Clear"
 									appSvgIcon
 									*ngIf="!!name.value.length"
 									[class.btn-success]="name.touched && name.valid"
 									[class.btn-error]="name.touched && name.invalid"
 									[class.btn-ghost]="name.untouched"
-									[class.btn-disabled]="categoryDeleteFormIsSubmitted"
+									[disabled]="categoryDeleteFormIsSubmitted"
 									[appIcon]="'x'"
 									[appSquare]="'1.75rem'"
 									(click)="name.setValue('')"
@@ -372,7 +367,9 @@
 											Move category posts to another category
 										</span>
 										<span
-											class="badge indicator-item badge-success w-max translate-x-full translate-y-0 text-xs"
+											class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+											[class.badge-success]="!categoryDeleteFormIsSubmitted"
+											[class.opacity-50]="categoryDeleteFormIsSubmitted"
 										>
 											Optional
 										</span>
@@ -386,10 +383,15 @@
 									<ul
 										class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
 										*ngIf="category as categoryActive"
+										[class.cursor-not-allowed]="categoryDeleteFormIsSubmitted"
 									>
 										<ng-container *ngFor="let category of categoryList">
-											<li *ngIf="category.id !== categoryActive.id">
-												<!-- prettier-ignore -->
+											<!-- prettier-ignore -->
+											<li
+												*ngIf="category.id !== categoryActive.id"
+												[class.disabled]="categoryDeleteFormIsSubmitted"
+												[class.pointer-events-none]="categoryDeleteFormIsSubmitted"
+											>
 												<button
                           class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
                           type="button"
@@ -414,7 +416,6 @@
 								class="btn"
                 [ngClass]="!!categoryId.value ? 'btn-success' : 'btn-error'"
 								type="submit"
-								title="Submit"
 								aria-label="Submit"
 								[class.loading]="categoryDeleteFormIsSubmitted"
 								[disabled]="categoryDeleteForm.invalid || categoryDeleteFormIsSubmitted"

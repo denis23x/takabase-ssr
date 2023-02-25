@@ -49,19 +49,18 @@
 							appInputTrimWhitespace
 							[class.input-success]="email.touched && email.valid"
 							[class.input-error]="email.touched && email.invalid"
-							[class.input-disabled]="emailFormIsSubmitted"
+							[disabled]="emailFormIsSubmitted"
 						/>
 						<button
 							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 							type="button"
-							title="Clear"
 							aria-label="Clear"
 							appSvgIcon
 							*ngIf="!!email.value.length"
 							[class.btn-success]="email.touched && email.valid"
 							[class.btn-error]="email.touched && email.invalid"
 							[class.btn-ghost]="email.untouched"
-							[class.btn-disabled]="emailFormIsSubmitted"
+							[disabled]="emailFormIsSubmitted"
 							[appIcon]="'x'"
 							[appSquare]="'1.75rem'"
 							(click)="email.setValue('')"
@@ -72,7 +71,6 @@
 					<button
 						class="btn btn-success w-full"
 						type="submit"
-						title="Submit"
 						aria-label="Submit"
 						[disabled]="emailForm.invalid || emailFormIsSubmitted"
 					>
@@ -125,19 +123,18 @@
 							[type]="isVisible.value ? 'text' : 'password'"
 							[class.input-success]="password.touched && password.valid"
 							[class.input-error]="password.touched && password.invalid"
-							[class.input-disabled]="passwordFormIsSubmitted"
+							[disabled]="passwordFormIsSubmitted"
 						/>
 						<button
 							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 							type="button"
-							title="Password"
 							aria-label="Password"
 							appSvgIcon
 							*ngIf="!!password.value.length"
 							[class.btn-success]="password.touched && password.value"
 							[class.btn-error]="password.touched && password.invalid"
 							[class.btn-ghost]="password.untouched"
-							[class.btn-disabled]="passwordFormIsSubmitted"
+							[disabled]="passwordFormIsSubmitted"
 							[appIcon]="'incognito'"
 							[appSquare]="'1.5em'"
 							(touchstart)="isVisible.value = !isVisible.value"
@@ -154,7 +151,6 @@
 					<button
 						class="btn btn-success w-full"
 						type="submit"
-						title="Submit"
 						aria-label="Submit"
 						[disabled]="passwordForm.invalid || passwordFormIsSubmitted"
 					>
@@ -219,19 +215,18 @@
 								[type]="isVisible.value ? 'text' : 'password'"
 								[class.input-success]="password.touched && password.valid"
 								[class.input-error]="password.touched && password.invalid"
-								[class.input-disabled]="confirmationFormIsSubmitted"
+								[disabled]="confirmationFormIsSubmitted"
 							/>
 							<button
 								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 								type="button"
-								title="Password"
 								aria-label="Password"
 								appSvgIcon
 								*ngIf="!!password.value.length"
 								[class.btn-success]="password.touched && password.value"
 								[class.btn-error]="password.touched && password.invalid"
 								[class.btn-ghost]="password.untouched"
-								[class.btn-disabled]="confirmationFormIsSubmitted"
+								[disabled]="confirmationFormIsSubmitted"
 								[appIcon]="'incognito'"
 								[appSquare]="'1.5em'"
 								(touchstart)="isVisible.value = !isVisible.value"
@@ -245,7 +240,6 @@
 						<button
 							class="btn btn-success w-full"
 							type="submit"
-							title="Submit"
 							aria-label="Submit"
 							[class.loading]="confirmationFormIsSubmitted"
 							[disabled]="confirmationForm.invalid || confirmationFormIsSubmitted"

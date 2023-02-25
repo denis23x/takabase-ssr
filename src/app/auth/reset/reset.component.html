@@ -41,7 +41,7 @@
 							placeholder="Type your email"
 							[class.input-success]="email.touched && email.valid"
 							[class.input-error]="email.touched && email.invalid"
-							[class.input-disabled]="resetFormIsSubmitted"
+							[disabled]="resetFormIsSubmitted"
 						/>
 						<button
 							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
@@ -52,7 +52,7 @@
 							[class.btn-success]="email.touched && email.valid"
 							[class.btn-error]="email.touched && email.invalid"
 							[class.btn-ghost]="email.untouched"
-							[class.btn-disabled]="resetFormIsSubmitted"
+							[disabled]="resetFormIsSubmitted"
 							[appIcon]="'x'"
 							[appSquare]="'1.75rem'"
 							(click)="email.setValue('')"
