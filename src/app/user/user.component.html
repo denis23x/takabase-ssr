@@ -297,7 +297,10 @@
 					[formGroup]="categoryDeleteForm"
 					(ngSubmit)="onSubmitCategoryDeleteForm()"
 				>
-					<p class="alert inline">This action cannot be undone.</p>
+					<p class="alert inline">
+						Are you sure you want to delete this category?
+						<span class="underline">This action cannot be undone</span>
+					</p>
 					<fieldset
 						class="flex flex-col space-y-4"
 						[disabled]="categoryDeleteFormIsSubmitted"
@@ -381,7 +384,7 @@
 									[class.border-success]="categoryId.value"
 								>
 									<ul
-										class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
+										class="flex max-h-52 flex-col flex-nowrap overflow-y-auto p-2"
 										*ngIf="category as categoryActive"
 										[class.cursor-not-allowed]="categoryDeleteFormIsSubmitted"
 									>

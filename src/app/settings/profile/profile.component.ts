@@ -123,8 +123,14 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		[this.activatedRouteData$, this.profileForm$].forEach($ => $?.unsubscribe());
 	}
 
+	onToggleProfileFormAvatar(toggle: boolean): void {
+		this.profileFormIsSubmitted = toggle;
+
+		this.profileFormAvatarToggle = toggle;
+	}
+
 	onSubmitCropper(fileCreateDto: FileCreateDto): void {
-		this.profileFormAvatarToggle = false;
+		this.onToggleProfileFormAvatar(false);
 
 		const userUpdateDto: UserUpdateDto = {
 			avatar: fileCreateDto.path

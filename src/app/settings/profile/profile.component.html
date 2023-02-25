@@ -24,14 +24,12 @@
 					</div>
 				</div>
 				<button
-					class="btn"
+					class="btn btn-success"
 					type="button"
 					aria-label="Image"
-					[class.btn-success]="!!authUser.avatar"
-					[class.btn-primary]="!authUser.avatar"
-					[class.btn-outline]="!profileFormIsSubmitted"
+					[class.btn-outline]="!authUser.avatar && !profileFormIsSubmitted"
 					[disabled]="profileFormIsSubmitted"
-					(click)="profileFormAvatarToggle = true"
+					(click)="onToggleProfileFormAvatar(true)"
 				>
 					Image
 				</button>
@@ -168,13 +166,13 @@
 	</div>
 	<app-overlay
 		[appToggle]="profileFormAvatarToggle"
-		(clicked)="profileFormAvatarToggle = false"
-		(escaped)="profileFormAvatarToggle = false"
+		(clicked)="onToggleProfileFormAvatar(false)"
+		(escaped)="onToggleProfileFormAvatar(false)"
 	>
 		<app-window
 			slot="content"
 			[appTitle]="'Image'"
-			(closed)="profileFormAvatarToggle = false"
+			(closed)="onToggleProfileFormAvatar(false)"
 		>
 			<ng-container slot="content" *ngIf="profileFormAvatarToggle">
 				<app-cropper

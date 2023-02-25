@@ -20,7 +20,7 @@
 						height="256"
 						[ngClass]="{ invisible: !image.value, 'pointer-events-none opacity-50 saturate-0': postFormIsSubmitted }"
 						[src]="image.value"
-						(click)="postFormImageToggle = true"
+						(click)="onTogglePostFormImage(true)"
 					/>
 					<div
 						class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -34,7 +34,7 @@
 							[appIcon]="'plus'"
 							[appSquare]="'1.75rem'"
 							[disabled]="postFormIsSubmitted"
-							(click)="postFormImageToggle = true"
+							(click)="onTogglePostFormImage(true)"
 						></button>
 					</div>
 				</figure>
@@ -355,10 +355,13 @@
 						class="flex flex-col items-center justify-center"
 						[class.hidden]="!fullscreenToggle"
 					>
+						<!-- prettier-ignore -->
 						<ul
 							class="menu rounded-btn menu-horizontal border border-base-content/20 sm:menu-vertical"
+							[class.bg-base-300]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle"
+							[class.border-transparent]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle"
 						>
-							<li class="inline-block">
+							<li class="inline-block" [class.disabled]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle">
 								<button
 									class="p-3.5"
 									type="button"
@@ -374,7 +377,7 @@
 									></i>
 								</button>
 							</li>
-							<li class="inline-block">
+							<li class="inline-block" [class.disabled]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle">
 								<button
 									class="fill-current p-3.5"
 									type="button"
@@ -386,7 +389,7 @@
 									(click)="onFullscreenHide('fullscreenHiddenControls')"
 								></button>
 							</li>
-							<li class="inline-block">
+							<li class="inline-block" [class.disabled]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle">
 								<button
 									class="fill-current p-3.5"
 									type="button"
@@ -398,8 +401,7 @@
 									(click)="fullscreenScrollSync = !fullscreenScrollSync"
 								></button>
 							</li>
-							<li class="inline-block">
-								<!-- prettier-ignore -->
+							<li class="inline-block" [class.disabled]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle">
 								<button
 									class="fill-current p-3.5"
 									type="button"
@@ -411,7 +413,7 @@
 									(click)="fullscreenDisableTextWrapping = !fullscreenDisableTextWrapping"
 								></button>
 							</li>
-							<li class="inline-block">
+							<li class="inline-block" [class.disabled]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle">
 								<button
 									class="p-3.5"
 									type="button"
@@ -447,27 +449,26 @@
 					</section>
 				</div>
 			</div>
+			<!-- prettier-ignore -->
 			<div
 				class="grid grid-cols-12 gap-4"
 				[class.hidden]="fullscreenHiddenControls"
 			>
-				<!-- prettier-ignore -->
 				<button
 					class="btn btn-primary col-span-4 sm:col-span-3"
 					type="button"
 					aria-label="Preview"
-					[class.btn-outline]="postForm.valid && !postFormIsSubmitted && !postFormIsPristine"
-					[disabled]="postForm.invalid || postFormIsSubmitted || postFormIsPristine"
-					(click)="onTogglePreviewPost()"
+					[class.btn-outline]="postForm.valid && !postFormIsSubmitted"
+					[disabled]="postForm.invalid || postFormIsSubmitted"
+					(click)="onTogglePreviewPost(true)"
 				>
 					Preview
 				</button>
-				<!-- prettier-ignore -->
 				<button
 					class="btn btn-success col-span-8 sm:col-span-9"
 					type="button"
 					aria-label="Submit"
-					[class.loading]="postFormIsSubmitted"
+					[class.loading]="postFormIsSubmitted && !postFormImageToggle && !categoryFormToggle && !postFormPreviewToggle && !postDeleteToggle"
 					[disabled]="postForm.invalid || postFormIsSubmitted || postFormIsPristine"
 					(click)="onSubmitPostForm()"
 				>
@@ -480,6 +481,7 @@
 					*ngIf="!!post"
 					[class.btn-outline]="!postFormIsSubmitted"
 					[disabled]="postFormIsSubmitted"
+					(click)="onToggleDeletePost(true)"
 				>
 					Delete
 				</button>
@@ -488,14 +490,14 @@
 	</div>
 	<app-overlay
 		[appToggle]="postFormPreviewToggle"
-		(clicked)="postFormPreviewToggle = false"
-		(escaped)="postFormPreviewToggle = false"
+		(clicked)="onTogglePreviewPost(false)"
+		(escaped)="onTogglePreviewPost(false)"
 	>
 		<app-window
 			slot="content"
 			[appTitle]="'Preview'"
 			[appButtons]="['close', 'fullscreen']"
-			(closed)="postFormPreviewToggle = false"
+			(closed)="onTogglePreviewPost(false)"
 		>
 			<ng-container slot="content">
 				<app-post-detail
@@ -655,13 +657,13 @@
 	</app-overlay>
 	<app-overlay
 		[appToggle]="postFormImageToggle"
-		(clicked)="postFormImageToggle = false"
-		(escaped)="postFormImageToggle = false"
+		(clicked)="onTogglePostFormImage(false)"
+		(escaped)="onTogglePostFormImage(false)"
 	>
 		<app-window
 			slot="content"
 			[appTitle]="'Image'"
-			(closed)="postFormImageToggle = false"
+			(closed)="onTogglePostFormImage(false)"
 		>
 			<ng-container slot="content" *ngIf="postFormImageToggle">
 				<app-cropper
@@ -669,6 +671,36 @@
 					(submitted)="onSubmitPostFormImage($event)"
 				>
 				</app-cropper>
+			</ng-container>
+		</app-window>
+	</app-overlay>
+	<app-overlay
+		[appToggle]="postDeleteToggle"
+		(clicked)="onToggleDeletePost(false)"
+		(escaped)="onToggleDeletePost(false)"
+	>
+		<app-window
+			slot="content"
+			[appTitle]="'Confirmation'"
+			(closed)="onToggleDeletePost(false)"
+		>
+			<ng-container slot="content">
+				<div class="flex w-window max-w-[425px] flex-col space-y-4 p-4">
+					<p class="alert inline">
+						Are you sure you want to delete this post?
+						<span class="underline">This action cannot be undone</span>
+					</p>
+					<button
+						class="btn btn-error"
+						type="button"
+						aria-label="Submit"
+						[class.loading]="postDeleteIsSubmitted"
+						[disabled]="postDeleteIsSubmitted"
+						(click)="onSubmitPostDelete()"
+					>
+						Submit
+					</button>
+				</div>
 			</ng-container>
 		</app-window>
 	</app-overlay>

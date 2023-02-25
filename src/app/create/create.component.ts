@@ -89,6 +89,9 @@ export class CreateComponent implements OnInit, OnDestroy {
 	postFormPreviewToggle: boolean = false;
 	postFormPreviewPost: Post | undefined;
 
+	postDeleteToggle: boolean = false;
+	postDeleteIsSubmitted: boolean = false;
+
 	authUser: User | undefined;
 	authUser$: Subscription | undefined;
 
@@ -212,6 +215,12 @@ export class CreateComponent implements OnInit, OnDestroy {
 		[this.activatedRouteData$, this.postForm$, this.authUser$].forEach($ => $?.unsubscribe());
 	}
 
+	onTogglePostFormImage(toggle: boolean): void {
+		this.postFormIsSubmitted = toggle;
+
+		this.postFormImageToggle = toggle;
+	}
+
 	onToggleCategory(toggle: boolean): void {
 		const abstractControl: AbstractControl = this.postForm.get('categoryName');
 
@@ -227,18 +236,32 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleCategoryForm(toggle: boolean): void {
+		this.postFormIsSubmitted = toggle;
+
 		this.categoryFormToggle = toggle;
 		this.categoryForm.reset();
 	}
 
-	onTogglePreviewPost(): void {
-		this.postFormPreviewPost = {
-			...this.postForm.value,
-			user: this.authUser,
-			category: this.category
-		};
+	onTogglePreviewPost(toggle: boolean): void {
+		this.postFormIsSubmitted = toggle;
 
-		this.postFormPreviewToggle = true;
+		if (toggle) {
+			this.postFormPreviewPost = {
+				...this.postForm.value,
+				user: this.authUser,
+				category: this.category
+			};
+		} else {
+			this.postFormPreviewPost = undefined;
+		}
+
+		this.postFormPreviewToggle = toggle;
+	}
+
+	onToggleDeletePost(toggle: boolean): void {
+		this.postFormIsSubmitted = toggle;
+
+		this.postDeleteToggle = toggle;
 	}
 
 	onSelectCategory(category: Category): void {
@@ -316,7 +339,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitPostFormImage(fileCreateDto?: FileCreateDto): void {
-		this.postFormImageToggle = false;
+		this.onTogglePostFormImage(false);
+
 		this.postForm.get('image').setValue(fileCreateDto.path);
 	}
 
@@ -341,5 +365,21 @@ export class CreateComponent implements OnInit, OnDestroy {
 				error: () => (this.categoryFormIsSubmitted = false)
 			});
 		}
+	}
+
+	onSubmitPostDelete(): void {
+		this.postDeleteIsSubmitted = true;
+
+		const postId: number = this.post.id;
+
+		this.postService.delete(postId).subscribe({
+			next: (post: Post) => {
+				// prettier-ignore
+				this.router
+          .navigate([this.userService.getUserUrl(this.post.user), 'category', this.post.category.id])
+          .then(() => this.snackbarService.success('Sadly..', 'Post has been deleted'));
+			},
+			error: () => (this.postDeleteIsSubmitted = false)
+		});
 	}
 }
