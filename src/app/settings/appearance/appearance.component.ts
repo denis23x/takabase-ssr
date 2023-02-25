@@ -83,7 +83,6 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 					this.appearanceForm.patchValue(user.settings);
 					this.appearanceForm.markAllAsTouched();
-					this.appearanceFormIsSubmitted = true;
 				},
 				error: (error: any) => console.error(error)
 			});

@@ -1,7 +1,11 @@
+/* Update default loading behaviour */
+
 .btn.loading,
 .btn.loading:hover {
   @apply pointer-events-auto;
 }
+
+/* Update default behaviour */
 
 .btn-disabled,
 .btn[disabled] {
