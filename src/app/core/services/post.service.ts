@@ -150,7 +150,7 @@ export class PostService {
 		return this.apiService.get('/posts', postGetAllDto);
 	}
 
-	getOne(id: number, postGetOneDto?: PostGetOneDto): Observable<Post> {
+	getOne(id: number, postGetOneDto: PostGetOneDto): Observable<Post> {
 		return this.apiService.get('/posts/' + id, postGetOneDto);
 	}
 

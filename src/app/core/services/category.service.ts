@@ -8,6 +8,7 @@ import { CategoryGetAllDto } from '../dto/category/category-get-all.dto';
 import { Category } from '../models/category.model';
 import { CategoryUpdateDto } from '../dto/category/category-update.dto';
 import { CategoryDeleteDto } from '../dto/category/category-delete.dto';
+import { CategoryGetOneDto } from '../dto/category/category-get-one.dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -23,8 +24,9 @@ export class CategoryService {
 		return this.apiService.get('/categories', categoryGetAllDto);
 	}
 
-	getOne(id: number): Observable<Category> {
-		return this.apiService.get('/categories/' + id);
+	// prettier-ignore
+	getOne(id: number, categoryGetOneDto: CategoryGetOneDto): Observable<Category> {
+		return this.apiService.get('/categories/' + id, categoryGetOneDto);
 	}
 
 	// prettier-ignore

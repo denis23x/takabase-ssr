@@ -6,13 +6,11 @@
 			class="rounded-box flex w-full flex-col items-stretch gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl sm:flex-row"
 		>
 			<div class="flex items-center gap-4">
+				<!-- prettier-ignore -->
 				<figure
 					class="rounded-btn relative overflow-hidden border border-base-content/20"
 					*ngIf="postForm.get('image') as image"
-					[class.pointer-events-none]="postFormIsSubmitted"
-					[class.bg-base-200]="postFormIsSubmitted"
-					[class.border-transparent]="postFormIsSubmitted"
-					[class.border-success]="!postFormIsSubmitted && image.value"
+					[ngClass]="{ 'cursor-not-allowed border-transparent bg-base-200': postFormIsSubmitted, 'border-success': !postFormIsSubmitted && image.value }"
 				>
 					<img
 						class="aspect-square h-20 w-20 cursor-pointer object-cover sm:h-44 sm:w-44"
@@ -20,9 +18,7 @@
 						loading="lazy"
 						width="256"
 						height="256"
-						[class.invisible]="!image.value"
-						[class.opacity-50]="postFormIsSubmitted"
-						[class.saturate-0]="postFormIsSubmitted"
+						[ngClass]="{ invisible: !image.value, 'pointer-events-none opacity-50 saturate-0': postFormIsSubmitted }"
 						[src]="image.value"
 						(click)="postFormImageToggle = true"
 					/>
@@ -37,7 +33,7 @@
 							appSvgIcon
 							[appIcon]="'plus'"
 							[appSquare]="'1.75rem'"
-							[class.btn-disabled]="postFormIsSubmitted"
+							[disabled]="postFormIsSubmitted"
 							(click)="postFormImageToggle = true"
 						></button>
 					</div>
@@ -98,7 +94,6 @@
 							<button
 								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 								type="button"
-								title="Clear"
 								aria-label="Clear"
 								appSvgIcon
 								*ngIf="!!name.value.length"
@@ -134,54 +129,59 @@
 									<span class="label-text mr-2">Category</span>
 								</div>
 							</label>
-							<div appDropdown (toggled)="onToggleCategory($event)">
-								<!-- prettier-ignore -->
-								<input
-                  class="input input-bordered w-full cursor-pointer truncate"
-                  id="postFormCategoryName"
-                  type="text"
-                  aria-label="Category"
-                  placeholder="Select post category"
-                  formControlName="categoryName"
-                  slot="target"
-                  readonly
-                  [class.input-success]="categoryName.touched && categoryName.value"
-                  [class.input-error]="categoryName.touched && categoryName.invalid"
-                  [class.input-disabled]="postFormIsSubmitted"
-                />
+							<div [class.cursor-not-allowed]="postFormIsSubmitted">
 								<div
-									class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
-									slot="content"
-									[class.hidden]="!categoryList.length"
+									appDropdown
+									[class.pointer-events-none]="postFormIsSubmitted"
+									(toggled)="onToggleCategory($event)"
 								>
-									<ul
-										class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
+									<!-- prettier-ignore -->
+									<input
+                    class="input input-bordered w-full cursor-pointer truncate"
+                    id="postFormCategoryName"
+                    type="text"
+                    aria-label="Category"
+                    placeholder="Select post category"
+                    formControlName="categoryName"
+                    slot="target"
+                    readonly
+                    [class.input-success]="categoryName.touched && categoryName.value"
+                    [class.input-error]="categoryName.touched && categoryName.invalid"
+                    [class.input-disabled]="postFormIsSubmitted"
+                  />
+									<div
+										class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
+										slot="content"
+										[class.hidden]="!categoryList.length"
 									>
-										<li
-											class="flex w-full"
-											*ngFor="let category of categoryList"
+										<ul
+											class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
 										>
-											<!-- prettier-ignore -->
-											<button
-												class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
-												type="button"
-                        appScrollIntoView
-                        [appScrollActive]="categoryName.value === category.name"
-												[ngClass]="{ 'bg-success text-success-content': categoryName.value === category.name }"
-												[attr.aria-label]="category.name"
-												(click)="onSelectCategory(category)"
+											<li
+												class="flex w-full"
+												*ngFor="let category of categoryList"
 											>
-												{{ category.name }}
-											</button>
-										</li>
-									</ul>
+												<!-- prettier-ignore -->
+												<button
+                          class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+                          type="button"
+                          appScrollIntoView
+                          [appScrollActive]="categoryName.value === category.name"
+                          [ngClass]="{ 'bg-success text-success-content': categoryName.value === category.name }"
+                          [attr.aria-label]="category.name"
+                          (click)="onSelectCategory(category)"
+                        >
+                          {{ category.name }}
+                        </button>
+											</li>
+										</ul>
+									</div>
 								</div>
 							</div>
 						</fieldset>
 						<button
 							class="btn btn-success fill-current p-3"
 							type="button"
-							title="Create"
 							aria-label="Create"
 							appSvgIcon
 							[appIcon]="'folder-plus'"
@@ -233,7 +233,6 @@
 							<button
 								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 								type="button"
-								title="Clear"
 								aria-label="Clear"
 								appSvgIcon
 								*ngIf="!!description.value.length"
@@ -264,6 +263,7 @@
 					<div
 						class="flex overflow-auto"
 						appMarkdown
+						[class.cursor-not-allowed]="postFormIsSubmitted"
 						[appTextareaId]="'postFormTextarea'"
 						[appPreviewId]="'postFormPreview'"
 						[appScrollSync]="fullscreenScrollSync"
@@ -272,9 +272,9 @@
 					<button
 						class="btn btn-primary !outline-0"
 						type="button"
-						title="Fullscreen"
 						aria-label="Fullscreen"
 						[class.btn-outline]="!postFormIsSubmitted && !fullscreenToggle"
+						[class.btn-disabled]="postFormIsSubmitted"
 						[disabled]="postFormIsSubmitted"
 						(click)="onFullscreen(!fullscreenToggle)"
 					>
@@ -456,7 +456,6 @@
 				<button
 					class="btn btn-primary col-span-4 sm:col-span-3"
 					type="button"
-					title="Preview"
 					aria-label="Preview"
 					[class.btn-outline]="postForm.valid && !postFormIsSubmitted && !postFormIsPristine"
 					[disabled]="postForm.invalid || postFormIsSubmitted || postFormIsPristine"
@@ -468,7 +467,6 @@
 				<button
 					class="btn btn-success col-span-8 sm:col-span-9"
 					type="button"
-					title="Submit"
 					aria-label="Submit"
 					[class.loading]="postFormIsSubmitted"
 					[disabled]="postForm.invalid || postFormIsSubmitted || postFormIsPristine"
@@ -479,7 +477,6 @@
 				<button
 					class="btn btn-error col-span-12"
 					type="button"
-					title="Delete"
 					aria-label="Delete"
 					*ngIf="!!post"
 					[class.btn-outline]="!postFormIsSubmitted"

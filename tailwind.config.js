@@ -83,8 +83,6 @@ module.exports = {
       ["default"]: "default",
       ["pointer"]: "pointer",
       ["not-allowed"]: "not-allowed",
-      ["col-resize"]: "col-resize",
-      ["row-resize"]: "row-resize",
     },
     extend: {
       width: {
