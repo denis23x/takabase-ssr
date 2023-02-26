@@ -53,7 +53,7 @@
       </g>
     </pattern>
     <pattern id='d' width='19' height='17' patternUnits='userSpaceOnUse' patternTransform='scale(50) translate(-980 -735)'>
-      <g fill='hsl(var(--pf))'>
+      <g fill='hsl(var(--p))'>
         <use href='#s' y='9' />
         <use href='#s' x='16' y='5' />
         <use href='#s' x='14' y='2' />

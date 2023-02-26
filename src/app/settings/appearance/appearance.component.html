@@ -21,7 +21,7 @@
 						<label class="label" for="appearanceFormTheme">
 							<span class="label-text">Theme</span>
 							<a
-								class="link label-text-alt"
+								class="label-text-alt link"
 								href="https://daisyui.com/docs/themes/"
 								rel="noopener noreferrer"
 								target="_blank"
@@ -33,10 +33,9 @@
 							<div
 								appDropdown
 								[class.pointer-events-none]="appearanceFormIsSubmitted"
-								[appCloseOnContentClick]="false"
 							>
 								<input
-									class="input input-bordered w-full cursor-pointer truncate"
+									class="input-bordered input w-full cursor-pointer truncate"
 									id="appearanceFormTheme"
 									type="text"
 									aria-label="Theme"
@@ -84,7 +83,7 @@
 						<label class="label" for="appearanceFormBackground">
 							<span class="label-text">Background</span>
 							<a
-								class="link label-text-alt"
+								class="label-text-alt link"
 								href="https://www.svgbackgrounds.com/set/free-svg-backgrounds-and-patterns/"
 								rel="noopener noreferrer"
 								target="_blank"
@@ -96,7 +95,6 @@
 							<div
 								appDropdown
 								[class.pointer-events-none]="appearanceFormIsSubmitted"
-								[appCloseOnContentClick]="false"
 							>
 								<!-- prettier-ignore -->
 								<input
@@ -119,21 +117,21 @@
 									<ul
 										class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
 									>
+										<!-- prettier-ignore -->
 										<li
 											class="flex w-full overflow-hidden"
-											*ngFor="let backgroundValue of appearanceBackgroundList"
+											*ngFor="let themeBackgroundValue of appearanceThemeBackgroundList"
 										>
-											<!-- prettier-ignore -->
 											<button
                         class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
                         type="button"
                         appScrollIntoView
-                        [appScrollActive]="themeBackground.value === backgroundValue"
-                        [ngClass]="{ 'bg-success text-success-content': themeBackground.value === backgroundValue }"
-                        [attr.aria-label]="backgroundValue"
-                        (click)="themeBackground.setValue(backgroundValue)"
+                        [appScrollActive]="themeBackground.value === themeBackgroundValue"
+                        [ngClass]="{ 'bg-success text-success-content': themeBackground.value === themeBackgroundValue }"
+                        [attr.aria-label]="themeBackgroundValue"
+                        (click)="themeBackground.setValue(themeBackgroundValue)"
                       >
-                        {{ backgroundValue }}
+                        {{ themeBackgroundValue }}
                       </button>
 										</li>
 									</ul>
@@ -152,7 +150,7 @@
 						<label class="label" for="appearanceFormPrism">
 							<span class="label-text">Prism</span>
 							<a
-								class="link label-text-alt"
+								class="label-text-alt link"
 								href="https://prismjs.com/"
 								rel="noopener noreferrer"
 								target="_blank"
@@ -164,10 +162,9 @@
 							<div
 								appDropdown
 								[class.pointer-events-none]="appearanceFormIsSubmitted"
-								[appCloseOnContentClick]="false"
 							>
 								<input
-									class="input input-bordered w-full cursor-pointer truncate"
+									class="input-bordered input w-full cursor-pointer truncate"
 									id="appearanceFormPrism"
 									type="text"
 									aria-label="Prism"
@@ -188,19 +185,19 @@
 									>
 										<li
 											class="flex w-full overflow-hidden"
-											*ngFor="let prismValue of appearancePrismList"
+											*ngFor="let themePrismValue of appearanceThemePrismList"
 										>
 											<!-- prettier-ignore -->
 											<button
                         class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
                         type="button"
                         appScrollIntoView
-                        [appScrollActive]="themePrism.value === prismValue"
-                        [ngClass]="{ 'bg-success text-success-content': themePrism.value === prismValue }"
-                        [attr.aria-label]="prismValue"
-                        (click)="themePrism.setValue(prismValue)"
+                        [appScrollActive]="themePrism.value === themePrismValue"
+                        [ngClass]="{ 'bg-success text-success-content': themePrism.value === themePrismValue }"
+                        [attr.aria-label]="themePrismValue"
+                        (click)="themePrism.setValue(themePrismValue)"
                       >
-                        {{ prismValue }}
+                        {{ themePrismValue }}
                       </button>
 										</li>
 									</ul>
@@ -219,10 +216,9 @@
 							<div
 								appDropdown
 								[class.pointer-events-none]="appearanceFormIsSubmitted"
-								[appCloseOnContentClick]="false"
 							>
 								<input
-									class="input input-bordered w-full cursor-pointer truncate"
+									class="input-bordered input w-full cursor-pointer truncate"
 									id="appearanceFormLanguage"
 									type="text"
 									aria-label="Language"

@@ -24,7 +24,7 @@
 					appSvgIcon
 					[class.pointer-events-none]="disabled.value"
 					[appIcon]="'arrow-left'"
-					(click)="onMarkdownBack()"
+					(click)="setBack()"
 				></button>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
@@ -54,7 +54,7 @@
 								class="w-full whitespace-nowrap text-base-content active:bg-success active:text-success-content"
 								type="button"
 								[attr.aria-label]="control.label"
-								(click)="onMarkdownControl(control)"
+								(click)="setTextareaValue(getTextareaValue(control))"
 							>
 								<span class="block" [ngClass]="control.classList">
 									{{ control.label }}
@@ -94,7 +94,7 @@
 								class="w-full whitespace-nowrap text-base-content active:bg-success active:text-success-content"
 								type="button"
 								[attr.aria-label]="control.label"
-								(click)="onMarkdownControl(control)"
+								(click)="setTextareaValue(getTextareaValue(control))"
 							>
 								<span class="block" [ngClass]="control.classList">
 									{{ control.label }}
@@ -132,7 +132,7 @@
 								type="button"
 								[attr.aria-label]="control.label"
 								[attr.title]="control.label"
-								(click)="onMarkdownControl(control)"
+								(click)="setTextareaValue(getTextareaValue(control))"
 							>
 								{{ control.label }}
 							</button>
@@ -151,7 +151,7 @@
 					[attr.aria-label]="control.label"
 					[attr.title]="control.label"
 					[appIcon]="control.icon"
-					(click)="onMarkdownControl(control)"
+					(click)="onToggleUrlForm(true, control)"
 				></button>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
@@ -187,20 +187,20 @@
 					[attr.aria-label]="controlListCode.label"
 					[attr.title]="controlListCode.label"
 					[appIcon]="controlListCode.icon"
-					(click)="onMarkdownControl(controlListCode)"
+					(click)="setTextareaValue(getTextareaValue(controlListCode))"
 				></button>
 			</li>
 		</ul>
 	</div>
 	<app-overlay
 		[appToggle]="urlFormModal"
-		(clicked)="onCloseUrlForm()"
-		(escaped)="onCloseUrlForm()"
+		(clicked)="onToggleUrlForm(false)"
+		(escaped)="onToggleUrlForm(false)"
 	>
 		<app-window
 			slot="content"
 			[appTitle]="urlFormControl?.label"
-			(closed)="onCloseUrlForm()"
+			(closed)="onToggleUrlForm(false)"
 		>
 			<form
 				class="flex w-window max-w-[512px] flex-col bg-base-100 p-4"
@@ -274,7 +274,7 @@
 								[disabled]="urlFormIsSubmitted"
 							/>
 							<button
-								class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
+								class="btn btn-sm btn-circle absolute top-2 right-2 fill-current"
 								type="button"
 								aria-label="Clear"
 								appSvgIcon
@@ -319,7 +319,7 @@
 								[disabled]="urlFormIsSubmitted"
               />
 							<button
-								class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
+								class="btn btn-sm btn-circle absolute top-2 right-2 fill-current"
 								type="button"
 								aria-label="Clear"
 								appSvgIcon
@@ -336,7 +336,7 @@
 					</fieldset>
 					<fieldset class="form-control">
 						<button
-							class="btn-success btn w-full"
+							class="btn btn-success w-full"
 							type="button"
 							aria-label="Submit"
 							[class.loading]="urlFormIsSubmitted"

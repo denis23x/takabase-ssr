@@ -268,10 +268,12 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 				// prettier-ignore
 				data: async () => fetch('/assets/emoji/github_emojis.json').then((response: Response) => response.json()),
 				onEmojiSelect: (event: any) => {
-					this.onMarkdownControl({
+					const markdownControl: MarkdownControl = {
 						...this.controlListEmojiMart,
 						handler: () => event.shortcodes
-					});
+					};
+
+					this.setTextareaValue(this.getTextareaValue(markdownControl));
 				},
 				maxFrequentRows: 3,
 				set: 'native'
@@ -332,7 +334,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 			});
 	}
 
-	onMarkdownBack(): void {
+	setBack(): void {
 		const history: string[] = this.textareaHistory$.getValue().slice(0, -1);
 		const historyValue: string = history[history.length - 1];
 
@@ -340,55 +342,6 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.textareaHistoryToggle = false;
 
 		this.setTextareaValue(historyValue);
-	}
-
-	onMarkdownControl(markdownControl: MarkdownControl): void {
-		if (markdownControl.key.includes('url')) {
-			/** Build dynamic form */
-
-			// prettier-ignore
-			switch (markdownControl.key) {
-				case 'url-link': {
-          this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', [Validators.required]));
-          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required]));
-
-          break;
-        }
-				case 'url-image': {
-          this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', []));
-          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required]));
-
-					break;
-				}
-        case 'url-youtube': {
-          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required]));
-
-          break;
-        }
-				default: {
-					break;
-				}
-			}
-
-			/** Apply selection */
-
-			// prettier-ignore
-			const markdownTextarea: MarkdownTextarea = this.getMarkdownTextarea(this.textarea);
-
-			if (!!markdownTextarea.selection) {
-				Object.keys(this.urlForm.controls).forEach((key: string) => {
-					const abstractControl: AbstractControl = this.urlForm.get(key);
-
-					abstractControl.setValue(markdownTextarea.selection);
-					abstractControl.markAsTouched();
-				});
-			}
-
-			this.urlFormControl = markdownControl;
-			this.urlFormModal = true;
-		} else {
-			this.setTextareaValue(this.getTextareaValue(markdownControl));
-		}
 	}
 
 	getMarkdownTextarea(textAreaElement: HTMLTextAreaElement): MarkdownTextarea {
@@ -447,20 +400,65 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.textarea.focus();
 	}
 
+	onToggleUrlForm(toggle: boolean, markdownControl?: MarkdownControl): void {
+		if (toggle) {
+			/** Build dynamic form */
+
+			// prettier-ignore
+			switch (markdownControl.key) {
+        case 'url-link': {
+          this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', [Validators.required]));
+          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required]));
+
+          break;
+        }
+        case 'url-image': {
+          this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', []));
+          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required]));
+
+          break;
+        }
+        case 'url-youtube': {
+          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required]));
+
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+
+			/** Apply selection */
+
+			// prettier-ignore
+			const markdownTextarea: MarkdownTextarea = this.getMarkdownTextarea(this.textarea);
+
+			if (!!markdownTextarea.selection) {
+				Object.keys(this.urlForm.controls).forEach((key: string) => {
+					const abstractControl: AbstractControl = this.urlForm.get(key);
+
+					abstractControl.setValue(markdownTextarea.selection);
+					abstractControl.markAsTouched();
+				});
+			}
+
+			this.urlFormControl = markdownControl;
+			this.urlFormModal = true;
+		} else {
+			// prettier-ignore
+			Object.keys(this.urlForm.controls).forEach((key: string) => this.urlForm.removeControl(key));
+
+			this.urlFormControl = undefined;
+			this.urlFormModal = false;
+		}
+	}
+
 	onSubmitUrlForm(): void {
 		if (this.helperService.getFormValidation(this.urlForm)) {
 			// prettier-ignore
 			this.setTextareaValue(this.getTextareaValue(this.urlFormControl, this.urlForm));
 
-			this.onCloseUrlForm();
+			this.onToggleUrlForm(false);
 		}
-	}
-
-	onCloseUrlForm(): void {
-		// prettier-ignore
-		Object.keys(this.urlForm.controls).forEach((key: string) => this.urlForm.removeControl(key));
-
-		this.urlFormControl = undefined;
-		this.urlFormModal = false;
 	}
 }

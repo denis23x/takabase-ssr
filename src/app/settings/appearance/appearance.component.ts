@@ -51,9 +51,10 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	appearanceForm$: Subscription | undefined;
 	appearanceFormIsSubmitted: boolean | false;
 
-	appearanceThemeList: string[] = environment.themes.sort();
-	appearanceBackgroundList: string[] = environment.backgrounds.sort();
-	appearancePrismList: string[] = environment.prism.sort();
+	appearanceThemeList: string[] = [];
+	appearanceThemeBackgroundList: string[] = [];
+	appearanceThemePrismList: string[] = [];
+
 	appearanceLanguageList: string[] = ['English', 'Italian', 'French'];
 	appearanceButtonsList: string[] = ['left', 'right'];
 
@@ -81,6 +82,11 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 				next: (user: User) => {
 					this.authUser = user;
 
+					// prettier-ignore
+					['theme', 'themeBackground', 'themePrism'].forEach((key: string) => {
+            user.settings[key] = this.getTransformListValue(user.settings[key], key);
+          })
+
 					this.appearanceForm.patchValue(user.settings);
 					this.appearanceForm.markAllAsTouched();
 				},
@@ -95,6 +101,11 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 					settings: value
 				};
 
+				// prettier-ignore
+				['theme', 'themeBackground', 'themePrism'].forEach((key: string) => {
+          userUpdateDto.settings[key] = this.getTransformListValue(userUpdateDto.settings[key], key, true);
+        })
+
 				this.userService.update(this.authUser.id, userUpdateDto).subscribe({
 					next: (user: User) => {
 						this.authService.setUser(user);
@@ -106,10 +117,58 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 			},
 			error: (error: any) => console.error(error)
 		});
+
+		/** Transform appearance list */
+
+		this.setTransformList();
 	}
 
 	ngOnDestroy(): void {
 		// prettier-ignore
 		[this.activatedRouteData$, this.appearanceForm$].forEach($ => $?.unsubscribe());
+	}
+
+	setTransformList(): void {
+		this.appearanceThemeList = environment.themes
+			.sort()
+			.map((theme: string) => this.getTransformListValue(theme, 'theme'));
+
+		// prettier-ignore
+		this.appearanceThemeBackgroundList = environment.backgrounds
+      .sort()
+      .map((themeBackground: string) => this.getTransformListValue(themeBackground, 'themeBackground'));
+
+		// prettier-ignore
+		this.appearanceThemePrismList = environment.prism
+      .sort()
+      .map((themePrism: string) => this.getTransformListValue(themePrism, 'themePrism'));
+	}
+
+	getTransformListValue(value: string, key: string, update?: boolean): string {
+		switch (key) {
+			case 'theme': {
+				if (update) {
+					return value.charAt(0).toLowerCase() + value.slice(1);
+				} else {
+					return value.charAt(0).toUpperCase() + value.slice(1);
+				}
+			}
+			case 'themeBackground':
+			case 'themePrism': {
+				if (update) {
+					return value
+						.split(' ')
+						.map((name: string) => name.charAt(0).toLowerCase() + name.slice(1))
+						.join('-');
+				} else {
+					return value
+						.split('-')
+						.map((name: string) => name.charAt(0).toUpperCase() + name.slice(1))
+						.join(' ');
+				}
+			}
+			default:
+				return value;
+		}
 	}
 }
