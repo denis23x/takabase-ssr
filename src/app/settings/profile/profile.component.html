@@ -15,16 +15,17 @@
 						<span class="truncate text-xl font-bold text-base-content">
 							{{ authUser.name }}
 						</span>
+						<!-- prettier-ignore -->
 						<time
 							class="text-sm text-base-content/50"
-							[attr.datetime]="authUser.createdAt | dayjs: 'format':'YYYY-M-D'"
+							[attr.datetime]="authUser.createdAt | dayjs : 'format' : 'YYYY-M-D'"
 						>
-							registered {{ authUser.createdAt | dayjs: "fromX" }}
+							registered {{ authUser.createdAt | dayjs : "fromX" }}
 						</time>
 					</div>
 				</div>
 				<button
-					class="btn btn-success"
+					class="btn-success btn"
 					type="button"
 					aria-label="Image"
 					[class.btn-outline]="!authUser.avatar && !profileFormIsSubmitted"
@@ -43,7 +44,7 @@
 					<label class="label" for="profileFormName">
 						<div class="indicator">
 							<span
-								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 								*ngIf="name.touched && !!name.errors"
 								[ngSwitch]="true"
 							>
@@ -64,7 +65,7 @@
 					</label>
 					<div class="relative">
 						<input
-							class="input input-bordered w-full truncate pr-12"
+							class="input-bordered input w-full truncate pr-12"
 							id="profileFormName"
 							type="text"
 							aria-label="Name"
@@ -76,7 +77,7 @@
 							[disabled]="profileFormIsSubmitted"
 						/>
 						<button
-							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+							class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
 							type="button"
 							aria-label="Clear"
 							appSvgIcon
@@ -105,7 +106,7 @@
 					<label class="label" for="profileFormDescription">
 						<div class="indicator">
 							<span
-								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 								*ngIf="description.touched && !!description.errors"
 								[ngSwitch]="true"
 							>
@@ -134,20 +135,25 @@
 						</span>
 					</label>
 					<!-- prettier-ignore -->
-					<textarea
-						class="textarea textarea-bordered w-full"
-						id="profileFormDescription"
-						aria-label="Description"
-						placeholder="Type your description"
-						formControlName="description"
-            appInputTrimWhitespace
-						[rows]="4"
-						[class.textarea-success]="description.touched && !description.errors"
-						[class.textarea-error]="description.touched && !!description.errors"
-						[disabled]="profileFormIsSubmitted"
-					>
-            {{ description.value }}
-          </textarea>
+					<div
+            class="rounded-btn flex overflow-hidden w-full"
+            [ngClass]="{ 'border border-base-content/20': !profileFormIsSubmitted }"
+            [class.border-success]="description.touched && !description.errors"
+            [class.border-error]="description.touched && !!description.errors"
+          >
+            <textarea
+              class="textarea border-0 w-full"
+              id="profileFormDescription"
+              aria-label="Description"
+              placeholder="Type your description"
+              formControlName="description"
+              appInputTrimWhitespace
+              [rows]="4"
+              [disabled]="profileFormIsSubmitted"
+            >
+              {{ description.value }}
+            </textarea>
+          </div>
 				</fieldset>
 				<fieldset class="form-control">
 					<!-- prettier-ignore -->

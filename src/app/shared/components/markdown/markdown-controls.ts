@@ -2,12 +2,13 @@
 
 import {
 	MarkdownControl,
-	MarkdownTextarea
+	MarkdownTextarea,
+	MarkdownWrapper
 } from '../../../core/models/markdown.model';
 
 // prettier-ignore
-export const MarkdownControlWrapper = (value: string, markdownTextarea: MarkdownTextarea, type?: string): string => {
-  const { selectionBefore, selectionAfter } = markdownTextarea.selectionPayload;
+export const setWrapper = (value: string, markdownTextarea: MarkdownTextarea, type?: string): string => {
+  const wrapper: MarkdownWrapper = markdownTextarea.wrapper;
 
   if (type === 'block') {
     let before: string = '';
@@ -15,27 +16,27 @@ export const MarkdownControlWrapper = (value: string, markdownTextarea: Markdown
 
     /** Before */
 
-    if (selectionBefore.space || selectionBefore.character) {
+    if (wrapper.before.space || wrapper.before.character) {
       before = '\n\n';
     }
 
-    if (selectionBefore.newline) {
+    if (wrapper.before.newline) {
       before = '\n';
     }
 
     /** After */
 
-    if (selectionAfter.space || selectionAfter.character) {
+    if (wrapper.after.space || wrapper.after.character) {
       after = '\n\n';
     }
 
-    if (selectionAfter.newline) {
+    if (wrapper.after.newline) {
       after = '\n';
     }
 
     /** Both */
 
-    if (selectionBefore.character && selectionAfter.newline) {
+    if (wrapper.before.character && wrapper.after.newline) {
       after = '';
     }
 
@@ -48,13 +49,13 @@ export const MarkdownControlWrapper = (value: string, markdownTextarea: Markdown
 
     /** Before */
 
-    if (selectionBefore.character) {
+    if (wrapper.before.character) {
       before = ' ';
     }
 
     /** After */
 
-    if (selectionAfter.character) {
+    if (wrapper.after.character) {
       after = ' ';
     }
 
@@ -64,15 +65,14 @@ export const MarkdownControlWrapper = (value: string, markdownTextarea: Markdown
   return value;
 }
 
+// prettier-ignore
 export const MarkdownControlHeading = (): MarkdownControl[] => [
 	{
 		key: 'heading-h1',
 		label: 'Heading 1',
 		classList: ['text-4xl', 'font-extrabold'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-			const value: string = '# ' + (markdownTextarea.selection || 'Heading 1');
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'block');
+			return setWrapper('# ' + (markdownTextarea.selection || 'Heading 1'), markdownTextarea, 'block');
 		}
 	},
 	{
@@ -80,9 +80,7 @@ export const MarkdownControlHeading = (): MarkdownControl[] => [
 		label: 'Heading 2',
 		classList: ['text-2xl', 'font-bold'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-			const value: string = '## ' + (markdownTextarea.selection || 'Heading 2');
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'block');
+      return setWrapper('## ' + (markdownTextarea.selection || 'Heading 2'), markdownTextarea, 'block');
 		}
 	},
 	{
@@ -90,10 +88,7 @@ export const MarkdownControlHeading = (): MarkdownControl[] => [
 		label: 'Heading 3',
 		classList: ['text-xl', 'font-semibold'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-			// prettier-ignore
-			const value: string = '### ' + (markdownTextarea.selection || 'Heading 3');
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'block');
+      return setWrapper('### ' + (markdownTextarea.selection || 'Heading 3'), markdownTextarea, 'block');
 		}
 	},
 	{
@@ -101,24 +96,19 @@ export const MarkdownControlHeading = (): MarkdownControl[] => [
 		label: 'Heading 4',
 		classList: ['text-base', 'font-semibold'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-			// prettier-ignore
-			const value: string = '#### ' + (markdownTextarea.selection || 'Heading 4');
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'block');
+      return setWrapper('#### ' + (markdownTextarea.selection || 'Heading 4'), markdownTextarea, 'block');
 		}
 	}
 ];
 
+// prettier-ignore
 export const MarkdownControlFormatting = (): MarkdownControl[] => [
 	{
 		key: 'formatting-bold',
 		label: 'Bold',
 		classList: ['font-semibold'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-			// prettier-ignore
-			const value: string = '**' + (markdownTextarea.selection || 'Bold text') + '**';
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'inline');
+			return setWrapper('**' + (markdownTextarea.selection || 'Bold text') + '**', markdownTextarea, 'inline');
 		}
 	},
 	{
@@ -126,10 +116,7 @@ export const MarkdownControlFormatting = (): MarkdownControl[] => [
 		label: 'Strikethrough',
 		classList: ['line-through'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-			// prettier-ignore
-			const value: string = '~~' + (markdownTextarea.selection || 'Strikethrough text') + '~~';
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'inline');
+			return setWrapper('~~' + (markdownTextarea.selection || 'Strikethrough text') + '~~', markdownTextarea, 'inline');
 		}
 	},
 	{
@@ -137,10 +124,7 @@ export const MarkdownControlFormatting = (): MarkdownControl[] => [
 		label: 'Italic',
 		classList: ['italic'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-			// prettier-ignore
-			const value: string = '_' + (markdownTextarea.selection || 'Italic text') + '_';
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'inline');
+			return setWrapper('_' + (markdownTextarea.selection || 'Italic text') + '_', markdownTextarea, 'inline');
 		}
 	},
 	{
@@ -148,56 +132,44 @@ export const MarkdownControlFormatting = (): MarkdownControl[] => [
 		label: 'Mark',
 		classList: ['bg-primary text-primary-content p-1 !rounded'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-			// prettier-ignore
-			const value: string = '==' + (markdownTextarea.selection || 'Marked text') + '==';
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'inline');
+			return setWrapper('==' + (markdownTextarea.selection || 'Marked text') + '==', markdownTextarea, 'inline');
 		}
 	}
 ];
 
+// prettier-ignore
 export const MarkdownControlList = (): MarkdownControl[] => [
 	{
 		key: 'list-unordered',
 		label: 'Unordered',
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-			// prettier-ignore
-			const value: string = '- ' + (markdownTextarea.selection || 'Unordered list');
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'block');
+			return setWrapper('- ' + (markdownTextarea.selection || 'Unordered list'), markdownTextarea, 'block');
 		}
 	},
 	{
 		key: 'list-ordered',
 		label: 'Ordered',
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-			// prettier-ignore
-			const value: string = '1. ' + (markdownTextarea.selection || 'Ordered list');
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'block');
+			return setWrapper('1. ' + (markdownTextarea.selection || 'Ordered list'), markdownTextarea, 'block');
 		}
 	},
 	{
 		key: 'list-task',
 		label: 'Task',
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-			// prettier-ignore
-			const value: string = '- [x]  ' + (markdownTextarea.selection || 'Task list');
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'block');
+			return setWrapper('- [x]  ' + (markdownTextarea.selection || 'Task list'), markdownTextarea, 'block');
 		}
 	}
 ];
 
+// prettier-ignore
 export const MarkdownControlUrl = (): MarkdownControl[] => [
 	{
 		key: 'url-link',
 		label: 'Link',
 		icon: 'link',
 		handler: (markdownTextarea: MarkdownTextarea, payload: any): string => {
-			const value: string = `[${payload.title}](${payload.url})`;
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'inline');
+			return setWrapper(`[${payload.title}](${payload.url})`, markdownTextarea, 'inline');
 		}
 	},
 	{
@@ -205,9 +177,7 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 		label: 'Image',
 		icon: 'image',
 		handler: (markdownTextarea: MarkdownTextarea, payload: any): string => {
-			const value: string = `![${payload.title}](${payload.url})`;
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'block');
+			return setWrapper(`![${payload.title}](${payload.url})`, markdownTextarea, 'block');
 		}
 	},
 	{
@@ -215,9 +185,7 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 		label: 'Video',
 		icon: 'youtube',
 		handler: (markdownTextarea: MarkdownTextarea, payload: any): string => {
-			const value: string = `@[youtube](${payload.url})`;
-
-			return MarkdownControlWrapper(value, markdownTextarea, 'block');
+			return setWrapper(`@[youtube](${payload.url})`, markdownTextarea, 'block');
 		}
 	}
 ];
@@ -229,17 +197,12 @@ export const MarkdownControlEmojiMart = (): MarkdownControl => ({
 	handler: (): string => ''
 });
 
+// prettier-ignore
 export const MarkdownControlCode = (): MarkdownControl => ({
 	key: 'code',
 	label: 'Code',
 	icon: 'code-slash',
 	handler: (markdownTextarea: MarkdownTextarea): string => {
-		// prettier-ignore
-		const value: string = markdownTextarea.selection || 'Your code';
-
-		// prettier-ignore
-		const template: string = '``` text\n' + value + '\n```';
-
-		return MarkdownControlWrapper(template, markdownTextarea, 'block');
+		return setWrapper('``` text\n' + (markdownTextarea.selection || 'Type your code') + '\n```', markdownTextarea, 'block');
 	}
 });

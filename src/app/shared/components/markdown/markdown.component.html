@@ -220,17 +220,6 @@
 					<ng-container *ngSwitchCase="'url-image'">
 						Paste a image URL from internet and add optional title
 					</ng-container>
-					<ng-container *ngSwitchCase="'url-gist'">
-						Paste a gist URL from
-						<a
-							class="link whitespace-nowrap after:inline-block after:px-1 after:content-['\279A']"
-							href="https://gist.github.com/"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							gist.github.com
-						</a>
-					</ng-container>
 					<ng-container *ngSwitchCase="'url-youtube'">
 						Paste a video URL from
 						<a
@@ -258,6 +247,14 @@
 									<ng-container *ngSwitchCase="!!title.errors.required">
 										Required
 									</ng-container>
+								</span>
+								<span
+									class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+									*ngIf="urlFormControl?.key === 'url-image'"
+									[class.badge-success]="!urlFormIsSubmitted"
+									[class.opacity-50]="urlFormIsSubmitted"
+								>
+									Optional
 								</span>
 								<span class="label-text mr-2">Title</span>
 							</div>

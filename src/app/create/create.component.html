@@ -59,7 +59,7 @@
 						<label class="label" for="postFormTitle">
 							<div class="indicator">
 								<span
-									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+									class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 									*ngIf="name.touched && !!name.errors"
 									[ngSwitch]="true"
 								>
@@ -80,7 +80,7 @@
 						</label>
 						<div class="relative">
 							<input
-								class="input input-bordered w-full truncate pr-12"
+								class="input-bordered input w-full truncate pr-12"
 								id="postFormTitle"
 								type="text"
 								aria-label="Name"
@@ -92,7 +92,7 @@
 								[disabled]="postFormIsSubmitted"
 							/>
 							<button
-								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+								class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
 								type="button"
 								aria-label="Clear"
 								appSvgIcon
@@ -117,7 +117,7 @@
 							<label class="label" for="postFormCategoryName">
 								<div class="indicator">
 									<span
-										class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+										class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 										*ngIf="categoryName.touched && !!categoryName.errors"
 										[ngSwitch]="true"
 									>
@@ -180,7 +180,7 @@
 							</div>
 						</fieldset>
 						<button
-							class="btn btn-success fill-current p-3"
+							class="btn-success btn fill-current p-3"
 							type="button"
 							aria-label="Create"
 							appSvgIcon
@@ -198,7 +198,7 @@
 						<label class="label" for="postFormDescription">
 							<div class="indicator">
 								<span
-									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+									class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 									*ngIf="description.touched && !!description.errors"
 									[ngSwitch]="true"
 								>
@@ -219,7 +219,7 @@
 						</label>
 						<div class="relative">
 							<input
-								class="input input-bordered w-full truncate pr-12"
+								class="input-bordered input w-full truncate pr-12"
 								id="postFormDescription"
 								type="text"
 								aria-label="Description"
@@ -231,7 +231,7 @@
 								[disabled]="postFormIsSubmitted"
 							/>
 							<button
-								class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+								class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
 								type="button"
 								aria-label="Clear"
 								appSvgIcon
@@ -270,7 +270,7 @@
 						[appDisabled]="postFormIsSubmitted"
 					></div>
 					<button
-						class="btn btn-primary !outline-0"
+						class="btn-primary btn !outline-0"
 						type="button"
 						aria-label="Fullscreen"
 						[class.btn-outline]="!postFormIsSubmitted && !fullscreenToggle"
@@ -303,7 +303,7 @@
 								<label class="label" for="postFormTextarea">
 									<div class="indicator">
 										<span
-											class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+											class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 											*ngIf="markdown.touched && !!markdown.errors"
 											[ngSwitch]="true"
 										>
@@ -332,22 +332,26 @@
                   </span>
 								</label>
 								<!-- prettier-ignore -->
-								<textarea
-									class="textarea textarea-bordered !outline-0 w-full h-full"
-									id="postFormTextarea"
-									aria-label="Markdown"
-									placeholder="Type post markdown"
-									formControlName="markdown"
-									[rows]="8"
-                  [class.whitespace-pre]="fullscreenDisableTextWrapping"
-									[class.font-mono]="authUser.settings.monospace"
-									[class.textarea-success]="markdown.touched && !markdown.errors"
-									[class.textarea-error]="markdown.touched && !!markdown.errors"
-									[class.bg-base-200]="postFormIsSubmitted"
-                  [disabled]="postFormIsSubmitted"
-                >
-                  {{ markdown.value }}
-                </textarea>
+								<div
+									class="rounded-btn flex overflow-hidden w-full h-full"
+									[ngClass]="{ 'border border-base-content/20': !postFormIsSubmitted }"
+									[class.border-success]="markdown.touched && !markdown.errors"
+									[class.border-error]="markdown.touched && !!markdown.errors"
+								>
+									<textarea
+                    class="textarea border-0 !outline-0 w-full h-full"
+                    id="postFormTextarea"
+                    aria-label="Markdown"
+                    placeholder="Type post markdown"
+                    formControlName="markdown"
+                    [rows]="8"
+                    [class.whitespace-pre]="fullscreenDisableTextWrapping"
+                    [class.font-mono]="authUser.settings.monospace"
+                    [disabled]="postFormIsSubmitted"
+                  >
+                    {{ markdown.value }}
+                  </textarea>
+								</div>
 							</fieldset>
 						</fieldset>
 					</form>
@@ -540,7 +544,7 @@
 							<label class="label" for="categoryFormName">
 								<div class="indicator">
 									<span
-										class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+										class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 										*ngIf="name.touched && !!name.errors"
 										[ngSwitch]="true"
 									>
@@ -561,7 +565,7 @@
 							</label>
 							<div class="relative">
 								<input
-									class="input input-bordered w-full truncate pr-12"
+									class="input-bordered input w-full truncate pr-12"
 									id="categoryFormName"
 									type="text"
 									aria-label="Name"
@@ -573,7 +577,7 @@
 									[disabled]="categoryFormIsSubmitted"
 								/>
 								<button
-									class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+									class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
 									type="button"
 									title="Clear"
 									aria-label="Clear"
@@ -596,7 +600,7 @@
 							<label class="label" for="categoryFormDescription">
 								<div class="indicator">
 									<span
-										class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+										class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 										*ngIf="description.touched && !!description.errors"
 										[ngSwitch]="true"
 									>
@@ -625,23 +629,27 @@
                 </span>
 							</label>
 							<!-- prettier-ignore -->
-							<textarea
-                class="textarea textarea-bordered w-full"
-                id="categoryFormDescription"
-                aria-label="Description"
-                placeholder="Type category description"
-                formControlName="description"
-                [rows]="4"
-                [class.textarea-success]="description.touched && !description.errors"
-                [class.textarea-error]="description.touched && !!description.errors"
-                [disabled]="categoryFormIsSubmitted"
+							<div class="rounded-btn flex overflow-hidden w-full"
+                [ngClass]="{ 'border border-base-content/20': !categoryFormIsSubmitted }"
+                [class.border-success]="description.touched && !description.errors"
+                [class.border-error]="description.touched && !!description.errors"
               >
-                {{ description.value }}
-              </textarea>
+								<textarea
+                  class="textarea border-0 w-full"
+                  id="categoryFormDescription"
+                  aria-label="Description"
+                  placeholder="Type category description"
+                  formControlName="description"
+                  [rows]="4"
+                  [disabled]="categoryFormIsSubmitted"
+                >
+                  {{ description.value }}
+                </textarea>
+							</div>
 						</fieldset>
 						<fieldset class="form-control">
 							<button
-								class="btn btn-success w-full"
+								class="btn-success btn w-full"
 								type="submit"
 								aria-label="Submit"
 								[class.loading]="categoryFormIsSubmitted"
@@ -691,7 +699,7 @@
 						<span class="underline">This action cannot be undone</span>
 					</p>
 					<button
-						class="btn btn-error"
+						class="btn-error btn"
 						type="button"
 						aria-label="Submit"
 						[class.loading]="postDeleteIsSubmitted"

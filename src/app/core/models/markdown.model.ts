@@ -12,16 +12,16 @@ export interface MarkdownTextarea {
 	selection: string;
 	selectionStart: number;
 	selectionEnd: number;
-	selectionPayload: MarkdownTextareaPayload;
+	wrapper: MarkdownWrapper;
 	value: string;
 }
 
-export interface MarkdownTextareaPayload {
-	selectionBefore: MarkdownTextareaPayloadSelection;
-	selectionAfter: MarkdownTextareaPayloadSelection;
+export interface MarkdownWrapper {
+	before: MarkdownWrapperPayload;
+	after: MarkdownWrapperPayload;
 }
 
-export interface MarkdownTextareaPayloadSelection {
+export interface MarkdownWrapperPayload {
 	space: boolean;
 	newline: boolean;
 	character: boolean;
