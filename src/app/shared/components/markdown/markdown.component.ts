@@ -15,7 +15,8 @@ import {
 	MarkdownControlFormatting,
 	MarkdownControlList,
 	MarkdownControlUrl,
-	MarkdownControlEmojiMart
+	MarkdownControlEmojiMart,
+	MarkdownControlCode
 } from './markdown-controls';
 import { BehaviorSubject, fromEvent, merge, Subscription, EMPTY } from 'rxjs';
 import { debounceTime, filter, startWith } from 'rxjs/operators';
@@ -36,7 +37,9 @@ import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim
 import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
 import {
 	MarkdownControl,
-	MarkdownTextarea
+	MarkdownTextarea,
+	MarkdownTextareaPayload,
+	MarkdownTextareaPayloadSelection
 } from '../../../core/models/markdown.model';
 import { MarkdownService } from '../../../core/services/markdown.service';
 import { PlatformService } from '../../../core/services/platform.service';
@@ -101,6 +104,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	controlListList: MarkdownControl[] = MarkdownControlList();
 	controlListUrl: MarkdownControl[] = MarkdownControlUrl();
 	controlListEmojiMart: MarkdownControl = MarkdownControlEmojiMart();
+	controlListCode: MarkdownControl = MarkdownControlCode();
 	controlListScroll$: Subscription | undefined;
 	controlListDisabled: boolean = false;
 
@@ -333,31 +337,41 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	onMarkdownControl(markdownControl: MarkdownControl): void {
-		const markdownTextarea: MarkdownTextarea = this.getTextarea(this.textarea);
-
 		if (markdownControl.key.includes('url')) {
-			// prettier-ignore
-			this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required, this.helperService.getCustomValidator(markdownControl.key)]));
+			/** Build dynamic form */
 
-			if (['url-link', 'url-image'].includes(markdownControl.key)) {
-				// prettier-ignore
-				this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', [Validators.required]));
+			// prettier-ignore
+			switch (markdownControl.key) {
+				case 'url-link':
+				case 'url-image': {
+					this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required]));
+					this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', [Validators.required]));
+
+					break;
+				}
+        case 'url-youtube': {
+          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required]));
+
+          break;
+        }
+				default: {
+					break;
+				}
 			}
 
-			const regex: RegExp = this.helperService.getRegex(markdownControl.key);
-			const regexValid: boolean = regex.test(markdownTextarea.selection || '');
+			/** Apply selection */
 
-			Object.keys(this.urlForm.controls).forEach((key: string) => {
-				const abstractControl: AbstractControl = this.urlForm.get(key);
+			// prettier-ignore
+			const markdownTextarea: MarkdownTextarea = this.getTextarea(this.textarea);
 
-				if (key === 'title' || (key === 'url' && regexValid)) {
+			if (!!markdownTextarea.selection) {
+				Object.keys(this.urlForm.controls).forEach((key: string) => {
+					const abstractControl: AbstractControl = this.urlForm.get(key);
+
 					abstractControl.setValue(markdownTextarea.selection);
-				}
-
-				if (!!abstractControl.value) {
 					abstractControl.markAsTouched();
-				}
-			});
+				});
+			}
 
 			this.urlFormControl = markdownControl;
 			this.urlFormModal = true;
@@ -369,10 +383,25 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	getTextarea(textAreaElement: HTMLTextAreaElement): MarkdownTextarea {
 		const { selectionStart, selectionEnd, value } = textAreaElement;
 
+		const getPayload = (value: string): MarkdownTextareaPayloadSelection => {
+			return {
+				space: !!value.length && value === ' ',
+				newline: !!value.length && value === '\n',
+				character: !!value.length && value !== ' ' && value !== '\n'
+			};
+		};
+
+		// prettier-ignore
+		const selectionPayload: MarkdownTextareaPayload = {
+			selectionBefore: getPayload(value.substring(0, selectionStart).slice(-1)),
+			selectionAfter: getPayload(value.substring(selectionEnd, value.length).slice(0, 1))
+		};
+
 		return {
 			selection: value.substring(selectionStart, selectionEnd).trim(),
 			selectionStart,
 			selectionEnd,
+			selectionPayload,
 			value
 		};
 	}
@@ -381,62 +410,15 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	getTextareaValue(markdownControl: MarkdownControl, urlForm?: FormGroup): void {
 		const markdownTextarea: MarkdownTextarea = this.getTextarea(this.textarea);
 
-		const getControlHandler = (markdownControl: MarkdownControl): string => {
-			// prettier-ignore
-			const placeholder: string = markdownControl.key.split('-').pop().toUpperCase();
+    const selectionStart: number = markdownTextarea.selectionStart;
+    const selectionEnd: number = markdownTextarea.selectionEnd;
 
-			switch (markdownControl.key) {
-				case 'heading-h1':
-				case 'heading-h2':
-				case 'heading-h3':
-				case 'heading-h4':
-					if (!!markdownTextarea.selection) {
-						// prettier-ignore
-						const value: string = markdownControl.handler(markdownTextarea.selection);
+    const before: string = markdownTextarea.value.substring(0, selectionStart);
+    const after: string = markdownTextarea.value.substring(selectionEnd);
 
-						return '\n\n' + value + '\n\n';
-					}
+    const value: string = before + markdownControl.handler(markdownTextarea, urlForm?.value) + after;
 
-					return markdownControl.handler(placeholder);
-				case 'list-unordered':
-				case 'list-ordered':
-				case 'list-task':
-          if (!!markdownTextarea.selection) {
-            // prettier-ignore
-            const value: string = markdownControl.handler(markdownTextarea.selection);
-
-            return '\n\n' + value + '\n\n';
-          }
-
-          return markdownControl.handler(placeholder);
-        case 'formatting-bold':
-				case 'formatting-strikethrough':
-				case 'formatting-italic':
-				case 'formatting-mark':
-					// prettier-ignore
-					return markdownControl.handler(markdownTextarea.selection || placeholder);
-				case 'url-youtube':
-				case 'url-link':
-				case 'url-image':
-					return markdownControl.handler(urlForm.value);
-        case 'emoji-mart':
-          return markdownControl.handler();
-				default:
-					return '';
-			}
-		};
-
-		const getValue = (): string => {
-			const selectionStart: number = markdownTextarea.selectionStart;
-			const selectionEnd: number = markdownTextarea.selectionEnd;
-
-			const left: string = markdownTextarea.value.substring(0, selectionStart);
-			const right: string = markdownTextarea.value.substring(selectionEnd);
-
-			return left + getControlHandler(markdownControl) + right;
-		};
-
-		this.setTextareaValue(getValue());
+		this.setTextareaValue(value);
 	}
 
 	setTextareaValue(value: string): void {

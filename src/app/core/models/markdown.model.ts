@@ -5,16 +5,24 @@ export interface MarkdownControl {
 	label: string;
 	classList?: string[];
 	icon?: string;
-	handler(selection?: string, handler?: string): string;
+	handler(markdownTextarea: MarkdownTextarea | null, payload?: any): string;
 }
 
 export interface MarkdownTextarea {
 	selection: string;
 	selectionStart: number;
 	selectionEnd: number;
+	selectionPayload: MarkdownTextareaPayload;
 	value: string;
 }
 
-export interface MarkdownParser {
-	[key: string]: string;
+export interface MarkdownTextareaPayload {
+	selectionBefore: MarkdownTextareaPayloadSelection;
+	selectionAfter: MarkdownTextareaPayloadSelection;
+}
+
+export interface MarkdownTextareaPayloadSelection {
+	space: boolean;
+	newline: boolean;
+	character: boolean;
 }
