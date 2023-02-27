@@ -17,9 +17,10 @@
 				<fieldset class="form-control" *ngIf="imageForm.get('url') as url">
 					<label class="label" for="imageFormUrl">
 						<div class="indicator">
+							<!-- prettier-ignore -->
 							<span
 								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="url.touched && !!url.errors"
+								*ngIf="url.touched && !!url.errors && !imageFormIsSubmitted && !cropperIsSubmitted"
 								[ngSwitch]="true"
 							>
 								<ng-container *ngSwitchCase="!!url.errors.required">
@@ -72,7 +73,7 @@
 							(change)="onInputFile($event)"
 						/>
 						<button
-							class="btn btn-primary"
+							class="btn-primary btn"
 							type="button"
 							aria-label="Browse"
 							[disabled]="imageFormIsSubmitted || cropperIsSubmitted"

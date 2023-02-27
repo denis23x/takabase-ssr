@@ -15,9 +15,10 @@
 				<fieldset class="form-control" *ngIf="resetForm.get('email') as email">
 					<label class="label" for="resetFormEmail">
 						<div class="indicator">
+							<!-- prettier-ignore -->
 							<span
-								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="email.touched && !!email.errors"
+								class="badge badge-error indicator-item w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="email.touched && !!email.errors && !resetFormIsSubmitted"
 								[ngSwitch]="true"
 							>
 								<ng-container *ngSwitchCase="!!email.errors.required">
@@ -32,7 +33,7 @@
 					</label>
 					<div class="relative">
 						<input
-							class="input input-bordered w-full truncate pr-12"
+							class="input-bordered input w-full truncate pr-12"
 							id="resetFormEmail"
 							type="email"
 							aria-label="Email"
@@ -44,7 +45,7 @@
 							[disabled]="resetFormIsSubmitted"
 						/>
 						<button
-							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+							class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
 							type="button"
 							aria-label="Clear"
 							appSvgIcon
@@ -61,7 +62,7 @@
 				</fieldset>
 				<fieldset class="form-control">
 					<button
-						class="btn btn-success w-full"
+						class="btn-success btn w-full"
 						type="submit"
 						aria-label="Reset"
 						[class.loading]="resetFormIsSubmitted"
@@ -73,7 +74,7 @@
 			</fieldset>
 		</form>
 		<a
-			class="btn btn-outline btn-primary w-full"
+			class="btn-outline btn-primary btn w-full"
 			aria-label="Login"
 			[routerLink]="'/login'"
 		>

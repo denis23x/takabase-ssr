@@ -58,19 +58,18 @@
 					>
 						<label class="label" for="postFormTitle">
 							<div class="indicator">
+								<!-- prettier-ignore -->
 								<span
 									class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="name.touched && !!name.errors"
+									*ngIf="name.touched && !!name.errors && !postFormIsSubmitted"
 									[ngSwitch]="true"
 								>
 									<ng-container *ngSwitchCase="!!name.errors.required">
 										Required
 									</ng-container>
-									<!-- prettier-ignore -->
 									<ng-container *ngSwitchCase="!!name.errors.minlength">
                     Min length {{ name.errors.minlength["requiredLength"] }} characters
                   </ng-container>
-									<!-- prettier-ignore -->
 									<ng-container *ngSwitchCase="!!name.errors.maxlength">
                     Max length {{ name.errors.maxlength["requiredLength"] }} characters
                   </ng-container>
@@ -116,12 +115,12 @@
 						>
 							<label class="label" for="postFormCategoryName">
 								<div class="indicator">
+									<!-- prettier-ignore -->
 									<span
 										class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-										*ngIf="categoryName.touched && !!categoryName.errors"
+										*ngIf="categoryName.touched && !!categoryName.errors && !postFormIsSubmitted"
 										[ngSwitch]="true"
 									>
-										<!-- prettier-ignore -->
 										<ng-container *ngSwitchCase="!!categoryName.errors.required">
                       Required
                     </ng-container>
@@ -197,19 +196,18 @@
 					>
 						<label class="label" for="postFormDescription">
 							<div class="indicator">
+								<!-- prettier-ignore -->
 								<span
 									class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="description.touched && !!description.errors"
+									*ngIf="description.touched && !!description.errors && !postFormIsSubmitted"
 									[ngSwitch]="true"
 								>
 									<ng-container *ngSwitchCase="!!description.errors.required">
 										Required
 									</ng-container>
-									<!-- prettier-ignore -->
 									<ng-container *ngSwitchCase="!!description.errors.minlength">
                     Min length {{ description.errors.minlength["requiredLength"] }} characters
                   </ng-container>
-									<!-- prettier-ignore -->
 									<ng-container *ngSwitchCase="!!description.errors.maxlength">
                     Max length {{ description.errors.maxlength["requiredLength"] }} characters
                   </ng-container>
@@ -302,19 +300,18 @@
 							>
 								<label class="label" for="postFormTextarea">
 									<div class="indicator">
+										<!-- prettier-ignore -->
 										<span
 											class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-											*ngIf="markdown.touched && !!markdown.errors"
+											*ngIf="markdown.touched && !!markdown.errors && !postFormIsSubmitted"
 											[ngSwitch]="true"
 										>
 											<ng-container *ngSwitchCase="!!markdown.errors.required">
 												Required
 											</ng-container>
-											<!-- prettier-ignore -->
 											<ng-container *ngSwitchCase="!!markdown.errors.minlength">
                         Min length {{ markdown.errors.minlength["requiredLength"] }} characters
                       </ng-container>
-											<!-- prettier-ignore -->
 											<ng-container *ngSwitchCase="!!markdown.errors.maxlength">
                         Max length {{ markdown.errors.maxlength["requiredLength"] }} characters
                       </ng-container>
@@ -543,19 +540,18 @@
 						>
 							<label class="label" for="categoryFormName">
 								<div class="indicator">
+									<!-- prettier-ignore -->
 									<span
 										class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-										*ngIf="name.touched && !!name.errors"
+										*ngIf="name.touched && !!name.errors && !categoryFormIsSubmitted"
 										[ngSwitch]="true"
 									>
 										<ng-container *ngSwitchCase="!!name.errors.required">
 											Required
 										</ng-container>
-										<!-- prettier-ignore -->
 										<ng-container *ngSwitchCase="!!name.errors.minlength">
 											Min length {{ name.errors.minlength["requiredLength"] }} characters
                     </ng-container>
-										<!-- prettier-ignore -->
 										<ng-container *ngSwitchCase="!!name.errors.maxlength">
 											Max length {{ name.errors.maxlength["requiredLength"] }} characters
                     </ng-container>
@@ -599,19 +595,18 @@
 						>
 							<label class="label" for="categoryFormDescription">
 								<div class="indicator">
+									<!-- prettier-ignore -->
 									<span
 										class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-										*ngIf="description.touched && !!description.errors"
+										*ngIf="description.touched && !!description.errors && !categoryFormIsSubmitted"
 										[ngSwitch]="true"
 									>
 										<ng-container *ngSwitchCase="!!description.errors.required">
 											Required
 										</ng-container>
-										<!-- prettier-ignore -->
 										<ng-container *ngSwitchCase="!!description.errors.minlength">
                       Min length {{ description.errors.minlength["requiredLength"] }} characters
                     </ng-container>
-										<!-- prettier-ignore -->
 										<ng-container *ngSwitchCase="!!description.errors.maxlength">
                       Max length {{ description.errors.maxlength["requiredLength"] }} characters
                     </ng-container>

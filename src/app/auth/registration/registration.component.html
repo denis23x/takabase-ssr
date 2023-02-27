@@ -17,19 +17,18 @@
 				>
 					<label class="label" for="registrationFormName">
 						<div class="indicator">
+							<!-- prettier-ignore -->
 							<span
 								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="name.touched && !!name.errors"
+								*ngIf="name.touched && !!name.errors && !registrationFormIsSubmitted"
 								[ngSwitch]="true"
 							>
 								<ng-container *ngSwitchCase="!!name.errors.required">
 									Required
 								</ng-container>
-								<!-- prettier-ignore -->
 								<ng-container *ngSwitchCase="!!name.errors.minlength">
                   Min length {{ name.errors.minlength["requiredLength"] }} characters
                 </ng-container>
-								<!-- prettier-ignore -->
 								<ng-container *ngSwitchCase="!!name.errors.maxlength">
                   Max length {{ name.errors.maxlength["requiredLength"] }} characters
                 </ng-container>
@@ -39,7 +38,7 @@
 					</label>
 					<div class="relative">
 						<input
-							class="input input-bordered w-full truncate pr-12"
+							class="input-bordered input w-full truncate pr-12"
 							id="registrationFormName"
 							type="text"
 							aria-label="Name"
@@ -51,7 +50,7 @@
 							[disabled]="registrationFormIsSubmitted"
 						/>
 						<button
-							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+							class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
 							type="button"
 							aria-label="Clear"
 							appSvgIcon
@@ -72,9 +71,10 @@
 				>
 					<label class="label" for="registrationFormEmail">
 						<div class="indicator">
+							<!-- prettier-ignore -->
 							<span
-								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="email.touched && !!email.errors"
+								class="badge badge-error indicator-item w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="email.touched && !!email.errors && !registrationFormIsSubmitted"
 								[ngSwitch]="true"
 							>
 								<ng-container *ngSwitchCase="!!email.errors.required">
@@ -89,7 +89,7 @@
 					</label>
 					<div class="relative">
 						<input
-							class="input input-bordered w-full truncate pr-12"
+							class="input-bordered input w-full truncate pr-12"
 							id="registrationFormEmail"
 							type="email"
 							aria-label="Email"
@@ -101,7 +101,7 @@
 							[disabled]="registrationFormIsSubmitted"
 						/>
 						<button
-							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+							class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
 							type="button"
 							aria-label="Clear"
 							appSvgIcon
@@ -122,9 +122,10 @@
 				>
 					<label class="label" for="registrationFormPassword">
 						<div class="indicator">
+							<!-- prettier-ignore -->
 							<span
-								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="password.touched && !!password.errors"
+								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="password.touched && !!password.errors && !registrationFormIsSubmitted"
 								[ngSwitch]="true"
 							>
 								<ng-container *ngSwitchCase="!!password.errors.required">
@@ -139,7 +140,7 @@
 					</label>
 					<div class="relative" *ngIf="{ value: false } as isVisible">
 						<input
-							class="input input-bordered w-full truncate pr-12"
+							class="input-bordered input w-full truncate pr-12"
 							id="registrationFormPassword"
 							aria-label="Password"
 							autocomplete="current-password"
@@ -151,7 +152,7 @@
 							[disabled]="registrationFormIsSubmitted"
 						/>
 						<button
-							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+							class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
 							type="button"
 							aria-label="Password"
 							appSvgIcon
@@ -174,7 +175,7 @@
 				</p>
 				<fieldset class="form-control">
 					<button
-						class="btn btn-success w-full"
+						class="btn-success btn w-full"
 						type="submit"
 						aria-label="Registration"
 						[class.loading]="registrationFormIsSubmitted"
@@ -186,7 +187,7 @@
 			</fieldset>
 		</form>
 		<a
-			class="btn btn-outline btn-primary w-full"
+			class="btn-outline btn-primary btn w-full"
 			aria-label="Login"
 			[routerLink]="'/login'"
 		>
