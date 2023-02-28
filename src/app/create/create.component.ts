@@ -36,6 +36,7 @@ import { PostCreateDto } from '../core/dto/post/post-create.dto';
 import { FileCreateDto } from '../core/dto/file/file-create.dto';
 import { CategoryCreateDto } from '../core/dto/category/category-create.dto';
 import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
+import { AppInputMarkAsTouchedDirective } from '../shared/directives/app-input-mark-as-touched.directive';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -48,7 +49,7 @@ interface PostForm {
 
 interface CategoryForm {
 	name: FormControl<string>;
-	description: FormControl<string>;
+	description: FormControl<string | null>;
 }
 
 @Component({
@@ -67,7 +68,8 @@ interface CategoryForm {
 		ShareComponent,
 		MarkdownComponent,
 		NgOptimizedImage,
-		AppScrollIntoViewDirective
+		AppScrollIntoViewDirective,
+		AppInputMarkAsTouchedDirective
 	],
 	templateUrl: './create.component.html'
 })
@@ -145,13 +147,9 @@ export class CreateComponent implements OnInit, OnDestroy {
 			name: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
-				Validators.maxLength(24)
+				Validators.maxLength(36)
 			]),
-			description: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.minLength(6),
-				Validators.maxLength(255)
-			])
+			description: this.formBuilder.control(null, [Validators.maxLength(255)])
 		});
 	}
 

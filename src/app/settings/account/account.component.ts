@@ -18,6 +18,7 @@ import { WindowComponent } from '../../shared/components/window/window.component
 import { User } from '../../core/models/user.model';
 import { HelperService } from '../../core/services/helper.service';
 import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
+import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
 
 interface EmailForm {
 	email: FormControl<string>;
@@ -40,7 +41,8 @@ interface ConfirmationForm {
 		SvgIconComponent,
 		OverlayComponent,
 		WindowComponent,
-		AppInputTrimWhitespaceDirective
+		AppInputTrimWhitespaceDirective,
+		AppInputMarkAsTouchedDirective
 	],
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'

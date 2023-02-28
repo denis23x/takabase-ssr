@@ -20,6 +20,8 @@ import { LoginDto } from '../../core/dto/auth/login.dto';
 import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
+import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
+import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -28,7 +30,14 @@ interface LoginForm {
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, ReactiveFormsModule, SvgIconComponent],
+	imports: [
+		CommonModule,
+		RouterModule,
+		ReactiveFormsModule,
+		SvgIconComponent,
+		AppInputTrimWhitespaceDirective,
+		AppInputMarkAsTouchedDirective
+	],
 	selector: 'app-auth-login',
 	templateUrl: './login.component.html'
 })

@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { AppInputTrimWhitespaceDirective } from '../shared/directives/app-input-trim-whitespace.directive';
 import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
 import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
+import { AppInputMarkAsTouchedDirective } from '../shared/directives/app-input-mark-as-touched.directive';
 
 interface SearchForm {
 	query: FormControl<string>;
@@ -28,7 +29,8 @@ interface SearchForm {
 		RouterModule,
 		AppInputTrimWhitespaceDirective,
 		SvgIconComponent,
-		AppScrollIntoViewDirective
+		AppScrollIntoViewDirective,
+		AppInputMarkAsTouchedDirective
 	],
 	selector: 'app-search',
 	templateUrl: './search.component.html'
@@ -48,7 +50,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 		this.searchForm = this.formBuilder.group<SearchForm>({
 			query: this.formBuilder.nonNullable.control('', [
 				Validators.minLength(4),
-				Validators.maxLength(24)
+				Validators.maxLength(16)
 			])
 		});
 	}

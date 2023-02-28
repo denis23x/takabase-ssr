@@ -71,6 +71,7 @@
 							formControlName="name"
 							placeholder="Type your name"
 							appInputTrimWhitespace
+							appInputMarkAsTouched
 							[class.input-success]="name.touched && name.valid"
 							[class.input-error]="name.touched && name.invalid"
 							[disabled]="profileFormIsSubmitted"
@@ -103,49 +104,53 @@
 					*ngIf="profileForm.get('description') as description"
 				>
 					<label class="label" for="profileFormDescription">
+						<!-- prettier-ignore -->
 						<div class="indicator">
-							<!-- prettier-ignore -->
 							<span
 								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="description.touched && !!description.errors && !profileFormIsSubmitted"
+								*ngIf="!!description.value && !!description.errors && !profileFormIsSubmitted"
 								[ngSwitch]="true"
 							>
-								<ng-container *ngSwitchCase="!!description.errors.required">
-									Required
-								</ng-container>
-								<ng-container *ngSwitchCase="!!description.errors.minlength">
-                  Min length {{ description.errors.minlength["requiredLength"] }} characters
-                </ng-container>
 								<ng-container *ngSwitchCase="!!description.errors.maxlength">
                   Max length {{ description.errors.maxlength["requiredLength"] }} characters
                 </ng-container>
 							</span>
+              <span
+                class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                *ngIf="!description.errors"
+                [class.badge-ghost]="!description.value"
+                [class.badge-success]="!!description.value && !profileFormIsSubmitted"
+                [class.opacity-25]="profileFormIsSubmitted"
+              >
+                Optional
+              </span>
 							<span class="label-text mr-2">Description</span>
 						</div>
 						<!-- prettier-ignore -->
 						<span
 							class="label-text-alt"
 							[class.text-base-content]="profileFormIsSubmitted"
-							[class.text-success]="!profileFormIsSubmitted && description.touched && !description.errors"
-							[class.text-error]="!profileFormIsSubmitted && description.touched && !!description.errors"
+							[class.text-success]="!profileFormIsSubmitted && !!description.value && !description.errors"
+							[class.text-error]="!profileFormIsSubmitted && !!description.value && !!description.errors"
 						>
-							{{ description.value.length }}/255
+							{{ description.value?.length || 0 }}/255
 						</span>
 					</label>
 					<!-- prettier-ignore -->
 					<div
             class="rounded-btn flex overflow-hidden w-full"
             [ngClass]="{ 'border border-base-content/20': !profileFormIsSubmitted }"
-            [class.border-success]="description.touched && !description.errors"
-            [class.border-error]="description.touched && !!description.errors"
+            [class.border-success]="!!description.value && !description.errors"
+            [class.border-error]="!!description.value && !!description.errors"
           >
             <textarea
-              class="textarea border-0 w-full"
+              class="textarea border-0 !outline-0 w-full resize-none"
               id="profileFormDescription"
               aria-label="Description"
               placeholder="Type your description"
               formControlName="description"
               appInputTrimWhitespace
+              appInputMarkAsTouched
               [rows]="4"
               [disabled]="profileFormIsSubmitted"
             >

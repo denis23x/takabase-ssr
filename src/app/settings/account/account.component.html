@@ -48,6 +48,7 @@
 							formControlName="email"
 							placeholder="Type your new email"
 							appInputTrimWhitespace
+							appInputMarkAsTouched
 							[class.input-success]="email.touched && email.valid"
 							[class.input-error]="email.touched && email.invalid"
 							[disabled]="emailFormIsSubmitted || confirmationFormToggle"
@@ -123,6 +124,7 @@
 							autocomplete="new-password"
 							placeholder="Type your new password"
 							appInputTrimWhitespace
+							appInputMarkAsTouched
 							[type]="isVisible.value ? 'text' : 'password'"
 							[class.input-success]="password.touched && password.valid"
 							[class.input-error]="password.touched && password.invalid"
@@ -217,6 +219,7 @@
 								autocomplete="new-password"
 								placeholder="Type your current password"
 								appInputTrimWhitespace
+								appInputMarkAsTouched
 								[type]="isVisible.value ? 'text' : 'password'"
 								[class.input-success]="password.touched && password.valid"
 								[class.input-error]="password.touched && password.invalid"

@@ -14,6 +14,8 @@ import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.comp
 import { HelperService } from '../../core/services/helper.service';
 import { MetaService } from '../../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
+import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
+import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
 
 interface ResetForm {
 	email: FormControl<string>;
@@ -21,7 +23,14 @@ interface ResetForm {
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, ReactiveFormsModule, SvgIconComponent],
+	imports: [
+		CommonModule,
+		RouterModule,
+		ReactiveFormsModule,
+		SvgIconComponent,
+		AppInputTrimWhitespaceDirective,
+		AppInputMarkAsTouchedDirective
+	],
 	selector: 'app-auth-reset',
 	templateUrl: './reset.component.html'
 })

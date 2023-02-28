@@ -20,6 +20,8 @@ import { User } from '../../core/models/user.model';
 import { LoginDto } from '../../core/dto/auth/login.dto';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
+import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
+import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -29,7 +31,14 @@ interface RegistrationForm {
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, ReactiveFormsModule, SvgIconComponent],
+	imports: [
+		CommonModule,
+		RouterModule,
+		ReactiveFormsModule,
+		SvgIconComponent,
+		AppInputTrimWhitespaceDirective,
+		AppInputMarkAsTouchedDirective
+	],
 	selector: 'app-auth-registration',
 	templateUrl: './registration.component.html'
 })

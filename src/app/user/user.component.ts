@@ -33,10 +33,11 @@ import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { CategoryUpdateDto } from '../core/dto/category/category-update.dto';
 import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
+import { AppInputMarkAsTouchedDirective } from '../shared/directives/app-input-mark-as-touched.directive';
 
 interface CategoryEditForm {
 	name: FormControl<string>;
-	description: FormControl<string>;
+	description: FormControl<string | null>;
 }
 
 interface CategoryDeleteForm {
@@ -56,7 +57,8 @@ interface CategoryDeleteForm {
 		SvgIconComponent,
 		OverlayComponent,
 		WindowComponent,
-		AppInputTrimWhitespaceDirective
+		AppInputTrimWhitespaceDirective,
+		AppInputMarkAsTouchedDirective
 	],
 	selector: 'app-user',
 	templateUrl: './user.component.html'
@@ -104,13 +106,9 @@ export class UserComponent implements OnInit, OnDestroy {
 			name: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
-				Validators.maxLength(24)
+				Validators.maxLength(36)
 			]),
-			description: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.minLength(4),
-				Validators.maxLength(255)
-			])
+			description: this.formBuilder.control(null, [Validators.maxLength(255)])
 		});
 
 		this.categoryDeleteForm = this.formBuilder.group<CategoryDeleteForm>({
@@ -245,10 +243,10 @@ export class UserComponent implements OnInit, OnDestroy {
 				Validators.pattern(this.helperService.getRegex('exact', this.category.name))
 			]);
 
-			abstractControl.updateValueAndValidity();
-		} else {
-      this.categoryDeleteForm.reset();
+      abstractControl.updateValueAndValidity();
     }
+
+		this.categoryDeleteForm.reset();
 	}
 
 	onSubmitCategoryEditForm(): void {

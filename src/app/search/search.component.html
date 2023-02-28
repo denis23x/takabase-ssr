@@ -38,6 +38,7 @@
 							formControlName="query"
 							placeholder="Type keywords"
 							appInputTrimWhitespace
+							appInputMarkAsTouched
 							[class.input-success]="query.touched && query.value"
 							[class.input-error]="query.touched && query.invalid"
 							[disabled]="searchFormIsSubmitted"

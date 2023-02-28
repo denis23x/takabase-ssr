@@ -39,6 +39,8 @@
 							autocomplete="username"
 							formControlName="email"
 							placeholder="Type your email"
+							appInputTrimWhitespace
+							appInputMarkAsTouched
 							[class.input-success]="email.touched && email.valid"
 							[class.input-error]="email.touched && email.invalid"
 							[disabled]="loginFormIsSubmitted"
@@ -89,6 +91,8 @@
 							autocomplete="current-password"
 							formControlName="password"
 							placeholder="Type your password"
+							appInputTrimWhitespace
+							appInputMarkAsTouched
 							[type]="isVisible.value ? 'text' : 'password'"
 							[class.input-success]="password.touched && password.valid"
 							[class.input-error]="password.touched && password.invalid"

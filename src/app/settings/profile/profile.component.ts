@@ -33,10 +33,11 @@ import { AuthService } from '../../core/services/auth.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { FileCreateDto } from '../../core/dto/file/file-create.dto';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
+import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
 
 interface ProfileForm {
 	name: FormControl<string>;
-	description: FormControl<string>;
+	description: FormControl<string | null>;
 }
 
 @Component({
@@ -52,7 +53,8 @@ interface ProfileForm {
 		WindowComponent,
 		DayjsPipe,
 		AppInputTrimWhitespaceDirective,
-		UserUrlPipe
+		UserUrlPipe,
+		AppInputMarkAsTouchedDirective
 	],
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'
@@ -85,11 +87,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				Validators.minLength(4),
 				Validators.maxLength(24)
 			]),
-			description: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.minLength(4),
-				Validators.maxLength(255)
-			])
+			description: this.formBuilder.control(null, [Validators.maxLength(255)])
 		});
 	}
 
