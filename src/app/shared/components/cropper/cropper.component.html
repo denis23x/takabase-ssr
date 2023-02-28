@@ -1,7 +1,10 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="flex w-window max-w-[512px] flex-col space-y-4 p-4">
+	<div
+		class="flex w-window max-w-[512px] flex-col space-y-4 p-4"
+		[class.overflow-hidden]="!cropperIsAvailable"
+	>
 		<form
 			class="flex flex-col space-y-4"
 			autocomplete="off"
@@ -26,7 +29,7 @@
 								<ng-container *ngSwitchCase="!!url.errors.required">
 									Required
 								</ng-container>
-								<ng-container *ngSwitchCase="!!url.errors.customValidator">
+								<ng-container *ngSwitchCase="!!url.errors.pattern">
 									Url does not correct
 								</ng-container>
 							</span>
@@ -44,10 +47,12 @@
                 formControlName="url"
                 placeholder="Paste image URL"
                 appInputOnlyPaste
+                appInputTrimWhitespace
+                appInputMarkAsTouched
                 [class.input-success]="url.touched && url.value"
                 [class.input-error]="url.touched && url.invalid"
                 [disabled]="imageFormIsSubmitted || cropperIsSubmitted"
-                (keydown)="onInputUrl()"
+                (input)="onInputUrl()"
               />
               <button
                 class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
@@ -61,7 +66,7 @@
                 [disabled]="imageFormIsSubmitted || cropperIsSubmitted"
                 [appIcon]="'x'"
                 [appSquare]="'1.75rem'"
-                (click)="onResetImageForm()"
+                (click)="onResetAll()"
               ></button>
             </div>
 						<input
@@ -76,10 +81,11 @@
 							class="btn-primary btn"
 							type="button"
 							aria-label="Browse"
+							[class.loading]="imageFormIsSubmitted"
 							[disabled]="imageFormIsSubmitted || cropperIsSubmitted"
 							(click)="imageFormFile.click()"
 						>
-							Browse
+							{{ imageFormIsSubmitted ? "Download" : "Browse" }}
 						</button>
 					</div>
 					<label class="label" for="imageFormUrl">
@@ -88,7 +94,10 @@
 				</fieldset>
 			</fieldset>
 		</form>
-		<div class="flex flex-col space-y-4" [class.hidden]="!cropperFile">
+		<div
+			class="flex flex-col space-y-4"
+			[ngClass]="{ 'invisible !m-0 !h-0': !cropperIsAvailable }"
+		>
 			<div [class.cursor-not-allowed]="cropperIsSubmitted">
 				<!-- prettier-ignore -->
 				<image-cropper
@@ -107,6 +116,7 @@
           [transform]="imageTransform"
           [allowMoveImage]="cropperBackgroundIsDraggable"
           (imageCropped)="onImageCropped($event)"
+          (loadImageFailed)="onImageFailed()"
         >
         </image-cropper>
 			</div>
@@ -209,7 +219,7 @@
 					aria-label="Reset"
           [class.btn-outline]="!imageFormIsSubmitted && !cropperIsSubmitted"
 					[disabled]="imageForm.invalid || imageFormIsSubmitted || cropperIsSubmitted"
-					(click)="onImageReset()"
+					(click)="onResetTransform()"
 				>
 					Reset
 				</button>

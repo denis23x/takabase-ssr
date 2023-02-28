@@ -34,6 +34,9 @@ import { HelperService } from '../../../core/services/helper.service';
 import { FileService } from '../../../core/services/file.service';
 import { FileGetOneDto } from '../../../core/dto/file/file-get-one.dto';
 import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
+import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
+import { AppInputMarkAsTouchedDirective } from '../../directives/app-input-mark-as-touched.directive';
+import { SnackbarService } from '../../../core/services/snackbar.service';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -46,7 +49,9 @@ interface ImageForm {
 		ReactiveFormsModule,
 		ImageCropperModule,
 		SvgIconComponent,
-		AppInputOnlyPasteDirective
+		AppInputOnlyPasteDirective,
+		AppInputTrimWhitespaceDirective,
+		AppInputMarkAsTouchedDirective
 	],
 	selector: 'app-cropper, [appCropper]',
 	templateUrl: './cropper.component.html'
@@ -88,6 +93,7 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 	cropperRound: boolean = false;
 	cropperBase64: string = undefined;
 	cropperBackgroundIsDraggable: boolean = false;
+	cropperIsAvailable: boolean = false;
 	cropperIsSubmitted: boolean = false;
 
 	cropperPositionInitial: CropperPosition = undefined;
@@ -101,7 +107,8 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 	constructor(
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
-		private fileService: FileService
+		private fileService: FileService,
+		private snackbarService: SnackbarService
 	) {
 		this.imageForm = this.formBuilder.group<ImageForm>({
 			url: this.formBuilder.nonNullable.control('', [Validators.required])
@@ -124,8 +131,12 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 	onInputUrl(): void {
 		const abstractControl: AbstractControl = this.imageForm.get('url');
 
-		abstractControl.setValue('');
-		abstractControl.setValidators([Validators.required]);
+		abstractControl.setValidators([
+			Validators.required,
+			Validators.pattern(this.helperService.getRegex('url'))
+		]);
+
+		abstractControl.updateValueAndValidity();
 
 		const validationTimeout = setTimeout(() => {
 			if (this.helperService.getFormValidation(this.imageForm)) {
@@ -142,7 +153,13 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 
 						this.imageFormIsSubmitted = false;
 					},
-					error: () => (this.imageFormIsSubmitted = false)
+					error: () => {
+						this.imageFormIsSubmitted = false;
+
+						/** Reset only imageForm because cropper not initialized */
+
+						this.onResetImageForm('');
+					}
 				});
 			}
 
@@ -157,27 +174,18 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.cropperPositionInitial = undefined;
 		this.cropperFile = file;
 
-		this.setUpdateAndValidityImageForm(file.name);
+		this.onResetImageForm(file.name);
 	}
 
-	onResetImageForm(): void {
-		this.imageFormFile.nativeElement.value = '';
+	onImageFailed(): void {
+		this.snackbarService.danger('Error', 'Invalid image type');
 
-		this.setUpdateAndValidityImageForm('');
-
+		this.onResetImageForm('');
 		this.onResetCropper();
 	}
 
-	setUpdateAndValidityImageForm(value: string): void {
-		const abstractControl: AbstractControl = this.imageForm.get('url');
-
-		abstractControl.setValue(value);
-		abstractControl.setValidators([Validators.required]);
-		abstractControl.updateValueAndValidity();
-		abstractControl.markAsTouched();
-	}
-
 	onImageCropped(imageCroppedEvent: ImageCroppedEvent): void {
+		this.cropperIsAvailable = true;
 		this.cropperBase64 = imageCroppedEvent.base64;
 
 		if (!this.cropperPositionInitial) {
@@ -216,7 +224,15 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		};
 	}
 
-	onImageReset(): void {
+	onResetAll(): void {
+		this.imageFormFile.nativeElement.value = '';
+
+		this.onResetImageForm('');
+		this.onResetTransform();
+		this.onResetCropper();
+	}
+
+	onResetTransform(): void {
 		this.imageTransform = {
 			scale: 1,
 			rotate: 0,
@@ -234,10 +250,18 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	onResetCropper(): void {
-		this.onImageReset();
-
 		this.cropperFile = undefined;
 		this.cropperBase64 = undefined;
+		this.cropperIsAvailable = false;
+	}
+
+	onResetImageForm(value: string): void {
+		const abstractControl: AbstractControl = this.imageForm.get('url');
+
+		abstractControl.setValue(value);
+		abstractControl.setValidators([Validators.required]);
+		abstractControl.updateValueAndValidity();
+		abstractControl.markAsTouched();
 	}
 
 	// prettier-ignore
@@ -261,8 +285,6 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.fileService.create(formData).subscribe({
 			next: (fileCreateDto: FileCreateDto) => {
 				this.cropperIsSubmitted = false;
-
-				this.onResetCropper();
 
 				this.submitted.emit(fileCreateDto);
 			},

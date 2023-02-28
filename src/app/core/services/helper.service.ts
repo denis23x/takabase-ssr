@@ -14,9 +14,11 @@ export class HelperService {
 		// prettier-ignore
 		switch (regex) {
 			case 'exact':
-				return new RegExp('^' + payload + '$');
+				return new RegExp('^' + payload + '$', 'm');
 			case 'password':
-				return new RegExp('^((?=.*\\d)|(?=.*[!@#$%^&*]))(?=.*[a-zA-Z]).{6,32}$');
+				return new RegExp('^((?=.*\\d)|(?=.*[!@#$%^&*]))(?=.*[a-zA-Z]).{6,32}$', 'm');
+      case 'url':
+				return new RegExp('^(https?|chrome|ftp):\\/\\/[^\\s$.?#].[^\\s]*$', 'm');
 			default:
 				throw new Error(`Invalid regex type specified: ${regex}`);
 		}
