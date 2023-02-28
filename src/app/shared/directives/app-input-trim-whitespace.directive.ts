@@ -11,16 +11,17 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 })
 export class AppInputTrimWhitespaceDirective {
 	constructor(private ngControl: NgControl) {
-		trimValueAccessor(ngControl.valueAccessor);
+		this.trimValue(ngControl.valueAccessor);
 	}
-}
 
-function trimValueAccessor(valueAccessor: ControlValueAccessor) {
-	const original = valueAccessor.registerOnChange;
+	// prettier-ignore
+	trimValue(controlValueAccessor: ControlValueAccessor) {
+		const originalControlValueAccessor: any = controlValueAccessor.registerOnChange;
 
-	valueAccessor.registerOnChange = (fn: (_: unknown) => void) => {
-		return original.call(valueAccessor, (value: unknown) => {
-			return fn(typeof value === 'string' ? value.trim() : value);
-		});
-	};
+		controlValueAccessor.registerOnChange = (fn: (_: unknown) => void) => {
+			return originalControlValueAccessor.call(controlValueAccessor, (value: unknown) => {
+				return fn(typeof value === 'string' ? value.trim() : value);
+			});
+		};
+	}
 }
