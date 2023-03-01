@@ -206,7 +206,6 @@
 				class="flex w-window max-w-[512px] flex-col bg-base-100 p-4"
 				autocomplete="off"
 				slot="content"
-				#urlFormElement
 				[formGroup]="urlForm"
 				(ngSubmit)="onSubmitUrlForm()"
 			>
@@ -238,11 +237,11 @@
 				>
 					<fieldset class="form-control" *ngIf="urlForm.get('title') as title">
 						<label class="label" for="urlFormTitle">
-							<div class="indicator">
-								<!-- prettier-ignore -->
+							<!-- prettier-ignore -->
+							<div class="indicator" [ngSwitch]="true">
 								<span
-									class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="title.touched && !!title.errors && !urlFormIsSubmitted"
+									class="badge badge-error indicator-item w-max translate-x-full translate-y-0 text-xs"
+									*ngSwitchCase="urlFormControl?.key === 'url-link' && title.touched && !!title.errors && !urlFormIsSubmitted"
 									[ngSwitch]="true"
 								>
 									<ng-container *ngSwitchCase="!!title.errors.required">
@@ -251,17 +250,18 @@
 								</span>
 								<span
 									class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="urlFormControl?.key === 'url-image'"
-									[class.badge-success]="!urlFormIsSubmitted"
-									[class.opacity-50]="urlFormIsSubmitted"
+									*ngSwitchCase="urlFormControl?.key === 'url-image'"
+									[class.badge-ghost]="!title.value"
+									[class.badge-success]="!!title.value && !urlFormIsSubmitted"
+									[class.opacity-25]="urlFormIsSubmitted"
 								>
 									Optional
 								</span>
 								<span class="label-text mr-2">Title</span>
 							</div>
 						</label>
+						<!-- prettier-ignore -->
 						<div class="relative">
-							<!-- prettier-ignore -->
 							<input
 								class="input input-bordered w-full truncate pr-12"
 								id="urlFormTitle"
@@ -269,9 +269,10 @@
 								aria-label="Title"
 								formControlName="title"
                 appInputTrimWhitespace
+                appInputMarkAsTouched
                 [attr.placeholder]="'Type ' + urlFormControl.label.toLowerCase() + ' title'"
-								[class.input-success]="title.touched && title.valid"
-								[class.input-error]="title.touched && title.invalid"
+								[class.input-success]="(urlFormControl?.key === 'url-image' ? !!title.value : title.touched) && title.valid"
+								[class.input-error]="(urlFormControl?.key === 'url-image' ? !!title.value : title.touched) && title.invalid"
 								[disabled]="urlFormIsSubmitted"
 							/>
 							<button
@@ -280,9 +281,8 @@
 								aria-label="Clear"
 								appSvgIcon
 								*ngIf="!!title.value.length"
-								[class.btn-success]="title.touched && title.valid"
-								[class.btn-error]="title.touched && title.invalid"
-								[class.btn-ghost]="title.untouched"
+								[class.btn-success]="(urlFormControl?.key === 'url-image' ?  !!title.value : title.touched) && title.valid"
+								[class.btn-error]="(urlFormControl?.key === 'url-image' ?  !!title.value : title.touched) && title.invalid"
 								[disabled]="urlFormIsSubmitted"
 								[appIcon]="'x'"
 								[appSquare]="'1.75rem'"
@@ -302,6 +302,9 @@
 									<ng-container *ngSwitchCase="!!url.errors.required">
 										Required
 									</ng-container>
+                  <ng-container *ngSwitchCase="!!url.errors.pattern">
+                    Url does not correct
+									</ng-container>
 								</span>
 								<span class="label-text mr-2">URL</span>
 							</div>
@@ -315,6 +318,8 @@
 								aria-label="URL"
 								formControlName="url"
                 appInputOnlyPaste
+                appInputTrimWhitespace
+                appInputMarkAsTouched
 								[attr.placeholder]="'Paste ' + urlFormControl.label.toLowerCase() + ' URL'"
 								[class.input-success]="url.touched && !url.errors"
 								[class.input-error]="url.touched && !!url.errors"
@@ -328,7 +333,6 @@
 								*ngIf="!!url.value.length"
 								[class.btn-success]="url.touched && url.valid"
 								[class.btn-error]="url.touched && url.invalid"
-								[class.btn-ghost]="url.untouched"
 								[disabled]="urlFormIsSubmitted"
 								[appIcon]="'x'"
 								[appSquare]="'1.75rem'"
@@ -339,11 +343,10 @@
 					<fieldset class="form-control">
 						<button
 							class="btn-success btn w-full"
-							type="button"
+							type="submit"
 							aria-label="Submit"
 							[class.loading]="urlFormIsSubmitted"
 							[disabled]="urlForm.invalid || urlFormIsSubmitted"
-							(click)="urlFormElement.requestSubmit()"
 						>
 							Submit
 						</button>

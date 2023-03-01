@@ -18,7 +18,9 @@ export class HelperService {
 			case 'password':
 				return new RegExp('^((?=.*\\d)|(?=.*[!@#$%^&*]))(?=.*[a-zA-Z]).{6,32}$', 'm');
       case 'url':
-				return new RegExp('^(https?|chrome|ftp):\\/\\/[^\\s$.?#].[^\\s]*$', 'm');
+				return new RegExp('^([a-zA-Z][a-zA-Z0-9+.\\-]{1,31}):([^<>\x00-\x20]*)$', 'm');
+      case 'youtube':
+        return new RegExp('^.*((youtu.be\\/)|(v\\/)|(\\/u\\/\\w\\/)|(embed\\/)|(watch\\?))\\??v?=?([^#&?]*).*', 'm');
 			default:
 				throw new Error(`Invalid regex type specified: ${regex}`);
 		}

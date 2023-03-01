@@ -4,10 +4,12 @@ import {
 	AfterViewInit,
 	Component,
 	ElementRef,
+	EventEmitter,
 	Inject,
 	Input,
 	OnDestroy,
 	OnInit,
+	Output,
 	ViewChild
 } from '@angular/core';
 import {
@@ -44,6 +46,7 @@ import {
 import { MarkdownService } from '../../../core/services/markdown.service';
 import { PlatformService } from '../../../core/services/platform.service';
 import { HelperService } from '../../../core/services/helper.service';
+import { AppInputMarkAsTouchedDirective } from '../../directives/app-input-mark-as-touched.directive';
 
 interface UrlForm {
 	title?: FormControl<string>;
@@ -63,7 +66,8 @@ interface UrlForm {
 		OverlayComponent,
 		WindowComponent,
 		AppInputTrimWhitespaceDirective,
-		AppInputOnlyPasteDirective
+		AppInputOnlyPasteDirective,
+		AppInputMarkAsTouchedDirective
 	],
 	selector: 'app-markdown, [appMarkdown]',
 	templateUrl: './markdown.component.html'
@@ -78,6 +82,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	// prettier-ignore
 	@ViewChild('dropdownEmojiMart') dropdownEmojiMart: DropdownComponent | undefined;
+
+	@Output() modalToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input()
 	set appScrollSync(scrollSync: boolean) {
@@ -408,18 +414,18 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 			switch (markdownControl.key) {
         case 'url-link': {
           this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', [Validators.required]));
-          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required]));
+          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(this.helperService.getRegex('url'))]));
 
           break;
         }
         case 'url-image': {
           this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', []));
-          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required]));
+          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(this.helperService.getRegex('url'))]));
 
           break;
         }
         case 'url-youtube': {
-          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required]));
+          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(this.helperService.getRegex('youtube'))]));
 
           break;
         }
@@ -438,7 +444,12 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 					const abstractControl: AbstractControl = this.urlForm.get(key);
 
 					abstractControl.setValue(markdownTextarea.selection);
-					abstractControl.markAsTouched();
+
+					if (abstractControl.valid) {
+						abstractControl.markAsTouched();
+					} else {
+						abstractControl.reset();
+					}
 				});
 			}
 
@@ -451,6 +462,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.urlFormControl = undefined;
 			this.urlFormModal = false;
 		}
+
+		this.modalToggle.emit(toggle);
 	}
 
 	onSubmitUrlForm(): void {
