@@ -4,12 +4,11 @@
 	<div
 		class="rounded-btn flex overflow-auto border border-base-content/20"
 		#controlListElement
-		[class.pointer-events-none]="controlListDisabled"
-		[class.border-transparent]="controlListDisabled"
+		[ngClass]="{ 'cursor-not-allowed border-transparent': controlListDisabled }"
 	>
 		<ul
 			class="menu rounded-btn menu-horizontal flex-nowrap bg-base-100"
-			[class.bg-base-300]="controlListDisabled"
+			[ngClass]="{ 'pointer-events-none bg-base-300': controlListDisabled }"
 		>
 			<li
 				class="inline-block"
@@ -321,8 +320,8 @@
                 appInputTrimWhitespace
                 appInputMarkAsTouched
 								[attr.placeholder]="'Paste ' + urlFormControl.label.toLowerCase() + ' URL'"
-								[class.input-success]="url.touched && !url.errors"
-								[class.input-error]="url.touched && !!url.errors"
+								[class.input-success]="url.touched && url.valid"
+								[class.input-error]="url.touched && url.invalid"
 								[disabled]="urlFormIsSubmitted"
               />
 							<button

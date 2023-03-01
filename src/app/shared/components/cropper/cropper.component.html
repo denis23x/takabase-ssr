@@ -122,14 +122,12 @@
 			</div>
 			<div class="flex items-center justify-between gap-4">
 				<div [class.cursor-not-allowed]="cropperIsSubmitted">
+					<!-- prettier-ignore -->
 					<ul
 						class="menu rounded-btn menu-horizontal flex-nowrap overflow-x-auto overflow-y-hidden border border-base-content/20"
-						[class.pointer-events-none]="cropperIsSubmitted"
-						[class.border-transparent]="cropperIsSubmitted"
-						[class.bg-base-200]="cropperIsSubmitted"
+            [ngClass]="{ 'pointer-events-none border-transparent bg-base-200': cropperIsSubmitted }"
 					>
 						<li class="inline-block" [class.disabled]="cropperIsSubmitted">
-							<!-- prettier-ignore -->
 							<button
                 class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
                 type="button"

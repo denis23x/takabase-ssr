@@ -233,8 +233,8 @@
 								<span
                   class="label-text-alt"
                   [class.text-base-content]="categoryEditFormIsSubmitted || categoryDeleteFormToggle"
-                  [class.text-success]="!categoryEditFormIsSubmitted && !categoryDeleteFormToggle && !!description.value && !description.errors"
-                  [class.text-error]="!categoryEditFormIsSubmitted && !categoryDeleteFormToggle && !!description.value && !!description.errors"
+                  [class.text-success]="!categoryEditFormIsSubmitted && !categoryDeleteFormToggle && !!description.value && description.valid"
+                  [class.text-error]="!categoryEditFormIsSubmitted && !categoryDeleteFormToggle && !!description.value && description.invalid"
                 >
                   {{ description.value?.length || 0 }}/255
                 </span>
@@ -243,8 +243,8 @@
 							<div
                 class="rounded-btn flex overflow-hidden w-full"
                 [ngClass]="{ 'border border-base-content/20': !categoryEditFormIsSubmitted && !categoryDeleteFormToggle }"
-                [class.border-success]="!!description.value && !description.errors"
-                [class.border-error]="!!description.value && !!description.errors"
+                [class.border-success]="!!description.value && description.valid"
+                [class.border-error]="!!description.value && description.invalid"
               >
                 <textarea
                   class="textarea border-0 !outline-0 w-full resize-none"
@@ -406,8 +406,7 @@
 										<ng-container *ngFor="let category of categoryList">
 											<li
 												*ngIf="category.id !== categoryActive.id"
-												[class.disabled]="categoryDeleteFormIsSubmitted"
-												[class.pointer-events-none]="categoryDeleteFormIsSubmitted"
+                        [ngClass]="{ 'disabled pointer-events-none': categoryDeleteFormIsSubmitted }"
 											>
 												<button
                           *ngIf="{ value: categoryId.value === category.id } as isActive"

@@ -130,8 +130,8 @@
 						<span
 							class="label-text-alt"
 							[class.text-base-content]="profileFormIsSubmitted"
-							[class.text-success]="!profileFormIsSubmitted && !!description.value && !description.errors"
-							[class.text-error]="!profileFormIsSubmitted && !!description.value && !!description.errors"
+							[class.text-success]="!profileFormIsSubmitted && !!description.value && description.valid"
+							[class.text-error]="!profileFormIsSubmitted && !!description.value && description.invalid"
 						>
 							{{ description.value?.length || 0 }}/255
 						</span>
@@ -140,8 +140,8 @@
 					<div
             class="rounded-btn flex overflow-hidden w-full"
             [ngClass]="{ 'border border-base-content/20': !profileFormIsSubmitted }"
-            [class.border-success]="!!description.value && !description.errors"
-            [class.border-error]="!!description.value && !!description.errors"
+            [class.border-success]="!!description.value && description.valid"
+            [class.border-error]="!!description.value && description.invalid"
           >
             <textarea
               class="textarea border-0 !outline-0 w-full resize-none"

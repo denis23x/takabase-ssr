@@ -263,7 +263,6 @@
 					<div
 						class="flex overflow-auto"
 						appMarkdown
-						[class.cursor-not-allowed]="postFormIsSubmitted"
 						[appTextareaId]="'postFormTextarea'"
 						[appPreviewId]="'postFormPreview'"
 						[appScrollSync]="fullscreenScrollSync"
@@ -325,8 +324,8 @@
 									<span
                     class="label-text-alt"
                     [class.text-base-content]="postFormIsSubmitted"
-                    [class.text-success]="!postFormIsSubmitted && markdown.touched && !markdown.errors"
-                    [class.text-error]="!postFormIsSubmitted && markdown.touched && !!markdown.errors"
+                    [class.text-success]="!postFormIsSubmitted && markdown.touched && markdown.valid"
+                    [class.text-error]="!postFormIsSubmitted && markdown.touched && markdown.invalid"
                   >
                     {{ markdown.value.length }}/7200
                   </span>
@@ -335,8 +334,8 @@
 								<div
 									class="rounded-btn flex overflow-hidden w-full h-full"
 									[ngClass]="{ 'border border-base-content/20': !postFormIsSubmitted }"
-									[class.border-success]="markdown.touched && !markdown.errors"
-									[class.border-error]="markdown.touched && !!markdown.errors"
+									[class.border-success]="markdown.touched && markdown.valid"
+									[class.border-error]="markdown.touched && markdown.invalid"
 								>
 									<textarea
                     class="textarea border-0 !outline-0 w-full h-full resize-none"
@@ -364,8 +363,7 @@
 						<!-- prettier-ignore -->
 						<ul
 							class="menu rounded-btn menu-horizontal border border-base-content/20 sm:menu-vertical"
-							[class.bg-base-300]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle"
-							[class.border-transparent]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle"
+              [ngClass]="{ 'bg-base-300 border-transparent': postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle }"
 						>
 							<li class="inline-block" [class.disabled]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle">
 								<button
@@ -625,8 +623,8 @@
 								<span
                   class="label-text-alt"
                   [class.text-base-content]="categoryFormIsSubmitted"
-                  [class.text-success]="!categoryFormIsSubmitted && !!description.value && !description.errors"
-                  [class.text-error]="!categoryFormIsSubmitted && !!description.value && !!description.errors"
+                  [class.text-success]="!categoryFormIsSubmitted && !!description.value && description.valid"
+                  [class.text-error]="!categoryFormIsSubmitted && !!description.value && description.invalid"
                 >
                   {{ description.value?.length || 0 }}/255
                 </span>
@@ -634,8 +632,8 @@
 							<!-- prettier-ignore -->
 							<div class="rounded-btn flex overflow-hidden w-full"
                 [ngClass]="{ 'border border-base-content/20': !categoryFormIsSubmitted }"
-                [class.border-success]="!!description.value && !description.errors"
-                [class.border-error]="!!description.value && !!description.errors"
+                [class.border-success]="!!description.value && description.valid"
+                [class.border-error]="!!description.value && description.invalid"
               >
 								<textarea
                   class="textarea border-0 !outline-0 w-full resize-none"
