@@ -38,7 +38,6 @@
 							formControlName="query"
 							placeholder="Type keywords"
 							appInputTrimWhitespace
-							appInputMarkAsTouched
 							[class.input-success]="query.touched && query.value"
 							[class.input-error]="query.touched && query.invalid"
 							[disabled]="searchFormIsSubmitted"
@@ -55,7 +54,7 @@
 							[disabled]="searchFormIsSubmitted"
 							[appIcon]="'x'"
 							[appSquare]="'1.75rem'"
-							(click)="query.setValue('')"
+							(click)="searchForm.reset()"
 						></button>
 					</div>
 				</fieldset>

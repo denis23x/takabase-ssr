@@ -3,6 +3,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import {
+	AbstractControl,
 	FormBuilder,
 	FormControl,
 	FormGroup,
@@ -15,7 +16,6 @@ import { CommonModule } from '@angular/common';
 import { AppInputTrimWhitespaceDirective } from '../shared/directives/app-input-trim-whitespace.directive';
 import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
 import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
-import { AppInputMarkAsTouchedDirective } from '../shared/directives/app-input-mark-as-touched.directive';
 
 interface SearchForm {
 	query: FormControl<string>;
@@ -29,8 +29,7 @@ interface SearchForm {
 		RouterModule,
 		AppInputTrimWhitespaceDirective,
 		SvgIconComponent,
-		AppScrollIntoViewDirective,
-		AppInputMarkAsTouchedDirective
+		AppScrollIntoViewDirective
 	],
 	selector: 'app-search',
 	templateUrl: './search.component.html'
@@ -41,6 +40,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 	searchForm: FormGroup | undefined;
 	searchForm$: Subscription | undefined;
 	searchFormIsSubmitted: boolean = false;
+	searchFormIsSubmitted$: Subscription | undefined;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -63,8 +63,11 @@ export class SearchComponent implements OnInit, OnDestroy {
 			)
 			.subscribe({
 				next: (query: string) => {
-					this.searchForm.setValue({ query }, { emitEvent: false });
-					this.searchForm.markAllAsTouched();
+					// prettier-ignore
+					const abstractControl: AbstractControl = this.searchForm.get('query');
+
+					abstractControl.setValue(query, { emitEvent: false });
+					abstractControl.markAsTouched();
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -93,15 +96,20 @@ export class SearchComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.routeQueryParams$, this.searchForm$].forEach($ => $?.unsubscribe());
+		[
+			this.routeQueryParams$,
+			this.searchForm$,
+			this.searchFormIsSubmitted$
+		].forEach($ => $?.unsubscribe());
 	}
 
+	// prettier-ignore
 	onRouterOutletActivate(event: any): void {
-		// prettier-ignore
-		const isLoading: Observable<boolean> = event.categoryListLoading || event.postListLoading || event.userListLoading
+		const isLoading$: Observable<boolean> = event.categoryListLoading || event.postListLoading || event.userListLoading
 
-		isLoading.subscribe((isSubmitted: boolean) => {
-			this.searchFormIsSubmitted = isSubmitted;
-		});
+		this.searchFormIsSubmitted$ = isLoading$.subscribe({
+      next: (isSubmitted: boolean) => this.searchFormIsSubmitted = isSubmitted,
+      error: (error: any) => console.error(error)
+    });
 	}
 }
