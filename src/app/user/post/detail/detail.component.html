@@ -8,7 +8,7 @@
 			[appButtons]="['close', 'fullscreen']"
 			(closed)="onClose()"
 		>
-			<app-post-detail slot="content" [appPost]="post"></app-post-detail>
+			<app-post-prose slot="content" [appPost]="post"></app-post-prose>
 			<app-share class="flex bg-base-200 p-2" slot="footer"></app-share>
 		</app-window>
 	</app-overlay>

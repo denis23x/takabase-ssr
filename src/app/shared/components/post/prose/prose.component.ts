@@ -23,8 +23,8 @@ import { AuthService } from '../../../../core/services/auth.service';
 		DayjsPipe,
 		NgOptimizedImage
 	],
-	selector: 'app-post-detail, [appPostDetail]',
-	templateUrl: './detail.component.html'
+	selector: 'app-post-prose, [appPostProse]',
+	templateUrl: './prose.component.html'
 })
 export class PostDetailComponent implements OnInit, OnDestroy {
 	@Input()

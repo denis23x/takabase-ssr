@@ -55,7 +55,6 @@ module.exports = {
     "md:max-w-[calc(768px-4rem)]",
     "shadow-xl",
     "rounded-box",
-    "blur-none",
 
     /** FULLSCREEN */
 

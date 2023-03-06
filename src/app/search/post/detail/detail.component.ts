@@ -7,7 +7,7 @@ import { ActivatedRoute, Data, Router } from '@angular/router';
 import { OverlayComponent } from '../../../shared/components/overlay/overlay.component';
 import { WindowComponent } from '../../../shared/components/window/window.component';
 import { ShareComponent } from '../../../shared/components/share/share.component';
-import { PostDetailComponent } from '../../../shared/components/post/detail/detail.component';
+import { PostDetailComponent } from '../../../shared/components/post/prose/prose.component';
 import { Post } from '../../../core/models/post.model';
 import { PostService } from '../../../core/services/post.service';
 

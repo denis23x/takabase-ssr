@@ -22,13 +22,13 @@
 						{{ category.user.name }}
 					</span>
 				</div>
-				<p class="alert inline">
+				<p class="alert inline" *ngIf="!!category.description">
 					<span class="line-clamp-2">{{ category.description }}</span>
 				</p>
 			</li>
 		</ul>
 		<button
-			class="btn btn-primary mt-4 w-full"
+			class="btn-primary btn mt-4 w-full"
 			type="button"
 			aria-label="Load more"
 			*ngIf="categoryListHasMore"

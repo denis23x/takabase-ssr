@@ -21,7 +21,7 @@ import { WindowComponent } from '../shared/components/window/window.component';
 import { CropperComponent } from '../shared/components/cropper/cropper.component';
 import { ShareComponent } from '../shared/components/share/share.component';
 import { MarkdownComponent } from '../shared/components/markdown/markdown.component';
-import { PostDetailComponent } from '../shared/components/post/detail/detail.component';
+import { PostDetailComponent } from '../shared/components/post/prose/prose.component';
 import { Category } from '../core/models/category.model';
 import { Post } from '../core/models/post.model';
 import { User } from '../core/models/user.model';
