@@ -2,107 +2,48 @@
 
 <ng-container>
 	<div class="flex flex-col space-y-4 md:space-y-8">
-		<header
-			class="rounded-box grid grid-cols-2 gap-8 bg-base-100 p-8 shadow-xl"
+		<section
+			class="rounded-box flex items-start justify-start space-x-4 bg-base-100 p-4 shadow-xl"
 		>
-			<div class="flex flex-col">
-				<h1 class="text-5xl font-bold">Just write</h1>
-				<p class="py-6">
+			<div class="flex flex-col space-y-4">
+				<h1 class="text-xl font-bold">
+					Draft - build your personal knowledge base
+				</h1>
+				<hr class="my-0 border-base-content/20" />
+				<p class="block">
 					Without annoying background, you don't need no more to chat or comment
-					or whatever, just focus on your interests
+					or whatever just focus on your idea. We can offer bloggers a
+					streamlined and efficient way to create and publish high-quality
+					content, without getting bogged down in complex formatting and design
+					issues.
 				</p>
-				<a class="btn btn-primary" [routerLink]="['/search']"> Get Started </a>
+				<ul class="flex flex-wrap gap-4">
+					<li class="badge badge-primary" *ngFor="let feature of featureList">
+						{{ feature }}
+					</li>
+				</ul>
 			</div>
-			<ul class="flex flex-col space-y-2">
-				<li class="flex items-center justify-start space-x-2">
-					<span>Markdown</span>
-				</li>
-				<li class="flex items-center justify-start space-x-2">
-					<span>Fast and lightweight</span>
-				</li>
-				<li class="flex items-center justify-start space-x-2">
-					<span>Customizable</span>
-				</li>
-				<li class="flex items-center justify-start space-x-2">
-					<span>Mobile support</span>
-				</li>
-				<li class="flex items-center justify-start space-x-2">
-					<span>Working offline</span>
-				</li>
-				<li class="flex items-center justify-start space-x-2">
-					<span>Absolutely free</span>
-				</li>
-			</ul>
-		</header>
-		<article class="flex w-full gap-4">
-			<div class="card-compact card bg-base-100 shadow-xl">
-				<div class="card-body items-center text-center">
-					<h2 class="card-title">
-						<i
-							class="fill-current p-4 text-base-content"
-							appSvgIcon
-							[appIcon]="'heart'"
-							[appSquare]="'2rem'"
-						></i>
-					</h2>
-					<p class="alert inline">
-						Absent direct messages and comments, no likes pursuit
-					</p>
-				</div>
-			</div>
-			<div class="card-compact card bg-base-100 shadow-xl">
-				<div class="card-body items-center text-center">
-					<h2 class="card-title">
-						<i
-							class="fill-current p-4 text-base-content"
-							appSvgIcon
-							[appIcon]="'markdown'"
-							[appSquare]="'2rem'"
-						></i>
-					</h2>
-					<p class="alert inline">
-						Rich Markdown editor with media embed and emoji
-					</p>
-				</div>
-			</div>
-			<div class="card-compact card bg-base-100 shadow-xl">
-				<div class="card-body items-center text-center">
-					<h2 class="card-title">
-						<i
-							class="fill-current p-4 text-base-content"
-							appSvgIcon
-							[appIcon]="'gem'"
-							[appSquare]="'2rem'"
-						></i>
-					</h2>
-					<p class="alert inline">
-						Super light web app with full mobile devices support
-					</p>
-				</div>
-			</div>
-		</article>
-		<footer
-			class="footer rounded-box bg-base-100 p-4 text-base-content shadow-xl"
+		</section>
+		<div
+			class="rounded-box flex flex-col items-start justify-start space-y-4 bg-base-100 p-4 shadow-xl"
 		>
-			<div>
-				<span class="footer-title">Looking for</span>
-				<a class="link">Translators</a>
-				<a class="link">SMM</a>
-			</div>
-			<div>
-				<span class="footer-title">Project</span>
-				<a class="link">About</a>
-				<a class="link">Buy Me a Coffee</a>
-			</div>
-			<div>
-				<span class="footer-title">Backend</span>
-				<a class="link">Github</a>
-				<a class="link">API</a>
-			</div>
-			<div>
-				<span class="footer-title">Frontend</span>
-				<a class="link">Github</a>
-			</div>
+			<input
+				class="input-bordered input w-full"
+				type="text"
+				placeholder="Type here"
+			/>
+			<a class="btn-outline btn-success btn w-full" [routerLink]="['/login']">
+				Search
+			</a>
+		</div>
+		<footer
+			class="rounded-box flex flex-wrap items-center justify-start gap-4 bg-base-100 p-4 text-base-content shadow-xl"
+		>
+			<a class="link">Wanna use in your language?</a>
+			<a class="link">SMM</a>
+			<a class="link">Github</a>
+			<a class="link">Contact</a>
+			<a class="link">Donate</a>
 		</footer>
 	</div>
 </ng-container>

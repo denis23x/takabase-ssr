@@ -27,15 +27,15 @@
 					</a>
 					<time
 						class="text-sm text-base-content/50"
-						[attr.datetime]="user.createdAt | dayjs: 'format':'YYYY-M-D'"
+						[attr.datetime]="user.createdAt | dayjs : 'format' : 'YYYY-M-D'"
 					>
-						{{ user.createdAt | dayjs: "fromX" }}
+						{{ user.createdAt | dayjs : "fromX" }}
 					</time>
 				</div>
 			</li>
 		</ul>
 		<button
-			class="btn btn-primary mt-4 w-full"
+			class="btn-primary btn mt-4 w-full"
 			type="button"
 			aria-label="Load more"
 			*ngIf="userListHasMore"
@@ -54,7 +54,7 @@
 					[appSquare]="'3em'"
 				></i>
 				<div class="text-center">
-					<p class="text-xl font-medium">
+					<p class="text-xl font-bold">
 						<span class="text-base-content">Users</span>
 						<span class="text-error"> not found</span>
 					</p>
@@ -70,7 +70,7 @@
 			</div>
 			<div class="flex flex-col items-center" *ngSwitchCase="true">
 				<progress class="progress progress-primary my-5 w-56"></progress>
-				<span class="text-xl font-medium text-base-content">Loading</span>
+				<span class="text-xl font-bold text-base-content">Loading</span>
 			</div>
 		</ng-container>
 	</ng-template>

@@ -15,7 +15,7 @@
 			></li>
 		</ul>
 		<button
-			class="md btn btn-success mt-4 w-full"
+			class="md btn-success btn mt-4 w-full"
 			type="button"
 			aria-label="Load more"
 			*ngIf="postListHasMore"
@@ -34,7 +34,7 @@
 					[appSquare]="'3em'"
 				></i>
 				<div class="text-center">
-					<p class="text-xl font-medium">
+					<p class="text-xl font-bold">
 						<span class="text-error">Empty</span>
 						<span class="text-base-content"> category</span>
 					</p>
@@ -50,7 +50,7 @@
 			</div>
 			<div class="flex flex-col items-center" *ngSwitchCase="true">
 				<progress class="progress progress-primary my-5 w-56"></progress>
-				<span class="text-xl font-medium text-base-content">Loading</span>
+				<span class="text-xl font-bold text-base-content">Loading</span>
 			</div>
 		</ng-container>
 	</ng-template>

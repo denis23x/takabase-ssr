@@ -13,67 +13,71 @@ import * as compression from 'compression';
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
-  const server = express();
-  const distFolder = join(process.cwd(), 'dist/draft-ssr/browser');
-  const indexHtml = existsSync(join(distFolder, 'index.original.html'))
-    ? 'index.original.html'
-    : 'index';
+	const server = express();
+	const distFolder = join(process.cwd(), 'dist/draft-ssr/browser');
+	const indexHtml = existsSync(join(distFolder, 'index.original.html'))
+		? 'index.original.html'
+		: 'index';
 
-  // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
-  server.engine(
-    'html',
-    ngExpressEngine({
-      bootstrap: AppServerModule
-    })
-  );
+	// Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
+	server.engine(
+		'html',
+		ngExpressEngine({
+			bootstrap: AppServerModule
+		})
+	);
 
-  server.set('view engine', 'html');
-  server.set('views', distFolder);
+	server.set('view engine', 'html');
+	server.set('views', distFolder);
 
-  const shouldCompress = (req: any, res: any) => {
-    if (req.headers['x-no-compression']) {
-      // Will not compress responses, if this header is present
-      return false;
-    }
-    // Resort to standard compression
-    return compression.filter(req, res);
-  };
+	const shouldCompress = (req: any, res: any) => {
+		if (req.headers['x-no-compression']) {
+			// Will not compress responses, if this header is present
+			return false;
+		}
+		// Resort to standard compression
+		return compression.filter(req, res);
+	};
 
-  // Compress all HTTP responses
-  server.use(
-    compression({
-      // filter: Decide if the answer should be compressed or not,
-      // depending on the 'shouldCompress' function above
-      filter: shouldCompress
-    })
-  );
+	// Compress all HTTP responses
+	server.use(
+		compression({
+			level: 9,
+			// filter: Decide if the answer should be compressed or not,
+			// depending on the 'shouldCompress' function above
+			filter: shouldCompress
+		})
+	);
 
-  // Example Express Rest API endpoints
-  // server.get('/api/**', (req, res) => { });
-  // Serve static files from /browser
-  server.get(
-    '*.*',
-    express.static(distFolder, {
-      maxAge: '1y'
-    })
-  );
+	// Example Express Rest API endpoints
+	// server.get('/api/**', (req, res) => { });
+	// Serve static files from /browser
+	server.get(
+		'*.*',
+		express.static(distFolder, {
+			maxAge: '1y'
+		})
+	);
 
-  // All regular routes use the Universal engine
-  server.get('*', (req, res) => {
-    res.render(indexHtml, { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
-  });
+	// All regular routes use the Universal engine
+	server.get('*', (req, res) => {
+		res.render(indexHtml, {
+			req,
+			providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }]
+		});
+	});
 
-  return server;
+	return server;
 }
 
 function run(): void {
-  const port = process.env.PORT || 4200;
+	const port = process.env.PORT || 4000;
 
-  // Start up the Node server
-  const server = app();
-  server.listen(port, () => {
-    console.log(`Node Express server listening on http://localhost:${port}`);
-  });
+	// Start up the Node server
+	const server = app();
+	server.listen(port, () => {
+		console.log(`Node Express server listening on http://localhost:${port}`);
+	});
 }
 
 // Webpack will replace 'require' with '__webpack_require__'
@@ -83,7 +87,7 @@ declare const __non_webpack_require__: NodeRequire;
 const mainModule = __non_webpack_require__.main;
 const moduleFilename = (mainModule && mainModule.filename) || '';
 if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
-  run();
+	run();
 }
 
 export * from './src/main.server';

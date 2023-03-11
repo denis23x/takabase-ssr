@@ -78,6 +78,10 @@ module.exports = {
     "!mr-4",
   ],
   theme: {
+    fontFamily: {
+      sans: ["Ubuntu", "sans-serif"],
+      mono: ["Ubuntu Mono", "monospace"],
+    },
     cursor: {
       ["default"]: "default",
       ["pointer"]: "pointer",

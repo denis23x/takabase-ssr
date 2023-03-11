@@ -70,7 +70,7 @@ export const MarkdownControlHeading = (): MarkdownControl[] => [
 	{
 		key: 'heading-h1',
 		label: 'Heading 1',
-		classList: ['text-4xl', 'font-extrabold'],
+		classList: ['text-4xl', 'font-bold'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
 			return setWrapper('# ' + (markdownTextarea.selection || 'Heading 1'), markdownTextarea, 'block');
 		}
@@ -86,7 +86,7 @@ export const MarkdownControlHeading = (): MarkdownControl[] => [
 	{
 		key: 'heading-h3',
 		label: 'Heading 3',
-		classList: ['text-xl', 'font-semibold'],
+		classList: ['text-xl', 'font-bold'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
       return setWrapper('### ' + (markdownTextarea.selection || 'Heading 3'), markdownTextarea, 'block');
 		}
@@ -94,7 +94,7 @@ export const MarkdownControlHeading = (): MarkdownControl[] => [
 	{
 		key: 'heading-h4',
 		label: 'Heading 4',
-		classList: ['text-base', 'font-semibold'],
+		classList: ['text-base', 'font-bold'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
       return setWrapper('#### ' + (markdownTextarea.selection || 'Heading 4'), markdownTextarea, 'block');
 		}
@@ -106,7 +106,7 @@ export const MarkdownControlFormatting = (): MarkdownControl[] => [
 	{
 		key: 'formatting-bold',
 		label: 'Bold',
-		classList: ['font-semibold'],
+		classList: ['font-bold'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
 			return setWrapper('**' + (markdownTextarea.selection || 'Bold text') + '**', markdownTextarea, 'inline');
 		}

@@ -28,7 +28,7 @@
   }
 
   :where(ol):not(:where([class~="not-prose"] *)) {
-    @apply marker:font-medium;
+    @apply marker:font-bold;
   }
 
   :where(mark):not(:where([class~="not-prose"] *)) {
@@ -37,5 +37,9 @@
     * {
       @apply text-primary-content;
     }
+  }
+
+  :where(pre):not(:where([class~="not-prose"] *)) {
+    @apply text-sm #{!important};
   }
 }

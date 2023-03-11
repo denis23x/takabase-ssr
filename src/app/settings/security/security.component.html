@@ -28,7 +28,7 @@
 					</a>
 				</div>
 				<button
-					class="btn btn-outline btn-error w-full"
+					class="btn-outline btn-error btn w-full"
 					type="button"
 					title="Logout"
 					aria-label="Logout"
@@ -72,12 +72,12 @@
 								class="text-base-content/50"
 								[attr.datetime]="session.createdAt"
 							>
-								{{ session.createdAt | dayjs: "fromX" }}
+								{{ session.createdAt | dayjs : "fromX" }}
 							</time>
 						</div>
 					</div>
 					<button
-						class="btn btn-error btn-circle btn-sm fill-current"
+						class="btn-error btn-sm btn-circle btn fill-current"
 						type="button"
 						title="Terminate"
 						aria-label="Terminate"
@@ -99,7 +99,7 @@
 				[appSquare]="'3em'"
 			></i>
 			<div class="text-center">
-				<p class="text-xl font-medium">
+				<p class="text-xl font-bold">
 					<span class="text-success">No extra</span>
 					<span class="text-base-content"> sessions</span>
 				</p>
