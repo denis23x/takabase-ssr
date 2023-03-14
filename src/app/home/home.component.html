@@ -2,48 +2,74 @@
 
 <ng-container>
 	<div class="flex flex-col space-y-4 md:space-y-8">
-		<section
-			class="rounded-box flex items-start justify-start space-x-4 bg-base-100 p-4 shadow-xl"
-		>
-			<div class="flex flex-col space-y-4">
-				<h1 class="text-xl font-bold">
-					Draft - build your personal knowledge base
-				</h1>
-				<hr class="my-0 border-base-content/20" />
-				<p class="block">
-					Without annoying background, you don't need no more to chat or comment
-					or whatever just focus on your idea. We can offer bloggers a
-					streamlined and efficient way to create and publish high-quality
-					content, without getting bogged down in complex formatting and design
-					issues.
-				</p>
-				<ul class="flex flex-wrap gap-4">
-					<li class="badge badge-primary" *ngFor="let feature of featureList">
-						{{ feature }}
-					</li>
-				</ul>
-			</div>
-		</section>
 		<div
 			class="rounded-box flex flex-col items-start justify-start space-y-4 bg-base-100 p-4 shadow-xl"
 		>
-			<input
-				class="input-bordered input w-full"
-				type="text"
-				placeholder="Type here"
-			/>
-			<a class="btn-outline btn-success btn w-full" [routerLink]="['/login']">
-				Search
-			</a>
+			<div
+				class="rounded-box flex w-full items-center justify-start bg-base-200 p-4"
+			>
+				<div class="form-control w-full">
+					<label
+						class="label cursor-pointer space-x-4 p-0"
+						(click)="show = !show"
+					>
+						<span class="label-text text-xl">Markdown</span>
+						<input class="toggle" type="checkbox" />
+					</label>
+				</div>
+			</div>
+			<div
+				class="rounded-box flex w-full flex-col items-start justify-start space-y-4"
+				[class.hidden]="!show"
+			>
+				<div
+					class="flex overflow-auto"
+					appMarkdown
+					[appTextareaId]="'postFormTextarea'"
+					[appPreviewId]="'postFormPreview'"
+					[appScrollSync]="true"
+				></div>
+				<form
+					class="flex h-full w-full flex-col overflow-auto"
+					autocomplete="off"
+				>
+					<fieldset class="flex h-full flex-col" [disabled]="false">
+						<fieldset class="form-control h-full">
+							<div
+								class="rounded-btn flex h-full w-full overflow-hidden"
+								[ngClass]="{ 'border border-base-content/20': true }"
+							>
+								<textarea
+									class="textarea h-full w-full resize-none border-0 !outline-0"
+									id="postFormTextarea"
+									aria-label="Markdown"
+									placeholder="Type post markdown"
+									[rows]="4"
+								>
+                  {{ markdown }}
+                </textarea>
+							</div>
+						</fieldset>
+					</fieldset>
+				</form>
+			</div>
+			<div
+				class="rounded-btn flex h-full min-h-[128px] w-full flex-col overflow-auto bg-base-100"
+				[class.hidden]="show"
+			>
+				<article
+					class="prose max-w-none overflow-auto"
+					id="postFormPreview"
+				></article>
+			</div>
+			<!--			<app-share></app-share>-->
 		</div>
-		<footer
-			class="rounded-box flex flex-wrap items-center justify-start gap-4 bg-base-100 p-4 text-base-content shadow-xl"
-		>
-			<a class="link">Wanna use in your language?</a>
-			<a class="link">SMM</a>
-			<a class="link">Github</a>
-			<a class="link">Contact</a>
-			<a class="link">Donate</a>
-		</footer>
+		<!--		<section class="rounded-box flex flex-col gap-4 bg-base-100 p-4 shadow-xl">-->
+		<!--			<ul class="flex flex-wrap gap-4">-->
+		<!--				<li class="badge badge-primary" *ngFor="let feature of featureList">-->
+		<!--					{{ feature }}-->
+		<!--				</li>-->
+		<!--			</ul>-->
+		<!--		</section>-->
 	</div>
 </ng-container>

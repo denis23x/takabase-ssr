@@ -3,11 +3,15 @@
 import { Injectable } from '@angular/core';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
+import attrs from 'markdown-it-attrs';
+import bracketedSpans from 'markdown-it-bracketed-spans';
+import collapsible from 'markdown-it-collapsible';
 import emoji from 'markdown-it-emoji';
-import mila from 'markdown-it-link-attributes';
+import linkAttributes from 'markdown-it-link-attributes';
 import mark from 'markdown-it-mark';
+import multiMdTable from 'markdown-it-multimd-table';
 import smartArrows from 'markdown-it-smartarrows';
-import task from 'markdown-it-tasks';
+import tasks from 'markdown-it-tasks';
 import video from 'markdown-it-video';
 import Prism from 'prismjs';
 import morphdom from 'morphdom';
@@ -64,16 +68,28 @@ export class MarkdownService {
 				return prismTemplate(this.markdownIt.utils.escapeHtml(value), 'plain');
 			}
 		})
+			.use(attrs, {
+				allowedAttributes: ['class', 'width', 'height']
+			})
+			.use(bracketedSpans)
+			.use(collapsible)
 			.use(emoji)
-			.use(mila, {
+			.use(linkAttributes, {
 				attrs: {
 					target: '_blank',
 					rel: 'ugc noopener noreferrer'
 				}
 			})
 			.use(mark)
+			.use(multiMdTable, {
+				multiline: true,
+				rowspan: true,
+				headerless: true,
+				multibody: false,
+				autolabel: false
+			})
 			.use(smartArrows)
-			.use(task, {
+			.use(tasks, {
 				enabled: false,
 				label: true,
 				labelAfter: false,
@@ -87,9 +103,11 @@ export class MarkdownService {
 
 		/** Update Image */
 
-		this.markdownIt.renderer.rules.image = (token: Token[], idx: number) => {
-			return `<img src="${token[idx].attrs[0][1]}" loading="lazy" alt="${token[idx].content}" title="${token[idx].content}">`;
-		};
+		// this.markdownIt.renderer.rules.image = (token: Token[], idx: number) => {
+		// 	console.log(token);
+		// 	console.log(idx);
+		// 	return `<img src="${token[idx].attrs[0][1]}" loading="lazy" alt="${token[idx].content}" title="${token[idx].content}">`;
+		// };
 
 		/** Update Emoji Mart size */
 

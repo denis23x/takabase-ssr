@@ -24,9 +24,13 @@
               "ua-parser-js",
               "prismjs",
               "dompurify",
+              "markdown-it-attrs",
+              "markdown-it-bracketed-spans",
+              "markdown-it-collapsible",
               "markdown-it-emoji",
               "markdown-it-link-attributes",
               "markdown-it-mark",
+              "markdown-it-multimd-table",
               "markdown-it-smartarrows",
               "markdown-it-tasks",
               "markdown-it-video"

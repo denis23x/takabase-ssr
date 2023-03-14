@@ -4,11 +4,23 @@
   }
 
   :where(img):not(:where([class~="not-prose"] *)) {
-    @apply rounded-box w-full h-auto m-0;
+    @apply m-0;
+
+    &:not(.mask) {
+      @apply rounded-box;
+    }
+
+    &:not([width]):not([height]) {
+      @apply w-full h-auto;
+    }
   }
 
   :where(a):not(:where([class~="not-prose"] *)) {
     @apply link after:content-['\279A'] after:inline-block after:px-1;
+
+    &.btn {
+      @apply no-underline after:hidden;
+    }
   }
 
   :where(p):not(:where([class~="not-prose"] *)) {
@@ -41,5 +53,9 @@
 
   :where(pre):not(:where([class~="not-prose"] *)) {
     @apply text-sm #{!important};
+  }
+
+  :where(td):not(:where([class~="not-prose"] *)) {
+    @apply align-top p-2;
   }
 }
