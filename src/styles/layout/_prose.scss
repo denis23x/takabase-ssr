@@ -1,9 +1,9 @@
 .prose {
-  :where(iframe):not(:where([class~="not-prose"] *)) {
+  :where(iframe):not(:where([class~="not-prose"])) {
     @apply rounded-box aspect-video w-full h-auto;
   }
 
-  :where(img):not(:where([class~="not-prose"] *)) {
+  :where(img):not(:where([class~="not-prose"])) {
     @apply m-0;
 
     &:not(.mask) {
@@ -15,15 +15,11 @@
     }
   }
 
-  :where(a):not(:where([class~="not-prose"] *)) {
+  :where(a):not(:where([class~="not-prose"])) {
     @apply link after:content-['\279A'] after:inline-block after:px-1;
-
-    &.btn {
-      @apply no-underline after:hidden;
-    }
   }
 
-  :where(p):not(:where([class~="not-prose"] *)) {
+  :where(p):not(:where([class~="not-prose"])) {
     @apply text-ellipsis overflow-hidden;
 
     &:empty {
@@ -31,7 +27,7 @@
     }
   }
 
-  :where(ul):not(:where([class~="not-prose"] *)) {
+  :where(ul):not(:where([class~="not-prose"])) {
     @apply marker:text-info;
 
     &.form-control {
@@ -39,11 +35,11 @@
     }
   }
 
-  :where(ol):not(:where([class~="not-prose"] *)) {
+  :where(ol):not(:where([class~="not-prose"])) {
     @apply marker:font-bold;
   }
 
-  :where(mark):not(:where([class~="not-prose"] *)) {
+  :where(mark):not(:where([class~="not-prose"])) {
     @apply bg-primary text-primary-content p-1 rounded;
 
     * {
@@ -51,11 +47,11 @@
     }
   }
 
-  :where(pre):not(:where([class~="not-prose"] *)) {
+  :where(pre):not(:where([class~="not-prose"])) {
     @apply text-sm #{!important};
   }
 
-  :where(td):not(:where([class~="not-prose"] *)) {
-    @apply align-top p-2;
+  :where(summary):not(:where([class~="not-prose"])) {
+    @apply cursor-pointer py-2;
   }
 }

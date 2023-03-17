@@ -169,13 +169,24 @@ module.exports = {
     "menu-vertical",
     "menu-horizontal",
 
-    "navbar",
-    "navbar-start",
-    "navbar-center",
-    "navbar-end",
+    "border-spacing-0",
+    "border-collapse",
+    "border-separate",
+
+    "rounded-none",
+    "rounded-sm",
+    "rounded",
+    "rounded-md",
+    "rounded-lg",
+    "rounded-xl",
 
     "not-prose",
+    "w-32",
+    "m-0",
+    "m-1",
     "mr-4",
+    "ml-1",
+    "ml-2",
   ],
   theme: {
     fontFamily: {
