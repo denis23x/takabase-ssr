@@ -51,7 +51,7 @@ export class MarkdownService {
 				const prismTemplate = (value: string, language: string): string => {
           const getValue = (): string => {
             if (language === 'markup') {
-              return `<xmp>${value}</xmp>`;
+              return value.replace(/</g, '&lt;').replace(/>/g, '&gt;')
             }
 
             return value;

@@ -12,20 +12,12 @@ export class SanitizerPipe implements PipeTransform {
 	constructor(protected domSanitizer: DomSanitizer) {}
 
 	// prettier-ignore
-	transform(value: string, context: string, extra?: string): SafeValue | null {
-    return this.bypassSecurityTrust(context, String(DOMPurify.sanitize(value, this.getConfig(context, extra))));
-	}
+	transform(value: string, context: string): SafeValue | null {
+    const config: Config = {
+      ADD_TAGS: ['iframe'],
+    };
 
-	private getConfig(context: string, extra?: string): Config {
-		/** Allow to use "use" tag in SVG background */
-
-		if (!!extra && extra === 'svg') {
-			return {
-				ADD_TAGS: ['use']
-			};
-		}
-
-		return {};
+    return this.bypassSecurityTrust(context, String(DOMPurify.sanitize(value, config)));
 	}
 
 	// prettier-ignore
