@@ -124,18 +124,17 @@ export class MarkdownService {
 		return this.markdownIt;
 	}
 
-	getRender(value: string, element: HTMLElement): void {
-		const makeRender = (): HTMLElement => {
-			const markdownIt: MarkdownIt = this.getMarkdownIt();
-			const render: HTMLElement = element.cloneNode(true) as HTMLElement;
+	getRender(value: string): string {
+		return this.getMarkdownIt().render(value);
+	}
 
-			/** Set markdownIt render */
+	setRender(value: string, element: HTMLElement): void {
+		const cloneElement: HTMLElement = element.cloneNode(true) as HTMLElement;
 
-			render.innerHTML = markdownIt.render(value);
+		/** Set markdownIt render */
 
-			return render;
-		};
+		cloneElement.innerHTML = this.getRender(value);
 
-		morphdom(element, makeRender());
+		morphdom(element, cloneElement);
 	}
 }

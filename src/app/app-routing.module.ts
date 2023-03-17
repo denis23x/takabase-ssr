@@ -7,12 +7,13 @@ import {
 	TitleStrategy,
 	UrlSegment
 } from '@angular/router';
-import { SettingsResolverService } from './settings/settings-resolver.service';
 import { CreateResolverService } from './create/create-resolver.service';
+import { HomeResolverService } from './home/home-resolver.service';
 import { SearchPostResolverService } from './search/post/post-resolver.service';
 import { SearchPostDetailResolverService } from './search/post/detail/detail-resolver.service';
 import { SearchCategoryResolverService } from './search/category/category-resolver.service';
 import { SearchUserResolverService } from './search/user/user-resolver.service';
+import { SettingsResolverService } from './settings/settings-resolver.service';
 import { UserResolverService } from './user/user-resolver.service';
 import { UserPostResolverService } from './user/post/post-resolver.service';
 import { UserPostDetailResolverService } from './user/post/detail/detail-resolver.service';
@@ -26,6 +27,9 @@ const routes: Routes = [
 		title: 'Home',
 		loadComponent: () => {
 			return import('./home/home.component').then(m => m.HomeComponent);
+		},
+		resolve: {
+			data: HomeResolverService
 		}
 	},
 	{

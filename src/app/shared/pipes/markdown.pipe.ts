@@ -10,7 +10,7 @@ import { MarkdownService } from '../../core/services/markdown.service';
 export class MarkdownPipe implements PipeTransform {
 	constructor(private markdownService: MarkdownService) {}
 
-	transform(value: string, element: HTMLElement): void {
-		this.markdownService.getRender(value, element);
+	transform(value: string): string {
+		return this.markdownService.getRender(value);
 	}
 }

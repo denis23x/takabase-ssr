@@ -161,7 +161,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 				.pipe(startWith(EMPTY), debounceTime(100))
 				.subscribe({
 					next: () => {
-						this.markdownService.getRender(this.textarea.value, this.preview);
+						this.markdownService.setRender(this.textarea.value, this.preview);
 
 						if (this.textareaHistoryToggle) {
 							// prettier-ignore

@@ -11,6 +11,7 @@ import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { Post } from '../../../../core/models/post.model';
 import { User } from '../../../../core/models/user.model';
 import { AuthService } from '../../../../core/services/auth.service';
+import { SanitizerPipe } from '../../../pipes/sanitizer.pipe';
 
 @Component({
 	standalone: true,
@@ -21,7 +22,8 @@ import { AuthService } from '../../../../core/services/auth.service';
 		MarkdownPipe,
 		UserUrlPipe,
 		DayjsPipe,
-		NgOptimizedImage
+		NgOptimizedImage,
+		SanitizerPipe
 	],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
