@@ -1,19 +1,32 @@
-# For sellers
+## Showcase example
 
-We are pleased to offer you a fantastic opportunity to showcase your products to a wider audience on our website. With our unlimited storage and strong SEO capabilities, we can help you reach a larger audience and promote your products effectively.
+Customizable tables are a powerful tool for creating any layout you can imagine. With their flexibility, ease of use, and range of customization options, our tables are the perfect solution for anyone who wants to create stunning designs quickly and easily.{.alert}
 
-### The Chair is an excellent value for anyone in need of comfortable and stylish seating
+### Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-| --- | --- | --- | --- |
-| ![](/assets/ikea-chair.png){width=170 height=170 .rounded-box} | **Price**: 50$ |||
-| ^^ | **Delivery**: Worldwide |||
-| ^^ | **Contact**: [https://www.npmjs.com/package/markdown-it-multimd-table](https://www.npmjs.com/package/markdown-it-multimd-table) |||
-| ^^ | [Buy](https://www.npmjs.com/search?q=markdown-it){.btn .btn-success .mr-4 .not-prose} **Stock**: 999 |||
-| Introducing the Chair, a stylish and versatile seating option that's perfect for any space. This chair is a popular choice for modern homes and offices, offering a sleek and minimalist design that complements a wide range of decor styles. Made with durable materials, the Chair is built to last and withstand daily wear and tear. The frame is made from sturdy steel and features a powder-coated finish that adds an extra layer of protection against rust and corrosion. The seat and backrest are made from high-quality polypropylene, which is lightweight, easy to clean, and resists fading over time. ||||
+| ------------------------------------------------------------------ | ----------------- | --- | --- |
+| ![Chair][image170] {width=170 height=170 .rounded-box .py-2 .pr-4} | **Price**: Etiam non        |||
+| ^^                                                                 | **Delivery**: Ut iaculis    |||
+| ^^                                                                 | **Contact**: [Nullam at](#) |||
+| ^^                                                                 | **Stock**: Cras vel         |||
 {.border-separate .not-prose}
 
-### Check our other images of Chair
+Fusce orci dui, vestibulum eget erat sit amet, luctus pellentesque nibh. Phasellus sed neque congue, lacinia massa in, eleifend sem. Sed ac odio eget libero semper imperdiet tincidunt ut mauris. Nullam lobortis dui id est finibus consectetur. Mauris ut maximus diam.
 
-| --- | --- | --- | --- | --- |
-| ![](/assets/ikea-chair.png){width=170 height=170 .rounded-box} | ![](/assets/ikea-chair.png){width=170 height=170 .rounded-box} | ![](/assets/ikea-chair.png){width=170 height=170 .rounded-box} | ![](/assets/ikea-chair.png){width=170 height=170 .rounded-box} | ![](/assets/ikea-chair.png){width=170 height=170 .rounded-box} |
+### Nunc a egestas ex, sit amet volutpat elit.
+
+| ----------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- | 
+| ![Chair][image170]{width=170 height=170 .rounded-box} | ![Chair][image170]{width=170 height=170 .rounded-box} | ![Chair][image170]{width=170 height=170 .rounded-box} | ![Chair][image170]{width=170 height=170 .rounded-box} | ![Chair][image170]{width=170 height=170 .rounded-box} |
 {.border-separate .not-prose}
+
+### Sed ut diam eget orci imperdiet laoreet.
+
+| -------------------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| ![Chair][image75] {width=75 height=75 .rounded-box .p-2} | ![Chair][image250] {width=250 height=250 .rounded-box .px-2}   | [Curabitur a enim nec orci commodo venenatis vitae tempor purus. In nulla justo, ornare a mollis vitae, vestibulum eget leo. Nunc ullamcorper vulputate lacus a ultrices. Cras at placerat metus. Aenean suscipit augue at porta luctus. Nulla nec enim hendrerit, condimentum magna eu, ullamcorper diam.]{.block .mb-4} [Aenean purus metus, iaculis convallis mauris quis, suscipit lacinia magna. Curabitur blandit risus nec augue condimentum, at mollis dolor tempus. Nam molestie molestie nisi ut ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Fusce quis vehicula lacus. Vivamus viverra est sed elementum vehicula. Sed ut diam eget orci imperdiet laoreet.]{.block} |     |
+| ![Chair][image75] {width=75 height=75 .rounded-box .p-2} | ^^                                                             |  ^^                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |     |
+| ![Chair][image75] {width=75 height=75 .rounded-box .p-2} | ^^                                                             |  ^^                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |     |
+{.border-separate .not-prose}
+
+[image75]: https://placehold.co/75x75
+[image170]: https://placehold.co/170x170
+[image250]: https://placehold.co/250x250

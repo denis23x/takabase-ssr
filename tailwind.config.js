@@ -2,32 +2,6 @@ module.exports = {
   mode: "jit",
   content: ["./src/**/*.html"],
   safelist: [
-    /** MARKDOWN  */
-
-    "text-xs",
-    "text-sm",
-    "text-base",
-    "text-lg",
-    "text-xl",
-    "text-2xl",
-    "text-3xl",
-    "text-4xl",
-    "font-thin",
-    "font-extralight",
-    "font-light",
-    "font-normal",
-    "font-medium",
-    "font-semibold",
-    "font-bold",
-    "font-extrabold",
-    "font-black",
-    "underline",
-    "overline",
-    "line-through",
-    "no-underline",
-    "italic",
-    "not-italic",
-
     /** WINDOW  */
 
     "w-full",
@@ -69,6 +43,136 @@ module.exports = {
     "!rounded",
     "!my-0",
     "!mr-4",
+
+    /** MARKDOWN  */
+
+    "prose",
+    "not-prose",
+
+    "border-primary",
+    "border-primary-focus",
+    "border-primary-content",
+
+    "border-secondary",
+    "border-secondary-focus",
+    "border-secondary-content",
+
+    "border-accent",
+    "border-accent-focus",
+    "border-accent-content",
+
+    "border-neutral",
+    "border-neutral-focus",
+    "border-neutral-content",
+
+    "border-base-100",
+    "border-base-200",
+    "border-base-300",
+    "border-base-content",
+
+    "border-info",
+    "border-info-content",
+
+    "border-success",
+    "border-success-content",
+
+    "border-warning",
+    "border-warning-content",
+
+    "border-error",
+    "border-error-content",
+
+    "bg-primary",
+    "bg-primary-focus",
+    "bg-primary-content",
+
+    "bg-secondary",
+    "bg-secondary-focus",
+    "bg-secondary-content",
+
+    "bg-accent",
+    "bg-accent-focus",
+    "bg-accent-content",
+
+    "bg-neutral",
+    "bg-neutral-focus",
+    "bg-neutral-content",
+
+    "bg-base-100",
+    "bg-base-200",
+    "bg-base-300",
+    "bg-base-content",
+
+    "bg-info",
+    "bg-info-content",
+
+    "bg-success",
+    "bg-success-content",
+
+    "bg-warning",
+    "bg-warning-content",
+
+    "bg-error",
+    "bg-error-content",
+
+    "text-primary",
+    "text-primary-focus",
+    "text-primary-content",
+
+    "text-secondary",
+    "text-secondary-focus",
+    "text-secondary-content",
+
+    "text-accent",
+    "text-accent-focus",
+    "text-accent-content",
+
+    "text-neutral",
+    "text-neutral-focus",
+    "text-neutral-content",
+
+    "text-base-100",
+    "text-base-200",
+    "text-base-300",
+    "text-base-content",
+
+    "text-info",
+    "text-info-content",
+
+    "text-success",
+    "text-success-content",
+
+    "text-warning",
+    "text-warning-content",
+
+    "text-error",
+    "text-error-content",
+
+    "text-xs",
+    "text-sm",
+    "text-base",
+    "text-lg",
+    "text-xl",
+    "text-2xl",
+    "text-3xl",
+    "text-4xl",
+
+    "font-thin",
+    "font-extralight",
+    "font-light",
+    "font-normal",
+    "font-medium",
+    "font-semibold",
+    "font-bold",
+    "font-extrabold",
+    "font-black",
+
+    "underline",
+    "overline",
+    "line-through",
+    "no-underline",
+    "italic",
+    "not-italic",
 
     "alert",
     "alert-info",
@@ -150,10 +254,11 @@ module.exports = {
     "mask-triangle-3",
     "mask-triangle-4",
 
-    "step",
     "steps",
     "steps-vertical",
     "steps-horizontal",
+
+    "step",
     "step-primary",
     "step-secondary",
     "step-accent",
@@ -173,6 +278,21 @@ module.exports = {
     "border-collapse",
     "border-separate",
 
+    "border",
+    "border-l",
+    "border-t",
+    "border-r",
+    "border-b",
+    "border-x",
+    "border-y",
+
+    "border-solid",
+    "border-dashed",
+    "border-dotted",
+    "border-double",
+    "border-hidden",
+    "border-none",
+
     "rounded-none",
     "rounded-sm",
     "rounded",
@@ -180,13 +300,24 @@ module.exports = {
     "rounded-lg",
     "rounded-xl",
 
-    "not-prose",
-    "w-32",
-    "m-0",
-    "m-1",
-    "mr-4",
-    "ml-1",
-    "ml-2",
+    "shadow-sm",
+    "shadow",
+    "shadow-md",
+    "shadow-lg",
+    "shadow-xl",
+    "shadow-2xl",
+    "shadow-inner",
+    "shadow-none",
+
+    {
+      pattern: /(w|h)-(10|12|16|24|32|full)/,
+    },
+    {
+      pattern: /border-(l|t|r|b|x|y)-(0|2|4|8)/,
+    },
+    {
+      pattern: /(m|p)(l|t|r|b|x|y)-(0|px|0.5|1|1.5|2|2.5|3|3.5|4)/,
+    },
   ],
   theme: {
     fontFamily: {
