@@ -2,12 +2,12 @@
 
 <ng-container>
 	<div
-		class="rounded-btn flex overflow-auto border border-base-content/20"
+		class="flex overflow-auto rounded-btn border border-base-content/20"
 		#controlListElement
 		[ngClass]="{ 'cursor-not-allowed border-transparent': controlListDisabled }"
 	>
 		<ul
-			class="menu rounded-btn menu-horizontal flex-nowrap bg-base-100"
+			class="menu menu-horizontal flex-nowrap rounded-btn bg-base-100"
 			[ngClass]="{ 'pointer-events-none bg-base-300': controlListDisabled }"
 		>
 			<li
@@ -45,7 +45,7 @@
 						[appIcon]="'type-h1'"
 					></button>
 					<ul
-						class="menu rounded-btn mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
+						class="menu mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow"
 						slot="content"
 					>
 						<li class="flex w-full" *ngFor="let control of controlListHeading">
@@ -82,7 +82,7 @@
 						[appIcon]="'type-bold'"
 					></button>
 					<ul
-						class="menu rounded-btn mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
+						class="menu mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow"
 						slot="content"
 					>
 						<li
@@ -122,7 +122,7 @@
 						[appIcon]="'list-ul'"
 					></button>
 					<ul
-						class="menu rounded-btn mt-2 min-w-fit border border-base-content/20 bg-base-100 p-2 shadow"
+						class="menu mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow"
 						slot="content"
 					>
 						<li class="flex w-full" *ngFor="let control of controlListList">
@@ -173,10 +173,56 @@
 						[appIcon]="controlListEmojiMart.icon"
 					></button>
 					<div
-						class="menu rounded-btn mt-2 min-w-fit overflow-hidden border border-base-content/20 bg-base-100 shadow"
+						class="menu mt-2 min-w-fit overflow-hidden rounded-btn border border-base-content/20 bg-base-100 shadow"
 						id="emojiMartPicker"
 						slot="content"
 					></div>
+				</div>
+			</li>
+			<li class="inline-block" [class.disabled]="controlListDisabled">
+				<div
+					class="flex p-0 active:bg-base-content/10 active:text-base-content"
+					appDropdown
+					#dropdownTable
+					*ngIf="{ value: false } as toggle"
+					[ngClass]="{ 'bg-base-content/10 text-base-content': toggle.value }"
+					(toggled)="toggle.value = $event"
+				>
+					<button
+						class="fill-current p-3.5"
+						type="button"
+						appSvgIcon
+						slot="target"
+						[attr.aria-label]="controlListTable.label"
+						[attr.title]="controlListTable.label"
+						[appIcon]="controlListTable.icon"
+					></button>
+					<div
+						class="menu mt-2 min-w-fit overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-2 shadow"
+						slot="content"
+					>
+						<div class="relative h-40 w-40 overflow-hidden rounded-btn">
+							<div
+								class="pointer-events-none absolute left-0 top-0 bg-base-content/10"
+								#controlListTableElement
+							></div>
+							<ul class="grid h-full w-full grid-cols-5 grid-rows-5">
+								<!-- prettier-ignore -->
+								<li
+                  class="col-span-1 row-span-1 h-full w-full bg-transparent p-0 border-4 border-base-100 outline outline-base-content/20 outline-1 -outline-offset-4 m-0"
+                  *ngFor="let cell of [].constructor(25); let i = index"
+                  (mouseenter)="onTableMouseEnter($event)"
+                  (mouseleave)="controlListTableElement.removeAttribute('style')"
+                  (click)="setTextareaValue(getTextareaValue(controlListTable, i))"
+                  [class.rounded-tl-btn]="i === 0"
+                  [class.rounded-tr-btn]="i === 4"
+                  [class.rounded-bl-btn]="i === 20"
+                  [class.rounded-br-btn]="i === 24"
+                >
+                </li>
+							</ul>
+						</div>
+					</div>
 				</div>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">

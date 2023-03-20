@@ -26,6 +26,8 @@ Our layout is also highly customizable, allowing users to tailor it to their spe
 
 +++ Link adds the missing underline style to links.
 [Primary]{.link .link-primary .m-1} [Secondary]{.link .link-secondary .m-1} [Accent]{.link .link-accent .m-1} [Info]{.link .link-info .m-1} [Success]{.link .link-success .m-1} [Warning]{.link .link-warning .m-1} [Error]{.link .link-error .m-1}
+
+Difference between `.prose` [link](#) and `.not-prose` [link](#){.not-prose}
 +++
 
 +++ Mask crops the content of the element to common shapes.
@@ -106,7 +108,7 @@ App bundle comes with a wide range of CSS classes that you can use to style your
 
 You can read much more information about classes and advanced layout in [DaisyUI](https://daisyui.com/) and [Tailwind](https://tailwindcss.com/) documentation, take a look there to write effective materials.
 
-+++ Full list of all safe classes what you be able to use
++++ Safe classes what you be able to use
 ``` scss
 // Prose
 
@@ -328,7 +330,7 @@ line-through
  
 /* You can be able to write spacing in all directions from 0 to 4 (where 4 === 16px) */
 
-(m|p)(l|t|r|b|x|y)-(0|px|0.5|1|1.5|2|2.5|3|3.5|4)
+(m|p)(l|t|r|b|x|y)?-(0|px|0.5|1|1.5|2|2.5|3|3.5|4)
 
 // Width and height pattern
  
@@ -346,6 +348,29 @@ shadow-xl
 shadow-2xl
 shadow-inner
 shadow-none
+```
++++
+
+### Compatibility
+
+Implementation of markdown includes a wide range of features beyond the standard markdown syntax. While default markdown is a great tool for simple formatting, we recognize that many of our users require more advanced functionality to fully express their ideas and creativity. That's why we've developed a custom markdown implementation that supports a range of features, including advanced tables, attributes, media, syntax highlighting, and more.
+
+Use only [base syntax](https://www.markdownguide.org/basic-syntax/) to achieve 100% compatibility.
+
+Using our connected plugins we can't guarantee your syntax will work well in third party editors.
+
++++ Connected Markdown plugins
+```text
+markdown-it-attrs
+markdown-it-bracketed-spans
+markdown-it-collapsible
+markdown-it-emoji
+markdown-it-link-attributes
+markdown-it-mark
+markdown-it-multimd-table
+markdown-it-smartarrows
+markdown-it-tasks
+markdown-it-video
 ```
 +++
 

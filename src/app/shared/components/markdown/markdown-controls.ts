@@ -168,24 +168,24 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 		key: 'url-link',
 		label: 'Link',
 		icon: 'link',
-		handler: (markdownTextarea: MarkdownTextarea, payload: any): string => {
-			return setWrapper(`[${payload.title}](${payload.url})`, markdownTextarea, 'inline');
+		handler: (markdownTextarea: MarkdownTextarea, formGroupValue: any): string => {
+			return setWrapper(`[${formGroupValue.title}](${formGroupValue.url})`, markdownTextarea, 'inline');
 		}
 	},
 	{
 		key: 'url-image',
 		label: 'Image',
 		icon: 'image',
-		handler: (markdownTextarea: MarkdownTextarea, payload: any): string => {
-			return setWrapper(`![${payload.title}](${payload.url})`, markdownTextarea, 'block');
+		handler: (markdownTextarea: MarkdownTextarea, formGroupValue: any): string => {
+			return setWrapper(`![${formGroupValue.title}](${formGroupValue.url})`, markdownTextarea, 'block');
 		}
 	},
 	{
 		key: 'url-youtube',
 		label: 'Video',
 		icon: 'youtube',
-		handler: (markdownTextarea: MarkdownTextarea, payload: any): string => {
-			return setWrapper(`@[youtube](${payload.url})`, markdownTextarea, 'block');
+		handler: (markdownTextarea: MarkdownTextarea, formGroupValue: any): string => {
+			return setWrapper(`@[youtube](${formGroupValue.url})`, markdownTextarea, 'block');
 		}
 	}
 ];
@@ -205,4 +205,43 @@ export const MarkdownControlCode = (): MarkdownControl => ({
 	handler: (markdownTextarea: MarkdownTextarea): string => {
 		return setWrapper('``` text\n' + (markdownTextarea.selection || 'Type your code') + '\n```', markdownTextarea, 'block');
 	}
+});
+
+// prettier-ignore
+export const MarkdownControlTable = (): MarkdownControl => ({
+  key: 'table',
+  label: 'Table',
+  icon: 'table',
+  handler: (markdownTextarea: MarkdownTextarea, index: number): string => {
+    const columns: number = (index % 5) + 1;
+    const rows: number = ((index - (columns - 1)) / 5) + 1;
+
+    /** Get ready columns */
+
+    const getReadyColumns = (header: boolean, value?: string): string => {
+      const column: string[] = [];
+      const columnText: string = ` ${value} `;
+
+      for(let i = 0; i < columns; i++){
+        column.push(header ? ' ------ ' : columnText);
+      }
+
+      return '|' + column.join('|') + '|';
+    }
+
+    /** Get ready rows */
+
+    const readyRows: string[] = [];
+
+    readyRows.push(getReadyColumns(false, 'Header'));
+    readyRows.push(getReadyColumns(true));
+
+    for(let i = 0; i < rows; i++){
+      readyRows.push(getReadyColumns(false, 'Column'));
+    }
+
+    const value: string = readyRows.join('\n');
+
+    return setWrapper(value, markdownTextarea, 'block');
+  }
 });

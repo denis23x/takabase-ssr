@@ -2,6 +2,8 @@ module.exports = {
   mode: "jit",
   content: ["./src/**/*.html"],
   safelist: [
+    "!my-0.5",
+
     /** WINDOW  */
 
     "w-full",
@@ -316,7 +318,7 @@ module.exports = {
       pattern: /border-(l|t|r|b|x|y)-(0|2|4|8)/,
     },
     {
-      pattern: /(m|p)(l|t|r|b|x|y)-(0|px|0.5|1|1.5|2|2.5|3|3.5|4)/,
+      pattern: /(m|p)(l|t|r|b|x|y)?-(0|px|0.5|1|1.5|2|2.5|3|3.5|4)/,
     },
   ],
   theme: {
@@ -330,6 +332,9 @@ module.exports = {
       ["not-allowed"]: "not-allowed",
     },
     extend: {
+      borderRadius: {
+        btn: "var(--rounded-btn)",
+      },
       width: {
         window: "calc(100vw - 2rem - 2px)",
       },

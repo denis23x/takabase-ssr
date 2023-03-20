@@ -18,7 +18,8 @@ import {
 	MarkdownControlList,
 	MarkdownControlUrl,
 	MarkdownControlEmojiMart,
-	MarkdownControlCode
+	MarkdownControlCode,
+	MarkdownControlTable
 } from './markdown-controls';
 import { BehaviorSubject, fromEvent, merge, Subscription, EMPTY } from 'rxjs';
 import { debounceTime, filter, startWith } from 'rxjs/operators';
@@ -75,6 +76,9 @@ interface UrlForm {
 export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	@ViewChild('controlListElement') controlListElement: ElementRef | undefined;
 
+	// prettier-ignore
+	@ViewChild('controlListTableElement') controlListTableElement: ElementRef | undefined;
+
 	@ViewChild('dropdownHeading') dropdownHeading: DropdownComponent | undefined;
 	// prettier-ignore
 	@ViewChild('dropdownFormatting') dropdownFormatting: DropdownComponent | undefined;
@@ -82,6 +86,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	// prettier-ignore
 	@ViewChild('dropdownEmojiMart') dropdownEmojiMart: DropdownComponent | undefined;
+
+	@ViewChild('dropdownTable') dropdownTable: DropdownComponent | undefined;
 
 	@Output() modalToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -116,6 +122,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	controlListList: MarkdownControl[] = MarkdownControlList();
 	controlListUrl: MarkdownControl[] = MarkdownControlUrl();
 	controlListEmojiMart: MarkdownControl = MarkdownControlEmojiMart();
+	controlListTable: MarkdownControl = MarkdownControlTable();
 	controlListCode: MarkdownControl = MarkdownControlCode();
 	controlListScroll$: Subscription | undefined;
 	controlListDisabled: boolean = false;
@@ -291,12 +298,24 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 	}
 
+	// prettier-ignore
+	onTableMouseEnter(mouseEvent: MouseEvent): void {
+    const parentElement: any = (mouseEvent.target as HTMLElement).parentElement.getBoundingClientRect();
+    const targetElement: any = (mouseEvent.target as HTMLElement).getBoundingClientRect();
+
+    const width: string = 'width:' + Math.abs(parentElement.left - targetElement.right) + 'px;';
+    const height: string = 'height:' + Math.abs(parentElement.top - targetElement.bottom) + 'px;';
+
+    this.controlListTableElement.nativeElement.setAttribute('style', width + height);
+  }
+
 	setDropdownHandler(): void {
 		const dropdownComponentList: DropdownComponent[] = [
 			this.dropdownHeading,
 			this.dropdownFormatting,
 			this.dropdownList,
-			this.dropdownEmojiMart
+			this.dropdownEmojiMart,
+			this.dropdownTable
 		];
 
 		// prettier-ignore
@@ -378,15 +397,15 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	// prettier-ignore
-	getTextareaValue(markdownControl: MarkdownControl, urlForm?: FormGroup): string {
-		const markdownTextarea: MarkdownTextarea = this.getMarkdownTextarea(this.textarea);
+	getTextareaValue(markdownControl: MarkdownControl, params?: any): string {
+    const markdownTextarea: MarkdownTextarea = this.getMarkdownTextarea(this.textarea);
 
     const selectionStart: number = markdownTextarea.selectionStart;
     const selectionEnd: number = markdownTextarea.selectionEnd;
 
     const before: string = markdownTextarea.value.substring(0, selectionStart);
     const after: string = markdownTextarea.value.substring(selectionEnd);
-    const value: string = markdownControl.handler(markdownTextarea, urlForm?.value);
+    const value: string = markdownControl.handler(markdownTextarea, params);
 
     return before + value + after;
 	}
@@ -469,7 +488,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	onSubmitUrlForm(): void {
 		if (this.helperService.getFormValidation(this.urlForm)) {
 			// prettier-ignore
-			this.setTextareaValue(this.getTextareaValue(this.urlFormControl, this.urlForm));
+			this.setTextareaValue(this.getTextareaValue(this.urlFormControl, this.urlForm.value));
 
 			this.onToggleUrlForm(false);
 		}

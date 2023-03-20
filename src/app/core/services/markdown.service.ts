@@ -95,14 +95,14 @@ export class MarkdownService {
 				labelAfter: false,
 				containerClass: 'form-control',
 				itemClass: 'label !m-0',
-				// prettier-ignore
-				inputClass: 'checkbox inline-block align-middle -translate-y-0.5 !my-0 !mr-4',
-				labelClass: 'inline-block !m-0'
+				inputClass: 'checkbox block !my-0.5 !mr-4',
+				labelClass: 'flex !m-0'
 			})
 			.use(video);
 
 		/** Update Image */
 
+		// TODO:
 		// this.markdownIt.renderer.rules.image = (token: Token[], idx: number) => {
 		// 	console.log(token);
 		// 	console.log(idx);
