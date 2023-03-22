@@ -24,6 +24,7 @@
               "ua-parser-js",
               "prismjs",
               "dompurify",
+              "typewriter-effect/dist/core",
               "markdown-it-attrs",
               "markdown-it-bracketed-spans",
               "markdown-it-collapsible",

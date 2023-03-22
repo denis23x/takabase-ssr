@@ -33,11 +33,11 @@ Difference between [prose link](#){.inline} and [not-prose link](#){.inline .not
 +++ Mask crops the content of the element to common shapes.
 To change image size you can use `width, height`{.inline} attributes{.alert .inline}
 
-| ------------------------------------------------------------------ | -------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- |
-| ![Chair][image]{.mask .mask-squircle width=120 height=120}         | ![Chair][image]{.mask .mask-heart width=120 height=120}  | ![Chair][image]{.mask .mask-hexagon width=120 height=120} | ![Chair][image]{.mask .mask-hexagon-2 width=120 height=120}     | ![Chair][image]{.mask .mask-decagon width=120 height=120}         | ![Chair][image]{.mask .mask-pentagon width=120 height=120}        |
-| ![Chair][image]{.mask .mask-diamond  width=120 height=120}         | ![Chair][image]{.mask .mask-square width=120 height=120} | ![Chair][image]{.mask .mask-circle width=120 height=120}  | ![Chair][image]{.mask .mask-parallelogram width=120 height=120} | ![Chair][image]{.mask .mask-parallelogram-2 width=120 height=120} | ![Chair][image]{.mask .mask-parallelogram-3 width=120 height=120} |
-| ![Chair][image]{.mask .mask-parallelogram-4  width=120 height=120} | ![Chair][image]{.mask .mask-star width=120 height=120}   | ![Chair][image]{.mask .mask-star-2 width=120 height=120}  | ![Chair][image]{.mask .mask-triangle width=120 height=120}      | ![Chair][image]{.mask .mask-triangle-2 width=120 height=120}      | ![Chair][image]{.mask .mask-triangle-3 width=120 height=120}      |
-| ![Chair][image]{.mask .mask-triangle-4  width=120 height=120}      |                                                          |                                                           |                                                                 |                                                                   |                                                                   |
+| ------------------------------------------------------------------------ | -------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| ![Placeholder][image]{.mask .mask-squircle width=120 height=120}         | ![Placeholder][image]{.mask .mask-heart width=120 height=120}  | ![Placeholder][image]{.mask .mask-hexagon width=120 height=120} | ![Placeholder][image]{.mask .mask-hexagon-2 width=120 height=120}     | ![Placeholder][image]{.mask .mask-decagon width=120 height=120}         | ![Placeholder][image]{.mask .mask-pentagon width=120 height=120}        |
+| ![Placeholder][image]{.mask .mask-diamond  width=120 height=120}         | ![Placeholder][image]{.mask .mask-square width=120 height=120} | ![Placeholder][image]{.mask .mask-circle width=120 height=120}  | ![Placeholder][image]{.mask .mask-parallelogram width=120 height=120} | ![Placeholder][image]{.mask .mask-parallelogram-2 width=120 height=120} | ![Placeholder][image]{.mask .mask-parallelogram-3 width=120 height=120} |
+| ![Placeholder][image]{.mask .mask-parallelogram-4  width=120 height=120} | ![Placeholder][image]{.mask .mask-star width=120 height=120}   | ![Placeholder][image]{.mask .mask-star-2 width=120 height=120}  | ![Placeholder][image]{.mask .mask-triangle width=120 height=120}      | ![Placeholder][image]{.mask .mask-triangle-2 width=120 height=120}      | ![Placeholder][image]{.mask .mask-triangle-3 width=120 height=120}      |
+| ![Placeholder][image]{.mask .mask-triangle-4  width=120 height=120}      |                                                                |                                                                 |                                                                       |                                                                         |                                                                         |
 {.border-separate .table .my-0 .not-prose style=width:928px;}
 +++
 
@@ -121,7 +121,7 @@ You can read much more information about classes and advanced layout in [DaisyUI
 prose
 not-prose
 
-// Background colors
+// Background color
 
 bg-primary
 bg-primary-focus

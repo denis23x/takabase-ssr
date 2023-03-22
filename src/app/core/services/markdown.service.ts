@@ -124,7 +124,7 @@ export class MarkdownService {
 
 			const token: Token = tokenList[idx];
 
-			token.attrs.forEach(([key, value]: string[]) => {
+			token.attrs?.forEach(([key, value]: string[]) => {
 				if (key === 'class') {
 					// prettier-ignore
 					const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
@@ -167,7 +167,7 @@ export class MarkdownService {
 
       const token: Token = tokenList[idx];
 
-      token.attrs.forEach(([key, value]: string[]) => {
+      token.attrs?.forEach(([key, value]: string[]) => {
         if (key === 'class') {
           // prettier-ignore
           const classList: string[] = value.split(/\s/).filter((className: string) => !!className);

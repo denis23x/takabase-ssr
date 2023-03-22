@@ -257,7 +257,8 @@
 				[formGroup]="urlForm"
 				(ngSubmit)="onSubmitUrlForm()"
 			>
-				<p
+				<!--
+		    <p
 					class="rounded-box mb-4 bg-base-200 p-4"
 					[ngSwitch]="urlFormControl?.key"
 				>
@@ -279,6 +280,7 @@
 						</a>
 					</ng-container>
 				</p>
+				-->
 				<fieldset
 					class="flex flex-col space-y-4"
 					[disabled]="urlFormIsSubmitted"
@@ -318,7 +320,7 @@
 								formControlName="title"
                 appInputTrimWhitespace
                 appInputMarkAsTouched
-                [attr.placeholder]="'Type ' + urlFormControl.label.toLowerCase() + ' title'"
+                placeholder="Type title"
 								[class.input-success]="(urlFormControl?.key === 'url-image' ? !!title.value : title.touched) && title.valid"
 								[class.input-error]="(urlFormControl?.key === 'url-image' ? !!title.value : title.touched) && title.invalid"
 								[disabled]="urlFormIsSubmitted"
@@ -368,7 +370,7 @@
                 appInputOnlyPaste
                 appInputTrimWhitespace
                 appInputMarkAsTouched
-								[attr.placeholder]="'Paste ' + urlFormControl.label.toLowerCase() + ' URL'"
+                placeholder="Paste URL"
 								[class.input-success]="url.touched && url.valid"
 								[class.input-error]="url.touched && url.invalid"
 								[disabled]="urlFormIsSubmitted"
