@@ -3,6 +3,7 @@ module.exports = {
   content: ["./src/**/*.html"],
   safelist: [
     "!my-0.5",
+    "!mt-0",
 
     /** WINDOW  */
 
@@ -45,6 +46,11 @@ module.exports = {
     "!rounded",
     "!my-0",
     "!mr-4",
+
+    /** MARKDOWN  */
+
+    "checkbox",
+    "checkbox-success",
 
     /** MARKDOWN  */
 
@@ -312,13 +318,13 @@ module.exports = {
     "shadow-none",
 
     {
-      pattern: /(w|h)-(10|12|16|24|32|full)/,
+      pattern: /(w|h)-(10|12|16|24|32|64|1\/6|2\/6|3\/6|4\/6|5\/6|full)/,
     },
     {
       pattern: /border-(l|t|r|b|x|y)-(0|2|4|8)/,
     },
     {
-      pattern: /(m|p)(l|t|r|b|x|y)?-(0|px|0.5|1|1.5|2|2.5|3|3.5|4)/,
+      pattern: /(m|p)(l|t|r|b|x|y)?-(0|px|auto|1|2|3|4)/,
     },
   ],
   theme: {

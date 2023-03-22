@@ -1,6 +1,6 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 import attrs from 'markdown-it-attrs';
@@ -20,6 +20,8 @@ import 'prismjs/plugins/autoloader/prism-autoloader.min.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.min.js';
 import 'prismjs/plugins/match-braces/prism-match-braces.min.js';
 import { environment } from '../../../environments/environment';
+import { RenderRule } from 'markdown-it/lib/renderer';
+import { DOCUMENT } from '@angular/common';
 
 Prism.manual = true;
 Prism.plugins.autoloader.languages_path = '/assets/grammars/';
@@ -30,7 +32,10 @@ Prism.plugins.autoloader.languages_path = '/assets/grammars/';
 export class MarkdownService {
 	markdownIt: MarkdownIt;
 
-	constructor() {}
+	constructor(
+		@Inject(DOCUMENT)
+		private document: Document
+	) {}
 
 	getMarkdownIt(): MarkdownIt {
 		if (!!this.markdownIt) {
@@ -90,42 +95,73 @@ export class MarkdownService {
 			})
 			.use(smartArrows)
 			.use(tasks, {
-				enabled: false,
+				enabled: true,
 				label: true,
 				labelAfter: false,
 				containerClass: 'form-control',
-				itemClass: 'label flex-col items-start m-0 px-0',
-				inputClass: 'checkbox block my-0.5 ml-0.5 mr-4',
+				itemClass: 'label flex-col items-start pointer-events-none m-0 px-0',
+				inputClass: 'checkbox checkbox-success block my-0.5 ml-0.5 mr-4',
 				labelClass: 'flex m-0'
 			})
 			.use(video);
 
-		/** Update Image */
-
-		// TODO:
-		// this.markdownIt.renderer.rules.image = (token: Token[], idx: number) => {
-		// 	console.log(token);
-		// 	console.log(idx);
-		// 	return `<img src="${token[idx].attrs[0][1]}" loading="lazy" alt="${token[idx].content}" title="${token[idx].content}">`;
-		// };
-
-		/** Update Emoji Mart size */
-
-		this.markdownIt.renderer.rules.emoji = (token: Token[], idx: number) => {
-			return `<span class="text-2xl">${token[idx].content}</span>`;
-		};
-
-		/** Update Youtube Iframe */
-
-		this.markdownIt.renderer.rules.video = (token: any[], idx: number) => {
-			return `<iframe title="YouTube video player" width="640" height="390" loading="lazy" src="https://www.youtube-nocookie.com/embed/${token[idx].videoID}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-		};
+		this.markdownIt.renderer.rules.image = this.setMarkdownItRule('image');
+		this.markdownIt.renderer.rules.video = this.setMarkdownItRule('video');
 
 		return this.markdownIt;
 	}
 
-	getRender(value: string): string {
-		return this.getMarkdownIt().render(value);
+	setMarkdownItRule(rule: string): RenderRule {
+		const ruleImage: RenderRule = (tokenList: Token[], idx: number): string => {
+			const imageElement: HTMLImageElement = this.document.createElement('img');
+
+			const token: Token = tokenList[idx];
+
+			token.attrs.forEach(([key, value]: string[]) => {
+				if (key === 'class') {
+					// prettier-ignore
+					const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
+
+					imageElement.classList.add(...classList);
+				} else {
+					imageElement[key] = value;
+				}
+			});
+
+			imageElement.loading = 'lazy';
+			imageElement.alt = token.content;
+			imageElement.title = token.content;
+
+			return imageElement.outerHTML;
+		};
+
+		// prettier-ignore
+		const ruleVideo: RenderRule = (tokenList: Token[], idx: number): string => {
+      const iframeSrc: string = 'https://www.youtube-nocookie.com/embed/';
+      const iframeElement: HTMLIFrameElement = this.document.createElement('iframe');
+
+      const token: Token = tokenList[idx];
+
+      // @ts-ignore
+      iframeElement.loading = 'lazy';
+
+      // @ts-ignore
+      iframeElement.src = iframeSrc + token.videoID;
+      iframeElement.width = String(640);
+      iframeElement.height = String(390);
+      iframeElement.title = 'YouTube video player';
+      iframeElement.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframeElement.allowFullscreen = true;
+
+      return iframeElement.outerHTML;
+    };
+
+		const ruleMap: any = {
+			image: ruleImage,
+			video: ruleVideo
+		};
+
+		return ruleMap[rule];
 	}
 
 	setRender(value: string, element: HTMLElement): void {
@@ -133,7 +169,7 @@ export class MarkdownService {
 
 		/** Set markdownIt render */
 
-		cloneElement.innerHTML = this.getRender(value);
+		cloneElement.innerHTML = this.getMarkdownIt().render(value);
 
 		morphdom(element, cloneElement);
 	}

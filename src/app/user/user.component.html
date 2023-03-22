@@ -31,9 +31,11 @@
 					</a>
 				</div>
 			</div>
-			<p class="alert inline w-full" *ngIf="!!user.description">
-				{{ user.description }}
-			</p>
+			<article
+				class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
+				*ngIf="!!user.description"
+				[innerHTML]="user.description | markdown | sanitizer : 'html'"
+			></article>
 		</header>
 		<div class="flex flex-col">
 			<nav class="block px-4">
@@ -116,9 +118,11 @@
 							Edit
 						</button>
 					</div>
-					<p class="alert inline w-full" *ngIf="!!category.description">
-						{{ category.description }}
-					</p>
+					<article
+						class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
+						*ngIf="!!category.description"
+						[innerHTML]="category.description | markdown | sanitizer : 'html'"
+					></article>
 				</div>
 				<router-outlet></router-outlet>
 			</section>

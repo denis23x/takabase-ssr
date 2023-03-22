@@ -8,6 +8,10 @@
     @apply my-6;
   }
 
+  :where(hr):not(:where([class~="not-prose"])) {
+    @apply my-6;
+  }
+
   :where(iframe):not(:where([class~="not-prose"])) {
     @apply rounded-box aspect-video w-full h-auto;
   }

@@ -15,6 +15,7 @@ export class SanitizerPipe implements PipeTransform {
 	transform(value: string, context: string): SafeValue | null {
     const config: Config = {
       ADD_TAGS: ['iframe'],
+      ADD_ATTR: ['target']
     };
 
     return this.bypassSecurityTrust(context, String(DOMPurify.sanitize(value, config)));

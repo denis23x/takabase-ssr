@@ -34,6 +34,8 @@ import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { CategoryUpdateDto } from '../core/dto/category/category-update.dto';
 import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
 import { AppInputMarkAsTouchedDirective } from '../shared/directives/app-input-mark-as-touched.directive';
+import { MarkdownPipe } from '../shared/pipes/markdown.pipe';
+import { SanitizerPipe } from '../shared/pipes/sanitizer.pipe';
 
 interface CategoryEditForm {
 	name: FormControl<string>;
@@ -58,7 +60,9 @@ interface CategoryDeleteForm {
 		OverlayComponent,
 		WindowComponent,
 		AppInputTrimWhitespaceDirective,
-		AppInputMarkAsTouchedDirective
+		AppInputMarkAsTouchedDirective,
+		MarkdownPipe,
+		SanitizerPipe
 	],
 	selector: 'app-user',
 	templateUrl: './user.component.html'

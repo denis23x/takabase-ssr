@@ -11,6 +11,6 @@ export class MarkdownPipe implements PipeTransform {
 	constructor(private markdownService: MarkdownService) {}
 
 	transform(value: string): string {
-		return this.markdownService.getRender(value);
+		return this.markdownService.getMarkdownIt().render(value);
 	}
 }

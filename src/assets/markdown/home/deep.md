@@ -330,13 +330,13 @@ line-through
  
 /* You can be able to write spacing in all directions from 0 to 4 (where 4 === 16px) */
 
-(m|p)(l|t|r|b|x|y)?-(0|px|0.5|1|1.5|2|2.5|3|3.5|4)
+(m|p)(l|t|r|b|x|y)?-(0|px|auto|0.5|1|1.5|2|2.5|3|3.5|4)
 
 // Width and height pattern
  
-/* You can be able to write size in X and Y directions from 10 to 32 (where 32 === 128px) */
+/* You can be able to write size in X and Y directions from 10 to 64 (where 64 === 256px) and 1...5/6 or full size */
 
-(w|h)-(10|12|16|24|32|full)
+(w|h)-(10|12|16|24|32|64|1\/6|2\/6|3\/6|4\/6|5\/6|full)
 
 // Shadow
 
