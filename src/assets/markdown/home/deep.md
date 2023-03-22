@@ -77,15 +77,9 @@ Vertical menu
 Horizontal menu with active item
 
 - [Item 1](){.not-prose}
-- [Item 2 active](){.not-prose .active}
+- [Active](){.not-prose .active}
 - [Item 3](){.not-prose}
-- [Item 4](){.not-prose}
-- [Item 5](){.not-prose}
-- [Item 6](){.not-prose}
-- [Item 7](){.not-prose}
-- [Item 8](){.not-prose}
-- [Item 9](){.not-prose}
-{.menu .menu-horizontal .shadow-xl .not-prose .overflow-auto .flex-nowrap .rounded-box .border .border-base-content/20 .p-0 .w-8/12}
+{.menu .menu-horizontal .shadow-xl .not-prose .overflow-auto .flex-nowrap .rounded-box .border .border-base-content/20 .p-0}
 +++
 
 +++ Table can be used to show a list of data in a table format.

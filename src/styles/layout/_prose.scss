@@ -69,10 +69,14 @@
   }
 
   :where(details):not(:where([class~="not-prose"])) {
-    @apply flex flex-col;
+    @apply flex flex-col my-4;
 
     summary {
-      @apply cursor-pointer py-2;
+      @apply flex cursor-pointer;
+
+      &::before {
+        @apply content-[''] list-item;
+      }
     }
   }
 

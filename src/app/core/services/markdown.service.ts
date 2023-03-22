@@ -114,6 +114,9 @@ export class MarkdownService {
 		// prettier-ignore
 		this.markdownIt.renderer.rules.table_close = this.setMarkdownItRule('tableClose');
 
+		// prettier-ignore
+		this.markdownIt.renderer.rules.collapsible_summary = this.setMarkdownItRule('collapsibleSummary');
+
 		return this.markdownIt;
 	}
 
@@ -185,11 +188,16 @@ export class MarkdownService {
 			return `</table></div>`;
 		};
 
+    const ruleCollapsibleSummary: RenderRule = (tokenList: Token[], idx: number) => {
+      return `<summary><span class="block">${tokenList[idx].content}</span></summary>`;
+    };
+
 		const ruleMap: any = {
 			image: ruleImage,
 			video: ruleVideo,
 			tableOpen: ruleTableOpen,
-			tableClose: ruleTableClose
+			tableClose: ruleTableClose,
+      collapsibleSummary: ruleCollapsibleSummary
 		};
 
 		return ruleMap[rule];
