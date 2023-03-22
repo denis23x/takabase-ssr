@@ -74,7 +74,7 @@ export class MarkdownService {
 			}
 		})
 			.use(attrs, {
-				allowedAttributes: ['class', 'width', 'height']
+				allowedAttributes: ['class', 'style', 'width', 'height']
 			})
 			.use(bracketedSpans)
 			.use(collapsible)
@@ -108,9 +108,16 @@ export class MarkdownService {
 		this.markdownIt.renderer.rules.image = this.setMarkdownItRule('image');
 		this.markdownIt.renderer.rules.video = this.setMarkdownItRule('video');
 
+		// prettier-ignore
+		this.markdownIt.renderer.rules.table_open = this.setMarkdownItRule('tableOpen');
+
+		// prettier-ignore
+		this.markdownIt.renderer.rules.table_close = this.setMarkdownItRule('tableClose');
+
 		return this.markdownIt;
 	}
 
+	// prettier-ignore
 	setMarkdownItRule(rule: string): RenderRule {
 		const ruleImage: RenderRule = (tokenList: Token[], idx: number): string => {
 			const imageElement: HTMLImageElement = this.document.createElement('img');
@@ -135,7 +142,6 @@ export class MarkdownService {
 			return imageElement.outerHTML;
 		};
 
-		// prettier-ignore
 		const ruleVideo: RenderRule = (tokenList: Token[], idx: number): string => {
       const iframeSrc: string = 'https://www.youtube-nocookie.com/embed/';
       const iframeElement: HTMLIFrameElement = this.document.createElement('iframe');
@@ -156,9 +162,34 @@ export class MarkdownService {
       return iframeElement.outerHTML;
     };
 
+		const ruleTableOpen: RenderRule = (tokenList: Token[], idx: number) => {
+      const tableElement: HTMLTableElement = this.document.createElement('table');
+
+      const token: Token = tokenList[idx];
+
+      token.attrs.forEach(([key, value]: string[]) => {
+        if (key === 'class') {
+          // prettier-ignore
+          const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
+
+          tableElement.classList.add(...classList);
+        } else {
+          tableElement[key] = value;
+        }
+      });
+
+      return `<div class="overflow-auto">${tableElement.outerHTML.replace('</table>', '')}`;
+    };
+
+		const ruleTableClose: RenderRule = () => {
+			return `</table></div>`;
+		};
+
 		const ruleMap: any = {
 			image: ruleImage,
-			video: ruleVideo
+			video: ruleVideo,
+			tableOpen: ruleTableOpen,
+			tableClose: ruleTableClose
 		};
 
 		return ruleMap[rule];
