@@ -114,8 +114,8 @@ You can read much more information about classes and advanced layout in [DaisyUI
 
 /* Turn on/off all default classes */
 
-.prose
-.not-prose
+prose
+not-prose
 
 // Colors
 
@@ -360,18 +360,16 @@ Use only [base syntax](https://www.markdownguide.org/basic-syntax/) to achieve 1
 Using our connected plugins we can't guarantee your syntax will work well in third party editors.
 
 +++ Connected Markdown plugins
-```text
-markdown-it-attrs
-markdown-it-bracketed-spans
-markdown-it-collapsible
-markdown-it-emoji
-markdown-it-link-attributes
-markdown-it-mark
-markdown-it-multimd-table
-markdown-it-smartarrows
-markdown-it-tasks
-markdown-it-video
-```
+- [markdown-it-attrs](https://www.npmjs.com/package/markdown-it-attrs)
+- [markdown-it-bracketed-spans](https://www.npmjs.com/package/markdown-it-bracketed-spans)
+- [markdown-it-collapsible](https://www.npmjs.com/package/markdown-it-collapsible)
+- [markdown-it-emoji](https://www.npmjs.com/package/markdown-it-emoji)
+- [markdown-it-link-attributes](https://www.npmjs.com/package/markdown-it-link-attributes)
+- [markdown-it-mark](https://www.npmjs.com/package/markdown-it-mark)
+- [markdown-it-multimd-table](https://www.npmjs.com/package/markdown-it-multimd-table)
+- [markdown-it-smartarrows](https://www.npmjs.com/package/markdown-it-smartarrows)
+- [markdown-it-tasks](https://www.npmjs.com/package/markdown-it-tasks)
+- [markdown-it-video](https://www.npmjs.com/package/markdown-it-video)
 +++
 
 [image]: https://placehold.co/120x120

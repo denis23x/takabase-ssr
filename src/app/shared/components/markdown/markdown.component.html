@@ -7,11 +7,11 @@
 		[ngClass]="{ 'cursor-not-allowed border-transparent': controlListDisabled }"
 	>
 		<ul
-			class="menu menu-horizontal flex-nowrap rounded-btn bg-base-100"
+			class="menu menu-horizontal flex-nowrap overflow-auto rounded-btn bg-base-100"
 			[ngClass]="{ 'pointer-events-none bg-base-300': controlListDisabled }"
 		>
 			<li
-				class="inline-block"
+				class="inline-block rounded-none"
 				*ngIf="{ value: textareaHistory$.getValue().length <= 1 } as disabled"
 				[class.disabled]="disabled.value"
 			>
@@ -225,7 +225,10 @@
 					</div>
 				</div>
 			</li>
-			<li class="inline-block" [class.disabled]="controlListDisabled">
+			<li
+				class="inline-block rounded-none"
+				[class.disabled]="controlListDisabled"
+			>
 				<button
 					class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
 					appSvgIcon

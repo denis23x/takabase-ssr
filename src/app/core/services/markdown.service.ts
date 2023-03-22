@@ -94,9 +94,9 @@ export class MarkdownService {
 				label: true,
 				labelAfter: false,
 				containerClass: 'form-control',
-				itemClass: 'label !m-0',
-				inputClass: 'checkbox block !my-0.5 !mr-4',
-				labelClass: 'flex !m-0'
+				itemClass: 'label flex-col items-start m-0 px-0',
+				inputClass: 'checkbox block my-0.5 ml-0.5 mr-4',
+				labelClass: 'flex m-0'
 			})
 			.use(video);
 

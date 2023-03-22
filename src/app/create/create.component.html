@@ -150,7 +150,7 @@
                     [disabled]="postFormIsSubmitted"
                   />
 									<div
-										class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100 shadow"
+										class="menu mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 shadow"
 										slot="content"
 										[class.hidden]="!categoryList.length"
 									>
@@ -363,15 +363,16 @@
 						<!-- prettier-ignore -->
 						<ul
 							class="menu rounded-btn menu-horizontal border border-base-content/20 sm:menu-vertical"
-              [ngClass]="{ 'bg-base-300 border-transparent': postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle }"
+              *ngIf="{ value: postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle } as disabled"
+              [ngClass]="{ 'bg-base-300 border-transparent': disabled.value }"
 						>
-							<li class="inline-block" [class.disabled]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle">
+							<li class="inline-block" [class.disabled]="disabled.value">
 								<button
-									class="p-3.5"
+                  class="p-3.5 active:bg-base-content/10 active:text-base-content"
 									type="button"
 									title="Markdown"
 									aria-label="Markdown"
-									[class.active]="fullscreenHiddenRender"
+                  [ngClass]="{ 'bg-success text-success-content' : fullscreenHiddenRender && !disabled.value, 'bg-base-content/10' : fullscreenHiddenRender && disabled.value }"
 									(click)="onFullscreenHide('fullscreenHiddenRender')"
 								>
 									<i
@@ -381,49 +382,49 @@
 									></i>
 								</button>
 							</li>
-							<li class="inline-block" [class.disabled]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle">
+							<li class="inline-block" [class.disabled]="disabled.value">
 								<button
-									class="fill-current p-3.5"
+                  class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
 									type="button"
 									title="Fullscreen"
 									aria-label="Fullscreen"
 									appSvgIcon
 									[appIcon]="'fullscreen'"
-									[class.active]="fullscreenHiddenControls"
+                  [ngClass]="{ 'bg-success text-success-content' : fullscreenHiddenControls && !disabled.value, 'bg-base-content/10' : fullscreenHiddenControls && disabled.value }"
 									(click)="onFullscreenHide('fullscreenHiddenControls')"
 								></button>
 							</li>
-							<li class="inline-block" [class.disabled]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle">
+							<li class="inline-block" [class.disabled]="disabled.value">
 								<button
-									class="fill-current p-3.5"
+                  class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
 									type="button"
 									title="Scroll sync"
 									aria-label="Scroll sync"
 									appSvgIcon
 									[appIcon]="'mouse'"
-									[class.active]="fullscreenScrollSync"
-									(click)="fullscreenScrollSync = !fullscreenScrollSync"
+                  [ngClass]="{ 'bg-success text-success-content' : fullscreenScrollSync && !disabled.value, 'bg-base-content/10' : fullscreenScrollSync && disabled.value }"
+                  (click)="fullscreenScrollSync = !fullscreenScrollSync"
 								></button>
 							</li>
-							<li class="inline-block" [class.disabled]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle">
+							<li class="inline-block" [class.disabled]="disabled.value">
 								<button
-									class="fill-current p-3.5"
+                  class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
 									type="button"
 									title="Disable text wrapping"
 									aria-label="Disable text wrapping"
 									appSvgIcon
 									[appIcon]="'text-wrap'"
-									[class.active]="fullscreenDisableTextWrapping"
+                  [ngClass]="{ 'bg-success text-success-content' : fullscreenDisableTextWrapping && !disabled.value, 'bg-base-content/10' : fullscreenDisableTextWrapping && disabled.value }"
 									(click)="fullscreenDisableTextWrapping = !fullscreenDisableTextWrapping"
 								></button>
 							</li>
-							<li class="inline-block" [class.disabled]="postFormIsSubmitted || postFormPreviewToggle || postDeleteToggle">
+							<li class="inline-block" [class.disabled]="disabled.value">
 								<button
-									class="p-3.5"
+                  class="p-3.5 active:bg-base-content/10 active:text-base-content"
 									type="button"
 									title="Render"
 									aria-label="Render"
-									[class.active]="fullscreenHiddenMarkdown"
+                  [ngClass]="{ 'bg-success text-success-content' : fullscreenHiddenMarkdown && !disabled.value, 'bg-base-content/10' : fullscreenHiddenMarkdown && disabled.value }"
 									(click)="onFullscreenHide('fullscreenHiddenMarkdown')"
 								>
 									<i
@@ -443,7 +444,7 @@
 							<span class="label-text">Render</span>
 						</div>
 						<div
-							class="rounded-btn flex h-full flex-col overflow-auto border border-base-content/20"
+							class="flex h-full flex-col overflow-auto rounded-btn border border-base-content/20"
 						>
 							<article
 								class="prose max-w-none overflow-auto px-4 py-2"
