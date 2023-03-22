@@ -5,11 +5,11 @@
   :where(h4):not(:where([class~="not-prose"])),
   :where(h5):not(:where([class~="not-prose"])),
   :where(h6):not(:where([class~="not-prose"])) {
-    @apply my-6;
+    @apply my-4;
   }
 
   :where(hr):not(:where([class~="not-prose"])) {
-    @apply my-6;
+    @apply my-4;
   }
 
   :where(iframe):not(:where([class~="not-prose"])) {
@@ -33,7 +33,7 @@
   }
 
   :where(p):not(:where([class~="not-prose"])) {
-    @apply text-ellipsis overflow-hidden;
+    @apply text-ellipsis overflow-hidden my-4;
 
     &:empty {
       @apply hidden;
@@ -77,6 +77,6 @@
   }
 
   :where(table):not(:where([class~="not-prose"])) {
-    @apply my-6;
+    @apply my-0;
   }
 }

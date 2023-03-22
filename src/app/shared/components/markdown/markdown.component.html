@@ -225,6 +225,16 @@
 					</div>
 				</div>
 			</li>
+			<li class="inline-block" [class.disabled]="controlListDisabled">
+				<button
+					class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
+					appSvgIcon
+					[attr.aria-label]="controlListSpoiler.label"
+					[attr.title]="controlListSpoiler.label"
+					[appIcon]="controlListSpoiler.icon"
+					(click)="setTextareaValue(getTextareaValue(controlListSpoiler))"
+				></button>
+			</li>
 			<li
 				class="inline-block rounded-none"
 				[class.disabled]="controlListDisabled"

@@ -178,7 +178,7 @@ export class MarkdownService {
         }
       });
 
-      return `<div class="overflow-auto">${tableElement.outerHTML.replace('</table>', '')}`;
+      return `<div class="overflow-auto my-4">${tableElement.outerHTML.replace('</table>', '')}`;
     };
 
 		const ruleTableClose: RenderRule = () => {

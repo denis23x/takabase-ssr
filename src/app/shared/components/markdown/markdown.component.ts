@@ -19,7 +19,8 @@ import {
 	MarkdownControlUrl,
 	MarkdownControlEmojiMart,
 	MarkdownControlCode,
-	MarkdownControlTable
+	MarkdownControlTable,
+	MarkdownControlSpoiler
 } from './markdown-controls';
 import { BehaviorSubject, fromEvent, merge, Subscription, EMPTY } from 'rxjs';
 import { debounceTime, filter, startWith } from 'rxjs/operators';
@@ -123,6 +124,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	controlListUrl: MarkdownControl[] = MarkdownControlUrl();
 	controlListEmojiMart: MarkdownControl = MarkdownControlEmojiMart();
 	controlListTable: MarkdownControl = MarkdownControlTable();
+	controlListSpoiler: MarkdownControl = MarkdownControlSpoiler();
 	controlListCode: MarkdownControl = MarkdownControlCode();
 	controlListScroll$: Subscription | undefined;
 	controlListDisabled: boolean = false;

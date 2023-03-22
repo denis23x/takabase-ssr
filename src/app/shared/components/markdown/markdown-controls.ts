@@ -198,16 +198,6 @@ export const MarkdownControlEmojiMart = (): MarkdownControl => ({
 });
 
 // prettier-ignore
-export const MarkdownControlCode = (): MarkdownControl => ({
-	key: 'code',
-	label: 'Code',
-	icon: 'code-slash',
-	handler: (markdownTextarea: MarkdownTextarea): string => {
-		return setWrapper('``` text\n' + (markdownTextarea.selection || 'Type your code') + '\n```', markdownTextarea, 'block');
-	}
-});
-
-// prettier-ignore
 export const MarkdownControlTable = (): MarkdownControl => ({
   key: 'table',
   label: 'Table',
@@ -243,5 +233,25 @@ export const MarkdownControlTable = (): MarkdownControl => ({
     const value: string = readyRows.join('\n');
 
     return setWrapper(value, markdownTextarea, 'block');
+  }
+});
+
+// prettier-ignore
+export const MarkdownControlSpoiler = (): MarkdownControl => ({
+  key: 'spoiler',
+  label: 'Spoiler',
+  icon: 'arrows-collapse',
+  handler: (markdownTextarea: MarkdownTextarea): string => {
+    return setWrapper('+++ Click me!\n' + (markdownTextarea.selection || 'Type your details') + '\n+++', markdownTextarea, 'block');
+  }
+});
+
+// prettier-ignore
+export const MarkdownControlCode = (): MarkdownControl => ({
+  key: 'code',
+  label: 'Code',
+  icon: 'code-slash',
+  handler: (markdownTextarea: MarkdownTextarea): string => {
+    return setWrapper('``` text\n' + (markdownTextarea.selection || 'Type your code') + '\n```', markdownTextarea, 'block');
   }
 });
