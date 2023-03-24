@@ -11,11 +11,16 @@ We're excited to share with you our plans to improve our app in the near future.
   - [ ] [Subscriptions]{.block}
   - [ ] [Public settings]{.block}
   - [ ] [Private posts and categories]{.block}
+- [ ] [Window]{.block}
+  - [ ] [Multi window]{.block}
+  - [ ] [Resize]{.block}
+  - [ ] [Drag]{.block}
+  - [ ] [Collapse and restore from dock]{.block}
 - [ ] [Markdown editor]{.block}
   - [ ] [Templates]{.block}
   - [ ] [Auto saving]{.block}
   - [ ] [Auto conversion links to media]{.block}
-  - [ ] [Auto formatting]{.block}
+  - [ ] [Auto formatting improvements]{.block}
   - [ ] [Images]{.block}
     - [ ] [Upload to backend]{.block}
     - [ ] [Cropping]{.block}
