@@ -31,6 +31,7 @@
               "markdown-it-link-attributes",
               "markdown-it-mark",
               "markdown-it-multimd-table",
+              "markdown-it-plain-text",
               "markdown-it-smartarrows",
               "markdown-it-tasks",
               "markdown-it-video"

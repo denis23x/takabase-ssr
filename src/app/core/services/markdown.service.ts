@@ -10,6 +10,7 @@ import emoji from 'markdown-it-emoji';
 import linkAttributes from 'markdown-it-link-attributes';
 import mark from 'markdown-it-mark';
 import multiMdTable from 'markdown-it-multimd-table';
+import plainText from 'markdown-it-plain-text';
 import smartArrows from 'markdown-it-smartarrows';
 import tasks from 'markdown-it-tasks';
 import video from 'markdown-it-video';
@@ -93,6 +94,7 @@ export class MarkdownService {
 				multibody: false,
 				autolabel: false
 			})
+			.use(plainText)
 			.use(smartArrows)
 			.use(tasks, {
 				enabled: true,

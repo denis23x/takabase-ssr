@@ -41,6 +41,11 @@
 					<p class="alert inline">
 						{{ post.description }}
 					</p>
+					<span class="text-sm font-bold" *ngIf="post?.markdown">
+						Time to read:
+						{{ post?.markdown | markdown : "time-to-read" }}
+						min.
+					</span>
 				</div>
 			</div>
 		</header>
