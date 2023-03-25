@@ -1,48 +1,62 @@
 <!-- @format -->
 
-<ng-container>
-	<div class="flex flex-col space-y-4 md:space-y-8">
-		<ng-container *ngFor="let markdown of markdownList">
-			<div
-				class="rounded-box flex flex-col items-start justify-start gap-4 bg-base-100 p-4 shadow-xl"
-				*ngIf="{ value: false } as markdownToggle"
-			>
-				<div
-					class="form-control rounded-box flex w-full items-center justify-start bg-base-200 p-4"
-				>
-					<label class="label w-full cursor-pointer space-x-4 p-0">
-						<span class="label-text text-base">Markdown</span>
-						<input
-							class="toggle toggle-md"
-							type="checkbox"
-							[checked]="markdownToggle.value"
-							(change)="markdownToggle.value = !markdownToggle.value"
-						/>
-					</label>
-				</div>
-				<div
-					class="rounded-btn flex h-full min-h-[128px] w-full flex-col overflow-auto bg-base-100"
-					[class.hidden]="markdownToggle.value"
-				>
-					<article
-						class="prose h-full w-full max-w-full overflow-hidden"
-						[innerHTML]="markdown | markdown | sanitizer : 'html'"
-					></article>
-				</div>
-				<div
-					class="rounded-box flex w-full overflow-hidden border border-success"
-					[class.hidden]="!markdownToggle.value"
-				>
-					<textarea
-						class="textarea h-full w-full resize-none whitespace-nowrap border-0 font-mono !outline-0"
-						aria-label="Markdown"
-						placeholder="Markdown syntax"
-						[value]="markdown"
-						[rows]="4"
-					>
-					</textarea>
-				</div>
-			</div>
-		</ng-container>
+<section class="flex flex-col space-y-4 md:space-y-8">
+	<div
+		class="rounded-box flex flex-col justify-start gap-4 bg-base-100 p-4 shadow-xl md:flex-row md:items-center"
+	>
+		<img
+			class="rounded-box block h-24 w-24"
+			src="https://placehold.co/120x120"
+			alt="Placeholder"
+		/>
+		<div class="flex flex-col gap-2">
+			<h1 class="text-3xl font-bold md:text-4xl">Your personal content base</h1>
+			<span class="text-2xl">Absolutely free</span>
+		</div>
 	</div>
-</ng-container>
+	<div class="rounded-box flex flex-col gap-4 bg-base-100 p-4 shadow-xl">
+		<div class="flex flex-col gap-4">
+			<span class="text-2xl">About</span>
+			<hr class="my-0 border-base-content/20" />
+			<div class="flex flex-col gap-4">
+				<p class="inline">
+					Our platform is designed to provide you with an easy-to-use,
+					<span class="font-bold">lightweight app</span> that is highly
+					customizable to your preferences. Whether you’re a blogger, writer, or
+					developer, our website is the perfect tool to bring your ideas to
+					life. We provide you a rich editor that supports
+					<span class="font-bold">media content</span>,
+					<span class="font-bold">markdown syntax</span>,
+					<span class="font-bold">code highlighting</span>, and even
+					<span class="font-bold">emoji</span>.
+				</p>
+				<p class="inline">
+					Another great feature of our site is that it
+					<span class="font-bold">works offline</span>, allowing you to continue
+					working even when you don’t have an internet connection. This makes it
+					ideal for working on the go, or in areas with limited connectivity.
+				</p>
+				<p class="inline">
+					In addition, our site is fully
+					<span class="font-bold">optimized for mobile devices</span>, ensuring
+					that you can create and edit content on the go, and share it with your
+					audience quickly and easily.
+				</p>
+			</div>
+		</div>
+		<div class="flex flex-col gap-4">
+			<span class="text-2xl">Read more</span>
+			<hr class="my-0 border-base-content/20" />
+			<ul class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+				<li
+					class="rounded-box col-span-1 bg-base-200 p-4"
+					*ngFor="let readMore of readMoreList"
+				>
+					<a class="link block truncate" [href]="readMore.id">
+						{{ readMore.name }}
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</section>
