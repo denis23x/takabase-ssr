@@ -16,6 +16,9 @@ import { MetaService } from '../../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
 import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
+import { AuthService } from '../../core/services/auth.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
+import { ResetDto } from '../../core/dto/auth/reset.dto';
 
 interface ResetForm {
 	email: FormControl<string>;
@@ -41,7 +44,9 @@ export class AuthResetComponent implements OnInit {
 	constructor(
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
-		private metaService: MetaService
+		private metaService: MetaService,
+		private authService: AuthService,
+		private snackbarService: SnackbarService
 	) {
 		this.resetForm = this.formBuilder.group<ResetForm>({
 			email: this.formBuilder.nonNullable.control('', [
@@ -78,6 +83,22 @@ export class AuthResetComponent implements OnInit {
 	onSubmitResetForm(): void {
 		if (this.helperService.getFormValidation(this.resetForm)) {
 			this.resetFormIsSubmitted = true;
+
+			const resetDto: ResetDto = {
+				...this.resetForm.value
+			};
+
+			this.authService.onReset(resetDto).subscribe({
+				next: () => {
+					// prettier-ignore
+					this.snackbarService.success('Success', 'Check your email to continue process');
+
+					this.resetForm.reset();
+					this.resetForm.markAsUntouched();
+					this.resetFormIsSubmitted = false;
+				},
+				error: () => (this.resetFormIsSubmitted = false)
+			});
 		}
 	}
 }

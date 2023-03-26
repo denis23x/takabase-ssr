@@ -13,6 +13,7 @@ import { SnackbarService } from './snackbar.service';
 import { UiService } from './ui.service';
 import { LoginDto } from '../dto/auth/login.dto';
 import { LogoutDto } from '../dto/auth/logout.dto';
+import { ResetDto } from '../dto/auth/reset.dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -118,6 +119,10 @@ export class AuthService {
 					.pipe(tap((user: User) => this.setUser(user)));
 			})
 		);
+	}
+
+	onReset(resetDto: ResetDto): Observable<any> {
+		return this.apiService.post('/auth/reset', resetDto);
 	}
 
 	/** Service */

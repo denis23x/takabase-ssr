@@ -84,6 +84,23 @@ const routes: Routes = [
 		]
 	},
 	{
+		path: 'reset/password',
+		loadComponent: () => {
+			return import('./auth/auth.component').then(m => m.AuthComponent);
+		},
+		canMatch: [CanMatchPublicGuard],
+		children: [
+			{
+				path: '',
+				title: 'Set new password',
+				// prettier-ignore
+				loadComponent: () => {
+          return import('./auth/password/password.component').then(m => m.AuthPasswordComponent);
+        }
+			}
+		]
+	},
+	{
 		path: 'create',
 		title: 'Create post',
 		loadComponent: () => {

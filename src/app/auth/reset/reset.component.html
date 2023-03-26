@@ -11,7 +11,9 @@
 				class="flex flex-col space-y-4"
 				[disabled]="resetFormIsSubmitted"
 			>
-				<p class="alert inline">Resetting email will terminate all sessions</p>
+				<p class="alert inline">
+					We will send you an email with further instructions.
+				</p>
 				<fieldset class="form-control" *ngIf="resetForm.get('email') as email">
 					<label class="label" for="resetFormEmail">
 						<div class="indicator">

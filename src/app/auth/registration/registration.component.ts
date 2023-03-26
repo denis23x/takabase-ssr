@@ -22,6 +22,7 @@ import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
 import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
+import { SnackbarService } from '../../core/services/snackbar.service';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -52,7 +53,8 @@ export class AuthRegistrationComponent implements OnInit {
 		private userService: UserService,
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
-		private metaService: MetaService
+		private metaService: MetaService,
+		private snackbarService: SnackbarService
 	) {
 		this.registrationForm = this.formBuilder.group<RegistrationForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -117,9 +119,10 @@ export class AuthRegistrationComponent implements OnInit {
 				)
 				.subscribe({
 					next: (user: User) => {
+						// prettier-ignore
 						this.router
 							.navigate([this.userService.getUserUrl(user)])
-							.then(() => console.debug('Route changed'));
+							.then(() => this.snackbarService.success('Success', 'Welcome to our website'));
 					},
 					error: () => (this.registrationFormIsSubmitted = false)
 				});
