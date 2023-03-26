@@ -118,10 +118,12 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 	ngOnInit(): void {}
 
 	ngAfterViewInit(): void {
-		// prettier-ignore
-		this.imageTransform$ = this.imageCropper.transformChange.subscribe((imageTransform: ImageTransform) => {
-      this.imageTransform = imageTransform;
-    });
+		this.imageTransform$ = this.imageCropper.transformChange.subscribe({
+			next: (imageTransform: ImageTransform) => {
+				this.imageTransform = imageTransform;
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	ngOnDestroy(): void {

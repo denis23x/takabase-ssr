@@ -331,7 +331,10 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
 		this.controlListScroll$ = fromEvent(controlListElement, 'scroll')
 			.pipe(filter(() => !!dropdownComponent()))
-			.subscribe(() => dropdownComponent().setStateStyle(false));
+			.subscribe({
+				next: () => dropdownComponent().setStateStyle(false),
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	setScrollSyncHandler(): void {
