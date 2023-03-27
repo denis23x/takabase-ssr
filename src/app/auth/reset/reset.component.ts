@@ -19,6 +19,7 @@ import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-inpu
 import { AuthService } from '../../core/services/auth.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { ResetDto } from '../../core/dto/auth/reset.dto';
+import { OauthComponent } from '../../shared/components/oauth/oauth.component';
 
 interface ResetForm {
 	email: FormControl<string>;
@@ -32,7 +33,8 @@ interface ResetForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		AppInputTrimWhitespaceDirective,
-		AppInputMarkAsTouchedDirective
+		AppInputMarkAsTouchedDirective,
+		OauthComponent
 	],
 	selector: 'app-auth-reset',
 	templateUrl: './reset.component.html'

@@ -14,6 +14,7 @@ import { UiService } from './ui.service';
 import { LoginDto } from '../dto/auth/login.dto';
 import { LogoutDto } from '../dto/auth/logout.dto';
 import { ResetDto } from '../dto/auth/reset.dto';
+import { ChangePasswordDto } from '../dto/auth/change-password.dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -123,6 +124,10 @@ export class AuthService {
 
 	onReset(resetDto: ResetDto): Observable<any> {
 		return this.apiService.post('/auth/reset', resetDto);
+	}
+
+	onChangePassword(changePasswordDto: ChangePasswordDto): Observable<User> {
+		return this.apiService.post('/auth/change/password', changePasswordDto);
 	}
 
 	/** Service */

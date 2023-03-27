@@ -23,6 +23,7 @@ import { MetaService } from '../../core/services/meta.service';
 import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
 import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
+import { OauthComponent } from '../../shared/components/oauth/oauth.component';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -38,7 +39,8 @@ interface RegistrationForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		AppInputTrimWhitespaceDirective,
-		AppInputMarkAsTouchedDirective
+		AppInputMarkAsTouchedDirective,
+		OauthComponent
 	],
 	selector: 'app-auth-registration',
 	templateUrl: './registration.component.html'

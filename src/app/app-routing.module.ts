@@ -34,71 +34,39 @@ const routes: Routes = [
 	},
 	{
 		path: 'login',
+		title: 'Login',
+		// prettier-ignore
 		loadComponent: () => {
-			return import('./auth/auth.component').then(m => m.AuthComponent);
-		},
-		canMatch: [CanMatchPublicGuard],
-		children: [
-			{
-				path: '',
-				title: 'Login',
-				// prettier-ignore
-				loadComponent: () => {
-          return import('./auth/login/login.component').then(m => m.AuthLoginComponent);
-        }
-			}
-		]
+      return import('./auth/login/login.component').then(m => m.AuthLoginComponent);
+    },
+		canMatch: [CanMatchPublicGuard]
 	},
 	{
 		path: 'registration',
+		title: 'Registration',
+		// prettier-ignore
 		loadComponent: () => {
-			return import('./auth/auth.component').then(m => m.AuthComponent);
-		},
-		canMatch: [CanMatchPublicGuard],
-		children: [
-			{
-				path: '',
-				title: 'Registration',
-				// prettier-ignore
-				loadComponent: () => {
-          return import('./auth/registration/registration.component').then(m => m.AuthRegistrationComponent);
-        }
-			}
-		]
+      return import('./auth/registration/registration.component').then(m => m.AuthRegistrationComponent);
+    },
+		canMatch: [CanMatchPublicGuard]
 	},
 	{
 		path: 'reset',
+		title: 'Reset password',
+		// prettier-ignore
 		loadComponent: () => {
-			return import('./auth/auth.component').then(m => m.AuthComponent);
-		},
-		canMatch: [CanMatchPublicGuard],
-		children: [
-			{
-				path: '',
-				title: 'Reset password',
-				// prettier-ignore
-				loadComponent: () => {
-          return import('./auth/reset/reset.component').then(m => m.AuthResetComponent);
-        }
-			}
-		]
+      return import('./auth/reset/reset.component').then(m => m.AuthResetComponent);
+    },
+		canMatch: [CanMatchPublicGuard]
 	},
 	{
 		path: 'reset/password',
+		title: 'Set password',
+		// prettier-ignore
 		loadComponent: () => {
-			return import('./auth/auth.component').then(m => m.AuthComponent);
-		},
-		canMatch: [CanMatchPublicGuard],
-		children: [
-			{
-				path: '',
-				title: 'Set new password',
-				// prettier-ignore
-				loadComponent: () => {
-          return import('./auth/password/password.component').then(m => m.AuthPasswordComponent);
-        }
-			}
-		]
+      return import('./auth/reset-password/reset-password.component').then(m => m.AuthResetPasswordComponent);
+    },
+		canMatch: [CanMatchPublicGuard]
 	},
 	{
 		path: 'create',

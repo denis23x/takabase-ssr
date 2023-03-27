@@ -1,0 +1,47 @@
+<!-- @format -->
+
+<ng-container>
+	<ul class="flex items-center justify-start space-x-4">
+		<li class="block">
+			<a
+				class="block rounded-full bg-[#EA4335] fill-current p-1.5 text-white"
+				title="Google"
+				aria-label="Google"
+				target="_self"
+				rel="noopener noreferrer"
+				appSvgIcon
+				[href]="apiUrl + '/auth/google'"
+				[appIcon]="'google'"
+			>
+			</a>
+		</li>
+		<li class="block">
+			<a
+				class="block rounded-full bg-white fill-current text-[#1877f2]"
+				title="Facebook"
+				aria-label="Facebook"
+				target="_self"
+				rel="noopener noreferrer"
+				appSvgIcon
+				appSquare="32"
+				[href]="apiUrl + '/auth/facebook'"
+				[appIcon]="'facebook'"
+			>
+			</a>
+		</li>
+		<li class="block">
+			<a
+				class="block rounded-full bg-white fill-current text-[#333333]"
+				title="Github"
+				aria-label="Github"
+				target="_self"
+				rel="noopener noreferrer"
+				appSvgIcon
+				appSquare="32"
+				[href]="apiUrl + '/auth/github'"
+				[appIcon]="'github'"
+			>
+			</a>
+		</li>
+	</ul>
+</ng-container>

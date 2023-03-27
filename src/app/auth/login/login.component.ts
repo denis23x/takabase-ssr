@@ -22,6 +22,7 @@ import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
 import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
+import { OauthComponent } from '../../shared/components/oauth/oauth.component';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -36,7 +37,8 @@ interface LoginForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		AppInputTrimWhitespaceDirective,
-		AppInputMarkAsTouchedDirective
+		AppInputMarkAsTouchedDirective,
+		OauthComponent
 	],
 	selector: 'app-auth-login',
 	templateUrl: './login.component.html'
