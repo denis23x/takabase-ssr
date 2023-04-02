@@ -22,7 +22,6 @@ import { UserService } from '../../core/services/user.service';
 import { ChangePasswordDto } from '../../core/dto/auth/change-password.dto';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../shared/components/oauth/oauth.component';
-import { AuthResetComponent } from '../reset/reset.component';
 
 interface PasswordForm {
 	token: FormControl<string>;

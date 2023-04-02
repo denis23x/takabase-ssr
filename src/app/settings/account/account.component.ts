@@ -19,6 +19,10 @@ import { User } from '../../core/models/user.model';
 import { HelperService } from '../../core/services/helper.service';
 import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
 import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
+import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
+import { UserService } from '../../core/services/user.service';
+import { AuthService } from '../../core/services/auth.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
 
 interface EmailForm {
 	email: FormControl<string>;
@@ -66,7 +70,10 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	constructor(
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
-		private activatedRoute: ActivatedRoute
+		private activatedRoute: ActivatedRoute,
+		private userService: UserService,
+		private authService: AuthService,
+		private snackbarService: SnackbarService
 	) {
 		this.emailForm = this.formBuilder.group<EmailForm>({
 			email: this.formBuilder.nonNullable.control('', [
@@ -118,6 +125,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleConfirmationForm(toggle: boolean): void {
+		this.confirmationFormIsSubmitted = false;
 		this.confirmationFormToggle = toggle;
 		this.confirmationForm.reset();
 
@@ -137,6 +145,43 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	onSubmitConfirmationForm(): void {
 		if (this.helperService.getFormValidation(this.confirmationForm)) {
 			this.confirmationFormIsSubmitted = true;
+
+			const userUpdateDto: UserUpdateDto = {
+				...this.confirmationForm.value
+			};
+
+			if (this.emailFormIsSubmitted) {
+				userUpdateDto.newEmail = this.emailForm.value.email;
+			}
+
+			if (this.passwordFormIsSubmitted) {
+				userUpdateDto.newPassword = this.passwordForm.value.password;
+			}
+
+			this.userService.update(this.authUser.id, userUpdateDto).subscribe({
+				next: (user: User) => {
+					this.authService.setUser(user).subscribe({
+						next: () => (this.authUser = user),
+						error: (error: any) => console.error(error)
+					});
+
+					if (this.emailFormIsSubmitted) {
+						this.emailForm.reset();
+						this.emailForm.markAsUntouched();
+					}
+
+					if (this.passwordFormIsSubmitted) {
+						this.passwordForm.reset();
+						this.passwordForm.markAsUntouched();
+					}
+
+					this.onToggleConfirmationForm(false);
+
+					// prettier-ignore
+					this.snackbarService.success('Success', 'Account information has been changed');
+				},
+				error: () => this.onToggleConfirmationForm(false)
+			});
 		}
 	}
 }

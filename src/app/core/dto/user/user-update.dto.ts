@@ -7,6 +7,9 @@ export interface UserUpdateDto {
 	description?: string;
 	avatar?: string;
 	email?: string;
+	password?: string;
+	newEmail?: string;
+	newPassword?: string;
 	settings?: Partial<UserSettingsUpdateDto>;
 }
 
