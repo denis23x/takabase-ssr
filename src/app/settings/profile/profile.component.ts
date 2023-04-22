@@ -34,6 +34,8 @@ import { SnackbarService } from '../../core/services/snackbar.service';
 import { FileCreateDto } from '../../core/dto/file/file-create.dto';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
+import { PlatformService } from '../../core/services/platform.service';
+import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 
 interface ProfileForm {
 	name: FormControl<string>;
@@ -62,6 +64,8 @@ interface ProfileForm {
 export class SettingsProfileComponent implements OnInit, OnDestroy {
 	@ViewChild('avatarInput') avatarInput: ElementRef | undefined;
 
+	@ViewChild('QRCodeCanvas') QRCodeCanvas: ElementRef | undefined;
+
 	activatedRouteData$: Subscription | undefined;
 
 	authUser: User | undefined;
@@ -73,13 +77,22 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	profileFormIsSubmitted: boolean = false;
 	profileFormAvatarToggle: boolean = false;
 
+	QRCodeText: string | undefined;
+	QRCodeOptions: QRCodeRenderersOptions = {
+		margin: 2,
+		scale: 1,
+		width: 384
+	};
+	QRCodeToggle: boolean = false;
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
 		private activatedRoute: ActivatedRoute,
 		private userService: UserService,
 		private authService: AuthService,
-		private snackbarService: SnackbarService
+		private snackbarService: SnackbarService,
+		private platformService: PlatformService
 	) {
 		this.profileForm = this.formBuilder.group<ProfileForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -125,6 +138,49 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		this.profileFormIsSubmitted = toggle;
 
 		this.profileFormAvatarToggle = toggle;
+	}
+
+	onToggleQRCode(toggle: boolean): void {
+		this.QRCodeToggle = toggle;
+
+		if (!!toggle) {
+			// prettier-ignore
+			if (this.platformService.isBrowser()) {
+				const window: Window = this.platformService.getWindow();
+
+				this.QRCodeText = [window.location.origin, this.userService.getUserUrl(this.authUser)].join('');
+
+				const QRElement: HTMLCanvasElement = this.QRCodeCanvas.nativeElement;
+				const QRCallback = (error: Error): void => {
+					if (!!error) {
+						this.snackbarService.danger('Error', "Damn, can't draw your QR Code");
+					} else {
+						QRElement.removeAttribute('style');
+					}
+				};
+
+				/** Draw QR Code */
+
+				QRCode.toCanvas(QRElement, this.QRCodeText, this.QRCodeOptions, QRCallback);
+			}
+		}
+	}
+
+	onDownloadQRCode(): void {
+		// prettier-ignore
+		if (this.platformService.isBrowser()) {
+			const QRCallback = (error: Error, dataURL: string): void => {
+				if (!!error) {
+					this.snackbarService.danger('Error', "Damn, can't download your QR Code");
+				} else {
+          this.helperService.getDownload(dataURL, this.userService.getUserUrl(this.authUser).substring(1));
+				}
+			};
+
+			/** Download QR Code */
+
+			QRCode.toDataURL(this.QRCodeText, this.QRCodeOptions, QRCallback);
+		}
 	}
 
 	onSubmitCropper(fileCreateDto: FileCreateDto): void {

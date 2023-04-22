@@ -1,14 +1,19 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { PlatformService } from './platform.service';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class HelperService {
-	constructor(private platformService: PlatformService) {}
+	constructor(
+		@Inject(DOCUMENT)
+		private document: Document,
+		private platformService: PlatformService
+	) {}
 
 	getRegex(regex: string, payload?: any): RegExp {
 		// prettier-ignore
@@ -57,5 +62,20 @@ export class HelperService {
 		}
 
 		return (Math.random() + 1).toString(36).substring(7);
+	}
+
+	getDownload(url: string, filename: string): void {
+		if (this.platformService.isBrowser()) {
+			const HTMLElement: HTMLAnchorElement = this.document.createElement('a');
+
+			HTMLElement.download = filename;
+			HTMLElement.href = url;
+
+			this.document.body.appendChild(HTMLElement);
+
+			HTMLElement.click();
+
+			this.document.body.removeChild(HTMLElement);
+		}
 	}
 }
