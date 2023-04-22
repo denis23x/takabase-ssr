@@ -15,8 +15,8 @@ import { UserUpdateDto } from '../dto/user/user-update.dto';
 export class UserService {
 	constructor(private apiService: ApiService) {}
 
-	getUserUrl(user: User): string {
-		return ['/@', user.name].join('');
+	getUserUrl(user: User, substring: number = 0): string {
+		return ['/@', user.name].join('').substring(substring);
 	}
 
 	/** REST */

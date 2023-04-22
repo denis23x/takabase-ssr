@@ -96,23 +96,34 @@
 						></button>
 					</div>
 				</fieldset>
-				<div class="flex items-center justify-start gap-4">
-					<button
-						class="btn-ghost rounded-box btn h-14 w-14 bg-base-200 fill-current p-3"
-						type="button"
-						title="QR Code"
-						aria-label="QR Code"
-						appSvgIcon
-						[appIcon]="'qr-code'"
-						[appSquare]="'1.75rem'"
-						(click)="onToggleQRCode(true)"
-					></button>
+				<div class="flex flex-col items-start justify-start gap-4 sm:flex-row">
+					<div class="flex items-center justify-start gap-4">
+						<button
+							class="btn-ghost rounded-box btn h-14 w-14 bg-base-200 fill-current p-3"
+							type="button"
+							title="QR Code"
+							aria-label="QR Code"
+							appSvgIcon
+							[disabled]="profileFormIsSubmitted"
+							[appIcon]="'qr-code'"
+							[appSquare]="'1.75rem'"
+							(click)="onToggleQRCode(true)"
+						></button>
+						<div class="flex flex-col overflow-auto sm:hidden">
+							<span class="block truncate text-lg font-bold text-base-content">
+								QR Code
+							</span>
+							<p class="truncate text-sm text-base-content/50">
+								Watch and download
+							</p>
+						</div>
+					</div>
 					<p class="alert inline">
 						Change the name will set the
 						<span class="inline font-bold">
-							{{ (authUser | userUrl).substring(1) }}
+							{{ authUser | userUrl : 1 }}
 						</span>
-						user profile not more available by direct link
+						user profile not more available by direct link and QR code
 					</p>
 				</div>
 				<fieldset

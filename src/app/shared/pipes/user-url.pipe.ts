@@ -11,7 +11,7 @@ import { User } from '../../core/models/user.model';
 export class UserUrlPipe implements PipeTransform {
 	constructor(private userService: UserService) {}
 
-	transform(user: User): string {
-		return this.userService.getUserUrl(user);
+	transform(user: User, substring: number = 0): string {
+		return this.userService.getUserUrl(user, substring);
 	}
 }

@@ -173,7 +173,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				if (!!error) {
 					this.snackbarService.danger('Error', "Damn, can't download your QR Code");
 				} else {
-          this.helperService.getDownload(dataURL, this.userService.getUserUrl(this.authUser).substring(1));
+          this.helperService.getDownload(dataURL, this.userService.getUserUrl(this.authUser, 1));
 				}
 			};
 

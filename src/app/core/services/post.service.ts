@@ -106,7 +106,7 @@ export class PostService {
 			['og:type']: 'article',
 			['article:published_time']: post.createdAt,
 			['article:modified_time']: post.updatedAt,
-			['article:author']: this.userService.getUserUrl(post.user).substring(1),
+			['article:author']: this.userService.getUserUrl(post.user, 1),
 			['article:section']: post.category.name,
 			['og:image']: post.image,
 			['og:image:alt']: post.name,
