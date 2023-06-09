@@ -61,7 +61,7 @@
 								[disabled]="registrationFormIsSubmitted"
 							/>
 							<button
-								class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
+								class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 								type="button"
 								aria-label="Clear"
 								appSvgIcon
@@ -114,7 +114,7 @@
 								[disabled]="registrationFormIsSubmitted"
 							/>
 							<button
-								class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
+								class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 								type="button"
 								aria-label="Clear"
 								appSvgIcon
@@ -167,7 +167,7 @@
 								[disabled]="registrationFormIsSubmitted"
 							/>
 							<button
-								class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
+								class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 								type="button"
 								aria-label="Password"
 								appSvgIcon
@@ -188,6 +188,37 @@
 						The password must be 6-32 characters long, must contain at least one
 						number or special character
 					</p>
+					<fieldset
+						class="form-control"
+						*ngIf="registrationForm.get('terms') as terms"
+					>
+						<label
+							class="label cursor-pointer justify-start gap-4"
+							for="registrationFormTerms"
+						>
+							<input
+								class="checkbox"
+								id="registrationFormTerms"
+								type="checkbox"
+								aria-label="Terms of use"
+								formControlName="terms"
+								appInputMarkAsTouched
+								[class.checkbox-success]="terms.touched && terms.valid"
+								[class.checkbox-error]="terms.touched && terms.invalid"
+								[disabled]="registrationFormIsSubmitted"
+							/>
+							<span class="label-text">
+								I agree with
+								<a
+									class="link"
+									target="_blank"
+									[routerLink]="['/rights/terms-of-use']"
+								>
+									the terms of use
+								</a>
+							</span>
+						</label>
+					</fieldset>
 					<fieldset class="form-control">
 						<!-- prettier-ignore -->
 						<button

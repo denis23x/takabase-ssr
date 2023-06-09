@@ -29,6 +29,7 @@ interface RegistrationForm {
 	name: FormControl<string>;
 	email: FormControl<string>;
 	password: FormControl<string>;
+	terms: FormControl<boolean>;
 }
 
 @Component({
@@ -71,6 +72,9 @@ export class AuthRegistrationComponent implements OnInit {
 			password: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
+			]),
+			terms: this.formBuilder.nonNullable.control(false, [
+				Validators.requiredTrue
 			])
 		});
 	}
