@@ -13,16 +13,16 @@ import {
 	ViewChild
 } from '@angular/core';
 import {
-	MarkdownControlHeading,
-	MarkdownControlFormatting,
-	MarkdownControlList,
-	MarkdownControlUrl,
-	MarkdownControlEmojiMart,
 	MarkdownControlCode,
+	MarkdownControlEmojiMart,
+	MarkdownControlFormatting,
+	MarkdownControlHeading,
+	MarkdownControlList,
+	MarkdownControlSpoiler,
 	MarkdownControlTable,
-	MarkdownControlSpoiler
+	MarkdownControlUrl
 } from './markdown-controls';
-import { BehaviorSubject, fromEvent, merge, Subscription, EMPTY } from 'rxjs';
+import { BehaviorSubject, EMPTY, fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, filter, startWith } from 'rxjs/operators';
 import {
 	AbstractControl,
