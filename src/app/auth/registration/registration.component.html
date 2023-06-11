@@ -207,14 +207,22 @@
 								[class.checkbox-error]="terms.touched && terms.invalid"
 								[disabled]="registrationFormIsSubmitted"
 							/>
-							<span class="label-text">
-								I agree with
+							<span class="label-text inline">
+								I agree with the
+								<a
+									class="link inline-block"
+									target="_blank"
+									[routerLink]="['/terms/terms-of-use']"
+								>
+									terms of use
+								</a>
+								and
 								<a
 									class="link"
 									target="_blank"
-									[routerLink]="['/rights/terms-of-use']"
+									[routerLink]="['/terms/cookie-policy']"
 								>
-									the terms of use
+									cookie policy
 								</a>
 							</span>
 						</label>

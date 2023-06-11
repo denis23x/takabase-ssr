@@ -17,6 +17,7 @@ import { SettingsResolverService } from './settings/settings-resolver.service';
 import { UserResolverService } from './user/user-resolver.service';
 import { UserPostResolverService } from './user/post/post-resolver.service';
 import { UserPostDetailResolverService } from './user/post/detail/detail-resolver.service';
+import { RightsDetailResolverService } from './terms/detail/detail-resolver.service';
 import { CanMatchPublicGuard } from './core/guards/public-guard.service';
 import { CanMatchPrivateGuard } from './core/guards/private-guard.service';
 import { TitleService } from './core/services/title.service';
@@ -67,6 +68,41 @@ const routes: Routes = [
       return import('./auth/reset-password/reset-password.component').then(m => m.AuthResetPasswordComponent);
     },
 		canMatch: [CanMatchPublicGuard]
+	},
+	{
+		path: 'terms',
+		loadComponent: () => {
+			return import('./terms/terms.component').then(m => m.TermsComponent);
+		},
+		children: [
+			{
+				path: '',
+				pathMatch: 'full',
+				redirectTo: 'terms-of-use'
+			},
+			{
+				path: 'terms-of-use',
+				title: 'Terms of use',
+				// prettier-ignore
+				loadComponent: () => {
+          return import('./terms/detail/detail.component').then(m => m.RightsDetailComponent);
+        },
+				resolve: {
+					data: RightsDetailResolverService
+				}
+			},
+			{
+				path: 'cookie-policy',
+				title: 'Cookie policy',
+				// prettier-ignore
+				loadComponent: () => {
+          return import('./terms/detail/detail.component').then(m => m.RightsDetailComponent);
+        },
+				resolve: {
+					data: RightsDetailResolverService
+				}
+			}
+		]
 	},
 	{
 		path: 'create',

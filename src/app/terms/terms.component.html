@@ -1,0 +1,48 @@
+<!-- @format -->
+
+<ng-container>
+	<div class="flex flex-col space-y-4 md:space-y-8">
+		<header
+			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+		>
+			<div class="flex w-full items-center justify-between gap-4">
+				<h1 class="truncate text-2xl font-bold text-base-content">
+					Legal information
+				</h1>
+			</div>
+		</header>
+		<div class="flex flex-col">
+			<nav class="block px-4">
+				<ul
+					class="tabs w-full translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg"
+				>
+					<!-- prettier-ignore -->
+					<li
+						class="tab tab-lifted tab-lg h-11 border border-b border-solid border-base-content/20 !px-0"
+						*ngFor="let term of termsList"
+						[ngClass]="routerLinkActive.isActive ? 'tab-active h-12 border-b-0 !border-base-content/20 pb-0 before:invisible after:invisible' : 'bg-base-200'"
+					>
+						<a
+							class="flex h-full items-center justify-center whitespace-nowrap px-4"
+							appScrollIntoView
+							#routerLinkActive="routerLinkActive"
+							[appScrollActive]="routerLinkActive.isActive"
+							[routerLink]="[term.path]"
+							[routerLinkActive]="''"
+							[attr.aria-label]="term.name"
+						>
+							<span class="block truncate max-w-[192px]">{{ term.name }}</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+			<section
+				class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
+			>
+				<div class="rounded-box bg-base-200 p-4">
+					<router-outlet></router-outlet>
+				</div>
+			</section>
+		</div>
+	</div>
+</ng-container>
