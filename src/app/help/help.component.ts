@@ -6,10 +6,16 @@ import { CommonModule } from '@angular/common';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
+import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, AppScrollIntoViewDirective],
+	imports: [
+		CommonModule,
+		RouterModule,
+		AppScrollIntoViewDirective,
+		SvgIconComponent
+	],
 	selector: 'app-help',
 	templateUrl: './help.component.html'
 })

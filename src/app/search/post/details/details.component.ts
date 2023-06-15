@@ -19,10 +19,10 @@ import { PostService } from '../../../core/services/post.service';
 		PostDetailComponent,
 		ShareComponent
 	],
-	selector: 'app-search-post-detail',
-	templateUrl: './detail.component.html'
+	selector: 'app-search-post-details',
+	templateUrl: './details.component.html'
 })
-export class SearchPostDetailComponent implements OnInit, OnDestroy {
+export class SearchPostDetailsComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 
 	post: Post | undefined;

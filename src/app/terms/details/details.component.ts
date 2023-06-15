@@ -10,10 +10,10 @@ import { SanitizerPipe } from '../../shared/pipes/sanitizer.pipe';
 @Component({
 	standalone: true,
 	imports: [MarkdownPipe, SanitizerPipe],
-	selector: 'app-terms-detail',
-	templateUrl: './detail.component.html'
+	selector: 'app-terms-details',
+	templateUrl: './details.component.html'
 })
-export class RightsDetailComponent implements OnInit, OnDestroy {
+export class TermsDetailsComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 
 	prose: string | undefined;

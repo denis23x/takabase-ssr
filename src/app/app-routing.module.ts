@@ -9,18 +9,18 @@ import {
 } from '@angular/router';
 import { CreateResolverService } from './create/create-resolver.service';
 import { SearchPostResolverService } from './search/post/post-resolver.service';
-import { SearchPostDetailResolverService } from './search/post/detail/detail-resolver.service';
+import { SearchPostDetailsResolverService } from './search/post/details/details-resolver.service';
 import { SearchCategoryResolverService } from './search/category/category-resolver.service';
 import { SearchUserResolverService } from './search/user/user-resolver.service';
 import { SettingsResolverService } from './settings/settings-resolver.service';
 import { UserResolverService } from './user/user-resolver.service';
 import { UserPostResolverService } from './user/post/post-resolver.service';
-import { UserPostDetailResolverService } from './user/post/detail/detail-resolver.service';
-import { RightsDetailResolverService } from './terms/detail/detail-resolver.service';
+import { UserPostDetailsResolverService } from './user/post/details/details-resolver.service';
 import { CanMatchPublicGuard } from './core/guards/public-guard.service';
 import { CanMatchPrivateGuard } from './core/guards/private-guard.service';
-import { TitleService } from './core/services/title.service';
+import { TermsDetailsResolverService } from './terms/details/details-resolver.service';
 import { HelpDetailsResolverService } from './help/details/details-resolver.service';
+import { TitleService } from './core/services/title.service';
 
 const routes: Routes = [
 	{
@@ -76,35 +76,24 @@ const routes: Routes = [
 	},
 	{
 		path: 'terms',
+		pathMatch: 'full',
+		redirectTo: 'terms/terms-of-use'
+	},
+	{
+		path: 'terms/:markdown',
 		loadComponent: () => {
 			return import('./terms/terms.component').then(m => m.TermsComponent);
 		},
 		children: [
 			{
 				path: '',
-				pathMatch: 'full',
-				redirectTo: 'terms-of-use'
-			},
-			{
-				path: 'terms-of-use',
-				title: 'Terms of use',
+				title: 'Terms',
 				// prettier-ignore
 				loadComponent: () => {
-          return import('./terms/detail/detail.component').then(m => m.RightsDetailComponent);
+          return import('./terms/details/details.component').then(m => m.TermsDetailsComponent);
         },
 				resolve: {
-					data: RightsDetailResolverService
-				}
-			},
-			{
-				path: 'cookie-policy',
-				title: 'Cookie policy',
-				// prettier-ignore
-				loadComponent: () => {
-          return import('./terms/detail/detail.component').then(m => m.RightsDetailComponent);
-        },
-				resolve: {
-					data: RightsDetailResolverService
+					data: TermsDetailsResolverService
 				}
 			}
 		]
@@ -181,10 +170,10 @@ const routes: Routes = [
 						path: ':postId',
 						// prettier-ignore
 						loadComponent: () => {
-              return import('./search/post/detail/detail.component').then(m => m.SearchPostDetailComponent);
+              return import('./search/post/details/details.component').then(m => m.SearchPostDetailsComponent);
             },
 						resolve: {
-							data: SearchPostDetailResolverService
+							data: SearchPostDetailsResolverService
 						}
 					}
 				]
@@ -350,10 +339,10 @@ const routes: Routes = [
 						path: 'post/:postId',
 						loadComponent: () => {
 							// prettier-ignore
-							return import('./user/post/detail/detail.component').then(m => m.UserPostDetailComponent);
+							return import('./user/post/details/details.component').then(m => m.UserPostDetailsComponent);
 						},
 						resolve: {
-							data: UserPostDetailResolverService
+							data: UserPostDetailsResolverService
 						}
 					}
 				]

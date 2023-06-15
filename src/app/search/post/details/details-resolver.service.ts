@@ -13,7 +13,7 @@ import { PostGetOneDto } from '../../../core/dto/post/post-get-one.dto';
 @Injectable({
 	providedIn: 'root'
 })
-export class SearchPostDetailResolverService {
+export class SearchPostDetailsResolverService {
 	constructor(
 		private apiService: ApiService,
 		private router: Router,

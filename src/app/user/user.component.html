@@ -128,7 +128,9 @@
 						[innerHTML]="category.description | markdown | sanitizer : 'html'"
 					></article>
 				</div>
-				<router-outlet></router-outlet>
+				<div class="block">
+					<router-outlet></router-outlet>
+				</div>
 			</section>
 		</div>
 	</div>

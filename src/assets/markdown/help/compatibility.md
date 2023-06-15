@@ -2,9 +2,7 @@
 
 Implementation of markdown includes a wide range of features beyond the standard markdown syntax. While default markdown is a great tool for simple formatting, we recognize that many of our users require more advanced functionality to fully express their ideas and creativity. That's why we've developed a custom markdown implementation that supports a range of features, including advanced tables, attributes, media, syntax highlighting, and more.
 
-Use only [base syntax](https://www.markdownguide.org/basic-syntax/) to achieve 100% compatibility.
-
-Using our connected plugins we can't guarantee your syntax will work well in third party editors.
+Using our connected plugins we can't guarantee your syntax will work well in third party editors. Use only [base syntax](https://www.markdownguide.org/basic-syntax/) to achieve 100% compatibility.
 
 Connected Markdown plugins
 

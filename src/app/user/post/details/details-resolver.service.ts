@@ -15,7 +15,7 @@ import { Category } from '../../../core/models/category.model';
 @Injectable({
 	providedIn: 'root'
 })
-export class UserPostDetailResolverService {
+export class UserPostDetailsResolverService {
 	constructor(
 		private apiService: ApiService,
 		private router: Router,

@@ -19,10 +19,10 @@ import { PostService } from '../../../core/services/post.service';
 		PostDetailComponent,
 		ShareComponent
 	],
-	selector: 'app-user-post-detail',
-	templateUrl: './detail.component.html'
+	selector: 'app-user-post-details',
+	templateUrl: './details.component.html'
 })
-export class UserPostDetailComponent implements OnInit, OnDestroy {
+export class UserPostDetailsComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 
 	post: Post | undefined;

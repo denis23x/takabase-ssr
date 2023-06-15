@@ -5,10 +5,27 @@
 		<header
 			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
-			<div class="flex w-full flex-col items-start justify-start gap-4">
-				<h1 class="truncate text-2xl font-bold text-base-content">
-					Help & Support
-				</h1>
+			<div class="flex w-full flex-col items-stretch justify-between gap-4">
+				<div class="flex items-center justify-start gap-4 overflow-hidden">
+					<button
+						class="btn-ghost btn pointer-events-none bg-base-200 fill-current p-3"
+						type="button"
+						title="Help"
+						aria-label="Help"
+						appSvgIcon
+						[appIcon]="'heart'"
+						[appSquare]="'1.5rem'"
+					></button>
+					<div class="flex flex-col overflow-hidden">
+						<h1 class="block truncate text-xl font-bold text-base-content">
+							Help & Support
+						</h1>
+						<span class="truncate text-sm text-base-content/50">
+							Enhance your experience with us by accessing our extensive help
+							resources
+						</span>
+					</div>
+				</div>
 				<p class="alert inline">
 					Get the assistance you need to navigate our website and make the most
 					of our services. Browse through our helpful resources to find answers
@@ -16,11 +33,21 @@
 					guidance on account management, troubleshooting, feature explanations,
 					and more.
 				</p>
+			</div>
+			<div class="grid w-full grid-cols-12 gap-4">
 				<button
-					class="btn-outline btn-success btn w-full"
+					class="btn-outline btn-success btn col-span-12 sm:col-span-8"
+					type="button"
 					aria-label="Have any questions"
 				>
 					Have any questions?
+				</button>
+				<button
+					class="btn-outline btn-error btn col-span-12 sm:col-span-4"
+					type="button"
+					aria-label="Found the issue"
+				>
+					Found the issue?
 				</button>
 			</div>
 		</header>
