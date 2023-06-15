@@ -70,6 +70,14 @@ const routes: Routes = [
 		canMatch: [CanMatchPublicGuard]
 	},
 	{
+		path: 'email/confirmation',
+		title: 'Email confirmation',
+		// prettier-ignore
+		loadComponent: () => {
+      return import('./auth/email-confirmation/email-confirmation.component').then(m => m.AuthEmailConfirmationComponent);
+    }
+	},
+	{
 		path: 'terms',
 		loadComponent: () => {
 			return import('./terms/terms.component').then(m => m.TermsComponent);
