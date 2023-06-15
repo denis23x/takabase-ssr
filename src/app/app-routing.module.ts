@@ -34,6 +34,14 @@ const routes: Routes = [
 		}
 	},
 	{
+		path: 'email/confirmation',
+		title: 'Email confirmation',
+		// prettier-ignore
+		loadComponent: () => {
+      return import('./auth/email-confirmation/email-confirmation.component').then(m => m.AuthEmailConfirmationComponent);
+    }
+	},
+	{
 		path: 'login',
 		title: 'Login',
 		// prettier-ignore
@@ -68,14 +76,6 @@ const routes: Routes = [
       return import('./auth/reset-password/reset-password.component').then(m => m.AuthResetPasswordComponent);
     },
 		canMatch: [CanMatchPublicGuard]
-	},
-	{
-		path: 'email/confirmation',
-		title: 'Email confirmation',
-		// prettier-ignore
-		loadComponent: () => {
-      return import('./auth/email-confirmation/email-confirmation.component').then(m => m.AuthEmailConfirmationComponent);
-    }
 	},
 	{
 		path: 'terms',
