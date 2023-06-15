@@ -1,0 +1,59 @@
+<!-- @format -->
+
+<ng-container>
+	<div class="flex flex-col space-y-4 md:space-y-8">
+		<header
+			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+		>
+			<div class="flex w-full flex-col items-start justify-start gap-4">
+				<h1 class="truncate text-2xl font-bold text-base-content">
+					Help & Support
+				</h1>
+				<p class="alert inline">
+					Get the assistance you need to navigate our website and make the most
+					of our services. Browse through our helpful resources to find answers
+					to your queries. Our goal is to provide you with clear and concise
+					guidance on account management, troubleshooting, feature explanations,
+					and more.
+				</p>
+				<button
+					class="btn-outline btn-success btn w-full"
+					aria-label="Have any questions"
+				>
+					Have any questions?
+				</button>
+			</div>
+		</header>
+		<div class="flex flex-col">
+			<nav class="block px-4">
+				<ul
+					class="tabs w-full translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg"
+				>
+					<!-- prettier-ignore -->
+					<li
+						class="tab tab-lifted tab-lg h-11 border border-b border-solid border-base-content/20 !px-0"
+						*ngFor="let help of helpNavigationList"
+						[ngClass]="routerLinkActive.isActive ? 'tab-active h-12 border-b-0 !border-base-content/20 pb-0 before:invisible after:invisible' : 'bg-base-200'"
+					>
+						<a
+							class="flex h-full items-center justify-center whitespace-nowrap px-4"
+							appScrollIntoView
+							#routerLinkActive="routerLinkActive"
+							[appScrollActive]="routerLinkActive.isActive"
+							[routerLink]="['../', help.path]"
+							[routerLinkActive]="''"
+							[attr.aria-label]="help.name"
+						>
+							<span class="block truncate max-w-[192px]">{{ help.name }}</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+			<section
+				class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
+			>
+				<router-outlet></router-outlet>
+			</section>
+		</div>
+	</div>
+</ng-container>

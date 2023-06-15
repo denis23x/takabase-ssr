@@ -1,0 +1,8 @@
+<!-- @format -->
+
+<ng-container>
+	<div
+		class="prose max-w-none overflow-auto"
+		[innerHTML]="prose | markdown | sanitizer : 'html'"
+	></div>
+</ng-container>

@@ -8,7 +8,6 @@ import {
 	UrlSegment
 } from '@angular/router';
 import { CreateResolverService } from './create/create-resolver.service';
-import { HomeResolverService } from './home/home-resolver.service';
 import { SearchPostResolverService } from './search/post/post-resolver.service';
 import { SearchPostDetailResolverService } from './search/post/detail/detail-resolver.service';
 import { SearchCategoryResolverService } from './search/category/category-resolver.service';
@@ -21,6 +20,7 @@ import { RightsDetailResolverService } from './terms/detail/detail-resolver.serv
 import { CanMatchPublicGuard } from './core/guards/public-guard.service';
 import { CanMatchPrivateGuard } from './core/guards/private-guard.service';
 import { TitleService } from './core/services/title.service';
+import { HelpDetailsResolverService } from './help/details/details-resolver.service';
 
 const routes: Routes = [
 	{
@@ -28,9 +28,6 @@ const routes: Routes = [
 		title: 'Home',
 		loadComponent: () => {
 			return import('./home/home.component').then(m => m.HomeComponent);
-		},
-		resolve: {
-			data: HomeResolverService
 		}
 	},
 	{
@@ -108,6 +105,30 @@ const routes: Routes = [
         },
 				resolve: {
 					data: RightsDetailResolverService
+				}
+			}
+		]
+	},
+	{
+		path: 'help',
+		pathMatch: 'full',
+		redirectTo: 'help/features'
+	},
+	{
+		path: 'help/:markdown',
+		loadComponent: () => {
+			return import('./help/help.component').then(m => m.HelpComponent);
+		},
+		children: [
+			{
+				path: '',
+				title: 'Help',
+				// prettier-ignore
+				loadComponent: () => {
+		      return import('./help/details/details.component').then(m => m.HelpDetailsComponent);
+		    },
+				resolve: {
+					data: HelpDetailsResolverService
 				}
 			}
 		]
