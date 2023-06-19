@@ -12,6 +12,7 @@ export interface User {
 	categories?: Category[];
 	avatar: string | null;
 	email?: string;
+	emailConfirmed?: boolean;
 	sessions: Session[];
 	token?: string;
 	settings?: UserSettings;

@@ -17,18 +17,18 @@ export class HelpDetailsResolverService {
 		const markdown: string = String(activatedRouteSnapshot.paramMap.get('markdown'));
 		const markdownFile: string = '/assets/markdown/help/' + markdown + '.md';
 
-		const requestOptions: any = {
-			responseType: 'text'
-		};
-
-		return this.httpClient.get(markdownFile, requestOptions).pipe(
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				this.router
-					.navigate(['/error', httpErrorResponse.status])
-					.then(() => console.debug('Route changed'));
-
-				return throwError(() => httpErrorResponse);
+		return this.httpClient
+			.get(markdownFile, {
+				responseType: 'text'
 			})
-		);
+			.pipe(
+				catchError((httpErrorResponse: HttpErrorResponse) => {
+					this.router
+						.navigate(['/error', httpErrorResponse.status])
+						.then(() => console.debug('Route changed'));
+
+					return throwError(() => httpErrorResponse);
+				})
+			);
 	}
 }

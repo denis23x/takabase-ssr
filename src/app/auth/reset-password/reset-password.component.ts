@@ -89,7 +89,7 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 			};
 
 			this.authService.onPassword(passwordDto).subscribe({
-				next: (user: User) => {
+				next: (user: Partial<User>) => {
 					const loginDto: LoginDto = {
 						email: user.email,
 						password: passwordDto.password
