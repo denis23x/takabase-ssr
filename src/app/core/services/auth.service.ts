@@ -1,7 +1,7 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, from, of, throwError } from 'rxjs';
+import { BehaviorSubject, from, Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
@@ -13,8 +13,9 @@ import { SnackbarService } from './snackbar.service';
 import { UiService } from './ui.service';
 import { LoginDto } from '../dto/auth/login.dto';
 import { LogoutDto } from '../dto/auth/logout.dto';
-import { ResetDto } from '../dto/auth/reset.dto';
-import { PasswordDto } from '../dto/auth/change-password.dto';
+import { PasswordResetUpdateDto } from '../dto/password/password-reset-update.dto';
+import { PasswordCheckGetDto } from '../dto/password/password-check-get.dto';
+import { PasswordResetGetDto } from '../dto/password/password-reset-get.dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -122,12 +123,19 @@ export class AuthService {
 		);
 	}
 
-	onReset(resetDto: ResetDto): Observable<any> {
-		return this.apiService.post('/auth/reset', resetDto);
+	// prettier-ignore
+	onPasswordCheck(passwordCheckGetDto: PasswordCheckGetDto): Observable<any> {
+    return this.apiService.get('/password/check', passwordCheckGetDto);
+  }
+
+	// prettier-ignore
+	onPasswordReset(passwordResetGetDto: PasswordResetGetDto): Observable<Partial<User>> {
+		return this.apiService.get('/password/reset', passwordResetGetDto);
 	}
 
-	onPassword(passwordDto: PasswordDto): Observable<User> {
-		return this.apiService.post('/auth/password', passwordDto);
+	// prettier-ignore
+	onPasswordUpdate(passwordResetUpdateDto: PasswordResetUpdateDto): Observable<Partial<User>> {
+		return this.apiService.post('/password/reset', passwordResetUpdateDto);
 	}
 
 	/** Service */

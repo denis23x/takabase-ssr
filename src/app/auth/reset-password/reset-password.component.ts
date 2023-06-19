@@ -19,7 +19,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
 import { LoginDto } from '../../core/dto/auth/login.dto';
 import { UserService } from '../../core/services/user.service';
-import { PasswordDto } from '../../core/dto/auth/change-password.dto';
+import { PasswordResetUpdateDto } from '../../core/dto/password/password-reset-update.dto';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../shared/components/oauth/oauth.component';
 
@@ -84,15 +84,15 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.passwordForm)) {
 			this.passwordFormIsSubmitted = true;
 
-			const passwordDto: PasswordDto = {
+			const passwordResetUpdateDto: PasswordResetUpdateDto = {
 				...this.passwordForm.value
 			};
 
-			this.authService.onPassword(passwordDto).subscribe({
+			this.authService.onPasswordUpdate(passwordResetUpdateDto).subscribe({
 				next: (user: Partial<User>) => {
 					const loginDto: LoginDto = {
 						email: user.email,
-						password: passwordDto.password
+						password: passwordResetUpdateDto.password
 					};
 
 					this.authService.onLogin(loginDto).subscribe({

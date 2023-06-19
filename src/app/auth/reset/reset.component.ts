@@ -18,8 +18,8 @@ import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-inp
 import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
 import { AuthService } from '../../core/services/auth.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { ResetDto } from '../../core/dto/auth/reset.dto';
 import { OauthComponent } from '../../shared/components/oauth/oauth.component';
+import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
 
 interface ResetForm {
 	email: FormControl<string>;
@@ -86,11 +86,11 @@ export class AuthResetComponent implements OnInit {
 		if (this.helperService.getFormValidation(this.resetForm)) {
 			this.resetFormIsSubmitted = true;
 
-			const resetDto: ResetDto = {
+			const passwordResetGetDto: PasswordResetGetDto = {
 				...this.resetForm.value
 			};
 
-			this.authService.onReset(resetDto).subscribe({
+			this.authService.onPasswordReset(passwordResetGetDto).subscribe({
 				next: () => {
 					// prettier-ignore
 					this.snackbarService.success('Success', 'Check your email to continue process');

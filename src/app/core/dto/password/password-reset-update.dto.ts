@@ -1,6 +1,6 @@
 /** @format */
 
-export interface PasswordDto {
+export interface PasswordResetUpdateDto {
 	token: string;
 	password: string;
 }
