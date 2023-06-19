@@ -1,43 +1,113 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="flex flex-col items-start justify-start gap-4">
+	<div
+		class="flex flex-col items-start justify-start gap-4"
+		[ngSwitch]="passwordCheckIsValid"
+	>
 		<form
-			class="rounded-box flex w-full flex-col"
+			class="flex w-full flex-col gap-4"
 			autocomplete="off"
-			[formGroup]="emailForm"
-			(ngSubmit)="onSubmitEmailForm()"
+			*ngSwitchCase="false"
+			[formGroup]="passwordCheckForm"
+			(ngSubmit)="onSubmitPasswordCheckForm()"
 		>
 			<fieldset
-				class="flex flex-col space-y-4"
-				[disabled]="emailFormIsSubmitted || confirmationFormToggle"
+				class="form-control"
+				*ngIf="passwordCheckForm.get('password') as password"
+			>
+				<label class="label" for="passwordCheckFormPassword">
+					<div class="indicator">
+						<!-- prettier-ignore -->
+						<span
+              class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+              *ngIf="password.touched && !!password.errors && passwordCheckForm.enabled"
+              [ngSwitch]="true"
+            >
+              <ng-container *ngSwitchCase="!!password.errors.required">
+                Required
+              </ng-container>
+              <ng-container *ngSwitchCase="!!password.errors.pattern">
+                Password does not match pattern
+              </ng-container>
+            </span>
+						<span class="label-text mr-2">Current password</span>
+					</div>
+				</label>
+				<div class="relative" *ngIf="{ value: false } as isVisible">
+					<input
+						class="input-bordered input w-full truncate pr-12"
+						id="passwordCheckFormPassword"
+						aria-label="Password"
+						formControlName="password"
+						autocomplete="password"
+						placeholder="Type your current password"
+						appInputTrimWhitespace
+						[type]="isVisible.value ? 'text' : 'password'"
+						[class.input-success]="password.dirty && password.valid"
+						[class.input-error]="password.touched && password.invalid"
+					/>
+					<!-- prettier-ignore -->
+					<button
+						class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+						type="button"
+						aria-label="Password"
+						appSvgIcon
+						*ngIf="!!password.value.length"
+						[class.btn-success]="password.dirty && password.value"
+						[class.btn-error]="password.touched && password.invalid"
+            [class.btn-ghost]="password.untouched && password.dirty && password.invalid"
+						[disabled]="password.disabled"
+						[appIcon]="'incognito'"
+						[appSquare]="'1.5em'"
+						(touchstart)="isVisible.value = !isVisible.value"
+						(mouseenter)="isVisible.value = true"
+						(mouseleave)="isVisible.value = false"
+					></button>
+				</div>
+			</fieldset>
+			<p class="alert inline">
+				Please provide your current password to continue. Your password ensures
+				the security and integrity of your account.
+			</p>
+			<fieldset class="form-control">
+				<!-- prettier-ignore -->
+				<button
+          class="btn btn-success w-full"
+          type="submit"
+          aria-label="Continue"
+          [class.loading]="passwordCheckForm.disabled"
+          [disabled]="passwordCheckForm.invalid || passwordCheckForm.disabled"
+        >
+          Continue
+        </button>
+			</fieldset>
+		</form>
+		<ng-container *ngSwitchCase="true">
+			<form
+				class="flex w-full flex-col gap-4"
+				autocomplete="off"
+				[formGroup]="emailForm"
+				(ngSubmit)="onSubmitEmailForm()"
 			>
 				<fieldset class="form-control" *ngIf="emailForm.get('email') as email">
 					<label class="label" for="emailFormEmail">
 						<div class="indicator">
 							<!-- prettier-ignore -->
 							<span
-								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="email.touched && !!email.errors && !emailFormIsSubmitted && !confirmationFormToggle"
-								[ngSwitch]="true"
-							>
-								<ng-container *ngSwitchCase="!!email.errors.required">
-									Required
-								</ng-container>
-								<ng-container *ngSwitchCase="!!email.errors.email">
-									Email must be a real email address
-								</ng-container>
-							</span>
+                class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+                *ngIf="email.touched && !!email.errors && emailForm.enabled"
+                [ngSwitch]="true"
+              >
+                <ng-container *ngSwitchCase="!!email.errors.required">
+                  Required
+                </ng-container>
+                <ng-container *ngSwitchCase="!!email.errors.email">
+                  Email must be a real email address
+                </ng-container>
+              </span>
 							<span class="label-text mr-2">New email</span>
 						</div>
-						<a
-							class="label-text-alt link"
-							target="_blank"
-							rel="noopener noreferrer"
-							[href]="'mailto:' + authUser.email"
-						>
-							{{ authUser.email }}
-						</a>
 					</label>
 					<div class="relative">
 						<input
@@ -46,52 +116,67 @@
 							type="email"
 							aria-label="Email"
 							formControlName="email"
+							autocomplete="email"
 							placeholder="Type your new email"
 							appInputTrimWhitespace
-							appInputMarkAsTouched
-							[class.input-success]="email.touched && email.valid"
+							[class.input-success]="email.dirty && email.valid"
 							[class.input-error]="email.touched && email.invalid"
-							[disabled]="emailFormIsSubmitted || confirmationFormToggle"
 						/>
+						<!-- prettier-ignore -->
 						<button
-							class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
+							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 							type="button"
-							aria-label="Clear"
+							aria-label="Reset"
 							appSvgIcon
 							*ngIf="!!email.value.length"
-							[class.btn-success]="email.touched && email.valid"
+							[class.btn-success]="email.dirty && email.valid"
 							[class.btn-error]="email.touched && email.invalid"
-							[class.btn-ghost]="email.untouched"
-							[disabled]="emailFormIsSubmitted || confirmationFormToggle"
+							[class.btn-ghost]="email.untouched && email.dirty && email.invalid"
+							[disabled]="email.disabled"
 							[appIcon]="'x'"
 							[appSquare]="'1.75rem'"
-							(click)="email.setValue('')"
+							(click)="email.reset()"
 						></button>
 					</div>
 				</fieldset>
-				<fieldset class="form-control">
-					<!-- prettier-ignore -->
+				<fieldset class="form-control" [ngSwitch]="authUser.emailConfirmed">
 					<button
-						class="btn btn-success w-full"
+						class="btn-success btn w-full"
 						type="submit"
 						aria-label="Submit"
-						[disabled]="emailForm.invalid || emailFormIsSubmitted || confirmationFormToggle"
+						*ngSwitchCase="true"
+						[class.loading]="emailForm.disabled"
+						[disabled]="emailForm.invalid || emailForm.disabled"
 					>
 						Submit
 					</button>
+					<div class="flex flex-col gap-4" *ngSwitchCase="false">
+						<p class="alert inline">
+							To maintain the security and validity of your account, we require
+							email address verification before making any changes. This
+							verification step helps us ensure that you have full control over
+							your account and protects your information from unauthorized
+							access.
+						</p>
+						<button
+							class="btn-success btn w-full"
+							type="button"
+							aria-label="Confirm"
+							[class.loading]="emailFormConfirmationIsSubmitted"
+							[disabled]="emailFormConfirmationIsSubmitted"
+							(click)="onSubmitEmailConfirmation()"
+						>
+							Confirm
+						</button>
+					</div>
 				</fieldset>
-			</fieldset>
-		</form>
-		<hr class="w-full border-base-content/20" />
-		<form
-			class="rounded-box flex w-full flex-col"
-			autocomplete="off"
-			[formGroup]="passwordForm"
-			(ngSubmit)="onSubmitPasswordForm()"
-		>
-			<fieldset
-				class="flex flex-col space-y-4"
-				[disabled]="passwordFormIsSubmitted || confirmationFormToggle"
+			</form>
+			<hr class="w-full border-base-content/20" />
+			<form
+				class="flex w-full flex-col gap-4"
+				autocomplete="off"
+				[formGroup]="passwordForm"
+				(ngSubmit)="onSubmitPasswordForm()"
 			>
 				<fieldset
 					class="form-control"
@@ -101,17 +186,17 @@
 						<div class="indicator">
 							<!-- prettier-ignore -->
 							<span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="password.touched && !!password.errors && !passwordFormIsSubmitted && !confirmationFormToggle"
-								[ngSwitch]="true"
-							>
-								<ng-container *ngSwitchCase="!!password.errors.required">
-									Required
-								</ng-container>
-								<ng-container *ngSwitchCase="!!password.errors.pattern">
-									Password does not match pattern
-								</ng-container>
-							</span>
+                class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                *ngIf="password.touched && !!password.errors && passwordForm.enabled"
+                [ngSwitch]="true"
+              >
+                <ng-container *ngSwitchCase="!!password.errors.required">
+                  Required
+                </ng-container>
+                <ng-container *ngSwitchCase="!!password.errors.pattern">
+                  Password does not match pattern
+                </ng-container>
+              </span>
 							<span class="label-text mr-2">New password</span>
 						</div>
 					</label>
@@ -124,22 +209,21 @@
 							autocomplete="new-password"
 							placeholder="Type your new password"
 							appInputTrimWhitespace
-							appInputMarkAsTouched
 							[type]="isVisible.value ? 'text' : 'password'"
-							[class.input-success]="password.touched && password.valid"
+							[class.input-success]="password.dirty && password.valid"
 							[class.input-error]="password.touched && password.invalid"
-							[disabled]="passwordFormIsSubmitted || confirmationFormToggle"
 						/>
+						<!-- prettier-ignore -->
 						<button
-							class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
+							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 							type="button"
 							aria-label="Password"
 							appSvgIcon
 							*ngIf="!!password.value.length"
-							[class.btn-success]="password.touched && password.value"
+							[class.btn-success]="password.dirty && password.value"
 							[class.btn-error]="password.touched && password.invalid"
-							[class.btn-ghost]="password.untouched"
-							[disabled]="passwordFormIsSubmitted || confirmationFormToggle"
+              [class.btn-ghost]="password.untouched && password.dirty && password.invalid"
+							[disabled]="password.disabled"
 							[appIcon]="'incognito'"
 							[appSquare]="'1.5em'"
 							(touchstart)="isVisible.value = !isVisible.value"
@@ -155,108 +239,16 @@
 				<fieldset class="form-control">
 					<!-- prettier-ignore -->
 					<button
-						class="btn btn-success w-full"
-						type="submit"
-						aria-label="Submit"
-						[disabled]="passwordForm.invalid || passwordFormIsSubmitted || confirmationFormToggle"
-					>
-						Submit
-					</button>
-				</fieldset>
-			</fieldset>
-		</form>
-	</div>
-	<app-overlay
-		[appToggle]="confirmationFormToggle"
-		(clicked)="onToggleConfirmationForm(false)"
-		(escaped)="onToggleConfirmationForm(false)"
-	>
-		<app-window
-			slot="content"
-			[appTitle]="'Confirmation'"
-			(closed)="onToggleConfirmationForm(false)"
-		>
-			<form
-				class="flex w-window max-w-[448px] flex-col space-y-4 p-4"
-				autocomplete="off"
-				slot="content"
-				[formGroup]="confirmationForm"
-				(ngSubmit)="onSubmitConfirmationForm()"
-			>
-				<p class="alert inline">Confirmation will terminate all sessions</p>
-				<fieldset
-					class="flex flex-col space-y-4"
-					[disabled]="confirmationFormIsSubmitted"
-				>
-					<fieldset
-						class="form-control"
-						*ngIf="confirmationForm.get('password') as password"
-					>
-						<label class="label" for="confirmationFormPassword">
-							<div class="indicator">
-								<!-- prettier-ignore -->
-								<span
-									class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="password.touched && !!password.errors && !confirmationFormIsSubmitted"
-									[ngSwitch]="true"
-								>
-									<ng-container *ngSwitchCase="!!password.errors.required">
-										Required
-									</ng-container>
-									<ng-container *ngSwitchCase="!!password.errors.pattern">
-										Password does not match pattern
-									</ng-container>
-								</span>
-								<span class="label-text mr-2">Current password</span>
-							</div>
-						</label>
-						<div class="relative" *ngIf="{ value: false } as isVisible">
-							<input
-								class="input-bordered input w-full truncate pr-12"
-								id="confirmationFormPassword"
-								aria-label="Password"
-								formControlName="password"
-								autocomplete="new-password"
-								placeholder="Type your current password"
-								appInputTrimWhitespace
-								appInputMarkAsTouched
-								[type]="isVisible.value ? 'text' : 'password'"
-								[class.input-success]="password.touched && password.valid"
-								[class.input-error]="password.touched && password.invalid"
-								[disabled]="confirmationFormIsSubmitted"
-							/>
-							<button
-								class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
-								type="button"
-								aria-label="Password"
-								appSvgIcon
-								*ngIf="!!password.value.length"
-								[class.btn-success]="password.touched && password.value"
-								[class.btn-error]="password.touched && password.invalid"
-								[class.btn-ghost]="password.untouched"
-								[disabled]="confirmationFormIsSubmitted"
-								[appIcon]="'incognito'"
-								[appSquare]="'1.5em'"
-								(touchstart)="isVisible.value = !isVisible.value"
-								(mouseenter)="isVisible.value = true"
-								(mouseleave)="isVisible.value = false"
-							></button>
-						</div>
-					</fieldset>
-					<fieldset class="form-control">
-						<!-- prettier-ignore -->
-						<button
-							class="btn btn-success w-full"
-							type="submit"
-							aria-label="Submit"
-							[class.loading]="confirmationFormIsSubmitted"
-							[disabled]="confirmationForm.invalid || confirmationFormIsSubmitted"
-						>
-              Submit
-						</button>
-					</fieldset>
+            class="btn btn-success w-full"
+            type="submit"
+            aria-label="Submit"
+            [class.loading]="passwordForm.disabled"
+            [disabled]="passwordForm.invalid || passwordForm.disabled"
+          >
+            Submit
+          </button>
 				</fieldset>
 			</form>
-		</app-window>
-	</app-overlay>
+		</ng-container>
+	</div>
 </ng-container>

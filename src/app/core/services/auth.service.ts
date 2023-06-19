@@ -123,6 +123,8 @@ export class AuthService {
 		);
 	}
 
+	/** Password API */
+
 	// prettier-ignore
 	onPasswordCheck(passwordCheckGetDto: PasswordCheckGetDto): Observable<any> {
     return this.apiService.get('/password/check', passwordCheckGetDto);
@@ -135,7 +137,13 @@ export class AuthService {
 
 	// prettier-ignore
 	onPasswordUpdate(passwordResetUpdateDto: PasswordResetUpdateDto): Observable<Partial<User>> {
-		return this.apiService.post('/password/reset', passwordResetUpdateDto);
+		return this.apiService.put('/password/reset', passwordResetUpdateDto);
+	}
+
+	/** Email API */
+
+	onEmailConfirmation(): Observable<Partial<User>> {
+		return this.apiService.get('/email/confirmation');
 	}
 
 	/** Service */

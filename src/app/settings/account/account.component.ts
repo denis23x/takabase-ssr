@@ -13,26 +13,25 @@ import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
-import { OverlayComponent } from '../../shared/components/overlay/overlay.component';
-import { WindowComponent } from '../../shared/components/window/window.component';
 import { User } from '../../core/models/user.model';
 import { HelperService } from '../../core/services/helper.service';
 import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
-import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
-import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
+import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
+import { PasswordCheckGetDto } from '../../core/dto/password/password-check-get.dto';
+import { CookieService } from '../../core/services/cookie.service';
+
+interface PasswordCheckForm {
+	password: FormControl<string>;
+}
 
 interface EmailForm {
 	email: FormControl<string>;
 }
 
 interface PasswordForm {
-	password: FormControl<string>;
-}
-
-interface ConfirmationForm {
 	password: FormControl<string>;
 }
 
@@ -43,10 +42,7 @@ interface ConfirmationForm {
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
-		OverlayComponent,
-		WindowComponent,
-		AppInputTrimWhitespaceDirective,
-		AppInputMarkAsTouchedDirective
+		AppInputTrimWhitespaceDirective
 	],
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'
@@ -57,15 +53,13 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	authUser: User | undefined;
 	authUser$: Subscription | undefined;
 
+	passwordCheckIsValid: boolean = false;
+	passwordCheckForm: FormGroup | undefined;
+
 	emailForm: FormGroup | undefined;
-	emailFormIsSubmitted: boolean = false;
+	emailFormConfirmationIsSubmitted: boolean = false;
 
 	passwordForm: FormGroup | undefined;
-	passwordFormIsSubmitted: boolean = false;
-
-	confirmationForm: FormGroup | undefined;
-	confirmationFormIsSubmitted: boolean = false;
-	confirmationFormToggle: boolean = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -73,8 +67,15 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		private activatedRoute: ActivatedRoute,
 		private userService: UserService,
 		private authService: AuthService,
-		private snackbarService: SnackbarService
+		private snackbarService: SnackbarService,
+		private cookieService: CookieService
 	) {
+		this.passwordCheckForm = this.formBuilder.group<PasswordCheckForm>({
+			password: this.formBuilder.nonNullable.control('', [
+				Validators.required,
+				Validators.pattern(this.helperService.getRegex('password'))
+			])
+		});
 		this.emailForm = this.formBuilder.group<EmailForm>({
 			email: this.formBuilder.nonNullable.control('', [
 				Validators.required,
@@ -87,21 +88,25 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				Validators.pattern(this.helperService.getRegex('password'))
 			])
 		});
-		this.confirmationForm = this.formBuilder.group<ConfirmationForm>({
-			password: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.pattern(this.helperService.getRegex('password'))
-			])
-		});
 	}
 
 	ngOnInit(): void {
 		this.activatedRouteData$ = this.activatedRoute.parent.data
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
-				next: (user: User) => (this.authUser = user),
+				next: (user: User) => {
+					this.authUser = user;
+
+					if (!this.authUser.emailConfirmed) {
+						this.emailForm.patchValue(this.authUser);
+						this.emailForm.disable();
+					}
+				},
 				error: (error: any) => console.error(error)
 			});
+
+		// prettier-ignore
+		this.passwordCheckIsValid = !!Number(this.cookieService.getItem('password-valid'))
 	}
 
 	ngOnDestroy(): void {
@@ -110,53 +115,11 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 	onSubmitEmailForm(): void {
 		if (this.helperService.getFormValidation(this.emailForm)) {
-			this.emailFormIsSubmitted = true;
-
-			this.onToggleConfirmationForm(true);
-		}
-	}
-
-	onSubmitPasswordForm(): void {
-		if (this.helperService.getFormValidation(this.passwordForm)) {
-			this.passwordFormIsSubmitted = true;
-
-			this.onToggleConfirmationForm(true);
-		}
-	}
-
-	onToggleConfirmationForm(toggle: boolean): void {
-		this.confirmationFormIsSubmitted = false;
-		this.confirmationFormToggle = toggle;
-		this.confirmationForm.reset();
-
-		/** Reset submit when close confirmation */
-
-		if (!this.confirmationFormToggle) {
-			if (!!this.emailFormIsSubmitted) {
-				this.emailFormIsSubmitted = false;
-			}
-
-			if (!!this.passwordFormIsSubmitted) {
-				this.passwordFormIsSubmitted = false;
-			}
-		}
-	}
-
-	onSubmitConfirmationForm(): void {
-		if (this.helperService.getFormValidation(this.confirmationForm)) {
-			this.confirmationFormIsSubmitted = true;
+			this.emailForm.disable();
 
 			const userUpdateDto: UserUpdateDto = {
-				...this.confirmationForm.value
+				newEmail: this.emailForm.value.password
 			};
-
-			if (this.emailFormIsSubmitted) {
-				userUpdateDto.newEmail = this.emailForm.value.email;
-			}
-
-			if (this.passwordFormIsSubmitted) {
-				userUpdateDto.newPassword = this.passwordForm.value.password;
-			}
 
 			this.userService.update(this.authUser.id, userUpdateDto).subscribe({
 				next: (user: User) => {
@@ -165,23 +128,104 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 						error: (error: any) => console.error(error)
 					});
 
-					if (this.emailFormIsSubmitted) {
-						this.emailForm.reset();
-						this.emailForm.markAsUntouched();
-					}
-
-					if (this.passwordFormIsSubmitted) {
-						this.passwordForm.reset();
-						this.passwordForm.markAsUntouched();
-					}
-
-					this.onToggleConfirmationForm(false);
+					this.emailForm.enable();
+					this.emailForm.reset();
 
 					// prettier-ignore
-					this.snackbarService.success('Success', 'Account information has been changed');
+					this.snackbarService.success('Success', 'Email has been changed');
 				},
-				error: () => this.onToggleConfirmationForm(false)
+				error: () => this.emailForm.enable()
 			});
+		}
+	}
+
+	onSubmitEmailConfirmation(): void {
+		if (this.helperService.getFormValidation(this.emailForm)) {
+			this.emailFormConfirmationIsSubmitted = true;
+
+			this.authService.onEmailConfirmation().subscribe({
+				next: (user: Partial<User>) => {
+					this.authService.setUser(user as User).subscribe({
+						next: () => (this.authUser = user as User),
+						error: (error: any) => console.error(error)
+					});
+
+					this.emailFormConfirmationIsSubmitted = false;
+
+					if (this.authUser.emailConfirmed) {
+						this.emailForm.reset();
+						this.emailForm.enable();
+
+						this.snackbarService.success('Well', 'Your email confirmed');
+					} else {
+						// prettier-ignore
+						this.snackbarService.success('Okey', 'We sent you a verification email');
+					}
+				},
+				error: () => (this.emailFormConfirmationIsSubmitted = false)
+			});
+		}
+	}
+
+	onSubmitPasswordForm(): void {
+		if (this.helperService.getFormValidation(this.passwordForm)) {
+			this.passwordForm.disable();
+
+			const userUpdateDto: UserUpdateDto = {
+				newPassword: this.passwordForm.value.password
+			};
+
+			this.userService.update(this.authUser.id, userUpdateDto).subscribe({
+				next: (user: User) => {
+					this.authService.setUser(user).subscribe({
+						next: () => (this.authUser = user),
+						error: (error: any) => console.error(error)
+					});
+
+					this.passwordForm.enable();
+					this.passwordForm.reset();
+
+					// prettier-ignore
+					this.snackbarService.success('Success', 'Password has been changed');
+				},
+				error: () => this.passwordForm.enable()
+			});
+		}
+	}
+
+	onSubmitPasswordCheckForm(): void {
+		if (this.helperService.getFormValidation(this.passwordCheckForm)) {
+			this.passwordCheckForm.disable();
+
+			const passwordCheckGetDto: PasswordCheckGetDto = {
+				...this.passwordCheckForm.value
+			};
+
+			this.authService
+				.onPasswordCheck(passwordCheckGetDto)
+				.pipe(map((data: any) => data.valid))
+				.subscribe({
+					next: (valid: boolean) => {
+						this.passwordCheckForm.enable();
+						this.passwordCheckForm.reset();
+
+						if (valid) {
+							this.passwordCheckIsValid = valid;
+
+							const dateNow: Date = new Date();
+
+							/** Set 1 hour cookie */
+
+							this.cookieService.setItem('password-valid', '1', {
+								expires: dateNow.setTime(dateNow.getTime() + 1 * 3600 * 1000)
+							});
+						} else {
+							// prettier-ignore
+							this.snackbarService.danger('Nope', 'You entered the wrong password');
+						}
+					},
+					error: () => this.passwordCheckForm.enable()
+				});
 		}
 	}
 }
