@@ -143,7 +143,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.emailForm)) {
 			this.emailFormConfirmationIsSubmitted = true;
 
-			this.authService.onEmailConfirmation().subscribe({
+			this.authService.onEmailConfirmationGet().subscribe({
 				next: (user: Partial<User>) => {
 					this.authService.setUser(user as User).subscribe({
 						next: () => (this.authUser = user as User),
@@ -202,7 +202,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			};
 
 			this.authService
-				.onPasswordCheck(passwordCheckGetDto)
+				.onPasswordCheckGet(passwordCheckGetDto)
 				.pipe(map((data: any) => data.valid))
 				.subscribe({
 					next: (valid: boolean) => {

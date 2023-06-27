@@ -16,6 +16,7 @@ import { LogoutDto } from '../dto/auth/logout.dto';
 import { PasswordResetUpdateDto } from '../dto/password/password-reset-update.dto';
 import { PasswordCheckGetDto } from '../dto/password/password-check-get.dto';
 import { PasswordResetGetDto } from '../dto/password/password-reset-get.dto';
+import { EmailConfirmationUpdateDto } from '../dto/email/email-confirmation-update.dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -126,24 +127,29 @@ export class AuthService {
 	/** Password API */
 
 	// prettier-ignore
-	onPasswordCheck(passwordCheckGetDto: PasswordCheckGetDto): Observable<any> {
+	onPasswordCheckGet(passwordCheckGetDto: PasswordCheckGetDto): Observable<any> {
     return this.apiService.get('/password/check', passwordCheckGetDto);
   }
 
 	// prettier-ignore
-	onPasswordReset(passwordResetGetDto: PasswordResetGetDto): Observable<Partial<User>> {
+	onPasswordResetGet(passwordResetGetDto: PasswordResetGetDto): Observable<Partial<User>> {
 		return this.apiService.get('/password/reset', passwordResetGetDto);
 	}
 
 	// prettier-ignore
-	onPasswordUpdate(passwordResetUpdateDto: PasswordResetUpdateDto): Observable<Partial<User>> {
+	onPasswordResetUpdate(passwordResetUpdateDto: PasswordResetUpdateDto): Observable<Partial<User>> {
 		return this.apiService.put('/password/reset', passwordResetUpdateDto);
 	}
 
 	/** Email API */
 
-	onEmailConfirmation(): Observable<Partial<User>> {
+	onEmailConfirmationGet(): Observable<Partial<User>> {
 		return this.apiService.get('/email/confirmation');
+	}
+
+	// prettier-ignore
+	onEmailConfirmationUpdate(emailConfirmationUpdateDto: EmailConfirmationUpdateDto): Observable<Partial<User>> {
+		return this.apiService.put('/email/confirmation', emailConfirmationUpdateDto);
 	}
 
 	/** Service */

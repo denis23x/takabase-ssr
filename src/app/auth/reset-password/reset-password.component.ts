@@ -68,12 +68,10 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		// prettier-ignore
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe(
-			{
-				next: (params: Params) => this.passwordForm.get('token').setValue(params.token),
-				error: (error: any) => console.error(error)
-			}
-		);
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe({
+      next: (params: Params) => this.passwordForm.get('token').setValue(params.token),
+      error: (error: any) => console.error(error)
+    });
 	}
 
 	ngOnDestroy(): void {
@@ -88,7 +86,7 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 				...this.passwordForm.value
 			};
 
-			this.authService.onPasswordUpdate(passwordResetUpdateDto).subscribe({
+			this.authService.onPasswordResetUpdate(passwordResetUpdateDto).subscribe({
 				next: (user: Partial<User>) => {
 					const loginDto: LoginDto = {
 						email: user.email,
