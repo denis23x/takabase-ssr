@@ -1,34 +1,66 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
+import { User } from '../../core/models/user.model';
+import { SnackbarService } from '../../core/services/snackbar.service';
+import { CommonModule } from '@angular/common';
+import { UserUrlPipe } from '../../shared/pipes/user-url.pipe';
+import { EmailConfirmationUpdateDto } from '../../core/dto/email/email-confirmation-update.dto';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule],
+	imports: [CommonModule, RouterModule, UserUrlPipe],
 	selector: 'app-auth-email-confirmation',
 	templateUrl: './email-confirmation.component.html'
 })
 export class AuthEmailConfirmationComponent implements OnInit, OnDestroy {
 	activatedRouteQueryParams$: Subscription | undefined;
 
+	confirmationUser: Partial<User> | undefined;
+	confirmationIsSubmitted: boolean = true;
+
 	constructor(
 		private activatedRoute: ActivatedRoute,
-		private metaService: MetaService
+		private authService: AuthService,
+		private metaService: MetaService,
+		private snackbarService: SnackbarService
 	) {}
 
 	ngOnInit(): void {
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe(
-			{
-				next: (params: Params) => {
-					console.log(params);
-				},
-				error: (error: any) => console.error(error)
-			}
-		);
+		// prettier-ignore
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe({
+      next: () => {
+        const token: string = String(this.activatedRoute.snapshot.queryParamMap.get('token') || '');
+
+        if (!!token.length) {
+          const emailConfirmationUpdateDto: EmailConfirmationUpdateDto = {
+            token
+          };
+
+          this.authService
+            .onEmailConfirmationUpdate(emailConfirmationUpdateDto)
+            .subscribe({
+              next: (user: Partial<User>) => {
+                this.confirmationUser = user;
+                this.confirmationIsSubmitted = false;
+
+                if (this.confirmationUser.emailConfirmed) {
+                  this.snackbarService.success('Great', 'Email successfully confirmed');
+                }
+              },
+              error: () => (this.confirmationIsSubmitted = false)
+            });
+        } else {
+          this.confirmationIsSubmitted = false;
+        }
+      },
+      error: (error: any) => console.error(error)
+    });
 
 		this.setMeta();
 	}

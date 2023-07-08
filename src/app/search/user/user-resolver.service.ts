@@ -21,9 +21,8 @@ export class SearchUserResolverService {
 			size: 20
 		};
 
-		const name: string = String(
-			activatedRouteSnapshot.parent.queryParamMap.get('query') || ''
-		);
+		// prettier-ignore
+		const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
 
 		if (!!name.length) {
 			userGetAllDto = {
