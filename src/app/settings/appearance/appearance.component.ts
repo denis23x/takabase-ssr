@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -49,7 +49,6 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 	appearanceForm: FormGroup | undefined;
 	appearanceForm$: Subscription | undefined;
-	appearanceFormIsSubmitted: boolean | false;
 
 	appearanceThemeList: string[] = [];
 	appearanceThemeBackgroundList: string[] = [];
@@ -57,6 +56,12 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 	appearanceLanguageList: string[] = ['English', 'Italian', 'French'];
 	appearanceButtonsList: string[] = ['left', 'right'];
+
+	appearanceTransformList: string[] = [
+		'theme',
+		'themeBackground',
+		'themePrism'
+	];
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -83,9 +88,9 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 					this.authUser = user;
 
 					// prettier-ignore
-					['theme', 'themeBackground', 'themePrism'].forEach((key: string) => {
+					this.appearanceTransformList.forEach((key: string) => {
             user.settings[key] = this.getTransformListValue(user.settings[key], key);
-          })
+          });
 
 					this.appearanceForm.patchValue(user.settings);
 					this.appearanceForm.markAllAsTouched();
@@ -95,24 +100,24 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 		this.appearanceForm$ = this.appearanceForm.valueChanges.subscribe({
 			next: (value: any) => {
-				this.appearanceFormIsSubmitted = true;
+				this.appearanceForm.disable({ emitEvent: false });
 
 				const userUpdateDto: UserUpdateDto = {
 					settings: value
 				};
 
 				// prettier-ignore
-				['theme', 'themeBackground', 'themePrism'].forEach((key: string) => {
-          userUpdateDto.settings[key] = this.getTransformListValue(userUpdateDto.settings[key], key, true);
-        })
+				this.appearanceTransformList.forEach((key: string) => {
+				  userUpdateDto.settings[key] = this.getTransformListValue(userUpdateDto.settings[key], key, true);
+				});
 
 				this.userService.update(this.authUser.id, userUpdateDto).subscribe({
 					next: (user: User) => {
 						this.authService.setUser(user);
 
-						this.appearanceFormIsSubmitted = false;
+						this.appearanceForm.enable({ emitEvent: false });
 					},
-					error: () => (this.appearanceFormIsSubmitted = false)
+					error: () => this.appearanceForm.enable({ emitEvent: false })
 				});
 			},
 			error: (error: any) => console.error(error)
@@ -131,41 +136,41 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	setTransformList(): void {
 		this.appearanceThemeList = environment.themes
 			.sort()
-			.map((theme: string) => this.getTransformListValue(theme, 'theme'));
+			.map((theme: string) => {
+				return this.getTransformListValue(theme, 'theme');
+			});
 
-		// prettier-ignore
 		this.appearanceThemeBackgroundList = environment.backgrounds
-      .sort()
-      .map((themeBackground: string) => this.getTransformListValue(themeBackground, 'themeBackground'));
+			.sort()
+			.map((themeBackground: string) => {
+				return this.getTransformListValue(themeBackground, 'themeBackground');
+			});
 
-		// prettier-ignore
 		this.appearanceThemePrismList = environment.prism
-      .sort()
-      .map((themePrism: string) => this.getTransformListValue(themePrism, 'themePrism'));
+			.sort()
+			.map((themePrism: string) => {
+				return this.getTransformListValue(themePrism, 'themePrism');
+			});
 	}
 
 	getTransformListValue(value: string, key: string, update?: boolean): string {
+		const getCase = (value: string): string => {
+			return update ? value.toLowerCase() : value.toUpperCase();
+		};
+
 		switch (key) {
 			case 'theme': {
-				if (update) {
-					return value.charAt(0).toLowerCase() + value.slice(1);
-				} else {
-					return value.charAt(0).toUpperCase() + value.slice(1);
-				}
+				return getCase(value.charAt(0)) + value.slice(1);
 			}
 			case 'themeBackground':
 			case 'themePrism': {
-				if (update) {
-					return value
-						.split(' ')
-						.map((name: string) => name.charAt(0).toLowerCase() + name.slice(1))
-						.join('-');
-				} else {
-					return value
-						.split('-')
-						.map((name: string) => name.charAt(0).toUpperCase() + name.slice(1))
-						.join(' ');
-				}
+				const separator: string = update ? ' ' : '-';
+				const join: string = update ? '-' : ' ';
+
+				return value
+					.split(separator)
+					.map((name: string) => getCase(name.charAt(0)) + name.slice(1))
+					.join(join);
 			}
 			default:
 				return value;
