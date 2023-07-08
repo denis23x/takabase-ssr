@@ -39,7 +39,6 @@ export class SearchComponent implements OnInit, OnDestroy {
 
 	searchForm: FormGroup | undefined;
 	searchForm$: Subscription | undefined;
-	searchFormIsSubmitted: boolean = false;
 	searchFormIsSubmitted$: Subscription | undefined;
 
 	constructor(
@@ -108,7 +107,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 		const isLoading$: Observable<boolean> = event.categoryListLoading || event.postListLoading || event.userListLoading
 
 		this.searchFormIsSubmitted$ = isLoading$.subscribe({
-      next: (isSubmitted: boolean) => this.searchFormIsSubmitted = isSubmitted,
+      next: (isSubmitted: boolean) => isSubmitted ? this.searchForm.disable() : this.searchForm.enable(),
       error: (error: any) => console.error(error)
     });
 	}

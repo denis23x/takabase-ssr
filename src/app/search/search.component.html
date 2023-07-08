@@ -11,7 +11,7 @@
 				<fieldset
 					class="form-control"
 					*ngIf="searchForm.get('query') as query"
-					[disabled]="searchFormIsSubmitted"
+					[disabled]="searchForm.disabled"
 				>
 					<!--
 		      <label class="label" for="searchFormSearch">
@@ -19,7 +19,7 @@
 							&lt;!&ndash; prettier-ignore &ndash;&gt;
 							<span
 								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="query.touched && !!query.errors && !searchFormIsSubmitted"
+								*ngIf="query.touched && !!query.errors && searchForm.enabled"
 								[ngSwitch]="true"
 							>
 								<ng-container *ngSwitchCase="!!query.errors.minlength">
@@ -44,10 +44,9 @@
 							appInputTrimWhitespace
 							[class.input-success]="query.touched && query.value"
 							[class.input-error]="query.touched && query.invalid"
-							[disabled]="searchFormIsSubmitted"
 						/>
 						<button
-							class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
+							class="btn btn-sm btn-circle absolute right-2 top-2 fill-current"
 							type="button"
 							aria-label="Clear query"
 							appSvgIcon
@@ -55,7 +54,7 @@
 							[class.btn-success]="query.touched && query.value"
 							[class.btn-error]="query.touched && query.invalid"
 							[class.btn-ghost]="query.untouched"
-							[disabled]="searchFormIsSubmitted"
+							[disabled]="searchForm.disabled"
 							[appIcon]="'x'"
 							[appSquare]="'1.75rem'"
 							(click)="searchForm.reset()"
