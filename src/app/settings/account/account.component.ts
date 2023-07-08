@@ -216,8 +216,9 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 							/** Set 1 hour cookie */
 
+							// prettier-ignore
 							this.cookieService.setItem('password-valid', '1', {
-								expires: dateNow.setTime(dateNow.getTime() + 1 * 3600 * 1000)
+								expires: new Date(dateNow.setTime(dateNow.getTime() + 1 * 3600 * 1000))
 							});
 						} else {
 							// prettier-ignore

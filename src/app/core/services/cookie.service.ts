@@ -13,10 +13,10 @@ export class CookieService {
 	) {}
 
 	getItem(key: string): any {
-		let result = {};
+		let result: any = {};
 
-		this.document.cookie.split(';').forEach(function (cookie) {
-			let [key, value] = cookie.split('=');
+		this.document.cookie.split(';').forEach((cookie: string) => {
+			let [key, value]: string[] = cookie.split('=');
 
 			result[key.trim()] = value;
 		});
@@ -36,7 +36,7 @@ export class CookieService {
 		}
 
 		// prettier-ignore
-		let updatedCookie = encodeURIComponent(key) + '=' + encodeURIComponent(value);
+		let updatedCookie: string = encodeURIComponent(key) + '=' + encodeURIComponent(value);
 
 		for (const optionKey in options) {
 			updatedCookie += '; ' + optionKey;
