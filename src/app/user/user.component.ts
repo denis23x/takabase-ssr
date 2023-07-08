@@ -1,7 +1,7 @@
 /** @format */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, Data, RouterModule } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map, startWith } from 'rxjs/operators';
 import {
@@ -85,13 +85,11 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	categoryEditForm: FormGroup | undefined;
 	categoryEditForm$: Subscription | undefined;
-	categoryEditFormIsPristine: boolean = false;
-	categoryEditFormIsSubmitted: boolean = false;
 	categoryEditFormToggle: boolean = false;
+	categoryEditFormIsPristine: boolean = false;
 
 	categoryDeleteForm: FormGroup | undefined;
 	categoryDeleteForm$: Subscription | undefined;
-	categoryDeleteFormIsSubmitted: boolean = false;
 	categoryDeleteFormToggle: boolean = false;
 
 	constructor(
@@ -236,6 +234,12 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleCategoryDeleteForm(toggle: boolean): void {
+		if (toggle) {
+			this.categoryEditForm.disable();
+		} else {
+			this.categoryEditForm.enable();
+		}
+
 		this.categoryDeleteFormToggle = toggle;
 
 		// prettier-ignore
@@ -255,7 +259,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	onSubmitCategoryEditForm(): void {
 		if (this.helperService.getFormValidation(this.categoryEditForm)) {
-			this.categoryEditFormIsSubmitted = true;
+			this.categoryEditForm.disable();
 
 			const categoryId: number = this.category.id;
 			const categoryUpdateDto: CategoryUpdateDto = {
@@ -271,18 +275,18 @@ export class UserComponent implements OnInit, OnDestroy {
 						return category.id === this.category.id ? this.category : category;
 					});
 
-					this.categoryEditFormIsSubmitted = false;
+					this.categoryEditForm.enable();
 
 					this.onToggleCategoryEditForm(false);
 				},
-				error: () => (this.categoryEditFormIsSubmitted = false)
+				error: () => this.categoryEditForm.enable()
 			});
 		}
 	}
 
 	onSubmitCategoryDeleteForm(): void {
 		if (this.helperService.getFormValidation(this.categoryDeleteForm)) {
-			this.categoryDeleteFormIsSubmitted = true;
+			this.categoryDeleteForm.disable();
 
 			const categoryId: number = this.category.id;
 			const categoryDeleteDto: CategoryDeleteDto = {};
@@ -307,7 +311,7 @@ export class UserComponent implements OnInit, OnDestroy {
 						return category.id !== categoryId;
 					});
 
-					this.categoryDeleteFormIsSubmitted = false;
+					this.categoryDeleteForm.enable();
 
 					this.onToggleCategoryDeleteForm(false);
 					this.onToggleCategoryEditForm(false);
@@ -316,7 +320,7 @@ export class UserComponent implements OnInit, OnDestroy {
 						.navigate(categoryDeleteRedirect)
 						.then(() => console.debug('Route changed'));
 				},
-				error: () => (this.categoryDeleteFormIsSubmitted = false)
+				error: () => this.categoryDeleteForm.enable()
 			});
 		}
 	}

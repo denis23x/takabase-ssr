@@ -14,7 +14,7 @@ import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 @Component({
 	standalone: true,
 	imports: [CommonModule, RouterModule, PostCardComponent, SvgIconComponent],
-	selector: 'app-user-category',
+	selector: 'app-user-post',
 	templateUrl: './post.component.html'
 })
 export class UserPostComponent implements OnInit, OnDestroy {
