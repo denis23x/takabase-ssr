@@ -3,16 +3,18 @@
 <ng-container>
 	<div class="flex flex-col items-start justify-start gap-4">
 		<form
-			class="rounded-box flex w-full flex-col"
+			class="rounded-box flex w-full flex-col gap-4"
 			autocomplete="off"
 			[formGroup]="profileForm"
 			(ngSubmit)="onSubmitProfileForm()"
 		>
-			<div class="flex w-full items-center justify-between gap-4 pb-4">
+			<div class="flex w-full items-center justify-between gap-4">
 				<div class="flex items-center justify-start gap-4 overflow-auto">
+					<!-- prettier-ignore -->
 					<div
 						class="flex h-12 min-h-[3rem] w-12 min-w-[3rem]"
 						appAvatar
+						[ngClass]="{ 'pointer-events-none opacity-50 saturate-0 transition': profileForm.disabled }"
 						[appUser]="authUser"
 					></div>
 					<div class="flex flex-col overflow-auto">
@@ -29,174 +31,167 @@
 					</div>
 				</div>
 				<button
-					class="btn-success btn"
+					class="btn btn-success"
 					type="button"
 					aria-label="Image"
-					[class.btn-outline]="!authUser.avatar && !profileFormIsSubmitted"
-					[disabled]="profileFormIsSubmitted"
+					[class.btn-outline]="!authUser.avatar && profileForm.enabled"
+					[disabled]="profileForm.disabled"
 					(click)="onToggleProfileFormAvatar(true)"
 				>
 					Image
 				</button>
 			</div>
-			<hr class="my-2 w-full border-base-content/20" />
-			<fieldset
-				class="flex flex-col space-y-4"
-				[disabled]="profileFormIsSubmitted"
-			>
-				<fieldset class="form-control" *ngIf="profileForm.get('name') as name">
-					<label class="label" for="profileFormName">
-						<div class="indicator">
-							<!-- prettier-ignore -->
-							<span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="name.touched && !!name.errors && !profileFormIsSubmitted"
-								[ngSwitch]="true"
-							>
-								<ng-container *ngSwitchCase="!!name.errors.required">
-									Required
-								</ng-container>
-								<ng-container *ngSwitchCase="!!name.errors.minlength">
-                  Min length {{ name.errors.minlength["requiredLength"] }} characters
-                </ng-container>
-								<ng-container *ngSwitchCase="!!name.errors.maxlength">
-                  Max length {{ name.errors.maxlength["requiredLength"] }} characters
-                </ng-container>
-							</span>
-							<span class="label-text mr-2">Name</span>
-						</div>
-					</label>
-					<div class="relative">
-						<input
-							class="input-bordered input w-full truncate pr-12"
-							id="profileFormName"
-							type="text"
-							aria-label="Name"
-							formControlName="name"
-							placeholder="Type your name"
-							appInputTrimWhitespace
-							appInputMarkAsTouched
-							[class.input-success]="name.touched && name.valid"
-							[class.input-error]="name.touched && name.invalid"
-							[disabled]="profileFormIsSubmitted"
-						/>
-						<button
-							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-							type="button"
-							aria-label="Clear"
-							appSvgIcon
-							*ngIf="!!name.value.length"
-							[class.btn-success]="name.touched && name.valid"
-							[class.btn-error]="name.touched && name.invalid"
-							[class.btn-ghost]="name.untouched"
-							[disabled]="profileFormIsSubmitted"
-							[appIcon]="'x'"
-							[appSquare]="'1.75rem'"
-							(click)="name.setValue('')"
-						></button>
-					</div>
-				</fieldset>
-				<div class="flex flex-col items-start justify-start gap-4 sm:flex-row">
-					<div class="flex items-center justify-start gap-4">
-						<button
-							class="btn-ghost rounded-box btn h-14 w-14 bg-base-200 fill-current p-3"
-							type="button"
-							title="QR Code"
-							aria-label="QR Code"
-							appSvgIcon
-							[disabled]="profileFormIsSubmitted"
-							[appIcon]="'qr-code'"
-							[appSquare]="'1.75rem'"
-							(click)="onToggleQRCode(true)"
-						></button>
-						<div class="flex flex-col overflow-auto sm:hidden">
-							<span class="block truncate text-lg font-bold text-base-content">
-								QR Code
-							</span>
-							<p class="truncate text-sm text-base-content/50">
-								Watch and download
-							</p>
-						</div>
-					</div>
-					<p class="alert inline">
-						Change the name will set the
-						<span class="inline font-bold">
-							{{ authUser | userUrl : 1 }}
-						</span>
-						user profile not more available by direct link and QR code
-					</p>
-				</div>
-				<fieldset
-					class="form-control"
-					*ngIf="profileForm.get('description') as description"
-				>
-					<label class="label" for="profileFormDescription">
-						<!-- prettier-ignore -->
-						<div class="indicator">
-							<span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="!!description.value && !!description.errors && !profileFormIsSubmitted"
-								[ngSwitch]="true"
-							>
-								<ng-container *ngSwitchCase="!!description.errors.maxlength">
-                  Max length {{ description.errors.maxlength["requiredLength"] }} characters
-                </ng-container>
-							</span>
-              <span
-                class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                *ngIf="!description.errors"
-                [class.badge-ghost]="!description.value"
-                [class.badge-success]="!!description.value && !profileFormIsSubmitted"
-                [class.opacity-25]="profileFormIsSubmitted"
-              >
-                Optional
-              </span>
-							<span class="label-text mr-2">Description</span>
-						</div>
+			<hr class="w-full border-base-content/20" />
+			<fieldset class="form-control" *ngIf="profileForm.get('name') as name">
+				<label class="label" for="profileFormName">
+					<div class="indicator">
 						<!-- prettier-ignore -->
 						<span
-							class="label-text-alt"
-							[class.text-base-content]="profileFormIsSubmitted"
-							[class.text-success]="!profileFormIsSubmitted && !!description.value && description.valid"
-							[class.text-error]="!profileFormIsSubmitted && !!description.value && description.invalid"
-						>
-							{{ description.value?.length || 0 }}/255
-						</span>
-					</label>
-					<!-- prettier-ignore -->
-					<div
-            class="rounded-btn flex overflow-hidden w-full"
-            [ngClass]="{ 'border border-base-content/20': !profileFormIsSubmitted }"
-            [class.border-success]="!!description.value && description.valid"
-            [class.border-error]="!!description.value && description.invalid"
-          >
-            <textarea
-              class="textarea border-0 !outline-0 w-full resize-none"
-              id="profileFormDescription"
-              aria-label="Description"
-              placeholder="Type your description"
-              formControlName="description"
-              appInputTrimWhitespace
-              appInputMarkAsTouched
-              [rows]="4"
-              [disabled]="profileFormIsSubmitted"
+              class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+              *ngIf="name.touched && !!name.errors && profileForm.enabled"
+              [ngSwitch]="true"
             >
-              {{ description.value }}
-            </textarea>
-          </div>
-				</fieldset>
-				<fieldset class="form-control">
-					<!-- prettier-ignore -->
+              <ng-container *ngSwitchCase="!!name.errors.required">
+                Required
+              </ng-container>
+              <ng-container *ngSwitchCase="!!name.errors.minlength">
+                Min length {{ name.errors.minlength["requiredLength"] }} characters
+              </ng-container>
+              <ng-container *ngSwitchCase="!!name.errors.maxlength">
+                Max length {{ name.errors.maxlength["requiredLength"] }} characters
+              </ng-container>
+            </span>
+						<span class="label-text mr-2">Name</span>
+					</div>
+				</label>
+				<div class="relative">
+					<input
+						class="input-bordered input w-full truncate pr-12"
+						id="profileFormName"
+						type="text"
+						aria-label="Name"
+						formControlName="name"
+						placeholder="Type your name"
+						appInputTrimWhitespace
+						appInputMarkAsTouched
+						[class.input-success]="name.touched && name.valid"
+						[class.input-error]="name.touched && name.invalid"
+					/>
 					<button
-						class="btn btn-success w-full"
-						type="submit"
-						aria-label="Submit"
-						[class.loading]="profileFormIsSubmitted"
-						[disabled]="profileForm.invalid || profileFormIsSubmitted || profileFormIsPristine"
-					>
-						Submit
-					</button>
-				</fieldset>
+						class="btn btn-sm btn-circle absolute right-2 top-2 fill-current"
+						type="button"
+						aria-label="Clear"
+						appSvgIcon
+						*ngIf="!!name.value.length"
+						[class.btn-success]="name.touched && name.valid"
+						[class.btn-error]="name.touched && name.invalid"
+						[class.btn-ghost]="name.untouched"
+						[disabled]="profileForm.disabled"
+						[appIcon]="'x'"
+						[appSquare]="'1.75rem'"
+						(click)="name.setValue('')"
+					></button>
+				</div>
+			</fieldset>
+			<div class="flex flex-col items-start justify-start gap-4 sm:flex-row">
+				<div class="flex items-center justify-start gap-4">
+					<button
+						class="btn btn-ghost rounded-box h-14 w-14 bg-base-200 fill-current p-3"
+						type="button"
+						title="QR Code"
+						aria-label="QR Code"
+						appSvgIcon
+						[disabled]="profileForm.disabled"
+						[appIcon]="'qr-code'"
+						[appSquare]="'1.75rem'"
+						(click)="onToggleQRCode(true)"
+					></button>
+					<div class="flex flex-col overflow-auto sm:hidden">
+						<span class="block truncate text-lg font-bold text-base-content">
+							QR Code
+						</span>
+						<p class="truncate text-sm text-base-content/50">
+							Watch and download
+						</p>
+					</div>
+				</div>
+				<p class="alert inline">
+					Change the name will set the
+					<span class="inline font-bold">
+						{{ authUser | userUrl : 1 }}
+					</span>
+					user profile not more available by direct link and QR code
+				</p>
+			</div>
+			<fieldset
+				class="form-control"
+				*ngIf="profileForm.get('description') as description"
+			>
+				<label class="label" for="profileFormDescription">
+					<!-- prettier-ignore -->
+					<div class="indicator">
+            <span
+              class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+              *ngIf="!!description.value && !!description.errors && profileForm.enabled"
+              [ngSwitch]="true"
+            >
+              <ng-container *ngSwitchCase="!!description.errors.maxlength">
+                Max length {{ description.errors.maxlength["requiredLength"] }} characters
+              </ng-container>
+            </span>
+            <span
+              class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+              *ngIf="!description.errors"
+              [class.badge-ghost]="!description.value"
+              [class.badge-success]="!!description.value && profileForm.enabled"
+              [class.opacity-25]="profileForm.disabled"
+            >
+              Optional
+            </span>
+            <span class="label-text mr-2">Description</span>
+          </div>
+					<!-- prettier-ignore -->
+					<span
+            class="label-text-alt"
+            [class.text-base-content]="profileForm.disabled"
+            [class.text-success]="profileForm.enabled && !!description.value && description.valid"
+            [class.text-error]="profileForm.enabled && !!description.value && description.invalid"
+          >
+            {{ description.value?.length || 0 }}/255
+          </span>
+				</label>
+				<!-- prettier-ignore -->
+				<div
+          class="rounded-btn flex overflow-hidden w-full border"
+          [ngClass]="{ 'border-base-content/20': profileForm.enabled, 'border-transparent': profileForm.disabled }"
+          [class.border-success]="!!description.value && description.valid"
+          [class.border-error]="!!description.value && description.invalid"
+        >
+          <textarea
+            class="textarea border-0 !outline-0 w-full resize-none"
+            id="profileFormDescription"
+            aria-label="Description"
+            placeholder="Type your description"
+            formControlName="description"
+            appInputTrimWhitespace
+            appInputMarkAsTouched
+            [rows]="4"
+          >
+            {{ description.value }}
+          </textarea>
+        </div>
+			</fieldset>
+			<fieldset class="form-control">
+				<!-- prettier-ignore -->
+				<button
+          class="btn btn-success w-full"
+          type="submit"
+          aria-label="Submit"
+          [class.loading]="profileForm.disabled"
+          [disabled]="profileForm.invalid || profileForm.disabled || profileFormIsPristine"
+        >
+          Submit
+        </button>
 			</fieldset>
 		</form>
 	</div>
@@ -238,7 +233,7 @@
 						#QRCodeCanvas
 					></canvas>
 					<button
-						class="btn-success btn w-full"
+						class="btn btn-success w-full"
 						type="button"
 						aria-label="Download"
 						(click)="onDownloadQRCode()"

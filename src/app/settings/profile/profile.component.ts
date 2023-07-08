@@ -74,7 +74,6 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	profileForm: FormGroup | undefined;
 	profileForm$: Subscription | undefined;
 	profileFormIsPristine: boolean = false;
-	profileFormIsSubmitted: boolean = false;
 	profileFormAvatarToggle: boolean = false;
 
 	QRCodeText: string | undefined;
@@ -135,7 +134,11 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleProfileFormAvatar(toggle: boolean): void {
-		this.profileFormIsSubmitted = toggle;
+		if (toggle) {
+			this.profileForm.disable();
+		} else {
+			this.profileForm.enable();
+		}
 
 		this.profileFormAvatarToggle = toggle;
 	}
@@ -207,7 +210,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	onSubmitProfileForm(): void {
 		if (this.helperService.getFormValidation(this.profileForm)) {
-			this.profileFormIsSubmitted = true;
+			this.profileForm.disable();
 
 			const userUpdateDto: UserUpdateDto = {
 				...this.profileForm.value
@@ -227,9 +230,9 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 					// prettier-ignore
 					this.snackbarService.success('Success', 'Information has been updated');
 
-					this.profileFormIsSubmitted = false;
+					this.profileForm.enable();
 				},
-				error: () => (this.profileFormIsSubmitted = false)
+				error: () => this.profileForm.enable()
 			});
 		}
 	}

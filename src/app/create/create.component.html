@@ -18,7 +18,7 @@
 						loading="lazy"
 						width="256"
 						height="256"
-						[ngClass]="{ invisible: !image.value, 'pointer-events-none opacity-50 saturate-0': postFormIsSubmitted }"
+						[ngClass]="{ invisible: !image.value, 'pointer-events-none opacity-50 saturate-0 transition': postFormIsSubmitted }"
 						[src]="image.value"
 						(click)="onTogglePostFormImage(true)"
 					/>
@@ -49,7 +49,7 @@
 				[formGroup]="postForm"
 			>
 				<fieldset
-					class="grid grid-cols-12 gap-y-2.5 gap-x-4"
+					class="grid grid-cols-12 gap-x-4 gap-y-2.5"
 					[disabled]="postFormIsSubmitted"
 				>
 					<fieldset
@@ -92,7 +92,7 @@
 								[disabled]="postFormIsSubmitted"
 							/>
 							<button
-								class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
+								class="btn btn-sm btn-circle absolute right-2 top-2 fill-current"
 								type="button"
 								aria-label="Clear"
 								appSvgIcon
@@ -180,7 +180,7 @@
 							</div>
 						</fieldset>
 						<button
-							class="btn-success btn fill-current p-3"
+							class="btn btn-success fill-current p-3"
 							type="button"
 							aria-label="Create"
 							appSvgIcon
@@ -231,7 +231,7 @@
 								[disabled]="postFormIsSubmitted"
 							/>
 							<button
-								class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
+								class="btn btn-sm btn-circle absolute right-2 top-2 fill-current"
 								type="button"
 								aria-label="Clear"
 								appSvgIcon
@@ -270,7 +270,7 @@
 						(modalToggle)="postFormIsSubmitted = $event"
 					></div>
 					<button
-						class="btn-primary btn !outline-0"
+						class="btn btn-primary !outline-0"
 						type="button"
 						aria-label="Fullscreen"
 						[class.btn-outline]="!postFormIsSubmitted && !fullscreenToggle"
@@ -578,7 +578,7 @@
 									[disabled]="categoryFormIsSubmitted"
 								/>
 								<button
-									class="btn-sm btn-circle btn absolute top-2 right-2 fill-current"
+									class="btn btn-sm btn-circle absolute right-2 top-2 fill-current"
 									type="button"
 									aria-label="Clear"
 									appSvgIcon
@@ -653,7 +653,7 @@
 						</fieldset>
 						<fieldset class="form-control">
 							<button
-								class="btn-success btn w-full"
+								class="btn btn-success w-full"
 								type="submit"
 								aria-label="Submit"
 								[class.loading]="categoryFormIsSubmitted"
@@ -703,7 +703,7 @@
 						<span class="underline">This action cannot be undone</span>
 					</p>
 					<button
-						class="btn-error btn"
+						class="btn btn-error"
 						type="button"
 						aria-label="Submit"
 						[class.loading]="postDeleteIsSubmitted"
