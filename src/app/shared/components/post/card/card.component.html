@@ -4,17 +4,17 @@
 	<article
 		class="rounded-box flex h-full w-full flex-col overflow-hidden border border-base-content/20 bg-base-100 shadow-xl"
 	>
-		<figure *ngIf="!!post.image">
+		<figure class="block" *ngIf="!!post.image">
 			<a
+				class="relative block aspect-square"
 				[routerLink]="[path, post.id]"
 				[queryParamsHandling]="'preserve'"
 				[attr.aria-label]="post.name"
 			>
 				<img
-					class="aspect-square object-cover object-center"
+					class="object-cover object-center"
 					loading="lazy"
-					width="256"
-					height="256"
+					[fill]="true"
 					[ngSrc]="post.image"
 					[alt]="post.name"
 				/>
@@ -36,7 +36,7 @@
 				class="!mt-auto text-sm text-base-content/50"
 				[attr.datetime]="post.updatedAt"
 			>
-				{{ post.updatedAt | dayjs: "fromX" }}
+				{{ post.updatedAt | dayjs : "fromX" }}
 			</time>
 		</div>
 	</article>
