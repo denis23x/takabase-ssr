@@ -332,8 +332,8 @@
 								</label>
 								<!-- prettier-ignore -->
 								<div
-									class="rounded-btn flex overflow-hidden w-full h-full"
-									[ngClass]="{ 'border border-base-content/20': !postFormIsSubmitted }"
+									class="rounded-btn flex overflow-hidden w-full h-full border"
+                  [ngClass]="{ 'border-base-content/20': !postFormIsSubmitted, 'border-transparent': postFormIsSubmitted }"
 									[class.border-success]="markdown.touched && markdown.valid"
 									[class.border-error]="markdown.touched && markdown.invalid"
 								>
@@ -631,8 +631,8 @@
                 </span>
 							</label>
 							<!-- prettier-ignore -->
-							<div class="rounded-btn flex overflow-hidden w-full"
-                [ngClass]="{ 'border border-base-content/20': !categoryFormIsSubmitted }"
+							<div class="rounded-btn flex overflow-hidden w-full border"
+                [ngClass]="{ 'border-base-content/20': !categoryFormIsSubmitted, 'border-transparent': categoryFormIsSubmitted }"
                 [class.border-success]="!!description.value && description.valid"
                 [class.border-error]="!!description.value && description.invalid"
               >

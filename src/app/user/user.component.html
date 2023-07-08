@@ -26,7 +26,7 @@
 				</div>
 				<div class="flex items-center justify-end gap-4">
 					<a
-						class="btn-primary btn"
+						class="btn btn-primary"
 						aria-label="Settings"
 						*ngIf="authUser?.id === user.id"
 						[routerLink]="['/settings']"
@@ -92,7 +92,7 @@
 					<div class="flex w-full items-center justify-between gap-4">
 						<div class="flex items-center justify-start gap-4 overflow-hidden">
 							<button
-								class="btn-ghost btn bg-base-200 fill-current p-3"
+								class="btn btn-ghost bg-base-200 fill-current p-3"
 								type="button"
 								title="Category"
 								aria-label="Category"
@@ -114,7 +114,7 @@
 							</div>
 						</div>
 						<button
-							class="btn-primary btn"
+							class="btn btn-primary"
 							aria-label="Edit"
 							*ngIf="authUser?.id === user.id"
 							(click)="onToggleCategoryEditForm(true)"
@@ -251,8 +251,8 @@
 							</label>
 							<!-- prettier-ignore -->
 							<div
-                class="rounded-btn flex overflow-hidden w-full"
-                [ngClass]="{ 'border border-base-content/20': !categoryEditFormIsSubmitted && !categoryDeleteFormToggle }"
+                class="rounded-btn flex overflow-hidden w-full border"
+                [ngClass]="{ 'border-base-content/20': !categoryEditFormIsSubmitted && !categoryDeleteFormToggle, 'border-transparent': categoryEditFormIsSubmitted || categoryDeleteFormToggle }"
                 [class.border-success]="!!description.value && description.valid"
                 [class.border-error]="!!description.value && description.invalid"
               >
@@ -365,7 +365,7 @@
 									[disabled]="categoryDeleteFormIsSubmitted"
 								/>
 								<button
-									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+									class="btn btn-sm btn-circle absolute right-2 top-2 fill-current"
 									type="button"
 									aria-label="Clear"
 									appSvgIcon
