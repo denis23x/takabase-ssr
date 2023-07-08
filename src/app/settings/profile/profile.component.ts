@@ -33,7 +33,6 @@ import { AuthService } from '../../core/services/auth.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { FileCreateDto } from '../../core/dto/file/file-create.dto';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
-import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
 import { PlatformService } from '../../core/services/platform.service';
 import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 
@@ -54,9 +53,8 @@ interface ProfileForm {
 		CropperComponent,
 		WindowComponent,
 		DayjsPipe,
-		AppInputTrimWhitespaceDirective,
 		UserUrlPipe,
-		AppInputMarkAsTouchedDirective
+		AppInputTrimWhitespaceDirective
 	],
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'

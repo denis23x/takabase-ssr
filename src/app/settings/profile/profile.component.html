@@ -73,7 +73,6 @@
 						formControlName="name"
 						placeholder="Type your name"
 						appInputTrimWhitespace
-						appInputMarkAsTouched
 						[class.input-success]="name.touched && name.valid"
 						[class.input-error]="name.touched && name.invalid"
 					/>
@@ -174,7 +173,6 @@
             placeholder="Type your description"
             formControlName="description"
             appInputTrimWhitespace
-            appInputMarkAsTouched
             [rows]="4"
           >
             {{ description.value }}
