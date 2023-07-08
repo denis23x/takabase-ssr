@@ -286,7 +286,7 @@
                 class="btn btn-success btn-sm"
                 type="button"
                 *ngFor="let buttonsValue of appearanceButtonsList"
-                [class.btn-outline]="buttons.value !== buttonsValue && !appearanceForm.disabled"
+                [class.btn-outline]="buttons.value !== buttonsValue && appearanceForm.enabled"
                 [class.btn-inline]="buttons.value === buttonsValue && appearanceForm.disabled"
                 [disabled]="appearanceForm.disabled"
                 (click)="buttons.setValue(buttonsValue)"
