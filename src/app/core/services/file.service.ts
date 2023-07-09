@@ -17,7 +17,7 @@ export class FileService {
 	}
 
 	getOne(fileGetOneDto: FileGetOneDto): Observable<File> {
-		return this.apiService.get('/files', fileGetOneDto, {
+		return this.apiService.get('/files/proxy', fileGetOneDto, {
 			responseType: 'blob'
 		});
 	}
