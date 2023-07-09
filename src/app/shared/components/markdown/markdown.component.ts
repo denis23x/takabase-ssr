@@ -48,7 +48,6 @@ import {
 import { MarkdownService } from '../../../core/services/markdown.service';
 import { PlatformService } from '../../../core/services/platform.service';
 import { HelperService } from '../../../core/services/helper.service';
-import { AppInputMarkAsTouchedDirective } from '../../directives/app-input-mark-as-touched.directive';
 
 interface UrlForm {
 	title?: FormControl<string>;
@@ -68,8 +67,7 @@ interface UrlForm {
 		OverlayComponent,
 		WindowComponent,
 		AppInputTrimWhitespaceDirective,
-		AppInputOnlyPasteDirective,
-		AppInputMarkAsTouchedDirective
+		AppInputOnlyPasteDirective
 	],
 	selector: 'app-markdown, [appMarkdown]',
 	templateUrl: './markdown.component.html'
@@ -143,8 +141,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	preview: HTMLElement | undefined;
 
 	urlForm: FormGroup | undefined;
+	urlForm$: Subscription | undefined;
 	urlFormControl: MarkdownControl | undefined;
-	urlFormIsSubmitted: boolean = false;
 	urlFormModal: boolean = false;
 
 	constructor(
@@ -195,7 +193,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.textareaInput$,
 			this.textareaHistory$,
 			this.scrollSync$,
-			this.controlListScroll$
+			this.controlListScroll$,
+			this.urlForm$
 		].forEach($ => $?.unsubscribe());
 	}
 
@@ -440,6 +439,14 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
           this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', [Validators.required]));
           this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(this.helperService.getRegex('url'))]));
 
+          const abstractControlTitle: AbstractControl = this.urlForm.get('title');
+          const abstractControlUrl: AbstractControl = this.urlForm.get('url');
+
+          this.urlForm$?.unsubscribe();
+          this.urlForm$ = abstractControlUrl.valueChanges
+            .pipe(filter(() => abstractControlTitle.untouched))
+            .subscribe((value: string) => abstractControlTitle.setValue(value));
+
           break;
         }
         case 'url-image': {
@@ -483,6 +490,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 			// prettier-ignore
 			Object.keys(this.urlForm.controls).forEach((key: string) => this.urlForm.removeControl(key));
 
+			this.urlForm$?.unsubscribe();
 			this.urlFormControl = undefined;
 			this.urlFormModal = false;
 		}
@@ -492,8 +500,16 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	onSubmitUrlForm(): void {
 		if (this.helperService.getFormValidation(this.urlForm)) {
+			/** Set value */
+
+			this.urlForm.disable();
+
 			// prettier-ignore
 			this.setTextareaValue(this.getTextareaValue(this.urlFormControl, this.urlForm.value));
+
+			/** Clear urlForm && emit modalToggle  */
+
+			this.urlForm.enable();
 
 			this.onToggleUrlForm(false);
 		}

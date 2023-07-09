@@ -261,7 +261,7 @@
 			(closed)="onToggleUrlForm(false)"
 		>
 			<form
-				class="flex w-window max-w-[512px] flex-col bg-base-100 p-4"
+				class="flex w-window max-w-[512px] flex-col gap-4 bg-base-100 p-4"
 				autocomplete="off"
 				slot="content"
 				[formGroup]="urlForm"
@@ -291,126 +291,119 @@
 					</ng-container>
 				</p>
 				-->
-				<fieldset
-					class="flex flex-col space-y-4"
-					[disabled]="urlFormIsSubmitted"
-				>
-					<fieldset class="form-control" *ngIf="urlForm.get('title') as title">
-						<label class="label" for="urlFormTitle">
-							<!-- prettier-ignore -->
-							<div class="indicator" [ngSwitch]="true">
-								<span
-									class="badge badge-error indicator-item w-max translate-x-full translate-y-0 text-xs"
-									*ngSwitchCase="urlFormControl?.key === 'url-link' && title.touched && !!title.errors && !urlFormIsSubmitted"
-									[ngSwitch]="true"
-								>
-									<ng-container *ngSwitchCase="!!title.errors.required">
-										Required
-									</ng-container>
-								</span>
-								<span
-									class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-									*ngSwitchCase="urlFormControl?.key === 'url-image'"
-									[class.badge-ghost]="!title.value"
-									[class.badge-success]="!!title.value && !urlFormIsSubmitted"
-									[class.opacity-25]="urlFormIsSubmitted"
-								>
-									Optional
-								</span>
-								<span class="label-text mr-2">Title</span>
-							</div>
-						</label>
+				<fieldset class="form-control" *ngIf="urlForm.get('title') as title">
+					<label class="label" for="urlFormTitle">
 						<!-- prettier-ignore -->
-						<div class="relative">
-							<input
-								class="input-bordered input w-full truncate pr-12"
-								id="urlFormTitle"
-								type="text"
-								aria-label="Title"
-								appInputTrimWhitespace
-								appInputMarkAsTouched
-								placeholder="Type title"
-								[formControl]="$any(title)"
-								[class.input-success]="(urlFormControl?.key === 'url-image' ? !!title.value : title.touched) && title.valid"
-								[class.input-error]="(urlFormControl?.key === 'url-image' ? !!title.value : title.touched) && title.invalid"
-								[disabled]="urlFormIsSubmitted"
-							/>
-							<button
-								class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-								type="button"
-								aria-label="Clear"
-								appSvgIcon
-								*ngIf="!!title.value.length"
-								[class.btn-success]="(urlFormControl?.key === 'url-image' ?  !!title.value : title.touched) && title.valid"
-								[class.btn-error]="(urlFormControl?.key === 'url-image' ?  !!title.value : title.touched) && title.invalid"
-								[disabled]="urlFormIsSubmitted"
-								[appIcon]="'x'"
-								[appSquare]="'1.75rem'"
-								(click)="title.setValue('')"
-							></button>
-						</div>
-					</fieldset>
-					<fieldset class="form-control" *ngIf="urlForm.get('url') as url">
-						<label class="label" for="urlFormUrl">
-							<div class="indicator">
-								<!-- prettier-ignore -->
-								<span
-									class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="url.touched && !!url.errors && !urlFormIsSubmitted"
-									[ngSwitch]="true"
-								>
-									<ng-container *ngSwitchCase="!!url.errors.required">
-										Required
-									</ng-container>
-                  <ng-container *ngSwitchCase="!!url.errors.pattern">
-                    Url does not correct
-									</ng-container>
-								</span>
-								<span class="label-text mr-2">URL</span>
-							</div>
-						</label>
-						<div class="relative">
+						<div class="indicator" [ngSwitch]="true">
+              <span
+                class="badge badge-error indicator-item w-max translate-x-full translate-y-0 text-xs"
+                *ngSwitchCase="urlFormControl?.key === 'url-link' && title.touched && !!title.errors && urlForm.enabled"
+                [ngSwitch]="true"
+              >
+                <ng-container *ngSwitchCase="!!title.errors.required">
+                  Required
+                </ng-container>
+              </span>
+              <span
+                class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                *ngSwitchCase="urlFormControl?.key === 'url-image'"
+                [class.badge-ghost]="!title.value"
+                [class.badge-success]="!!title.value && urlForm.enabled"
+                [class.opacity-25]="urlForm.disabled"
+              >
+                Optional
+              </span>
+              <span class="label-text mr-2">Title</span>
+            </div>
+					</label>
+					<!-- prettier-ignore -->
+					<div class="relative">
+            <input
+              class="input-bordered input w-full truncate pr-12"
+              id="urlFormTitle"
+              type="text"
+              aria-label="Title"
+              appInputTrimWhitespace
+              placeholder="Type title"
+              [formControl]="$any(title)"
+              [class.input-success]="title.value && title.valid"
+              [class.input-error]="title.touched && title.invalid"
+            />
+            <button
+              class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+              type="button"
+              aria-label="Clear"
+              appSvgIcon
+              *ngIf="!!title.value.length"
+              [class.btn-success]="title.valid"
+              [class.btn-error]="title.touched && title.invalid"
+              [class.btn-ghost]="title.untouched && title.invalid"
+              [disabled]="urlForm.disabled"
+              [appIcon]="'x'"
+              [appSquare]="'1.75rem'"
+              (click)="title.setValue('')"
+            ></button>
+          </div>
+				</fieldset>
+				<fieldset class="form-control" *ngIf="urlForm.get('url') as url">
+					<label class="label" for="urlFormUrl">
+						<div class="indicator">
 							<!-- prettier-ignore -->
-							<input
-								class="input input-bordered w-full truncate pr-12"
-								id="urlFormUrl"
-								type="text"
-								aria-label="URL"
-                appInputOnlyPaste
-                appInputTrimWhitespace
-                appInputMarkAsTouched
-                placeholder="Paste URL"
-                [formControl]="$any(url)"
-								[class.input-success]="url.touched && url.valid"
-								[class.input-error]="url.touched && url.invalid"
-								[disabled]="urlFormIsSubmitted"
-              />
-							<button
-								class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-								type="button"
-								aria-label="Clear"
-								appSvgIcon
-								*ngIf="!!url.value.length"
-								[class.btn-success]="url.touched && url.valid"
-								[class.btn-error]="url.touched && url.invalid"
-								[disabled]="urlFormIsSubmitted"
-								[appIcon]="'x'"
-								[appSquare]="'1.75rem'"
-								(click)="url.setValue('')"
-							></button>
+							<span
+                class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                *ngIf="url.touched && !!url.errors && urlForm.enabled"
+                [ngSwitch]="true"
+              >
+                <ng-container *ngSwitchCase="!!url.errors.required">
+                  Required
+                </ng-container>
+                <ng-container *ngSwitchCase="!!url.errors.pattern">
+                  Url does not correct
+                </ng-container>
+              </span>
+							<span class="label-text mr-2">URL</span>
 						</div>
-					</fieldset>
-					<fieldset class="form-control">
+					</label>
+					<div class="relative">
+						<!-- prettier-ignore -->
+						<input
+              class="input input-bordered w-full truncate pr-12"
+              id="urlFormUrl"
+              type="text"
+              aria-label="URL"
+              appInputOnlyPaste
+              appInputTrimWhitespace
+              placeholder="Paste URL"
+              [formControl]="$any(url)"
+              [class.input-success]="url.value && url.valid"
+              [class.input-error]="url.touched && url.invalid"
+            />
 						<button
-							class="btn-success btn w-full"
-							type="submit"
-							aria-label="Submit"
-							[class.loading]="urlFormIsSubmitted"
-							[disabled]="urlForm.invalid || urlFormIsSubmitted"
-						>
-							Submit
-						</button>
-					</fieldset>
+							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+							type="button"
+							aria-label="Clear"
+							appSvgIcon
+							*ngIf="!!url.value.length"
+							[class.btn-success]="url.valid"
+							[class.btn-error]="url.touched && url.invalid"
+							[class.btn-ghost]="url.untouched && url.invalid"
+							[disabled]="urlForm.disabled"
+							[appIcon]="'x'"
+							[appSquare]="'1.75rem'"
+							(click)="url.setValue('')"
+						></button>
+					</div>
+				</fieldset>
+				<fieldset class="form-control">
+					<button
+						class="btn-success btn w-full"
+						type="submit"
+						aria-label="Submit"
+						[class.loading]="urlForm.disabled"
+						[disabled]="urlForm.invalid || urlForm.disabled"
+					>
+						Submit
+					</button>
 				</fieldset>
 			</form>
 		</app-window>
