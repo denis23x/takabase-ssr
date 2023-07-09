@@ -13,7 +13,6 @@ import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../core/services/helper.service';
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
-import { AppInputMarkAsTouchedDirective } from '../../standalone/directives/app-input-mark-as-touched.directive';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
@@ -36,7 +35,6 @@ interface PasswordForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		AppInputTrimWhitespaceDirective,
-		AppInputMarkAsTouchedDirective,
 		OauthComponent
 	],
 	selector: 'app-auth-reset-password',
@@ -46,7 +44,7 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 	activatedRouteQueryParams$: Subscription | undefined;
 
 	passwordForm: FormGroup | undefined;
-	passwordFormIsSubmitted: boolean = false;
+	passwordForm$: Subscription | undefined;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -80,7 +78,7 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 
 	onSubmitPasswordForm(): void {
 		if (this.helperService.getFormValidation(this.passwordForm)) {
-			this.passwordFormIsSubmitted = true;
+			this.passwordForm.disable();
 
 			const passwordResetUpdateDto: PasswordResetUpdateDto = {
 				...this.passwordForm.value
@@ -100,10 +98,10 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 								.navigate([this.userService.getUserUrl(user)])
 								.then(() => this.snackbarService.success('Success', 'Password has been changed'));
 						},
-						error: () => (this.passwordFormIsSubmitted = false)
+						error: () => this.passwordForm.enable()
 					});
 				},
-				error: () => (this.passwordFormIsSubmitted = false)
+				error: () => this.passwordForm.enable()
 			});
 		}
 	}

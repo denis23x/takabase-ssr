@@ -15,11 +15,11 @@ import { HelperService } from '../../core/services/helper.service';
 import { MetaService } from '../../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
-import { AppInputMarkAsTouchedDirective } from '../../standalone/directives/app-input-mark-as-touched.directive';
 import { AuthService } from '../../core/services/auth.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
+import { Subscription } from 'rxjs';
 
 interface ResetForm {
 	email: FormControl<string>;
@@ -33,7 +33,6 @@ interface ResetForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		AppInputTrimWhitespaceDirective,
-		AppInputMarkAsTouchedDirective,
 		OauthComponent
 	],
 	selector: 'app-auth-reset',
@@ -41,7 +40,7 @@ interface ResetForm {
 })
 export class AuthResetComponent implements OnInit {
 	resetForm: FormGroup | undefined;
-	resetFormIsSubmitted: boolean = false;
+	resetForm$: Subscription | undefined;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -84,7 +83,7 @@ export class AuthResetComponent implements OnInit {
 
 	onSubmitResetForm(): void {
 		if (this.helperService.getFormValidation(this.resetForm)) {
-			this.resetFormIsSubmitted = true;
+			this.resetForm.disable();
 
 			const passwordResetGetDto: PasswordResetGetDto = {
 				...this.resetForm.value
@@ -96,10 +95,9 @@ export class AuthResetComponent implements OnInit {
 					this.snackbarService.success('Success', 'Check your email to continue process');
 
 					this.resetForm.reset();
-					this.resetForm.markAsUntouched();
-					this.resetFormIsSubmitted = false;
+					this.resetForm.enable();
 				},
-				error: () => (this.resetFormIsSubmitted = false)
+				error: () => this.resetForm.enable()
 			});
 		}
 	}

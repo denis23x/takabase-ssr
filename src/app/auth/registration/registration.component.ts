@@ -21,9 +21,9 @@ import { LoginDto } from '../../core/dto/auth/login.dto';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
-import { AppInputMarkAsTouchedDirective } from '../../standalone/directives/app-input-mark-as-touched.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
+import { Subscription } from 'rxjs';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -40,7 +40,6 @@ interface RegistrationForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		AppInputTrimWhitespaceDirective,
-		AppInputMarkAsTouchedDirective,
 		OauthComponent
 	],
 	selector: 'app-auth-registration',
@@ -48,7 +47,7 @@ interface RegistrationForm {
 })
 export class AuthRegistrationComponent implements OnInit {
 	registrationForm: FormGroup | undefined;
-	registrationFormIsSubmitted: boolean = false;
+	registrationForm$: Subscription | undefined;
 
 	constructor(
 		private router: Router,
@@ -105,7 +104,7 @@ export class AuthRegistrationComponent implements OnInit {
 
 	onSubmitRegistrationForm(): void {
 		if (this.helperService.getFormValidation(this.registrationForm)) {
-			this.registrationFormIsSubmitted = true;
+			this.registrationForm.disable();
 
 			const userCreateDto: UserCreateDto = {
 				...this.registrationForm.value
@@ -130,7 +129,7 @@ export class AuthRegistrationComponent implements OnInit {
 							.navigate([this.userService.getUserUrl(user)])
 							.then(() => this.snackbarService.success('Success', 'Welcome to our website'));
 					},
-					error: () => (this.registrationFormIsSubmitted = false)
+					error: () => this.registrationForm.enable()
 				});
 		}
 	}
