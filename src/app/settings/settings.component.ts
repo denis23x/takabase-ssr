@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
+import { AppScrollIntoViewDirective } from '../standalone/directives/app-scroll-into-view.directive';
 import { User } from '../core/models/user.model';
 
 @Component({

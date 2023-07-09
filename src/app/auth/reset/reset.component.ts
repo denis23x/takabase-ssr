@@ -10,15 +10,15 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
+import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../core/services/helper.service';
 import { MetaService } from '../../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
-import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
-import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
+import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
+import { AppInputMarkAsTouchedDirective } from '../../standalone/directives/app-input-mark-as-touched.directive';
 import { AuthService } from '../../core/services/auth.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { OauthComponent } from '../../shared/components/oauth/oauth.component';
+import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
 
 interface ResetForm {

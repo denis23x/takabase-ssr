@@ -5,8 +5,8 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
-import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
-import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
+import { AppScrollIntoViewDirective } from '../standalone/directives/app-scroll-into-view.directive';
+import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 
 @Component({
 	standalone: true,

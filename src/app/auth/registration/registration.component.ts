@@ -11,7 +11,7 @@ import {
 import { Router, RouterModule } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
-import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
+import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AuthService } from '../../core/services/auth.service';
 import { UserService } from '../../core/services/user.service';
 import { HelperService } from '../../core/services/helper.service';
@@ -20,10 +20,10 @@ import { User } from '../../core/models/user.model';
 import { LoginDto } from '../../core/dto/auth/login.dto';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
-import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
-import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
+import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
+import { AppInputMarkAsTouchedDirective } from '../../standalone/directives/app-input-mark-as-touched.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { OauthComponent } from '../../shared/components/oauth/oauth.component';
+import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 
 interface RegistrationForm {
 	name: FormControl<string>;

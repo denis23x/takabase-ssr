@@ -4,10 +4,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Data, Router } from '@angular/router';
-import { OverlayComponent } from '../../../shared/components/overlay/overlay.component';
-import { WindowComponent } from '../../../shared/components/window/window.component';
-import { ShareComponent } from '../../../shared/components/share/share.component';
-import { PostDetailComponent } from '../../../shared/components/post/prose/prose.component';
+import { OverlayComponent } from '../../../standalone/components/overlay/overlay.component';
+import { WindowComponent } from '../../../standalone/components/window/window.component';
+import { ShareComponent } from '../../../standalone/components/share/share.component';
+import { PostDetailComponent } from '../../../standalone/components/post/prose/prose.component';
 import { Post } from '../../../core/models/post.model';
 import { PostService } from '../../../core/services/post.service';
 

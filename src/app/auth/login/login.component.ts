@@ -12,7 +12,7 @@ import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
+import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AuthService } from '../../core/services/auth.service';
 import { HelperService } from '../../core/services/helper.service';
 import { UserService } from '../../core/services/user.service';
@@ -20,9 +20,9 @@ import { LoginDto } from '../../core/dto/auth/login.dto';
 import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
-import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
-import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
-import { OauthComponent } from '../../shared/components/oauth/oauth.component';
+import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
+import { AppInputMarkAsTouchedDirective } from '../../standalone/directives/app-input-mark-as-touched.directive';
+import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 
 interface LoginForm {
 	email: FormControl<string>;

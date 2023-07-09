@@ -9,7 +9,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { CommonModule } from '@angular/common';
-import { UserUrlPipe } from '../../shared/pipes/user-url.pipe';
+import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { EmailConfirmationUpdateDto } from '../../core/dto/email/email-confirmation-update.dto';
 
 @Component({

@@ -7,8 +7,8 @@ import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { HeaderComponent } from './shared/components/header/header.component';
-import { SnackbarComponent } from './shared/components/snackbar/snackbar.component';
+import { HeaderComponent } from './standalone/components/header/header.component';
+import { SnackbarComponent } from './standalone/components/snackbar/snackbar.component';
 import { HttpAuthInterceptor } from './core/interceptors/http.auth.interceptor';
 
 @NgModule({

@@ -2,7 +2,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
+import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { CommonModule } from '@angular/common';

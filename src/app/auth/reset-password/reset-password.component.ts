@@ -10,10 +10,10 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import { SvgIconComponent } from '../../shared/components/svg-icon/svg-icon.component';
+import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../core/services/helper.service';
-import { AppInputTrimWhitespaceDirective } from '../../shared/directives/app-input-trim-whitespace.directive';
-import { AppInputMarkAsTouchedDirective } from '../../shared/directives/app-input-mark-as-touched.directive';
+import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
+import { AppInputMarkAsTouchedDirective } from '../../standalone/directives/app-input-mark-as-touched.directive';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
@@ -21,7 +21,7 @@ import { LoginDto } from '../../core/dto/auth/login.dto';
 import { UserService } from '../../core/services/user.service';
 import { PasswordResetUpdateDto } from '../../core/dto/password/password-reset-update.dto';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { OauthComponent } from '../../shared/components/oauth/oauth.component';
+import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 
 interface PasswordForm {
 	token: FormControl<string>;

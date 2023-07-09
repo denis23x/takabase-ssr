@@ -13,13 +13,13 @@ import {
 	Validators
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AvatarComponent } from '../shared/components/avatar/avatar.component';
-import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
-import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
-import { OverlayComponent } from '../shared/components/overlay/overlay.component';
-import { WindowComponent } from '../shared/components/window/window.component';
-import { AppInputTrimWhitespaceDirective } from '../shared/directives/app-input-trim-whitespace.directive';
-import { DayjsPipe } from '../shared/pipes/dayjs.pipe';
+import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
+import { AppScrollIntoViewDirective } from '../standalone/directives/app-scroll-into-view.directive';
+import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
+import { OverlayComponent } from '../standalone/components/overlay/overlay.component';
+import { WindowComponent } from '../standalone/components/window/window.component';
+import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
+import { DayjsPipe } from '../standalone/pipes/dayjs.pipe';
 import { User } from '../core/models/user.model';
 import { Post } from '../core/models/post.model';
 import { Category } from '../core/models/category.model';
@@ -33,8 +33,8 @@ import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { CategoryUpdateDto } from '../core/dto/category/category-update.dto';
 import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
-import { MarkdownPipe } from '../shared/pipes/markdown.pipe';
-import { SanitizerPipe } from '../shared/pipes/sanitizer.pipe';
+import { MarkdownPipe } from '../standalone/pipes/markdown.pipe';
+import { SanitizerPipe } from '../standalone/pipes/sanitizer.pipe';
 
 interface CategoryEditForm {
 	name: FormControl<string>;

@@ -13,15 +13,15 @@ import {
 	Validators
 } from '@angular/forms';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
-import { AppInputTrimWhitespaceDirective } from '../shared/directives/app-input-trim-whitespace.directive';
-import { DropdownComponent } from '../shared/components/dropdown/dropdown.component';
-import { OverlayComponent } from '../shared/components/overlay/overlay.component';
-import { WindowComponent } from '../shared/components/window/window.component';
-import { CropperComponent } from '../shared/components/cropper/cropper.component';
-import { ShareComponent } from '../shared/components/share/share.component';
-import { MarkdownComponent } from '../shared/components/markdown/markdown.component';
-import { PostDetailComponent } from '../shared/components/post/prose/prose.component';
+import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
+import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
+import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
+import { OverlayComponent } from '../standalone/components/overlay/overlay.component';
+import { WindowComponent } from '../standalone/components/window/window.component';
+import { CropperComponent } from '../standalone/components/cropper/cropper.component';
+import { ShareComponent } from '../standalone/components/share/share.component';
+import { MarkdownComponent } from '../standalone/components/markdown/markdown.component';
+import { PostDetailComponent } from '../standalone/components/post/prose/prose.component';
 import { Category } from '../core/models/category.model';
 import { Post } from '../core/models/post.model';
 import { User } from '../core/models/user.model';
@@ -35,7 +35,7 @@ import { UserService } from '../core/services/user.service';
 import { PostCreateDto } from '../core/dto/post/post-create.dto';
 import { FileCreateDto } from '../core/dto/file/file-create.dto';
 import { CategoryCreateDto } from '../core/dto/category/category-create.dto';
-import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
+import { AppScrollIntoViewDirective } from '../standalone/directives/app-scroll-into-view.directive';
 
 interface PostForm {
 	name: FormControl<string>;

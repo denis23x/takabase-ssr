@@ -12,13 +12,13 @@ import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
+import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { User } from '../../core/models/user.model';
 import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { environment } from '../../../environments/environment';
-import { AppScrollIntoViewDirective } from '../../shared/directives/app-scroll-into-view.directive';
+import { AppScrollIntoViewDirective } from '../../standalone/directives/app-scroll-into-view.directive';
 
 interface AppearanceForm {
 	theme: FormControl<string>;

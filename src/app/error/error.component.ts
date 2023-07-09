@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { SvgIconComponent } from '../shared/components/svg-icon/svg-icon.component';
+import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { TitleService } from '../core/services/title.service';

@@ -4,8 +4,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Data } from '@angular/router';
-import { MarkdownPipe } from '../../shared/pipes/markdown.pipe';
-import { SanitizerPipe } from '../../shared/pipes/sanitizer.pipe';
+import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
+import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 
 @Component({
 	standalone: true,
