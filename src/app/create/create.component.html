@@ -8,18 +8,18 @@
 			<div class="flex items-center gap-4">
 				<!-- prettier-ignore -->
 				<figure
-					class="rounded-btn relative overflow-hidden border border-base-content/20"
+					class="block rounded-btn relative aspect-square border border-base-content/20 cursor-pointer h-20 w-20 sm:h-44 sm:w-44"
 					*ngIf="postForm.get('image') as image"
 					[ngClass]="{ 'cursor-not-allowed border-transparent bg-base-200': postForm.disabled, 'border-success': postForm.enabled && image.value }"
 				>
 					<img
-						class="aspect-square h-20 w-20 cursor-pointer object-cover sm:h-44 sm:w-44"
+						class="rounded-btn aspect-square object-cover"
 						alt="Image"
 						loading="lazy"
-						width="256"
-						height="256"
+            *ngIf="!!image.value"
+            [fill]="true"
 						[ngClass]="{ invisible: !image.value, 'pointer-events-none opacity-50 saturate-0 transition': postForm.disabled }"
-						[src]="image.value"
+						[ngSrc]="image.value"
 						(click)="onTogglePostFormImage(true)"
 					/>
 					<div
