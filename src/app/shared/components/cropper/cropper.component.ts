@@ -35,7 +35,6 @@ import { FileService } from '../../../core/services/file.service';
 import { FileGetOneDto } from '../../../core/dto/file/file-get-one.dto';
 import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
 import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
-import { AppInputMarkAsTouchedDirective } from '../../directives/app-input-mark-as-touched.directive';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 
 interface ImageForm {
@@ -50,8 +49,7 @@ interface ImageForm {
 		ImageCropperModule,
 		SvgIconComponent,
 		AppInputOnlyPasteDirective,
-		AppInputTrimWhitespaceDirective,
-		AppInputMarkAsTouchedDirective
+		AppInputTrimWhitespaceDirective
 	],
 	selector: 'app-cropper, [appCropper]',
 	templateUrl: './cropper.component.html'
@@ -76,7 +74,7 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 	@Output() submitted: EventEmitter<FileCreateDto> = new EventEmitter<FileCreateDto>();
 
 	imageForm: FormGroup | undefined;
-	imageFormIsSubmitted: boolean = false;
+	imageForm$: Subscription | undefined;
 
 	imageTransform$: Subscription | undefined;
 	imageTransform: ImageTransform = {
@@ -94,7 +92,6 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 	cropperBase64: string = undefined;
 	cropperBackgroundIsDraggable: boolean = false;
 	cropperIsAvailable: boolean = false;
-	cropperIsSubmitted: boolean = false;
 
 	cropperPositionInitial: CropperPosition = undefined;
 	cropperPosition: CropperPosition = {
@@ -142,7 +139,7 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 
 		const validationTimeout = setTimeout(() => {
 			if (this.helperService.getFormValidation(this.imageForm)) {
-				this.imageFormIsSubmitted = true;
+				this.imageForm.disable();
 
 				const fileGetOneDto: FileGetOneDto = {
 					...this.imageForm.value
@@ -153,12 +150,12 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 						this.cropperPositionInitial = undefined;
 						this.cropperFile = file;
 
-						this.imageFormIsSubmitted = false;
+						this.imageForm.enable();
 					},
 					error: () => {
-						this.imageFormIsSubmitted = false;
+						this.imageForm.enable();
 
-						/** Reset only imageForm because cropper not initialized */
+						/** Reset only imageForm because cropper not initialized yet */
 
 						this.onResetImageForm('');
 					}
@@ -282,15 +279,15 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 
 		formData.append(this.cropperField, file);
 
-		this.cropperIsSubmitted = true;
+		this.imageForm.disable();
 
 		this.fileService.create(formData).subscribe({
 			next: (fileCreateDto: FileCreateDto) => {
-				this.cropperIsSubmitted = false;
+				this.imageForm.enable();
 
 				this.submitted.emit(fileCreateDto);
 			},
-			error: () => (this.cropperIsSubmitted = false)
+			error: () => this.imageForm.enable()
 		});
 	}
 }
