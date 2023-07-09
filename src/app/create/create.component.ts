@@ -79,14 +79,12 @@ export class CreateComponent implements OnInit, OnDestroy {
 	category: Category | undefined;
 	categoryList: Category[] = [];
 	categoryForm: FormGroup | undefined;
-	categoryFormIsSubmitted: boolean = false;
 	categoryFormToggle: boolean = false;
 
 	post: Post | undefined;
 	postForm: FormGroup | undefined;
 	postForm$: Subscription | undefined;
 	postFormIsPristine: boolean = false;
-	postFormIsSubmitted: boolean = false;
 	postFormImageToggle: boolean = false;
 	postFormPreviewToggle: boolean = false;
 	postFormPreviewPost: Post | undefined;
@@ -214,7 +212,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	onTogglePostFormImage(toggle: boolean): void {
-		this.postFormIsSubmitted = toggle;
+		this.onSubmitPostFormStatus(toggle);
 
 		this.postFormImageToggle = toggle;
 	}
@@ -234,14 +232,14 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleCategoryForm(toggle: boolean): void {
-		this.postFormIsSubmitted = toggle;
+		this.onSubmitPostFormStatus(toggle);
 
 		this.categoryFormToggle = toggle;
 		this.categoryForm.reset();
 	}
 
 	onTogglePreviewPost(toggle: boolean): void {
-		this.postFormIsSubmitted = toggle;
+		this.onSubmitPostFormStatus(toggle);
 
 		if (toggle) {
 			this.postFormPreviewPost = {
@@ -257,7 +255,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleDeletePost(toggle: boolean): void {
-		this.postFormIsSubmitted = toggle;
+		this.onSubmitPostFormStatus(toggle);
 
 		this.postDeleteToggle = toggle;
 	}
@@ -310,9 +308,17 @@ export class CreateComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	onSubmitPostFormStatus(toggle: boolean): void {
+		if (toggle) {
+			this.postForm.disable({ emitEvent: false });
+		} else {
+			this.postForm.enable({ emitEvent: false });
+		}
+	}
+
 	onSubmitPostForm(): void {
 		if (this.helperService.getFormValidation(this.postForm)) {
-			this.postFormIsSubmitted = true;
+			this.postForm.disable();
 
 			// prettier-ignore
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
@@ -331,7 +337,7 @@ export class CreateComponent implements OnInit, OnDestroy {
             .navigate([this.userService.getUserUrl(post.user), 'category', post.category.id, 'post', post.id])
             .then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
 				},
-				error: () => (this.postFormIsSubmitted = false)
+				error: () => this.postForm.enable()
 			});
 		}
 	}
@@ -344,7 +350,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	onSubmitCategoryForm(): void {
 		if (this.helperService.getFormValidation(this.categoryForm)) {
-			this.categoryFormIsSubmitted = true;
+			this.categoryForm.disable();
 
 			const categoryCreateDto: CategoryCreateDto = {
 				...this.categoryForm.value
@@ -355,12 +361,12 @@ export class CreateComponent implements OnInit, OnDestroy {
 					this.snackbarService.success('Cheers!', 'Category created');
 
 					this.categoryList.unshift(category);
-					this.categoryFormIsSubmitted = false;
+					this.categoryForm.enable();
 
 					this.onSelectCategory(category);
 					this.onToggleCategoryForm(false);
 				},
-				error: () => (this.categoryFormIsSubmitted = false)
+				error: () => this.categoryForm.enable()
 			});
 		}
 	}
