@@ -18,6 +18,57 @@ export class UiService {
 		private httpClient: HttpClient
 	) {}
 
+	getCSSPropertyValue(property: string): string {
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
+			return window
+				.getComputedStyle(this.document.documentElement)
+				.getPropertyValue(property)
+				.trim();
+		}
+
+		return '';
+	}
+
+	getHSLToRGB = (h: number, s: number, l: number): number[] => {
+		s /= 100;
+		l /= 100;
+
+		/** https://www.30secondsofcode.org/js/s/hsl-to-rgb */
+
+		const k = (n: number): number => (n + h / 30) % 12;
+		const a: number = s * Math.min(l, 1 - l);
+
+		const f = (n: number): number => {
+			return l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+		};
+
+		return [
+			Math.round(255 * f(0)),
+			Math.round(255 * f(8)),
+			Math.round(255 * f(4))
+		];
+	};
+
+	getHSLToHEX = (h: number, s: number, l: number): string[] => {
+		l /= 100;
+
+		/** https://stackoverflow.com/questions/36721830/convert-hsl-to-rgb-and-hex/54014428#54014428 */
+
+		const a: number = (s * Math.min(l, 1 - l)) / 100;
+		const f = (n: number) => {
+			const k: number = (n + h / 30) % 12;
+			const color: number = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+
+			return Math.round(255 * color)
+				.toString(16)
+				.padStart(2, '0');
+		};
+
+		return [f(0), f(8), f(4)];
+	};
+
 	setOverlay(toggle: boolean): void {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();

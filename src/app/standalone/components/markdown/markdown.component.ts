@@ -48,6 +48,7 @@ import {
 import { MarkdownService } from '../../../core/services/markdown.service';
 import { PlatformService } from '../../../core/services/platform.service';
 import { HelperService } from '../../../core/services/helper.service';
+import { UiService } from '../../../core/services/ui.service';
 
 interface UrlForm {
 	title?: FormControl<string>;
@@ -151,7 +152,8 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 		private markdownService: MarkdownService,
 		private platformService: PlatformService,
 		private formBuilder: FormBuilder,
-		private helperService: HelperService
+		private helperService: HelperService,
+		private uiService: UiService
 	) {
 		this.urlForm = this.formBuilder.group<UrlForm>({});
 	}
@@ -202,40 +204,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
-			/** https://www.30secondsofcode.org/js/s/hsl-to-rgb */
-
-			const convertHSLToRGB = (h: number, s: number, l: number): number[] => {
-				s /= 100;
-				l /= 100;
-
-				const k = (n: number): number => (n + h / 30) % 12;
-
-				const a: number = s * Math.min(l, 1 - l);
-
-				// prettier-ignore
-				const f = (n: number): number => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-
-				return [
-					Math.round(255 * f(0)),
-					Math.round(255 * f(8)),
-					Math.round(255 * f(4))
-				];
-			};
-
 			/** Prepare theme colors */
-
-			const getCSSPropertyValue = (variable: string): string[] => {
-				return window
-					.getComputedStyle(this.document.documentElement)
-					.getPropertyValue(variable)
-					.trim()
-					.split(/\s/g);
-			};
-
-			// prettier-ignore
-			const setCSSProperty = (property: string, propertyValue: string): void => {
-        this.document.documentElement.style.setProperty(property, propertyValue);
-      };
 
 			const variablesCSSMap: any[] = [
 				{
@@ -260,17 +229,17 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 				}
 			];
 
+			// prettier-ignore
 			variablesCSSMap.forEach((variable: any) => {
-				// prettier-ignore
-				const [h, s, l]: number[] = getCSSPropertyValue(variable.nameHSL).map((value: string) => Number(value.replace('%', '')));
-				const [r, g, b]: number[] = convertHSLToRGB(h, s, l);
+				const value: string = this.uiService.getCSSPropertyValue(variable.nameHSL);
 
+				const [h, s, l]: number[] = value.split(/\s/g).map((value: string) => Number(value.replace('%', '')));
+				const [r, g, b]: number[] = this.uiService.getHSLToRGB(h, s, l);
+
+				const propertyValue: string = [r, g, b].join(variable.nameWithComma ? ',' : ' ');
 				const property: string = variable.nameRGB;
 
-				// prettier-ignore
-				const propertyValue: string = [r, g, b].join(variable.nameWithComma ? ',' : ' ');
-
-				setCSSProperty(property, propertyValue);
+        this.document.documentElement.style.setProperty(property, propertyValue);
 			});
 
 			/** Init Emoji Mart */

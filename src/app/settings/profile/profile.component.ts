@@ -34,6 +34,7 @@ import { SnackbarService } from '../../core/services/snackbar.service';
 import { FileCreateDto } from '../../core/dto/file/file-create.dto';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { PlatformService } from '../../core/services/platform.service';
+import { UiService } from '../../core/services/ui.service';
 import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 
 interface ProfileForm {
@@ -74,13 +75,17 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	profileFormIsPristine: boolean = false;
 	profileFormAvatarToggle: boolean = false;
 
+	QRCodeToggle: boolean = false;
 	QRCodeText: string | undefined;
 	QRCodeOptions: QRCodeRenderersOptions = {
 		margin: 2,
 		scale: 1,
-		width: 384
+		width: 384,
+		color: {
+			dark: '#000000ff',
+			light: '#ffffffff'
+		}
 	};
-	QRCodeToggle: boolean = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -89,7 +94,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		private userService: UserService,
 		private authService: AuthService,
 		private snackbarService: SnackbarService,
-		private platformService: PlatformService
+		private platformService: PlatformService,
+		private uiService: UiService
 	) {
 		this.profileForm = this.formBuilder.group<ProfileForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -145,24 +151,48 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		this.QRCodeToggle = toggle;
 
 		if (!!toggle) {
-			// prettier-ignore
 			if (this.platformService.isBrowser()) {
 				const window: Window = this.platformService.getWindow();
 
-				this.QRCodeText = [window.location.origin, this.userService.getUserUrl(this.authUser)].join('');
+				/** Prepare theme colors */
 
-				const QRElement: HTMLCanvasElement = this.QRCodeCanvas.nativeElement;
-				const QRCallback = (error: Error): void => {
-					if (!!error) {
-						this.snackbarService.danger('Error', "Damn, can't draw your QR Code");
-					} else {
-						QRElement.removeAttribute('style');
+				const variablesCSSMap: any[] = [
+					{
+						nameHSL: '--bc',
+						nameHEX: 'dark'
+					},
+					{
+						nameHSL: '--b1',
+						nameHEX: 'light'
 					}
-				};
+				];
+
+				// prettier-ignore
+				variablesCSSMap.forEach((variable: any) => {
+          const value: string = this.uiService.getCSSPropertyValue(variable.nameHSL);
+
+          const [h, s, l]: number[] = value.split(/\s/g).map((value: string) => Number(value.replace('%', '')));
+          const valueList: string[] = this.uiService.getHSLToHEX(h, s, l);
+
+          const propertyValue: string = [...valueList, 'ff'].join('');
+          const property: string = variable.nameHEX;
+
+          this.QRCodeOptions.color[property] = propertyValue;
+        });
 
 				/** Draw QR Code */
 
-				QRCode.toCanvas(QRElement, this.QRCodeText, this.QRCodeOptions, QRCallback);
+				// prettier-ignore
+				this.QRCodeText = [window.location.origin, this.userService.getUserUrl(this.authUser)].join('');
+
+				// prettier-ignore
+				QRCode.toCanvas(this.QRCodeCanvas.nativeElement, this.QRCodeText, this.QRCodeOptions, (error: Error): void => {
+          if (!!error) {
+            this.snackbarService.danger('Error', "Can't draw your QR Code");
+          } else {
+            this.QRCodeCanvas.nativeElement.removeAttribute('style');
+          }
+        });
 			}
 		}
 	}
@@ -170,17 +200,13 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	onDownloadQRCode(): void {
 		// prettier-ignore
 		if (this.platformService.isBrowser()) {
-			const QRCallback = (error: Error, dataURL: string): void => {
-				if (!!error) {
-					this.snackbarService.danger('Error', "Damn, can't download your QR Code");
-				} else {
+			QRCode.toDataURL(this.QRCodeText, this.QRCodeOptions, (error: Error, dataURL: string): void => {
+        if (!!error) {
+          this.snackbarService.danger('Error', "Can't download your QR Code");
+        } else {
           this.helperService.getDownload(dataURL, this.userService.getUserUrl(this.authUser, 1));
-				}
-			};
-
-			/** Download QR Code */
-
-			QRCode.toDataURL(this.QRCodeText, this.QRCodeOptions, QRCallback);
+        }
+      });
 		}
 	}
 
