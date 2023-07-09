@@ -33,7 +33,6 @@ import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { CategoryUpdateDto } from '../core/dto/category/category-update.dto';
 import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
-import { AppInputMarkAsTouchedDirective } from '../shared/directives/app-input-mark-as-touched.directive';
 import { MarkdownPipe } from '../shared/pipes/markdown.pipe';
 import { SanitizerPipe } from '../shared/pipes/sanitizer.pipe';
 
@@ -60,7 +59,6 @@ interface CategoryDeleteForm {
 		OverlayComponent,
 		WindowComponent,
 		AppInputTrimWhitespaceDirective,
-		AppInputMarkAsTouchedDirective,
 		MarkdownPipe,
 		SanitizerPipe
 	],
