@@ -21,7 +21,6 @@ import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
-import { AppInputMarkAsTouchedDirective } from '../../standalone/directives/app-input-mark-as-touched.directive';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 
 interface LoginForm {
@@ -37,7 +36,6 @@ interface LoginForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		AppInputTrimWhitespaceDirective,
-		AppInputMarkAsTouchedDirective,
 		OauthComponent
 	],
 	selector: 'app-auth-login',
@@ -47,7 +45,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 
 	loginForm: FormGroup | undefined;
-	loginFormIsSubmitted: boolean = false;
+	loginForm$: Subscription | undefined;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -121,7 +119,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	}
 
 	onLogin(value: any): void {
-		this.loginFormIsSubmitted = true;
+		this.loginForm.disable();
 
 		const loginDto: LoginDto = {
 			...value
@@ -133,7 +131,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 					.navigate([this.userService.getUserUrl(user)])
 					.then(() => console.debug('Route changed'));
 			},
-			error: () => (this.loginFormIsSubmitted = false)
+			error: () => this.loginForm.enable()
 		});
 	}
 
