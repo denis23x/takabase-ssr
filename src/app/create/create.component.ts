@@ -36,7 +36,6 @@ import { PostCreateDto } from '../core/dto/post/post-create.dto';
 import { FileCreateDto } from '../core/dto/file/file-create.dto';
 import { CategoryCreateDto } from '../core/dto/category/category-create.dto';
 import { AppScrollIntoViewDirective } from '../shared/directives/app-scroll-into-view.directive';
-import { AppInputMarkAsTouchedDirective } from '../shared/directives/app-input-mark-as-touched.directive';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -68,8 +67,7 @@ interface CategoryForm {
 		ShareComponent,
 		MarkdownComponent,
 		NgOptimizedImage,
-		AppScrollIntoViewDirective,
-		AppInputMarkAsTouchedDirective
+		AppScrollIntoViewDirective
 	],
 	templateUrl: './create.component.html'
 })

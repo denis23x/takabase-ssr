@@ -82,8 +82,7 @@
 							placeholder="Type post name"
 							formControlName="name"
 							appInputTrimWhitespace
-							appInputMarkAsTouched
-							[class.input-success]="name.touched && name.valid"
+							[class.input-success]="name.value && name.valid"
 							[class.input-error]="name.touched && name.invalid"
 						/>
 						<button
@@ -92,9 +91,9 @@
 							aria-label="Clear"
 							appSvgIcon
 							*ngIf="!!name.value.length"
-							[class.btn-success]="name.touched && name.valid"
+							[class.btn-success]="name.valid"
 							[class.btn-error]="name.touched && name.invalid"
-							[class.btn-ghost]="name.untouched"
+							[class.btn-ghost]="name.untouched && name.invalid"
 							[disabled]="postForm.disabled"
 							[appIcon]="'x'"
 							[appSquare]="'1.75rem'"
@@ -219,8 +218,7 @@
 							placeholder="Type post description"
 							formControlName="description"
 							appInputTrimWhitespace
-							appInputMarkAsTouched
-							[class.input-success]="description.touched && description.valid"
+							[class.input-success]="description.value && description.valid"
 							[class.input-error]="description.touched && description.invalid"
 						/>
 						<button
@@ -229,9 +227,9 @@
 							aria-label="Clear"
 							appSvgIcon
 							*ngIf="!!description.value.length"
-							[class.btn-success]="description.touched && description.valid"
+							[class.btn-success]="description.valid"
 							[class.btn-error]="description.touched && description.invalid"
-							[class.btn-ghost]="description.untouched"
+							[class.btn-ghost]="description.untouched && description.invalid"
 							[disabled]="postForm.disabled"
 							[appIcon]="'x'"
 							[appSquare]="'1.75rem'"
@@ -312,7 +310,7 @@
 								<span
                   class="label-text-alt"
                   [class.text-base-content]="postForm.disabled"
-                  [class.text-success]="postForm.enabled && markdown.touched && markdown.valid"
+                  [class.text-success]="postForm.enabled && markdown.value && markdown.valid"
                   [class.text-error]="postForm.enabled && markdown.touched && markdown.invalid"
                 >
                   {{ markdown.value.length }}/7200
@@ -322,7 +320,7 @@
 							<div
                 class="rounded-btn flex overflow-hidden w-full h-full border"
                 [ngClass]="{ 'border-base-content/20': postForm.enabled, 'border-transparent': postForm.disabled }"
-                [class.border-success]="markdown.touched && markdown.valid"
+                [class.border-success]="markdown.value && markdown.valid"
                 [class.border-error]="markdown.touched && markdown.invalid"
               >
                 <textarea
@@ -332,7 +330,6 @@
                   placeholder="Type post markdown"
                   formControlName="markdown"
                   appInputTrimWhitespace
-                  appInputMarkAsTouched
                   [rows]="8"
                   [class.whitespace-pre]="fullscreenDisableTextWrapping"
                   [class.font-mono]="authUser.settings.monospace"
@@ -554,8 +551,7 @@
 								formControlName="name"
 								placeholder="Type category name"
 								appInputTrimWhitespace
-								appInputMarkAsTouched
-								[class.input-success]="name.touched && name.valid"
+								[class.input-success]="name.value && name.valid"
 								[class.input-error]="name.touched && name.invalid"
 							/>
 							<button
@@ -564,9 +560,9 @@
 								aria-label="Clear"
 								appSvgIcon
 								*ngIf="!!name.value.length"
-								[class.btn-success]="name.touched && name.valid"
+								[class.btn-success]="name.valid"
 								[class.btn-error]="name.touched && name.invalid"
-								[class.btn-ghost]="name.untouched"
+								[class.btn-ghost]="name.untouched && name.invalid"
 								[disabled]="categoryForm.disabled"
 								[appIcon]="'x'"
 								[appSquare]="'1.75rem'"
@@ -605,8 +601,8 @@
 							<span
                 class="label-text-alt"
                 [class.text-base-content]="categoryForm.disabled"
-                [class.text-success]="categoryForm.enabled && !!description.value && description.valid"
-                [class.text-error]="categoryForm.enabled && !!description.value && description.invalid"
+                [class.text-success]="categoryForm.enabled && description.value && description.valid"
+                [class.text-error]="categoryForm.enabled && description.value && description.invalid"
               >
                 {{ description.value?.length || 0 }}/255
               </span>
@@ -614,8 +610,8 @@
 						<!-- prettier-ignore -->
 						<div class="rounded-btn flex overflow-hidden w-full border"
               [ngClass]="{ 'border-base-content/20': categoryForm.enabled, 'border-transparent': categoryForm.disabled }"
-              [class.border-success]="!!description.value && description.valid"
-              [class.border-error]="!!description.value && description.invalid"
+              [class.border-success]="description.value && description.valid"
+              [class.border-error]="description.value && description.invalid"
             >
               <textarea
                 class="textarea border-0 !outline-0 w-full resize-none"
@@ -624,7 +620,6 @@
                 placeholder="Type category description"
                 formControlName="description"
                 appInputTrimWhitespace
-                appInputMarkAsTouched
                 [rows]="4"
               >
                 {{ description.value }}
