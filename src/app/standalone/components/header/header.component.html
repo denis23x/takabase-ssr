@@ -6,11 +6,11 @@
 	>
 		<div class="navbar-start">
 			<a
-				class="btn btn-ghost btn-circle fill-current"
+				class="btn-ghost btn-circle btn fill-current"
 				title="Bug"
 				aria-label="Bug"
 				appSvgIcon
-				[routerLink]="['/']"
+				[routerLink]="['/help']"
 				[appIcon]="'bug'"
 				[appSquare]="'1.5em'"
 				[appViewBox]="'0 0 16 16'"
@@ -19,7 +19,7 @@
 		</div>
 		<div class="navbar-center">
 			<a
-				class="btn btn-ghost text-xl normal-case"
+				class="btn-ghost btn text-xl normal-case"
 				title="Draft"
 				aria-label="Draft"
 				[routerLink]="['/']"
@@ -31,7 +31,7 @@
 			<ng-container *appAuthenticated="false">
 				<nav class="flex items-center justify-end space-x-4">
 					<a
-						class="btn btn-primary"
+						class="btn-primary btn"
 						title="Login"
 						aria-label="Login"
 						[routerLink]="['/login']"
@@ -43,7 +43,7 @@
 			<ng-container *appAuthenticated="true">
 				<nav class="flex items-center justify-end space-x-2" *ngIf="!!authUser">
 					<a
-						class="btn btn-ghost btn-circle fill-current"
+						class="btn-ghost btn-circle btn fill-current"
 						title="Create post"
 						aria-label="Create post"
 						appSvgIcon
@@ -56,7 +56,7 @@
 					>
 					</a>
 					<a
-						class="btn btn-ghost btn-circle fill-current"
+						class="btn-ghost btn-circle btn fill-current"
 						title="Search"
 						aria-label="Search"
 						appSvgIcon
@@ -68,7 +68,7 @@
 					>
 					</a>
 					<a
-						class="btn btn-link btn-circle"
+						class="btn-link btn-circle btn"
 						appAvatar
 						[routerLink]="[authUser | userUrl]"
 						[attr.aria-label]="authUser.name"

@@ -48,20 +48,6 @@
 					</p>
 				</div>
 			</div>
-			<div class="flex flex-col gap-4">
-				<span class="text-2xl">Read more</span>
-				<hr class="my-0 border-base-content/20" />
-				<ul class="grid grid-cols-1 gap-4 sm:grid-cols-4">
-					<li
-						class="rounded-box col-span-1 bg-base-200 p-4"
-						*ngFor="let readMore of readMoreList"
-					>
-						<a class="link block truncate" [href]="readMore.id">
-							{{ readMore.name }}
-						</a>
-					</li>
-				</ul>
-			</div>
 		</div>
 	</div>
 </ng-container>

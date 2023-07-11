@@ -14,25 +14,6 @@ import { CommonModule } from '@angular/common';
 	templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
-	readMoreList: any[] = [
-		{
-			name: 'Showcase',
-			id: 15615
-		},
-		{
-			name: 'Code tutorials',
-			id: 15615
-		},
-		{
-			name: 'Deep dive',
-			id: 15615
-		},
-		{
-			name: 'Road map',
-			id: 15615
-		}
-	];
-
 	constructor(private metaService: MetaService) {}
 
 	ngOnInit(): void {
