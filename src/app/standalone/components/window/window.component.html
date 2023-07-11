@@ -5,7 +5,7 @@
 
 <ng-container>
 	<div
-		class="absolute flex flex-col overflow-hidden bg-base-100"
+		class="flex flex-col overflow-hidden bg-base-100"
 		[ngClass]="fullscreenClassList"
 	>
 		<ng-container [ngTemplateOutlet]="windowCaption"></ng-container>
@@ -14,8 +14,8 @@
 		</header>
 		<!-- prettier-ignore -->
 		<section class="flex flex-col overflow-auto empty:hidden" [class.h-full]="fullscreenToggle">
-		<ng-content select="[slot=content]"></ng-content>
-	</section>
+      <ng-content select="[slot=content]"></ng-content>
+    </section>
 		<footer class="flex flex-col empty:hidden">
 			<ng-content select="[slot=footer]"></ng-content>
 		</footer>
@@ -46,7 +46,7 @@
 		</ng-template>
 		<ng-template #windowCaptionButtons>
 			<button
-				class="btn-error btn-xs btn-circle btn fill-current"
+				class="btn-error btn-xs btn-circle btn fill-current focus:outline-0"
 				type="button"
 				title="Close"
 				aria-label="Close"
@@ -57,7 +57,7 @@
 				(click)="onClose()"
 			></button>
 			<button
-				class="btn-warning btn-xs btn-circle btn fill-current"
+				class="btn-warning btn-xs btn-circle btn fill-current focus:outline-0"
 				type="button"
 				title="Fullscreen"
 				aria-label="Fullscreen"
@@ -68,7 +68,7 @@
 				(click)="onFullscreen(!fullscreenToggle)"
 			></button>
 			<button
-				class="btn-success btn-xs btn-circle btn fill-current"
+				class="btn-success btn-xs btn-circle btn fill-current focus:outline-0"
 				type="button"
 				title="Minimize"
 				aria-label="Minimize"

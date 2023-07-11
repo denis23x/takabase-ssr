@@ -40,14 +40,10 @@ export class WindowComponent implements OnInit, OnDestroy {
 
 	fullscreenToggle: boolean = false;
 	fullscreenClassList: string[] = [
-		'top-1/2',
-		'left-1/2',
 		'h-auto',
 		'w-auto',
 		'max-h-[calc(100vh-2rem)]',
 		'max-w-[calc(100vw-2rem)]',
-		'-translate-y-1/2',
-		'-translate-x-1/2',
 		'border',
 		'border-base-content/20',
 		'md:max-h-[80vh]',
@@ -86,17 +82,19 @@ export class WindowComponent implements OnInit, OnDestroy {
 		this.fullscreenToggle = toggle;
 
 		if (this.fullscreenToggle) {
-			this.fullscreenClassList = ['w-full', 'h-full', 'justify-between'];
+			this.fullscreenClassList = [
+				'w-full',
+				'h-full',
+				'fixed',
+				'left-0',
+				'top-0'
+			];
 		} else {
 			this.fullscreenClassList = [
-				'top-1/2',
-				'left-1/2',
 				'h-auto',
 				'w-auto',
 				'max-h-[calc(100vh-2rem)]',
 				'max-w-[calc(100vw-2rem)]',
-				'-translate-y-1/2',
-				'-translate-x-1/2',
 				'border',
 				'border-base-content/20',
 				'md:max-h-[80vh]',
