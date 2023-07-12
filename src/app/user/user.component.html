@@ -114,7 +114,7 @@
 							</div>
 						</div>
 						<button
-							class="btn-primary btn"
+							class="btn-primary btn focus:outline-0"
 							aria-label="Edit"
 							*ngIf="authUser?.id === user.id"
 							(click)="onToggleCategoryEditForm(true)"
@@ -134,13 +134,14 @@
 			</section>
 		</div>
 	</div>
-	<app-overlay
-		[appToggle]="categoryEditFormToggle"
-		(clicked)="onToggleCategoryEditForm(false)"
-		(escaped)="onToggleCategoryEditForm(false)"
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#categoryEditFormModal
+		(close)="onToggleCategoryEditForm(false)"
+		(click)="$event.target === $event.currentTarget && categoryEditFormModal.close()"
 	>
 		<app-window
-			slot="content"
 			[appTitle]="'Category'"
 			(closed)="onToggleCategoryEditForm(false)"
 		>
@@ -269,7 +270,7 @@
               class="btn btn-success"
               type="submit"
               aria-label="Submit"
-              [class.loading]="categoryEditForm.disabled && !categoryDeleteFormToggle"
+              [class.loading]="categoryEditForm.disabled && !categoryDeleteFormModal.open"
               [disabled]="categoryEditForm.invalid || categoryEditForm.disabled || categoryEditFormIsPristine"
             >
               Submit
@@ -288,14 +289,15 @@
 				</form>
 			</ng-container>
 		</app-window>
-	</app-overlay>
-	<app-overlay
-		[appToggle]="categoryDeleteFormToggle"
-		(clicked)="onToggleCategoryDeleteForm(false)"
-		(escaped)="onToggleCategoryDeleteForm(false)"
+	</dialog>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#categoryDeleteFormModal
+		(close)="onToggleCategoryDeleteForm(false)"
+		(click)="$event.target === $event.currentTarget && categoryDeleteFormModal.close()"
 	>
 		<app-window
-			slot="content"
 			[appTitle]="'Confirmation'"
 			(closed)="onToggleCategoryDeleteForm(false)"
 		>
@@ -437,5 +439,5 @@
 				</form>
 			</ng-container>
 		</app-window>
-	</app-overlay>
+	</dialog>
 </ng-container>

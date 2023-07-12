@@ -1,6 +1,12 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+	Component,
+	ElementRef,
+	OnDestroy,
+	OnInit,
+	ViewChild
+} from '@angular/core';
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map, startWith } from 'rxjs/operators';
@@ -66,6 +72,12 @@ interface CategoryDeleteForm {
 	templateUrl: './user.component.html'
 })
 export class UserComponent implements OnInit, OnDestroy {
+	// prettier-ignore
+	@ViewChild('categoryEditFormModal') categoryEditFormModal: ElementRef<HTMLDialogElement> | undefined;
+
+	// prettier-ignore
+	@ViewChild('categoryDeleteFormModal') categoryDeleteFormModal: ElementRef<HTMLDialogElement> | undefined;
+
 	activatedRouteData$: Subscription | undefined;
 	activatedRouteFirstChildData$: Subscription | undefined;
 	activatedRouteFirstChildUrl$: Subscription | undefined;
@@ -83,12 +95,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	categoryEditForm: FormGroup | undefined;
 	categoryEditForm$: Subscription | undefined;
-	categoryEditFormToggle: boolean = false;
 	categoryEditFormIsPristine: boolean = false;
 
 	categoryDeleteForm: FormGroup | undefined;
 	categoryDeleteForm$: Subscription | undefined;
-	categoryDeleteFormToggle: boolean = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -221,13 +231,13 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleCategoryEditForm(toggle: boolean): void {
-		this.categoryEditFormToggle = toggle;
-
-		if (this.categoryEditFormToggle) {
+		if (toggle) {
 			this.categoryEditForm.patchValue(this.category);
 			this.categoryEditForm.markAllAsTouched();
+			this.categoryEditFormModal.nativeElement.showModal();
 		} else {
 			this.categoryEditForm.reset();
+			this.categoryEditFormModal.nativeElement.close();
 		}
 	}
 
@@ -238,21 +248,26 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.categoryEditForm.enable();
 		}
 
-		this.categoryDeleteFormToggle = toggle;
+		/** Prepare categoryDeleteForm */
 
-		// prettier-ignore
-		if (this.categoryDeleteFormToggle) {
+		if (toggle) {
+			this.categoryDeleteForm.reset();
+			this.categoryDeleteFormModal.nativeElement.showModal();
+
+			// prettier-ignore
 			const abstractControl: AbstractControl = this.categoryDeleteForm.get('name');
 
+			// prettier-ignore
 			abstractControl.setValidators([
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('exact', this.category.name))
 			]);
 
-      abstractControl.updateValueAndValidity();
-    }
-
-		this.categoryDeleteForm.reset();
+			abstractControl.updateValueAndValidity();
+		} else {
+			this.categoryDeleteForm.reset();
+			this.categoryDeleteFormModal.nativeElement.close();
+		}
 	}
 
 	onSubmitCategoryEditForm(): void {
