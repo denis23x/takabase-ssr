@@ -36,8 +36,8 @@ export class SvgIconComponent implements OnInit {
 	square: string | undefined;
 	viewBox: string = '0 0 16 16';
 
-	width: string = '1.25em';
-	height: string = '1.25em';
+	width: string = '1em';
+	height: string = '1em';
 
 	icon: string | undefined;
 

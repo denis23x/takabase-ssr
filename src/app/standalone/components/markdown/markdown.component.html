@@ -7,50 +7,52 @@
 		[ngClass]="{ 'cursor-not-allowed border-transparent': controlListDisabled }"
 	>
 		<ul
-			class="menu menu-horizontal flex-nowrap overflow-auto rounded-btn bg-base-100"
+			class="menu menu-horizontal menu-md flex-nowrap overflow-auto rounded-btn bg-base-100 p-0 [&>li>*:nth-child(1):active]:bg-base-content/10 [&>li>*:nth-child(1):active]:text-base-content"
 			[ngClass]="{ 'pointer-events-none bg-base-300': controlListDisabled }"
 		>
 			<li
-				class="inline-block rounded-none"
+				class="inline-block"
 				*ngIf="{ value: textareaHistory$.getValue().length <= 1 } as disabled"
 				[class.disabled]="disabled.value || controlListDisabled"
 			>
 				<button
-					class="fill-current p-3.5 active:bg-error active:text-error-content"
+					class="rounded-none fill-current p-3 active:!bg-error active:!text-error-content"
 					type="button"
 					title="Undo"
 					aria-label="Undo"
 					appSvgIcon
 					[class.pointer-events-none]="disabled.value"
 					[appIcon]="'arrow-left'"
+					[appSquare]="'1.5725em'"
 					(click)="setBack()"
 				></button>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
-					class="flex p-0 active:bg-base-content/10 active:text-base-content"
+					class="flex rounded-none p-0"
 					appDropdown
 					#dropdownHeading
 					*ngIf="{ value: false } as toggle"
-					[ngClass]="{ 'bg-base-content/10 text-base-content': toggle.value }"
+					[ngClass]="{ 'bg-base-content/10': toggle.value }"
 					(toggled)="toggle.value = $event"
 				>
 					<button
-						class="fill-current p-3.5"
+						class="fill-current p-3"
 						type="button"
 						title="Heading"
 						aria-label="Heading"
 						appSvgIcon
 						slot="target"
+						[appSquare]="'1.5725em'"
 						[appIcon]="'type-h1'"
 					></button>
 					<ul
-						class="menu mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow"
+						class="menu menu-vertical menu-md ml-0 mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
 						slot="content"
 					>
 						<li class="flex w-full" *ngFor="let control of controlListHeading">
 							<button
-								class="w-full whitespace-nowrap text-base-content active:bg-success active:text-success-content"
+								class="w-full whitespace-nowrap text-base-content"
 								type="button"
 								[attr.aria-label]="control.label"
 								(click)="setTextareaValue(getTextareaValue(control))"
@@ -65,24 +67,25 @@
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
-					class="flex p-0 active:bg-base-content/10 active:text-base-content"
+					class="flex rounded-none p-0"
 					appDropdown
 					#dropdownFormatting
 					*ngIf="{ value: false } as toggle"
-					[ngClass]="{ 'bg-base-content/10 text-base-content': toggle.value }"
+					[ngClass]="{ 'bg-base-content/10': toggle.value }"
 					(toggled)="toggle.value = $event"
 				>
 					<button
-						class="fill-current p-3.5"
+						class="fill-current p-3"
 						type="button"
 						title="Formatting"
 						aria-label="Formatting"
 						appSvgIcon
 						slot="target"
+						[appSquare]="'1.5725em'"
 						[appIcon]="'type-bold'"
 					></button>
 					<ul
-						class="menu mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow"
+						class="menu menu-vertical menu-md ml-2 mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
 						slot="content"
 					>
 						<li
@@ -90,7 +93,7 @@
 							*ngFor="let control of controlListFormatting"
 						>
 							<button
-								class="w-full whitespace-nowrap text-base-content active:bg-success active:text-success-content"
+								class="w-full whitespace-nowrap text-base text-base-content"
 								type="button"
 								[attr.aria-label]="control.label"
 								(click)="setTextareaValue(getTextareaValue(control))"
@@ -105,29 +108,30 @@
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
-					class="flex p-0 active:bg-base-content/10 active:text-base-content"
+					class="flex rounded-none p-0"
 					appDropdown
 					#dropdownList
 					*ngIf="{ value: false } as toggle"
-					[ngClass]="{ 'bg-base-content/10 text-base-content': toggle.value }"
+					[ngClass]="{ 'bg-base-content/10': toggle.value }"
 					(toggled)="toggle.value = $event"
 				>
 					<button
-						class="fill-current p-3.5"
+						class="fill-current p-3"
 						type="button"
 						title="List"
 						aria-label="List"
 						appSvgIcon
 						slot="target"
+						[appSquare]="'1.5725em'"
 						[appIcon]="'list-ul'"
 					></button>
 					<ul
-						class="menu mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow"
+						class="menu menu-vertical menu-md ml-0 mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
 						slot="content"
 					>
 						<li class="flex w-full" *ngFor="let control of controlListList">
 							<button
-								class="w-full whitespace-nowrap text-base-content active:bg-success active:text-success-content"
+								class="w-full whitespace-nowrap text-base text-base-content"
 								type="button"
 								[attr.aria-label]="control.label"
 								[attr.title]="control.label"
@@ -145,35 +149,37 @@
 				[class.disabled]="controlListDisabled"
 			>
 				<button
-					class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
+					class="rounded-none fill-current p-3"
 					appSvgIcon
 					[attr.aria-label]="control.label"
 					[attr.title]="control.label"
 					[appIcon]="control.icon"
+					[appSquare]="'1.5725em'"
 					(click)="onToggleUrlForm(true, control)"
 				></button>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
-					class="flex p-0 active:bg-base-content/10 active:text-base-content"
+					class="flex rounded-none p-0"
 					appDropdown
 					#dropdownEmojiMart
 					*ngIf="{ value: false } as toggle"
-					[ngClass]="{ 'bg-base-content/10 text-base-content': toggle.value }"
+					[ngClass]="{ 'bg-base-content/10': toggle.value }"
 					[appCloseOnContentClick]="false"
 					(toggled)="toggle.value = $event"
 				>
 					<button
-						class="fill-current p-3.5"
+						class="fill-current p-3"
 						type="button"
 						appSvgIcon
 						slot="target"
 						[attr.aria-label]="controlListEmojiMart.label"
 						[attr.title]="controlListEmojiMart.label"
 						[appIcon]="controlListEmojiMart.icon"
+						[appSquare]="'1.5725em'"
 					></button>
 					<div
-						class="menu mt-2 min-w-fit overflow-hidden rounded-btn border border-base-content/20 bg-base-100 shadow"
+						class="menu menu-vertical menu-md mt-2 min-w-fit overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow before:hidden"
 						id="emojiMartPicker"
 						slot="content"
 					></div>
@@ -181,24 +187,25 @@
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
-					class="flex p-0 active:bg-base-content/10 active:text-base-content"
+					class="flex rounded-none p-0"
 					appDropdown
 					#dropdownTable
 					*ngIf="{ value: false } as toggle"
-					[ngClass]="{ 'bg-base-content/10 text-base-content': toggle.value }"
+					[ngClass]="{ 'bg-base-content/10': toggle.value }"
 					(toggled)="toggle.value = $event"
 				>
 					<button
-						class="fill-current p-3.5"
+						class="fill-current p-3"
 						type="button"
 						appSvgIcon
 						slot="target"
 						[attr.aria-label]="controlListTable.label"
 						[attr.title]="controlListTable.label"
 						[appIcon]="controlListTable.icon"
+						[appSquare]="'1.5725em'"
 					></button>
 					<div
-						class="menu mt-2 min-w-fit overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-2 shadow"
+						class="menu menu-vertical menu-md mt-2 min-w-fit overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
 						slot="content"
 					>
 						<div class="relative h-40 w-40 overflow-hidden rounded-btn">
@@ -206,7 +213,7 @@
 								class="pointer-events-none absolute left-0 top-0 bg-base-content/10"
 								#controlListTableElement
 							></div>
-							<ul class="grid h-full w-full grid-cols-5 grid-rows-5">
+							<ul class="m-0 grid h-full w-full grid-cols-5 grid-rows-5 p-0">
 								<!-- prettier-ignore -->
 								<li
                   class="col-span-1 row-span-1 h-full w-full bg-transparent p-0 border-4 border-base-100 outline outline-base-content/20 outline-1 -outline-offset-4 m-0"
@@ -227,21 +234,20 @@
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<button
-					class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
+					class="rounded-none fill-current p-3"
 					appSvgIcon
 					[attr.aria-label]="controlListSpoiler.label"
 					[attr.title]="controlListSpoiler.label"
 					[appIcon]="controlListSpoiler.icon"
+					[appSquare]="'1.5725em'"
 					(click)="setTextareaValue(getTextareaValue(controlListSpoiler))"
 				></button>
 			</li>
-			<li
-				class="inline-block rounded-none"
-				[class.disabled]="controlListDisabled"
-			>
+			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<button
-					class="fill-current p-3.5 active:bg-base-content/10 active:text-base-content"
+					class="rounded-none fill-current p-3"
 					appSvgIcon
+					[appSquare]="'1.5725em'"
 					[attr.aria-label]="controlListCode.label"
 					[attr.title]="controlListCode.label"
 					[appIcon]="controlListCode.icon"
