@@ -250,10 +250,12 @@
 			</li>
 		</ul>
 	</div>
-	<app-overlay
-		[appToggle]="urlFormModal"
-		(clicked)="onToggleUrlForm(false)"
-		(escaped)="onToggleUrlForm(false)"
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#urlFormModal
+		(close)="onToggleUrlForm(false)"
+		(click)="$event.target === $event.currentTarget ? urlFormModal.close() : $event"
 	>
 		<app-window
 			slot="content"
@@ -407,5 +409,5 @@
 				</fieldset>
 			</form>
 		</app-window>
-	</app-overlay>
+	</dialog>
 </ng-container>

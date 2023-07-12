@@ -35,7 +35,6 @@ import {
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { OverlayComponent } from '../overlay/overlay.component';
 import { WindowComponent } from '../window/window.component';
 import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
@@ -65,7 +64,6 @@ interface UrlForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		DropdownComponent,
-		OverlayComponent,
 		WindowComponent,
 		AppInputTrimWhitespaceDirective,
 		AppInputOnlyPasteDirective
@@ -88,6 +86,9 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	@ViewChild('dropdownEmojiMart') dropdownEmojiMart: DropdownComponent | undefined;
 
 	@ViewChild('dropdownTable') dropdownTable: DropdownComponent | undefined;
+
+	// prettier-ignore
+	@ViewChild('urlFormModal') urlFormModal: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() modalToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -144,7 +145,6 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	urlForm: FormGroup | undefined;
 	urlForm$: Subscription | undefined;
 	urlFormControl: MarkdownControl | undefined;
-	urlFormModal: boolean = false;
 
 	constructor(
 		@Inject(DOCUMENT)
@@ -454,14 +454,14 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 			}
 
 			this.urlFormControl = markdownControl;
-			this.urlFormModal = true;
+			this.urlFormModal.nativeElement.showModal();
 		} else {
 			// prettier-ignore
 			Object.keys(this.urlForm.controls).forEach((key: string) => this.urlForm.removeControl(key));
 
 			this.urlForm$?.unsubscribe();
 			this.urlFormControl = undefined;
-			this.urlFormModal = false;
+			this.urlFormModal.nativeElement.close();
 		}
 
 		this.modalToggle.emit(toggle);

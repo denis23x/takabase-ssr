@@ -19,7 +19,6 @@ import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { OverlayComponent } from '../../standalone/components/overlay/overlay.component';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { CropperComponent } from '../../standalone/components/cropper/cropper.component';
 import { WindowComponent } from '../../standalone/components/window/window.component';
@@ -49,7 +48,6 @@ interface ProfileForm {
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
-		OverlayComponent,
 		AvatarComponent,
 		CropperComponent,
 		WindowComponent,
@@ -63,7 +61,13 @@ interface ProfileForm {
 export class SettingsProfileComponent implements OnInit, OnDestroy {
 	@ViewChild('avatarInput') avatarInput: ElementRef | undefined;
 
+	// prettier-ignore
+	@ViewChild('profileFormAvatarModal') profileFormAvatarModal: ElementRef<HTMLDialogElement> | undefined;
+
 	@ViewChild('QRCodeCanvas') QRCodeCanvas: ElementRef | undefined;
+
+	// prettier-ignore
+	@ViewChild('QRCodeModal') QRCodeModal: ElementRef<HTMLDialogElement> | undefined;
 
 	activatedRouteData$: Subscription | undefined;
 
@@ -73,9 +77,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	profileForm: FormGroup | undefined;
 	profileForm$: Subscription | undefined;
 	profileFormIsPristine: boolean = false;
-	profileFormAvatarToggle: boolean = false;
 
-	QRCodeToggle: boolean = false;
 	QRCodeText: string | undefined;
 	QRCodeOptions: QRCodeRenderersOptions = {
 		margin: 2,
@@ -140,17 +142,17 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	onToggleProfileFormAvatar(toggle: boolean): void {
 		if (toggle) {
 			this.profileForm.disable();
+			this.profileFormAvatarModal.nativeElement.showModal();
 		} else {
 			this.profileForm.enable();
+			this.profileFormAvatarModal.nativeElement.close();
 		}
-
-		this.profileFormAvatarToggle = toggle;
 	}
 
 	onToggleQRCode(toggle: boolean): void {
-		this.QRCodeToggle = toggle;
+		if (toggle) {
+			this.QRCodeModal.nativeElement.showModal();
 
-		if (!!toggle) {
 			if (this.platformService.isBrowser()) {
 				const window: Window = this.platformService.getWindow();
 
@@ -194,6 +196,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
           }
         });
 			}
+		} else {
+			this.QRCodeModal.nativeElement.close();
 		}
 	}
 

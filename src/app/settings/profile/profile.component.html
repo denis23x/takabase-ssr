@@ -31,7 +31,7 @@
 					</div>
 				</div>
 				<button
-					class="btn btn-success"
+					class="btn-success btn"
 					type="button"
 					aria-label="Image"
 					[class.btn-outline]="!authUser.avatar && profileForm.enabled"
@@ -77,7 +77,7 @@
 						[class.input-error]="name.touched && name.invalid"
 					/>
 					<button
-						class="btn btn-sm btn-circle absolute right-2 top-2 fill-current"
+						class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 						type="button"
 						aria-label="Clear"
 						appSvgIcon
@@ -95,7 +95,7 @@
 			<div class="flex flex-col items-start justify-start gap-4 sm:flex-row">
 				<div class="flex items-center justify-start gap-4">
 					<button
-						class="btn btn-ghost rounded-box h-14 w-14 bg-base-200 fill-current p-3"
+						class="btn-ghost rounded-box btn h-14 w-14 bg-base-200 fill-current p-3"
 						type="button"
 						title="QR Code"
 						aria-label="QR Code"
@@ -193,17 +193,19 @@
 			</fieldset>
 		</form>
 	</div>
-	<app-overlay
-		[appToggle]="profileFormAvatarToggle"
-		(clicked)="onToggleProfileFormAvatar(false)"
-		(escaped)="onToggleProfileFormAvatar(false)"
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#profileFormAvatarModal
+		(close)="onToggleProfileFormAvatar(false)"
+		(click)="$event.target === $event.currentTarget ? profileFormAvatarModal.close() : $event"
 	>
 		<app-window
 			slot="content"
 			[appTitle]="'Image'"
 			(closed)="onToggleProfileFormAvatar(false)"
 		>
-			<ng-container slot="content" *ngIf="profileFormAvatarToggle">
+			<ng-container slot="content" *ngIf="profileFormAvatarModal.open">
 				<app-cropper
 					[appField]="'avatars'"
 					(submitted)="onSubmitCropper($event)"
@@ -211,11 +213,13 @@
 				</app-cropper>
 			</ng-container>
 		</app-window>
-	</app-overlay>
-	<app-overlay
-		[appToggle]="QRCodeToggle"
-		(clicked)="onToggleQRCode(false)"
-		(escaped)="onToggleQRCode(false)"
+	</dialog>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#QRCodeModal
+		(close)="onToggleQRCode(false)"
+		(click)="$event.target === $event.currentTarget ? QRCodeModal.close() : $event"
 	>
 		<app-window
 			slot="content"
@@ -231,7 +235,7 @@
 						#QRCodeCanvas
 					></canvas>
 					<button
-						class="btn btn-success w-full"
+						class="btn-success btn w-full"
 						type="button"
 						aria-label="Download"
 						(click)="onDownloadQRCode()"
@@ -241,5 +245,5 @@
 				</div>
 			</ng-container>
 		</app-window>
-	</app-overlay>
+	</dialog>
 </ng-container>
