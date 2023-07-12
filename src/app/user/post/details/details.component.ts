@@ -1,10 +1,15 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+	Component,
+	ElementRef,
+	OnDestroy,
+	OnInit,
+	ViewChild
+} from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Data, Router } from '@angular/router';
-import { OverlayComponent } from '../../../standalone/components/overlay/overlay.component';
 import { WindowComponent } from '../../../standalone/components/window/window.component';
 import { ShareComponent } from '../../../standalone/components/share/share.component';
 import { PostDetailComponent } from '../../../standalone/components/post/prose/prose.component';
@@ -13,16 +18,14 @@ import { PostService } from '../../../core/services/post.service';
 
 @Component({
 	standalone: true,
-	imports: [
-		OverlayComponent,
-		WindowComponent,
-		PostDetailComponent,
-		ShareComponent
-	],
+	imports: [WindowComponent, PostDetailComponent, ShareComponent],
 	selector: 'app-user-post-details',
 	templateUrl: './details.component.html'
 })
 export class UserPostDetailsComponent implements OnInit, OnDestroy {
+	// prettier-ignore
+	@ViewChild('postProseModal', { static: true }) postProseModal: ElementRef<HTMLDialogElement> | undefined;
+
 	activatedRouteData$: Subscription | undefined;
 
 	post: Post | undefined;
@@ -39,6 +42,7 @@ export class UserPostDetailsComponent implements OnInit, OnDestroy {
 			.subscribe({
 				next: (post: Post) => {
 					this.post = post;
+					this.postProseModal.nativeElement.showModal();
 
 					this.postService.setPostMeta(this.post);
 					this.postService.setPostTitle(this.post.name);
@@ -50,16 +54,25 @@ export class UserPostDetailsComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
 
-		this.postService.removePostMeta();
-		this.postService.removePostTitle();
+		/** Update meta tags */
+
+		this.onClosePostProseModal(false);
 	}
 
-	onClose(): void {
-		this.router
-			.navigate(['..'], {
-				relativeTo: this.activatedRoute,
-				queryParamsHandling: 'preserve'
-			})
-			.then(() => console.debug('Route changed'));
+	onClosePostProseModal(redirect: boolean = true): void {
+		this.post = undefined;
+		this.postProseModal.nativeElement.close();
+
+		this.postService.removePostMeta();
+		this.postService.removePostTitle();
+
+		if (redirect) {
+			this.router
+				.navigate(['..'], {
+					relativeTo: this.activatedRoute,
+					queryParamsHandling: 'preserve'
+				})
+				.then(() => console.debug('Route changed'));
+		}
 	}
 }

@@ -1,19 +1,19 @@
 <!-- @format -->
 
 <ng-container>
-	<app-overlay [appToggle]="true" (clicked)="onClose()" (escaped)="onClose()">
+	<dialog
+		class="modal"
+		#postProseModal
+		(close)="onClosePostProseModal()"
+		(click)="$event.target === $event.currentTarget && postProseModal.close()"
+	>
 		<app-window
-			slot="content"
 			[appTitle]="'View'"
 			[appButtons]="['close', 'fullscreen']"
-			(closed)="onClose()"
+			(closed)="onClosePostProseModal()"
 		>
-			<app-post-prose
-				class="h-full"
-				slot="content"
-				[appPost]="post"
-			></app-post-prose>
+			<app-post-prose slot="content" [appPost]="post"></app-post-prose>
 			<app-share class="flex bg-base-200 p-2" slot="footer"></app-share>
 		</app-window>
-	</app-overlay>
+	</dialog>
 </ng-container>
