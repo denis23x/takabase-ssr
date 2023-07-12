@@ -1,11 +1,12 @@
 <!-- @format -->
 
 <ng-container>
+	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
 		#postProseModal
 		(close)="onClosePostProseModal()"
-		(click)="$event.target === $event.currentTarget && postProseModal.close()"
+		(click)="$event.target === $event.currentTarget ? postProseModal.close() : $event"
 	>
 		<app-window
 			[appTitle]="'View'"

@@ -139,7 +139,7 @@
 		class="modal"
 		#categoryEditFormModal
 		(close)="onToggleCategoryEditForm(false)"
-		(click)="$event.target === $event.currentTarget && categoryEditFormModal.close()"
+		(click)="$event.target === $event.currentTarget ? categoryEditFormModal.close() : $event"
 	>
 		<app-window
 			[appTitle]="'Category'"
@@ -295,7 +295,7 @@
 		class="modal"
 		#categoryDeleteFormModal
 		(close)="onToggleCategoryDeleteForm(false)"
-		(click)="$event.target === $event.currentTarget && categoryDeleteFormModal.close()"
+		(click)="$event.target === $event.currentTarget ? categoryDeleteFormModal.close() : $event"
 	>
 		<app-window
 			[appTitle]="'Confirmation'"
