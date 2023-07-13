@@ -391,12 +391,12 @@
 							</label>
 							<!-- prettier-ignore -->
 							<div
-                class="menu rounded-btn mt-2 overflow-hidden border border-base-content/20 bg-base-100"
+                class="menu menu-vertical menu-md rounded-btn mt-2 overflow-hidden border border-base-content/20 p-0 bg-base-100"
                 slot="content"
                 [class.border-success]="categoryId.value && categoryDeleteForm.enabled"
               >
                 <ul
-                  class="flex max-h-52 flex-col flex-nowrap overflow-y-auto p-2"
+                  class="flex max-h-44 flex-col flex-nowrap overflow-y-auto p-2"
                   *ngIf="category as categoryActive"
                   [class.cursor-not-allowed]="categoryDeleteForm.disabled"
                 >
@@ -407,12 +407,10 @@
                     >
                       <button
                         *ngIf="{ value: categoryId.value === category.id } as isActive"
-                        class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+                        class="rounded-btn block w-full truncate text-base text-left"
                         type="button"
-                        [class.bg-success]="!!isActive.value && categoryDeleteForm.enabled"
-                        [class.text-success-content]="!!isActive.value && categoryDeleteForm.enabled"
-                        [class.bg-base-200]="!!isActive.value && categoryDeleteForm.disabled"
-                        [class.text-base-content]="!!isActive.value && categoryDeleteForm.disabled"
+                        appScrollIntoView
+                        [ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
                         [attr.aria-label]="category.name"
                         (click)="categoryId.patchValue(category.id)"
                       >

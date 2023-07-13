@@ -43,23 +43,21 @@
 								[class.input-error]="theme.touched && theme.invalid"
 							/>
 							<div
-								class="menu mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 shadow"
+								class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 								slot="content"
 							>
-								<ul
-									class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
-								>
+								<ul class="flex max-h-64 flex-col overflow-y-auto p-2">
 									<li
 										class="flex w-full"
 										*ngFor="let themeValue of appearanceThemeList"
 									>
 										<!-- prettier-ignore -->
 										<button
-                      class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+                      class="rounded-btn block w-full truncate text-base text-left"
                       type="button"
                       appScrollIntoView
                       [appScrollActive]="theme.value === themeValue"
-                      [ngClass]="{ 'bg-success text-success-content': theme.value === themeValue }"
+                      [ngClass]="{ 'active': theme.value === themeValue }"
                       [attr.aria-label]="themeValue"
                       (click)="theme.setValue(themeValue)"
                     >
@@ -105,23 +103,21 @@
                 [class.input-error]="themeBackground.touched && themeBackground.invalid"
               />
 							<div
-								class="menu mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 shadow"
+								class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 								slot="content"
 							>
-								<ul
-									class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
-								>
+								<ul class="flex max-h-64 flex-col overflow-y-auto p-2">
 									<!-- prettier-ignore -->
 									<li
                     class="flex w-full overflow-hidden"
                     *ngFor="let themeBackgroundValue of appearanceThemeBackgroundList"
                   >
                     <button
-                      class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+                      class="rounded-btn block w-full truncate text-base text-left"
                       type="button"
                       appScrollIntoView
                       [appScrollActive]="themeBackground.value === themeBackgroundValue"
-                      [ngClass]="{ 'bg-success text-success-content': themeBackground.value === themeBackgroundValue }"
+                      [ngClass]="{ 'active': themeBackground.value === themeBackgroundValue }"
                       [attr.aria-label]="themeBackgroundValue"
                       (click)="themeBackground.setValue(themeBackgroundValue)"
                     >
@@ -170,23 +166,21 @@
 								[class.input-error]="themePrism.touched && themePrism.invalid"
 							/>
 							<div
-								class="menu mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 shadow"
+								class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 								slot="content"
 							>
-								<ul
-									class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
-								>
+								<ul class="flex max-h-64 flex-col overflow-y-auto p-2">
 									<li
 										class="flex w-full overflow-hidden"
 										*ngFor="let themePrismValue of appearanceThemePrismList"
 									>
 										<!-- prettier-ignore -->
 										<button
-                      class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+                      class="rounded-btn block w-full truncate text-base text-left"
                       type="button"
                       appScrollIntoView
                       [appScrollActive]="themePrism.value === themePrismValue"
-                      [ngClass]="{ 'bg-success text-success-content': themePrism.value === themePrismValue }"
+                      [ngClass]="{ 'active': themePrism.value === themePrismValue }"
                       [attr.aria-label]="themePrismValue"
                       (click)="themePrism.setValue(themePrismValue)"
                     >
@@ -223,23 +217,21 @@
 								[class.input-error]="language.touched && language.invalid"
 							/>
 							<div
-								class="menu mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 shadow"
+								class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 								slot="content"
 							>
-								<ul
-									class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
-								>
+								<ul class="flex max-h-64 flex-col overflow-y-auto p-2">
 									<li
 										class="flex w-full overflow-hidden"
 										*ngFor="let languageValue of appearanceLanguageList"
 									>
 										<!-- prettier-ignore -->
 										<button
-                      class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+                      class="rounded-btn block w-full truncate text-base text-left"
                       type="button"
                       appScrollIntoView
                       [appScrollActive]="language.value === languageValue"
-                      [ngClass]="{ 'bg-success text-success-content': language.value === languageValue }"
+                      [ngClass]="{ 'active': language.value === languageValue }"
                       [attr.aria-label]="languageValue"
                       (click)="language.setValue(languageValue)"
                     >

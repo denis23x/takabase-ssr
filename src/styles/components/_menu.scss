@@ -3,6 +3,7 @@
   /* Swap default styles */
 
   li {
+    button[appScrollIntoView],
     button[appSvgIcon] {
       &:first-child:active {
         @apply bg-base-content/10 text-base-content;

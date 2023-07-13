@@ -144,24 +144,22 @@
                   [class.input-error]="categoryName.touched && categoryName.invalid"
                 />
 								<div
-									class="menu mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 shadow"
+									class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 									slot="content"
 									[class.hidden]="!categoryList.length"
 								>
-									<ul
-										class="flex max-h-64 flex-col flex-nowrap overflow-y-auto p-2"
-									>
+									<ul class="flex max-h-64 flex-col overflow-y-auto p-2">
 										<li
 											class="flex w-full"
 											*ngFor="let category of categoryList"
 										>
 											<!-- prettier-ignore -->
 											<button
-                        class="rounded-btn block w-full truncate text-left active:bg-success active:text-success-content"
+                        class="rounded-btn block w-full truncate text-base text-left"
                         type="button"
                         appScrollIntoView
                         [appScrollActive]="categoryName.value === category.name"
-                        [ngClass]="{ 'bg-success text-success-content': categoryName.value === category.name }"
+                        [ngClass]="{ 'active': categoryName.value === category.name }"
                         [attr.aria-label]="category.name"
                         (click)="onSelectCategory(category)"
                       >
