@@ -1,0 +1,22 @@
+.menu {
+
+  /* Swap default styles */
+
+  li:not(:first-child):not(:last-child) {
+    button {
+      @apply rounded-none;
+    }
+  }
+
+  li {
+    button:first-child:active {
+      @apply bg-base-content/10 text-base-content;
+    }
+
+    button[appSvgIcon] {
+      &.active {
+        @apply bg-success text-success-content;
+      }
+    }
+  }
+}
