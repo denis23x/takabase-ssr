@@ -22,7 +22,6 @@ import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { AppScrollIntoViewDirective } from '../standalone/directives/app-scroll-into-view.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
-import { OverlayComponent } from '../standalone/components/overlay/overlay.component';
 import { WindowComponent } from '../standalone/components/window/window.component';
 import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { DayjsPipe } from '../standalone/pipes/dayjs.pipe';
@@ -62,7 +61,6 @@ interface CategoryDeleteForm {
 		DayjsPipe,
 		AppScrollIntoViewDirective,
 		SvgIconComponent,
-		OverlayComponent,
 		WindowComponent,
 		AppInputTrimWhitespaceDirective,
 		MarkdownPipe,

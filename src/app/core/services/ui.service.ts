@@ -69,22 +69,6 @@ export class UiService {
 		return [f(0), f(8), f(4)];
 	};
 
-	setOverlay(toggle: boolean): void {
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			if (this.document.body.clientHeight > window.innerHeight) {
-				if (toggle) {
-					this.document.body.setAttribute('class', 'overlay');
-				} else {
-					this.document.body.removeAttribute('class');
-				}
-			} else {
-				this.document.body.removeAttribute('class');
-			}
-		}
-	}
-
 	setLoader(toggle: boolean): void {
 		if (!!toggle) {
 			// this.document.querySelector('[data-loader]').remove();

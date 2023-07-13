@@ -1,6 +1,12 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+	Component,
+	ElementRef,
+	OnDestroy,
+	OnInit,
+	ViewChild
+} from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { iif, of, Subscription, switchMap } from 'rxjs';
 import { filter, map, startWith } from 'rxjs/operators';
@@ -16,7 +22,6 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
-import { OverlayComponent } from '../standalone/components/overlay/overlay.component';
 import { WindowComponent } from '../standalone/components/window/window.component';
 import { CropperComponent } from '../standalone/components/cropper/cropper.component';
 import { ShareComponent } from '../standalone/components/share/share.component';
@@ -60,7 +65,6 @@ interface CategoryForm {
 		SvgIconComponent,
 		AppInputTrimWhitespaceDirective,
 		DropdownComponent,
-		OverlayComponent,
 		WindowComponent,
 		CropperComponent,
 		PostDetailComponent,
@@ -72,22 +76,30 @@ interface CategoryForm {
 	templateUrl: './create.component.html'
 })
 export class CreateComponent implements OnInit, OnDestroy {
+	// prettier-ignore
+	@ViewChild('postFormPreviewModal') postFormPreviewModal: ElementRef<HTMLDialogElement> | undefined;
+
+	// prettier-ignore
+	@ViewChild('categoryFormModal') categoryFormModal: ElementRef<HTMLDialogElement> | undefined;
+
+	// prettier-ignore
+	@ViewChild('postFormImageModal') postFormImageModal: ElementRef<HTMLDialogElement> | undefined;
+
+	// prettier-ignore
+	@ViewChild('postDeleteModal') postDeleteModal: ElementRef<HTMLDialogElement> | undefined;
+
 	activatedRouteData$: Subscription | undefined;
 
 	category: Category | undefined;
 	categoryList: Category[] = [];
 	categoryForm: FormGroup | undefined;
-	categoryFormToggle: boolean = false;
 
 	post: Post | undefined;
 	postForm: FormGroup | undefined;
 	postForm$: Subscription | undefined;
 	postFormIsPristine: boolean = false;
-	postFormImageToggle: boolean = false;
-	postFormPreviewToggle: boolean = false;
 	postFormPreviewPost: Post | undefined;
 
-	postDeleteToggle: boolean = false;
 	postDeleteIsSubmitted: boolean = false;
 
 	authUser: User | undefined;
@@ -212,7 +224,11 @@ export class CreateComponent implements OnInit, OnDestroy {
 	onTogglePostFormImage(toggle: boolean): void {
 		this.onSubmitPostFormStatus(toggle);
 
-		this.postFormImageToggle = toggle;
+		if (toggle) {
+			this.postFormImageModal.nativeElement.showModal();
+		} else {
+			this.postFormImageModal.nativeElement.close();
+		}
 	}
 
 	onToggleCategory(toggle: boolean): void {
@@ -232,7 +248,12 @@ export class CreateComponent implements OnInit, OnDestroy {
 	onToggleCategoryForm(toggle: boolean): void {
 		this.onSubmitPostFormStatus(toggle);
 
-		this.categoryFormToggle = toggle;
+		if (toggle) {
+			this.categoryFormModal.nativeElement.showModal();
+		} else {
+			this.categoryFormModal.nativeElement.close();
+		}
+
 		this.categoryForm.reset();
 	}
 
@@ -240,22 +261,26 @@ export class CreateComponent implements OnInit, OnDestroy {
 		this.onSubmitPostFormStatus(toggle);
 
 		if (toggle) {
+			this.postFormPreviewModal.nativeElement.showModal();
 			this.postFormPreviewPost = {
 				...this.postForm.value,
 				user: this.authUser,
 				category: this.category
 			};
 		} else {
+			this.postFormPreviewModal.nativeElement.close();
 			this.postFormPreviewPost = undefined;
 		}
-
-		this.postFormPreviewToggle = toggle;
 	}
 
 	onToggleDeletePost(toggle: boolean): void {
 		this.onSubmitPostFormStatus(toggle);
 
-		this.postDeleteToggle = toggle;
+		if (toggle) {
+			this.postDeleteModal.nativeElement.showModal();
+		} else {
+			this.postDeleteModal.nativeElement.close();
+		}
 	}
 
 	onSelectCategory(category: Category): void {

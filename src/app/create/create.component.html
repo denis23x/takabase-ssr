@@ -15,11 +15,12 @@
 					<img
 						class="rounded-btn aspect-square object-cover"
 						alt="Image"
+            width="256"
+            height="256"
 						loading="lazy"
             *ngIf="!!image.value"
-            [fill]="true"
 						[ngClass]="{ invisible: !image.value, 'pointer-events-none opacity-50 saturate-0 transition': postForm.disabled }"
-						[ngSrc]="image.value"
+						[src]="image.value"
 						(click)="onTogglePostFormImage(true)"
 					/>
 					<div
@@ -346,7 +347,7 @@
 						<!-- prettier-ignore -->
 						<ul
 							class="menu rounded-btn menu-horizontal border border-base-content/20 sm:menu-vertical"
-              *ngIf="{ value: postForm.disabled || postFormPreviewToggle || postDeleteToggle } as disabled"
+              *ngIf="{ value: postForm.disabled || postFormPreviewModal.open || postDeleteModal.open } as disabled"
               [ngClass]="{ 'bg-base-300 border-transparent': disabled.value }"
 						>
 							<li class="inline-block" [class.disabled]="disabled.value">
@@ -456,7 +457,7 @@
 					class="btn btn-success col-span-8 sm:col-span-9"
 					type="button"
 					aria-label="Submit"
-					[class.loading]="postForm.disabled && !postFormImageToggle && !categoryFormToggle && !postFormPreviewToggle && !postDeleteToggle"
+					[class.loading]="postForm.disabled && !postFormImageModal.open && !categoryFormModal.open && !postFormPreviewModal.open && !postDeleteModal.open"
 					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine"
 					(click)="onSubmitPostForm()"
 				>
@@ -476,10 +477,12 @@
 			</div>
 		</div>
 	</div>
-	<app-overlay
-		[appToggle]="postFormPreviewToggle"
-		(clicked)="onTogglePreviewPost(false)"
-		(escaped)="onTogglePreviewPost(false)"
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#postFormPreviewModal
+		(close)="onTogglePreviewPost(false)"
+		(click)="$event.target === $event.currentTarget ? postFormPreviewModal.close() : $event"
 	>
 		<app-window
 			slot="content"
@@ -497,11 +500,13 @@
 				<app-share class="opacity-50"></app-share>
 			</div>
 		</app-window>
-	</app-overlay>
-	<app-overlay
-		[appToggle]="categoryFormToggle"
-		(clicked)="onToggleCategoryForm(false)"
-		(escaped)="onToggleCategoryForm(false)"
+	</dialog>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#categoryFormModal
+		(close)="onToggleCategoryForm(false)"
+		(click)="$event.target === $event.currentTarget ? categoryFormModal.close() : $event"
 	>
 		<app-window
 			slot="content"
@@ -640,18 +645,20 @@
 				</form>
 			</ng-container>
 		</app-window>
-	</app-overlay>
-	<app-overlay
-		[appToggle]="postFormImageToggle"
-		(clicked)="onTogglePostFormImage(false)"
-		(escaped)="onTogglePostFormImage(false)"
+	</dialog>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#postFormImageModal
+		(close)="onTogglePostFormImage(false)"
+		(click)="$event.target === $event.currentTarget ? postFormImageModal.close() : $event"
 	>
 		<app-window
 			slot="content"
 			[appTitle]="'Image'"
 			(closed)="onTogglePostFormImage(false)"
 		>
-			<ng-container slot="content" *ngIf="postFormImageToggle">
+			<ng-container slot="content" *ngIf="postFormImageModal.open">
 				<app-cropper
 					[appField]="'images'"
 					(submitted)="onSubmitPostFormImage($event)"
@@ -659,11 +666,13 @@
 				</app-cropper>
 			</ng-container>
 		</app-window>
-	</app-overlay>
-	<app-overlay
-		[appToggle]="postDeleteToggle"
-		(clicked)="onToggleDeletePost(false)"
-		(escaped)="onToggleDeletePost(false)"
+	</dialog>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#postDeleteModal
+		(close)="onToggleDeletePost(false)"
+		(click)="$event.target === $event.currentTarget ? postDeleteModal.close() : $event"
 	>
 		<app-window
 			slot="content"
@@ -689,5 +698,5 @@
 				</div>
 			</ng-container>
 		</app-window>
-	</app-overlay>
+	</dialog>
 </ng-container>
