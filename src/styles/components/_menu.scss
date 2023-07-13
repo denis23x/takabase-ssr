@@ -3,16 +3,19 @@
   /* Swap default styles */
 
   li {
-    button[appSvgIcon]:first-child:active {
-      @apply bg-base-content/10 text-base-content;
-    }
-
     button[appSvgIcon] {
-      @apply rounded-none;
+      &:first-child:active {
+        @apply bg-base-content/10 text-base-content;
+      }
 
       &.active {
         @apply bg-success text-success-content;
       }
+    }
+
+    div[appDropdown],
+    button[appSvgIcon] {
+      @apply rounded-none;
     }
   }
 }
