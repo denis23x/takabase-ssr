@@ -341,83 +341,85 @@
 						</fieldset>
 					</form>
 					<div
-						class="flex flex-col items-center justify-center"
+						class="flex items-center justify-center"
 						[class.hidden]="!fullscreenToggle"
 					>
 						<!-- prettier-ignore -->
-						<ul
-							class="menu menu-md rounded-btn menu-horizontal border border-base-content/20 sm:menu-vertical p-0"
-              *ngIf="{ value: postForm.disabled || postFormPreviewModal.open || postDeleteModal.open } as disabled"
-              [ngClass]="{ 'bg-base-300 border-transparent': disabled.value }"
-						>
-							<li class="inline-block" [class.disabled]="disabled.value">
-								<button
-                  class="fill-current p-3 -rotate-90 sm:-rotate-180 rounded-b-none sm:rounded-b-btn sm:rounded-t-none"
-									type="button"
-									title="Markdown"
-									aria-label="Markdown"
-                  appSvgIcon
-                  [appIcon]="'arrow-bar-left'"
-                  [appSquare]="'1.5725em'"
-                  [ngClass]="{ 'active' : fullscreenHiddenRender && !disabled.value, 'bg-base-content/10' : fullscreenHiddenRender && disabled.value }"
-                  (click)="onFullscreenHide('fullscreenHiddenRender')"
-								>
-								</button>
-							</li>
-							<li class="inline-block" [class.disabled]="disabled.value">
-								<button
-                  class="fill-current p-3"
-									type="button"
-									title="Fullscreen"
-									aria-label="Fullscreen"
-									appSvgIcon
-									[appIcon]="'fullscreen'"
-                  [appSquare]="'1.5725em'"
-                  [ngClass]="{ 'active' : fullscreenHiddenControls && !disabled.value, 'bg-base-content/10' : fullscreenHiddenControls && disabled.value }"
-									(click)="onFullscreenHide('fullscreenHiddenControls')"
-								></button>
-							</li>
-							<li class="inline-block" [class.disabled]="disabled.value">
-								<button
-                  class="fill-current p-3"
-									type="button"
-									title="Scroll sync"
-									aria-label="Scroll sync"
-									appSvgIcon
-									[appIcon]="'mouse'"
-                  [appSquare]="'1.5725em'"
-                  [ngClass]="{ 'active' : fullscreenScrollSync && !disabled.value, 'bg-base-content/10' : fullscreenScrollSync && disabled.value }"
-                  (click)="fullscreenScrollSync = !fullscreenScrollSync"
-								></button>
-							</li>
-							<li class="inline-block" [class.disabled]="disabled.value">
-								<button
-                  class="fill-current p-3"
-									type="button"
-									title="Disable text wrapping"
-									aria-label="Disable text wrapping"
-									appSvgIcon
-									[appIcon]="'text-wrap'"
-                  [appSquare]="'1.5725em'"
-                  [ngClass]="{ 'active' : fullscreenDisableTextWrapping && !disabled.value, 'bg-base-content/10' : fullscreenDisableTextWrapping && disabled.value }"
-									(click)="fullscreenDisableTextWrapping = !fullscreenDisableTextWrapping"
-								></button>
-							</li>
-							<li class="inline-block" [class.disabled]="disabled.value">
-								<button
-                  class="fill-current p-3 rotate-90 sm:rotate-0 rounded-b-none sm:rounded-b-btn sm:rounded-t-none"
-									type="button"
-									title="Render"
-									aria-label="Render"
-                  appSvgIcon
-                  [appIcon]="'arrow-bar-left'"
-                  [appSquare]="'1.5725em'"
-                  [ngClass]="{ 'active' : fullscreenHiddenMarkdown && !disabled.value, 'bg-base-content/10' : fullscreenHiddenMarkdown && disabled.value }"
-									(click)="onFullscreenHide('fullscreenHiddenMarkdown')"
-								>
-								</button>
-							</li>
-						</ul>
+						<div class="flex overflow-auto rounded-btn border border-base-content/20">
+              <ul
+                class="menu menu-md rounded-btn menu-horizontal flex-nowrap overflow-auto sm:menu-vertical p-0"
+                *ngIf="{ value: postForm.disabled || postFormPreviewModal.open || postDeleteModal.open } as disabled"
+                [ngClass]="{ 'bg-base-300 border-transparent': disabled.value }"
+              >
+                <li class="inline-block" [class.disabled]="disabled.value">
+                  <button
+                    class="fill-current p-3 -rotate-90 sm:-rotate-180"
+                    type="button"
+                    title="Markdown"
+                    aria-label="Markdown"
+                    appSvgIcon
+                    [appIcon]="'arrow-bar-left'"
+                    [appSquare]="'1.5725em'"
+                    [ngClass]="{ 'active' : fullscreenHiddenRender && !disabled.value, 'bg-base-content/10' : fullscreenHiddenRender && disabled.value }"
+                    (click)="onFullscreenHide('fullscreenHiddenRender')"
+                  >
+                  </button>
+                </li>
+                <li class="inline-block" [class.disabled]="disabled.value">
+                  <button
+                    class="fill-current p-3"
+                    type="button"
+                    title="Fullscreen"
+                    aria-label="Fullscreen"
+                    appSvgIcon
+                    [appIcon]="'fullscreen'"
+                    [appSquare]="'1.5725em'"
+                    [ngClass]="{ 'active' : fullscreenHiddenControls && !disabled.value, 'bg-base-content/10' : fullscreenHiddenControls && disabled.value }"
+                    (click)="onFullscreenHide('fullscreenHiddenControls')"
+                  ></button>
+                </li>
+                <li class="inline-block" [class.disabled]="disabled.value">
+                  <button
+                    class="fill-current p-3"
+                    type="button"
+                    title="Scroll sync"
+                    aria-label="Scroll sync"
+                    appSvgIcon
+                    [appIcon]="'mouse'"
+                    [appSquare]="'1.5725em'"
+                    [ngClass]="{ 'active' : fullscreenScrollSync && !disabled.value, 'bg-base-content/10' : fullscreenScrollSync && disabled.value }"
+                    (click)="fullscreenScrollSync = !fullscreenScrollSync"
+                  ></button>
+                </li>
+                <li class="inline-block" [class.disabled]="disabled.value">
+                  <button
+                    class="fill-current p-3"
+                    type="button"
+                    title="Disable text wrapping"
+                    aria-label="Disable text wrapping"
+                    appSvgIcon
+                    [appIcon]="'text-wrap'"
+                    [appSquare]="'1.5725em'"
+                    [ngClass]="{ 'active' : fullscreenDisableTextWrapping && !disabled.value, 'bg-base-content/10' : fullscreenDisableTextWrapping && disabled.value }"
+                    (click)="fullscreenDisableTextWrapping = !fullscreenDisableTextWrapping"
+                  ></button>
+                </li>
+                <li class="inline-block" [class.disabled]="disabled.value">
+                  <button
+                    class="fill-current p-3 rotate-90 sm:rotate-0"
+                    type="button"
+                    title="Render"
+                    aria-label="Render"
+                    appSvgIcon
+                    [appIcon]="'arrow-bar-left'"
+                    [appSquare]="'1.5725em'"
+                    [ngClass]="{ 'active' : fullscreenHiddenMarkdown && !disabled.value, 'bg-base-content/10' : fullscreenHiddenMarkdown && disabled.value }"
+                    (click)="onFullscreenHide('fullscreenHiddenMarkdown')"
+                  >
+                  </button>
+                </li>
+              </ul>
+            </div>
 					</div>
 					<section
 						class="flex h-full w-full flex-col overflow-auto"

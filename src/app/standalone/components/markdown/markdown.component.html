@@ -7,7 +7,7 @@
 		[ngClass]="{ 'cursor-not-allowed border-transparent': controlListDisabled }"
 	>
 		<ul
-			class="menu menu-horizontal menu-md flex-nowrap overflow-auto rounded-btn bg-base-100 p-0 [&>li>*:nth-child(1):active]:bg-base-content/10 [&>li>*:nth-child(1):active]:text-base-content"
+			class="menu menu-horizontal menu-md flex-nowrap overflow-auto rounded-btn bg-base-100 p-0"
 			[ngClass]="{ 'pointer-events-none bg-base-300': controlListDisabled }"
 		>
 			<li
@@ -16,7 +16,7 @@
 				[class.disabled]="disabled.value || controlListDisabled"
 			>
 				<button
-					class="rounded-none fill-current p-3 active:!bg-error active:!text-error-content"
+					class="fill-current p-3 active:!bg-error active:!text-error-content"
 					type="button"
 					title="Undo"
 					aria-label="Undo"
@@ -29,7 +29,7 @@
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
-					class="flex rounded-none p-0"
+					class="flex p-0"
 					appDropdown
 					#dropdownHeading
 					*ngIf="{ value: false } as toggle"
@@ -67,7 +67,7 @@
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
-					class="flex rounded-none p-0"
+					class="flex p-0"
 					appDropdown
 					#dropdownFormatting
 					*ngIf="{ value: false } as toggle"
@@ -85,7 +85,7 @@
 						[appIcon]="'type-bold'"
 					></button>
 					<ul
-						class="menu menu-vertical menu-md ml-2 mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
+						class="menu menu-vertical menu-md ml-0 mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
 						slot="content"
 					>
 						<li
@@ -108,7 +108,7 @@
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
-					class="flex rounded-none p-0"
+					class="flex p-0"
 					appDropdown
 					#dropdownList
 					*ngIf="{ value: false } as toggle"
@@ -149,7 +149,7 @@
 				[class.disabled]="controlListDisabled"
 			>
 				<button
-					class="rounded-none fill-current p-3"
+					class="fill-current p-3"
 					appSvgIcon
 					[attr.aria-label]="control.label"
 					[attr.title]="control.label"
@@ -160,7 +160,7 @@
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
-					class="flex rounded-none p-0"
+					class="flex p-0"
 					appDropdown
 					#dropdownEmojiMart
 					*ngIf="{ value: false } as toggle"
@@ -187,7 +187,7 @@
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
-					class="flex rounded-none p-0"
+					class="flex p-0"
 					appDropdown
 					#dropdownTable
 					*ngIf="{ value: false } as toggle"
@@ -234,7 +234,7 @@
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<button
-					class="rounded-none fill-current p-3"
+					class="fill-current p-3"
 					appSvgIcon
 					[attr.aria-label]="controlListSpoiler.label"
 					[attr.title]="controlListSpoiler.label"
@@ -245,7 +245,7 @@
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<button
-					class="rounded-none fill-current p-3"
+					class="fill-current p-3"
 					appSvgIcon
 					[appSquare]="'1.5725em'"
 					[attr.aria-label]="controlListCode.label"

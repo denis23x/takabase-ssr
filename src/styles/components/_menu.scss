@@ -2,18 +2,14 @@
 
   /* Swap default styles */
 
-  li:not(:first-child):not(:last-child) {
-    button {
-      @apply rounded-none;
-    }
-  }
-
   li {
-    button:first-child:active {
+    button[appSvgIcon]:first-child:active {
       @apply bg-base-content/10 text-base-content;
     }
 
     button[appSvgIcon] {
+      @apply rounded-none;
+
       &.active {
         @apply bg-success text-success-content;
       }
