@@ -18,7 +18,8 @@
     "ssr:prerender:prod": "ng run draft-ssr:prerender:production",
     "spite:build": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --stripAttrs class --stripAttrs fill",
     "dist:start": "node dist/draft-ssr/server/main.js",
-    "dist:analyze": "webpack-bundle-analyzer dist/draft-ssr/browser/stats.json"
+    "dist:analyze": "webpack-bundle-analyzer dist/draft-ssr/browser/stats.json",
+    "lint": "ng lint"
   },
   "dependencies": {
     "@angular/common": "^15.1.0",
@@ -62,6 +63,11 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.1.1",
+    "@angular-eslint/builder": "15.2.1",
+    "@angular-eslint/eslint-plugin": "15.2.1",
+    "@angular-eslint/eslint-plugin-template": "15.2.1",
+    "@angular-eslint/schematics": "15.2.1",
+    "@angular-eslint/template-parser": "15.2.1",
     "@angular/cli": "^15.1.1",
     "@angular/compiler-cli": "^15.1.0",
     "@nguniversal/builders": "^15.1.0",
@@ -77,10 +83,15 @@
     "@types/prismjs": "^1.26.0",
     "@types/qrcode": "^1.5.0",
     "@types/ua-parser-js": "^0.7.36",
+    "@typescript-eslint/eslint-plugin": "5.48.2",
+    "@typescript-eslint/parser": "5.48.2",
     "autoprefixer": "^10.4.12",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^5.0.0-alpha.2",
     "npm-check-updates": "^16.10.15",
     "postcss": "^8.4.18",
-    "prettier": "^2.8.4",
+    "prettier": "^3.0.0",
     "prettier-plugin-organize-attributes": "^0.0.5",
     "prettier-plugin-tailwindcss": "^0.2.3",
     "svg2sprite-cli": "^2.0.1",
