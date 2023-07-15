@@ -54,7 +54,8 @@ interface ImageForm {
 	templateUrl: './cropper.component.html'
 })
 export class CropperComponent implements AfterViewInit, OnDestroy {
-	@ViewChild('imageFormFile') imageFormFile: ElementRef | undefined;
+	// prettier-ignore
+	@ViewChild('imageFormFile') imageFormFile: ElementRef<HTMLInputElement> | undefined;
 
 	// prettier-ignore
 	@ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent | undefined;

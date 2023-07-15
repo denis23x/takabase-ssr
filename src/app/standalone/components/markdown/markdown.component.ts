@@ -71,10 +71,11 @@ interface UrlForm {
 	templateUrl: './markdown.component.html'
 })
 export class MarkdownComponent implements AfterViewInit, OnDestroy {
-	@ViewChild('controlListElement') controlListElement: ElementRef | undefined;
+	// prettier-ignore
+	@ViewChild('controlListElement') controlListElement: ElementRef<HTMLDivElement> | undefined;
 
 	// prettier-ignore
-	@ViewChild('controlListTableElement') controlListTableElement: ElementRef | undefined;
+	@ViewChild('controlListTableElement') controlListTableElement: ElementRef<HTMLDivElement> | undefined;
 
 	@ViewChild('dropdownHeading') dropdownHeading: DropdownComponent | undefined;
 	// prettier-ignore

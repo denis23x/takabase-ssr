@@ -23,8 +23,11 @@ import { PlatformService } from '../../../core/services/platform.service';
 	templateUrl: './dropdown.component.html'
 })
 export class DropdownComponent implements OnInit, OnDestroy {
-	@ViewChild('dropdownTarget') dropdownTarget: ElementRef | undefined;
-	@ViewChild('dropdownContent') dropdownContent: ElementRef | undefined;
+	// prettier-ignore
+	@ViewChild('dropdownTarget') dropdownTarget: ElementRef<HTMLSlotElement> | undefined;
+
+	// prettier-ignore
+	@ViewChild('dropdownContent') dropdownContent: ElementRef<HTMLSlotElement> | undefined;
 
 	@Output() toggled: EventEmitter<boolean> = new EventEmitter<boolean>();
 

@@ -59,12 +59,11 @@ interface ProfileForm {
 	templateUrl: './profile.component.html'
 })
 export class SettingsProfileComponent implements OnInit, OnDestroy {
-	@ViewChild('avatarInput') avatarInput: ElementRef | undefined;
-
 	// prettier-ignore
 	@ViewChild('profileFormAvatarModal') profileFormAvatarModal: ElementRef<HTMLDialogElement> | undefined;
 
-	@ViewChild('QRCodeCanvas') QRCodeCanvas: ElementRef | undefined;
+	// prettier-ignore
+	@ViewChild('QRCodeCanvas') QRCodeCanvas: ElementRef<HTMLCanvasElement> | undefined;
 
 	// prettier-ignore
 	@ViewChild('QRCodeModal') QRCodeModal: ElementRef<HTMLDialogElement> | undefined;
