@@ -13,7 +13,10 @@ import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 	providedIn: 'root'
 })
 export class SearchUserResolverService {
-	constructor(private router: Router, private userService: UserService) {}
+	constructor(
+		private router: Router,
+		private userService: UserService
+	) {}
 
 	resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<User[]> {
 		let userGetAllDto: UserGetAllDto = {
@@ -24,7 +27,7 @@ export class SearchUserResolverService {
 		// prettier-ignore
 		const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
 
-		if (!!name.length) {
+		if (name.length) {
 			userGetAllDto = {
 				...userGetAllDto,
 				name

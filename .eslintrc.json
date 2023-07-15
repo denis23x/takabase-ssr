@@ -25,6 +25,8 @@
             "style": "camelCase"
           }
         ],
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/no-explicit-any": "off",
         "@angular-eslint/component-selector": [
           "error",
           {

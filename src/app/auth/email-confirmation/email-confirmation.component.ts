@@ -37,7 +37,7 @@ export class AuthEmailConfirmationComponent implements OnInit, OnDestroy {
       next: () => {
         const token: string = String(this.activatedRoute.snapshot.queryParamMap.get('token') || '');
 
-        if (!!token.length) {
+        if (token.length) {
           const emailConfirmationUpdateDto: EmailConfirmationUpdateDto = {
             token
           };

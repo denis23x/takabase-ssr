@@ -20,7 +20,7 @@ export class TitleService extends TitleStrategy {
 	override updateTitle(routerStateSnapshot: RouterStateSnapshot): void {
 		const title: string | undefined = this.buildTitle(routerStateSnapshot);
 
-		if (!!title) {
+		if (title) {
 			this.title.setTitle(this.getTitleFormatted(title));
 		}
 	}
@@ -34,7 +34,7 @@ export class TitleService extends TitleStrategy {
 	}
 
 	getTitleFormatted(title: string, append: boolean = false): string {
-		if (!!append) {
+		if (append) {
 			return [this.getTitle(), title].reverse().join(this.titleDelimiter);
 		} else {
 			return [title, this.titlePostfix].join(this.titlePostfixDelimiter);

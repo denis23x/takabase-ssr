@@ -240,7 +240,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 				abstractControl.setErrors({ required: true });
 			}
 		} else {
-			if (!!toggle) {
+			if (toggle) {
 				this.onToggleCategoryForm(true);
 			}
 		}

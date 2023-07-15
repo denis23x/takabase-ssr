@@ -39,7 +39,7 @@ export class MarkdownService {
 	) {}
 
 	getMarkdownIt(): MarkdownIt {
-		if (!!this.markdownIt) {
+		if (this.markdownIt) {
 			return this.markdownIt;
 		}
 

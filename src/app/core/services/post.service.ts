@@ -82,7 +82,7 @@ export class PostService {
 	getSearchPostGetAllDto(postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto {
     const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
 
-    if (!!name.length) {
+    if (name.length) {
       postGetAllDto = {
         ...postGetAllDto,
         name

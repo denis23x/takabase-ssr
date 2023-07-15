@@ -28,7 +28,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 
 		const token: string = this.getToken();
 
-		if (!!token) {
+		if (token) {
 			requestHeaders['Authorization'] = 'Bearer ' + token;
 		}
 
@@ -57,7 +57,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				const token: string = this.getToken();
 
-				if (!!token) {
+				if (token) {
 					return this.handleResponseError(httpErrorResponse, request, next);
 				}
 

@@ -1,5 +1,5 @@
 /** @format */
 
 export interface Share {
-  [key: string]: string;
+	[key: string]: string;
 }

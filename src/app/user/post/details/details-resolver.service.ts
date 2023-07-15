@@ -44,7 +44,7 @@ export class UserPostDetailsResolverService {
         // prettier-ignore
 				const data: [User, Category[]] | undefined = activatedRouteSnapshot.parent.parent.data.data;
 
-				if (!!data) {
+				if (data) {
 					// @ts-ignore
 					const user: User = [...data].shift();
 

@@ -24,7 +24,7 @@ export class MetaService {
 			// prettier-ignore
 			const linkElement: HTMLLinkElement = this.document.querySelector("link[rel='canonical']");
 
-			if (!!linkElement) {
+			if (linkElement) {
 				linkElement.setAttribute('href', window.location.href);
 			} else {
 				// prettier-ignore

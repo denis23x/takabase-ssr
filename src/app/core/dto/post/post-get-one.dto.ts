@@ -1,5 +1,5 @@
 /** @format */
 
 export interface PostGetOneDto {
-  scope?: string[];
+	scope?: string[];
 }

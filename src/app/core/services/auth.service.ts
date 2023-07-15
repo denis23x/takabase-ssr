@@ -65,7 +65,7 @@ export class AuthService {
 	guardPrivate(): Observable<boolean> {
 		return this.getUser().pipe(
 			switchMap((user: User | undefined) => {
-				if (!!user) {
+				if (user) {
 					return of(true);
 				}
 
@@ -157,7 +157,7 @@ export class AuthService {
 	getUser(): Observable<User | undefined> {
 		const user: User | undefined = this.user.getValue();
 
-		if (!!user) {
+		if (user) {
 			return of(user);
 		} else {
 			if (this.cookieService.getItem('authed')) {
@@ -176,13 +176,13 @@ export class AuthService {
 
 		/** Set token */
 
-		if (!!user.token) {
+		if (user.token) {
 			this.cookieService.setItem('authed', String(1));
 		}
 
 		/** Set settings */
 
-		if (!!user.settings) {
+		if (user.settings) {
 			this.uiService.setTheme(user.settings.theme);
 			this.uiService.setBackground(user.settings.themeBackground);
 			this.uiService.setPrism(user.settings.themePrism);

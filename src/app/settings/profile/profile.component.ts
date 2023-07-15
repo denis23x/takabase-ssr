@@ -189,7 +189,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 				// prettier-ignore
 				QRCode.toCanvas(this.QRCodeCanvas.nativeElement, this.QRCodeText, this.QRCodeOptions, (error: Error): void => {
-          if (!!error) {
+          if (error) {
             this.snackbarService.danger('Error', "Can't draw your QR Code");
           } else {
             this.QRCodeCanvas.nativeElement.removeAttribute('style');
@@ -205,7 +205,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		// prettier-ignore
 		if (this.platformService.isBrowser()) {
 			QRCode.toDataURL(this.QRCodeText, this.QRCodeOptions, (error: Error, dataURL: string): void => {
-        if (!!error) {
+        if (error) {
           this.snackbarService.danger('Error', "Can't download your QR Code");
         } else {
           this.helperService.getDownload(dataURL, this.userService.getUserUrl(this.authUser, 1));

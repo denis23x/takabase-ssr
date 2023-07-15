@@ -114,7 +114,7 @@ export class SearchUserComponent implements OnInit, OnDestroy {
 		// prettier-ignore
 		const name: string = String(this.activatedRoute.parent.snapshot.queryParamMap.get('query') || '');
 
-		if (!!name.length) {
+		if (name.length) {
 			userGetAllDto = {
 				...userGetAllDto,
 				name

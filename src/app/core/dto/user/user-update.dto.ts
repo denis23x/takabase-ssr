@@ -13,4 +13,4 @@ export interface UserUpdateDto {
 	settings?: Partial<UserSettingsUpdateDto>;
 }
 
-export interface UserSettingsUpdateDto extends UserSettings {}
+export type UserSettingsUpdateDto = UserSettings;

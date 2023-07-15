@@ -9,7 +9,10 @@ import { UiService } from './core/services/ui.service';
 	templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit, AfterViewInit {
-	constructor(private authService: AuthService, private uiService: UiService) {}
+	constructor(
+		private authService: AuthService,
+		private uiService: UiService
+	) {}
 
 	ngOnInit(): void {
 		this.authService.getUser().subscribe({

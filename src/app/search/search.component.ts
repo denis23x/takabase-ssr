@@ -78,7 +78,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 			)
 			.subscribe({
 				next: () => {
-					let value: any = this.searchForm.value;
+					const value: any = this.searchForm.value;
 
 					this.router
 						.navigate([], {

@@ -13,10 +13,10 @@ export class CookieService {
 	) {}
 
 	getItem(key: string): any {
-		let result: any = {};
+		const result: any = {};
 
 		this.document.cookie.split(';').forEach((cookie: string) => {
-			let [key, value]: string[] = cookie.split('=');
+			const [key, value]: string[] = cookie.split('=');
 
 			result[key.trim()] = value;
 		});

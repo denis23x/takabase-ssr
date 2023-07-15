@@ -10,7 +10,10 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 	providedIn: 'root'
 })
 export class TermsDetailsResolverService {
-	constructor(private httpClient: HttpClient, private router: Router) {}
+	constructor(
+		private httpClient: HttpClient,
+		private router: Router
+	) {}
 
 	resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<any> {
 		// prettier-ignore

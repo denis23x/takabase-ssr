@@ -67,7 +67,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
 				if (target) {
 					this.setStateStyle(!this.dropdownState);
-				} else if (!!this.dropdownState) {
+				} else if (this.dropdownState) {
 					if (content) {
 						if (this.dropdownStateCloseOnContentClick) {
 							this.setStateStyle(false);

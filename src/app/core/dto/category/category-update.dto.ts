@@ -1,5 +1,5 @@
 /** @format */
 
 export interface CategoryUpdateDto {
-  name?: string;
+	name?: string;
 }

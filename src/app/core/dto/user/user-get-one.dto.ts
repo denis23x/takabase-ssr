@@ -1,5 +1,5 @@
 /** @format */
 
 export interface UserGetOneDto {
-  scope?: string[];
+	scope?: string[];
 }

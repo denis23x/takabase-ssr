@@ -70,7 +70,7 @@ export class UiService {
 	};
 
 	setLoader(toggle: boolean): void {
-		if (!!toggle) {
+		if (toggle) {
 			// this.document.querySelector('[data-loader]').remove();
 		} else {
 			this.document.querySelector('[data-loader]')?.remove();
@@ -78,7 +78,7 @@ export class UiService {
 	}
 
 	setTheme(theme: string | null): void {
-		if (!!theme) {
+		if (theme) {
 			this.cookieService.setItem('theme', theme);
 		} else {
 			this.cookieService.removeItem('theme');
@@ -90,7 +90,7 @@ export class UiService {
 	}
 
 	setBackground(themeBackground: string | null): void {
-		if (!!themeBackground) {
+		if (themeBackground) {
 			this.cookieService.setItem('theme-background', themeBackground);
 		} else {
 			this.cookieService.removeItem('theme-background');
@@ -115,7 +115,7 @@ export class UiService {
 	}
 
 	setPrism(themePrism: string | null): void {
-		if (!!themePrism) {
+		if (themePrism) {
 			this.cookieService.setItem('theme-prism', themePrism);
 		} else {
 			this.cookieService.removeItem('theme-prism');

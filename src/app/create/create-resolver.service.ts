@@ -74,7 +74,7 @@ export class CreateResolverService {
 				};
 
 				const observable$ = (): Observable<Category[] | Post>[] => {
-					if (!!postId) {
+					if (postId) {
 						return [categoryList$(), post$()];
 					} else {
 						return [categoryList$()];

@@ -13,7 +13,10 @@ import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 	providedIn: 'root'
 })
 export class SearchPostResolverService {
-	constructor(private postService: PostService, private router: Router) {}
+	constructor(
+		private postService: PostService,
+		private router: Router
+	) {}
 
 	resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Post[]> {
 		let postGetAllDto: PostGetAllDto = {

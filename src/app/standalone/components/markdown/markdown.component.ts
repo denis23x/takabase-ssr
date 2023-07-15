@@ -97,7 +97,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.scrollSync = scrollSync;
 
 		if (this.platformService.isBrowser()) {
-			if (!!this.textarea) {
+			if (this.textarea) {
 				this.textarea.dispatchEvent(new Event('scroll'));
 			}
 		}
@@ -439,7 +439,7 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 			// prettier-ignore
 			const markdownTextarea: MarkdownTextarea = this.getMarkdownTextarea(this.textarea);
 
-			if (!!markdownTextarea.selection) {
+			if (markdownTextarea.selection) {
 				Object.keys(this.urlForm.controls).forEach((key: string) => {
 					const abstractControl: AbstractControl = this.urlForm.get(key);
 

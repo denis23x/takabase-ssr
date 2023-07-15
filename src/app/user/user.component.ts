@@ -155,7 +155,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
 					this.titleService.setTitle(this.user.name);
 
-          if (!!this.category) {
+          if (this.category) {
             this.titleService.appendTitle(this.category.name);
           }
 
@@ -210,7 +210,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			['og:image:type']: 'image/png'
 		};
 
-		if (!!this.category) {
+		if (this.category) {
 			metaOpenGraph['og:type'] = 'website';
 		} else {
 			metaOpenGraph['og:type'] = 'profile';
@@ -308,7 +308,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			// prettier-ignore
 			const abstractControl: AbstractControl = this.categoryDeleteForm.get('categoryId');
 
-			if (!!abstractControl.value) {
+			if (abstractControl.value) {
 				categoryDeleteDto.categoryId = abstractControl.value;
 				categoryDeleteRedirect.push('category', abstractControl.value);
 			}
