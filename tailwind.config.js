@@ -166,6 +166,7 @@ module.exports = {
     "link-error",
 
     "btn",
+    "btn-neutral",
     "btn-primary",
     "btn-secondary",
     "btn-accent",
@@ -182,6 +183,7 @@ module.exports = {
     "btn-xs",
 
     "badge",
+    "badge-neutral",
     "badge-primary",
     "badge-secondary",
     "badge-accent",
@@ -205,8 +207,10 @@ module.exports = {
 
     "table",
     "table-zebra",
-    "table-normal",
-    "table-compact",
+    "table-xs",
+    "table-sm",
+    "table-md",
+    "table-lg",
 
     "mask",
     "mask-squircle",

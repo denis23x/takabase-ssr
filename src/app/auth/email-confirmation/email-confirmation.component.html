@@ -9,7 +9,7 @@
 		</div>
 		<ng-container [ngSwitch]="true">
 			<div class="flex flex-col space-y-4" *ngSwitchDefault>
-				<p class="alert inline">
+				<p class="alert inline text-left">
 					Thank you for verifying your email address. You are now officially a
 					member of our community. Get ready to enjoy exclusive updates and
 					exciting content delivered straight to you.
@@ -38,7 +38,7 @@
 				class="flex flex-col space-y-4"
 				*ngSwitchCase="!confirmationIsSubmitted && !confirmationUser"
 			>
-				<p class="alert inline">
+				<p class="alert inline text-left">
 					Our system encountered an issue while attempting to verify your email
 					address. We apologize for any inconvenience this may cause. To resolve
 					this matter, please ensure that you have entered the correct email

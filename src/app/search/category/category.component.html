@@ -22,7 +22,7 @@
 						{{ category.user.name }}
 					</span>
 				</div>
-				<p class="alert inline" *ngIf="!!category.description">
+				<p class="alert inline text-left" *ngIf="!!category.description">
 					<span class="line-clamp-2">{{ category.description }}</span>
 				</p>
 			</li>
@@ -62,7 +62,7 @@
 				</div>
 			</div>
 			<div class="flex flex-col items-center" *ngSwitchCase="true">
-				<progress class="progress progress-primary my-5 w-56"></progress>
+				<progress class="progress-primary progress my-5 w-56"></progress>
 				<span class="text-xl font-bold text-base-content">Loading</span>
 			</div>
 		</ng-container>

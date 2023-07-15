@@ -523,7 +523,9 @@
 					[formGroup]="categoryForm"
 					(ngSubmit)="onSubmitCategoryForm()"
 				>
-					<p class="alert inline">You can change category information later</p>
+					<p class="alert inline text-left">
+						You can change category information later
+					</p>
 					<fieldset
 						class="form-control"
 						*ngIf="categoryForm.get('name') as name"
@@ -686,9 +688,9 @@
 		>
 			<ng-container slot="content">
 				<div class="flex w-window max-w-[425px] flex-col space-y-4 p-4">
-					<p class="alert inline">
-						Are you sure you want to delete this post?
-						<span class="underline">This action cannot be undone</span>
+					<!-- prettier-ignore -->
+					<p class="alert inline text-left">
+						Are you sure you want to delete this post? <span class="underline">This action cannot be undone</span>
 					</p>
 					<button
 						class="btn-error btn"

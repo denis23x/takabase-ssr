@@ -101,7 +101,7 @@ Compact table
 | [2]{.font-bold} | Hart Hagerty | Desktop Support Technician | Purple         | Zemlak, Daniel and Leannon     | United States |
 | [3]{.font-bold} | Brice Swyre  | Tax Accountant             | Red            | Carroll Group                  | China         |
 | [4]{.font-bold} | Irma Vasilik | Quality Control Specialist | Yellow         | Sauer LLC                      | Indonesia     |
-{.table .table-compact .not-prose .border .border-base-content/20 .rounded-md .border-spacing-0 .border-separate .overflow-hidden .my-0}
+{.table .table-sm .not-prose .border .border-base-content/20 .rounded-md .border-spacing-0 .border-separate .overflow-hidden .my-0}
 +++
 
 [image]: https://placehold.co/120x120

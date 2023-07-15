@@ -68,6 +68,7 @@ link-error
 // Button
 
 btn
+btn-neutral
 btn-primary
 btn-secondary
 btn-accent
@@ -86,6 +87,7 @@ btn-xs
 // Badge
 
 badge
+badge-neutral
 badge-primary
 badge-secondary
 badge-accent
@@ -113,8 +115,10 @@ kbd-xs
 
 table
 table-zebra
-table-normal
-table-compact
+table-xs
+table-sm
+table-md
+table-lg
 
 // Table border
 
