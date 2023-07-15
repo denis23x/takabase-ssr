@@ -8,9 +8,9 @@
 			<div class="flex items-center gap-4">
 				<!-- prettier-ignore -->
 				<figure
-					class="block rounded-btn relative aspect-square border border-base-content/20 cursor-pointer h-20 w-20 sm:h-44 sm:w-44"
+					class="block rounded-btn relative aspect-square border border-base-content/20 h-20 w-20 sm:h-44 sm:w-44"
 					*ngIf="postForm.get('image') as image"
-					[ngClass]="{ 'cursor-not-allowed border-transparent bg-base-200': postForm.disabled, 'border-success': postForm.enabled && image.value }"
+					[ngClass]="{ 'cursor-not-allowed border-transparent bg-base-200': postForm.disabled, 'cursor-pointer': postForm.enabled, 'border-success': postForm.enabled && image.value }"
 				>
 					<img
 						class="rounded-btn aspect-square object-cover"
@@ -256,7 +256,7 @@
 						[appPreviewId]="'postFormPreview'"
 						[appScrollSync]="fullscreenScrollSync"
 						[appDisabled]="postForm.disabled"
-						(modalToggle)="onSubmitPostFormStatus($event)"
+						(modalToggle)="onToggleMarkdownModal($event)"
 					></div>
 					<button
 						class="btn-primary btn !outline-0"
@@ -456,10 +456,13 @@
 					class="btn btn-success col-span-8 sm:col-span-9"
 					type="button"
 					aria-label="Submit"
-					[class.loading]="postForm.disabled && !postFormImageModal.open && !categoryFormModal.open && !postFormPreviewModal.open && !postDeleteModal.open"
 					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine"
 					(click)="onSubmitPostForm()"
 				>
+          <span
+            class="loading loading-spinner"
+            *ngIf="postForm.disabled && !postFormImageModal.open && !categoryFormModal.open && !postFormPreviewModal.open && !postDeleteModal.open && !postMarkdownModalToggle"
+          ></span>
 					Submit
 				</button>
 				<button
@@ -635,9 +638,12 @@
 							class="btn-success btn w-full"
 							type="submit"
 							aria-label="Submit"
-							[class.loading]="categoryForm.disabled"
 							[disabled]="categoryForm.invalid || categoryForm.disabled"
 						>
+							<span
+								class="loading loading-spinner"
+								*ngIf="categoryForm.disabled"
+							></span>
 							Submit
 						</button>
 					</fieldset>
@@ -688,10 +694,13 @@
 						class="btn-error btn"
 						type="button"
 						aria-label="Submit"
-						[class.loading]="postDeleteIsSubmitted"
 						[disabled]="postDeleteIsSubmitted"
 						(click)="onSubmitPostDelete()"
 					>
+						<span
+							class="loading loading-spinner"
+							*ngIf="postDeleteIsSubmitted"
+						></span>
 						Submit
 					</button>
 				</div>

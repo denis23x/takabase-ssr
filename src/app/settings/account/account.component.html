@@ -76,9 +76,12 @@
           class="btn btn-success w-full"
           type="submit"
           aria-label="Continue"
-          [class.loading]="passwordCheckForm.disabled"
           [disabled]="passwordCheckForm.invalid || passwordCheckForm.disabled"
         >
+          <span
+            class="loading loading-spinner"
+            *ngIf="passwordCheckForm.disabled"
+          ></span>
           Continue
         </button>
 			</fieldset>
@@ -145,9 +148,12 @@
 						type="submit"
 						aria-label="Submit"
 						*ngSwitchCase="true"
-						[class.loading]="emailForm.disabled"
 						[disabled]="emailForm.invalid || emailForm.disabled"
 					>
+						<span
+							class="loading loading-spinner"
+							*ngIf="emailForm.disabled"
+						></span>
 						Submit
 					</button>
 					<div class="flex flex-col gap-4" *ngSwitchCase="false">
@@ -162,10 +168,13 @@
 							class="btn-success btn w-full"
 							type="button"
 							aria-label="Confirm"
-							[class.loading]="emailFormConfirmationIsSubmitted"
 							[disabled]="emailFormConfirmationIsSubmitted"
 							(click)="onSubmitEmailConfirmation()"
 						>
+							<span
+								class="loading loading-spinner"
+								*ngIf="emailFormConfirmationIsSubmitted"
+							></span>
 							Confirm
 						</button>
 					</div>
@@ -242,9 +251,12 @@
             class="btn btn-success w-full"
             type="submit"
             aria-label="Submit"
-            [class.loading]="passwordForm.disabled"
             [disabled]="passwordForm.invalid || passwordForm.disabled"
           >
+            <span
+              class="loading loading-spinner"
+              *ngIf="passwordForm.disabled"
+            ></span>
             Submit
           </button>
 				</fieldset>

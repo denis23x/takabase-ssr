@@ -270,9 +270,12 @@
               class="btn btn-success"
               type="submit"
               aria-label="Submit"
-              [class.loading]="categoryEditForm.disabled && !categoryDeleteFormModal.open"
               [disabled]="categoryEditForm.invalid || categoryEditForm.disabled || categoryEditFormIsPristine"
             >
+              <span
+                class="loading loading-spinner"
+                *ngIf="categoryEditForm.disabled && !categoryDeleteFormModal.open"
+              ></span>
               Submit
             </button>
             <button
@@ -428,9 +431,12 @@
               class="btn btn-success"
               type="submit"
               aria-label="Submit"
-              [class.loading]="categoryDeleteForm.disabled"
               [disabled]="categoryDeleteForm.invalid || categoryDeleteForm.disabled"
             >
+              <span
+                class="loading loading-spinner"
+                *ngIf="categoryDeleteForm.disabled"
+              ></span>
               Submit
             </button>
 					</fieldset>

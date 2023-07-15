@@ -71,19 +71,25 @@
 						#imageFormFile
 						(change)="onInputFile($event)"
 					/>
-					<!-- prettier-ignore -->
 					<button
-						class="btn-success btn fill-current p-3"
+						class="btn-success btn-square btn fill-current p-3"
 						type="button"
 						aria-label="Browse"
-						appSvgIcon
-						[appIcon]="'upload'"
-						[appSquare]="'1.375rem'"
 						[class.btn-outline]="imageForm.enabled"
-						[ngClass]="{ 'loading w-12 before:!mr-0 [&>svg]:hidden': imageForm.disabled && !cropperFile }"
 						[disabled]="imageForm.disabled"
+						[ngSwitch]="imageForm.disabled && !cropperFile"
 						(click)="imageFormFile.click()"
-					></button>
+					>
+						<span class="loading loading-spinner" *ngSwitchCase="true"></span>
+						<i
+							class="block"
+							appSvgIcon
+							*ngSwitchDefault
+							[appIcon]="'upload'"
+							[appSquare]="'1.375rem'"
+						>
+						</i>
+					</button>
 				</div>
 				<label class="label" for="imageFormUrl">
 					<span class="label-text-alt">Accept only *.png, *.jpg files</span>
@@ -262,10 +268,13 @@
         class="btn btn-success w-full"
         type="button"
         aria-label="Submit"
-        [class.loading]="imageForm.disabled"
         [disabled]="imageForm.invalid || imageForm.disabled"
         (click)="onSubmitCropper()"
       >
+        <span
+          class="loading loading-spinner"
+          *ngIf="imageForm.disabled"
+        ></span>
         Submit
       </button>
 		</div>

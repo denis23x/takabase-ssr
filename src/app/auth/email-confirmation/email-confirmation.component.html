@@ -16,15 +16,16 @@
 				</p>
 				<ng-container [ngSwitch]="!!confirmationUser">
 					<button
-						class="loading btn-success btn w-full"
+						class="btn-success btn w-full"
 						aria-label="Confirmation"
 						*ngSwitchDefault
 						[disabled]="true"
 					>
+						<span class="loading loading-spinner"></span>
 						Confirmation
 					</button>
 					<a
-						class="btn-outline btn-success btn w-full"
+						class="btn-success btn-outline btn w-full"
 						aria-label="Create post"
 						*ngSwitchCase="true"
 						[routerLink]="$any(confirmationUser) | userUrl"

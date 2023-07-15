@@ -407,9 +407,12 @@
 						class="btn-success btn w-full"
 						type="submit"
 						aria-label="Submit"
-						[class.loading]="urlForm.disabled"
 						[disabled]="urlForm.invalid || urlForm.disabled"
 					>
+						<span
+							class="loading loading-spinner"
+							*ngIf="urlForm.disabled"
+						></span>
 						Submit
 					</button>
 				</fieldset>

@@ -100,6 +100,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	postFormIsPristine: boolean = false;
 	postFormPreviewPost: Post | undefined;
 
+	postMarkdownModalToggle: boolean = false;
 	postDeleteIsSubmitted: boolean = false;
 
 	authUser: User | undefined;
@@ -281,6 +282,12 @@ export class CreateComponent implements OnInit, OnDestroy {
 		} else {
 			this.postDeleteModal.nativeElement.close();
 		}
+	}
+
+	onToggleMarkdownModal(toggle: boolean): void {
+		this.onSubmitPostFormStatus(toggle);
+
+		this.postMarkdownModalToggle = toggle;
 	}
 
 	onSelectCategory(category: Category): void {

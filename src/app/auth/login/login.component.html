@@ -135,15 +135,18 @@
 						class="btn-success btn w-full"
 						type="submit"
 						aria-label="Login"
-						[class.loading]="loginForm.disabled"
 						[disabled]="loginForm.invalid || loginForm.disabled"
 					>
+						<span
+							class="loading loading-spinner"
+							*ngIf="loginForm.disabled"
+						></span>
 						Login
 					</button>
 				</fieldset>
 			</form>
 			<a
-				class="btn-outline btn-primary btn w-full"
+				class="btn-primary btn-outline btn w-full"
 				aria-label="Registration"
 				[routerLink]="'/registration'"
 			>
