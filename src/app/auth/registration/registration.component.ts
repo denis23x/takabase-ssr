@@ -113,7 +113,7 @@ export class AuthRegistrationComponent implements OnInit {
 			this.userService
 				.create(userCreateDto)
 				.pipe(
-					switchMap((user: User) => {
+					switchMap(() => {
 						const loginDto: LoginDto = {
 							email: userCreateDto.email,
 							password: userCreateDto.password

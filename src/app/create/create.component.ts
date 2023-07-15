@@ -407,7 +407,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 		const postId: number = this.post.id;
 
 		this.postService.delete(postId).subscribe({
-			next: (post: Post) => {
+			next: () => {
 				// prettier-ignore
 				this.router
           .navigate([this.userService.getUserUrl(this.post.user), 'category', this.post.category.id])

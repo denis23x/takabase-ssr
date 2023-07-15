@@ -8,7 +8,6 @@ import {
 	Inject,
 	Input,
 	OnDestroy,
-	OnInit,
 	Output,
 	ViewChild
 } from '@angular/core';
@@ -71,7 +70,7 @@ interface UrlForm {
 	selector: 'app-markdown, [appMarkdown]',
 	templateUrl: './markdown.component.html'
 })
-export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	@ViewChild('controlListElement') controlListElement: ElementRef | undefined;
 
 	// prettier-ignore
@@ -157,8 +156,6 @@ export class MarkdownComponent implements OnInit, AfterViewInit, OnDestroy {
 	) {
 		this.urlForm = this.formBuilder.group<UrlForm>({});
 	}
-
-	ngOnInit(): void {}
 
 	ngAfterViewInit(): void {
 		if (this.platformService.isBrowser()) {

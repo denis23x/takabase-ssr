@@ -7,7 +7,6 @@ import {
 	EventEmitter,
 	Input,
 	OnDestroy,
-	OnInit,
 	Output,
 	ViewChild
 } from '@angular/core';
@@ -54,7 +53,7 @@ interface ImageForm {
 	selector: 'app-cropper, [appCropper]',
 	templateUrl: './cropper.component.html'
 })
-export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CropperComponent implements AfterViewInit, OnDestroy {
 	@ViewChild('imageFormFile') imageFormFile: ElementRef | undefined;
 
 	// prettier-ignore
@@ -111,8 +110,6 @@ export class CropperComponent implements OnInit, AfterViewInit, OnDestroy {
 			url: this.formBuilder.nonNullable.control('', [Validators.required])
 		});
 	}
-
-	ngOnInit(): void {}
 
 	ngAfterViewInit(): void {
 		this.imageTransform$ = this.imageCropper.transformChange.subscribe({

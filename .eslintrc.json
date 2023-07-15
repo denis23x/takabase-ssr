@@ -16,7 +16,6 @@
         "plugin:prettier/recommended"
       ],
       "rules": {
-        "prettier/prettier": "error",
         "@angular-eslint/directive-selector": [
           "error",
           {
@@ -25,8 +24,6 @@
             "style": "camelCase"
           }
         ],
-        "@typescript-eslint/no-inferrable-types": "off",
-        "@typescript-eslint/no-explicit-any": "off",
         "@angular-eslint/component-selector": [
           "error",
           {
@@ -34,7 +31,11 @@
             "prefix": "app",
             "style": "kebab-case"
           }
-        ]
+        ],
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "prettier/prettier": "error"
       },
       "plugins": ["prettier"]
     },

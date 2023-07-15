@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
@@ -10,10 +10,6 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 	imports: [SvgIconComponent],
 	templateUrl: './oauth.component.html'
 })
-export class OauthComponent implements OnInit {
+export class OauthComponent {
 	apiUrl: string = environment.API_URL;
-
-	constructor() {}
-
-	ngOnInit(): void {}
 }

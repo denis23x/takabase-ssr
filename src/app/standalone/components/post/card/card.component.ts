@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
@@ -12,7 +12,7 @@ import { Post } from '../../../../core/models/post.model';
 	selector: 'app-post-card, [appPostCard]',
 	templateUrl: './card.component.html'
 })
-export class PostCardComponent implements OnInit {
+export class PostCardComponent {
 	@Input()
 	set appPost(post: Post) {
 		this.post = post;
@@ -23,10 +23,6 @@ export class PostCardComponent implements OnInit {
 		this.path = path;
 	}
 
-	constructor() {}
-
 	post: Post | undefined;
 	path: string = '';
-
-	ngOnInit(): void {}
 }

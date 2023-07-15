@@ -38,7 +38,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
 	dropdownState: boolean = false;
 	// prettier-ignore
-	dropdownStateStyle: Object = {
+	dropdownStateStyle: any = {
     'position': 'fixed',
     'visibility': 'hidden'
 	};

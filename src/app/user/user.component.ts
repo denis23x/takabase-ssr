@@ -314,7 +314,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			}
 
 			this.categoryService.delete(categoryId, categoryDeleteDto).subscribe({
-				next: (category: Category) => {
+				next: () => {
 					this.snackbarService.success(null, 'Category deleted');
 
 					this.category = undefined;

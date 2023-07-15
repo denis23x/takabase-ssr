@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { toSvg } from 'jdenticon';
 import { SanitizerPipe } from '../../pipes/sanitizer.pipe';
 import { User } from '../../../core/models/user.model';
@@ -11,7 +11,7 @@ import { User } from '../../../core/models/user.model';
 	imports: [SanitizerPipe],
 	templateUrl: './avatar.component.html'
 })
-export class AvatarComponent implements OnInit {
+export class AvatarComponent {
 	@Input()
 	set appUser(user: User) {
 		this.avatarHTML = user.avatar
@@ -19,12 +19,8 @@ export class AvatarComponent implements OnInit {
 			: this.getJdenticon(user);
 	}
 
-	constructor() {}
-
 	avatarHTML: string | undefined;
 	avatarSize: number = 256;
-
-	ngOnInit(): void {}
 
 	getAvatar(user: User): string {
 		return `<img loading="lazy" width="${this.avatarSize}" height="${this.avatarSize}" src="${user.avatar}" alt="${user.name}">`;

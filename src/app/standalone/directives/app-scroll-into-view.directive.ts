@@ -1,12 +1,12 @@
 /** @format */
 
-import { Directive, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 
 @Directive({
 	standalone: true,
 	selector: '[appScrollIntoView]'
 })
-export class AppScrollIntoViewDirective implements OnInit, OnDestroy {
+export class AppScrollIntoViewDirective implements OnInit {
 	@Input()
 	set appScrollActive(scrollActive: boolean) {
 		this.scrollActive = scrollActive;
@@ -27,6 +27,4 @@ export class AppScrollIntoViewDirective implements OnInit, OnDestroy {
 			}
 		});
 	}
-
-	ngOnDestroy(): void {}
 }

@@ -1,12 +1,12 @@
 /** @format */
 
-import { Directive, HostListener, OnInit } from '@angular/core';
+import { Directive, HostListener } from '@angular/core';
 
 @Directive({
 	standalone: true,
 	selector: '[appInputOnlyPaste]'
 })
-export class AppInputOnlyPasteDirective implements OnInit {
+export class AppInputOnlyPasteDirective {
 	@HostListener('keydown', ['$event']) onKeydown(keyboardEvent: KeyboardEvent) {
 		const ctrlKey: boolean = keyboardEvent.ctrlKey;
 
@@ -21,8 +21,4 @@ export class AppInputOnlyPasteDirective implements OnInit {
 			keyboardEvent.preventDefault();
 		}
 	}
-
-	constructor() {}
-
-	ngOnInit(): void {}
 }
