@@ -33,7 +33,7 @@
 							aria-label="Image"
 							appSvgIcon
 							[appIcon]="'plus'"
-							[appSquare]="'1.75rem'"
+							[appSquare]="'2em'"
 							[disabled]="postForm.disabled"
 							(click)="onTogglePostFormImage(true)"
 						></button>
@@ -97,7 +97,7 @@
 							[class.btn-ghost]="name.untouched && name.invalid"
 							[disabled]="postForm.disabled"
 							[appIcon]="'x'"
-							[appSquare]="'1.75rem'"
+              [appSquare]="'2em'"
 							(click)="name.setValue('')"
 						></button>
 					</div>
@@ -177,7 +177,7 @@
 						aria-label="Create"
 						appSvgIcon
 						[appIcon]="'folder-plus'"
-						[appSquare]="'1.375rem'"
+						[appSquare]="'1.75em'"
 						[class.btn-outline]="postForm.enabled"
 						[disabled]="postForm.disabled"
 						(click)="onToggleCategoryForm(true)"
@@ -231,7 +231,7 @@
 							[class.btn-ghost]="description.untouched && description.invalid"
 							[disabled]="postForm.disabled"
 							[appIcon]="'x'"
-							[appSquare]="'1.75rem'"
+              [appSquare]="'2em'"
 							(click)="description.setValue('')"
 						></button>
 					</div>
@@ -574,7 +574,7 @@
 								[class.btn-ghost]="name.untouched && name.invalid"
 								[disabled]="categoryForm.disabled"
 								[appIcon]="'x'"
-								[appSquare]="'1.75rem'"
+                [appSquare]="'2em'"
 								(click)="name.setValue('')"
 							></button>
 						</div>

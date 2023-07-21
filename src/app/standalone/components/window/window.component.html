@@ -52,8 +52,8 @@
 				aria-label="Close"
 				appSvgIcon
 				*ngIf="captionButtonsList.includes('close')"
-				[appIcon]="'x'"
-				[appSquare]="'1.4rem'"
+				[appIcon]="'x-lg'"
+				[appSquare]="'1em'"
 				(click)="onClose()"
 			></button>
 			<button
@@ -64,7 +64,7 @@
 				appSvgIcon
 				*ngIf="captionButtonsList.includes('fullscreen')"
 				[appIcon]="'square'"
-				[appSquare]="'0.75rem'"
+				[appSquare]="'1em'"
 				(click)="onFullscreen(!fullscreenToggle)"
 			></button>
 			<button
@@ -75,8 +75,7 @@
 				appSvgIcon
 				*ngIf="captionButtonsList.includes('minimize')"
 				[appIcon]="'dash-lg'"
-				[appSquare]="'0.75rem'"
-				[appViewBox]="'0 0 16 4'"
+				[appSquare]="'1em'"
 			></button>
 		</ng-template>
 	</div>
