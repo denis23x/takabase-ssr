@@ -1,12 +1,6 @@
 <!-- @format -->
 
 <ng-container>
-	<slot #dropdownTarget>
-		<ng-content select="[slot=target]"></ng-content>
-	</slot>
-	<slot #dropdownContent>
-		<div [ngStyle]="dropdownStateStyle">
-			<ng-content select="[slot=content]"></ng-content>
-		</div>
-	</slot>
+  <ng-content select="[slot=target]"></ng-content>
+  <ng-content select="[slot=content]"></ng-content>
 </ng-container>

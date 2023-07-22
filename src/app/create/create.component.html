@@ -124,52 +124,51 @@
 								<span class="label-text mr-2">Category</span>
 							</div>
 						</label>
-						<div [class.cursor-not-allowed]="postForm.disabled">
-							<div
-								appDropdown
-								[class.pointer-events-none]="postForm.disabled"
-								(toggled)="onToggleCategory($event)"
-							>
-								<!-- prettier-ignore -->
-								<input
-                  class="input input-bordered w-full cursor-pointer truncate"
-                  id="postFormCategoryName"
-                  type="text"
-                  aria-label="Category"
-                  placeholder="Select post category"
-                  formControlName="categoryName"
-                  slot="target"
-                  readonly
-                  [class.input-success]="categoryName.touched && categoryName.value"
-                  [class.input-error]="categoryName.touched && categoryName.invalid"
-                />
-								<div
-									class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
-									slot="content"
-									[class.hidden]="!categoryList.length"
-								>
-									<ul class="flex max-h-64 flex-col overflow-y-auto p-2">
-										<li
-											class="flex w-full"
-											*ngFor="let category of categoryList"
-										>
-											<!-- prettier-ignore -->
-											<button
-                        class="rounded-btn block w-full truncate text-base text-left"
-                        type="button"
-                        appScrollIntoView
-                        [appScrollActive]="categoryName.value === category.name"
-                        [ngClass]="{ 'active': categoryName.value === category.name }"
-                        [attr.aria-label]="category.name"
-                        (click)="onSelectCategory(category)"
-                      >
-                        {{ category.name }}
-                      </button>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
+            <div
+              appDropdown
+              class="block"
+              [class.cursor-not-allowed]="postForm.disabled"
+              (toggled)="onToggleCategory($event)"
+            >
+              <!-- prettier-ignore -->
+              <input
+                class="input input-bordered w-full cursor-pointer truncate"
+                id="postFormCategoryName"
+                type="text"
+                aria-label="Category"
+                placeholder="Select post category"
+                formControlName="categoryName"
+                slot="target"
+                readonly
+                [class.input-success]="categoryName.touched && categoryName.value"
+                [class.input-error]="categoryName.touched && categoryName.invalid"
+              />
+              <div
+                class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
+                slot="content"
+                [class.hidden]="!categoryList.length"
+              >
+                <ul class="flex max-h-64 flex-col overflow-y-auto p-2">
+                  <li
+                    class="flex w-full"
+                    *ngFor="let category of categoryList"
+                  >
+                    <!-- prettier-ignore -->
+                    <button
+                      class="rounded-btn block w-full truncate text-base text-left"
+                      type="button"
+                      appScrollIntoView
+                      [appScrollActive]="categoryName.value === category.name"
+                      [ngClass]="{ 'active': categoryName.value === category.name }"
+                      [attr.aria-label]="category.name"
+                      (click)="onSelectCategory(category)"
+                    >
+                      {{ category.name }}
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
 					</fieldset>
 					<button
 						class="btn-success btn-square btn fill-current p-3"

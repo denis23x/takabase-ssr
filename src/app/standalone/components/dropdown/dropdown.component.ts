@@ -8,8 +8,7 @@ import {
 	Input,
 	OnDestroy,
 	OnInit,
-	Output,
-	ViewChild
+	Output
 } from '@angular/core';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { CommonModule, DOCUMENT } from '@angular/common';
@@ -23,12 +22,6 @@ import { PlatformService } from '../../../core/services/platform.service';
 	templateUrl: './dropdown.component.html'
 })
 export class DropdownComponent implements OnInit, OnDestroy {
-	// prettier-ignore
-	@ViewChild('dropdownTarget') dropdownTarget: ElementRef<HTMLSlotElement> | undefined;
-
-	// prettier-ignore
-	@ViewChild('dropdownContent') dropdownContent: ElementRef<HTMLSlotElement> | undefined;
-
 	@Output() toggled: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input()
@@ -40,12 +33,10 @@ export class DropdownComponent implements OnInit, OnDestroy {
 	windowAction$: Subscription | undefined;
 
 	dropdownState: boolean = false;
-	// prettier-ignore
-	dropdownStateStyle: any = {
-    'position': 'fixed',
-    'visibility': 'hidden'
-	};
 	dropdownStateCloseOnContentClick: boolean = true;
+
+	dropdownTarget: any;
+	dropdownContent: any;
 
 	constructor(
 		@Inject(DOCUMENT)
@@ -54,28 +45,37 @@ export class DropdownComponent implements OnInit, OnDestroy {
 		private platformService: PlatformService
 	) {}
 
+	// prettier-ignore
 	ngOnInit(): void {
-		this.windowClick$ = fromEvent(this.document, 'click').subscribe({
-			next: (event: any) => {
-				// prettier-ignore
-				const target: boolean = this.dropdownTarget.nativeElement.contains(event.target);
+		this.dropdownTarget = this.elementRef.nativeElement.querySelector('[slot=target]');
+		this.dropdownContent = this.elementRef.nativeElement.querySelector('[slot=content]');
 
-				// prettier-ignore
-				const content: boolean = this.dropdownContent.nativeElement.contains(event.target);
+		this.setStateStyle(false, false);
+
+    setTimeout(() => {
+      console.log(this.dropdownTarget.disabled);
+    }, 1000)
+
+    this.windowClick$ = fromEvent(this.document, 'click').subscribe({
+			next: (event: any) => {
+				const clickTarget: boolean = this.dropdownTarget.contains(event.target);
+				const clickContent: boolean = this.dropdownContent.contains(event.target);
 
 				/**
-				 * If click on target = show/hide toggle
+				 * If click on target = show/hide toggle (if target not disabled)
 				 * If opened - close on click content or outside
 				 */
 
-				if (target) {
-					this.setStateStyle(!this.dropdownState);
+				if (clickTarget) {
+          if (!this.dropdownTarget.disabled) {
+            this.setStateStyle(!this.dropdownState);
+          }
 				} else if (this.dropdownState) {
-					if (content) {
+					if (clickContent) {
 						if (this.dropdownStateCloseOnContentClick) {
 							this.setStateStyle(false);
 						}
-					} else if (!target && !content) {
+					} else if (!clickTarget && !clickContent) {
 						this.setStateStyle(false);
 					}
 				}
@@ -102,28 +102,26 @@ export class DropdownComponent implements OnInit, OnDestroy {
 		[this.windowClick$, this.windowAction$].forEach($ => $?.unsubscribe());
 	}
 
-	setStateStyle(state: boolean): void {
+	// prettier-ignore
+	setStateStyle(state: boolean, emit: boolean = true): void {
 		this.dropdownState = state;
 
-		// prettier-ignore
-		const elementRefStyle: any = this.elementRef.nativeElement.getBoundingClientRect();
-
-		// prettier-ignore
 		if (this.dropdownState) {
-      this.dropdownStateStyle = {
-        'position': 'fixed',
-        'width.px': elementRefStyle.width,
-        'top.px': elementRefStyle.top + elementRefStyle.height,
-        'left.px': elementRefStyle.left,
-        'z-index': 2
-      };
+      const elementDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
+
+      this.dropdownContent.style['position'] = 'fixed';
+      this.dropdownContent.style['visibility'] = 'visible';
+      this.dropdownContent.style['width'] = elementDOMRect.width + 'px';
+      this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
+      this.dropdownContent.style['left'] = elementDOMRect.left + 'px';
+      this.dropdownContent.style['z-index'] = 2;
     } else {
-      this.dropdownStateStyle = {
-        'position': 'fixed',
-        'visibility': 'hidden'
-      };
+      this.dropdownContent.style['position'] = 'fixed';
+      this.dropdownContent.style['visibility'] = 'hidden';
     }
 
-		this.toggled.emit(this.dropdownState);
+    if (emit) {
+      this.toggled.emit(this.dropdownState);
+    }
 	}
 }

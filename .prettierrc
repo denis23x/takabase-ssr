@@ -1,5 +1,6 @@
 {
   "semi": false,
+  "plugins": ["prettier-plugin-organize-attributes"],
   "overrides": [
     {
       "files": "*.ts",
