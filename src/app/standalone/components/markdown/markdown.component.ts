@@ -268,8 +268,8 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 	// prettier-ignore
 	onTableMouseEnter(mouseEvent: MouseEvent): void {
-    const parentElement: any = (mouseEvent.target as HTMLElement).parentElement.getBoundingClientRect();
-    const targetElement: any = (mouseEvent.target as HTMLElement).getBoundingClientRect();
+    const parentElement: DOMRect = (mouseEvent.target as HTMLElement).parentElement.getBoundingClientRect();
+    const targetElement: DOMRect = (mouseEvent.target as HTMLElement).getBoundingClientRect();
 
     const width: string = 'width:' + Math.abs(parentElement.left - targetElement.right) + 'px;';
     const height: string = 'height:' + Math.abs(parentElement.top - targetElement.bottom) + 'px;';

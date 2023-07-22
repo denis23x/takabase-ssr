@@ -43,6 +43,7 @@
 						aria-label="Heading"
 						appSvgIcon
 						slot="target"
+						[disabled]="controlListDisabled"
 						[appSquare]="'1.5725em'"
 						[appIcon]="'type-h1'"
 					></button>
@@ -81,6 +82,7 @@
 						aria-label="Formatting"
 						appSvgIcon
 						slot="target"
+						[disabled]="controlListDisabled"
 						[appSquare]="'1.5725em'"
 						[appIcon]="'type-bold'"
 					></button>
@@ -122,6 +124,7 @@
 						aria-label="List"
 						appSvgIcon
 						slot="target"
+						[disabled]="controlListDisabled"
 						[appSquare]="'1.5725em'"
 						[appIcon]="'list-ul'"
 					></button>
@@ -173,6 +176,7 @@
 						type="button"
 						appSvgIcon
 						slot="target"
+						[disabled]="controlListDisabled"
 						[attr.aria-label]="controlListEmojiMart.label"
 						[attr.title]="controlListEmojiMart.label"
 						[appIcon]="controlListEmojiMart.icon"
@@ -199,6 +203,7 @@
 						type="button"
 						appSvgIcon
 						slot="target"
+						[disabled]="controlListDisabled"
 						[attr.aria-label]="controlListTable.label"
 						[attr.title]="controlListTable.label"
 						[appIcon]="controlListTable.icon"
@@ -397,7 +402,7 @@
 							[class.btn-ghost]="url.untouched && url.invalid"
 							[disabled]="urlForm.disabled"
 							[appIcon]="'x'"
-              [appSquare]="'2em'"
+							[appSquare]="'2em'"
 							(click)="url.setValue('')"
 						></button>
 					</div>

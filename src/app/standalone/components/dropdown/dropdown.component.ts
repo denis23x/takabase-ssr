@@ -52,10 +52,6 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
 		this.setStateStyle(false, false);
 
-    setTimeout(() => {
-      console.log(this.dropdownTarget.disabled);
-    }, 1000)
-
     this.windowClick$ = fromEvent(this.document, 'click').subscribe({
 			next: (event: any) => {
 				const clickTarget: boolean = this.dropdownTarget.contains(event.target);

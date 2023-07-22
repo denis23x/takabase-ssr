@@ -87,7 +87,7 @@
 						[class.btn-ghost]="name.untouched"
 						[disabled]="profileForm.disabled"
 						[appIcon]="'x'"
-            [appSquare]="'2em'"
+						[appSquare]="'2em'"
 						(click)="name.setValue('')"
 					></button>
 				</div>
@@ -186,7 +186,7 @@
         >
           <span
             class="loading loading-spinner"
-            *ngIf="profileForm.disabled"
+            *ngIf="profileForm.disabled && !profileFormAvatarModal.open"
           ></span>
           Submit
         </button>
