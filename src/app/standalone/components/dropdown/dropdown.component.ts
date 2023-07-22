@@ -25,18 +25,24 @@ export class DropdownComponent implements OnInit, OnDestroy {
 	@Output() toggled: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input()
-	set appCloseOnContentClick(dropdownStateCloseOnContentClick: boolean) {
-		this.dropdownStateCloseOnContentClick = dropdownStateCloseOnContentClick;
+	set appFitParentWidth(dropdownContentFitParentWidth: boolean) {
+		this.dropdownContentFitParentWidth = dropdownContentFitParentWidth;
+	}
+
+	@Input()
+	set appCloseOnClick(dropdownContentCloseOnClick: boolean) {
+		this.dropdownContentCloseOnClick = dropdownContentCloseOnClick;
 	}
 
 	windowClick$: Subscription | undefined;
 	windowAction$: Subscription | undefined;
 
 	dropdownState: boolean = false;
-	dropdownStateCloseOnContentClick: boolean = true;
 
 	dropdownTarget: any;
 	dropdownContent: any;
+	dropdownContentCloseOnClick: boolean = true;
+	dropdownContentFitParentWidth: boolean = false;
 
 	constructor(
 		@Inject(DOCUMENT)
@@ -68,7 +74,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
           }
 				} else if (this.dropdownState) {
 					if (clickContent) {
-						if (this.dropdownStateCloseOnContentClick) {
+						if (this.dropdownContentCloseOnClick) {
 							this.setStateStyle(false);
 						}
 					} else if (!clickTarget && !clickContent) {
@@ -100,20 +106,26 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
 	// prettier-ignore
 	setStateStyle(state: boolean, emit: boolean = true): void {
-		this.dropdownState = state;
+    const elementDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
+
+    this.dropdownState = state;
 
 		if (this.dropdownState) {
-      const elementDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
-
       this.dropdownContent.style['position'] = 'fixed';
       this.dropdownContent.style['visibility'] = 'visible';
-      this.dropdownContent.style['width'] = elementDOMRect.width + 'px';
+
+      /** Apply position */
+
       this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
       this.dropdownContent.style['left'] = elementDOMRect.left + 'px';
       this.dropdownContent.style['z-index'] = 2;
     } else {
       this.dropdownContent.style['position'] = 'fixed';
       this.dropdownContent.style['visibility'] = 'hidden';
+    }
+
+    if (this.dropdownContentFitParentWidth) {
+      this.dropdownContent.style['width'] = elementDOMRect.width + 'px';
     }
 
     if (emit) {

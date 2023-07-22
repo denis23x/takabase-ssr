@@ -97,7 +97,7 @@
 							[class.btn-ghost]="name.untouched && name.invalid"
 							[disabled]="postForm.disabled"
 							[appIcon]="'x'"
-              [appSquare]="'2em'"
+							[appSquare]="'2em'"
 							(click)="name.setValue('')"
 						></button>
 					</div>
@@ -124,14 +124,15 @@
 								<span class="label-text mr-2">Category</span>
 							</div>
 						</label>
-            <div
-              appDropdown
-              class="block"
-              [class.cursor-not-allowed]="postForm.disabled"
-              (toggled)="onToggleCategory($event)"
-            >
-              <!-- prettier-ignore -->
-              <input
+						<div
+							class="block"
+							appDropdown
+							[appFitParentWidth]="true"
+							[class.cursor-not-allowed]="postForm.disabled"
+							(toggled)="onToggleCategory($event)"
+						>
+							<!-- prettier-ignore -->
+							<input
                 class="input input-bordered w-full cursor-pointer truncate"
                 id="postFormCategoryName"
                 type="text"
@@ -143,18 +144,15 @@
                 [class.input-success]="categoryName.touched && categoryName.value"
                 [class.input-error]="categoryName.touched && categoryName.invalid"
               />
-              <div
-                class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
-                slot="content"
-                [class.hidden]="!categoryList.length"
-              >
-                <ul class="flex max-h-64 flex-col overflow-y-auto p-2">
-                  <li
-                    class="flex w-full"
-                    *ngFor="let category of categoryList"
-                  >
-                    <!-- prettier-ignore -->
-                    <button
+							<div
+								class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
+								slot="content"
+								[class.hidden]="!categoryList.length"
+							>
+								<ul class="flex max-h-64 flex-col overflow-y-auto p-2">
+									<li class="flex w-full" *ngFor="let category of categoryList">
+										<!-- prettier-ignore -->
+										<button
                       class="rounded-btn block w-full truncate text-base text-left"
                       type="button"
                       appScrollIntoView
@@ -165,10 +163,10 @@
                     >
                       {{ category.name }}
                     </button>
-                  </li>
-                </ul>
-              </div>
-            </div>
+									</li>
+								</ul>
+							</div>
+						</div>
 					</fieldset>
 					<button
 						class="btn-success btn-square btn fill-current p-3"
@@ -230,7 +228,7 @@
 							[class.btn-ghost]="description.untouched && description.invalid"
 							[disabled]="postForm.disabled"
 							[appIcon]="'x'"
-              [appSquare]="'2em'"
+							[appSquare]="'2em'"
 							(click)="description.setValue('')"
 						></button>
 					</div>
@@ -573,7 +571,7 @@
 								[class.btn-ghost]="name.untouched && name.invalid"
 								[disabled]="categoryForm.disabled"
 								[appIcon]="'x'"
-                [appSquare]="'2em'"
+								[appSquare]="'2em'"
 								(click)="name.setValue('')"
 							></button>
 						</div>

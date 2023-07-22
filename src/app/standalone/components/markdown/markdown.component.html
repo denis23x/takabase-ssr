@@ -48,7 +48,7 @@
 						[appIcon]="'type-h1'"
 					></button>
 					<ul
-						class="menu menu-vertical menu-md ml-0 mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
+						class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
 						slot="content"
 					>
 						<li class="flex w-full" *ngFor="let control of controlListHeading">
@@ -87,7 +87,7 @@
 						[appIcon]="'type-bold'"
 					></button>
 					<ul
-						class="menu menu-vertical menu-md ml-0 mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
+						class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
 						slot="content"
 					>
 						<li
@@ -129,7 +129,7 @@
 						[appIcon]="'list-ul'"
 					></button>
 					<ul
-						class="menu menu-vertical menu-md ml-0 mt-2 min-w-fit rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
+						class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
 						slot="content"
 					>
 						<li class="flex w-full" *ngFor="let control of controlListList">
@@ -168,7 +168,7 @@
 					#dropdownEmojiMart
 					*ngIf="{ value: false } as toggle"
 					[ngClass]="{ 'bg-base-content/10': toggle.value }"
-					[appCloseOnContentClick]="false"
+					[appCloseOnClick]="false"
 					(toggled)="toggle.value = $event"
 				>
 					<button
@@ -183,7 +183,7 @@
 						[appSquare]="'1.5725em'"
 					></button>
 					<div
-						class="menu menu-vertical menu-md ml-0 mt-2 min-w-fit overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow before:hidden"
+						class="menu menu-vertical menu-md ml-0 mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow before:hidden"
 						id="emojiMartPicker"
 						slot="content"
 					></div>
@@ -210,7 +210,7 @@
 						[appSquare]="'1.5725em'"
 					></button>
 					<div
-						class="menu menu-vertical menu-md ml-0 mt-2 min-w-fit overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
+						class="menu menu-vertical menu-md ml-0 mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
 						slot="content"
 					>
 						<div class="relative h-40 w-40 overflow-hidden rounded-btn">
