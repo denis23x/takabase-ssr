@@ -100,16 +100,16 @@ export class AuthService {
 		);
 	}
 
-	// prettier-ignore
-	onLogout(logoutDto?: LogoutDto, removeUser: boolean = true): Observable<void> {
+	onLogout(): Observable<void> {
 		return this.getFingerprint().pipe(
 			switchMap((fingerprint: string) => {
+				const logoutDto: LogoutDto = {
+					fingerprint
+				};
+
 				return this.apiService
-					.post('/auth/logout', {
-						...logoutDto,
-						fingerprint
-					})
-					.pipe(tap(() => removeUser && this.removeUser()));
+					.post('/auth/logout', logoutDto)
+					.pipe(tap(() => this.removeUser()));
 			})
 		);
 	}

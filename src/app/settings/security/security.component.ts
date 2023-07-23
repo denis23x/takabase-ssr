@@ -16,6 +16,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { User } from '../../core/models/user.model';
 import { LogoutDto } from '../../core/dto/auth/logout.dto';
+import { SessionService } from '../../core/services/session.service';
 
 @Component({
 	standalone: true,
@@ -37,17 +38,18 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
 		private helperService: HelperService,
 		private activatedRoute: ActivatedRoute,
 		private authService: AuthService,
+		private sessionService: SessionService,
 		private router: Router,
 		private snackbarService: SnackbarService
 	) {}
 
 	ngOnInit(): void {
 		// prettier-ignore
-		this.activatedRouteData$ = this.activatedRoute.parent?.data
+		this.activatedRouteData$ = this.activatedRoute.data
 			.pipe(
 				map((data: Data) => data.data),
-				tap((user: User) => {
-          return this.sessionActiveList = user.sessions.map((session: Session) => {
+				tap((sessionActiveList: Session[]) => {
+          return this.sessionActiveList = sessionActiveList.map((session: Session) => {
             return {
               ...session,
               uaParsed: this.uaParser.setUA(session.ua).getResult()
@@ -97,12 +99,10 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
 	}
 
 	onTerminate(session: Session): void {
-		const logoutDto: LogoutDto = {
-			id: session.id
-		};
+		const sessionId: number = session.id;
 
-		this.authService
-			.onLogout(logoutDto, false)
+		this.sessionService
+			.delete(sessionId)
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					this.router
@@ -116,8 +116,8 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
 				next: () => {
 					// prettier-ignore
 					this.sessionActiveList = this.sessionActiveList.filter((session: Session) => {
-            return session.id !== logoutDto.id;
-          });
+		        return session.id !== sessionId;
+		      });
 
 					// prettier-ignore
 					this.snackbarService.success(null, 'Session was successfully terminated');
