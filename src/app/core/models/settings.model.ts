@@ -7,4 +7,6 @@ export interface Settings {
 	language: string;
 	monospace: boolean;
 	buttons: string;
+	createdAt: string;
+	updatedAt: string;
 }
