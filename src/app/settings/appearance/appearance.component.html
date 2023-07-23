@@ -247,6 +247,73 @@
 			<div class="flex w-full flex-col">
 				<fieldset
 					class="form-control"
+					*ngIf="appearanceForm.get('pageScrollToTop') as pageScrollToTop"
+				>
+					<label
+						class="label cursor-pointer"
+						for="appearanceFormPageScrollToTop"
+					>
+						<span class="label-text"> Scroll to top </span>
+						<!-- prettier-ignore -->
+						<input
+							class="toggle"
+							id="appearanceFormPageScrollToTop"
+							type="checkbox"
+							aria-label="Scroll to top"
+							formControlName="pageScrollToTop"
+							[class.toggle-success]="pageScrollToTop.touched && pageScrollToTop.value"
+						/>
+					</label>
+				</fieldset>
+				<hr class="my-2 w-full border-base-content/20" />
+				<fieldset
+					class="form-control"
+					*ngIf="appearanceForm.get('pageScrollInfinite') as pageScrollInfinite"
+				>
+					<label
+						class="label cursor-pointer"
+						for="appearanceFormPageScrollInfinite"
+					>
+						<span class="label-text">
+							Infinite scroll (when viewing lists)
+						</span>
+						<!-- prettier-ignore -->
+						<input
+              class="toggle"
+              id="appearanceFormPageScrollInfinite"
+              type="checkbox"
+              aria-label="Infinite scroll"
+              formControlName="pageScrollInfinite"
+              [class.toggle-success]="pageScrollInfinite.touched && pageScrollInfinite.value"
+            />
+					</label>
+				</fieldset>
+				<hr class="my-2 w-full border-base-content/20" />
+				<fieldset
+					class="form-control"
+					*ngIf="appearanceForm.get('redirectFromHome') as redirectFromHome"
+				>
+					<label
+						class="label cursor-pointer"
+						for="appearanceFormPageScrollInfinite"
+					>
+						<span class="label-text">
+							Redirect from home page (to profile)
+						</span>
+						<!-- prettier-ignore -->
+						<input
+              class="toggle"
+              id="appearanceFormRedirectFromHome"
+              type="checkbox"
+              aria-label="Infinite scroll"
+              formControlName="redirectFromHome"
+              [class.toggle-success]="redirectFromHome.touched && redirectFromHome.value"
+            />
+					</label>
+				</fieldset>
+				<hr class="my-2 w-full border-base-content/20" />
+				<fieldset
+					class="form-control"
 					*ngIf="appearanceForm.get('monospace') as monospace"
 				>
 					<label class="label cursor-pointer" for="appearanceFormMonospace">

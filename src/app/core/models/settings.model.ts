@@ -7,6 +7,9 @@ export interface Settings {
 	language: string;
 	monospace: boolean;
 	buttons: string;
+	pageScrollToTop: boolean;
+	pageScrollInfinite: boolean;
+	redirectFromHome: boolean;
 	createdAt: string;
 	updatedAt: string;
 }
