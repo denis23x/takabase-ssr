@@ -21,6 +21,7 @@ import { UserService } from '../../core/services/user.service';
 import { PasswordResetUpdateDto } from '../../core/dto/password/password-reset-update.dto';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
+import { PasswordService } from '../../core/services/password.service';
 
 interface PasswordForm {
 	token: FormControl<string>;
@@ -53,7 +54,8 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 		private authService: AuthService,
 		private router: Router,
 		private userService: UserService,
-		private snackbarService: SnackbarService
+		private snackbarService: SnackbarService,
+		private passwordService: PasswordService
 	) {
 		this.passwordForm = this.formBuilder.group<PasswordForm>({
 			token: this.formBuilder.nonNullable.control('', [Validators.required]),
@@ -84,7 +86,7 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 				...this.passwordForm.value
 			};
 
-			this.authService.onPasswordResetUpdate(passwordResetUpdateDto).subscribe({
+			this.passwordService.onResetUpdate(passwordResetUpdateDto).subscribe({
 				next: (user: Partial<User>) => {
 					const loginDto: LoginDto = {
 						email: user.email,

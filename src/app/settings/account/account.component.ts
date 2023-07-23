@@ -22,6 +22,8 @@ import { SnackbarService } from '../../core/services/snackbar.service';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { PasswordCheckGetDto } from '../../core/dto/password/password-check-get.dto';
 import { CookieService } from '../../core/services/cookie.service';
+import { PasswordService } from '../../core/services/password.service';
+import { EmailService } from '../../core/services/email.service';
 
 interface PasswordCheckForm {
 	password: FormControl<string>;
@@ -68,7 +70,9 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		private userService: UserService,
 		private authService: AuthService,
 		private snackbarService: SnackbarService,
-		private cookieService: CookieService
+		private cookieService: CookieService,
+		private emailService: EmailService,
+		private passwordService: PasswordService
 	) {
 		this.passwordCheckForm = this.formBuilder.group<PasswordCheckForm>({
 			password: this.formBuilder.nonNullable.control('', [
@@ -143,7 +147,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.emailForm)) {
 			this.emailFormConfirmationIsSubmitted = true;
 
-			this.authService.onEmailConfirmationGet().subscribe({
+			this.emailService.onConfirmationGet().subscribe({
 				next: (user: Partial<User>) => {
 					this.authService.setUser(user as User).subscribe({
 						next: () => (this.authUser = user as User),
@@ -201,8 +205,8 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				...this.passwordCheckForm.value
 			};
 
-			this.authService
-				.onPasswordCheckGet(passwordCheckGetDto)
+			this.passwordService
+				.onCheckGet(passwordCheckGetDto)
 				.pipe(map((data: any) => data.valid))
 				.subscribe({
 					next: (valid: boolean) => {

@@ -15,11 +15,11 @@ import { HelperService } from '../../core/services/helper.service';
 import { MetaService } from '../../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
-import { AuthService } from '../../core/services/auth.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
 import { Subscription } from 'rxjs';
+import { PasswordService } from '../../core/services/password.service';
 
 interface ResetForm {
 	email: FormControl<string>;
@@ -46,8 +46,8 @@ export class AuthResetComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
 		private metaService: MetaService,
-		private authService: AuthService,
-		private snackbarService: SnackbarService
+		private snackbarService: SnackbarService,
+		private passwordService: PasswordService
 	) {
 		this.resetForm = this.formBuilder.group<ResetForm>({
 			email: this.formBuilder.nonNullable.control('', [
@@ -89,7 +89,7 @@ export class AuthResetComponent implements OnInit {
 				...this.resetForm.value
 			};
 
-			this.authService.onPasswordResetGet(passwordResetGetDto).subscribe({
+			this.passwordService.onResetGet(passwordResetGetDto).subscribe({
 				next: () => {
 					// prettier-ignore
 					this.snackbarService.success('Success', 'Check your email to continue process');

@@ -5,12 +5,12 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../core/services/auth.service';
 import { User } from '../../core/models/user.model';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { CommonModule } from '@angular/common';
 import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { EmailConfirmationUpdateDto } from '../../core/dto/email/email-confirmation-update.dto';
+import { EmailService } from '../../core/services/email.service';
 
 @Component({
 	standalone: true,
@@ -26,8 +26,8 @@ export class AuthEmailConfirmationComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
-		private authService: AuthService,
 		private metaService: MetaService,
+		private emailService: EmailService,
 		private snackbarService: SnackbarService
 	) {}
 
@@ -42,8 +42,8 @@ export class AuthEmailConfirmationComponent implements OnInit, OnDestroy {
             token
           };
 
-          this.authService
-            .onEmailConfirmationUpdate(emailConfirmationUpdateDto)
+          this.emailService
+            .onConfirmationUpdate(emailConfirmationUpdateDto)
             .subscribe({
               next: (user: Partial<User>) => {
                 this.confirmationUser = user;
