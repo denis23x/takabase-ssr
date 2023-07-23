@@ -24,7 +24,7 @@ export class SettingsResolverService {
 		return this.authService.getUser().pipe(
 			switchMap((user: User) => {
 				const userGetOneDto: UserGetOneDto = {
-					scope: ['settings', 'sessions']
+					scope: ['sessions']
 				};
 
 				return this.userService.getOne(user.id, userGetOneDto);

@@ -1,7 +1,5 @@
 /** @format */
 
-import { UserSettings } from '../../models/user.model';
-
 export interface UserUpdateDto {
 	name?: string;
 	description?: string;
@@ -10,7 +8,4 @@ export interface UserUpdateDto {
 	password?: string;
 	newEmail?: string;
 	newPassword?: string;
-	settings?: Partial<UserSettingsUpdateDto>;
 }
-
-export type UserSettingsUpdateDto = UserSettings;

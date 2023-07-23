@@ -13,12 +13,12 @@ import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
-import { User } from '../../core/models/user.model';
-import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
-import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { environment } from '../../../environments/environment';
 import { AppScrollIntoViewDirective } from '../../standalone/directives/app-scroll-into-view.directive';
+import { SettingsUpdateDto } from '../../core/dto/settings/settings-update.dto';
+import { SettingsService } from '../../core/services/settings.service';
+import { Settings } from '../../core/models/settings.model';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
@@ -44,9 +44,6 @@ interface AppearanceForm {
 export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 
-	authUser: User | undefined;
-	authUser$: Subscription | undefined;
-
 	appearanceForm: FormGroup | undefined;
 	appearanceForm$: Subscription | undefined;
 
@@ -65,8 +62,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private userService: UserService,
 		private authService: AuthService,
+		private settingsService: SettingsService,
 		private activatedRoute: ActivatedRoute
 	) {
 		// prettier-ignore
@@ -81,18 +78,16 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.activatedRouteData$ = this.activatedRoute.parent?.data
+		this.activatedRouteData$ = this.activatedRoute.data
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
-				next: (user: User) => {
-					this.authUser = user;
-
+				next: (settings: Settings) => {
 					// prettier-ignore
 					this.appearanceTransformList.forEach((key: string) => {
-            user.settings[key] = this.getTransformListValue(user.settings[key], key);
-          });
+					  settings[key] = this.getTransformListValue(settings[key], key);
+					});
 
-					this.appearanceForm.patchValue(user.settings);
+					this.appearanceForm.patchValue(settings);
 					this.appearanceForm.markAllAsTouched();
 				},
 				error: (error: any) => console.error(error)
@@ -102,18 +97,18 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 			next: (value: any) => {
 				this.appearanceForm.disable({ emitEvent: false });
 
-				const userUpdateDto: UserUpdateDto = {
-					settings: value
+				const settingsUpdateDto: SettingsUpdateDto = {
+					...value
 				};
 
 				// prettier-ignore
 				this.appearanceTransformList.forEach((key: string) => {
-				  userUpdateDto.settings[key] = this.getTransformListValue(userUpdateDto.settings[key], key, true);
+          settingsUpdateDto[key] = this.getTransformListValue(settingsUpdateDto[key], key, true);
 				});
 
-				this.userService.update(this.authUser.id, userUpdateDto).subscribe({
-					next: (user: User) => {
-						this.authService.setUser(user);
+				this.settingsService.update(settingsUpdateDto).subscribe({
+					next: (settings: Settings) => {
+						this.authService.setUser({ settings });
 
 						this.appearanceForm.enable({ emitEvent: false });
 					},

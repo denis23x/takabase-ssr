@@ -3,6 +3,7 @@
 import { Category } from './category.model';
 import { Session } from './session.model';
 import { Post } from './post.model';
+import { Settings } from './settings.model';
 
 export interface User {
 	id: number;
@@ -15,16 +16,7 @@ export interface User {
 	emailConfirmed?: boolean;
 	sessions: Session[];
 	token?: string;
-	settings?: UserSettings;
+	settings?: Settings;
 	createdAt: string;
 	updatedAt: string;
-}
-
-export interface UserSettings {
-	theme: string;
-	themePrism: string;
-	themeBackground: string;
-	language: string;
-	monospace: boolean;
-	buttons: string;
 }

@@ -13,6 +13,7 @@ import { SearchPostDetailsResolverService } from './search/post/details/details-
 import { SearchCategoryResolverService } from './search/category/category-resolver.service';
 import { SearchUserResolverService } from './search/user/user-resolver.service';
 import { SettingsResolverService } from './settings/settings-resolver.service';
+import { SettingsAppearanceResolverService } from './settings/appearance/appearance-resolver.service';
 import { UserResolverService } from './user/user-resolver.service';
 import { UserPostResolverService } from './user/post/post-resolver.service';
 import { UserPostDetailsResolverService } from './user/post/details/details-resolver.service';
@@ -233,7 +234,10 @@ const routes: Routes = [
 				// prettier-ignore
 				loadComponent: () => {
           return import('./settings/appearance/appearance.component').then(m => m.SettingsAppearanceComponent);
-        }
+        },
+				resolve: {
+					data: SettingsAppearanceResolverService
+				}
 			},
 			{
 				path: 'profile',

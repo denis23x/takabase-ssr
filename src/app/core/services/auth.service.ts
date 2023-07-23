@@ -168,7 +168,7 @@ export class AuthService {
 		}
 	}
 
-	setUser(user: User): Observable<void> {
+	setUser(user: Partial<User>): Observable<void> {
 		this.user.next({
 			...this.user.getValue(),
 			...user
