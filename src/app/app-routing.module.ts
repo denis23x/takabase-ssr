@@ -210,7 +210,6 @@ const routes: Routes = [
 		loadComponent: () => {
       return import('./settings/settings.component').then(m => m.SettingsComponent);
     },
-		runGuardsAndResolvers: 'always',
 		resolve: {
 			data: SettingsResolverService
 		},
