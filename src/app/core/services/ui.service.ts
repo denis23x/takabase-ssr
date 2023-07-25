@@ -84,9 +84,22 @@ export class UiService {
 			this.cookieService.removeItem('theme');
 		}
 
-		const themeValue = theme || 'light';
+		const themeValue: string = theme || 'light';
 
 		this.document.documentElement.setAttribute('data-theme', themeValue);
+
+		/** TODO: Update meta */
+
+		// const value: string = this.getCSSPropertyValue('--su');
+		//
+		// // prettier-ignore
+		// const [h, s, l]: number[] = value.split(/\s/g).map((value: string) => Number(value.replace('%', '')));
+		// const valueList: string[] = this.getHSLToHEX(h, s, l);
+		//
+		// const propertyValue: string = '#' + valueList.join('');
+		// const property: string = 'theme-color';
+		//
+		// this.meta.updateTag({ name: property, content: propertyValue });
 	}
 
 	setBackground(themeBackground: string | null): void {
@@ -98,7 +111,7 @@ export class UiService {
 
 		// prettier-ignore
 		const backgroundElement: HTMLElement | null = this.document.querySelector('[data-theme-background]');
-		const backgroundValue = themeBackground || 'slanted-gradient';
+		const backgroundValue: string = themeBackground || 'slanted-gradient';
 
 		if (backgroundElement.dataset.themeBackground !== backgroundValue) {
 			this.httpClient
