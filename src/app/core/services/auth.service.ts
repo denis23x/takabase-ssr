@@ -9,7 +9,7 @@ import { User } from '../models/user.model';
 import { ApiService } from './api.service';
 import { CookieService } from './cookie.service';
 import { SnackbarService } from './snackbar.service';
-import { UiService } from './ui.service';
+import { AppearanceService } from './appearance.service';
 import { LoginDto } from '../dto/auth/login.dto';
 import { LogoutDto } from '../dto/auth/logout.dto';
 
@@ -26,7 +26,7 @@ export class AuthService {
 		private cookieService: CookieService,
 		private router: Router,
 		private snackbarService: SnackbarService,
-		private uiService: UiService
+		private appearanceService: AppearanceService
 	) {}
 
 	getFingerprint(): Observable<string> {
@@ -109,9 +109,13 @@ export class AuthService {
 		/** Set settings */
 
 		if (user.settings) {
-			this.uiService.setTheme(user.settings.theme);
-			this.uiService.setBackground(user.settings.themeBackground);
-			this.uiService.setPrism(user.settings.themePrism);
+			this.appearanceService.setTheme(user.settings.theme);
+			this.appearanceService.setThemeBackground(user.settings.themeBackground);
+			this.appearanceService.setThemePrism(user.settings.themePrism);
+
+			// prettier-ignore
+			this.appearanceService.setPageScrollInfinite(user.settings.pageScrollInfinite);
+			this.appearanceService.setPageScrollToTop(user.settings.pageScrollToTop);
 		}
 
 		return of(null);
@@ -126,9 +130,12 @@ export class AuthService {
 
 		/** Remove settings */
 
-		this.uiService.setTheme(null);
-		this.uiService.setBackground(null);
-		this.uiService.setPrism(null);
+		this.appearanceService.setTheme(null);
+		this.appearanceService.setThemeBackground(null);
+		this.appearanceService.setThemePrism(null);
+
+		this.appearanceService.setPageScrollInfinite(null);
+		this.appearanceService.setPageScrollToTop(null);
 
 		return of(null);
 	}

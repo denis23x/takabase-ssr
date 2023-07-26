@@ -2,7 +2,7 @@
 
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { AuthService } from './core/services/auth.service';
-import { UiService } from './core/services/ui.service';
+import { AppearanceService } from './core/services/appearance.service';
 
 @Component({
 	selector: 'app-root',
@@ -11,7 +11,7 @@ import { UiService } from './core/services/ui.service';
 export class AppComponent implements OnInit, AfterViewInit {
 	constructor(
 		private authService: AuthService,
-		private uiService: UiService
+		private appearanceService: AppearanceService
 	) {}
 
 	ngOnInit(): void {
@@ -22,6 +22,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit(): void {
-		this.uiService.setLoader(false);
+		this.appearanceService.setLoader(false);
 	}
 }

@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
 	providedIn: 'root'
 })
-export class UiService {
+export class AppearanceService {
 	constructor(
 		@Inject(DOCUMENT)
 		private document: Document,
@@ -102,7 +102,7 @@ export class UiService {
 		// this.meta.updateTag({ name: property, content: propertyValue });
 	}
 
-	setBackground(themeBackground: string | null): void {
+	setThemeBackground(themeBackground: string | null): void {
 		if (themeBackground) {
 			this.cookieService.setItem('theme-background', themeBackground);
 		} else {
@@ -127,7 +127,7 @@ export class UiService {
 		}
 	}
 
-	setPrism(themePrism: string | null): void {
+	setThemePrism(themePrism: string | null): void {
 		if (themePrism) {
 			this.cookieService.setItem('theme-prism', themePrism);
 		} else {
@@ -141,6 +141,24 @@ export class UiService {
 		if (prismElement.dataset.themePrism !== prismValue) {
 			prismElement.href = 'prism-' + prismValue + '.css';
 			prismElement.dataset.themePrism = prismValue;
+		}
+	}
+
+	setPageScrollInfinite(pageScrollInfinite: boolean | null): void {
+		if (pageScrollInfinite) {
+			// prettier-ignore
+			this.cookieService.setItem('page-scroll-infinite', String(+pageScrollInfinite));
+		} else {
+			this.cookieService.removeItem('page-scroll-infinite');
+		}
+	}
+
+	setPageScrollToTop(pageScrollToTop: boolean | null): void {
+		if (pageScrollToTop) {
+			// prettier-ignore
+			this.cookieService.setItem('page-scroll-to-top', String(+pageScrollToTop));
+		} else {
+			this.cookieService.removeItem('page-scroll-to-top');
 		}
 	}
 }

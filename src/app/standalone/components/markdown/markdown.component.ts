@@ -46,7 +46,7 @@ import {
 import { MarkdownService } from '../../../core/services/markdown.service';
 import { PlatformService } from '../../../core/services/platform.service';
 import { HelperService } from '../../../core/services/helper.service';
-import { UiService } from '../../../core/services/ui.service';
+import { AppearanceService } from '../../../core/services/appearance.service';
 
 interface UrlForm {
 	title?: FormControl<string>;
@@ -153,7 +153,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		private platformService: PlatformService,
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
-		private uiService: UiService
+		private appearanceService: AppearanceService
 	) {
 		this.urlForm = this.formBuilder.group<UrlForm>({});
 	}
@@ -229,10 +229,10 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 			// prettier-ignore
 			variablesCSSMap.forEach((variable: any) => {
-				const value: string = this.uiService.getCSSPropertyValue(variable.nameHSL);
+				const value: string = this.appearanceService.getCSSPropertyValue(variable.nameHSL);
 
 				const [h, s, l]: number[] = value.split(/\s/g).map((value: string) => Number(value.replace('%', '')));
-				const [r, g, b]: number[] = this.uiService.getHSLToRGB(h, s, l);
+				const [r, g, b]: number[] = this.appearanceService.getHSLToRGB(h, s, l);
 
 				const propertyValue: string = [r, g, b].join(variable.nameWithComma ? ',' : ' ');
 				const property: string = variable.nameRGB;

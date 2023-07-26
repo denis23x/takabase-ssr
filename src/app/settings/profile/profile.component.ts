@@ -33,7 +33,7 @@ import { SnackbarService } from '../../core/services/snackbar.service';
 import { FileCreateDto } from '../../core/dto/file/file-create.dto';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { PlatformService } from '../../core/services/platform.service';
-import { UiService } from '../../core/services/ui.service';
+import { AppearanceService } from '../../core/services/appearance.service';
 import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 
 interface ProfileForm {
@@ -96,7 +96,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		private authService: AuthService,
 		private snackbarService: SnackbarService,
 		private platformService: PlatformService,
-		private uiService: UiService
+		private appearanceService: AppearanceService
 	) {
 		this.profileForm = this.formBuilder.group<ProfileForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -170,10 +170,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 				// prettier-ignore
 				variablesCSSMap.forEach((variable: any) => {
-          const value: string = this.uiService.getCSSPropertyValue(variable.nameHSL);
+          const value: string = this.appearanceService.getCSSPropertyValue(variable.nameHSL);
 
           const [h, s, l]: number[] = value.split(/\s/g).map((value: string) => Number(value.replace('%', '')));
-          const valueList: string[] = this.uiService.getHSLToHEX(h, s, l);
+          const valueList: string[] = this.appearanceService.getHSLToHEX(h, s, l);
 
           const propertyValue: string = [...valueList, 'ff'].join('');
           const property: string = variable.nameHEX;
