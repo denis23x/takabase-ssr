@@ -12,7 +12,7 @@ export class CookieService {
 		private document: Document
 	) {}
 
-	getItem(key: string): any {
+	getItem(key: string): string | undefined {
 		const result: any = {};
 
 		this.document.cookie.split(';').forEach((cookie: string) => {

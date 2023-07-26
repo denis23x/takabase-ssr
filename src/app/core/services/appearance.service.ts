@@ -5,6 +5,8 @@ import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
 import { CookieService } from './cookie.service';
 import { HttpClient } from '@angular/common/http';
+import { fromEvent, Observable, of } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
@@ -151,6 +153,26 @@ export class AppearanceService {
 		} else {
 			this.cookieService.removeItem('page-scroll-infinite');
 		}
+	}
+
+	setPageScrollInfiniteHandler(scrollOffset?: number): Observable<boolean> {
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
+			// prettier-ignore
+			return fromEvent(window, 'scroll').pipe(
+				map(() => {
+					const heightScrolled: number = window.innerHeight + Math.round(window.scrollY);
+          const heightOffset: number = scrollOffset || window.innerHeight
+					const heightBottom: number = this.document.body.offsetHeight - heightOffset;
+
+					return heightScrolled >= heightBottom;
+				}),
+        filter((pageScrollInfinite: boolean) => pageScrollInfinite)
+			);
+		}
+
+		return of(false);
 	}
 
 	setPageScrollToTop(pageScrollToTop: boolean | null): void {
