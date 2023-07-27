@@ -14,8 +14,6 @@ import { Session } from '../../core/models/session.model';
 import { HelperService } from '../../core/services/helper.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { User } from '../../core/models/user.model';
-import { LogoutDto } from '../../core/dto/auth/logout.dto';
 import { SessionService } from '../../core/services/session.service';
 
 @Component({
