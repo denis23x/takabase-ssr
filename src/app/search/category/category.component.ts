@@ -1,82 +1,30 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
-import { map, skip, tap } from 'rxjs/operators';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { Category } from '../../core/models/category.model';
-import { CategoryService } from '../../core/services/category.service';
-import { MetaService } from '../../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto';
+import { AbstractListComponent } from '../../standalone/abstracts/abstract-list.component';
 
+// prettier-ignore
 @Component({
 	standalone: true,
 	imports: [CommonModule, RouterModule, UserUrlPipe, SvgIconComponent],
 	selector: 'app-search-category',
 	templateUrl: './category.component.html'
 })
-export class SearchCategoryComponent implements OnInit, OnDestroy {
-	activatedRouteData$: Subscription | undefined;
-	activatedRouteQueryParams$: Subscription | undefined;
-
-	page: number = 1;
-	size: number = 20;
-
-	categoryList: Category[] = [];
-	categoryListHasMore: boolean = false;
-
-	// prettier-ignore
-	categoryListLoading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
-	constructor(
-		private activatedRoute: ActivatedRoute,
-		private router: Router,
-		private categoryService: CategoryService,
-		private metaService: MetaService
-	) {}
+export class SearchCategoryComponent extends AbstractListComponent implements OnInit {
+	abstractList: Category[] = [];
 
 	ngOnInit(): void {
-		this.activatedRouteData$ = this.activatedRoute.data
-			.pipe(map((data: Data) => data.data))
-			.subscribe({
-				next: (categoryList: Category[]) => {
-					this.categoryList = categoryList;
-					this.categoryListHasMore = categoryList.length === this.size;
-				},
-				error: (error: any) => console.error(error)
-			});
+		super.ngOnInit();
 
-		this.activatedRouteQueryParams$ = this.activatedRoute.parent.queryParams
-			.pipe(
-				skip(1),
-				tap(() => {
-					this.page = 1;
-					this.size = 20;
+		/** Meta */
 
-					this.categoryList = [];
-					this.categoryListHasMore = false;
-
-					this.categoryListLoading.next(true);
-				})
-			)
-			.subscribe({
-				next: () => this.getCategoryList(false),
-				error: (error: any) => console.error(error)
-			});
-
-		this.setMeta();
-	}
-
-	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.activatedRouteData$, this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
-	}
-
-	setMeta(): void {
 		const title: string = 'Search categories';
 
 		// prettier-ignore
@@ -96,7 +44,11 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	getCategoryList(concat: boolean): void {
+	getAbstractList(concat: boolean): void {
+		this.abstractListLoading$.next(true);
+
+		/** Request */
+
 		let categoryGetAllDto: CategoryGetAllDto = {
 			page: this.page,
 			size: this.size,
@@ -115,19 +67,11 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
 
 		this.categoryService.getAll(categoryGetAllDto).subscribe({
 			next: (categoryList: Category[]) => {
-				// prettier-ignore
-				this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
-				this.categoryListHasMore = categoryList.length === this.size;
-
-				this.categoryListLoading.next(false);
+				this.abstractList = concat ? this.abstractList.concat(categoryList) : categoryList;
+				this.abstractListHasMore = categoryList.length === this.size;
+				this.abstractListLoading$.next(false);
 			},
 			error: (error: any) => console.error(error)
 		});
-	}
-
-	onCategoryListLoadMore(): void {
-		this.page++;
-
-		this.getCategoryList(true);
 	}
 }

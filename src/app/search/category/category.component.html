@@ -1,13 +1,13 @@
 <!-- @format -->
 
 <ng-container>
-	<ng-container *ngIf="!!categoryList.length; else categoryListEmptyTemplate">
+	<ng-container *ngIf="!!abstractList.length; else abstractListEmptyTemplate">
 		<ul
 			class="grid grid-cols-1 grid-rows-none gap-4 sm:grid-cols-2 lg:grid-cols-3"
 		>
 			<li
 				class="rounded-box flex flex-col space-y-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-				*ngFor="let category of categoryList"
+				*ngFor="let category of abstractList"
 			>
 				<div class="flex flex-col">
 					<!-- prettier-ignore -->
@@ -27,18 +27,20 @@
 				</p>
 			</li>
 		</ul>
-		<button
-			class="btn-primary btn mt-4 w-full"
-			type="button"
-			aria-label="Load more"
-			*ngIf="categoryListHasMore"
-			(click)="onCategoryListLoadMore()"
-		>
-			Load more
-		</button>
+		<ng-container *ngIf="!abstractListLoadingPageScrollInfinite">
+			<button
+				class="btn-primary btn mt-4 w-full"
+				type="button"
+				aria-label="Load more"
+				*ngIf="abstractListHasMore"
+				(click)="getAbstractListLoadMore()"
+			>
+				Load more
+			</button>
+		</ng-container>
 	</ng-container>
-	<ng-template #categoryListEmptyTemplate>
-		<ng-container [ngSwitch]="categoryListLoading | async">
+	<ng-template #abstractListEmptyTemplate>
+		<ng-container [ngSwitch]="abstractListLoading$ | async">
 			<div class="flex flex-col items-center space-y-4" *ngSwitchDefault>
 				<i
 					class="fill-current text-base-content"

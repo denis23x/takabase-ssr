@@ -155,7 +155,7 @@ export class AppearanceService {
 		}
 	}
 
-	setPageScrollInfiniteHandler(scrollOffset?: number): Observable<boolean> {
+	setPageScrollInfiniteHandler(): Observable<boolean> {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
@@ -163,8 +163,7 @@ export class AppearanceService {
 			return fromEvent(window, 'scroll').pipe(
 				map(() => {
 					const heightScrolled: number = window.innerHeight + Math.round(window.scrollY);
-          const heightOffset: number = scrollOffset || window.innerHeight
-					const heightBottom: number = this.document.body.offsetHeight - heightOffset;
+					const heightBottom: number = this.document.body.offsetHeight;
 
 					return heightScrolled >= heightBottom;
 				}),

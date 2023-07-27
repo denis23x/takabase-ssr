@@ -1,13 +1,13 @@
 <!-- @format -->
 
 <ng-container>
-	<ng-container *ngIf="!!userList.length; else userListEmptyTemplate">
+	<ng-container *ngIf="!!abstractList.length; else abstractListEmptyTemplate">
 		<ul
 			class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
 		>
 			<li
 				class="rounded-box flex flex-col space-y-2 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-				*ngFor="let user of userList"
+				*ngFor="let user of abstractList"
 			>
 				<a
 					class="flex"
@@ -27,25 +27,27 @@
 					</a>
 					<time
 						class="text-sm text-base-content/50"
-						[attr.datetime]="user.createdAt | dayjs : 'format' : 'YYYY-M-D'"
+						[attr.datetime]="user.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 					>
-						{{ user.createdAt | dayjs : "fromX" }}
+						{{ user.createdAt | dayjs: "fromX" }}
 					</time>
 				</div>
 			</li>
 		</ul>
-		<button
-			class="btn-primary btn mt-4 w-full"
-			type="button"
-			aria-label="Load more"
-			*ngIf="userListHasMore"
-			(click)="onUserListLoadMore()"
-		>
-			Load more
-		</button>
+		<ng-container *ngIf="!abstractListLoadingPageScrollInfinite">
+			<button
+				class="btn-primary btn mt-4 w-full"
+				type="button"
+				aria-label="Load more"
+				*ngIf="abstractListHasMore"
+				(click)="getAbstractListLoadMore()"
+			>
+				Load more
+			</button>
+		</ng-container>
 	</ng-container>
-	<ng-template #userListEmptyTemplate>
-		<ng-container [ngSwitch]="userListLoading | async">
+	<ng-template #abstractListEmptyTemplate>
+		<ng-container [ngSwitch]="abstractListLoading$ | async">
 			<div class="flex flex-col items-center space-y-4" *ngSwitchDefault>
 				<i
 					class="fill-current text-base-content"

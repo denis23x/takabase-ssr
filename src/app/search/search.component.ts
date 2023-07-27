@@ -102,11 +102,11 @@ export class SearchComponent implements OnInit, OnDestroy {
 		].forEach($ => $?.unsubscribe());
 	}
 
-	// prettier-ignore
 	onRouterOutletActivate(event: any): void {
-		const isLoading$: Observable<boolean> = event.categoryListLoading || event.postListLoading$ || event.userListLoading
+		const isLoading$: Observable<boolean> = event.abstractListLoading$;
 
-    this.searchFormIsSubmitted$ = isLoading$.subscribe({
+		// prettier-ignore
+		this.searchFormIsSubmitted$ = isLoading$.subscribe({
       next: (isSubmitted: boolean) => isSubmitted ? this.searchForm.disable() : this.searchForm.enable(),
       error: (error: any) => console.error(error)
     });
