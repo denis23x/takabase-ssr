@@ -2,6 +2,7 @@
 
 import { NgModule } from '@angular/core';
 import {
+	Route,
 	RouterModule,
 	Routes,
 	TitleStrategy,
@@ -24,14 +25,7 @@ import { TermsDetailsResolverService } from './terms/details/details-resolver.se
 import { HelpDetailsResolverService } from './help/details/details-resolver.service';
 import { TitleService } from './core/services/title.service';
 
-const routes: Routes = [
-	{
-		path: '',
-		title: 'Home',
-		loadComponent: () => {
-			return import('./home/home.component').then(m => m.HomeComponent);
-		}
-	},
+export const routes: Routes = [
 	{
 		path: 'email/confirmation',
 		title: 'Email confirmation',
@@ -370,9 +364,47 @@ const routes: Routes = [
 	}
 ];
 
+export const routesRedirect = (routes: Routes) => {
+	console.log('aa');
+
+	const getCookie = (cookieName: string): string | undefined => {
+		const result: any = {};
+
+		document.cookie.split(';').forEach((cookie: string) => {
+			const [key, value]: string[] = cookie.split('=');
+
+			result[key.trim()] = value;
+		});
+
+		return result[cookieName];
+	};
+
+	/** Remove home if it's already exists */
+
+	routes = routes.filter((route: Route) => route.path !== '');
+
+	/** Make new home */
+
+	const routeHome: Route = {
+		path: '',
+		title: 'Home'
+	};
+
+	if (Number(getCookie('page-redirect-home'))) {
+		routeHome.redirectTo = 'settings/appearance';
+		routeHome.pathMatch = 'full';
+	} else {
+		routeHome.loadComponent = () => {
+			return import('./home/home.component').then(m => m.HomeComponent);
+		};
+	}
+
+	return [routeHome, ...routes];
+};
+
 @NgModule({
 	imports: [
-		RouterModule.forRoot(routes, {
+		RouterModule.forRoot(routesRedirect(routes), {
 			initialNavigation: 'enabledBlocking'
 		})
 	],
