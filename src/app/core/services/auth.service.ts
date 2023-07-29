@@ -108,14 +108,15 @@ export class AuthService {
 
 		/** Set settings */
 
+		// prettier-ignore
 		if (user.settings) {
 			this.appearanceService.setTheme(user.settings.theme);
 			this.appearanceService.setThemeBackground(user.settings.themeBackground);
 			this.appearanceService.setThemePrism(user.settings.themePrism);
-
-			// prettier-ignore
 			this.appearanceService.setPageScrollInfinite(user.settings.pageScrollInfinite);
 			this.appearanceService.setPageScrollToTop(user.settings.pageScrollToTop);
+			this.appearanceService.setWindowButtonPosition(user.settings.windowButtonPosition);
+			this.appearanceService.setMarkdownMonospace(user.settings.markdownMonospace);
 		}
 
 		return of(null);
@@ -133,9 +134,10 @@ export class AuthService {
 		this.appearanceService.setTheme(null);
 		this.appearanceService.setThemeBackground(null);
 		this.appearanceService.setThemePrism(null);
-
 		this.appearanceService.setPageScrollInfinite(null);
 		this.appearanceService.setPageScrollToTop(null);
+		this.appearanceService.setWindowButtonPosition(null);
+		this.appearanceService.setMarkdownMonospace(null);
 
 		return of(null);
 	}

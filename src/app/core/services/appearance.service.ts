@@ -146,6 +146,24 @@ export class AppearanceService {
 		}
 	}
 
+	setWindowButtonPosition(windowButtonPosition: string | null): void {
+		if (windowButtonPosition) {
+			// prettier-ignore
+			this.cookieService.setItem('window-button-position', windowButtonPosition);
+		} else {
+			this.cookieService.removeItem('window-button-position');
+		}
+	}
+
+	setMarkdownMonospace(markdownMonospace: boolean | null): void {
+		if (markdownMonospace) {
+			// prettier-ignore
+			this.cookieService.setItem('markdown-monospace', String(+markdownMonospace));
+		} else {
+			this.cookieService.removeItem('markdown-monospace');
+		}
+	}
+
 	setPageScrollInfinite(pageScrollInfinite: boolean | null): void {
 		if (pageScrollInfinite) {
 			// prettier-ignore

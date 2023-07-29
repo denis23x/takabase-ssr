@@ -291,11 +291,11 @@
 				<hr class="my-2 w-full border-base-content/20" />
 				<fieldset
 					class="form-control"
-					*ngIf="appearanceForm.get('redirectFromHome') as redirectFromHome"
+					*ngIf="appearanceForm.get('pageRedirectHome') as pageRedirectHome"
 				>
 					<label
 						class="label cursor-pointer"
-						for="appearanceFormPageScrollInfinite"
+						for="appearanceFormPageRedirectHome"
 					>
 						<span class="label-text">
 							Redirect from home page (to profile)
@@ -303,65 +303,67 @@
 						<!-- prettier-ignore -->
 						<input
               class="toggle"
-              id="appearanceFormRedirectFromHome"
+              id="appearanceFormPageRedirectHome"
               type="checkbox"
-              aria-label="Infinite scroll"
-              formControlName="redirectFromHome"
-              [class.toggle-success]="redirectFromHome.touched && redirectFromHome.value"
+              aria-label="Redirect home page"
+              formControlName="pageRedirectHome"
+              [class.toggle-success]="pageRedirectHome.touched && pageRedirectHome.value"
             />
 					</label>
 				</fieldset>
 				<hr class="my-2 w-full border-base-content/20" />
 				<fieldset
 					class="form-control"
-					*ngIf="appearanceForm.get('monospace') as monospace"
+					*ngIf="appearanceForm.get('markdownMonospace') as markdownMonospace"
 				>
-					<label class="label cursor-pointer" for="appearanceFormMonospace">
+					<label
+						class="label cursor-pointer"
+						for="appearanceFormMarkdownMonospace"
+					>
 						<span class="label-text">
 							Use a fixed-width (monospace) font when editing Markdown
 						</span>
+						<!-- prettier-ignore -->
 						<input
 							class="toggle"
-							id="appearanceFormMonospace"
+							id="appearanceFormMarkdownMonospace"
 							type="checkbox"
-							aria-label="Monospace"
-							formControlName="monospace"
-							[class.toggle-success]="monospace.touched && monospace.value"
+							aria-label="Markdown monospace"
+							formControlName="markdownMonospace"
+							[class.toggle-success]="markdownMonospace.touched && markdownMonospace.value"
 						/>
 					</label>
 				</fieldset>
 				<hr class="my-2 w-full border-base-content/20" />
+				<!-- prettier-ignore -->
 				<fieldset
-					class="form-control"
-					*ngIf="appearanceForm.get('buttons') as buttons"
+					class="form-control flex-row items-center justify-between"
+					*ngIf="appearanceForm.get('windowButtonPosition') as windowButtonPosition"
 				>
-					<label class="label cursor-pointer" for="appearanceFormButtons">
+					<div class="label">
 						<span class="label-text">
 							Position of caption buttons (close, minimize, maximize)
 						</span>
-						<div class="join">
-							<!-- prettier-ignore -->
-							<button
+					</div>
+					<ul class="join join-horizontal">
+						<li class="block" *ngFor="let buttonsValue of appearanceButtonsList">
+							<label
                 class="btn btn-success btn-sm join-item"
-                type="button"
-                *ngFor="let buttonsValue of appearanceButtonsList"
-                [class.btn-outline]="buttons.value !== buttonsValue && appearanceForm.enabled"
-                [class.btn-inline]="buttons.value === buttonsValue && appearanceForm.disabled"
-                [disabled]="appearanceForm.disabled"
-                (click)="buttons.setValue(buttonsValue)"
+                [class.btn-outline]="windowButtonPosition.value !== buttonsValue && appearanceForm.enabled"
+                [class.btn-inline]="windowButtonPosition.value === buttonsValue && appearanceForm.disabled"
+                [class.disabled]="appearanceForm.disabled"
               >
-                {{ buttonsValue }}
-              </button>
-						</div>
-						<input
-							class="hidden"
-							id="appearanceFormButtons"
-							type="text"
-							aria-label="Buttons"
-							formControlName="buttons"
-							readonly
-						/>
-					</label>
+								<input
+									class="hidden"
+									type="radio"
+									aria-label="Window button position"
+									formControlName="windowButtonPosition"
+									[value]="buttonsValue"
+								/>
+								<span class="block">{{ buttonsValue }}</span>
+							</label>
+						</li>
+					</ul>
 				</fieldset>
 			</div>
 		</form>

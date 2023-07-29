@@ -41,6 +41,7 @@ import { PostCreateDto } from '../core/dto/post/post-create.dto';
 import { FileCreateDto } from '../core/dto/file/file-create.dto';
 import { CategoryCreateDto } from '../core/dto/category/category-create.dto';
 import { AppScrollIntoViewDirective } from '../standalone/directives/app-scroll-into-view.directive';
+import { CookieService } from '../core/services/cookie.service';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -101,6 +102,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 	postFormPreviewPost: Post | undefined;
 
 	postMarkdownModalToggle: boolean = false;
+	postMarkdownMonospace: boolean = false;
+
 	postDeleteIsSubmitted: boolean = false;
 
 	authUser: User | undefined;
@@ -129,7 +132,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 		private snackbarService: SnackbarService,
 		private authService: AuthService,
 		private categoryService: CategoryService,
-		private userService: UserService
+		private userService: UserService,
+		private cookieService: CookieService
 	) {
 		this.postForm = this.formBuilder.group<PostForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -215,11 +219,21 @@ export class CreateComponent implements OnInit, OnDestroy {
 			next: (user: User) => (this.authUser = user),
 			error: (error: any) => console.error(error)
 		});
+
+		/** Set appearance settings */
+
+		this.setAppearance();
 	}
 
 	ngOnDestroy(): void {
 		// prettier-ignore
 		[this.activatedRouteData$, this.postForm$, this.authUser$].forEach($ => $?.unsubscribe());
+	}
+
+	setAppearance(): void {
+		if (this.cookieService.getItem('markdown-monospace')) {
+			this.postMarkdownMonospace = true;
+		}
 	}
 
 	onTogglePostFormImage(toggle: boolean): void {

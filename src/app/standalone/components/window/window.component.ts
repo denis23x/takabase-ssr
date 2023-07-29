@@ -1,19 +1,9 @@
 /** @format */
 
-import {
-	Component,
-	EventEmitter,
-	Input,
-	OnDestroy,
-	OnInit,
-	Output
-} from '@angular/core';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { CommonModule } from '@angular/common';
-import { User } from '../../../core/models/user.model';
-import { AuthService } from '../../../core/services/auth.service';
+import { CookieService } from '../../../core/services/cookie.service';
 
 @Component({
 	standalone: true,
@@ -21,7 +11,7 @@ import { AuthService } from '../../../core/services/auth.service';
 	selector: 'app-window, [appWindow]',
 	templateUrl: 'window.component.html'
 })
-export class WindowComponent implements OnInit, OnDestroy {
+export class WindowComponent implements OnInit {
 	@Input()
 	set appTitle(title: string) {
 		this.captionTitle = title;
@@ -52,26 +42,21 @@ export class WindowComponent implements OnInit, OnDestroy {
 		'rounded-box'
 	];
 
-	authUser: User | undefined;
-	authUser$: Subscription | undefined;
-
-	constructor(private authService: AuthService) {}
+	constructor(private cookieService: CookieService) {}
 
 	ngOnInit(): void {
-		this.authUser$ = this.authService.user
-			.pipe(filter((user: User) => !!user))
-			.subscribe({
-				next: (user: User) => {
-					this.authUser = user;
+		/** Set appearance settings */
 
-					this.captionButtonsPosition = this.authUser.settings.buttons;
-				},
-				error: (error: any) => console.error(error)
-			});
+		this.setAppearance();
 	}
 
-	ngOnDestroy(): void {
-		[this.authUser$].forEach($ => $?.unsubscribe());
+	setAppearance(): void {
+		// prettier-ignore
+		const captionButtonsPosition: string | undefined = this.cookieService.getItem('window-button-position');
+
+		if (captionButtonsPosition) {
+			this.captionButtonsPosition = captionButtonsPosition;
+		}
 	}
 
 	onClose(): void {

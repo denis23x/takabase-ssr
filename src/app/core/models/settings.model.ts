@@ -5,11 +5,11 @@ export interface Settings {
 	themePrism: string;
 	themeBackground: string;
 	language: string;
-	monospace: boolean;
-	buttons: string;
+	markdownMonospace: boolean;
+	windowButtonPosition: string;
 	pageScrollToTop: boolean;
 	pageScrollInfinite: boolean;
-	redirectFromHome: boolean;
+	pageRedirectHome: boolean;
 	createdAt: string;
 	updatedAt: string;
 }

@@ -71,19 +71,9 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
-		/** Page scroll infinite handler */
+		/** Set appearance settings */
 
-		// prettier-ignore
-		if (this.cookieService.getItem('page-scroll-infinite')) {
-      this.abstractListLoadingPageScrollInfinite = true;
-			this.abstractListLoadingPageScrollInfinite$ = this.appearanceService
-        .setPageScrollInfiniteHandler()
-        .pipe(filter(() => this.abstractListHasMore && !this.abstractListLoading$.getValue()))
-        .subscribe({
-          next: () => this.getAbstractListLoadMore(),
-          error: (error: any) => console.error(error)
-        });
-		}
+		this.setAppearance();
 	}
 
 	ngOnDestroy(): void {
@@ -92,6 +82,20 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
 			this.activatedRouteQueryParams$,
 			this.abstractListLoadingPageScrollInfinite$
 		].forEach($ => $?.unsubscribe());
+	}
+
+	setAppearance(): void {
+		// prettier-ignore
+		if (this.cookieService.getItem('page-scroll-infinite')) {
+      this.abstractListLoadingPageScrollInfinite = true;
+      this.abstractListLoadingPageScrollInfinite$ = this.appearanceService
+        .setPageScrollInfiniteHandler()
+        .pipe(filter(() => this.abstractListHasMore && !this.abstractListLoading$.getValue()))
+        .subscribe({
+          next: () => this.getAbstractListLoadMore(),
+          error: (error: any) => console.error(error)
+        });
+    }
 	}
 
 	getAbstractList(concat: boolean): void {

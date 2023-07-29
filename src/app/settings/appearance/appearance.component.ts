@@ -27,9 +27,9 @@ interface AppearanceForm {
 	language: FormControl<string>;
 	pageScrollToTop: FormControl<boolean>;
 	pageScrollInfinite: FormControl<boolean>;
-	redirectFromHome: FormControl<boolean>;
-	monospace: FormControl<boolean>;
-	buttons: FormControl<string>;
+	pageRedirectHome: FormControl<boolean>;
+	markdownMonospace: FormControl<boolean>;
+	windowButtonPosition: FormControl<string>;
 }
 
 @Component({
@@ -77,9 +77,9 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
       language: this.formBuilder.nonNullable.control('', [Validators.required]),
       pageScrollToTop: this.formBuilder.control(null, [Validators.required]),
       pageScrollInfinite: this.formBuilder.control(null, [Validators.required]),
-      redirectFromHome: this.formBuilder.control(null, [Validators.required]),
-      monospace: this.formBuilder.control(null, [Validators.required]),
-      buttons: this.formBuilder.nonNullable.control('', [Validators.required]),
+      pageRedirectHome: this.formBuilder.control(null, [Validators.required]),
+      markdownMonospace: this.formBuilder.control(null, [Validators.required]),
+      windowButtonPosition: this.formBuilder.nonNullable.control('', [Validators.required]),
 		});
 	}
 
