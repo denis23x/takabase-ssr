@@ -364,9 +364,7 @@ export const routes: Routes = [
 	}
 ];
 
-export const routesRedirect = (routes: Routes) => {
-	console.log('aa');
-
+export const routesRedirect = (routes: Routes): Routes => {
 	const getCookie = (cookieName: string): string | undefined => {
 		const result: any = {};
 
@@ -390,8 +388,11 @@ export const routesRedirect = (routes: Routes) => {
 		title: 'Home'
 	};
 
-	if (Number(getCookie('page-redirect-home'))) {
-		routeHome.redirectTo = 'settings/appearance';
+	const userAuthed: string = String(getCookie('user-authed'));
+	const pageRedirectHome: number = Number(getCookie('page-redirect-home'));
+
+	if (pageRedirectHome) {
+		routeHome.redirectTo = '@' + userAuthed;
 		routeHome.pathMatch = 'full';
 	} else {
 		routeHome.loadComponent = () => {

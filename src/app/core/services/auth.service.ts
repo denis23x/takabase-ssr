@@ -82,7 +82,7 @@ export class AuthService {
 		if (user) {
 			return of(user);
 		} else {
-			if (this.cookieService.getItem('authed')) {
+			if (this.cookieService.getItem('user-authed')) {
 				return this.onRefresh();
 			} else {
 				return of(undefined);
@@ -103,7 +103,7 @@ export class AuthService {
 		/** Set token */
 
 		if (user.token) {
-			this.cookieService.setItem('authed', String(1));
+			this.cookieService.setItem('user-authed', user.name);
 		}
 
 		/** Set settings */
@@ -124,7 +124,7 @@ export class AuthService {
 
 		/** Remove token */
 
-		this.cookieService.removeItem('authed');
+		this.cookieService.removeItem('user-authed');
 
 		/** Remove settings */
 
