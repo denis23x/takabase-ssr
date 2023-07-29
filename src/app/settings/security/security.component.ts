@@ -27,9 +27,9 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
 
 	uaParser: UAParser = new UAParser();
 
-	sessionGeolocation: string = 'https://get.geojs.io/v1/ip/geo/';
 	sessionActive: Session | undefined;
 	sessionActiveList: Session[] = [];
+	sessionGeolocation: string = 'https://get.geojs.io/v1/ip/geo/';
 
 	constructor(
 		private formBuilder: FormBuilder,

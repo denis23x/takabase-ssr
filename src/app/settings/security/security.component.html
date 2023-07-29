@@ -7,25 +7,11 @@
 				class="rounded-box flex flex-col space-y-4"
 				*ngIf="!!sessionActive?.uaParsed"
 			>
-				<div class="flex items-center justify-between gap-4">
-					<div class="breadcrumbs p-0">
-						<ul class="flex">
-							<li class="flex text-base-content">
-								{{ sessionActive.uaParsed?.os.name }}
-							</li>
-							<li class="flex text-base-content/50">
-								{{ sessionActive.uaParsed?.browser.name }}
-							</li>
-						</ul>
-					</div>
-					<a
-						class="link whitespace-nowrap after:inline-block after:px-1 after:content-['\279A']"
-						target="_blank"
-						rel="noopener noreferrer"
-						[href]="sessionGeolocation + sessionActive.ip"
-					>
-						Geolocation
-					</a>
+				<div class="rounded-box bg-base-200 p-4">
+					<ng-container
+						[ngTemplateOutlet]="sessionDetails"
+						[ngTemplateOutletContext]="{ session: sessionActive }"
+					></ng-container>
 				</div>
 				<button
 					class="btn-error btn-outline btn w-full"
@@ -48,34 +34,10 @@
 					class="flex items-center justify-between gap-4 border-b border-base-content/20 p-4 last:border-b-0"
 					*ngFor="let session of sessionActiveList"
 				>
-					<div class="flex flex-col">
-						<div class="breadcrumbs p-0">
-							<ul class="flex">
-								<li class="flex text-base-content">
-									{{ session.uaParsed.os.name }}
-								</li>
-								<li class="flex text-base-content/50">
-									{{ session.uaParsed.browser.name }}
-								</li>
-							</ul>
-						</div>
-						<div class="flex gap-2 text-sm">
-							<a
-								class="link whitespace-nowrap"
-								target="_blank"
-								rel="noopener noreferrer"
-								[href]="'https://get.geojs.io/v1/ip/geo/' + session.ip"
-							>
-								{{ session.ip }}
-							</a>
-							<time
-								class="text-base-content/50"
-								[attr.datetime]="session.createdAt"
-							>
-								{{ session.createdAt | dayjs : "fromX" }}
-							</time>
-						</div>
-					</div>
+					<ng-container
+						[ngTemplateOutlet]="sessionDetails"
+						[ngTemplateOutletContext]="{ session }"
+					></ng-container>
 					<button
 						class="btn-error btn-sm btn-circle btn fill-current"
 						type="button"
@@ -83,7 +45,7 @@
 						aria-label="Terminate"
 						appSvgIcon
 						[appIcon]="'x'"
-                        [appSquare]="'2em'"
+						[appSquare]="'2em'"
 						(click)="onTerminate(session)"
 					></button>
 				</li>
@@ -103,6 +65,33 @@
 					<span class="text-success">No extra</span>
 					<span class="text-base-content"> sessions</span>
 				</p>
+			</div>
+		</div>
+	</ng-template>
+	<ng-template let-session="session" #sessionDetails>
+		<div class="flex flex-col">
+			<div class="breadcrumbs p-0">
+				<ul class="flex">
+					<li class="flex text-base-content">
+						{{ session.uaParsed?.os.name }}
+					</li>
+					<li class="flex text-base-content/50">
+						{{ session.uaParsed?.browser.name }}
+					</li>
+				</ul>
+			</div>
+			<div class="flex gap-2 text-sm">
+				<a
+					class="link whitespace-nowrap after:inline-block after:px-1 after:content-['\279A']"
+					target="_blank"
+					rel="noopener noreferrer"
+					[href]="sessionGeolocation + session.ip"
+				>
+					{{ session.ip }}
+				</a>
+				<time class="text-base-content/50" [attr.datetime]="session.createdAt">
+					{{ session.createdAt | dayjs: "fromX" }}
+				</time>
 			</div>
 		</div>
 	</ng-template>
