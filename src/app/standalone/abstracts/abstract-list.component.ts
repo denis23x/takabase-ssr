@@ -86,10 +86,12 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
 
 	setAppearance(): void {
 		// prettier-ignore
-		if (this.cookieService.getItem('page-scroll-infinite')) {
-      this.abstractListLoadingPageScrollInfinite = true;
+		this.abstractListLoadingPageScrollInfinite = !!Number(this.cookieService.getItem('page-scroll-infinite'));
+
+		// prettier-ignore
+		if (this.abstractListLoadingPageScrollInfinite) {
       this.abstractListLoadingPageScrollInfinite$ = this.appearanceService
-        .setPageScrollInfiniteHandler()
+        .setPageScrollInfinite()
         .pipe(filter(() => this.abstractListHasMore && !this.abstractListLoading$.getValue()))
         .subscribe({
           next: () => this.getAbstractListLoadMore(),

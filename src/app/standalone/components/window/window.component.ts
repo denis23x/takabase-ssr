@@ -52,11 +52,7 @@ export class WindowComponent implements OnInit {
 
 	setAppearance(): void {
 		// prettier-ignore
-		const captionButtonsPosition: string | undefined = this.cookieService.getItem('window-button-position');
-
-		if (captionButtonsPosition) {
-			this.captionButtonsPosition = captionButtonsPosition;
-		}
+		this.captionButtonsPosition = this.cookieService.getItem('window-button-position') || 'left';
 	}
 
 	onClose(): void {

@@ -231,9 +231,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	setAppearance(): void {
-		if (this.cookieService.getItem('markdown-monospace')) {
-			this.postMarkdownMonospace = true;
-		}
+		// prettier-ignore
+		this.postMarkdownMonospace = !!Number(this.cookieService.getItem('markdown-monospace'));
 	}
 
 	onTogglePostFormImage(toggle: boolean): void {

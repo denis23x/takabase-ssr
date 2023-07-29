@@ -15,6 +15,11 @@ export class HelperService {
 		private platformService: PlatformService
 	) {}
 
+	setCamelCaseToDashCase(value: string): string {
+		// prettier-ignore
+		return value.replace(/[A-Z]/g, (value: string): string => '-' + value.toLowerCase());
+	}
+
 	getRegex(regex: string, payload?: any): RegExp {
 		// prettier-ignore
 		switch (regex) {

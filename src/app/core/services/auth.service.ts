@@ -3,15 +3,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
 import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
 import { User } from '../models/user.model';
 import { ApiService } from './api.service';
 import { CookieService } from './cookie.service';
-import { SnackbarService } from './snackbar.service';
-import { AppearanceService } from './appearance.service';
 import { LoginDto } from '../dto/auth/login.dto';
 import { LogoutDto } from '../dto/auth/logout.dto';
+import { SettingsService } from './settings.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -24,9 +22,7 @@ export class AuthService {
 	constructor(
 		private apiService: ApiService,
 		private cookieService: CookieService,
-		private router: Router,
-		private snackbarService: SnackbarService,
-		private appearanceService: AppearanceService
+		private settingsService: SettingsService
 	) {}
 
 	getFingerprint(): Observable<string> {
@@ -95,8 +91,12 @@ export class AuthService {
 	}
 
 	setUser(user: Partial<User>): Observable<void> {
+		const userSaved: User = this.user.getValue();
+
+		/** Set user */
+
 		this.user.next({
-			...this.user.getValue(),
+			...userSaved,
 			...user
 		});
 
@@ -108,21 +108,18 @@ export class AuthService {
 
 		/** Set settings */
 
-		// prettier-ignore
 		if (user.settings) {
-			this.appearanceService.setTheme(user.settings.theme);
-			this.appearanceService.setThemeBackground(user.settings.themeBackground);
-			this.appearanceService.setThemePrism(user.settings.themePrism);
-			this.appearanceService.setPageScrollInfinite(user.settings.pageScrollInfinite);
-			this.appearanceService.setPageScrollToTop(user.settings.pageScrollToTop);
-			this.appearanceService.setWindowButtonPosition(user.settings.windowButtonPosition);
-			this.appearanceService.setMarkdownMonospace(user.settings.markdownMonospace);
+			this.settingsService.setSettings(user.settings);
 		}
 
 		return of(null);
 	}
 
 	removeUser(): Observable<void> {
+		const userSaved: User = this.user.getValue();
+
+		/** Set user */
+
 		this.user.next(undefined);
 
 		/** Remove token */
@@ -131,13 +128,7 @@ export class AuthService {
 
 		/** Remove settings */
 
-		this.appearanceService.setTheme(null);
-		this.appearanceService.setThemeBackground(null);
-		this.appearanceService.setThemePrism(null);
-		this.appearanceService.setPageScrollInfinite(null);
-		this.appearanceService.setPageScrollToTop(null);
-		this.appearanceService.setWindowButtonPosition(null);
-		this.appearanceService.setMarkdownMonospace(null);
+		this.settingsService.removeSettings(userSaved.settings);
 
 		return of(null);
 	}

@@ -3,7 +3,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
-import { CookieService } from './cookie.service';
 import { HttpClient } from '@angular/common/http';
 import { fromEvent, Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -15,7 +14,6 @@ export class AppearanceService {
 	constructor(
 		@Inject(DOCUMENT)
 		private document: Document,
-		private cookieService: CookieService,
 		private platformService: PlatformService,
 		private httpClient: HttpClient
 	) {}
@@ -80,12 +78,6 @@ export class AppearanceService {
 	}
 
 	setTheme(theme: string | null): void {
-		if (theme) {
-			this.cookieService.setItem('theme', theme);
-		} else {
-			this.cookieService.removeItem('theme');
-		}
-
 		const themeValue: string = theme || 'light';
 
 		this.document.documentElement.setAttribute('data-theme', themeValue);
@@ -105,12 +97,6 @@ export class AppearanceService {
 	}
 
 	setThemeBackground(themeBackground: string | null): void {
-		if (themeBackground) {
-			this.cookieService.setItem('theme-background', themeBackground);
-		} else {
-			this.cookieService.removeItem('theme-background');
-		}
-
 		// prettier-ignore
 		const backgroundElement: HTMLElement | null = this.document.querySelector('[data-theme-background]');
 		const backgroundValue: string = themeBackground || 'slanted-gradient';
@@ -130,12 +116,6 @@ export class AppearanceService {
 	}
 
 	setThemePrism(themePrism: string | null): void {
-		if (themePrism) {
-			this.cookieService.setItem('theme-prism', themePrism);
-		} else {
-			this.cookieService.removeItem('theme-prism');
-		}
-
 		// prettier-ignore
 		const prismElement: HTMLLinkElement | null = this.document.querySelector('[data-theme-prism]') as HTMLLinkElement;
 		const prismValue: string = themePrism || 'default';
@@ -146,34 +126,7 @@ export class AppearanceService {
 		}
 	}
 
-	setWindowButtonPosition(windowButtonPosition: string | null): void {
-		if (windowButtonPosition) {
-			// prettier-ignore
-			this.cookieService.setItem('window-button-position', windowButtonPosition);
-		} else {
-			this.cookieService.removeItem('window-button-position');
-		}
-	}
-
-	setMarkdownMonospace(markdownMonospace: boolean | null): void {
-		if (markdownMonospace) {
-			// prettier-ignore
-			this.cookieService.setItem('markdown-monospace', String(+markdownMonospace));
-		} else {
-			this.cookieService.removeItem('markdown-monospace');
-		}
-	}
-
-	setPageScrollInfinite(pageScrollInfinite: boolean | null): void {
-		if (pageScrollInfinite) {
-			// prettier-ignore
-			this.cookieService.setItem('page-scroll-infinite', String(+pageScrollInfinite));
-		} else {
-			this.cookieService.removeItem('page-scroll-infinite');
-		}
-	}
-
-	setPageScrollInfiniteHandler(): Observable<boolean> {
+	setPageScrollInfinite(): Observable<boolean> {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
@@ -190,14 +143,5 @@ export class AppearanceService {
 		}
 
 		return of(false);
-	}
-
-	setPageScrollToTop(pageScrollToTop: boolean | null): void {
-		if (pageScrollToTop) {
-			// prettier-ignore
-			this.cookieService.setItem('page-scroll-to-top', String(+pageScrollToTop));
-		} else {
-			this.cookieService.removeItem('page-scroll-to-top');
-		}
 	}
 }
