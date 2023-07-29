@@ -6,6 +6,8 @@ import { PlatformService } from './platform.service';
 import { HttpClient } from '@angular/common/http';
 import { fromEvent, Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { Route, Router, Routes } from '@angular/router';
+import { routesRedirect } from '../../app-routing.module';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,7 +17,8 @@ export class AppearanceService {
 		@Inject(DOCUMENT)
 		private document: Document,
 		private platformService: PlatformService,
-		private httpClient: HttpClient
+		private httpClient: HttpClient,
+		private router: Router
 	) {}
 
 	getCSSPropertyValue(property: string): string {
@@ -143,5 +146,21 @@ export class AppearanceService {
 		}
 
 		return of(false);
+	}
+
+	setPageRedirectHome(): void {
+		const previousConfig: Routes = this.router.config;
+		const previousHome: Route = previousConfig.find((route: Route) => {
+			return route.path === '';
+		});
+
+		const nextConfig: Routes = routesRedirect(previousConfig);
+		const nextHome: Route = nextConfig.find((route: Route) => {
+			return route.path === '';
+		});
+
+		if (previousHome.redirectTo !== nextHome.redirectTo) {
+			this.router.resetConfig(nextConfig);
+		}
 	}
 }
