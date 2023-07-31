@@ -8,6 +8,9 @@ import { fromEvent, Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Route, Router, Routes } from '@angular/router';
 import { routesRedirect } from '../../app-routing.module';
+import { Settings } from '../models/settings.model';
+import { HelperService } from './helper.service';
+import { CookieService } from './cookie.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -18,7 +21,9 @@ export class AppearanceService {
 		private document: Document,
 		private platformService: PlatformService,
 		private httpClient: HttpClient,
-		private router: Router
+		private router: Router,
+		private helperService: HelperService,
+		private cookieService: CookieService
 	) {}
 
 	getCSSPropertyValue(property: string): string {
@@ -71,6 +76,44 @@ export class AppearanceService {
 
 		return [f(0), f(8), f(4)];
 	};
+
+	// prettier-ignore
+	setSettings(settings: Settings | null): void {
+    const settingsList: string[] = [
+      'theme',
+      'themePrism',
+      'themeBackground',
+      'language',
+      'markdownMonospace',
+      'windowButtonPosition',
+      'pageScrollToTop',
+      'pageScrollInfinite',
+      'pageRedirectHome'
+    ];
+
+    if (settings) {
+      settingsList.forEach((key: string) => {
+        const value: any = settings[key];
+
+        const cookieKey: string = this.helperService.setCamelCaseToDashCase(key);
+        const cookieValue: any = typeof value === 'boolean' ? String(+value) : value;
+
+        this.cookieService.setItem(cookieKey, cookieValue);
+      });
+    } else {
+      settingsList.forEach((key: string) => {
+        this.cookieService.removeItem(this.helperService.setCamelCaseToDashCase(key));
+      });
+    }
+
+    this.setPageRedirectHome();
+
+    /** Set theme settings */
+
+    this.setTheme(settings?.theme || null);
+    this.setThemeBackground(settings?.themeBackground || null);
+    this.setThemePrism(settings?.themePrism || null);
+  }
 
 	setLoader(toggle: boolean): void {
 		if (toggle) {

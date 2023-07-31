@@ -9,7 +9,7 @@ import { ApiService } from './api.service';
 import { CookieService } from './cookie.service';
 import { LoginDto } from '../dto/auth/login.dto';
 import { LogoutDto } from '../dto/auth/logout.dto';
-import { SettingsService } from './settings.service';
+import { AppearanceService } from './appearance.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -22,7 +22,7 @@ export class AuthService {
 	constructor(
 		private apiService: ApiService,
 		private cookieService: CookieService,
-		private settingsService: SettingsService
+		private appearanceService: AppearanceService
 	) {}
 
 	getFingerprint(): Observable<string> {
@@ -109,14 +109,14 @@ export class AuthService {
 		/** Set settings */
 
 		if (user.settings) {
-			this.settingsService.setSettings(user.settings);
+			this.appearanceService.setSettings(user.settings);
 		}
 
 		return of(null);
 	}
 
 	removeUser(): Observable<void> {
-		const userSaved: User = this.user.getValue();
+		// const userSaved: User = this.user.getValue();
 
 		/** Set user */
 
@@ -128,7 +128,7 @@ export class AuthService {
 
 		/** Remove settings */
 
-		this.settingsService.removeSettings(userSaved.settings);
+		this.appearanceService.setSettings(null);
 
 		return of(null);
 	}
