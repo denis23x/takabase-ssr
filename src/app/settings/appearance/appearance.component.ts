@@ -19,7 +19,6 @@ import { AppScrollIntoViewDirective } from '../../standalone/directives/app-scro
 import { SettingsUpdateDto } from '../../core/dto/settings/settings-update.dto';
 import { SettingsService } from '../../core/services/settings.service';
 import { Settings } from '../../core/models/settings.model';
-import { AppearanceService } from '../../core/services/appearance.service';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
@@ -68,8 +67,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		private formBuilder: FormBuilder,
 		private authService: AuthService,
 		private settingsService: SettingsService,
-		private activatedRoute: ActivatedRoute,
-		private appearanceService: AppearanceService
+		private activatedRoute: ActivatedRoute
 	) {
 		// prettier-ignore
 		this.appearanceForm = this.formBuilder.group<AppearanceForm>({
@@ -119,7 +117,6 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 						this.authService.setUser({ settings });
 
 						this.appearanceForm.enable({ emitEvent: false });
-						this.appearanceService.setPageRedirectHome();
 					},
 					error: () => this.appearanceForm.enable({ emitEvent: false })
 				});
