@@ -53,7 +53,7 @@
     "markdown-it-tasks": "^0.0.5",
     "markdown-it-video": "^0.6.3",
     "morphdom": "^2.7.0",
-    "ngx-image-cropper": "^6.3.2",
+    "ngx-image-cropper": "^7.0.0",
     "prism-themes": "^1.9.0",
     "prismjs": "^1.29.0",
     "qrcode": "^1.5.3",

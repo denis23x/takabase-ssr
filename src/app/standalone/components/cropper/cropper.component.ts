@@ -89,7 +89,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	cropperField: string | undefined;
 	cropperFile: File = undefined;
 	cropperRound: boolean = false;
-	cropperBase64: string = undefined;
+	cropperBlob: Blob = undefined;
 	cropperBackgroundIsDraggable: boolean = false;
 	cropperIsAvailable: boolean = false;
 
@@ -183,7 +183,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	onImageCropped(imageCroppedEvent: ImageCroppedEvent): void {
 		this.cropperIsAvailable = true;
-		this.cropperBase64 = imageCroppedEvent.base64;
+		this.cropperBlob = imageCroppedEvent.blob;
 
 		if (!this.cropperPositionInitial) {
 			this.cropperPositionInitial = imageCroppedEvent.cropperPosition;
@@ -248,7 +248,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	onResetCropper(): void {
 		this.cropperFile = undefined;
-		this.cropperBase64 = undefined;
+		this.cropperBlob = undefined;
 		this.cropperIsAvailable = false;
 	}
 
@@ -261,21 +261,10 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		abstractControl.markAsTouched();
 	}
 
-	// prettier-ignore
-	async setBase64ToFile(base64: string, filename: string, mimeType: string): Promise<File> {
-		const response: Response = await fetch(base64);
-		const arrayBuffer: ArrayBuffer = await response.arrayBuffer();
-
-		return new File([arrayBuffer], filename, { type: mimeType });
-	}
-
-	async onSubmitCropper(): Promise<void> {
-		// prettier-ignore
-		const file: File = await this.setBase64ToFile(this.cropperBase64, this.cropperFile.name, this.cropperFile.type);
-
+	onSubmitCropper(): void {
 		const formData: FormData = new FormData();
 
-		formData.append(this.cropperField, file);
+		formData.append(this.cropperField, this.cropperBlob);
 
 		this.imageForm.disable();
 
