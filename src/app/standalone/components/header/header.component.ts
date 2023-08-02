@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { AvatarComponent } from '../avatar/avatar.component';
@@ -10,6 +10,7 @@ import { AppAuthenticatedDirective } from '../../directives/app-authenticated.di
 import { UserUrlPipe } from '../../pipes/user-url.pipe';
 import { User } from '../../../core/models/user.model';
 import { AuthService } from '../../../core/services/auth.service';
+import { UserAvatarPipe } from '../../pipes/user-avatar.pipe';
 
 @Component({
 	standalone: true,
@@ -20,7 +21,8 @@ import { AuthService } from '../../../core/services/auth.service';
 		SvgIconComponent,
 		AvatarComponent,
 		AppAuthenticatedDirective,
-		UserUrlPipe
+		UserUrlPipe,
+		UserAvatarPipe
 	],
 	templateUrl: './header.component.html'
 })
@@ -28,10 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	authUser: User | undefined;
 	authUser$: Subscription | undefined;
 
-	constructor(
-		private authService: AuthService,
-		private router: Router
-	) {}
+	constructor(private authService: AuthService) {}
 
 	ngOnInit(): void {
 		this.authUser$ = this.authService.user.subscribe({
