@@ -1,35 +1,40 @@
 /** @format */
 
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input } from '@angular/core';
 import { toSvg } from 'jdenticon';
 import { SanitizerPipe } from '../../pipes/sanitizer.pipe';
 import { User } from '../../../core/models/user.model';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 
 @Component({
 	standalone: true,
 	selector: 'app-avatar, [appAvatar]',
-	imports: [SanitizerPipe],
+	imports: [SanitizerPipe, CommonModule, NgOptimizedImage],
 	templateUrl: './avatar.component.html'
 })
 export class AvatarComponent {
 	@Input()
 	set appUser(user: User) {
-		this.avatarHTML = user.avatar
-			? this.getAvatar(user)
-			: this.getJdenticon(user);
+		this.user = user;
+
+		if (!this.user.avatar) {
+			this.userJdenticon = this.getJdenticon();
+		}
 	}
 
-	avatarHTML: string | undefined;
-	avatarSize: number = 256;
+	user: Partial<User> | undefined;
+	userJdenticon: string | undefined;
 
-	getAvatar(user: User): string {
-		return `<img loading="lazy" width="${this.avatarSize}" height="${this.avatarSize}" src="${user.avatar}" alt="${user.name}">`;
-	}
+	constructor(private elementRef: ElementRef) {}
 
-	getJdenticon(user: User): string {
-		return toSvg(user.name, this.avatarSize, {
+	// prettier-ignore
+	getJdenticon(): string {
+		const elementRefDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
+
+		return toSvg(this.user.name, elementRefDOMRect.width, {
 			backColor: '#00000000',
-			padding: 0
+			padding: 0,
+			replaceMode: 'observe'
 		});
 	}
 }

@@ -1,10 +1,14 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="avatar">
-		<div
-			class="inline rounded-full [&>svg]:h-full [&>svg]:w-full"
-			[innerHTML]="avatarHTML | sanitizer: 'html'"
-		></div>
-	</div>
+	<ng-container [ngSwitch]="!!user.avatar">
+		<img
+			loading="lazy"
+			*ngSwitchCase="true"
+			[fill]="true"
+			[ngSrc]="user.avatar"
+			[alt]="user.name"
+		/>
+		<div *ngSwitchDefault [outerHTML]="userJdenticon | sanitizer: 'html'"></div>
+	</ng-container>
 </ng-container>
