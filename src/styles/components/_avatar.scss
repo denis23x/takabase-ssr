@@ -1,0 +1,7 @@
+/* Update default behaviour */
+
+.avatar {
+  svg {
+    @apply w-full h-full;
+  }
+}

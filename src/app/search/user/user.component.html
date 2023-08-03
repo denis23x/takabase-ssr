@@ -10,13 +10,13 @@
 				*ngFor="let user of abstractList"
 			>
 				<a
-					class="avatar"
+					class="avatar aspect-square"
 					[routerLink]="[user | userUrl]"
 					[attr.aria-label]="user.name"
 					[title]="user.name"
 				>
 					<div
-						class="w-32 rounded-btn relative"
+						class="w-full max-w-full rounded-btn relative"
 						appAvatar
 						[appUser]="user"
 					></div>
