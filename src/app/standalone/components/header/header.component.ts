@@ -10,7 +10,6 @@ import { AppAuthenticatedDirective } from '../../directives/app-authenticated.di
 import { UserUrlPipe } from '../../pipes/user-url.pipe';
 import { User } from '../../../core/models/user.model';
 import { AuthService } from '../../../core/services/auth.service';
-import { UserAvatarPipe } from '../../pipes/user-avatar.pipe';
 
 @Component({
 	standalone: true,
@@ -21,8 +20,7 @@ import { UserAvatarPipe } from '../../pipes/user-avatar.pipe';
 		SvgIconComponent,
 		AvatarComponent,
 		AppAuthenticatedDirective,
-		UserUrlPipe,
-		UserAvatarPipe
+		UserUrlPipe
 	],
 	templateUrl: './header.component.html'
 })

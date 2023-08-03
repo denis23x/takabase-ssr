@@ -46,7 +46,7 @@
 					</p>
 					<span class="text-sm font-bold" *ngIf="post?.markdown">
 						Time to read:
-						{{ post?.markdown | markdown : "time-to-read" }}
+						{{ post?.markdown | markdown: "time-to-read" }}
 						min.
 					</span>
 				</div>
@@ -65,13 +65,16 @@
 				*ngIf="authUser?.id !== post.user.id"
 			>
 				<a
-					class="btn-link btn-circle btn"
-					appAvatar
+					class="avatar"
 					[routerLink]="[post.user | userUrl]"
 					[attr.aria-label]="post.user.name"
 					[title]="post.user.name"
-					[appUser]="post.user"
 				>
+					<div
+						class="w-12 rounded-btn relative"
+						appAvatar
+						[appUser]="post.user"
+					></div>
 				</a>
 				<div class="flex flex-col items-start justify-start">
 					<a
@@ -84,9 +87,9 @@
 					</a>
 					<time
 						class="text-sm text-base-content/50"
-						[attr.datetime]="post.createdAt | dayjs : 'format' : 'YYYY-M-D'"
+						[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 					>
-						published {{ post.createdAt | dayjs : "fromX" }}
+						published {{ post.createdAt | dayjs: "fromX" }}
 					</time>
 				</div>
 			</div>

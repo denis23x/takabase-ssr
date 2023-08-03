@@ -9,7 +9,7 @@ import DOMPurify, { Config } from 'dompurify';
 	name: 'sanitizer'
 })
 export class SanitizerPipe implements PipeTransform {
-	constructor(protected domSanitizer: DomSanitizer) {}
+	constructor(private domSanitizer: DomSanitizer) {}
 
 	// prettier-ignore
 	transform(value: string, context: string): SafeValue | null {

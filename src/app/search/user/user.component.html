@@ -10,12 +10,16 @@
 				*ngFor="let user of abstractList"
 			>
 				<a
-					class="flex"
-					appAvatar
+					class="avatar"
 					[routerLink]="[user | userUrl]"
 					[attr.aria-label]="user.name"
-					[appUser]="user"
+					[title]="user.name"
 				>
+					<div
+						class="w-32 rounded-btn relative"
+						appAvatar
+						[appUser]="user"
+					></div>
 				</a>
 				<div class="flex flex-col text-center">
 					<a

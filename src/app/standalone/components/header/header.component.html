@@ -73,15 +73,11 @@
 						[attr.aria-label]="authUser.name"
 						[title]="authUser.name"
 					>
-						<div class="w-12 rounded-btn">
-							<img
-								loading="lazy"
-								width="48"
-								height="48"
-								[src]="authUser | userAvatar"
-								[alt]="authUser.name"
-							/>
-						</div>
+						<div
+							class="w-12 rounded-btn relative"
+							appAvatar
+							[appUser]="authUser"
+						></div>
 					</a>
 				</nav>
 			</ng-container>
