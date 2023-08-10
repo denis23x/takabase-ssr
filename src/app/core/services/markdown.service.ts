@@ -117,7 +117,13 @@ export class MarkdownService {
 		this.markdownIt.renderer.rules.table_close = this.setMarkdownItRule('tableClose');
 
 		// prettier-ignore
+		this.markdownIt.renderer.rules.collapsible_open = this.setMarkdownItRule('collapsibleOpen');
+
+		// prettier-ignore
 		this.markdownIt.renderer.rules.collapsible_summary = this.setMarkdownItRule('collapsibleSummary');
+
+		// prettier-ignore
+		this.markdownIt.renderer.rules.collapsible_close = this.setMarkdownItRule('collapsibleClose');
 
 		return this.markdownIt;
 	}
@@ -167,7 +173,7 @@ export class MarkdownService {
       return iframeElement.outerHTML;
     };
 
-		const ruleTableOpen: RenderRule = (tokenList: Token[], idx: number) => {
+		const ruleTableOpen: RenderRule = (tokenList: Token[], idx: number): string => {
       const tableElement: HTMLTableElement = this.document.createElement('table');
 
       const token: Token = tokenList[idx];
@@ -186,12 +192,20 @@ export class MarkdownService {
       return `<div class="overflow-auto my-4">${tableElement.outerHTML.replace('</table>', '')}`;
     };
 
-		const ruleTableClose: RenderRule = () => {
+		const ruleTableClose: RenderRule = (): string => {
 			return `</table></div>`;
 		};
 
-    const ruleCollapsibleSummary: RenderRule = (tokenList: Token[], idx: number) => {
-      return `<summary><span class="block">${tokenList[idx].content}</span></summary>`;
+    const ruleCollapsibleOpen: RenderRule = (): string => {
+      return '<details class="collapse collapse-arrow bg-base-200 border border-base-content/20">';
+    };
+
+    const ruleCollapsibleSummary: RenderRule = (tokenList: Token[], idx: number): string => {
+      return `<summary class="collapse-title text-xl font-medium">${tokenList[idx].content}</summary><div class="collapse-content">`;
+    };
+
+    const ruleCollapsibleClose: RenderRule = (): string => {
+      return '</div></details>';
     };
 
 		const ruleMap: any = {
@@ -199,7 +213,9 @@ export class MarkdownService {
 			video: ruleVideo,
 			tableOpen: ruleTableOpen,
 			tableClose: ruleTableClose,
-      collapsibleSummary: ruleCollapsibleSummary
+      collapsibleOpen: ruleCollapsibleOpen,
+      collapsibleSummary: ruleCollapsibleSummary,
+      collapsibleClose: ruleCollapsibleClose
 		};
 
 		return ruleMap[rule];

@@ -1,30 +1,31 @@
+@mixin first-and-last() {
+  /* Remove unnecessary margin from first and last element */
+
+  & > * {
+    &:first-child {
+      @apply mt-0 #{!important};
+    }
+
+    &:last-child {
+      @apply mb-0 #{!important};
+    }
+  }
+}
+
 .prose {
-  :where(*):first-child {
-    @apply mt-0;
-  }
-
-  :where(*):last-child {
-    @apply mb-0;
-  }
-
-  :where(h1):not(:where([class~="not-prose"])),
-  :where(h2):not(:where([class~="not-prose"])),
-  :where(h3):not(:where([class~="not-prose"])),
-  :where(h4):not(:where([class~="not-prose"])),
-  :where(h5):not(:where([class~="not-prose"])),
-  :where(h6):not(:where([class~="not-prose"])) {
+  h1, h2, h3, h4, h5, h6 {
     @apply my-4;
   }
 
-  :where(hr):not(:where([class~="not-prose"])) {
+  hr {
     @apply my-4;
   }
 
-  :where(iframe):not(:where([class~="not-prose"])) {
+  iframe {
     @apply rounded-box aspect-video w-full h-auto;
   }
 
-  :where(img):not(:where([class~="not-prose"])) {
+  img {
     @apply m-0;
 
     &:not(.mask) {
@@ -32,39 +33,59 @@
     }
 
     &:not([width]):not([height]) {
-      @apply w-full h-auto;
+      @apply w-full aspect-auto;
     }
   }
 
-  :where(a):not(:where([class~="not-prose"])) {
-    @apply link after:content-['\279A'] after:inline-block after:px-1;
-  }
+  a {
+    @apply link;
 
-  :where(p):not(:where([class~="not-prose"])) {
-    @apply text-ellipsis overflow-hidden my-4;
-
-    &:empty {
-      @apply hidden;
+    &:not(.not-prose) {
+      @apply after:content-['\279A'] after:inline-block after:px-1;
     }
   }
 
-  :where(ul):not(:where([class~="not-prose"])) {
-    @apply marker:text-info;
+  p {
+    @apply my-4;
+
+    &:not(.not-prose) {
+      @apply text-ellipsis overflow-hidden;
+
+      &:empty {
+        @apply hidden;
+      }
+    }
+  }
+
+  ul {
+    @apply marker:text-info my-4;
 
     &.form-control {
       @apply list-none p-0;
+
+      li {
+        @apply p-0;
+      }
+
+      ul {
+        @apply ml-8;
+      }
     }
 
     ul {
-      @apply ml-10 mb-0;
+      @apply mb-0;
     }
   }
 
-  :where(ol):not(:where([class~="not-prose"])) {
-    @apply marker:font-bold;
+  ol {
+    @apply marker:font-bold my-4;
+
+    ol {
+      @apply mb-0;
+    }
   }
 
-  :where(mark):not(:where([class~="not-prose"])) {
+  mark {
     @apply bg-primary text-primary-content p-1 rounded;
 
     * {
@@ -72,23 +93,23 @@
     }
   }
 
-  :where(pre):not(:where([class~="not-prose"])) {
+  table {
+    @apply my-0;
+  }
+
+  pre {
     @apply text-sm #{!important};
   }
 
-  :where(details):not(:where([class~="not-prose"])) {
-    @apply flex flex-col my-4;
+  details {
+    @apply my-4;
 
-    summary {
-      @apply flex cursor-pointer;
+    .collapse-content {
+      @apply bg-base-100 p-4;
 
-      &::before {
-        @apply content-[''] list-item;
-      }
+      @include first-and-last();
     }
   }
 
-  :where(table):not(:where([class~="not-prose"])) {
-    @apply my-0;
-  }
+  @include first-and-last();
 }

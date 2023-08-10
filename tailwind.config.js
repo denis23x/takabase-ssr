@@ -199,6 +199,11 @@ module.exports = {
     "badge-sm",
     "badge-xs",
 
+    "collapse",
+    "collapse-arrow",
+    "collapse-title",
+    "collapse-content",
+
     "kbd",
     "kbd-lg",
     "kbd-md",

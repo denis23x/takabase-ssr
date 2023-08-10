@@ -11,27 +11,27 @@ Our layout is also highly customizable, allowing users to tailor it to their spe
 +++
 
 +++ Buttons allow the user to take actions or make choices.
-Extra button size classes `btn-lg, btn-md, btn-sm, btn-xs`{.inline} {.alert .inline}
+Extra button size classes `btn-lg, btn-md, btn-sm, btn-xs` {.alert .block}
 
 [Primary]{.btn .btn-primary .m-2} [Secondary]{.btn .btn-secondary .m-2} [Accent]{.btn .btn-accent .m-2} [Info]{.btn .btn-info .m-2} [Success]{.btn .btn-success .m-2} [Warning]{.btn .btn-warning .m-2} [Error]{.btn .btn-error .m-2} [Ghost]{.btn .btn-ghost .m-2}
 [Primary]{.btn .btn-primary .btn-outline .m-2} [Secondary]{.btn .btn-secondary .btn-outline .m-2} [Accent]{.btn .btn-accent .btn-outline .m-2} [Info]{.btn .btn-info .btn-outline .m-2} [Success]{.btn .btn-success .btn-outline .m-2} [Warning]{.btn .btn-warning .btn-outline .m-2} [Error]{.btn .btn-error .btn-outline .m-2} [Ghost]{.btn .btn-ghost .btn-outline .m-2}
 +++
 
 +++ Badges are used to inform the user of the status of specific data.
-Extra badge size classes `badge-lg, badge-md, badge-sm, badge-xs`{.inline} {.alert .inline}
+Extra badge size classes `badge-lg, badge-md, badge-sm, badge-xs` {.alert .block}
 
 [Primary]{.badge .badge-primary .m-2} [Secondary]{.badge .badge-secondary .m-2} [Accent]{.badge .badge-accent .m-2} [Info]{.badge .badge-info .m-2} [Success]{.badge .badge-success .m-2} [Warning]{.badge .badge-warning .m-2} [Error]{.badge .badge-error .m-2}
 [Primary]{.badge .badge-primary .badge-outline .m-2} [Secondary]{.badge .badge-secondary .badge-outline .m-2} [Accent]{.badge .badge-accent .badge-outline .m-2} [Info]{.badge .badge-info .badge-outline .m-2} [Success]{.badge .badge-success .badge-outline .m-2} [Warning]{.badge .badge-warning .badge-outline .m-2} [Error]{.badge .badge-error .badge-outline .m-2}
 +++
 
 +++ Link adds the missing underline style to links.
-Difference between [prose link](#){.inline} and [not-prose link](#){.inline .not-prose} {.alert .inline}
+Difference between [prose link](#){.inline} and [not-prose link](#){.inline .not-prose} {.alert .block}
 
 [Primary]{.link .link-primary .m-2} [Secondary]{.link .link-secondary .m-2} [Accent]{.link .link-accent .m-2} [Info]{.link .link-info .m-2} [Success]{.link .link-success .m-2} [Warning]{.link .link-warning .m-2} [Error]{.link .link-error .m-2}
 +++
 
 +++ Mask crops the content of the element to common shapes.
-To change image size you can use `width, height`{.inline} attributes{.alert .inline}
+To change image size you can use `width, height`{.inline} attributes{.alert .block}
 
 | ------------------------------------------------------------------------ | -------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | ![Placeholder][image]{.mask .mask-squircle width=120 height=120}         | ![Placeholder][image]{.mask .mask-heart width=120 height=120}  | ![Placeholder][image]{.mask .mask-hexagon width=120 height=120} | ![Placeholder][image]{.mask .mask-hexagon-2 width=120 height=120}     | ![Placeholder][image]{.mask .mask-decagon width=120 height=120}         | ![Placeholder][image]{.mask .mask-pentagon width=120 height=120}        |
@@ -42,7 +42,7 @@ To change image size you can use `width, height`{.inline} attributes{.alert .inl
 +++
 
 +++ Steps can be used to show a list of steps in a process.
-Extra step colors `step-primary, step-secondary, step-accent, step-info, step-success, step-warning, step-error`{.inline} {.alert .inline}
+Extra step colors `step-primary, step-secondary, step-accent, step-info, step-success, step-warning, step-error`{.inline} {.alert .block}
 
 Vertical steps
 

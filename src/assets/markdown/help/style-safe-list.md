@@ -103,6 +103,13 @@ badge-md
 badge-sm
 badge-xs
 
+// Spoiler
+
+collapse
+collapse-arrow
+collapse-title
+collapse-content
+
 // Keyboard
 
 kbd
