@@ -10,8 +10,16 @@
 			autocomplete="off"
 			[formGroup]="imageForm"
 		>
-			<p class="alert inline text-left">
-				Browse file on your device or paste link from internet
+			<p class="alert">
+				<i
+					class="fill-current text-info"
+					appSvgIcon
+					[appIcon]="'info-circle'"
+					[appSquare]="'1.5em'"
+				></i>
+				<span class="block">
+					Browse file on your device or paste link from internet
+				</span>
 			</p>
 			<fieldset class="form-control" *ngIf="imageForm.get('url') as url">
 				<label class="label" for="imageFormUrl">

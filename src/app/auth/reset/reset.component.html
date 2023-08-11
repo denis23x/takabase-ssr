@@ -16,8 +16,16 @@
 				[formGroup]="resetForm"
 				(ngSubmit)="onSubmitResetForm()"
 			>
-				<p class="alert inline text-left">
-					We will send you an email with further instructions.
+				<p class="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appIcon]="'info-circle'"
+						[appSquare]="'1.5em'"
+					></i>
+					<span class="block">
+						We will send you an email with further instructions.
+					</span>
 				</p>
 				<fieldset class="form-control" *ngIf="resetForm.get('email') as email">
 					<label class="label" for="resetFormEmail">
@@ -62,7 +70,7 @@
 							[class.btn-ghost]="email.untouched && email.invalid"
 							[disabled]="resetForm.disabled"
 							[appIcon]="'x'"
-                            [appSquare]="'2em'"
+							[appSquare]="'2em'"
 							(click)="email.setValue('')"
 						></button>
 					</div>

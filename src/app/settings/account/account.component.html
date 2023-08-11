@@ -66,9 +66,17 @@
 					></button>
 				</div>
 			</fieldset>
-			<p class="alert inline text-left">
-				Please provide your current password to continue. Your password ensures
-				the security and integrity of your account.
+			<p class="alert">
+				<i
+					class="fill-current text-info"
+					appSvgIcon
+					[appIcon]="'info-circle'"
+					[appSquare]="'1.5em'"
+				></i>
+				<span class="block">
+					Please provide your current password to continue. Your password
+					ensures the security and integrity of your account.
+				</span>
 			</p>
 			<fieldset class="form-control">
 				<!-- prettier-ignore -->
@@ -157,12 +165,20 @@
 						Submit
 					</button>
 					<div class="flex flex-col gap-4" *ngSwitchCase="false">
-						<p class="alert inline text-left">
-							To maintain the security and validity of your account, we require
-							email address verification before making any changes. This
-							verification step helps us ensure that you have full control over
-							your account and protects your information from unauthorized
-							access.
+						<p class="alert">
+							<i
+								class="fill-current text-info"
+								appSvgIcon
+								[appIcon]="'info-circle'"
+								[appSquare]="'1.5em'"
+							></i>
+							<span class="block">
+								To maintain the security and validity of your account, we
+								require email address verification before making any changes.
+								This verification step helps us ensure that you have full
+								control over your account and protects your information from
+								unauthorized access.
+							</span>
 						</p>
 						<button
 							class="btn-success btn w-full"
@@ -241,9 +257,17 @@
 						></button>
 					</div>
 				</fieldset>
-				<p class="alert inline text-left">
-					The password must be 6-32 characters long, must contain at least one
-					number or special character
+				<p class="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appIcon]="'info-circle'"
+						[appSquare]="'1.5em'"
+					></i>
+					<span class="block">
+						The password must be 6-32 characters long, must contain at least one
+						number or special character
+					</span>
 				</p>
 				<fieldset class="form-control">
 					<!-- prettier-ignore -->

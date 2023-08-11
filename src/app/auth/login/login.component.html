@@ -59,7 +59,7 @@
 							[class.btn-ghost]="email.untouched && email.invalid"
 							[disabled]="loginForm.disabled"
 							[appIcon]="'x'"
-              [appSquare]="'2em'"
+							[appSquare]="'2em'"
 							(click)="email.setValue('')"
 						></button>
 					</div>
@@ -126,9 +126,17 @@
 						</a>
 					</label>
 				</fieldset>
-				<p class="alert inline text-left">
-					The password must be 6-32 characters long, must contain at least one
-					number or special character
+				<p class="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appIcon]="'info-circle'"
+						[appSquare]="'1.5em'"
+					></i>
+					<span class="block">
+						The password must be 6-32 characters long, must contain at least one
+						number or special character
+					</span>
 				</p>
 				<fieldset class="form-control">
 					<button

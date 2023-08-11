@@ -9,10 +9,18 @@
 		</div>
 		<ng-container [ngSwitch]="true">
 			<div class="flex flex-col space-y-4" *ngSwitchDefault>
-				<p class="alert inline text-left">
-					Thank you for verifying your email address. You are now officially a
-					member of our community. Get ready to enjoy exclusive updates and
-					exciting content delivered straight to you.
+				<p class="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appIcon]="'info-circle'"
+						[appSquare]="'1.5em'"
+					></i>
+					<span class="block">
+						Thank you for verifying your email address. You are now officially a
+						member of our community. Get ready to enjoy exclusive updates and
+						exciting content delivered straight to you.
+					</span>
 				</p>
 				<ng-container [ngSwitch]="!!confirmationUser">
 					<button
@@ -38,11 +46,19 @@
 				class="flex flex-col space-y-4"
 				*ngSwitchCase="!confirmationIsSubmitted && !confirmationUser"
 			>
-				<p class="alert inline text-left">
-					Our system encountered an issue while attempting to verify your email
-					address. We apologize for any inconvenience this may cause. To resolve
-					this matter, please ensure that you have entered the correct email
-					address and try the confirmation process again.
+				<p class="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appIcon]="'info-circle'"
+						[appSquare]="'1.5em'"
+					></i>
+					<span class="block">
+						Our system encountered an issue while attempting to verify your
+						email address. We apologize for any inconvenience this may cause. To
+						resolve this matter, please ensure that you have entered the correct
+						email address and try the confirmation process again.
+					</span>
 				</p>
 			</div>
 		</ng-container>

@@ -11,10 +11,11 @@ import { CommonModule } from '@angular/common';
 import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { EmailConfirmationUpdateDto } from '../../core/dto/email/email-confirmation-update.dto';
 import { EmailService } from '../../core/services/email.service';
+import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, UserUrlPipe],
+	imports: [CommonModule, RouterModule, UserUrlPipe, SvgIconComponent],
 	selector: 'app-auth-email-confirmation',
 	templateUrl: './email-confirmation.component.html'
 })
