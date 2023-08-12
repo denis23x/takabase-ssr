@@ -163,7 +163,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 						this.snackbarService.success('Well', 'Your email confirmed');
 					} else {
 						// prettier-ignore
-						this.snackbarService.success('Okey', 'We sent you a verification email');
+						this.snackbarService.info('Okey', 'We sent you a verification email');
 					}
 				},
 				error: () => (this.emailFormConfirmationIsSubmitted = false)

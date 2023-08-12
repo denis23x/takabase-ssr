@@ -2,23 +2,34 @@
 
 <ng-container>
 	<ul
-		class="fixed bottom-0 right-0 z-40 flex max-w-lg flex-col items-end justify-end space-y-4 pointer-events-none p-8"
+		class="fixed bottom-0 right-0 z-40 flex max-w-lg flex-col items-end justify-end space-y-4 p-8"
 	>
 		<li
-			class="alert flex flex-col items-start justify-start gap-2 text-left shadow-xl"
+			class="flex relative overflow-hidden rounded-box shadow-xl"
 			*ngFor="let snack of snackbarList"
-			[ngClass]="snack.options.classList"
 			(click)="onClose(snack.uuid)"
 		>
-			<span
-				class="block font-bold first-letter:capitalize"
-				*ngIf="!!snack.title"
-			>
-				{{ snack.title }}
-			</span>
-			<p class="first-letter:capitalize">{{ snack.message }}</p>
+			<div class="alert" [ngClass]="snack.options.alertClassList">
+				<i
+					class="fill-current"
+					appSvgIcon
+					[appIcon]="snack.options.icon"
+					[appSquare]="'1.5em'"
+				></i>
+				<div class="flex flex-col">
+					<span
+						class="block font-bold first-letter:capitalize"
+						*ngIf="!!snack.title"
+					>
+						{{ snack.title }}
+					</span>
+					<p class="font-base first-letter:capitalize">{{ snack.message }}</p>
+				</div>
+			</div>
 			<progress
-				class="progress opacity-50"
+				class="absolute left-0 bottom-0 progress h-1"
+				*ngIf="snack.options.progress"
+				[ngClass]="snack.options.progressClassList"
 				[value]="snack.progress.value || 0"
 				[max]="100"
 			></progress>

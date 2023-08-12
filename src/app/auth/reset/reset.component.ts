@@ -92,7 +92,7 @@ export class AuthResetComponent implements OnInit {
 			this.passwordService.onResetGet(passwordResetGetDto).subscribe({
 				next: () => {
 					// prettier-ignore
-					this.snackbarService.success('Success', 'Check your email to continue process');
+					this.snackbarService.info('Success', 'Check your email to continue process');
 
 					this.resetForm.reset();
 					this.resetForm.enable();

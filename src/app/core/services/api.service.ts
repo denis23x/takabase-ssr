@@ -49,7 +49,10 @@ export class ApiService {
 			return 4000;
 		};
 
-		this.snackbarService.danger(title, message(), duration());
+		this.snackbarService.danger(title, message(), {
+			icon: 'bug',
+			duration: duration()
+		});
 
 		return throwError(() => httpErrorResponse);
 	}

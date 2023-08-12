@@ -6,10 +6,11 @@ import { CommonModule } from '@angular/common';
 import { Snack } from '../../../core/models/snack.model';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { HelperService } from '../../../core/services/helper.service';
+import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule],
+	imports: [CommonModule, SvgIconComponent],
 	selector: 'app-snackbar',
 	templateUrl: './snackbar.component.html'
 })
@@ -22,7 +23,7 @@ export class SnackbarComponent implements OnInit, OnDestroy {
 		private helperService: HelperService
 	) {}
 
-	ngOnInit() {
+	ngOnInit(): void {
 		this.snackbar$ = this.snackbarService.snackbar$.subscribe({
 			next: (snack: Snack) => {
 				this.onPush({
@@ -34,33 +35,25 @@ export class SnackbarComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	ngOnDestroy() {
+	ngOnDestroy(): void {
 		[this.snackbar$].forEach($ => $?.unsubscribe());
 	}
 
 	onPush(snack: Snack): void {
-		/** Start timer */
-
-		snack.duration = {
-			...snack.duration,
-			timeout: setTimeout(() => {
-				this.onClose(snack.uuid);
-
-				clearTimeout(snack.duration.timeout);
-			}, snack.duration.value)
-		};
-
-		/** Start interval */
+		const progressTick: number = 10;
+		const progressStep: number = (100 / snack.options.duration) * progressTick;
 
 		snack.progress = {
-			...snack.progress,
+			value: 0,
 			interval: setInterval(() => {
-				snack.progress.value++;
+				snack.progress.value = snack.progress.value + progressStep;
 
 				if (snack.progress.value >= 100) {
+					this.onClose(snack.uuid);
+
 					clearInterval(snack.progress.interval);
 				}
-			}, snack.duration.value / 100)
+			}, progressTick)
 		};
 
 		/** Push snack */
@@ -73,10 +66,6 @@ export class SnackbarComponent implements OnInit, OnDestroy {
 		const snack: Partial<Snack> = this.snackbarList.find((snack: Partial<Snack>) => {
       return snack.uuid === uuid;
     });
-
-		/** Stop timer */
-
-		clearTimeout(snack.duration.timeout);
 
 		/** Stop interval */
 

@@ -2,12 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import {
-	Snack,
-	SnackDuration,
-	SnackOptions,
-	SnackProgress
-} from '../models/snack.model';
+import { Snack, SnackOptions } from '../models/snack.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,69 +10,61 @@ import {
 export class SnackbarService {
 	snackbar$: ReplaySubject<Snack> = new ReplaySubject<Snack>();
 
-	getDefaultDuration(duration: number = 4000): SnackDuration {
-		return {
-			value: duration
-		};
-	}
-
-	getDefaultProgress(): SnackProgress {
-		return {
-			value: 0
-		};
-	}
-
-	// prettier-ignore
-	info(title: string | null, message: string, duration?: number, options?: SnackOptions) {
+	info(title: string | null, message: string, options?: SnackOptions) {
 		this.snackbar$.next({
 			title,
 			message,
-			duration: this.getDefaultDuration(duration),
-			progress: this.getDefaultProgress(),
 			options: {
-				classList: 'alert-info',
+				icon: 'info-circle',
+				progress: true,
+				duration: 4000,
+				alertClassList: 'alert-info',
+				progressClassList: 'progress-info',
 				...options
 			}
 		});
 	}
 
-	// prettier-ignore
-	success(title: string | null, message: string, duration?: number, options?: SnackOptions) {
+	success(title: string | null, message: string, options?: SnackOptions) {
 		this.snackbar$.next({
 			title,
 			message,
-      duration: this.getDefaultDuration(duration),
-      progress: this.getDefaultProgress(),
 			options: {
-				classList: 'alert-success',
+				icon: 'check-circle',
+				progress: true,
+				duration: 3000,
+				alertClassList: 'alert-success',
+				progressClassList: 'progress-success',
 				...options
 			}
 		});
 	}
 
-	// prettier-ignore
-	warning(title: string | null, message: string, duration?: number, options?: SnackOptions) {
+	warning(title: string | null, message: string, options?: SnackOptions) {
 		this.snackbar$.next({
 			title,
 			message,
-      duration: this.getDefaultDuration(duration),
-      progress: this.getDefaultProgress(),
 			options: {
-				classList: 'alert-warning',
+				icon: 'exclamation-circle',
+				progress: false,
+				duration: 5000,
+				alertClassList: 'alert-warning',
+				progressClassList: 'progress-warning',
 				...options
 			}
 		});
 	}
 
-	// prettier-ignore
-	danger(title: string | null, message: string, duration?: number, options?: SnackOptions) {
+	danger(title: string | null, message: string, options?: SnackOptions) {
 		this.snackbar$.next({
 			title,
 			message,
-      duration: this.getDefaultDuration(duration),
-      progress: this.getDefaultProgress(),
 			options: {
-				classList: 'alert-error',
+				icon: 'x-circle',
+				progress: false,
+				duration: 5000,
+				alertClassList: 'alert-error',
+				progressClassList: 'progress-error',
 				...options
 			}
 		});

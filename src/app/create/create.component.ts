@@ -30,7 +30,6 @@ import { PostDetailComponent } from '../standalone/components/post/prose/prose.c
 import { Category } from '../core/models/category.model';
 import { Post } from '../core/models/post.model';
 import { User } from '../core/models/user.model';
-import { PlatformService } from '../core/services/platform.service';
 import { HelperService } from '../core/services/helper.service';
 import { PostService } from '../core/services/post.service';
 import { SnackbarService } from '../core/services/snackbar.service';
@@ -124,7 +123,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private platformService: PlatformService,
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
 		private helperService: HelperService,

@@ -127,7 +127,7 @@ export class AuthRegistrationComponent implements OnInit {
 						// prettier-ignore
 						this.router
 							.navigate([this.userService.getUserUrl(user)])
-							.then(() => this.snackbarService.success('Success', 'Welcome to our website'));
+							.then(() => this.snackbarService.info('Success', 'Welcome to our website'));
 					},
 					error: () => this.registrationForm.enable()
 				});

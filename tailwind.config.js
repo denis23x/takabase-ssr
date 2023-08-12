@@ -5,6 +5,14 @@ module.exports = {
     "!my-0.5",
     "!mt-0",
 
+    /** ALERT  */
+
+    "progress",
+    "progress-info",
+    "progress-success",
+    "progress-error",
+    "progress-warning",
+
     /** WINDOW  */
 
     "w-full",
@@ -52,7 +60,7 @@ module.exports = {
     "checkbox",
     "checkbox-success",
 
-    /** MARKDOWN  */
+    /** MARKDOWN SAFE LIST  */
 
     "prose",
     "not-prose",
