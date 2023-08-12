@@ -1,0 +1,10 @@
+/* Update default behaviour */
+
+.tab {
+  @apply border border-b border-solid;
+  @apply border-base-content/20 px-0 #{!important};
+
+  &.tab-active {
+    @apply border-b-0 before:invisible after:invisible;
+  }
+}

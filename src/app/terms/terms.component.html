@@ -6,10 +6,10 @@
 			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
 			<div class="flex w-full flex-col items-stretch justify-between gap-4">
-        <h1 class="block truncate text-2xl font-bold text-base-content">
-          Additional Information
-        </h1>
-        <hr class="my-0 border-base-content/20" />
+				<h1 class="block truncate text-2xl font-bold text-base-content">
+					Additional Information
+				</h1>
+				<hr class="my-0 border-base-content/20" />
 				<p class="alert">
 					<i
 						class="fill-current text-info"
@@ -32,9 +32,9 @@
 				>
 					<!-- prettier-ignore -->
 					<li
-						class="tab tab-lifted tab-lg h-11 border border-b border-solid border-base-content/20 !px-0"
+						class="tab tab-lifted tab-lg h-10"
 						*ngFor="let term of termsNavigationList"
-						[ngClass]="routerLinkActive.isActive ? 'tab-active h-12 border-b-0 !border-base-content/20 pb-0 before:invisible after:invisible' : 'bg-base-200'"
+						[ngClass]="routerLinkActive.isActive ? 'tab-active !h-12' : 'bg-base-200'"
 					>
 						<a
 							class="flex h-full items-center justify-center whitespace-nowrap px-4"
