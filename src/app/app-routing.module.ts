@@ -368,11 +368,13 @@ export const routesRedirect = (routes: Routes): Routes => {
 	const getCookie = (cookieName: string): string | undefined => {
 		const result: any = {};
 
-		document.cookie.split(';').forEach((cookie: string) => {
-			const [key, value]: string[] = cookie.split('=');
+		if (typeof window === 'object') {
+			document.cookie.split(';').forEach((cookie: string) => {
+				const [key, value]: string[] = cookie.split('=');
 
-			result[key.trim()] = value;
-		});
+				result[key.trim()] = value;
+			});
+		}
 
 		return result[cookieName];
 	};
