@@ -484,20 +484,18 @@
 		(click)="$event.target === $event.currentTarget ? postFormPreviewModal.close() : $event"
 	>
 		<app-window
-			slot="content"
 			[appTitle]="'Preview'"
 			[appButtons]="['close', 'fullscreen']"
 			(closed)="onTogglePreviewPost(false)"
 		>
-			<ng-container slot="content">
-				<app-post-prose
-					class="h-full"
-					[appPost]="postFormPreviewPost"
-				></app-post-prose>
-			</ng-container>
-			<div class="pointer-events-none flex bg-base-200 p-2" slot="footer">
-				<app-share class="opacity-50"></app-share>
-			</div>
+			<app-post-prose
+				slot="content"
+				[appPost]="postFormPreviewPost"
+			></app-post-prose>
+			<app-share
+				class="pointer-events-none flex bg-base-200 opacity-50 p-2"
+				slot="footer"
+			></app-share>
 		</app-window>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->
@@ -507,11 +505,7 @@
 		(close)="onToggleCategoryForm(false)"
 		(click)="$event.target === $event.currentTarget ? categoryFormModal.close() : $event"
 	>
-		<app-window
-			slot="content"
-			[appTitle]="'Category'"
-			(closed)="onToggleCategoryForm(false)"
-		>
+		<app-window [appTitle]="'Category'" (closed)="onToggleCategoryForm(false)">
 			<ng-container slot="content">
 				<form
 					class="flex w-window max-w-[512px] flex-col gap-4 p-4"
@@ -663,11 +657,7 @@
 		(close)="onTogglePostFormImage(false)"
 		(click)="$event.target === $event.currentTarget ? postFormImageModal.close() : $event"
 	>
-		<app-window
-			slot="content"
-			[appTitle]="'Image'"
-			(closed)="onTogglePostFormImage(false)"
-		>
+		<app-window [appTitle]="'Image'" (closed)="onTogglePostFormImage(false)">
 			<ng-container slot="content" *ngIf="postFormImageModal.open">
 				<app-cropper
 					[appField]="'images'"
@@ -685,7 +675,6 @@
 		(click)="$event.target === $event.currentTarget ? postDeleteModal.close() : $event"
 	>
 		<app-window
-			slot="content"
 			[appTitle]="'Confirmation'"
 			(closed)="onToggleDeletePost(false)"
 		>

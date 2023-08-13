@@ -209,7 +209,6 @@
 		(click)="$event.target === $event.currentTarget ? profileFormAvatarModal.close() : $event"
 	>
 		<app-window
-			slot="content"
 			[appTitle]="'Image'"
 			(closed)="onToggleProfileFormAvatar(false)"
 		>
@@ -229,11 +228,7 @@
 		(close)="onToggleQRCode(false)"
 		(click)="$event.target === $event.currentTarget ? QRCodeModal.close() : $event"
 	>
-		<app-window
-			slot="content"
-			[appTitle]="'QR Code'"
-			(closed)="onToggleQRCode(false)"
-		>
+		<app-window [appTitle]="'QR Code'" (closed)="onToggleQRCode(false)">
 			<ng-container slot="content">
 				<div
 					class="flex w-window max-w-[384px] flex-col items-center justify-start space-y-4 p-4"

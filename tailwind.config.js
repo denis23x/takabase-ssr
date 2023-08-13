@@ -2,8 +2,14 @@ module.exports = {
   mode: "jit",
   content: ["./src/**/*.html"],
   safelist: [
+    /** IMPORTANT BY SOME CASE  */
+
     "!my-0.5",
     "!mt-0",
+    "!my-0",
+    "!mr-4",
+    "!m-0",
+    "!rounded",
 
     /** ALERT  */
 
@@ -15,45 +21,10 @@ module.exports = {
 
     /** WINDOW  */
 
-    "w-full",
-    "h-full",
-    "justify-between",
-
-    "top-1/2",
-    "left-1/2",
-    "h-auto",
-    "w-auto",
     "max-h-[calc(100vh-2rem)]",
     "max-w-[calc(100vw-2rem)]",
-    "-translate-y-1/2",
-    "-translate-x-1/2",
-    "border",
-    "border-base-content/20",
     "md:max-h-[80vh]",
     "md:max-w-[calc(768px-4rem)]",
-    "shadow-xl",
-    "rounded-box",
-
-    /** FULLSCREEN */
-
-    "fixed",
-    "top-0",
-    "left-0",
-    "!m-0",
-    "w-full",
-    "h-full",
-
-    "border",
-    "border-base-content/20",
-    "rounded-box",
-    "shadow-xl",
-    "bg-primary",
-    "text-primary-content",
-    "align-middle",
-    "-translate-y-0.5",
-    "!rounded",
-    "!my-0",
-    "!mr-4",
 
     /** MARKDOWN  */
 

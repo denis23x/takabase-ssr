@@ -269,7 +269,6 @@
 		(click)="$event.target === $event.currentTarget ? urlFormModal.close() : $event"
 	>
 		<app-window
-			slot="content"
 			[appTitle]="urlFormControl?.label"
 			(closed)="onToggleUrlForm(false)"
 		>
