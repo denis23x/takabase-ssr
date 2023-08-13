@@ -41,6 +41,8 @@ import { FileCreateDto } from '../core/dto/file/file-create.dto';
 import { CategoryCreateDto } from '../core/dto/category/category-create.dto';
 import { AppScrollIntoViewDirective } from '../standalone/directives/app-scroll-into-view.directive';
 import { CookieService } from '../core/services/cookie.service';
+import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
+import { MetaService } from '../core/services/meta.service';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -131,7 +133,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 		private authService: AuthService,
 		private categoryService: CategoryService,
 		private userService: UserService,
-		private cookieService: CookieService
+		private cookieService: CookieService,
+		private metaService: MetaService
 	) {
 		this.postForm = this.formBuilder.group<PostForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -221,6 +224,10 @@ export class CreateComponent implements OnInit, OnDestroy {
 		/** Set appearance settings */
 
 		this.setAppearance();
+
+		/** Apply SEO meta tags */
+
+		this.setMetaTags();
 	}
 
 	ngOnDestroy(): void {
@@ -231,6 +238,26 @@ export class CreateComponent implements OnInit, OnDestroy {
 	setAppearance(): void {
 		// prettier-ignore
 		this.postMarkdownMonospace = !!Number(this.cookieService.getItem('markdown-monospace'));
+	}
+
+	setMetaTags(): void {
+		const title: string = 'Create post';
+
+		// prettier-ignore
+		const description: string = 'Create and share your thoughts with a new post on our platform';
+
+		const metaOpenGraph: MetaOpenGraph = {
+			['og:title']: title,
+			['og:description']: description,
+			['og:type']: 'website'
+		};
+
+		const metaTwitter: MetaTwitter = {
+			['twitter:title']: title,
+			['twitter:description']: description
+		};
+
+		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
 	onTogglePostFormImage(toggle: boolean): void {
