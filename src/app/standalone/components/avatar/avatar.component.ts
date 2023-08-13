@@ -4,12 +4,12 @@ import { Component, ElementRef, Input } from '@angular/core';
 import { toSvg } from 'jdenticon';
 import { SanitizerPipe } from '../../pipes/sanitizer.pipe';
 import { User } from '../../../core/models/user.model';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
 	standalone: true,
 	selector: 'app-avatar, [appAvatar]',
-	imports: [SanitizerPipe, CommonModule, NgOptimizedImage],
+	imports: [SanitizerPipe, CommonModule],
 	templateUrl: './avatar.component.html'
 })
 export class AvatarComponent {

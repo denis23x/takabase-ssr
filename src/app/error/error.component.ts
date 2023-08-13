@@ -63,6 +63,8 @@ export class ErrorComponent implements OnInit, OnDestroy {
 
 					this.setMetaTags();
 
+					/** Apply title */
+
 					// prettier-ignore
 					this.titleService.setTitle([this.statusCode, this.message].join(' '));
 				},

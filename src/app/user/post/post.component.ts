@@ -40,6 +40,7 @@ export class UserPostComponent extends AbstractListComponent implements OnInit, 
 	ngOnInit(): void {
 		super.ngOnInit();
 
+    // prettier-ignore
 		this.activatedRouteParentData$ = this.activatedRoute.parent.data
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
@@ -47,31 +48,30 @@ export class UserPostComponent extends AbstractListComponent implements OnInit, 
 					this.user = user;
 
 					this.categoryList = categoryList;
+
+          this.activatedRouteUrl$?.unsubscribe();
+          this.activatedRouteUrl$ = this.activatedRoute.url.subscribe({
+            next: () => {
+              const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
+
+              this.category = this.categoryList.find((category: Category) => {
+                return category.id === Number(categoryId);
+              });
+
+
+              /** Apply SEO meta tags */
+
+              this.setMetaTags();
+
+              /** Apply title */
+
+              this.setTitle();
+            },
+            error: (error: any) => console.error(error)
+          });
 				},
 				error: (error: any) => console.error(error)
 			});
-
-		// prettier-ignore
-		this.activatedRouteUrl$ = this.activatedRoute.url.subscribe({
-      next: () => {
-        const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
-
-        this.category = this.categoryList.find((category: Category) => {
-          return category.id === Number(categoryId);
-        });
-
-        this.titleService.setTitle(this.user.name);
-
-        if (this.category) {
-          this.titleService.appendTitle(this.category.name);
-        }
-
-        /** Apply SEO meta tags */
-
-        this.setMetaTags();
-      },
-      error: (error: any) => console.error(error)
-    });
 	}
 
 	ngOnDestroy(): void {
@@ -81,8 +81,16 @@ export class UserPostComponent extends AbstractListComponent implements OnInit, 
 		[this.activatedRouteData$, this.activatedRouteUrl$].forEach($ => $?.unsubscribe());
 	}
 
+  setTitle(): void {
+    this.titleService.setTitle(this.user.name);
+
+    if (this.category) {
+      this.titleService.appendTitle(this.category.name);
+    }
+  }
+
 	setMetaTags(): void {
-		const username: string = this.userService.getUserUrl(this.user, 1);
+    const username: string = this.userService.getUserUrl(this.user, 1);
 
 		const title: string = this.category?.name || username;
 
