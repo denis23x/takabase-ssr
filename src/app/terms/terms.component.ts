@@ -1,8 +1,7 @@
 /** @format */
 
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
@@ -32,18 +31,15 @@ export class TermsComponent implements OnInit {
 		}
 	];
 
-	constructor(
-		private formBuilder: FormBuilder,
-		private activatedRoute: ActivatedRoute,
-		private router: Router,
-		private metaService: MetaService
-	) {}
+	constructor(private metaService: MetaService) {}
 
 	ngOnInit(): void {
-		this.setMeta();
+		/** Apply SEO meta tags */
+
+		this.setMetaTags();
 	}
 
-	setMeta(): void {
+	setMetaTags(): void {
 		const title: string = 'Terms of use';
 
 		// prettier-ignore

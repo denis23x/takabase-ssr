@@ -32,10 +32,7 @@ import { HelperService } from '../core/services/helper.service';
 import { AuthService } from '../core/services/auth.service';
 import { CategoryService } from '../core/services/category.service';
 import { SnackbarService } from '../core/services/snackbar.service';
-import { TitleService } from '../core/services/title.service';
 import { UserService } from '../core/services/user.service';
-import { MetaService } from '../core/services/meta.service';
-import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { CategoryUpdateDto } from '../core/dto/category/category-update.dto';
 import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
 import { MarkdownPipe } from '../standalone/pipes/markdown.pipe';
@@ -106,9 +103,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		private authService: AuthService,
 		private categoryService: CategoryService,
 		private snackbarService: SnackbarService,
-		private titleService: TitleService,
-		private userService: UserService,
-		private metaService: MetaService
+		private userService: UserService
 	) {
 		this.categoryEditForm = this.formBuilder.group<CategoryEditForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -152,14 +147,6 @@ export class UserComponent implements OnInit, OnDestroy {
 					this.category = this.categoryList.find((category: Category) => {
 						return category.id === Number(categoryId);
 					});
-
-					this.titleService.setTitle(this.user.name);
-
-          if (this.category) {
-            this.titleService.appendTitle(this.category.name);
-          }
-
-					this.setMeta();
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -192,40 +179,6 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.categoryEditForm$,
 			this.authUser$
 		].forEach($ => $?.unsubscribe());
-	}
-
-	setMeta(): void {
-		const username: string = this.user.name;
-
-		const title: string = this.category?.name || username;
-
-		// prettier-ignore
-		const description: string = this.category?.description || this.user.description;
-
-		const metaOpenGraph: Partial<MetaOpenGraph> = {
-			['og:title']: title,
-			['og:description']: description,
-			['og:image']: this.user.avatar,
-			['og:image:alt']: username,
-			['og:image:type']: 'image/png'
-		};
-
-		if (this.category) {
-			metaOpenGraph['og:type'] = 'website';
-		} else {
-			metaOpenGraph['og:type'] = 'profile';
-			metaOpenGraph['profile:username'] = username;
-		}
-
-		// prettier-ignore
-		const metaTwitter: MetaTwitter = {
-			['twitter:title']: title,
-			['twitter:description']: description,
-			['twitter:image']: this.user.avatar,
-			['twitter:image:alt']: username
-		};
-
-		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
 	}
 
 	onToggleCategoryEditForm(toggle: boolean): void {

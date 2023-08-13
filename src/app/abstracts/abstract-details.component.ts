@@ -26,9 +26,9 @@ export abstract class AbstractDetailsComponent implements OnInit, OnDestroy {
 	abstractPost: Post | undefined;
 
 	constructor(
-		private activatedRoute: ActivatedRoute,
-		private router: Router,
-		private postService: PostService
+		public activatedRoute: ActivatedRoute,
+		public router: Router,
+		public postService: PostService
 	) {}
 
 	ngOnInit(): void {
