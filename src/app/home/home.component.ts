@@ -17,10 +17,12 @@ export class HomeComponent implements OnInit {
 	constructor(private metaService: MetaService) {}
 
 	ngOnInit(): void {
-		this.setMeta();
+		/** Apply SEO meta tags */
+
+		this.setMetaTags();
 	}
 
-	setMeta(): void {
+	setMetaTags(): void {
 		const title: string = 'Draft';
 
 		// prettier-ignore

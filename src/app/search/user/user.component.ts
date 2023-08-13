@@ -32,8 +32,12 @@ export class SearchUserComponent extends AbstractListComponent implements OnInit
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		/** Meta */
+		/** Apply SEO meta tags */
 
+		this.setMetaTags();
+	}
+
+	setMetaTags(): void {
 		const title: string = 'Search users';
 
 		// prettier-ignore

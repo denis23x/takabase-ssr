@@ -79,10 +79,12 @@ export class AuthRegistrationComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.setMeta();
+		/** Apply SEO meta tags */
+
+		this.setMetaTags();
 	}
 
-	setMeta(): void {
+	setMetaTags(): void {
 		const title: string = 'Registration';
 
 		// prettier-ignore

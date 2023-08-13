@@ -23,8 +23,12 @@ export class SearchCategoryComponent extends AbstractListComponent implements On
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		/** Meta */
+		/** Apply SEO meta tags */
 
+		this.setMetaTags();
+	}
+
+	setMetaTags(): void {
 		const title: string = 'Search categories';
 
 		// prettier-ignore

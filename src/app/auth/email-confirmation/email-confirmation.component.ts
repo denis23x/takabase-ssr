@@ -63,14 +63,16 @@ export class AuthEmailConfirmationComponent implements OnInit, OnDestroy {
       error: (error: any) => console.error(error)
     });
 
-		this.setMeta();
+		/** Apply SEO meta tags */
+
+		this.setMetaTags();
 	}
 
 	ngOnDestroy(): void {
 		[this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
 	}
 
-	setMeta(): void {
+	setMetaTags(): void {
 		const title: string = 'Email confirmation';
 		const description: string = 'Thank you for verifying your email address';
 

@@ -2,9 +2,8 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 import { ApiService } from './api.service';
-import { SnackbarService } from './snackbar.service';
 import { UserService } from './user.service';
 import { PostGetAllDto } from '../dto/post/post-get-all.dto';
 import { User } from '../models/user.model';
@@ -28,8 +27,6 @@ export class PostService {
 
 	constructor(
 		private apiService: ApiService,
-		private router: Router,
-		private snackbarService: SnackbarService,
 		private userService: UserService,
 		private metaService: MetaService,
 		private titleService: TitleService
@@ -92,9 +89,9 @@ export class PostService {
     return postGetAllDto;
   }
 
-	/** Meta */
+	/** SEO Meta tags */
 
-	setPostMeta(post: Post): void {
+	setPostMetaTags(post: Post): void {
 		this.backupPostMetaOpenGraph = this.metaService.getMetaOpenGraph();
 		this.backupPostMetaTwitter = this.metaService.getMetaTwitter();
 
@@ -123,12 +120,12 @@ export class PostService {
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	// prettier-ignore
 	removePostMeta(): void {
+		// prettier-ignore
 		this.metaService.setMeta(this.backupPostMetaOpenGraph, this.backupPostMetaTwitter);
 	}
 
-	/** Title */
+	/** SEO Title */
 
 	setPostTitle(title: string): void {
 		this.backupPostTitle = this.titleService.getTitle();

@@ -23,26 +23,30 @@ export class SearchPostComponent extends AbstractListComponent implements OnInit
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		/** Meta */
+    /** Apply SEO meta tags */
 
-		const title: string = 'Search posts';
-
-		// prettier-ignore
-		const description: string = 'Use our search function to find what you\'re looking for on Draft';
-
-		const metaOpenGraph: MetaOpenGraph = {
-			['og:title']: title,
-			['og:description']: description,
-			['og:type']: 'website'
-		};
-
-		const metaTwitter: MetaTwitter = {
-			['twitter:title']: title,
-			['twitter:description']: description
-		};
-
-		this.metaService.setMeta(metaOpenGraph, metaTwitter);
+    this.setMetaTags();
 	}
+
+  setMetaTags(): void {
+    const title: string = 'Search posts';
+
+    // prettier-ignore
+    const description: string = 'Use our search function to find what you\'re looking for on Draft';
+
+    const metaOpenGraph: MetaOpenGraph = {
+      ['og:title']: title,
+      ['og:description']: description,
+      ['og:type']: 'website'
+    };
+
+    const metaTwitter: MetaTwitter = {
+      ['twitter:title']: title,
+      ['twitter:description']: description
+    };
+
+    this.metaService.setMeta(metaOpenGraph, metaTwitter);
+  }
 
 	getAbstractList(concat: boolean): void {
 		this.abstractListLoading$.next(true);

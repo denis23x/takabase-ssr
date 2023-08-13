@@ -59,7 +59,9 @@ export class ErrorComponent implements OnInit, OnDestroy {
 					this.statusCode = statusCode;
 					this.message = message;
 
-					this.setMeta();
+					/** Apply SEO meta tags */
+
+					this.setMetaTags();
 
 					// prettier-ignore
 					this.titleService.setTitle([this.statusCode, this.message].join(' '));
@@ -72,7 +74,7 @@ export class ErrorComponent implements OnInit, OnDestroy {
 		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
 	}
 
-	setMeta(): void {
+	setMetaTags(): void {
 		const title: string = this.message;
 
 		// prettier-ignore

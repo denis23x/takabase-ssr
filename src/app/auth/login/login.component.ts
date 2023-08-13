@@ -91,14 +91,16 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
-		this.setMeta();
+		/** Apply SEO meta tags */
+
+		this.setMetaTags();
 	}
 
 	ngOnDestroy(): void {
 		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
 	}
 
-	setMeta(): void {
+	setMetaTags(): void {
 		const title: string = 'Login';
 
 		// prettier-ignore

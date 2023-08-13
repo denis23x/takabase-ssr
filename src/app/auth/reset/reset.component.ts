@@ -58,10 +58,12 @@ export class AuthResetComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.setMeta();
+		/** Apply SEO meta tags */
+
+		this.setMetaTags();
 	}
 
-	setMeta(): void {
+	setMetaTags(): void {
 		const title: string = 'Reset password';
 
 		// prettier-ignore

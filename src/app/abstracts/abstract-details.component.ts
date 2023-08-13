@@ -39,7 +39,7 @@ export abstract class AbstractDetailsComponent implements OnInit, OnDestroy {
 					this.abstractPost = post;
 					this.abstractPostProseModal.nativeElement.showModal();
 
-					this.postService.setPostMeta(this.abstractPost);
+					this.postService.setPostMetaTags(this.abstractPost);
 					this.postService.setPostTitle(this.abstractPost.name);
 				},
 				error: (error: any) => console.error(error)
