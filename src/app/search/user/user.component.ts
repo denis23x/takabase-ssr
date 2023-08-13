@@ -10,7 +10,7 @@ import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
-import { AbstractListComponent } from '../../standalone/abstracts/abstract-list.component';
+import { AbstractListComponent } from '../../abstracts/abstract-list.component';
 
 // prettier-ignore
 @Component({
@@ -59,8 +59,8 @@ export class SearchUserComponent extends AbstractListComponent implements OnInit
 		/** Request */
 
 		let userGetAllDto: UserGetAllDto = {
-			page: this.page,
-			size: this.size
+			page: this.abstractPage,
+			size: this.abstractSize
 		};
 
 		// prettier-ignore
@@ -76,7 +76,7 @@ export class SearchUserComponent extends AbstractListComponent implements OnInit
 		this.userService.getAll(userGetAllDto).subscribe({
 			next: (userList: User[]) => {
 				this.abstractList = concat ? this.abstractList.concat(userList) : userList;
-				this.abstractListHasMore = userList.length === this.size;
+				this.abstractListHasMore = userList.length === this.abstractSize;
 				this.abstractListLoading$.next(false);
 			},
 			error: (error: any) => console.error(error)

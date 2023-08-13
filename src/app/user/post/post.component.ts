@@ -7,7 +7,7 @@ import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.
 import { PostCardComponent } from '../../standalone/components/post/card/card.component';
 import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
-import { AbstractListComponent } from '../../standalone/abstracts/abstract-list.component';
+import { AbstractListComponent } from '../../abstracts/abstract-list.component';
 
 // prettier-ignore
 @Component({
@@ -31,8 +31,8 @@ export class UserPostComponent extends AbstractListComponent implements OnInit, 
 		/** Request */
 
 		let postGetAllDto: PostGetAllDto = {
-			page: this.page,
-			size: this.size,
+			page: this.abstractPage,
+			size: this.abstractSize,
 			scope: ['user', 'category']
 		};
 
@@ -44,7 +44,7 @@ export class UserPostComponent extends AbstractListComponent implements OnInit, 
 		this.postService.getAll(postGetAllDto).subscribe({
 			next: (postList: Post[]) => {
 				this.abstractList = concat ? this.abstractList.concat(postList) : postList;
-				this.abstractListHasMore = postList.length === this.size;
+				this.abstractListHasMore = postList.length === this.abstractSize;
         this.abstractListLoading$.next(false);
 			},
 			error: (error: any) => console.error(error)

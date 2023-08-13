@@ -4,12 +4,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data } from '@angular/router';
 import { filter, map, skip, tap } from 'rxjs/operators';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { PostService } from '../../core/services/post.service';
-import { CookieService } from '../../core/services/cookie.service';
-import { AppearanceService } from '../../core/services/appearance.service';
-import { MetaService } from '../../core/services/meta.service';
-import { CategoryService } from '../../core/services/category.service';
-import { UserService } from '../../core/services/user.service';
+import { PostService } from '../core/services/post.service';
+import { CookieService } from '../core/services/cookie.service';
+import { AppearanceService } from '../core/services/appearance.service';
+import { MetaService } from '../core/services/meta.service';
+import { CategoryService } from '../core/services/category.service';
+import { UserService } from '../core/services/user.service';
 
 @Component({
 	selector: 'app-abstract-list',
@@ -19,8 +19,8 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
 
-	page: number = 1;
-	size: number = 20;
+	abstractPage: number = 1;
+	abstractSize: number = 20;
 
 	abstractList: any[] = [];
 	abstractListHasMore: boolean = false;
@@ -48,7 +48,7 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
 			.subscribe({
 				next: (abstractList: any[]) => {
 					this.abstractList = abstractList;
-					this.abstractListHasMore = abstractList.length === this.size;
+					this.abstractListHasMore = abstractList.length === this.abstractSize;
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -59,8 +59,8 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
 			.pipe(
 				skip(1),
 				tap(() => {
-					this.page = 1;
-					this.size = 20;
+					this.abstractPage = 1;
+					this.abstractSize = 20;
 
 					this.abstractList = [];
 					this.abstractListHasMore = false;
@@ -73,7 +73,7 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
 
 		/** Set appearance settings */
 
-		this.setAppearance();
+		this.setAbstractAppearance();
 	}
 
 	ngOnDestroy(): void {
@@ -84,7 +84,7 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
 		].forEach($ => $?.unsubscribe());
 	}
 
-	setAppearance(): void {
+	setAbstractAppearance(): void {
 		// prettier-ignore
 		this.abstractListLoadingPageScrollInfinite = !!Number(this.cookieService.getItem('page-scroll-infinite'));
 
@@ -105,7 +105,7 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
 	}
 
 	getAbstractListLoadMore(): void {
-		this.page++;
+		this.abstractPage++;
 
 		this.getAbstractList(true);
 	}

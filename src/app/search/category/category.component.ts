@@ -8,7 +8,7 @@ import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { Category } from '../../core/models/category.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto';
-import { AbstractListComponent } from '../../standalone/abstracts/abstract-list.component';
+import { AbstractListComponent } from '../../abstracts/abstract-list.component';
 
 // prettier-ignore
 @Component({
@@ -50,8 +50,8 @@ export class SearchCategoryComponent extends AbstractListComponent implements On
 		/** Request */
 
 		let categoryGetAllDto: CategoryGetAllDto = {
-			page: this.page,
-			size: this.size,
+			page: this.abstractPage,
+			size: this.abstractSize,
 			scope: ['user']
 		};
 
@@ -68,7 +68,7 @@ export class SearchCategoryComponent extends AbstractListComponent implements On
 		this.categoryService.getAll(categoryGetAllDto).subscribe({
 			next: (categoryList: Category[]) => {
 				this.abstractList = concat ? this.abstractList.concat(categoryList) : categoryList;
-				this.abstractListHasMore = categoryList.length === this.size;
+				this.abstractListHasMore = categoryList.length === this.abstractSize;
 				this.abstractListLoading$.next(false);
 			},
 			error: (error: any) => console.error(error)

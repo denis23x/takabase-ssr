@@ -4,16 +4,16 @@
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
-		#postProseModal
-		(close)="onClosePostProseModal()"
-		(click)="$event.target === $event.currentTarget ? postProseModal.close() : $event"
+		#abstractPostProseModal
+		(close)="setAbstractClosePostProseModal()"
+		(click)="$event.target === $event.currentTarget ? abstractPostProseModal.close() : $event"
 	>
 		<app-window
 			[appTitle]="'View'"
 			[appButtons]="['close', 'fullscreen']"
-			(closed)="onClosePostProseModal()"
+			(closed)="setAbstractClosePostProseModal()"
 		>
-			<app-post-prose slot="content" [appPost]="post"></app-post-prose>
+			<app-post-prose slot="content" [appPost]="abstractPost"></app-post-prose>
 			<app-share class="flex bg-base-200 p-2" slot="footer"></app-share>
 		</app-window>
 	</dialog>
