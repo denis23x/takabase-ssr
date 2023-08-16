@@ -1,8 +1,6 @@
 /* https://css-tricks.com/the-cleanest-trick-for-autogrowing-textareas/ */
 
 @mixin shared-styles() {
-  @apply text-base p-4;
-
   grid-area: 1 / 1 / 2 / 2;
 }
 
@@ -10,7 +8,7 @@
   @apply grid;
 
   &:after {
-    @apply whitespace-pre-wrap invisible;
+    @apply whitespace-pre-wrap invisible text-sm leading-7 px-4 py-3;
 
     @include shared-styles();
 
@@ -18,7 +16,7 @@
   }
 
   textarea {
-    @apply resize-none;
+    @apply resize-none scroll-pb-4;
 
     @include shared-styles();
   }

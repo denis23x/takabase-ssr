@@ -182,7 +182,7 @@
 					<!-- prettier-ignore -->
 					<div class="relative">
             <input
-              class="input input-bordered w-full truncate pr-12"
+              class="input input-bordered input-md w-full truncate pr-12"
               id="categoryEditFormName"
               type="text"
               aria-label="Name"
@@ -247,18 +247,19 @@
 					</label>
 					<!-- prettier-ignore -->
 					<div
-            class="rounded-btn flex overflow-hidden w-full border"
+            class="rounded-btn flex overflow-hidden w-full border textarea-autosize after:max-h-64"
             [ngClass]="{ 'border-base-content/20': categoryEditForm.enabled, 'border-transparent': categoryEditForm.disabled }"
             [class.border-success]="!!description.value && description.valid"
             [class.border-error]="!!description.value && description.invalid"
           >
             <textarea
-              class="textarea border-0 !outline-0 w-full resize-none"
+              class="textarea textarea-md border-0 !outline-0 w-full"
               id="categoryEditFormDescription"
               aria-label="Description"
               placeholder="Type category description"
               formControlName="description"
               appInputTrimWhitespace
+              onInput="this.parentNode.dataset.replicatedValue = this.value"
               [rows]="4"
             >
               {{ description.value }}
@@ -343,7 +344,7 @@
 					</label>
 					<div class="relative">
 						<input
-							class="input-bordered input w-full truncate pr-12"
+							class="input-bordered input input-md w-full truncate pr-12"
 							id="categoryDeleteFormName"
 							type="text"
 							aria-label="Name"

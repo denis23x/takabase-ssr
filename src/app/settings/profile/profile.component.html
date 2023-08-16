@@ -68,7 +68,7 @@
 				</label>
 				<div class="relative">
 					<input
-						class="input-bordered input w-full truncate pr-12"
+						class="input-bordered input input-md w-full truncate pr-12"
 						id="profileFormName"
 						type="text"
 						aria-label="Name"
@@ -166,18 +166,19 @@
 				</label>
 				<!-- prettier-ignore -->
 				<div
-          class="rounded-btn flex overflow-hidden w-full border"
+          class="rounded-btn flex overflow-hidden w-full border textarea-autosize after:max-h-64"
           [ngClass]="{ 'border-base-content/20': profileForm.enabled, 'border-transparent': profileForm.disabled }"
           [class.border-success]="!!description.value && description.valid"
           [class.border-error]="!!description.value && description.invalid"
         >
           <textarea
-            class="textarea border-0 !outline-0 w-full resize-none"
+            class="textarea textarea-md border-0 !outline-0 w-full"
             id="profileFormDescription"
             aria-label="Description"
             placeholder="Type your description"
             formControlName="description"
             appInputTrimWhitespace
+            onInput="this.parentNode.dataset.replicatedValue = this.value"
             [rows]="4"
           >
             {{ description.value }}
