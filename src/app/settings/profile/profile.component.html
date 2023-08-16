@@ -212,13 +212,13 @@
 			[appTitle]="'Image'"
 			(closed)="onToggleProfileFormAvatar(false)"
 		>
-			<ng-container slot="content" *ngIf="profileFormAvatarModal.open">
-				<app-cropper
-					[appField]="'avatars'"
-					(submitted)="onSubmitCropper($event)"
-				>
-				</app-cropper>
-			</ng-container>
+			<app-cropper
+				slot="content"
+				*ngIf="profileFormAvatarModal.open"
+				[appField]="'avatars'"
+				(submitted)="onSubmitCropper($event)"
+			>
+			</app-cropper>
 		</app-window>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->
@@ -229,24 +229,23 @@
 		(click)="$event.target === $event.currentTarget ? QRCodeModal.close() : $event"
 	>
 		<app-window [appTitle]="'QR Code'" (closed)="onToggleQRCode(false)">
-			<ng-container slot="content">
-				<div
-					class="flex w-window max-w-[384px] flex-col items-center justify-start space-y-4 p-4"
+			<div
+				class="flex w-window max-w-[384px] flex-col items-center justify-start space-y-4 p-4"
+				slot="content"
+			>
+				<canvas
+					class="rounded-box h-full w-full border border-base-content/20"
+					#QRCodeCanvas
+				></canvas>
+				<button
+					class="btn-success btn w-full"
+					type="button"
+					aria-label="Download"
+					(click)="onDownloadQRCode()"
 				>
-					<canvas
-						class="rounded-box h-full w-full border border-base-content/20"
-						#QRCodeCanvas
-					></canvas>
-					<button
-						class="btn-success btn w-full"
-						type="button"
-						aria-label="Download"
-						(click)="onDownloadQRCode()"
-					>
-						Download
-					</button>
-				</div>
-			</ng-container>
+					Download
+				</button>
+			</div>
 		</app-window>
 	</dialog>
 </ng-container>

@@ -1,0 +1,25 @@
+/* https://css-tricks.com/the-cleanest-trick-for-autogrowing-textareas/ */
+
+@mixin shared-styles() {
+  @apply text-base p-4;
+
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.textarea-autosize {
+  @apply grid;
+
+  &:after {
+    @apply whitespace-pre-wrap invisible;
+
+    @include shared-styles();
+
+    content: attr(data-replicated-value) " " !important;
+  }
+
+  textarea {
+    @apply resize-none;
+
+    @include shared-styles();
+  }
+}

@@ -1,6 +1,6 @@
-@mixin first-and-last() {
-  /* Remove unnecessary margin from first and last element */
+/* Remove unnecessary margin from first and last element */
 
+@mixin shared-styles-first-and-last() {
   & > * {
     &:first-child {
       @apply mt-0 #{!important};
@@ -11,6 +11,8 @@
     }
   }
 }
+
+/* Update prose */
 
 .prose {
   h1, h2, h3, h4, h5, h6 {
@@ -105,7 +107,7 @@
     .collapse-content {
       @apply bg-base-100 p-4;
 
-      @include first-and-last();
+      @include shared-styles-first-and-last();
     }
 
     details {
@@ -115,5 +117,5 @@
     }
   }
 
-  @include first-and-last();
+  @include shared-styles-first-and-last();
 }

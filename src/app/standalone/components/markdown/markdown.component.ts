@@ -257,7 +257,11 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 					this.setTextareaValue(this.getTextareaValue(markdownControl));
 				},
 				maxFrequentRows: 3,
-				set: 'native'
+				set: 'native',
+				locale: 'en',
+				navPosition: 'top',
+				skinTonePosition: 'preview',
+				previewPosition: 'bottom'
 			});
 
 			this.document

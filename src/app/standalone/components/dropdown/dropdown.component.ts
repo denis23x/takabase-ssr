@@ -56,7 +56,11 @@ export class DropdownComponent implements OnInit, OnDestroy {
 		this.dropdownTarget = this.elementRef.nativeElement.querySelector('[slot=target]');
 		this.dropdownContent = this.elementRef.nativeElement.querySelector('[slot=content]');
 
+    /** Set initial state */
+
 		this.setStateStyle(false, false);
+
+    /** Clicks handler */
 
     this.windowClick$ = fromEvent(this.document, 'click').subscribe({
 			next: (event: any) => {
@@ -84,6 +88,8 @@ export class DropdownComponent implements OnInit, OnDestroy {
 			},
 			error: (error: any) => console.error(error)
 		});
+
+    /** Close on scroll && resize */
 
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();

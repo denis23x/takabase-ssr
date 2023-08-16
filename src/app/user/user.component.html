@@ -147,152 +147,150 @@
 			[appTitle]="'Category'"
 			(closed)="onToggleCategoryEditForm(false)"
 		>
-			<ng-container slot="content">
-				<form
-					class="flex w-window max-w-[512px] flex-col gap-4 p-4"
-					autocomplete="off"
-					slot="content"
-					[formGroup]="categoryEditForm"
-					(ngSubmit)="onSubmitCategoryEditForm()"
+			<form
+				class="flex w-window max-w-[512px] flex-col gap-4 p-4"
+				autocomplete="off"
+				slot="content"
+				[formGroup]="categoryEditForm"
+				(ngSubmit)="onSubmitCategoryEditForm()"
+			>
+				<fieldset
+					class="form-control"
+					*ngIf="categoryEditForm.get('name') as name"
 				>
-					<fieldset
-						class="form-control"
-						*ngIf="categoryEditForm.get('name') as name"
-					>
-						<label class="label" for="categoryEditFormName">
-							<div class="indicator">
-								<!-- prettier-ignore -->
-								<span
-                  class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                  *ngIf="name.touched && !!name.errors && categoryEditForm.enabled"
-                  [ngSwitch]="true"
-                >
-                  <ng-container *ngSwitchCase="!!name.errors.required">
-                    Required
-                  </ng-container>
-                  <ng-container *ngSwitchCase="!!name.errors.minlength">
-                    Min length {{ name.errors.minlength["requiredLength"] }} characters
-                  </ng-container>
-                  <ng-container *ngSwitchCase="!!name.errors.maxlength">
-                    Max length {{ name.errors.maxlength["requiredLength"] }} characters
-                  </ng-container>
-                </span>
-								<span class="label-text mr-2">Name</span>
-							</div>
-						</label>
-						<!-- prettier-ignore -->
-						<div class="relative">
-              <input
-                class="input input-bordered w-full truncate pr-12"
-                id="categoryEditFormName"
-                type="text"
-                aria-label="Name"
-                formControlName="name"
-                placeholder="Type category name"
-                appInputTrimWhitespace
-                [class.input-success]="name.touched && name.valid"
-                [class.input-error]="name.touched && name.invalid"
-              />
-              <button
-                class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
-                type="button"
-                aria-label="Clear"
-                appSvgIcon
-                *ngIf="!!name.value.length"
-                [class.btn-success]="name.touched && name.valid"
-                [class.btn-error]="name.touched && name.invalid"
-                [class.btn-ghost]="name.untouched"
-                [disabled]="categoryEditForm.disabled"
-                [appIcon]="'x'"
-                [appSquare]="'2em'"
-                (click)="name.setValue('')"
-              ></button>
-            </div>
-					</fieldset>
-					<fieldset
-						class="form-control"
-						*ngIf="categoryEditForm.get('description') as description"
-					>
-						<label class="label" for="categoryEditFormDescription">
-							<!-- prettier-ignore -->
-							<div class="indicator">
-                <span
-                  class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                  *ngIf="!!description.value && !!description.errors && categoryEditForm.enabled"
-                  [ngSwitch]="true"
-                >
-                  <ng-container *ngSwitchCase="!!description.errors.maxlength">
-                    Max length {{ description.errors.maxlength["requiredLength"] }} characters
-                  </ng-container>
-                </span>
-                <span
-                  class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                  *ngIf="!description.errors"
-                  [class.badge-ghost]="!description.value"
-                  [class.badge-success]="!!description.value && categoryEditForm.enabled"
-                  [class.opacity-25]="categoryEditForm.disabled"
-                >
-                  Optional
-                </span>
-                <span class="label-text mr-2">Description</span>
-              </div>
+					<label class="label" for="categoryEditFormName">
+						<div class="indicator">
 							<!-- prettier-ignore -->
 							<span
-                class="label-text-alt"
-                [class.text-base-content]="categoryEditForm.disabled"
-                [class.text-success]="categoryEditForm.enabled && !!description.value && description.valid"
-                [class.text-error]="categoryEditForm.enabled && !!description.value && description.invalid"
+                class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                *ngIf="name.touched && !!name.errors && categoryEditForm.enabled"
+                [ngSwitch]="true"
               >
-                {{ description.value?.length || 0 }}/255
+                <ng-container *ngSwitchCase="!!name.errors.required">
+                  Required
+                </ng-container>
+                <ng-container *ngSwitchCase="!!name.errors.minlength">
+                  Min length {{ name.errors.minlength["requiredLength"] }} characters
+                </ng-container>
+                <ng-container *ngSwitchCase="!!name.errors.maxlength">
+                  Max length {{ name.errors.maxlength["requiredLength"] }} characters
+                </ng-container>
               </span>
-						</label>
-						<!-- prettier-ignore -->
-						<div
-              class="rounded-btn flex overflow-hidden w-full border"
-              [ngClass]="{ 'border-base-content/20': categoryEditForm.enabled, 'border-transparent': categoryEditForm.disabled }"
-              [class.border-success]="!!description.value && description.valid"
-              [class.border-error]="!!description.value && description.invalid"
-            >
-              <textarea
-                class="textarea border-0 !outline-0 w-full resize-none"
-                id="categoryEditFormDescription"
-                aria-label="Description"
-                placeholder="Type category description"
-                formControlName="description"
-                appInputTrimWhitespace
-                [rows]="4"
-              >
-                {{ description.value }}
-              </textarea>
-            </div>
-					</fieldset>
+							<span class="label-text mr-2">Name</span>
+						</div>
+					</label>
 					<!-- prettier-ignore -->
-					<fieldset class="form-control gap-4">
+					<div class="relative">
+            <input
+              class="input input-bordered w-full truncate pr-12"
+              id="categoryEditFormName"
+              type="text"
+              aria-label="Name"
+              formControlName="name"
+              placeholder="Type category name"
+              appInputTrimWhitespace
+              [class.input-success]="name.touched && name.valid"
+              [class.input-error]="name.touched && name.invalid"
+            />
             <button
-              class="btn btn-success"
-              type="submit"
-              aria-label="Submit"
-              [disabled]="categoryEditForm.invalid || categoryEditForm.disabled || categoryEditFormIsPristine"
-            >
-              <span
-                class="loading loading-spinner"
-                *ngIf="categoryEditForm.disabled && !categoryDeleteFormModal.open"
-              ></span>
-              Submit
-            </button>
-            <button
-              class="btn btn-error"
+              class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
               type="button"
-              aria-label="Delete"
-              [class.btn-outline]="categoryEditForm.enabled"
+              aria-label="Clear"
+              appSvgIcon
+              *ngIf="!!name.value.length"
+              [class.btn-success]="name.touched && name.valid"
+              [class.btn-error]="name.touched && name.invalid"
+              [class.btn-ghost]="name.untouched"
               [disabled]="categoryEditForm.disabled"
-              (click)="onToggleCategoryDeleteForm(true)"
+              [appIcon]="'x'"
+              [appSquare]="'2em'"
+              (click)="name.setValue('')"
+            ></button>
+          </div>
+				</fieldset>
+				<fieldset
+					class="form-control"
+					*ngIf="categoryEditForm.get('description') as description"
+				>
+					<label class="label" for="categoryEditFormDescription">
+						<!-- prettier-ignore -->
+						<div class="indicator">
+              <span
+                class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                *ngIf="!!description.value && !!description.errors && categoryEditForm.enabled"
+                [ngSwitch]="true"
+              >
+                <ng-container *ngSwitchCase="!!description.errors.maxlength">
+                  Max length {{ description.errors.maxlength["requiredLength"] }} characters
+                </ng-container>
+              </span>
+              <span
+                class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                *ngIf="!description.errors"
+                [class.badge-ghost]="!description.value"
+                [class.badge-success]="!!description.value && categoryEditForm.enabled"
+                [class.opacity-25]="categoryEditForm.disabled"
+              >
+                Optional
+              </span>
+              <span class="label-text mr-2">Description</span>
+            </div>
+						<!-- prettier-ignore -->
+						<span
+              class="label-text-alt"
+              [class.text-base-content]="categoryEditForm.disabled"
+              [class.text-success]="categoryEditForm.enabled && !!description.value && description.valid"
+              [class.text-error]="categoryEditForm.enabled && !!description.value && description.invalid"
             >
-              Delete
-            </button>
-          </fieldset>
-				</form>
-			</ng-container>
+              {{ description.value?.length || 0 }}/255
+            </span>
+					</label>
+					<!-- prettier-ignore -->
+					<div
+            class="rounded-btn flex overflow-hidden w-full border"
+            [ngClass]="{ 'border-base-content/20': categoryEditForm.enabled, 'border-transparent': categoryEditForm.disabled }"
+            [class.border-success]="!!description.value && description.valid"
+            [class.border-error]="!!description.value && description.invalid"
+          >
+            <textarea
+              class="textarea border-0 !outline-0 w-full resize-none"
+              id="categoryEditFormDescription"
+              aria-label="Description"
+              placeholder="Type category description"
+              formControlName="description"
+              appInputTrimWhitespace
+              [rows]="4"
+            >
+              {{ description.value }}
+            </textarea>
+          </div>
+				</fieldset>
+				<!-- prettier-ignore -->
+				<fieldset class="form-control gap-4">
+          <button
+            class="btn btn-success"
+            type="submit"
+            aria-label="Submit"
+            [disabled]="categoryEditForm.invalid || categoryEditForm.disabled || categoryEditFormIsPristine"
+          >
+            <span
+              class="loading loading-spinner"
+              *ngIf="categoryEditForm.disabled && !categoryDeleteFormModal.open"
+            ></span>
+            Submit
+          </button>
+          <button
+            class="btn btn-error"
+            type="button"
+            aria-label="Delete"
+            [class.btn-outline]="categoryEditForm.enabled"
+            [disabled]="categoryEditForm.disabled"
+            (click)="onToggleCategoryDeleteForm(true)"
+          >
+            Delete
+          </button>
+        </fieldset>
+			</form>
 		</app-window>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->
@@ -306,144 +304,142 @@
 			[appTitle]="'Confirmation'"
 			(closed)="onToggleCategoryDeleteForm(false)"
 		>
-			<ng-container slot="content">
-				<form
-					class="flex w-window max-w-[448px] flex-col gap-4 p-4"
-					autocomplete="off"
-					slot="content"
-					[formGroup]="categoryDeleteForm"
-					(ngSubmit)="onSubmitCategoryDeleteForm()"
+			<form
+				class="flex w-window max-w-[448px] flex-col gap-4 p-4"
+				autocomplete="off"
+				slot="content"
+				[formGroup]="categoryDeleteForm"
+				(ngSubmit)="onSubmitCategoryDeleteForm()"
+			>
+				<p class="alert alert-error">
+					<!-- prettier-ignore -->
+					<span class="block">Are you sure you want to delete this category? <span class="inline underline">This action cannot be undone</span></span>
+				</p>
+				<fieldset
+					class="form-control"
+					*ngIf="categoryDeleteForm.get('name') as name"
 				>
-					<p class="alert alert-error">
-						<!-- prettier-ignore -->
-						<span class="block">Are you sure you want to delete this category? <span class="inline underline">This action cannot be undone</span></span>
-					</p>
+					<label class="label" for="categoryDeleteFormName">
+						<div class="indicator">
+							<!-- prettier-ignore -->
+							<span
+                class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                *ngIf="name.touched && !!name.errors && categoryDeleteForm.enabled"
+                [ngSwitch]="true"
+              >
+                <ng-container *ngSwitchCase="!!name.errors.required">
+                  Required
+                </ng-container>
+                <ng-container *ngSwitchCase="!!name.errors.pattern">
+                  Incorrect name
+                </ng-container>
+              </span>
+							<span class="label-text mr-2">
+								Please type
+								<span class="font-bold">{{ category?.name }}</span>
+								to confirm
+							</span>
+						</div>
+					</label>
+					<div class="relative">
+						<input
+							class="input-bordered input w-full truncate pr-12"
+							id="categoryDeleteFormName"
+							type="text"
+							aria-label="Name"
+							formControlName="name"
+							placeholder="Type category name"
+							appInputTrimWhitespace
+							[class.input-success]="name.dirty && name.valid"
+							[class.input-error]="name.touched && name.invalid"
+						/>
+						<button
+							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+							type="button"
+							aria-label="Clear"
+							appSvgIcon
+							*ngIf="!!name.value.length"
+							[class.btn-success]="name.dirty && name.value"
+							[class.btn-error]="name.touched && name.invalid"
+							[class.btn-ghost]="name.untouched && name.dirty && name.invalid"
+							[disabled]="categoryDeleteForm.disabled"
+							[appIcon]="'x'"
+							[appSquare]="'2em'"
+							(click)="name.setValue('')"
+						></button>
+					</div>
+				</fieldset>
+				<ng-container *ngIf="postList.length && categoryList.length > 1">
 					<fieldset
 						class="form-control"
-						*ngIf="categoryDeleteForm.get('name') as name"
+						*ngIf="categoryDeleteForm.get('categoryId') as categoryId"
 					>
-						<label class="label" for="categoryDeleteFormName">
-							<div class="indicator">
-								<!-- prettier-ignore -->
-								<span
-                  class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                  *ngIf="name.touched && !!name.errors && categoryDeleteForm.enabled"
-                  [ngSwitch]="true"
-                >
-                  <ng-container *ngSwitchCase="!!name.errors.required">
-                    Required
-                  </ng-container>
-                  <ng-container *ngSwitchCase="!!name.errors.pattern">
-                    Incorrect name
-                  </ng-container>
-                </span>
-								<span class="label-text mr-2">
-									Please type
-									<span class="font-bold">{{ category?.name }}</span>
-									to confirm
-								</span>
-							</div>
-						</label>
-						<div class="relative">
-							<input
-								class="input-bordered input w-full truncate pr-12"
-								id="categoryDeleteFormName"
-								type="text"
-								aria-label="Name"
-								formControlName="name"
-								placeholder="Type category name"
-								appInputTrimWhitespace
-								[class.input-success]="name.dirty && name.valid"
-								[class.input-error]="name.touched && name.invalid"
-							/>
-							<button
-								class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-								type="button"
-								aria-label="Clear"
-								appSvgIcon
-								*ngIf="!!name.value.length"
-								[class.btn-success]="name.dirty && name.value"
-								[class.btn-error]="name.touched && name.invalid"
-								[class.btn-ghost]="name.untouched && name.dirty && name.invalid"
-								[disabled]="categoryDeleteForm.disabled"
-								[appIcon]="'x'"
-								[appSquare]="'2em'"
-								(click)="name.setValue('')"
-							></button>
-						</div>
-					</fieldset>
-					<ng-container *ngIf="postList.length && categoryList.length > 1">
-						<fieldset
-							class="form-control"
-							*ngIf="categoryDeleteForm.get('categoryId') as categoryId"
-						>
-							<label class="label">
-								<!-- prettier-ignore -->
-								<div class="indicator">
-                  <span class="label-text mr-2">
-                    Move category posts to another category
-                  </span>
-                  <span
-                    class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                    *ngIf="!categoryId.errors"
-                    [class.badge-ghost]="!categoryId.value"
-                    [class.badge-success]="!!categoryId.value && categoryDeleteForm.enabled"
-                    [class.opacity-25]="categoryDeleteForm.disabled"
-                  >
-                  Optional
-                </span>
-                </div>
-							</label>
+						<label class="label">
 							<!-- prettier-ignore -->
-							<div
-                class="menu menu-vertical menu-md rounded-btn mt-2 overflow-hidden border border-base-content/20 p-0 bg-base-100"
-                slot="content"
-                [class.border-success]="categoryId.value && categoryDeleteForm.enabled"
-              >
-                <ul
-                  class="flex max-h-44 flex-col flex-nowrap overflow-y-auto p-2"
-                  *ngIf="category as categoryActive"
-                  [class.cursor-not-allowed]="categoryDeleteForm.disabled"
+							<div class="indicator">
+                <span class="label-text mr-2">
+                  Move category posts to another category
+                </span>
+                <span
+                  class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                  *ngIf="!categoryId.errors"
+                  [class.badge-ghost]="!categoryId.value"
+                  [class.badge-success]="!!categoryId.value && categoryDeleteForm.enabled"
+                  [class.opacity-25]="categoryDeleteForm.disabled"
                 >
-                  <ng-container *ngFor="let category of categoryList">
-                    <li
-                      *ngIf="category.id !== categoryActive.id"
-                      [ngClass]="{ 'disabled pointer-events-none': categoryDeleteForm.disabled }"
-                    >
-                      <button
-                        *ngIf="{ value: categoryId.value === category.id } as isActive"
-                        class="rounded-btn block w-full truncate text-base text-left"
-                        type="button"
-                        appScrollIntoView
-                        [ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
-                        [attr.aria-label]="category.name"
-                        (click)="categoryId.patchValue(category.id)"
-                      >
-                        {{ category.name }}
-                      </button>
-                    </li>
-                  </ng-container>
-                </ul>
+                Optional
+              </span>
               </div>
-						</fieldset>
-					</ng-container>
-					<fieldset class="form-control">
+						</label>
 						<!-- prettier-ignore -->
-						<button
-              class="btn btn-success"
-              type="submit"
-              aria-label="Submit"
-              [disabled]="categoryDeleteForm.invalid || categoryDeleteForm.disabled"
+						<div
+              class="menu menu-vertical menu-md rounded-btn mt-2 overflow-hidden border border-base-content/20 p-0 bg-base-100"
+              slot="content"
+              [class.border-success]="categoryId.value && categoryDeleteForm.enabled"
             >
-              <span
-                class="loading loading-spinner"
-                *ngIf="categoryDeleteForm.disabled"
-              ></span>
-              Submit
-            </button>
+              <ul
+                class="flex max-h-44 flex-col flex-nowrap overflow-y-auto p-2"
+                *ngIf="category as categoryActive"
+                [class.cursor-not-allowed]="categoryDeleteForm.disabled"
+              >
+                <ng-container *ngFor="let category of categoryList">
+                  <li
+                    *ngIf="category.id !== categoryActive.id"
+                    [ngClass]="{ 'disabled pointer-events-none': categoryDeleteForm.disabled }"
+                  >
+                    <button
+                      *ngIf="{ value: categoryId.value === category.id } as isActive"
+                      class="rounded-btn block w-full truncate text-base text-left"
+                      type="button"
+                      appScrollIntoView
+                      [ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
+                      [attr.aria-label]="category.name"
+                      (click)="categoryId.patchValue(category.id)"
+                    >
+                      {{ category.name }}
+                    </button>
+                  </li>
+                </ng-container>
+              </ul>
+            </div>
 					</fieldset>
-				</form>
-			</ng-container>
+				</ng-container>
+				<fieldset class="form-control">
+					<!-- prettier-ignore -->
+					<button
+            class="btn btn-success"
+            type="submit"
+            aria-label="Submit"
+            [disabled]="categoryDeleteForm.invalid || categoryDeleteForm.disabled"
+          >
+            <span
+              class="loading loading-spinner"
+              *ngIf="categoryDeleteForm.disabled"
+            ></span>
+            Submit
+          </button>
+				</fieldset>
+			</form>
 		</app-window>
 	</dialog>
 </ng-container>
