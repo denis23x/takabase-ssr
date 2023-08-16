@@ -149,11 +149,11 @@
 								slot="content"
 								[class.hidden]="!categoryList.length"
 							>
-								<ul class="flex max-h-64 flex-col overflow-y-auto p-2">
+								<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
 									<li class="flex w-full" *ngFor="let category of categoryList">
 										<!-- prettier-ignore -->
 										<button
-                      class="rounded-btn block w-full truncate text-base text-left"
+                      class="rounded-btn block w-full truncate text-left"
                       type="button"
                       appScrollIntoView
                       [appScrollActive]="categoryName.value === category.name"
@@ -670,17 +670,21 @@
 		(close)="onToggleDeletePost(false)"
 		(click)="$event.target === $event.currentTarget ? postDeleteModal.close() : $event"
 	>
-		<app-window
-			[appTitle]="'Confirmation'"
-			(closed)="onToggleDeletePost(false)"
-		>
+		<app-window [appTitle]="'Delete'" (closed)="onToggleDeletePost(false)">
 			<div
 				class="flex w-window max-w-[425px] flex-col space-y-4 p-4"
 				slot="content"
 			>
-				<p class="alert alert-error">
-					<!-- prettier-ignore -->
-					<span class="block">Are you sure you want to delete this post? <span class="block underline">This action cannot be undone</span></span>
+				<p class="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appIcon]="'info-circle'"
+						[appSquare]="'1.5em'"
+					></i>
+					<span class="block">
+						Are you sure you want to delete this post?
+					</span>
 				</p>
 				<button
 					class="btn-success btn"

@@ -182,7 +182,7 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 	},
 	{
 		key: 'url-youtube',
-		label: 'Video',
+		label: 'YouTube',
 		icon: 'youtube',
 		handler: (markdownTextarea: MarkdownTextarea, formGroupValue: any): string => {
 			return setWrapper(`@[youtube](${formGroupValue.url})`, markdownTextarea, 'block');

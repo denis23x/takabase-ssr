@@ -485,6 +485,10 @@ module.exports = {
       borderRadius: {
         btn: "var(--rounded-btn)",
       },
+      maxHeight: {
+        58: "14.5rem",
+        76: "19rem",
+      },
       width: {
         window: "calc(100vw - 2rem - 2px)",
       },

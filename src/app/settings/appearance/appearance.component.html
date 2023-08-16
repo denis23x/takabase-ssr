@@ -47,14 +47,14 @@
 							class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 							slot="content"
 						>
-							<ul class="flex max-h-64 flex-col overflow-y-auto p-2">
+							<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
 								<li
 									class="flex w-full"
 									*ngFor="let themeValue of appearanceThemeList"
 								>
 									<!-- prettier-ignore -->
 									<button
-                    class="rounded-btn block w-full truncate text-base text-left"
+                    class="rounded-btn block w-full truncate text-left"
                     type="button"
                     appScrollIntoView
                     [appScrollActive]="theme.value === themeValue"
@@ -107,14 +107,14 @@
 							class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 							slot="content"
 						>
-							<ul class="flex max-h-64 flex-col overflow-y-auto p-2">
+							<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
 								<!-- prettier-ignore -->
 								<li
                   class="flex w-full overflow-hidden"
                   *ngFor="let themeBackgroundValue of appearanceThemeBackgroundList"
                 >
                   <button
-                    class="rounded-btn block w-full truncate text-base text-left"
+                    class="rounded-btn block w-full truncate text-left"
                     type="button"
                     appScrollIntoView
                     [appScrollActive]="themeBackground.value === themeBackgroundValue"
@@ -170,14 +170,14 @@
 							class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 							slot="content"
 						>
-							<ul class="flex max-h-64 flex-col overflow-y-auto p-2">
+							<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
 								<li
 									class="flex w-full overflow-hidden"
 									*ngFor="let themePrismValue of appearanceThemePrismList"
 								>
 									<!-- prettier-ignore -->
 									<button
-                    class="rounded-btn block w-full truncate text-base text-left"
+                    class="rounded-btn block w-full truncate text-left"
                     type="button"
                     appScrollIntoView
                     [appScrollActive]="themePrism.value === themePrismValue"
@@ -221,14 +221,14 @@
 							class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 							slot="content"
 						>
-							<ul class="flex max-h-64 flex-col overflow-y-auto p-2">
+							<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
 								<li
 									class="flex w-full overflow-hidden"
 									*ngFor="let languageValue of appearanceLanguageList"
 								>
 									<!-- prettier-ignore -->
 									<button
-                    class="rounded-btn block w-full truncate text-base text-left"
+                    class="rounded-btn block w-full truncate text-left"
                     type="button"
                     appScrollIntoView
                     [appScrollActive]="language.value === languageValue"
@@ -250,7 +250,7 @@
 					*ngIf="appearanceForm.get('pageScrollToTop') as pageScrollToTop"
 				>
 					<label
-						class="label cursor-pointer"
+						class="label gap-4 cursor-pointer"
 						for="appearanceFormPageScrollToTop"
 					>
 						<span class="label-text"> Scroll to top </span>
@@ -271,7 +271,7 @@
 					*ngIf="appearanceForm.get('pageScrollInfinite') as pageScrollInfinite"
 				>
 					<label
-						class="label cursor-pointer"
+						class="label gap-4 cursor-pointer"
 						for="appearanceFormPageScrollInfinite"
 					>
 						<span class="label-text">
@@ -294,7 +294,7 @@
 					*ngIf="appearanceForm.get('pageRedirectHome') as pageRedirectHome"
 				>
 					<label
-						class="label cursor-pointer"
+						class="label gap-4 cursor-pointer"
 						for="appearanceFormPageRedirectHome"
 					>
 						<span class="label-text">
@@ -317,7 +317,7 @@
 					*ngIf="appearanceForm.get('markdownMonospace') as markdownMonospace"
 				>
 					<label
-						class="label cursor-pointer"
+						class="label gap-4 cursor-pointer"
 						for="appearanceFormMarkdownMonospace"
 					>
 						<span class="label-text">
@@ -337,7 +337,7 @@
 				<hr class="my-2 w-full border-base-content/20" />
 				<!-- prettier-ignore -->
 				<fieldset
-					class="form-control flex-row items-center justify-between"
+					class="form-control flex-row items-center gap-4 justify-between"
 					*ngIf="appearanceForm.get('windowButtonPosition') as windowButtonPosition"
 				>
 					<div class="label">
