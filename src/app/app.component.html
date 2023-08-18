@@ -1,14 +1,14 @@
 <!-- @format -->
 
 <ng-container>
-	<app-snackbar></app-snackbar>
-	<div
+	<div appSnackbar></div>
+	<section
 		class="relative z-[1] mx-auto grid min-h-screen w-full max-w-[1024px] grid-flow-row auto-rows-max grid-cols-1 grid-rows-none gap-4 p-4 md:gap-8 md:p-8"
 	>
 		<header appHeader></header>
-		<main class="block">
+		<div class="block">
 			<router-outlet #outlet="outlet"></router-outlet>
-		</main>
+		</div>
 		<footer appScrollToTop></footer>
-	</div>
+	</section>
 </ng-container>

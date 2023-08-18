@@ -11,7 +11,7 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 @Component({
 	standalone: true,
 	imports: [CommonModule, SvgIconComponent],
-	selector: 'app-snackbar',
+	selector: 'app-snackbar, [appSnackbar]',
 	templateUrl: './snackbar.component.html'
 })
 export class SnackbarComponent implements OnInit, OnDestroy {

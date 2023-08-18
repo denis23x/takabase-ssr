@@ -4,7 +4,7 @@
 <!-- TODO: named outlet -->
 
 <ng-container>
-	<div
+	<section
 		class="flex flex-col overflow-hidden bg-base-100"
 		[ngClass]="fullscreenClassList"
 	>
@@ -13,9 +13,9 @@
 			<ng-content select="[slot=header]"></ng-content>
 		</header>
 		<!-- prettier-ignore -->
-		<section class="flex flex-col overflow-auto empty:hidden" [class.h-full]="fullscreenToggle">
+		<div class="flex flex-col overflow-auto empty:hidden" [class.h-full]="fullscreenToggle">
       <ng-content select="[slot=content]"></ng-content>
-    </section>
+    </div>
 		<footer class="flex flex-col empty:hidden">
 			<ng-content select="[slot=footer]"></ng-content>
 		</footer>
@@ -78,5 +78,5 @@
 				[appSquare]="'1em'"
 			></button>
 		</ng-template>
-	</div>
+	</section>
 </ng-container>

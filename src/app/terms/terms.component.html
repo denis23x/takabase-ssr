@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="flex flex-col space-y-4 md:space-y-8">
+	<section class="flex flex-col space-y-4 md:space-y-8">
 		<header
 			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
@@ -50,13 +50,13 @@
 					</li>
 				</ul>
 			</nav>
-			<section
+			<div
 				class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
 			>
 				<div class="rounded-box bg-base-200 p-4">
 					<router-outlet></router-outlet>
 				</div>
-			</section>
+			</div>
 		</div>
-	</div>
+	</section>
 </ng-container>

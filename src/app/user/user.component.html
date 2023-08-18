@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="flex flex-col space-y-4 md:space-y-8">
+	<section class="flex flex-col space-y-4 md:space-y-8">
 		<header
 			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
@@ -84,7 +84,7 @@
 					</li>
 				</ul>
 			</nav>
-			<section
+			<div
 				class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
 			>
 				<div
@@ -133,9 +133,9 @@
 				<div class="block">
 					<router-outlet></router-outlet>
 				</div>
-			</section>
+			</div>
 		</div>
-	</div>
+	</section>
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
@@ -144,7 +144,7 @@
 		(close)="onToggleCategoryEditForm(false)"
 		(click)="$event.target === $event.currentTarget ? categoryEditFormModal.close() : $event"
 	>
-		<section
+		<div
 			appWindow
 			[appTitle]="'Category'"
 			[appButtons]="['close']"
@@ -295,7 +295,7 @@
           </button>
         </fieldset>
 			</form>
-		</section>
+		</div>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
@@ -305,7 +305,7 @@
 		(close)="onToggleCategoryDeleteForm(false)"
 		(click)="$event.target === $event.currentTarget ? categoryDeleteFormModal.close() : $event"
 	>
-		<section
+		<div
 			appWindow
 			[appTitle]="'Delete'"
 			[appButtons]="['close']"
@@ -452,6 +452,6 @@
           </button>
 				</fieldset>
 			</form>
-		</section>
+		</div>
 	</dialog>
 </ng-container>

@@ -210,7 +210,7 @@
 		(close)="onToggleProfileFormAvatar(false)"
 		(click)="$event.target === $event.currentTarget ? profileFormAvatarModal.close() : $event"
 	>
-		<section
+		<div
 			appWindow
 			[appTitle]="'Image'"
 			[appButtons]="['close']"
@@ -223,7 +223,7 @@
 				[appField]="'avatars'"
 				(submitted)="onSubmitCropper($event)"
 			></div>
-		</section>
+		</div>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
@@ -233,7 +233,7 @@
 		(close)="onToggleQRCode(false)"
 		(click)="$event.target === $event.currentTarget ? QRCodeModal.close() : $event"
 	>
-		<section
+		<div
 			appWindow
 			[appTitle]="'QR Code'"
 			[appButtons]="['close']"
@@ -256,6 +256,6 @@
 					Download
 				</button>
 			</div>
-		</section>
+		</div>
 	</dialog>
 </ng-container>

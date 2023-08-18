@@ -416,7 +416,7 @@
               </ul>
             </div>
 					</div>
-					<section
+					<div
 						class="flex h-full w-full flex-col overflow-auto"
 						[class.hidden]="!fullscreenToggle || fullscreenHiddenRender"
 					>
@@ -431,7 +431,7 @@
 								id="postFormPreview"
 							></article>
 						</div>
-					</section>
+					</div>
 				</div>
 			</div>
 			<!-- prettier-ignore -->
@@ -484,22 +484,19 @@
 		(close)="onTogglePreviewPost(false)"
 		(click)="$event.target === $event.currentTarget ? postFormPreviewModal.close() : $event"
 	>
-		<section
+		<div
 			appWindow
 			[appTitle]="'Preview'"
 			[appButtons]="['close', 'fullscreen']"
 			(closed)="onTogglePreviewPost(false)"
 		>
-			<app-post-prose
-				slot="content"
-				[appPost]="postFormPreviewPost"
-			></app-post-prose>
+			<main appPostProse slot="content" [appPost]="postFormPreviewPost"></main>
 			<nav
 				class="pointer-events-none flex bg-base-200 opacity-50 p-2"
 				appShare
 				slot="footer"
 			></nav>
-		</section>
+		</div>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
@@ -509,7 +506,7 @@
 		(close)="onToggleCategoryForm(false)"
 		(click)="$event.target === $event.currentTarget ? categoryFormModal.close() : $event"
 	>
-		<section
+		<div
 			appWindow
 			[appTitle]="'Category'"
 			[appButtons]="['close']"
@@ -653,7 +650,7 @@
 					</button>
 				</fieldset>
 			</form>
-		</section>
+		</div>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
@@ -663,7 +660,7 @@
 		(close)="onTogglePostFormImage(false)"
 		(click)="$event.target === $event.currentTarget ? postFormImageModal.close() : $event"
 	>
-		<section
+		<div
 			appWindow
 			[appTitle]="'Image'"
 			[appButtons]="['close']"
@@ -676,7 +673,7 @@
 				[appField]="'images'"
 				(submitted)="onSubmitPostFormImage($event)"
 			></div>
-		</section>
+		</div>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
@@ -686,7 +683,7 @@
 		(close)="onToggleDeletePost(false)"
 		(click)="$event.target === $event.currentTarget ? postDeleteModal.close() : $event"
 	>
-		<section
+		<div
 			appWindow
 			[appTitle]="'Delete'"
 			[appButtons]="['close']"
@@ -721,6 +718,6 @@
 					Submit
 				</button>
 			</div>
-		</section>
+		</div>
 	</dialog>
 </ng-container>
