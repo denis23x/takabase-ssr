@@ -10,6 +10,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './standalone/components/header/header.component';
 import { SnackbarComponent } from './standalone/components/snackbar/snackbar.component';
 import { HttpAuthInterceptor } from './core/interceptors/http.auth.interceptor';
+import { ScrollToTopComponent } from './standalone/components/scroll-to-top/scroll-to-top.component';
 
 @NgModule({
 	declarations: [AppComponent],
@@ -22,7 +23,8 @@ import { HttpAuthInterceptor } from './core/interceptors/http.auth.interceptor';
 		}),
 		HttpClientModule,
 		HeaderComponent,
-		SnackbarComponent
+		SnackbarComponent,
+		ScrollToTopComponent
 	],
 	providers: [
 		{

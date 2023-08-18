@@ -1,0 +1,19 @@
+<!-- @format -->
+
+<ng-container>
+	<button
+		class="backdrop-blur-sm bg-base-100/30 p-3 rounded-btn border border-base-content/20 fixed bottom-4 left-1/2 -translate-x-1/2"
+		type="button"
+		aria-label="Scroll to top"
+		[class.invisible]="!windowScrollToTopToggle"
+		(click)="onScrollToTop()"
+	>
+		<i
+			class="block rotate-90 fill-current text-base-content"
+			appSvgIcon
+			[appIcon]="'arrow-left'"
+			[appSquare]="'1.35em'"
+		>
+		</i>
+	</button>
+</ng-container>
