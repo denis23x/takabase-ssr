@@ -269,8 +269,10 @@
 		(close)="onToggleUrlForm(false)"
 		(click)="$event.target === $event.currentTarget ? urlFormModal.close() : $event"
 	>
-		<app-window
+		<section
+			appWindow
 			[appTitle]="urlFormControl?.label"
+			[appButtons]="['close']"
 			(closed)="onToggleUrlForm(false)"
 		>
 			<form
@@ -424,6 +426,6 @@
 					</button>
 				</fieldset>
 			</form>
-		</app-window>
+		</section>
 	</dialog>
 </ng-container>

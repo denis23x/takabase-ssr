@@ -9,13 +9,14 @@
 		(close)="setAbstractClosePostProseModal()"
 		(click)="$event.target === $event.currentTarget ? abstractPostProseModal.close() : $event"
 	>
-		<app-window
+		<section
+			appWindow
 			[appTitle]="'View'"
 			[appButtons]="['close', 'fullscreen']"
 			(closed)="setAbstractClosePostProseModal()"
 		>
 			<app-post-prose slot="content" [appPost]="abstractPost"></app-post-prose>
-			<app-share class="flex bg-base-200 p-2" slot="footer"></app-share>
-		</app-window>
+			<nav class="flex bg-base-200 p-2" appShare slot="footer"></nav>
+		</section>
 	</dialog>
 </ng-container>

@@ -144,8 +144,10 @@
 		(close)="onToggleCategoryEditForm(false)"
 		(click)="$event.target === $event.currentTarget ? categoryEditFormModal.close() : $event"
 	>
-		<app-window
+		<section
+			appWindow
 			[appTitle]="'Category'"
+			[appButtons]="['close']"
 			(closed)="onToggleCategoryEditForm(false)"
 		>
 			<form
@@ -293,7 +295,7 @@
           </button>
         </fieldset>
 			</form>
-		</app-window>
+		</section>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
@@ -303,8 +305,10 @@
 		(close)="onToggleCategoryDeleteForm(false)"
 		(click)="$event.target === $event.currentTarget ? categoryDeleteFormModal.close() : $event"
 	>
-		<app-window
+		<section
+			appWindow
 			[appTitle]="'Delete'"
+			[appButtons]="['close']"
 			(closed)="onToggleCategoryDeleteForm(false)"
 		>
 			<form
@@ -448,6 +452,6 @@
           </button>
 				</fieldset>
 			</form>
-		</app-window>
+		</section>
 	</dialog>
 </ng-container>

@@ -25,7 +25,7 @@ export class WindowComponent implements OnInit {
 	@Output() closed: EventEmitter<void> = new EventEmitter<void>();
 
 	captionTitle: string | undefined;
-	captionButtonsList: string[] = ['close'];
+	captionButtonsList: string[] = [];
 	captionButtonsPosition: string = 'left';
 
 	fullscreenToggle: boolean = false;

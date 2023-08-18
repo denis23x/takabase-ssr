@@ -484,7 +484,8 @@
 		(close)="onTogglePreviewPost(false)"
 		(click)="$event.target === $event.currentTarget ? postFormPreviewModal.close() : $event"
 	>
-		<app-window
+		<section
+			appWindow
 			[appTitle]="'Preview'"
 			[appButtons]="['close', 'fullscreen']"
 			(closed)="onTogglePreviewPost(false)"
@@ -493,11 +494,12 @@
 				slot="content"
 				[appPost]="postFormPreviewPost"
 			></app-post-prose>
-			<app-share
+			<nav
 				class="pointer-events-none flex bg-base-200 opacity-50 p-2"
+				appShare
 				slot="footer"
-			></app-share>
-		</app-window>
+			></nav>
+		</section>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
@@ -507,7 +509,12 @@
 		(close)="onToggleCategoryForm(false)"
 		(click)="$event.target === $event.currentTarget ? categoryFormModal.close() : $event"
 	>
-		<app-window [appTitle]="'Category'" (closed)="onToggleCategoryForm(false)">
+		<section
+			appWindow
+			[appTitle]="'Category'"
+			[appButtons]="['close']"
+			(closed)="onToggleCategoryForm(false)"
+		>
 			<form
 				class="flex w-window max-w-[512px] flex-col gap-4 p-4"
 				autocomplete="off"
@@ -646,7 +653,7 @@
 					</button>
 				</fieldset>
 			</form>
-		</app-window>
+		</section>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
@@ -656,15 +663,20 @@
 		(close)="onTogglePostFormImage(false)"
 		(click)="$event.target === $event.currentTarget ? postFormImageModal.close() : $event"
 	>
-		<app-window [appTitle]="'Image'" (closed)="onTogglePostFormImage(false)">
-			<app-cropper
+		<section
+			appWindow
+			[appTitle]="'Image'"
+			[appButtons]="['close']"
+			(closed)="onTogglePostFormImage(false)"
+		>
+			<div
+				appCropper
 				slot="content"
 				*ngIf="postFormImageModal.open"
 				[appField]="'images'"
 				(submitted)="onSubmitPostFormImage($event)"
-			>
-			</app-cropper>
-		</app-window>
+			></div>
+		</section>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
@@ -674,7 +686,12 @@
 		(close)="onToggleDeletePost(false)"
 		(click)="$event.target === $event.currentTarget ? postDeleteModal.close() : $event"
 	>
-		<app-window [appTitle]="'Delete'" (closed)="onToggleDeletePost(false)">
+		<section
+			appWindow
+			[appTitle]="'Delete'"
+			[appButtons]="['close']"
+			(closed)="onToggleDeletePost(false)"
+		>
 			<div
 				class="flex w-window max-w-[425px] flex-col space-y-4 p-4"
 				slot="content"
@@ -704,6 +721,6 @@
 					Submit
 				</button>
 			</div>
-		</app-window>
+		</section>
 	</dialog>
 </ng-container>

@@ -210,18 +210,20 @@
 		(close)="onToggleProfileFormAvatar(false)"
 		(click)="$event.target === $event.currentTarget ? profileFormAvatarModal.close() : $event"
 	>
-		<app-window
+		<section
+			appWindow
 			[appTitle]="'Image'"
+			[appButtons]="['close']"
 			(closed)="onToggleProfileFormAvatar(false)"
 		>
-			<app-cropper
+			<div
+				appCropper
 				slot="content"
 				*ngIf="profileFormAvatarModal.open"
 				[appField]="'avatars'"
 				(submitted)="onSubmitCropper($event)"
-			>
-			</app-cropper>
-		</app-window>
+			></div>
+		</section>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
@@ -231,7 +233,12 @@
 		(close)="onToggleQRCode(false)"
 		(click)="$event.target === $event.currentTarget ? QRCodeModal.close() : $event"
 	>
-		<app-window [appTitle]="'QR Code'" (closed)="onToggleQRCode(false)">
+		<section
+			appWindow
+			[appTitle]="'QR Code'"
+			[appButtons]="['close']"
+			(closed)="onToggleQRCode(false)"
+		>
 			<div
 				class="flex w-window max-w-[384px] flex-col items-center justify-start space-y-4 p-4"
 				slot="content"
@@ -249,6 +256,6 @@
 					Download
 				</button>
 			</div>
-		</app-window>
+		</section>
 	</dialog>
 </ng-container>
