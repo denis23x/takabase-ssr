@@ -60,7 +60,7 @@ export class ShareComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
+		[this.activatedRouteData$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	getParams(share: string, post: Post): Params {

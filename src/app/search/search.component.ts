@@ -99,7 +99,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 			this.routeQueryParams$,
 			this.searchForm$,
 			this.searchFormIsSubmitted$
-		].forEach($ => $?.unsubscribe());
+		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onRouterOutletActivate(event: any): void {

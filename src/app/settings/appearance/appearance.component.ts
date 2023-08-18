@@ -131,7 +131,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		// prettier-ignore
-		[this.activatedRouteData$, this.appearanceForm$].forEach($ => $?.unsubscribe());
+		[this.activatedRouteData$, this.appearanceForm$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setTransformList(): void {

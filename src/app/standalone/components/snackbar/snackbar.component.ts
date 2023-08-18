@@ -36,7 +36,7 @@ export class SnackbarComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.snackbar$].forEach($ => $?.unsubscribe());
+		[this.snackbar$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onPush(snack: Snack): void {

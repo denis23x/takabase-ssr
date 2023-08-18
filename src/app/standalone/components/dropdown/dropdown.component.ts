@@ -107,7 +107,8 @@ export class DropdownComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.windowClick$, this.windowAction$].forEach($ => $?.unsubscribe());
+		// prettier-ignore
+		[this.windowClick$, this.windowAction$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	// prettier-ignore

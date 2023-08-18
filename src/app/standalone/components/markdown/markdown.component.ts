@@ -195,7 +195,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.scrollSync$,
 			this.controlListScroll$,
 			this.urlForm$
-		].forEach($ => $?.unsubscribe());
+		].forEach(($: Subscription | BehaviorSubject<any>) => $?.unsubscribe());
 	}
 
 	setEmojiMart(): void {

@@ -232,7 +232,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		// prettier-ignore
-		[this.activatedRouteData$, this.postForm$, this.authUser$].forEach($ => $?.unsubscribe());
+		[this.activatedRouteData$, this.postForm$, this.authUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setAppearance(): void {

@@ -178,7 +178,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.activatedRouteFirstChildUrl$,
 			this.categoryEditForm$,
 			this.authUser$
-		].forEach($ => $?.unsubscribe());
+		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleCategoryEditForm(toggle: boolean): void {

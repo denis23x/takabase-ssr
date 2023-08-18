@@ -30,6 +30,6 @@ export class HelpDetailsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
+		[this.activatedRouteData$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 }

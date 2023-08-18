@@ -135,7 +135,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		// prettier-ignore
-		[this.activatedRouteData$, this.profileForm$].forEach($ => $?.unsubscribe());
+		[this.activatedRouteData$, this.profileForm$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleProfileFormAvatar(toggle: boolean): void {

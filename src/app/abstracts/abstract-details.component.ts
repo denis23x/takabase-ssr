@@ -47,7 +47,7 @@ export abstract class AbstractDetailsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
+		[this.activatedRouteData$].forEach(($: Subscription) => $?.unsubscribe());
 
 		/** Update meta tags */
 

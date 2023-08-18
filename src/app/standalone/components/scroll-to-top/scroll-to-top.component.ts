@@ -60,7 +60,7 @@ export class ScrollToTopComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.windowScroll$].forEach($ => $?.unsubscribe());
+		[this.windowScroll$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onScrollToTop(): void {

@@ -69,7 +69,8 @@ export class AuthEmailConfirmationComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteQueryParams$].forEach($ => $?.unsubscribe());
+		// prettier-ignore
+		[this.activatedRouteQueryParams$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setMetaTags(): void {

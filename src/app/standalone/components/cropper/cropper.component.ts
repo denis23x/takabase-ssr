@@ -122,7 +122,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.imageTransform$].forEach($ => $?.unsubscribe());
+		[this.imageTransform$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onInputUrl(): void {

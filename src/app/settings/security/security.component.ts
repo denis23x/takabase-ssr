@@ -71,7 +71,7 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteData$].forEach($ => $?.unsubscribe());
+		[this.activatedRouteData$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onLogout(): void {

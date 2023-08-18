@@ -38,6 +38,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.authUser$].forEach($ => $?.unsubscribe());
+		[this.authUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 }

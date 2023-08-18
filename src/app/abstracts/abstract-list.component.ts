@@ -81,7 +81,7 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
 			this.activatedRouteData$,
 			this.activatedRouteQueryParams$,
 			this.abstractListLoadingPageScrollInfinite$
-		].forEach($ => $?.unsubscribe());
+		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setAbstractAppearance(): void {
