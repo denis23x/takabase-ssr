@@ -140,6 +140,7 @@
 	<dialog
 		class="modal"
 		#categoryEditFormModal
+		(keydown.escape)="$event.preventDefault(); categoryEditFormModal.close()"
 		(close)="onToggleCategoryEditForm(false)"
 		(click)="$event.target === $event.currentTarget ? categoryEditFormModal.close() : $event"
 	>
@@ -298,6 +299,7 @@
 	<dialog
 		class="modal"
 		#categoryDeleteFormModal
+		(keydown.escape)="$event.preventDefault(); categoryDeleteFormModal.close()"
 		(close)="onToggleCategoryDeleteForm(false)"
 		(click)="$event.target === $event.currentTarget ? categoryDeleteFormModal.close() : $event"
 	>

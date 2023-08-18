@@ -1,5 +1,9 @@
 /* Update default behaviour */
 
-dialog:not([open]) {
-  @apply hidden;
+.modal {
+  @apply backdrop:backdrop-blur-sm;
+
+  &:not([open]) {
+    @apply hidden;
+  }
 }

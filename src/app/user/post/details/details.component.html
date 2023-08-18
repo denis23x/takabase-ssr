@@ -5,6 +5,7 @@
 	<dialog
 		class="modal"
 		#abstractPostProseModal
+		(keydown.escape)="$event.preventDefault(); abstractPostProseModal.close()"
 		(close)="setAbstractClosePostProseModal()"
 		(click)="$event.target === $event.currentTarget ? abstractPostProseModal.close() : $event"
 	>

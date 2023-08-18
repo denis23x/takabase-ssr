@@ -265,6 +265,7 @@
 	<dialog
 		class="modal"
 		#urlFormModal
+		(keydown.escape)="$event.preventDefault(); urlFormModal.close()"
 		(close)="onToggleUrlForm(false)"
 		(click)="$event.target === $event.currentTarget ? urlFormModal.close() : $event"
 	>

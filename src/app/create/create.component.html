@@ -480,6 +480,7 @@
 	<dialog
 		class="modal"
 		#postFormPreviewModal
+		(keydown.escape)="$event.preventDefault(); postFormPreviewModal.close()"
 		(close)="onTogglePreviewPost(false)"
 		(click)="$event.target === $event.currentTarget ? postFormPreviewModal.close() : $event"
 	>
@@ -502,6 +503,7 @@
 	<dialog
 		class="modal"
 		#categoryFormModal
+		(keydown.escape)="$event.preventDefault(); categoryFormModal.close()"
 		(close)="onToggleCategoryForm(false)"
 		(click)="$event.target === $event.currentTarget ? categoryFormModal.close() : $event"
 	>
@@ -650,6 +652,7 @@
 	<dialog
 		class="modal"
 		#postFormImageModal
+		(keydown.escape)="$event.preventDefault(); postFormImageModal.close()"
 		(close)="onTogglePostFormImage(false)"
 		(click)="$event.target === $event.currentTarget ? postFormImageModal.close() : $event"
 	>
@@ -667,6 +670,7 @@
 	<dialog
 		class="modal"
 		#postDeleteModal
+		(keydown.escape)="$event.preventDefault(); postDeleteModal.close()"
 		(close)="onToggleDeletePost(false)"
 		(click)="$event.target === $event.currentTarget ? postDeleteModal.close() : $event"
 	>
