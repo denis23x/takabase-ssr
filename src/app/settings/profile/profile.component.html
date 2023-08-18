@@ -12,12 +12,12 @@
 				<div class="flex items-center justify-start gap-4 overflow-auto">
 					<!-- prettier-ignore -->
 					<div class="avatar">
-            <div
-              class="w-12 rounded-btn relative"
+            <figure
+              class="h-12 w-12 rounded-btn relative overflow-hidden"
               appAvatar
               [ngClass]="{ 'cursor-not-allowed opacity-50 saturate-0 transition': profileForm.disabled }"
               [appUser]="authUser"
-            ></div>
+            ></figure>
           </div>
 					<div class="flex flex-col overflow-auto">
 						<span class="truncate text-xl font-bold text-base-content">
