@@ -130,8 +130,7 @@ export class UserPostComponent extends AbstractListComponent implements OnInit, 
 
 		let postGetAllDto: PostGetAllDto = {
 			page: this.abstractPage,
-			size: this.abstractSize,
-			scope: ['user', 'category']
+			size: this.abstractSize
 		};
 
 		// prettier-ignore

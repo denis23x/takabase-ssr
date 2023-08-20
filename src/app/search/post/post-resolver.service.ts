@@ -21,8 +21,7 @@ export class SearchPostResolverService {
 	resolve(activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<Post[]> {
 		let postGetAllDto: PostGetAllDto = {
 			page: 1,
-			size: 20,
-			scope: ['user', 'category']
+			size: 20
 		};
 
 		// prettier-ignore

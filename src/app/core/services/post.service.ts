@@ -81,6 +81,15 @@ export class PostService {
       };
     }
 
+    const orderBy: string = String(activatedRouteSnapshot.parent.queryParamMap.get('orderBy') || '');
+
+    if (orderBy.length) {
+      postGetAllDto = {
+        ...postGetAllDto,
+        orderBy
+      };
+    }
+
 		return postGetAllDto;
 	}
 

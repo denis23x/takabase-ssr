@@ -59,15 +59,15 @@ export class SearchComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe(
-			{
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
+			.pipe(filter((params: Params) => params.query || params.orderBy))
+			.subscribe({
 				next: (params: Params) => {
 					this.searchForm.patchValue(params, { emitEvent: false });
 					this.searchForm.markAllAsTouched();
 				},
 				error: (error: any) => console.error(error)
-			}
-		);
+			});
 
 		this.searchForm$ = this.searchForm.valueChanges
 			.pipe(
