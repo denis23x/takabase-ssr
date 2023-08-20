@@ -93,24 +93,22 @@
 					*ngIf="!!category"
 				>
 					<div class="flex w-full items-center justify-between gap-4">
-						<div
-							class="flex items-center justify-start gap-4 overflow-hidden w-full"
-						>
-							<button
-								class="btn-ghost btn-square btn bg-base-200 fill-current p-3"
-								type="button"
-								title="Search"
-								aria-label="Search"
-								appSvgIcon
-								[appIcon]="postSearchFormToggle ? 'x-lg' : 'search'"
-								[appSquare]="'1.5em'"
-								(click)="onTogglePostSearchForm()"
-							></button>
-							<ng-container [ngSwitch]="postSearchFormToggle">
-								<div
-									class="flex flex-col overflow-hidden"
-									*ngSwitchCase="false"
-								>
+						<button
+							class="btn-ghost btn-square btn bg-base-200 fill-current p-3"
+							type="button"
+							title="Search"
+							aria-label="Search"
+							appSvgIcon
+							[appIcon]="postSearchFormToggle ? 'x-lg' : 'search'"
+							[appSquare]="'1.5em'"
+							(click)="onTogglePostSearchForm()"
+						></button>
+						<ng-container [ngSwitch]="postSearchFormToggle">
+							<div
+								class="flex items-center justify-start gap-4 overflow-hidden w-full"
+								*ngSwitchCase="false"
+							>
+								<div class="flex flex-col overflow-hidden w-full">
 									<h2
 										class="block truncate text-xl font-bold text-base-content"
 									>
@@ -124,102 +122,102 @@
                     created {{ category.createdAt | dayjs: "fromX" }}
                   </time>
 								</div>
-								<form
-									class="flex items-end justify-between gap-4 w-full"
-									autocomplete="off"
-									*ngSwitchCase="true"
-									[formGroup]="postSearchForm"
+								<button
+									class="btn-primary btn focus:outline-0"
+									aria-label="Edit"
+									*ngIf="authUser?.id === user.id"
+									(click)="onToggleCategoryEditForm(true)"
 								>
-									<fieldset
-										class="form-control flex-1"
-										*ngIf="postSearchForm.get('query') as query"
-									>
-										<div class="relative">
-											<input
-												class="input-bordered input input-md w-full truncate !outline-0 pr-12"
-												id="searchFormSearch"
-												type="search"
-												aria-label="Search"
-												formControlName="query"
-												placeholder="Type search query"
-												appInputTrimWhitespace
-												[class.input-success]="query.value && query.valid"
-												[class.input-error]="query.touched && query.invalid"
-											/>
-											<button
-												class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-												type="button"
-												aria-label="Clear query"
-												appSvgIcon
-												*ngIf="!!query.value.length"
-												[class.btn-success]="query.valid"
-												[class.btn-error]="query.touched && query.invalid"
-												[class.btn-ghost]="query.untouched && query.invalid"
-												[disabled]="postSearchForm.disabled"
-												[appIcon]="'x'"
-												[appSquare]="'2em'"
-												(click)="query.setValue('')"
-											></button>
-										</div>
-									</fieldset>
-									<fieldset
-										class="form-control"
-										*ngIf="postSearchForm.get('orderBy') as orderBy"
-									>
-										<!-- prettier-ignore -->
-										<div
-											class="block"
-											appDropdown
-											[appPosition]="'bottom-right'"
-										>
-											<button
-												class="btn-success btn-square btn fill-current p-3"
-												type="button"
-												title="Sorting"
-												aria-label="Sorting"
-												appSvgIcon
-												slot="target"
-												[disabled]="postSearchForm.disabled"
-												[class.btn-outline]="postSearchForm.enabled && !orderBy.value"
-												[appIcon]="'filter'"
-												[appSquare]="'1.75em'"
-											></button>
-											<div
-												class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
-												slot="content"
-											>
-												<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
-													<li
-														class="flex w-full"
-														*ngFor="let searchFormOrderBy of postSearchFormOrderByList"
-													>
-														<button
-                              class="rounded-btn block w-full truncate text-right"
-                              type="button"
-                              appScrollIntoView
-                              [appScrollActive]="searchFormOrderBy === orderBy.value"
-                              [ngClass]="{ 'active': searchFormOrderBy === orderBy.value }"
-                              [attr.aria-label]="searchFormOrderBy"
-                              (click)="searchFormOrderBy === orderBy.value ? orderBy.reset() : orderBy.setValue(searchFormOrderBy)"
-                            >
-                              {{ searchFormOrderBy }}
-                            </button>
-													</li>
-												</ul>
-											</div>
-										</div>
-									</fieldset>
-								</form>
-							</ng-container>
-						</div>
-						<button
-							class="btn-primary btn focus:outline-0"
-							aria-label="Edit"
-							*ngIf="authUser?.id === user.id"
-							(click)="onToggleCategoryEditForm(true)"
-						>
-							Edit
-						</button>
+									Edit
+								</button>
+							</div>
+							<form
+								class="flex items-end justify-between gap-4 w-full"
+								autocomplete="off"
+								*ngSwitchCase="true"
+								[formGroup]="postSearchForm"
+							>
+								<fieldset
+									class="form-control flex-1"
+									*ngIf="postSearchForm.get('query') as query"
+								>
+									<div class="relative">
+										<input
+											class="input-bordered input input-md w-full truncate !outline-0 pr-12"
+											id="searchFormSearch"
+											type="search"
+											aria-label="Search"
+											formControlName="query"
+											placeholder="Type search query"
+											appInputTrimWhitespace
+											[class.input-success]="query.value && query.valid"
+											[class.input-error]="query.touched && query.invalid"
+										/>
+										<button
+											class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+											type="button"
+											aria-label="Clear query"
+											appSvgIcon
+											*ngIf="!!query.value.length"
+											[class.btn-success]="query.valid"
+											[class.btn-error]="query.touched && query.invalid"
+											[class.btn-ghost]="query.untouched && query.invalid"
+											[disabled]="postSearchForm.disabled"
+											[appIcon]="'x'"
+											[appSquare]="'2em'"
+											(click)="query.setValue('')"
+										></button>
+									</div>
+								</fieldset>
+								<fieldset
+									class="form-control"
+									*ngIf="postSearchForm.get('orderBy') as orderBy"
+								>
+									<!-- prettier-ignore -->
+									<div
+                    class="block"
+                    appDropdown
+                    [appPosition]="'bottom-right'"
+                  >
+                    <button
+                      class="btn-success btn-square btn fill-current p-3"
+                      type="button"
+                      title="Sorting"
+                      aria-label="Sorting"
+                      appSvgIcon
+                      slot="target"
+                      [disabled]="postSearchForm.disabled"
+                      [class.btn-outline]="postSearchForm.enabled && !orderBy.value"
+                      [appIcon]="'filter'"
+                      [appSquare]="'1.75em'"
+                    ></button>
+                    <div
+                      class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
+                      slot="content"
+                    >
+                      <ul class="flex max-h-76 flex-col overflow-y-auto p-2">
+                        <li
+                          class="flex w-full"
+                          *ngFor="let searchFormOrderBy of postSearchFormOrderByList"
+                        >
+                          <button
+                            class="rounded-btn block w-full truncate text-right first-letter:uppercase"
+                            type="button"
+                            appScrollIntoView
+                            [appScrollActive]="searchFormOrderBy === orderBy.value"
+                            [ngClass]="{ 'active': searchFormOrderBy === orderBy.value }"
+                            [attr.aria-label]="searchFormOrderBy"
+                            (click)="searchFormOrderBy === orderBy.value ? orderBy.reset() : orderBy.setValue(searchFormOrderBy)"
+                          >
+                            {{ searchFormOrderBy }}
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+								</fieldset>
+							</form>
+						</ng-container>
 					</div>
 					<article
 						class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"

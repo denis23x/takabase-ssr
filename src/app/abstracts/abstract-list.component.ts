@@ -58,6 +58,7 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
 		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
 			.pipe(
 				skip(1),
+				filter(() => !!this.activatedRoute.snapshot.url.length),
 				tap(() => {
 					this.abstractPage = 1;
 					this.abstractSize = 20;

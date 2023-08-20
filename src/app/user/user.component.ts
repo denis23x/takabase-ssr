@@ -102,7 +102,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	postSearchForm: FormGroup | undefined;
 	postSearchForm$: Subscription | undefined;
 	postSearchFormToggle: boolean = false;
-	postSearchFormOrderByList: string[] = ['Newest', 'Oldest'];
+	postSearchFormOrderByList: string[] = ['newest', 'oldest'];
 
 	category: Category | undefined;
 	categoryList: Category[] = [];
@@ -186,23 +186,17 @@ export class UserComponent implements OnInit, OnDestroy {
 
 		/** Set queryParams to postSearchForm */
 
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe(
-			{
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
+			.pipe(filter((params: Params) => params.query || params.orderBy))
+			.subscribe({
 				next: (params: Params) => {
-					if (params.query || params.orderBy) {
-						this.postSearchForm.patchValue(params, { emitEvent: false });
-						this.postSearchForm.markAllAsTouched();
+					this.postSearchForm.patchValue(params, { emitEvent: false });
+					this.postSearchForm.markAllAsTouched();
 
-						this.postSearchFormToggle = true;
-					} else {
-						this.postSearchForm.reset();
-
-						this.postSearchFormToggle = false;
-					}
+					this.postSearchFormToggle = true;
 				},
 				error: (error: any) => console.error(error)
-			}
-		);
+			});
 
 		/** Set postSearchForm to queryParams */
 
@@ -220,7 +214,7 @@ export class UserComponent implements OnInit, OnDestroy {
 							relativeTo: this.activatedRoute,
 							queryParams: {
 								query: value.query || null,
-								orderBy: value.orderBy.toLowerCase() || null
+								orderBy: value.orderBy || null
 							},
 							queryParamsHandling: 'merge'
 						})
@@ -276,6 +270,8 @@ export class UserComponent implements OnInit, OnDestroy {
 					queryParamsHandling: 'merge'
 				})
 				.then(() => console.debug('Route changed'));
+
+			this.postSearchForm.reset();
 
 			this.postSearchFormToggle = false;
 		} else {

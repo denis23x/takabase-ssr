@@ -42,7 +42,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 	searchForm: FormGroup | undefined;
 	searchForm$: Subscription | undefined;
 	searchFormIsSubmitted$: Subscription | undefined;
-	searchFormOrderByList: string[] = ['Newest', 'Oldest'];
+	searchFormOrderByList: string[] = ['newest', 'oldest'];
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -83,7 +83,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 							relativeTo: this.activatedRoute,
 							queryParams: {
 								query: value.query || null,
-								orderBy: value.orderBy.toLowerCase() || null
+								orderBy: value.orderBy || null
 							},
 							queryParamsHandling: 'merge'
 						})
