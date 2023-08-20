@@ -3,22 +3,23 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import {
-	AbstractControl,
 	FormBuilder,
 	FormControl,
 	FormGroup,
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { debounceTime, filter, map } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
+import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
 import { AppScrollIntoViewDirective } from '../standalone/directives/app-scroll-into-view.directive';
 
 interface SearchForm {
 	query: FormControl<string>;
+	orderBy: FormControl<string>;
 }
 
 @Component({
@@ -29,6 +30,7 @@ interface SearchForm {
 		RouterModule,
 		AppInputTrimWhitespaceDirective,
 		SvgIconComponent,
+		DropdownComponent,
 		AppScrollIntoViewDirective
 	],
 	selector: 'app-search',
@@ -40,6 +42,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 	searchForm: FormGroup | undefined;
 	searchForm$: Subscription | undefined;
 	searchFormIsSubmitted$: Subscription | undefined;
+	searchFormOrderByList: string[] = ['Newest', 'Oldest'];
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -50,26 +53,21 @@ export class SearchComponent implements OnInit, OnDestroy {
 			query: this.formBuilder.nonNullable.control('', [
 				Validators.minLength(4),
 				Validators.maxLength(16)
-			])
+			]),
+			orderBy: this.formBuilder.nonNullable.control('', [])
 		});
 	}
 
 	ngOnInit(): void {
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
-			.pipe(
-				map((params: Params) => params.query),
-				filter((query: string) => !!query)
-			)
-			.subscribe({
-				next: (query: string) => {
-					// prettier-ignore
-					const abstractControl: AbstractControl = this.searchForm.get('query');
-
-					abstractControl.setValue(query, { emitEvent: false });
-					abstractControl.markAsTouched();
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe(
+			{
+				next: (params: Params) => {
+					this.searchForm.patchValue(params, { emitEvent: false });
+					this.searchForm.markAllAsTouched();
 				},
 				error: (error: any) => console.error(error)
-			});
+			}
+		);
 
 		this.searchForm$ = this.searchForm.valueChanges
 			.pipe(
@@ -84,7 +82,8 @@ export class SearchComponent implements OnInit, OnDestroy {
 						.navigate([], {
 							relativeTo: this.activatedRoute,
 							queryParams: {
-								query: value.query || null
+								query: value.query || null,
+								orderBy: value.orderBy.toLowerCase() || null
 							},
 							queryParamsHandling: 'merge'
 						})

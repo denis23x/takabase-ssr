@@ -25,24 +25,9 @@ export class SearchUserResolverService {
 		};
 
 		// prettier-ignore
-		const query: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
-
-		if (query.length) {
-			userGetAllDto = {
-				...userGetAllDto,
-				query
-			};
-		}
-
-		// prettier-ignore
-		const orderBy: string = String(activatedRouteSnapshot.parent.queryParamMap.get('orderBy') || '');
-
-		if (orderBy.length) {
-			userGetAllDto = {
-				...userGetAllDto,
-				orderBy
-			};
-		}
+		userGetAllDto = {
+      ...this.userService.getSearchUserGetAllDto(userGetAllDto, activatedRouteSnapshot)
+    };
 
 		return this.userService.getAll(userGetAllDto).pipe(
 			catchError((httpErrorResponse: HttpErrorResponse) => {

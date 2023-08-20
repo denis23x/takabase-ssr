@@ -7,16 +7,18 @@
 		>
 			<h1 class="text-2xl font-bold">Search</h1>
 			<hr class="my-0 border-base-content/20" />
-			<form autocomplete="off" [formGroup]="searchForm">
+			<form
+				class="flex items-end justify-between gap-4"
+				autocomplete="off"
+				[formGroup]="searchForm"
+			>
 				<fieldset
-					class="form-control"
+					class="form-control flex-1"
 					*ngIf="searchForm.get('query') as query"
-					[disabled]="searchForm.disabled"
 				>
-					<!--
-		      <label class="label" for="searchFormSearch">
+					<label class="label" for="searchFormSearch">
 						<div class="indicator">
-							&lt;!&ndash; prettier-ignore &ndash;&gt;
+							<!-- prettier-ignore -->
 							<span
 								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
 								*ngIf="query.touched && !!query.errors && searchForm.enabled"
@@ -29,10 +31,9 @@
                   Max length {{ query.errors.maxlength["requiredLength"] }} characters
                 </ng-container>
 							</span>
-							<span class="label-text mr-2">Search</span>
+							<span class="label-text mr-2">Query</span>
 						</div>
 					</label>
-					-->
 					<div class="relative">
 						<input
 							class="input-bordered input input-md w-full truncate pr-12"
@@ -40,7 +41,7 @@
 							type="search"
 							aria-label="Search"
 							formControlName="query"
-							placeholder="Type keywords"
+							placeholder="Type search query"
 							appInputTrimWhitespace
 							[class.input-success]="query.touched && query.value"
 							[class.input-error]="query.touched && query.invalid"
@@ -59,6 +60,49 @@
 							[appSquare]="'2em'"
 							(click)="query.setValue('')"
 						></button>
+					</div>
+				</fieldset>
+				<fieldset
+					class="form-control"
+					*ngIf="searchForm.get('orderBy') as orderBy"
+				>
+					<div class="block" appDropdown [appPosition]="'bottom-right'">
+						<button
+							class="btn-success btn-square btn fill-current p-3"
+							type="button"
+							title="Sorting"
+							aria-label="Sorting"
+							appSvgIcon
+							slot="target"
+							[disabled]="searchForm.disabled"
+							[class.btn-outline]="searchForm.enabled && !orderBy.value"
+							[appIcon]="'filter'"
+							[appSquare]="'1.75em'"
+						></button>
+						<div
+							class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
+							slot="content"
+						>
+							<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
+								<li
+									class="flex w-full"
+									*ngFor="let searchFormOrderBy of searchFormOrderByList"
+								>
+									<!-- prettier-ignore -->
+									<button
+                    class="rounded-btn block w-full truncate text-right"
+                    type="button"
+                    appScrollIntoView
+                    [appScrollActive]="searchFormOrderBy === orderBy.value"
+                    [ngClass]="{ 'active': searchFormOrderBy === orderBy.value }"
+                    [attr.aria-label]="searchFormOrderBy"
+                    (click)="searchFormOrderBy === orderBy.value ? orderBy.reset() : orderBy.setValue(searchFormOrderBy)"
+                  >
+                    {{ searchFormOrderBy }}
+                  </button>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</fieldset>
 			</form>

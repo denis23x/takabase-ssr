@@ -59,25 +59,10 @@ export class SearchCategoryComponent extends AbstractListComponent implements On
 			scope: ['user']
 		};
 
-		// prettier-ignore
-		const query: string = String(this.activatedRoute.parent.snapshot.queryParamMap.get('query') || '');
-
-		if (query.length) {
-			categoryGetAllDto = {
-				...categoryGetAllDto,
-        query
-			};
-		}
-
     // prettier-ignore
-    const orderBy: string = String(this.activatedRoute.parent.snapshot.queryParamMap.get('orderBy') || '');
-
-    if (orderBy.length) {
-      categoryGetAllDto = {
-        ...categoryGetAllDto,
-        orderBy
-      };
-    }
+    categoryGetAllDto = {
+      ...this.categoryService.getSearchCategoryGetAllDto(categoryGetAllDto, this.activatedRoute.snapshot)
+    };
 
 		this.categoryService.getAll(categoryGetAllDto).subscribe({
 			next: (categoryList: Category[]) => {

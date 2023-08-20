@@ -67,25 +67,10 @@ export class SearchUserComponent extends AbstractListComponent implements OnInit
 			size: this.abstractSize
 		};
 
-		// prettier-ignore
-		const query: string = String(this.activatedRoute.parent.snapshot.queryParamMap.get('query') || '');
-
-		if (query.length) {
-			userGetAllDto = {
-				...userGetAllDto,
-        query
-			};
-		}
-
     // prettier-ignore
-    const orderBy: string = String(this.activatedRoute.parent.snapshot.queryParamMap.get('orderBy') || '');
-
-    if (orderBy.length) {
-      userGetAllDto = {
-        ...userGetAllDto,
-        orderBy
-      };
-    }
+    userGetAllDto = {
+      ...this.postService.getSearchPostGetAllDto(userGetAllDto, this.activatedRoute.snapshot)
+    };
 
 		this.userService.getAll(userGetAllDto).subscribe({
 			next: (userList: User[]) => {

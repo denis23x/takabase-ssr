@@ -26,24 +26,10 @@ export class SearchCategoryResolverService {
 			scope: ['user']
 		};
 
-		const query: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
-
-		if (query.length) {
-			categoryGetAllDto = {
-				...categoryGetAllDto,
-				query
-			};
-		}
-
     // prettier-ignore
-    const orderBy: string = String(activatedRouteSnapshot.parent.queryParamMap.get('orderBy') || '');
-
-    if (orderBy.length) {
-      categoryGetAllDto = {
-        ...categoryGetAllDto,
-        orderBy
-      };
-    }
+    categoryGetAllDto = {
+      ...this.categoryService.getSearchCategoryGetAllDto(categoryGetAllDto, activatedRouteSnapshot)
+    };
 
 		return this.categoryService.getAll(categoryGetAllDto).pipe(
 			catchError((httpErrorResponse: HttpErrorResponse) => {
