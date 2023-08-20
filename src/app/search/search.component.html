@@ -43,7 +43,7 @@
 							formControlName="query"
 							placeholder="Type search query"
 							appInputTrimWhitespace
-							[class.input-success]="query.touched && query.value"
+							[class.input-success]="query.value && query.valid"
 							[class.input-error]="query.touched && query.invalid"
 						/>
 						<button
@@ -52,9 +52,9 @@
 							aria-label="Clear query"
 							appSvgIcon
 							*ngIf="!!query.value.length"
-							[class.btn-success]="query.touched && query.value"
+							[class.btn-success]="query.valid"
 							[class.btn-error]="query.touched && query.invalid"
-							[class.btn-ghost]="query.untouched"
+							[class.btn-ghost]="query.untouched && query.invalid"
 							[disabled]="searchForm.disabled"
 							[appIcon]="'x'"
 							[appSquare]="'2em'"

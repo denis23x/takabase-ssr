@@ -7,9 +7,15 @@ import {
 	OnInit,
 	ViewChild
 } from '@angular/core';
-import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
+import {
+	ActivatedRoute,
+	Data,
+	Params,
+	Router,
+	RouterModule
+} from '@angular/router';
 import { Subscription } from 'rxjs';
-import { filter, map, startWith } from 'rxjs/operators';
+import { debounceTime, filter, map, startWith } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -37,6 +43,12 @@ import { CategoryUpdateDto } from '../core/dto/category/category-update.dto';
 import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
 import { MarkdownPipe } from '../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../standalone/pipes/sanitizer.pipe';
+import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
+
+interface PostSearchForm {
+	query: FormControl<string>;
+	orderBy: FormControl<string>;
+}
 
 interface CategoryEditForm {
 	name: FormControl<string>;
@@ -61,7 +73,8 @@ interface CategoryDeleteForm {
 		WindowComponent,
 		AppInputTrimWhitespaceDirective,
 		MarkdownPipe,
-		SanitizerPipe
+		SanitizerPipe,
+		DropdownComponent
 	],
 	selector: 'app-user',
 	templateUrl: './user.component.html'
@@ -74,6 +87,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	@ViewChild('categoryDeleteFormModal') categoryDeleteFormModal: ElementRef<HTMLDialogElement> | undefined;
 
 	activatedRouteData$: Subscription | undefined;
+	activatedRouteQueryParams$: Subscription | undefined;
 	activatedRouteFirstChildData$: Subscription | undefined;
 	activatedRouteFirstChildUrl$: Subscription | undefined;
 
@@ -84,6 +98,11 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	post: Post | undefined;
 	postList: Post[] = [];
+
+	postSearchForm: FormGroup | undefined;
+	postSearchForm$: Subscription | undefined;
+	postSearchFormToggle: boolean = false;
+	postSearchFormOrderByList: string[] = ['Newest', 'Oldest'];
 
 	category: Category | undefined;
 	categoryList: Category[] = [];
@@ -118,9 +137,19 @@ export class UserComponent implements OnInit, OnDestroy {
 			name: this.formBuilder.nonNullable.control('', []),
 			categoryId: this.formBuilder.control(null, [])
 		});
+
+		this.postSearchForm = this.formBuilder.group<PostSearchForm>({
+			query: this.formBuilder.nonNullable.control('', [
+				Validators.minLength(4),
+				Validators.maxLength(16)
+			]),
+			orderBy: this.formBuilder.nonNullable.control('', [])
+		});
 	}
 
 	ngOnInit(): void {
+		/** Resolver */
+
 		this.activatedRouteData$ = this.activatedRoute.data
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
@@ -132,12 +161,16 @@ export class UserComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
+		/** Get postList for categoryDeleteForm modal */
+
 		this.activatedRouteFirstChildData$ = this.activatedRoute.firstChild.data
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
 				next: (postList: Post[]) => (this.postList = postList),
 				error: (error: any) => console.error(error)
 			});
+
+		/** Get category for categoryEditForm modal */
 
 		// prettier-ignore
 		this.activatedRouteFirstChildUrl$ = this.activatedRoute.firstChild.url.subscribe({
@@ -150,6 +183,53 @@ export class UserComponent implements OnInit, OnDestroy {
 				},
 				error: (error: any) => console.error(error)
 			});
+
+		/** Set queryParams to postSearchForm */
+
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe(
+			{
+				next: (params: Params) => {
+					if (params.query || params.orderBy) {
+						this.postSearchForm.patchValue(params, { emitEvent: false });
+						this.postSearchForm.markAllAsTouched();
+
+						this.postSearchFormToggle = true;
+					} else {
+						this.postSearchForm.reset();
+
+						this.postSearchFormToggle = false;
+					}
+				},
+				error: (error: any) => console.error(error)
+			}
+		);
+
+		/** Set postSearchForm to queryParams */
+
+		this.postSearchForm$ = this.postSearchForm.valueChanges
+			.pipe(
+				debounceTime(400),
+				filter(() => this.postSearchForm.valid)
+			)
+			.subscribe({
+				next: () => {
+					const value: any = this.postSearchForm.value;
+
+					this.router
+						.navigate([], {
+							relativeTo: this.activatedRoute,
+							queryParams: {
+								query: value.query || null,
+								orderBy: value.orderBy.toLowerCase() || null
+							},
+							queryParamsHandling: 'merge'
+						})
+						.then(() => console.debug('Route changed'));
+				},
+				error: (error: any) => console.error(error)
+			});
+
+		/** Pristine state of categoryEditForm */
 
 		this.categoryEditForm$ = this.categoryEditForm.valueChanges
 			.pipe(
@@ -174,11 +254,33 @@ export class UserComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		[
 			this.activatedRouteData$,
+			this.activatedRouteQueryParams$,
 			this.activatedRouteFirstChildData$,
 			this.activatedRouteFirstChildUrl$,
+			this.postSearchForm$,
 			this.categoryEditForm$,
+			this.categoryDeleteForm$,
 			this.authUser$
 		].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	onTogglePostSearchForm(): void {
+		if (this.postSearchFormToggle) {
+			this.router
+				.navigate([], {
+					relativeTo: this.activatedRoute,
+					queryParams: {
+						query: null,
+						orderBy: null
+					},
+					queryParamsHandling: 'merge'
+				})
+				.then(() => console.debug('Route changed'));
+
+			this.postSearchFormToggle = false;
+		} else {
+			this.postSearchFormToggle = true;
+		}
 	}
 
 	onToggleCategoryEditForm(toggle: boolean): void {
