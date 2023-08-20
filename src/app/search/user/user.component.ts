@@ -68,14 +68,24 @@ export class SearchUserComponent extends AbstractListComponent implements OnInit
 		};
 
 		// prettier-ignore
-		const name: string = String(this.activatedRoute.parent.snapshot.queryParamMap.get('query') || '');
+		const query: string = String(this.activatedRoute.parent.snapshot.queryParamMap.get('query') || '');
 
-		if (name.length) {
+		if (query.length) {
 			userGetAllDto = {
 				...userGetAllDto,
-				name
+        query
 			};
 		}
+
+    // prettier-ignore
+    const orderBy: string = String(this.activatedRoute.parent.snapshot.queryParamMap.get('orderBy') || '');
+
+    if (orderBy.length) {
+      userGetAllDto = {
+        ...userGetAllDto,
+        orderBy
+      };
+    }
 
 		this.userService.getAll(userGetAllDto).subscribe({
 			next: (userList: User[]) => {

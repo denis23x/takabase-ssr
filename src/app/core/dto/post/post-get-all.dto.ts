@@ -6,5 +6,6 @@ export interface PostGetAllDto {
 	categoryId?: number;
 	page?: number;
 	size?: number;
+	orderBy?: string;
 	scope?: string[];
 }

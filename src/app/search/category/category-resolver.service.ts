@@ -35,6 +35,16 @@ export class SearchCategoryResolverService {
 			};
 		}
 
+    // prettier-ignore
+    const orderBy: string = String(activatedRouteSnapshot.parent.queryParamMap.get('orderBy') || '');
+
+    if (orderBy.length) {
+      categoryGetAllDto = {
+        ...categoryGetAllDto,
+        orderBy
+      };
+    }
+
 		return this.categoryService.getAll(categoryGetAllDto).pipe(
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				this.router

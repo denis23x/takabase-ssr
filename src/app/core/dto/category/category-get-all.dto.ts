@@ -5,5 +5,6 @@ export interface CategoryGetAllDto {
 	userId?: number;
 	page?: number;
 	size?: number;
+	orderBy?: string;
 	scope?: string[];
 }

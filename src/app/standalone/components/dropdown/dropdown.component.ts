@@ -25,6 +25,11 @@ export class DropdownComponent implements OnInit, OnDestroy {
 	@Output() toggled: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input()
+	set appPosition(dropdownPosition: string) {
+		this.dropdownPosition = dropdownPosition;
+	}
+
+	@Input()
 	set appFitParentWidth(dropdownContentFitParentWidth: boolean) {
 		this.dropdownContentFitParentWidth = dropdownContentFitParentWidth;
 	}
@@ -38,8 +43,10 @@ export class DropdownComponent implements OnInit, OnDestroy {
 	windowAction$: Subscription | undefined;
 
 	dropdownState: boolean = false;
+	dropdownPosition: string = 'bottom-left';
 
 	dropdownTarget: any;
+
 	dropdownContent: any;
 	dropdownContentCloseOnClick: boolean = true;
 	dropdownContentFitParentWidth: boolean = false;
@@ -123,8 +130,26 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
       /** Apply position */
 
-      this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
-      this.dropdownContent.style['left'] = elementDOMRect.left + 'px';
+      switch (this.dropdownPosition) {
+        case 'bottom-left': {
+          this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
+          this.dropdownContent.style['left'] = elementDOMRect.left + 'px';
+
+          break;
+        }
+        case 'bottom-right': {
+          const contentDOMRect: DOMRect = this.dropdownContent.getBoundingClientRect();
+
+          this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
+          this.dropdownContent.style['left'] = elementDOMRect.left - (contentDOMRect.width - elementDOMRect.width) + 'px';
+
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+
       this.dropdownContent.style['z-index'] = 2;
     } else {
       this.dropdownContent.style['position'] = 'fixed';

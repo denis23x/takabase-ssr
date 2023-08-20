@@ -69,6 +69,16 @@ export class SearchCategoryComponent extends AbstractListComponent implements On
 			};
 		}
 
+    // prettier-ignore
+    const orderBy: string = String(this.activatedRoute.parent.snapshot.queryParamMap.get('orderBy') || '');
+
+    if (orderBy.length) {
+      categoryGetAllDto = {
+        ...categoryGetAllDto,
+        orderBy
+      };
+    }
+
 		this.categoryService.getAll(categoryGetAllDto).subscribe({
 			next: (categoryList: Category[]) => {
 				this.abstractList = concat ? this.abstractList.concat(categoryList) : categoryList;
