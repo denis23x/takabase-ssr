@@ -60,12 +60,12 @@ export class SearchCategoryComponent extends AbstractListComponent implements On
 		};
 
 		// prettier-ignore
-		const name: string = String(this.activatedRoute.parent.snapshot.queryParamMap.get('query') || '');
+		const query: string = String(this.activatedRoute.parent.snapshot.queryParamMap.get('query') || '');
 
-		if (name.length) {
+		if (query.length) {
 			categoryGetAllDto = {
 				...categoryGetAllDto,
-				name
+        query
 			};
 		}
 

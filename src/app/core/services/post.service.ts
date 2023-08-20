@@ -72,17 +72,26 @@ export class PostService {
 			}
 		}
 
+    const query: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
+
+    if (query.length) {
+      postGetAllDto = {
+        ...postGetAllDto,
+        query
+      };
+    }
+
 		return postGetAllDto;
 	}
 
 	// prettier-ignore
 	getSearchPostGetAllDto(postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto {
-    const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
+    const query: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
 
-    if (name.length) {
+    if (query.length) {
       postGetAllDto = {
         ...postGetAllDto,
-        name
+        query
       };
     }
 

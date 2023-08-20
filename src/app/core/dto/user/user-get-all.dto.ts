@@ -2,7 +2,7 @@
 
 export interface UserGetAllDto {
 	name?: string;
-	exact?: number;
+	query?: string;
 	page?: number;
 	size?: number;
 	scope?: string[];

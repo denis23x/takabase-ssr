@@ -35,7 +35,7 @@ interface SearchForm {
 	templateUrl: './search.component.html'
 })
 export class SearchComponent implements OnInit, OnDestroy {
-	routeQueryParams$: Subscription | undefined;
+	activatedRouteQueryParams$: Subscription | undefined;
 
 	searchForm: FormGroup | undefined;
 	searchForm$: Subscription | undefined;
@@ -55,7 +55,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.routeQueryParams$ = this.activatedRoute.queryParams
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
 			.pipe(
 				map((params: Params) => params.query),
 				filter((query: string) => !!query)
@@ -96,7 +96,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[
-			this.routeQueryParams$,
+			this.activatedRouteQueryParams$,
 			this.searchForm$,
 			this.searchFormIsSubmitted$
 		].forEach(($: Subscription) => $?.unsubscribe());

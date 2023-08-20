@@ -1,7 +1,7 @@
 /** @format */
 
 export interface PostGetAllDto {
-	name?: string;
+	query?: string;
 	userId?: number;
 	categoryId?: number;
 	page?: number;

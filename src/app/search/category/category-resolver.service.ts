@@ -26,12 +26,12 @@ export class SearchCategoryResolverService {
 			scope: ['user']
 		};
 
-		const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
+		const query: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
 
-		if (name.length) {
+		if (query.length) {
 			categoryGetAllDto = {
 				...categoryGetAllDto,
-				name
+				query
 			};
 		}
 

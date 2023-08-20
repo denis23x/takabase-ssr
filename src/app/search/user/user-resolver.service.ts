@@ -25,12 +25,12 @@ export class SearchUserResolverService {
 		};
 
 		// prettier-ignore
-		const name: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
+		const query: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
 
-		if (name.length) {
+		if (query.length) {
 			userGetAllDto = {
 				...userGetAllDto,
-				name
+				query
 			};
 		}
 

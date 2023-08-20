@@ -31,8 +31,7 @@ export class UserResolverService {
 		const name: string = path.path;
 
 		const userGetAllDto: UserGetAllDto = {
-			name: name.substring(1),
-			exact: 1
+			name: name.substring(1)
 		};
 
 		return this.userService.getAll(userGetAllDto).pipe(
