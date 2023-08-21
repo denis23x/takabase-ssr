@@ -28,12 +28,19 @@
 				</div>
 				<div class="flex items-center justify-end gap-4">
 					<a
-						class="btn-primary btn"
+						class="btn-primary btn-outline btn w-12 h-12 sm:w-auto sm:h-auto"
 						aria-label="Settings"
 						*ngIf="authUser?.id === user.id"
 						[routerLink]="['/settings']"
 					>
-						Settings
+						<span class="hidden sm:block">Settings</span>
+						<i
+							class="block sm:hidden fill-current"
+							appSvgIcon
+							[appIcon]="'gear-fill'"
+							[appSquare]="'1.5em'"
+						>
+						</i>
 					</a>
 				</div>
 			</div>
@@ -123,12 +130,20 @@
                   </time>
 								</div>
 								<button
-									class="btn-primary btn focus:outline-0"
+									class="btn-success btn-outline btn focus:outline-0 w-12 h-12 sm:w-auto sm:h-auto"
+									type="button"
 									aria-label="Edit"
 									*ngIf="authUser?.id === user.id"
 									(click)="onToggleCategoryEditForm(true)"
 								>
-									Edit
+									<span class="hidden sm:block">Edit</span>
+									<i
+										class="block sm:hidden fill-current"
+										appSvgIcon
+										[appIcon]="'pencil-fill'"
+										[appSquare]="'1.5em'"
+									>
+									</i>
 								</button>
 							</div>
 							<form
@@ -143,7 +158,7 @@
 								>
 									<div class="relative">
 										<input
-											class="input-bordered input input-md w-full truncate !outline-0 pr-12"
+											class="input-bordered input input-md w-full truncate pr-12"
 											id="searchFormSearch"
 											type="search"
 											aria-label="Search"
@@ -345,19 +360,19 @@
 					</label>
 					<!-- prettier-ignore -->
 					<div
-            class="rounded-btn flex overflow-hidden w-full border textarea-autosize after:max-h-64"
+            class="textarea-autosize w-full"
             [ngClass]="{ 'border-base-content/20': categoryEditForm.enabled, 'border-transparent': categoryEditForm.disabled }"
-            [class.border-success]="!!description.value && description.valid"
-            [class.border-error]="!!description.value && description.invalid"
+            [class.textarea-autosize-success]="description.value && description.valid"
+            [class.textarea-autosize-error]="description.value && description.invalid"
           >
             <textarea
-              class="textarea textarea-md border-0 !outline-0 w-full"
+              class="textarea textarea-md w-full max-h-64"
               id="categoryEditFormDescription"
               aria-label="Description"
               placeholder="Type category description"
               formControlName="description"
               appInputTrimWhitespace
-              onInput="this.parentNode.dataset.replicatedValue = this.value"
+              appTextareaResize
               [rows]="4"
             >
               {{ description.value }}

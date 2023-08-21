@@ -166,18 +166,19 @@
 				</label>
 				<!-- prettier-ignore -->
 				<div
-          class="rounded-btn flex overflow-hidden w-full border textarea-autosize after:max-h-64"
+          class="textarea-autosize w-full"
           [ngClass]="{ 'border-base-content/20': profileForm.enabled, 'border-transparent': profileForm.disabled }"
-          [class.border-success]="!!description.value && description.valid"
-          [class.border-error]="!!description.value && description.invalid"
+          [class.textarea-autosize-success]="description.value && description.valid"
+          [class.textarea-autosize-error]="description.value && description.invalid"
         >
           <textarea
-            class="textarea textarea-md border-0 !outline-0 w-full"
+            class="textarea textarea-md w-full max-h-64"
             id="profileFormDescription"
             aria-label="Description"
             placeholder="Type your description"
             formControlName="description"
             appInputTrimWhitespace
+            appTextareaResize
             onInput="this.parentNode.dataset.replicatedValue = this.value"
             [rows]="4"
           >

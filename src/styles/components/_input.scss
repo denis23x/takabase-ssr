@@ -1,6 +1,6 @@
 /* Hide native search icon */
 
-input {
+.input {
   &[type="search"] {
     &::-webkit-search-decoration,
     &::-webkit-search-cancel-button,

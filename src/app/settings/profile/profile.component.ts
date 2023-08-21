@@ -34,6 +34,7 @@ import { FileCreateDto } from '../../core/dto/file/file-create.dto';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { PlatformService } from '../../core/services/platform.service';
 import { AppearanceService } from '../../core/services/appearance.service';
+import { AppTextareaResizeDirective } from '../../standalone/directives/app-textarea-resize.directive';
 import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 
 interface ProfileForm {
@@ -53,7 +54,8 @@ interface ProfileForm {
 		WindowComponent,
 		DayjsPipe,
 		UserUrlPipe,
-		AppInputTrimWhitespaceDirective
+		AppInputTrimWhitespaceDirective,
+		AppTextareaResizeDirective
 	],
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'

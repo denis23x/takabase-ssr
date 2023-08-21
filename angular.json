@@ -122,6 +122,11 @@
                 "input": "node_modules/emoji-mart/dist/browser.js",
                 "inject": true,
                 "bundleName": "emoji-mart"
+              },
+              {
+                "input": "node_modules/autosize/dist/autosize.js",
+                "inject": true,
+                "bundleName": "autosize"
               }
             ],
             "serviceWorker": true,

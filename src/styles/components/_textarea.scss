@@ -1,23 +1,31 @@
 /* https://css-tricks.com/the-cleanest-trick-for-autogrowing-textareas/ */
 
-@mixin shared-styles() {
-  grid-area: 1 / 1 / 2 / 2;
-}
-
 .textarea-autosize {
-  @apply grid;
+  @apply flex border rounded-btn overflow-hidden;
 
-  &:after {
-    @apply whitespace-pre-wrap invisible text-sm leading-7 px-4 py-3;
+  &.textarea-autosize-success {
+    @apply border-success;
 
-    @include shared-styles();
-
-    content: attr(data-replicated-value) " " !important;
+    &:focus-within {
+      @apply outline-success;
+    }
   }
 
-  textarea {
-    @apply resize-none scroll-pb-4;
+  &.textarea-autosize-error {
+    @apply border-error;
 
-    @include shared-styles();
+    &:focus-within {
+      @apply outline-error;
+    }
+  }
+
+  &:focus-within {
+    @apply outline outline-offset-2 outline-2 outline-base-content/20;
+  }
+
+  .textarea {
+    @apply resize-none border-0 focus:outline-0;
+
+    @apply overflow-x-hidden #{!important};
   }
 }

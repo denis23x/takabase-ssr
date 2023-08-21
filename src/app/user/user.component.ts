@@ -44,6 +44,7 @@ import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
 import { MarkdownPipe } from '../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../standalone/pipes/sanitizer.pipe';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
+import { AppTextareaResizeDirective } from '../standalone/directives/app-textarea-resize.directive';
 
 interface PostSearchForm {
 	query: FormControl<string>;
@@ -74,7 +75,8 @@ interface CategoryDeleteForm {
 		AppInputTrimWhitespaceDirective,
 		MarkdownPipe,
 		SanitizerPipe,
-		DropdownComponent
+		DropdownComponent,
+		AppTextareaResizeDirective
 	],
 	selector: 'app-user',
 	templateUrl: './user.component.html'

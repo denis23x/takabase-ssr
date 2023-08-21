@@ -256,7 +256,7 @@
 						(modalToggle)="onToggleMarkdownModal($event)"
 					></div>
 					<button
-						class="btn-primary btn !outline-0"
+						class="btn-primary btn focus:outline-0"
 						type="button"
 						aria-label="Fullscreen"
 						[class.btn-outline]="postForm.enabled && !fullscreenToggle"
@@ -312,20 +312,22 @@
                   {{ markdown.value.length }}/7200
                 </span>
 							</label>
+							<!-- focus-within:outline-0 -->
 							<!-- prettier-ignore -->
 							<div
-                class="rounded-btn flex overflow-hidden w-full h-full border"
+                class="textarea-autosize w-full h-full"
                 [ngClass]="{ 'border-base-content/20': postForm.enabled, 'border-transparent': postForm.disabled }"
                 [class.border-success]="markdown.value && markdown.valid"
                 [class.border-error]="markdown.touched && markdown.invalid"
               >
                 <textarea
-                  class="textarea textarea-md border-0 !outline-0 w-full h-full resize-none"
+                  class="textarea textarea-md w-full h-full max-h-96"
                   id="postFormTextarea"
                   aria-label="Markdown"
                   placeholder="Type post markdown"
                   formControlName="markdown"
                   appInputTrimWhitespace
+                  appTextareaResize
                   [rows]="8"
                   [class.whitespace-pre]="fullscreenDisableTextWrapping"
                   [class.font-mono]="postMarkdownMonospace"
@@ -616,18 +618,20 @@
             </span>
 					</label>
 					<!-- prettier-ignore -->
-					<div class="rounded-btn overflow-hidden w-full border textarea-autosize after:max-h-64"
+					<div
+            class="textarea-autosize w-full"
             [ngClass]="{ 'border-base-content/20': categoryForm.enabled, 'border-transparent': categoryForm.disabled }"
-            [class.border-success]="description.value && description.valid"
-            [class.border-error]="description.value && description.invalid"
+            [class.textarea-autosize-success]="description.value && description.valid"
+            [class.textarea-autosize-error]="description.value && description.invalid"
           >
             <textarea
-              class="textarea textarea-md border-0 !outline-0 w-full"
+              class="textarea textarea-md w-full max-h-64"
               id="categoryFormDescription"
               aria-label="Description"
               placeholder="Type category description"
               formControlName="description"
               appInputTrimWhitespace
+              appTextareaResize
               onInput="this.parentNode.dataset.replicatedValue = this.value"
               [rows]="4"
             >

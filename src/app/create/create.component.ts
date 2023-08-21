@@ -43,6 +43,7 @@ import { AppScrollIntoViewDirective } from '../standalone/directives/app-scroll-
 import { CookieService } from '../core/services/cookie.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
+import { AppTextareaResizeDirective } from '../standalone/directives/app-textarea-resize.directive';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -73,7 +74,8 @@ interface CategoryForm {
 		ShareComponent,
 		MarkdownComponent,
 		NgOptimizedImage,
-		AppScrollIntoViewDirective
+		AppScrollIntoViewDirective,
+		AppTextareaResizeDirective
 	],
 	templateUrl: './create.component.html'
 })
