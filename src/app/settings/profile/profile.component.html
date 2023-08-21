@@ -179,7 +179,7 @@
             formControlName="description"
             appInputTrimWhitespace
             appTextareaResize
-            onInput="this.parentNode.dataset.replicatedValue = this.value"
+            [appToggleResize]="true"
             [rows]="4"
           >
             {{ description.value }}

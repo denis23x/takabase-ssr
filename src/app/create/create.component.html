@@ -312,16 +312,15 @@
                   {{ markdown.value.length }}/7200
                 </span>
 							</label>
-							<!-- focus-within:outline-0 -->
 							<!-- prettier-ignore -->
 							<div
-                class="textarea-autosize w-full h-full"
+                class="textarea-autosize w-full h-full focus-within:outline-0"
                 [ngClass]="{ 'border-base-content/20': postForm.enabled, 'border-transparent': postForm.disabled }"
-                [class.border-success]="markdown.value && markdown.valid"
-                [class.border-error]="markdown.touched && markdown.invalid"
+                [class.textarea-autosize-success]="markdown.value && markdown.valid"
+                [class.textarea-autosize-error]="markdown.touched && markdown.invalid"
               >
                 <textarea
-                  class="textarea textarea-md w-full h-full max-h-96"
+                  class="textarea textarea-md w-full h-full"
                   id="postFormTextarea"
                   aria-label="Markdown"
                   placeholder="Type post markdown"
@@ -329,6 +328,8 @@
                   appInputTrimWhitespace
                   appTextareaResize
                   [rows]="8"
+                  [appToggleResize]="!fullscreenToggle"
+                  [class.max-h-96]="!fullscreenToggle"
                   [class.whitespace-pre]="fullscreenDisableTextWrapping"
                   [class.font-mono]="postMarkdownMonospace"
                 >
@@ -632,7 +633,7 @@
               formControlName="description"
               appInputTrimWhitespace
               appTextareaResize
-              onInput="this.parentNode.dataset.replicatedValue = this.value"
+              [appToggleResize]="true"
               [rows]="4"
             >
               {{ description.value }}

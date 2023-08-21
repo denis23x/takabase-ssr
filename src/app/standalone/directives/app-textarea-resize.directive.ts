@@ -1,10 +1,10 @@
 /** @format */
 
 import {
-	AfterViewInit,
 	Directive,
 	ElementRef,
 	HostListener,
+	Input,
 	OnDestroy
 } from '@angular/core';
 import { PlatformService } from '../../core/services/platform.service';
@@ -13,7 +13,7 @@ import { PlatformService } from '../../core/services/platform.service';
 	standalone: true,
 	selector: '[appTextareaResize]'
 })
-export class AppTextareaResizeDirective implements AfterViewInit, OnDestroy {
+export class AppTextareaResizeDirective implements OnDestroy {
 	@HostListener('input', ['$event']) onInput(inputEvent: InputEvent) {
 		// prettier-ignore
 		const textAreaElement: HTMLTextAreaElement = inputEvent.target as HTMLTextAreaElement;
@@ -31,26 +31,29 @@ export class AppTextareaResizeDirective implements AfterViewInit, OnDestroy {
 		}
 	}
 
+	@Input()
+	set appToggleResize(toggleResize: boolean) {
+		this.setAutoresize(toggleResize);
+	}
+
 	constructor(
 		private platformService: PlatformService,
 		private elementRef: ElementRef
 	) {}
 
-	ngAfterViewInit(): void {
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			// @ts-ignore
-			window.autosize(this.elementRef.nativeElement);
-		}
+	ngOnDestroy(): void {
+		this.setAutoresize(false);
 	}
 
-	ngOnDestroy(): void {
+	setAutoresize(toggle: boolean): void {
 		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
+			const window: any = this.platformService.getWindow();
 
-			// @ts-ignore
-			window.autosize.destroy(this.elementRef.nativeElement);
+			if (toggle) {
+				window.autosize(this.elementRef.nativeElement);
+			} else {
+				window.autosize.destroy(this.elementRef.nativeElement);
+			}
 		}
 	}
 }
