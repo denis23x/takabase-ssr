@@ -77,12 +77,17 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
 		this.setAbstractAppearance();
 	}
 
+	// prettier-ignore
 	ngOnDestroy(): void {
 		[
 			this.activatedRouteData$,
 			this.activatedRouteQueryParams$,
 			this.abstractListLoadingPageScrollInfinite$
 		].forEach(($: Subscription) => $?.unsubscribe());
+
+    [
+      this.abstractListLoading$
+    ].forEach(($: BehaviorSubject<boolean>) => $?.complete());
 	}
 
 	setAbstractAppearance(): void {

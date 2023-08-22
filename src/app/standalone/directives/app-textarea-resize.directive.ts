@@ -5,15 +5,17 @@ import {
 	ElementRef,
 	HostListener,
 	Input,
-	OnDestroy
+	OnDestroy,
+	OnInit
 } from '@angular/core';
 import { PlatformService } from '../../core/services/platform.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Directive({
 	standalone: true,
 	selector: '[appTextareaResize]'
 })
-export class AppTextareaResizeDirective implements OnDestroy {
+export class AppTextareaResizeDirective implements OnInit, OnDestroy {
 	@HostListener('input', ['$event']) onInput(inputEvent: InputEvent) {
 		// prettier-ignore
 		const textAreaElement: HTMLTextAreaElement = inputEvent.target as HTMLTextAreaElement;
@@ -33,16 +35,26 @@ export class AppTextareaResizeDirective implements OnDestroy {
 
 	@Input()
 	set appToggleResize(toggleResize: boolean) {
-		this.setAutoresize(toggleResize);
+		this.toggleResize$.next(toggleResize);
 	}
+
+	toggleResize$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	constructor(
 		private platformService: PlatformService,
 		private elementRef: ElementRef
 	) {}
 
+	ngOnInit(): void {
+		this.toggleResize$.subscribe({
+			next: (toggleResize: boolean) => this.setAutoresize(toggleResize),
+			error: (error: any) => console.error(error),
+			complete: () => this.setAutoresize(false)
+		});
+	}
+
 	ngOnDestroy(): void {
-		this.setAutoresize(false);
+		this.toggleResize$.complete();
 	}
 
 	setAutoresize(toggle: boolean): void {

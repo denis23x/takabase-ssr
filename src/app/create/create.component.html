@@ -256,14 +256,21 @@
 						(modalToggle)="onToggleMarkdownModal($event)"
 					></div>
 					<button
-						class="btn-primary btn focus:outline-0"
+						class="btn-primary btn focus:outline-0 w-12 h-12 sm:w-auto sm:h-auto"
 						type="button"
 						aria-label="Fullscreen"
 						[class.btn-outline]="postForm.enabled && !fullscreenToggle"
 						[disabled]="postForm.disabled"
 						(click)="onFullscreen(!fullscreenToggle)"
 					>
-						Fullscreen
+						<span class="hidden sm:block">Fullscreen</span>
+						<i
+							class="block sm:hidden fill-current"
+							appSvgIcon
+							[appIcon]="'fullscreen'"
+							[appSquare]="'1.5em'"
+						>
+						</i>
 					</button>
 				</div>
 				<hr

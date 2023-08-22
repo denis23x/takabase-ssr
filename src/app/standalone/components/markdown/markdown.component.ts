@@ -132,12 +132,12 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	scrollSync: boolean = false;
 	scrollSync$: Subscription | undefined;
 
+	// prettier-ignore
+	textareaHistory$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+	textareaHistoryToggle: boolean = true;
 	textareaInput$: Subscription | undefined;
 	textareaId: string | undefined;
 	textarea: HTMLTextAreaElement | undefined;
-	textareaHistoryToggle: boolean = true;
-	// prettier-ignore
-	textareaHistory$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
 	previewId: string | undefined;
 	preview: HTMLElement | undefined;
@@ -170,8 +170,8 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 					next: () => {
 						this.markdownService.setRender(this.textarea.value, this.preview);
 
+						// prettier-ignore
 						if (this.textareaHistoryToggle) {
-							// prettier-ignore
 							this.textareaHistory$.next(this.textareaHistory$.getValue().concat([this.textarea.value]));
 						} else {
 							this.textareaHistoryToggle = true;
@@ -188,14 +188,18 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		this.setScrollSyncHandler();
 	}
 
+	// prettier-ignore
 	ngOnDestroy(): void {
 		[
 			this.textareaInput$,
-			this.textareaHistory$,
 			this.scrollSync$,
 			this.controlListScroll$,
 			this.urlForm$
-		].forEach(($: Subscription | BehaviorSubject<any>) => $?.unsubscribe());
+		].forEach(($: Subscription) => $?.unsubscribe());
+
+		[
+      this.textareaHistory$
+    ].forEach(($: BehaviorSubject<string[]>) => $?.complete());
 	}
 
 	setEmojiMart(): void {
