@@ -32,10 +32,8 @@ import { AuthService } from '../../core/services/auth.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { FileCreateDto } from '../../core/dto/file/file-create.dto';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
-import { PlatformService } from '../../core/services/platform.service';
-import { AppearanceService } from '../../core/services/appearance.service';
 import { AppTextareaResizeDirective } from '../../standalone/directives/app-textarea-resize.directive';
-import QRCode, { QRCodeRenderersOptions } from 'qrcode';
+import { AppQrCodeDirective } from '../../standalone/directives/app-qr-code.directive';
 
 interface ProfileForm {
 	name: FormControl<string>;
@@ -55,7 +53,8 @@ interface ProfileForm {
 		DayjsPipe,
 		UserUrlPipe,
 		AppInputTrimWhitespaceDirective,
-		AppTextareaResizeDirective
+		AppTextareaResizeDirective,
+		AppQrCodeDirective
 	],
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'
@@ -63,9 +62,6 @@ interface ProfileForm {
 export class SettingsProfileComponent implements OnInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild('profileFormAvatarModal') profileFormAvatarModal: ElementRef<HTMLDialogElement> | undefined;
-
-	// prettier-ignore
-	@ViewChild('QRCodeCanvas') QRCodeCanvas: ElementRef<HTMLCanvasElement> | undefined;
 
 	// prettier-ignore
 	@ViewChild('QRCodeModal') QRCodeModal: ElementRef<HTMLDialogElement> | undefined;
@@ -79,26 +75,13 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	profileForm$: Subscription | undefined;
 	profileFormIsPristine: boolean = false;
 
-	QRCodeText: string | undefined;
-	QRCodeOptions: QRCodeRenderersOptions = {
-		margin: 2,
-		scale: 1,
-		width: 384,
-		color: {
-			dark: '#000000ff',
-			light: '#ffffffff'
-		}
-	};
-
 	constructor(
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
 		private activatedRoute: ActivatedRoute,
 		private userService: UserService,
 		private authService: AuthService,
-		private snackbarService: SnackbarService,
-		private platformService: PlatformService,
-		private appearanceService: AppearanceService
+		private snackbarService: SnackbarService
 	) {
 		this.profileForm = this.formBuilder.group<ProfileForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -153,65 +136,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	onToggleQRCode(toggle: boolean): void {
 		if (toggle) {
 			this.QRCodeModal.nativeElement.showModal();
-
-			if (this.platformService.isBrowser()) {
-				const window: Window = this.platformService.getWindow();
-
-				/** Prepare theme colors */
-
-				const variablesCSSMap: any[] = [
-					{
-						nameHSL: '--bc',
-						nameHEX: 'dark'
-					},
-					{
-						nameHSL: '--b1',
-						nameHEX: 'light'
-					}
-				];
-
-				// prettier-ignore
-				variablesCSSMap.forEach((variable: any) => {
-          const value: string = this.appearanceService.getCSSPropertyValue(variable.nameHSL);
-
-          const [h, s, l]: number[] = value.split(/\s/g).map((value: string) => Number(value.replace('%', '')));
-          const valueList: string[] = this.appearanceService.getHSLToHEX(h, s, l);
-
-          const propertyValue: string = [...valueList, 'ff'].join('');
-          const property: string = variable.nameHEX;
-
-          this.QRCodeOptions.color[property] = propertyValue;
-        });
-
-				/** Draw QR Code */
-
-				// prettier-ignore
-				this.QRCodeText = [window.location.origin, this.userService.getUserUrl(this.authUser)].join('');
-
-				// prettier-ignore
-				QRCode.toCanvas(this.QRCodeCanvas.nativeElement, this.QRCodeText, this.QRCodeOptions, (error: Error): void => {
-          if (error) {
-            this.snackbarService.danger('Error', "Can't draw your QR Code");
-          } else {
-            this.QRCodeCanvas.nativeElement.removeAttribute('style');
-          }
-        });
-			}
 		} else {
 			this.QRCodeModal.nativeElement.close();
-		}
-	}
-
-	onDownloadQRCode(): void {
-		// prettier-ignore
-		if (this.platformService.isBrowser()) {
-			QRCode.toDataURL(this.QRCodeText, this.QRCodeOptions, (error: Error, dataURL: string): void => {
-        if (error) {
-          this.snackbarService.danger('Error', "Can't download your QR Code");
-        } else {
-          this.helperService.getDownload(dataURL, this.userService.getUserUrl(this.authUser, 1));
-        }
-      });
 		}
 	}
 

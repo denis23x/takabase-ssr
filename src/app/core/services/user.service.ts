@@ -44,7 +44,7 @@ export class UserService {
 	/** Utility */
 
 	getUserUrl(user: User, substring: number = 0): string {
-		return ['/@', user.name].join('').substring(substring);
+		return ('/@' + user.name).substring(substring);
 	}
 
 	/** REST */

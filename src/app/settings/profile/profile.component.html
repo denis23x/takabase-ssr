@@ -8,7 +8,9 @@
 			[formGroup]="profileForm"
 			(ngSubmit)="onSubmitProfileForm()"
 		>
-			<div class="flex w-full items-center justify-between gap-4">
+			<div
+				class="flex flex-col sm:flex-row w-full sm:items-center items-start sm:justify-between justify-start gap-4"
+			>
 				<div class="flex items-center justify-start gap-4 overflow-auto">
 					<!-- prettier-ignore -->
 					<div class="avatar">
@@ -32,16 +34,29 @@
 						</time>
 					</div>
 				</div>
-				<button
-					class="btn-success btn"
-					type="button"
-					aria-label="Image"
-					[class.btn-outline]="!authUser.avatar && profileForm.enabled"
-					[disabled]="profileForm.disabled"
-					(click)="onToggleProfileFormAvatar(true)"
-				>
-					Image
-				</button>
+				<div class="flex items-center justify-end gap-4 w-full sm:w-auto">
+					<button
+						class="btn-ghost btn btn-square bg-base-200 fill-current"
+						type="button"
+						title="QR Code"
+						aria-label="QR Code"
+						appSvgIcon
+						[disabled]="profileForm.disabled"
+						[appIcon]="'qr-code'"
+						[appSquare]="'1.75em'"
+						(click)="onToggleQRCode(true)"
+					></button>
+					<button
+						class="btn-success btn flex-1 sm:flex-auto"
+						type="button"
+						aria-label="Avatar"
+						[class.btn-outline]="!authUser.avatar && profileForm.enabled"
+						[disabled]="profileForm.disabled"
+						(click)="onToggleProfileFormAvatar(true)"
+					>
+						Avatar
+					</button>
+				</div>
 			</div>
 			<hr class="w-full border-base-content/20" />
 			<fieldset class="form-control" *ngIf="profileForm.get('name') as name">
@@ -94,39 +109,16 @@
 					></button>
 				</div>
 			</fieldset>
-			<div class="flex flex-col items-start justify-start gap-4 sm:flex-row">
-				<div class="flex items-center justify-start gap-4">
-					<button
-						class="btn-ghost rounded-box btn h-14 w-14 bg-base-200 fill-current p-3"
-						type="button"
-						title="QR Code"
-						aria-label="QR Code"
-						appSvgIcon
-						[disabled]="profileForm.disabled"
-						[appIcon]="'qr-code'"
-						[appSquare]="'2em'"
-						(click)="onToggleQRCode(true)"
-					></button>
-					<div class="flex flex-col overflow-auto sm:hidden">
-						<span class="block truncate text-lg font-bold text-base-content">
-							QR Code
-						</span>
-						<p class="truncate text-sm text-base-content/50">
-							Watch and download
-						</p>
-					</div>
-				</div>
-				<p class="alert">
-					<i
-						class="fill-current text-info"
-						appSvgIcon
-						[appIcon]="'info-circle'"
-						[appSquare]="'1.5em'"
-					></i>
-					<!-- prettier-ignore -->
-					<span class="block">Change the name will set the <span class="inline font-bold">{{ authUser | userUrl : 1 }}</span> user profile not more available by direct link and QR code</span>
-				</p>
-			</div>
+			<p class="alert">
+				<i
+					class="fill-current text-info"
+					appSvgIcon
+					[appIcon]="'info-circle'"
+					[appSquare]="'1.5em'"
+				></i>
+				<!-- prettier-ignore -->
+				<span class="block">Change the name will set the <span class="inline font-bold">{{ authUser | userUrl : 1 }}</span> user profile not more available by direct link or QR code</span>
+			</p>
 			<fieldset
 				class="form-control"
 				*ngIf="profileForm.get('description') as description"
@@ -213,7 +205,7 @@
 	>
 		<div
 			appWindow
-			[appTitle]="'Image'"
+			[appTitle]="'Avatar'"
 			[appButtons]="['close']"
 			(closed)="onToggleProfileFormAvatar(false)"
 		>
@@ -252,7 +244,10 @@
 					class="btn-success btn w-full"
 					type="button"
 					aria-label="Download"
-					(click)="onDownloadQRCode()"
+					appQrCode
+					[appQRCodeDownloadOnClick]="true"
+					[appQRCodePath]="authUser | userUrl"
+					[appQRCodeCanvas]="QRCodeCanvas"
 				>
 					Download
 				</button>
