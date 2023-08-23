@@ -15,6 +15,20 @@
 			></button>
 		</li>
 		<li class="block">
+			<button
+				class="btn btn-ghost btn-circle fill-current"
+				type="button"
+				title="Download QR code"
+				aria-label="Download QR code"
+				appSvgIcon
+				appQrCode
+				[appIcon]="'qr-code'"
+				[appSquare]="'16'"
+				[appQRCodeDownloadOnClick]="true"
+				[appQRCodePath]="shareUrl"
+			></button>
+		</li>
+		<li class="block">
 			<a
 				class="btn btn-ghost btn-circle fill-current text-[#1877f2]"
 				title="Facebook"

@@ -12,6 +12,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AppearanceService } from '../../core/services/appearance.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { HelperService } from '../../core/services/helper.service';
+import { filter } from 'rxjs/operators';
 import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 
 @Directive({
@@ -94,7 +95,7 @@ export class AppQrCodeDirective implements OnInit, OnDestroy {
 
 		/** Subscribe for regenerate QRCode */
 
-		this.QRCodePath$.subscribe({
+		this.QRCodePath$.pipe(filter(() => !!this.QRCodeCanvas)).subscribe({
 			next: () => this.setQRCodeToCanvas(),
 			error: (error: any) => console.error(error)
 		});
@@ -105,13 +106,7 @@ export class AppQrCodeDirective implements OnInit, OnDestroy {
 	}
 
 	getQRCodeText(): string {
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			return window.location.origin + this.QRCodePath$.getValue();
-		} else {
-			return '';
-		}
+		return this.QRCodePath$.getValue();
 	}
 
 	// prettier-ignore

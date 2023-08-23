@@ -9,10 +9,11 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { PlatformService } from '../../../core/services/platform.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { Post } from '../../../core/models/post.model';
+import { AppQrCodeDirective } from '../../directives/app-qr-code.directive';
 
 @Component({
 	standalone: true,
-	imports: [SvgIconComponent],
+	imports: [SvgIconComponent, AppQrCodeDirective],
 	selector: 'app-share, [appShare]',
 	templateUrl: './share.component.html'
 })
@@ -43,7 +44,7 @@ export class ShareComponent implements OnInit, OnDestroy {
 					if (this.platformService.isBrowser()) {
 						const window: Window = this.platformService.getWindow();
 
-						this.shareUrl = window.location.href;
+						this.shareUrl = window.location.origin + window.location.pathname;
 					}
 
 					const shareList: string[] = Object.keys(this.shareMap);

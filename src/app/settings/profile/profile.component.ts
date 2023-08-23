@@ -34,6 +34,7 @@ import { FileCreateDto } from '../../core/dto/file/file-create.dto';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { AppTextareaResizeDirective } from '../../standalone/directives/app-textarea-resize.directive';
 import { AppQrCodeDirective } from '../../standalone/directives/app-qr-code.directive';
+import { PlatformService } from '../../core/services/platform.service';
 
 interface ProfileForm {
 	name: FormControl<string>;
@@ -70,6 +71,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	authUser: User | undefined;
 	authUser$: Subscription | undefined;
+	authUserQRCodeLink: string | undefined;
 
 	profileForm: FormGroup | undefined;
 	profileForm$: Subscription | undefined;
@@ -81,7 +83,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		private activatedRoute: ActivatedRoute,
 		private userService: UserService,
 		private authService: AuthService,
-		private snackbarService: SnackbarService
+		private snackbarService: SnackbarService,
+		private platformService: PlatformService
 	) {
 		this.profileForm = this.formBuilder.group<ProfileForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -102,6 +105,15 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 					this.profileForm.patchValue(this.authUser);
 					this.profileForm.markAllAsTouched();
+
+					/** Make URL for QR code */
+
+					if (this.platformService.isBrowser()) {
+						const window: Window = this.platformService.getWindow();
+
+						// prettier-ignore
+						this.authUserQRCodeLink = window.location.origin + this.userService.getUserUrl(this.authUser);
+					}
 				},
 				error: (error: any) => console.error(error)
 			});
