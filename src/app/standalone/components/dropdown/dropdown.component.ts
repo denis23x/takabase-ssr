@@ -46,6 +46,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 	dropdownPosition: string = 'bottom-left';
 
 	dropdownTarget: any;
+	dropdownTargetCheckDisabled: boolean = true;
 
 	dropdownContent: any;
 	dropdownContentCloseOnClick: boolean = true;
@@ -80,7 +81,14 @@ export class DropdownComponent implements OnInit, OnDestroy {
 				 */
 
 				if (clickTarget) {
-          if (!this.dropdownTarget.disabled) {
+          if (this.dropdownTargetCheckDisabled) {
+            const targetEnabled: boolean = !this.dropdownTarget.disabled;
+            const targetEnableChildren: boolean = !Array.from(this.dropdownTarget.querySelectorAll('[disabled]')).length;
+
+            if (!!targetEnabled && !!targetEnableChildren) {
+              this.setStateStyle(!this.dropdownState);
+            }
+          } else {
             this.setStateStyle(!this.dropdownState);
           }
 				} else if (this.dropdownState) {

@@ -188,29 +188,33 @@
 									class="form-control"
 									*ngIf="postSearchForm.get('orderBy') as orderBy"
 								>
-									<!-- prettier-ignore -->
-									<div
-                    class="block"
-                    appDropdown
-                    [appPosition]="'bottom-right'"
-                  >
-                    <button
-                      class="btn-success btn-square btn fill-current p-3"
-                      type="button"
-                      title="Sorting"
-                      aria-label="Sorting"
-                      appSvgIcon
-                      slot="target"
-                      [disabled]="postSearchForm.disabled"
-                      [class.btn-outline]="postSearchForm.enabled && !orderBy.value"
-                      [appIcon]="'filter'"
-                      [appSquare]="'1.75em'"
-                    ></button>
-                    <div
-                      class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
-                      slot="content"
-                    >
-                      <ul class="flex max-h-76 flex-col overflow-y-auto p-2">
+									<div class="block" appDropdown [appPosition]="'bottom-right'">
+										<div class="indicator" slot="target">
+											<span
+												class="indicator-item badge"
+												*ngIf="orderBy.value"
+												[class.badge-ghost]="postSearchForm.disabled"
+												[class.badge-success]="postSearchForm.enabled"
+											>
+											</span>
+											<button
+												class="btn-success btn-outline btn-square btn fill-current p-3"
+												type="button"
+												title="Sorting"
+												aria-label="Sorting"
+												appSvgIcon
+												[disabled]="postSearchForm.disabled"
+												[class.btn-outline]="postSearchForm.enabled"
+												[appIcon]="'filter'"
+												[appSquare]="'1.75em'"
+											></button>
+										</div>
+										<div
+											class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
+											slot="content"
+										>
+											<!-- prettier-ignore -->
+											<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
                         <li
                           class="flex w-full"
                           *ngFor="let searchFormOrderBy of postSearchFormOrderByList"
@@ -228,8 +232,8 @@
                           </button>
                         </li>
                       </ul>
-                    </div>
-                  </div>
+										</div>
+									</div>
 								</fieldset>
 							</form>
 						</ng-container>

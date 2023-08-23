@@ -67,18 +67,27 @@
 					*ngIf="searchForm.get('orderBy') as orderBy"
 				>
 					<div class="block" appDropdown [appPosition]="'bottom-right'">
-						<button
-							class="btn-success btn-square btn fill-current p-3"
-							type="button"
-							title="Sorting"
-							aria-label="Sorting"
-							appSvgIcon
-							slot="target"
-							[disabled]="searchForm.disabled"
-							[class.btn-outline]="searchForm.enabled && !orderBy.value"
-							[appIcon]="'filter'"
-							[appSquare]="'1.75em'"
-						></button>
+						<div class="indicator" slot="target">
+							<span
+								class="indicator-item badge"
+								*ngIf="orderBy.value"
+								[class.badge-ghost]="searchForm.disabled"
+								[class.badge-success]="searchForm.enabled"
+							>
+							</span>
+							<button
+								class="btn-success btn-outline btn-square btn fill-current p-3"
+								type="button"
+								title="Sorting"
+								aria-label="Sorting"
+								appSvgIcon
+								slot="target"
+								[disabled]="searchForm.disabled"
+								[class.btn-outline]="searchForm.enabled"
+								[appIcon]="'filter'"
+								[appSquare]="'1.75em'"
+							></button>
+						</div>
 						<div
 							class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 							slot="content"
