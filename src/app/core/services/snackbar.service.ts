@@ -1,14 +1,15 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Snack, SnackOptions } from '../models/snack.model';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class SnackbarService {
-	snackbar$: ReplaySubject<Snack> = new ReplaySubject<Snack>();
+	// prettier-ignore
+	snackbar$: BehaviorSubject<Snack | null> = new BehaviorSubject<Snack | null>(null);
 
 	info(title: string | null, message: string, options?: SnackOptions) {
 		this.snackbar$.next({

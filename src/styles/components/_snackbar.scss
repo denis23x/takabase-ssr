@@ -1,0 +1,7 @@
+/* Hide original snackbar under blurred dialog backdrop */
+
+body:has(dialog[open]) {
+  *[appSnackbar]:not(dialog [appSnackbar]) {
+    @apply hidden;
+  }
+}

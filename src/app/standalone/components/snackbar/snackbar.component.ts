@@ -7,6 +7,7 @@ import { Snack } from '../../../core/models/snack.model';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { HelperService } from '../../../core/services/helper.service';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { filter } from 'rxjs/operators';
 
 @Component({
 	standalone: true,
@@ -24,15 +25,17 @@ export class SnackbarComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
-		this.snackbar$ = this.snackbarService.snackbar$.subscribe({
-			next: (snack: Snack) => {
-				this.onPush({
-					uuid: this.helperService.getUUID(),
-					...snack
-				});
-			},
-			error: (error: any) => console.error(error)
-		});
+		this.snackbar$ = this.snackbarService.snackbar$
+			.pipe(filter((snack: Snack | null) => !!snack))
+			.subscribe({
+				next: (snack: Snack) => {
+					this.onPush({
+						uuid: this.helperService.getUUID(),
+						...snack
+					});
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	ngOnDestroy(): void {
@@ -76,5 +79,7 @@ export class SnackbarComponent implements OnInit, OnDestroy {
 		this.snackbarList = this.snackbarList.filter((snack: Partial<Snack>) => {
 			return snack.uuid !== uuid;
 		});
+
+		this.snackbarService.snackbar$.next(null);
 	}
 }
