@@ -498,7 +498,7 @@
 				</fieldset>
 				<ng-container *ngIf="postList.length && categoryList.length > 1">
 					<fieldset
-						class="form-control"
+						class="form-control grid"
 						*ngIf="categoryDeleteForm.get('categoryId') as categoryId"
 					>
 						<label class="label">
@@ -514,23 +514,23 @@
                   [class.badge-success]="!!categoryId.value && categoryDeleteForm.enabled"
                   [class.opacity-25]="categoryDeleteForm.disabled"
                 >
-                Optional
-              </span>
+                  Optional
+                </span>
               </div>
 						</label>
 						<!-- prettier-ignore -->
 						<div
               class="menu menu-vertical menu-md rounded-btn mt-2 overflow-hidden border border-base-content/20 p-0 bg-base-100"
-              slot="content"
               [class.border-success]="categoryId.value && categoryDeleteForm.enabled"
             >
               <ul
-                class="flex max-h-58 flex-col flex-nowrap overflow-y-auto p-2"
+                class="flex max-h-58 flex-col flex-nowrap overflow-y-auto w-full p-2"
                 *ngIf="category as categoryActive"
                 [class.cursor-not-allowed]="categoryDeleteForm.disabled"
               >
                 <ng-container *ngFor="let category of categoryList">
                   <li
+                    class="flex w-full"
                     *ngIf="category.id !== categoryActive.id"
                     [ngClass]="{ 'disabled pointer-events-none': categoryDeleteForm.disabled }"
                   >

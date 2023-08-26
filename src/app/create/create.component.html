@@ -149,7 +149,7 @@
 								slot="content"
 								[class.hidden]="!categoryList.length"
 							>
-								<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
+								<ul class="flex max-h-76 flex-col overflow-y-auto w-full p-2">
 									<li class="flex w-full" *ngFor="let category of categoryList">
 										<!-- prettier-ignore -->
 										<button
@@ -502,7 +502,7 @@
 		>
 			<main appPostProse slot="content" [appPost]="postFormPreviewPost"></main>
 			<nav
-				class="pointer-events-none flex bg-base-200 opacity-50 p-2"
+				class="pointer-events-none flex bg-base-200 opacity-50 overflow-auto p-2"
 				appShare
 				slot="footer"
 			></nav>
