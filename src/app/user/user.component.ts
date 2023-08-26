@@ -134,12 +134,10 @@ export class UserComponent implements OnInit, OnDestroy {
 			]),
 			description: this.formBuilder.control(null, [Validators.maxLength(255)])
 		});
-
 		this.categoryDeleteForm = this.formBuilder.group<CategoryDeleteForm>({
 			name: this.formBuilder.nonNullable.control('', []),
 			categoryId: this.formBuilder.control(null, [])
 		});
-
 		this.postSearchForm = this.formBuilder.group<PostSearchForm>({
 			query: this.formBuilder.nonNullable.control('', [
 				Validators.minLength(4),

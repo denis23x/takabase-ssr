@@ -26,22 +26,16 @@
 					</span>
 				</p>
 			</div>
-			<div class="grid w-full grid-cols-12 gap-4">
+			<ng-container *appAuthenticated="true">
 				<button
-					class="btn-success btn-outline btn col-span-12 sm:col-span-8"
+					class="btn-success btn-outline btn w-full"
 					type="button"
 					aria-label="Have any questions"
+					(click)="onToggleFeedbackForm(true)"
 				>
-					Have any questions?
+					Send feedback
 				</button>
-				<button
-					class="btn-error btn-outline btn col-span-12 sm:col-span-4"
-					type="button"
-					aria-label="Found the issue"
-				>
-					Found the issue?
-				</button>
-			</div>
+			</ng-container>
 		</header>
 		<div class="flex flex-col">
 			<nav class="block px-4">
@@ -75,4 +69,160 @@
 			</div>
 		</div>
 	</section>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#feedbackFormModal
+		(keydown.escape)="$event.preventDefault(); feedbackFormModal.close()"
+		(close)="onToggleFeedbackForm(false)"
+		(click)="$event.target === $event.currentTarget ? feedbackFormModal.close() : $event"
+	>
+		<div
+			appWindow
+			[appTitle]="'Feedback'"
+			[appButtons]="['close']"
+			(closed)="onToggleFeedbackForm(false)"
+		>
+			<form
+				class="flex w-window max-w-[512px] flex-col gap-4 p-4"
+				autocomplete="off"
+				slot="content"
+				[formGroup]="feedbackForm"
+				(ngSubmit)="onSubmitFeedbackForm()"
+			>
+				<p class="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appIcon]="'info-circle'"
+						[appSquare]="'1.5em'"
+					></i>
+					<span class="block">
+						Your feedback is helping us enhance our services and create a more
+						satisfying experience for you
+					</span>
+				</p>
+				<fieldset class="form-control" *ngIf="feedbackForm.get('name') as name">
+					<label class="label" for="feedbackFormName">
+						<div class="indicator">
+							<!-- prettier-ignore -->
+							<span
+                class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                *ngIf="name.touched && !!name.errors && feedbackForm.enabled"
+                [ngSwitch]="true"
+              >
+                <ng-container *ngSwitchCase="!!name.errors.required">
+                  Required
+                </ng-container>
+                <ng-container *ngSwitchCase="!!name.errors.minlength">
+                  Min length {{ name.errors.minlength["requiredLength"] }} characters
+                </ng-container>
+                <ng-container *ngSwitchCase="!!name.errors.maxlength">
+                  Max length {{ name.errors.maxlength["requiredLength"] }} characters
+                </ng-container>
+              </span>
+							<span class="label-text mr-2">Name</span>
+						</div>
+					</label>
+					<div class="relative">
+						<input
+							class="input-bordered input input-md w-full truncate pr-12"
+							id="feedbackFormName"
+							type="text"
+							aria-label="Name"
+							formControlName="name"
+							placeholder="Type feedback name"
+							appInputTrimWhitespace
+							[class.input-success]="name.value && name.valid"
+							[class.input-error]="name.touched && name.invalid"
+						/>
+						<button
+							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+							type="button"
+							aria-label="Clear"
+							appSvgIcon
+							*ngIf="!!name.value.length"
+							[class.btn-success]="name.valid"
+							[class.btn-error]="name.touched && name.invalid"
+							[class.btn-ghost]="name.untouched && name.invalid"
+							[disabled]="feedbackForm.disabled"
+							[appIcon]="'x'"
+							[appSquare]="'2em'"
+							(click)="name.setValue('')"
+						></button>
+					</div>
+				</fieldset>
+				<fieldset
+					class="form-control"
+					*ngIf="feedbackForm.get('description') as description"
+				>
+					<label class="label" for="feedbackFormDescription">
+						<!-- prettier-ignore -->
+						<div class="indicator">
+              <span
+                class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                *ngIf="!!description.value && !!description.errors && feedbackForm.enabled"
+                [ngSwitch]="true"
+              >
+                <ng-container *ngSwitchCase="!!description.errors.required">
+                  Required
+                </ng-container>
+                <ng-container *ngSwitchCase="!!description.errors.minlength">
+                  Min length {{ description.errors.minlength["requiredLength"] }} characters
+                </ng-container>
+                <ng-container *ngSwitchCase="!!description.errors.maxlength">
+                  Max length {{ description.errors.maxlength["requiredLength"] }} characters
+                </ng-container>
+              </span>
+              <span class="label-text mr-2">Description</span>
+            </div>
+						<!-- prettier-ignore -->
+						<span
+              class="label-text-alt"
+              [class.text-base-content]="feedbackForm.disabled"
+              [class.text-success]="feedbackForm.enabled && description.value && description.valid"
+              [class.text-error]="feedbackForm.enabled && description.value && description.invalid"
+            >
+              {{ description.value?.length || 0 }}/255
+            </span>
+					</label>
+					<!-- prettier-ignore -->
+					<div
+            class="textarea-autosize w-full"
+            [ngClass]="{ 'border-base-content/20': feedbackForm.enabled, 'border-transparent': feedbackForm.disabled }"
+            [class.textarea-autosize-success]="description.value && description.valid"
+            [class.textarea-autosize-error]="description.value && description.invalid"
+          >
+            <textarea
+              class="textarea textarea-md w-full max-h-64"
+              id="feedbackFormDescription"
+              aria-label="Description"
+              placeholder="Type feedback description"
+              formControlName="description"
+              appInputTrimWhitespace
+              appTextareaResize
+              [appToggleResize]="true"
+              [rows]="4"
+            >
+              {{ description.value }}
+            </textarea>
+          </div>
+				</fieldset>
+				<fieldset class="form-control">
+					<button
+						class="btn-success btn w-full"
+						type="submit"
+						aria-label="Submit"
+						[disabled]="feedbackForm.invalid || feedbackForm.disabled"
+					>
+						<span
+							class="loading loading-spinner"
+							*ngIf="feedbackForm.disabled"
+						></span>
+						Submit
+					</button>
+				</fieldset>
+			</form>
+		</div>
+	</dialog>
 </ng-container>
