@@ -524,13 +524,13 @@
               [class.border-success]="categoryId.value && categoryDeleteForm.enabled"
             >
               <ul
-                class="flex max-h-58 flex-col flex-nowrap overflow-y-auto w-full p-2"
+                class="flex max-h-58 flex-col flex-nowrap overflow-y-auto w-full snap-mandatory snap-y p-2"
                 *ngIf="category as categoryActive"
                 [class.cursor-not-allowed]="categoryDeleteForm.disabled"
               >
                 <ng-container *ngFor="let category of categoryList">
                   <li
-                    class="flex w-full"
+                    class="flex w-full snap-start scroll-my-2"
                     *ngIf="category.id !== categoryActive.id"
                     [ngClass]="{ 'disabled pointer-events-none': categoryDeleteForm.disabled }"
                   >

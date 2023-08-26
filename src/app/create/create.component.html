@@ -149,8 +149,13 @@
 								slot="content"
 								[class.hidden]="!categoryList.length"
 							>
-								<ul class="flex max-h-76 flex-col overflow-y-auto w-full p-2">
-									<li class="flex w-full" *ngFor="let category of categoryList">
+								<ul
+									class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2"
+								>
+									<li
+										class="flex w-full snap-start scroll-my-2"
+										*ngFor="let category of categoryList"
+									>
 										<!-- prettier-ignore -->
 										<button
                       class="rounded-btn block w-full truncate text-left"

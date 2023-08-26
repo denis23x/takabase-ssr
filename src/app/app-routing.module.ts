@@ -408,6 +408,8 @@ export const routesRedirect = (routes: Routes): Routes => {
 @NgModule({
 	imports: [
 		RouterModule.forRoot(routesRedirect(routes), {
+			anchorScrolling: 'disabled',
+			scrollPositionRestoration: 'disabled',
 			initialNavigation: 'enabledBlocking'
 		})
 	],
