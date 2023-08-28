@@ -1,7 +1,8 @@
 /** @format */
 
 export interface Snack {
-	uuid?: string;
+	uuid: string;
+	timestamp: number;
 	title: string | null;
 	message: string;
 	progress?: SnackProgress;

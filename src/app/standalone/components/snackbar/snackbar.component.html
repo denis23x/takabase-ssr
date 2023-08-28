@@ -6,8 +6,8 @@
 	>
 		<li
 			class="flex relative overflow-hidden rounded-box shadow-xl"
-			*ngFor="let snack of snackbarList"
-			(click)="onClose(snack.uuid)"
+			*ngFor="let snack of snackbarList$ | async"
+			(click)="onClose(snack)"
 		>
 			<div class="alert" [ngClass]="snack.options.alertClassList">
 				<i

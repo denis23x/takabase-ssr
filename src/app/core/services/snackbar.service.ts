@@ -3,16 +3,55 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Snack, SnackOptions } from '../models/snack.model';
+import { HelperService } from './helper.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class SnackbarService {
-	// prettier-ignore
-	snackbar$: BehaviorSubject<Snack | null> = new BehaviorSubject<Snack | null>(null);
+	snackbarList$: BehaviorSubject<Snack[]> = new BehaviorSubject<Snack[]>([]);
 
-	info(title: string | null, message: string, options?: SnackOptions) {
-		this.snackbar$.next({
+	constructor(private helperService: HelperService) {}
+
+	setSnack(snack: Partial<Snack>): void {
+		snack.uuid = this.helperService.getUUID();
+		snack.timestamp = Date.now();
+
+		const timestampStart: number = snack.timestamp;
+		const timestampFinish: number = snack.timestamp + snack.options.duration;
+
+		const getProgressValue = (): number => {
+			const timestampDifference: number = timestampFinish - timestampStart;
+			const timestampCurrent: number = timestampFinish - new Date().getTime();
+
+			return 100 - (timestampCurrent / timestampDifference) * 100;
+		};
+
+		snack.progress = {
+			value: getProgressValue(),
+			interval: setInterval(() => {
+				snack.progress.value = getProgressValue();
+
+				if (snack.progress.value >= 100) {
+					this.removeSnack(snack as Snack);
+				}
+			}, 50)
+		};
+
+		this.snackbarList$.next([...this.snackbarList$.getValue(), snack as Snack]);
+	}
+
+	removeSnack(snack: Snack): void {
+		clearInterval(snack.progress.interval);
+
+		// prettier-ignore
+		this.snackbarList$.next(this.snackbarList$.getValue().filter((snackList: Snack) => {
+      return snackList.uuid !== snack.uuid;
+    }));
+	}
+
+	info(title: string | null, message: string, options?: SnackOptions): void {
+		this.setSnack({
 			title,
 			message,
 			options: {
@@ -26,8 +65,8 @@ export class SnackbarService {
 		});
 	}
 
-	success(title: string | null, message: string, options?: SnackOptions) {
-		this.snackbar$.next({
+	success(title: string | null, message: string, options?: SnackOptions): void {
+		this.setSnack({
 			title,
 			message,
 			options: {
@@ -41,8 +80,8 @@ export class SnackbarService {
 		});
 	}
 
-	warning(title: string | null, message: string, options?: SnackOptions) {
-		this.snackbar$.next({
+	warning(title: string | null, message: string, options?: SnackOptions): void {
+		this.setSnack({
 			title,
 			message,
 			options: {
@@ -56,8 +95,8 @@ export class SnackbarService {
 		});
 	}
 
-	danger(title: string | null, message: string, options?: SnackOptions) {
-		this.snackbar$.next({
+	danger(title: string | null, message: string, options?: SnackOptions): void {
+		this.setSnack({
 			title,
 			message,
 			options: {
