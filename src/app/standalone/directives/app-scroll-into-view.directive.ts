@@ -1,21 +1,27 @@
 /** @format */
 
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, ElementRef, Input, OnInit } from '@angular/core';
 
 @Directive({
 	standalone: true,
 	selector: '[appScrollIntoView]'
 })
-export class AppScrollIntoViewDirective {
+export class AppScrollIntoViewDirective implements OnInit {
 	@Input()
 	set appScrollActive(scrollActive: boolean) {
-		this.setScroll(scrollActive);
+		this.scrollActive = scrollActive;
 	}
+
+	scrollActive: boolean = false;
 
 	parentLi: HTMLElement | undefined;
 	parentUl: HTMLElement | undefined;
 
 	constructor(private elementRef: ElementRef) {}
+
+	ngOnInit(): void {
+		setTimeout(() => this.setScroll(this.scrollActive));
+	}
 
 	setScroll(toggle: boolean): void {
 		this.parentLi = this.elementRef.nativeElement.parentElement;

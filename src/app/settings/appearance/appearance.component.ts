@@ -54,7 +54,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	appearanceThemeBackgroundList: string[] = [];
 	appearanceThemePrismList: string[] = [];
 
-	appearanceLanguageList: string[] = ['English', 'Italian', 'French'];
+	appearanceLanguageList: string[] = ['en-US'];
 	appearanceButtonsList: string[] = ['left', 'right'];
 
 	appearanceTransformList: string[] = [
