@@ -4,10 +4,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { CommonModule } from '@angular/common';
 import { CookieService } from '../../../core/services/cookie.service';
+import { SnackbarComponent } from '../snackbar/snackbar.component';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, SvgIconComponent],
+	imports: [CommonModule, SvgIconComponent, SnackbarComponent],
 	selector: 'app-window, [appWindow]',
 	templateUrl: 'window.component.html'
 })

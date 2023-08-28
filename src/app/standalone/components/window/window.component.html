@@ -8,6 +8,7 @@
 		class="flex flex-col overflow-hidden bg-base-100"
 		[ngClass]="fullscreenClassList"
 	>
+		<div class="fixed z-[1]" appSnackbar></div>
 		<ng-container [ngTemplateOutlet]="windowCaption"></ng-container>
 		<header class="flex flex-col empty:hidden">
 			<ng-content select="[slot=header]"></ng-content>
