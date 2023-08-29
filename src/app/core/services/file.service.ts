@@ -12,6 +12,18 @@ import { FileGetOneDto } from '../dto/file/file-get-one.dto';
 export class FileService {
 	constructor(private apiService: ApiService) {}
 
+	/** Utility */
+
+	getFileValidationMime(file: File, mimeTypes: string[]): boolean {
+		return mimeTypes.includes(file.type);
+	}
+
+	getFileValidationSize(file: File, size: number): boolean {
+		return file.size <= 1000 * 1000 * size;
+	}
+
+	/** REST */
+
 	create(formData: FormData): Observable<FileCreateDto> {
 		return this.apiService.post('/files', formData);
 	}

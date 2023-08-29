@@ -59,7 +59,7 @@
             <button
               class="btn btn-circle btn-sm absolute top-2 right-2 fill-current "
               type="button"
-              aria-label="Clear query"
+              aria-label="Clear"
               appSvgIcon
               *ngIf="!!url.value.length"
               [class.btn-success]="url.valid"
@@ -75,8 +75,8 @@
 						class="hidden"
 						type="file"
 						aria-label="File"
-						accept="image/jpeg, image/jpg, image/png"
 						#imageFormFile
+						[accept]="imageFormMime"
 						(change)="onInputFile($event)"
 					/>
 					<button

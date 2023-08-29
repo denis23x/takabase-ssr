@@ -75,6 +75,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	imageForm: FormGroup | undefined;
 	imageForm$: Subscription | undefined;
+	imageFormMime: string[] = ['image/jpeg', 'image/jpg', 'image/png'];
 
 	imageTransform$: Subscription | undefined;
 	imageTransform: ImageTransform = {
@@ -168,10 +169,30 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		const inputElement: HTMLInputElement = event.target as HTMLInputElement;
 		const file: File = inputElement.files.item(0);
 
-		this.cropperPositionInitial = undefined;
-		this.cropperFile = file;
+		const fileValidation: Record<string, any> = {
+			mime: {
+				valid: this.fileService.getFileValidationMime(file, this.imageFormMime),
+				message: 'Invalid image type'
+			},
+			type: {
+				valid: this.fileService.getFileValidationSize(file, 5),
+				message: 'Invalid image size'
+			}
+		};
 
-		this.onResetImageForm(file.name);
+		if (Object.values(fileValidation).every((file: any) => file.valid)) {
+			this.cropperPositionInitial = undefined;
+			this.cropperFile = file;
+
+			this.onResetImageForm(file.name);
+		} else {
+			this.onResetAll();
+
+			// prettier-ignore
+			Object.values(fileValidation)
+				.filter((file: any) => !file.valid)
+				.forEach((file: any) => this.snackbarService.danger('Error', file.message));
+		}
 	}
 
 	onImageFailed(): void {
