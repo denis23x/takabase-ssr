@@ -272,7 +272,9 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	onSubmitCropper(): void {
 		const fileInput: File = this.imageFormFile.nativeElement.files.item(0);
-		const fileCropped: File = new File([this.cropperBlob], fileInput.name);
+		const fileCropped: File = new File([this.cropperBlob], fileInput.name, {
+			type: fileInput.type
+		});
 
 		const formData: FormData = new FormData();
 
