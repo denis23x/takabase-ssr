@@ -19,17 +19,17 @@ export class FileService {
 	}
 
 	getFileValidationSize(file: File, size: number): boolean {
-		return file.size <= 1000 * 1000 * size;
+		return file.size <= 1000000 * size;
 	}
 
 	/** REST */
 
 	create(formData: FormData): Observable<FileCreateDto> {
-		return this.apiService.post('/files', formData);
+		return this.apiService.post('/files/image', formData);
 	}
 
 	getOne(fileGetOneDto: FileGetOneDto): Observable<File> {
-		return this.apiService.get('/files/proxy', fileGetOneDto, {
+		return this.apiService.get('/files/image/proxy', fileGetOneDto, {
 			responseType: 'blob'
 		});
 	}

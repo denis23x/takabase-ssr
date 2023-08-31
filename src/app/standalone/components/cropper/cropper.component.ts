@@ -5,7 +5,6 @@ import {
 	Component,
 	ElementRef,
 	EventEmitter,
-	Input,
 	OnDestroy,
 	Output,
 	ViewChild
@@ -60,16 +59,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent | undefined;
 
-	@Input()
-	set appField(field: string) {
-		this.cropperField = field;
-	}
-
-	@Input()
-	set appRound(round: boolean) {
-		this.cropperRound = round;
-	}
-
 	// prettier-ignore
 	@Output() submitted: EventEmitter<FileCreateDto> = new EventEmitter<FileCreateDto>();
 
@@ -87,7 +76,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		translateV: 0
 	};
 
-	cropperField: string | undefined;
 	cropperFile: File = undefined;
 	cropperRound: boolean = false;
 	cropperBlob: Blob = undefined;
@@ -283,9 +271,12 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	onSubmitCropper(): void {
+		const fileInput: File = this.imageFormFile.nativeElement.files.item(0);
+		const fileCropped: File = new File([this.cropperBlob], fileInput.name);
+
 		const formData: FormData = new FormData();
 
-		formData.append(this.cropperField, this.cropperBlob);
+		formData.append('image', fileCropped);
 
 		this.imageForm.disable();
 
