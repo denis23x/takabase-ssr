@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
-import { AppScrollIntoViewDirective } from '../standalone/directives/app-scroll-into-view.directive';
+import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 
 interface SearchForm {
 	query: FormControl<string>;
@@ -31,7 +31,7 @@ interface SearchForm {
 		AppInputTrimWhitespaceDirective,
 		SvgIconComponent,
 		DropdownComponent,
-		AppScrollIntoViewDirective
+		AppScrollPresetDirective
 	],
 	selector: 'app-search',
 	templateUrl: './search.component.html'

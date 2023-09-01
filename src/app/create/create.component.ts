@@ -39,7 +39,7 @@ import { UserService } from '../core/services/user.service';
 import { PostCreateDto } from '../core/dto/post/post-create.dto';
 import { FileCreateDto } from '../core/dto/file/file-create.dto';
 import { CategoryCreateDto } from '../core/dto/category/category-create.dto';
-import { AppScrollIntoViewDirective } from '../standalone/directives/app-scroll-into-view.directive';
+import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { CookieService } from '../core/services/cookie.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
@@ -74,7 +74,7 @@ interface CategoryForm {
 		ShareComponent,
 		MarkdownComponent,
 		NgOptimizedImage,
-		AppScrollIntoViewDirective,
+		AppScrollPresetDirective,
 		AppTextareaResizeDirective
 	],
 	templateUrl: './create.component.html'

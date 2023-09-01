@@ -106,9 +106,8 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
     }
 	}
 
-	getAbstractList(concat: boolean): void {
-		console.debug('getAbstractList', concat);
-	}
+	// eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
+	getAbstractList(concat: boolean): void {}
 
 	getAbstractListLoadMore(): void {
 		this.abstractPage++;

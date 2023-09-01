@@ -5,14 +5,14 @@ import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { AppScrollIntoViewDirective } from '../standalone/directives/app-scroll-into-view.directive';
+import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { User } from '../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, AppScrollIntoViewDirective],
+	imports: [CommonModule, RouterModule, AppScrollPresetDirective],
 	selector: 'app-settings',
 	templateUrl: './settings.component.html'
 })

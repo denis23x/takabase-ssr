@@ -16,7 +16,6 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 	ngOnInit(): void {
 		this.authService.getUser().subscribe({
-			next: () => console.debug('Authorization received'),
 			error: (error: any) => console.error(error)
 		});
 	}

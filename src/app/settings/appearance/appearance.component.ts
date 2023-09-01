@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { AuthService } from '../../core/services/auth.service';
 import { environment } from '../../../environments/environment';
-import { AppScrollIntoViewDirective } from '../../standalone/directives/app-scroll-into-view.directive';
+import { AppScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SettingsUpdateDto } from '../../core/dto/settings/settings-update.dto';
 import { SettingsService } from '../../core/services/settings.service';
 import { Settings } from '../../core/models/settings.model';
@@ -39,7 +39,7 @@ interface AppearanceForm {
 		RouterModule,
 		ReactiveFormsModule,
 		DropdownComponent,
-		AppScrollIntoViewDirective
+		AppScrollPresetDirective
 	],
 	selector: 'app-settings-appearance',
 	templateUrl: './appearance.component.html'

@@ -5,9 +5,9 @@ import { PlatformService } from '../../core/services/platform.service';
 
 @Directive({
 	standalone: true,
-	selector: '[appScrollIntoView]'
+	selector: '[appScrollPreset]'
 })
-export class AppScrollIntoViewDirective implements OnInit {
+export class AppScrollPresetDirective implements OnInit {
 	@Input()
 	set appScrollActive(scrollActive: boolean) {
 		this.scrollActive = scrollActive;
@@ -33,10 +33,8 @@ export class AppScrollIntoViewDirective implements OnInit {
 
 		if (this.platformService.isBrowser()) {
 			if (toggle) {
-				setTimeout(() => {
-					this.setScrollX();
-					this.setScrollY();
-				});
+				this.setScrollX();
+				this.setScrollY();
 			}
 		}
 	}

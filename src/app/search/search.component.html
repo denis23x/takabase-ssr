@@ -101,7 +101,7 @@
 									<button
                     class="rounded-btn block w-full truncate text-right first-letter:uppercase"
                     type="button"
-                    appScrollIntoView
+                    appScrollPreset
                     [appScrollActive]="searchFormOrderBy === orderBy.value"
                     [ngClass]="{ 'active': searchFormOrderBy === orderBy.value }"
                     [attr.aria-label]="searchFormOrderBy"
@@ -129,7 +129,7 @@
 					>
 						<a
 							class="flex h-full items-center justify-center whitespace-nowrap px-4"
-							appScrollIntoView
+							appScrollPreset
 							#routerLinkActive="routerLinkActive"
 							[appScrollActive]="routerLinkActive.isActive"
 							[routerLink]="link.toLowerCase()"

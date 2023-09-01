@@ -79,7 +79,7 @@
 					>
 						<a
 							class="flex h-full items-center justify-center whitespace-nowrap px-4"
-							appScrollIntoView
+							appScrollPreset
 							#routerLinkActive="routerLinkActive"
 							[appScrollActive]="routerLinkActive.isActive"
 							[routerLink]="['./category', category.id]"
@@ -222,7 +222,7 @@
                           <button
                             class="rounded-btn block w-full truncate text-right first-letter:uppercase"
                             type="button"
-                            appScrollIntoView
+                            appScrollPreset
                             [appScrollActive]="searchFormOrderBy === orderBy.value"
                             [ngClass]="{ 'active': searchFormOrderBy === orderBy.value }"
                             [attr.aria-label]="searchFormOrderBy"
@@ -538,7 +538,7 @@
                       *ngIf="{ value: categoryId.value === category.id } as isActive"
                       class="rounded-btn block w-full truncate text-left"
                       type="button"
-                      appScrollIntoView
+                      appScrollPreset
                       [ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
                       [attr.aria-label]="category.name"
                       (click)="categoryId.patchValue(category.id)"

@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
-import { AppScrollIntoViewDirective } from '../standalone/directives/app-scroll-into-view.directive';
+import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { AppTextareaResizeDirective } from '../standalone/directives/app-textarea-resize.directive';
@@ -34,7 +34,7 @@ interface FeedbackForm {
 	imports: [
 		CommonModule,
 		RouterModule,
-		AppScrollIntoViewDirective,
+		AppScrollPresetDirective,
 		SvgIconComponent,
 		AppInputTrimWhitespaceDirective,
 		AppTextareaResizeDirective,
