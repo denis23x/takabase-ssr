@@ -2,6 +2,7 @@
 
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { PlatformService } from './platform.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -9,46 +10,53 @@ import { DOCUMENT } from '@angular/common';
 export class CookieService {
 	constructor(
 		@Inject(DOCUMENT)
-		private document: Document
+		private document: Document,
+		private platformService: PlatformService
 	) {}
 
 	getItem(key: string): string | undefined {
-		const result: any = {};
+		if (this.platformService.isBrowser()) {
+			const result: any = {};
 
-		this.document.cookie.split(';').forEach((cookie: string) => {
-			const [key, value]: string[] = cookie.split('=');
+			this.document.cookie.split(';').forEach((cookie: string) => {
+				const [key, value]: string[] = cookie.split('=');
 
-			result[key.trim()] = value;
-		});
+				result[key.trim()] = value;
+			});
 
-		return result[key];
+			return result[key];
+		}
+
+		return undefined;
 	}
 
 	setItem(key: string, value: string, options?: any): void {
-		options = {
-			...options,
-			path: '/',
-			domain: 'localhost'
-		};
+		if (this.platformService.isBrowser()) {
+			options = {
+				...options,
+				path: '/',
+				domain: 'localhost'
+			};
 
-		if (options.expires instanceof Date) {
-			options.expires = options.expires.toUTCString();
-		}
-
-		// prettier-ignore
-		let updatedCookie: string = encodeURIComponent(key) + '=' + encodeURIComponent(value);
-
-		for (const optionKey in options) {
-			updatedCookie += '; ' + optionKey;
-
-			const optionValue = options[optionKey];
-
-			if (optionValue !== true) {
-				updatedCookie += '=' + optionValue;
+			if (options.expires instanceof Date) {
+				options.expires = options.expires.toUTCString();
 			}
-		}
 
-		this.document.cookie = updatedCookie;
+			// prettier-ignore
+			let updatedCookie: string = encodeURIComponent(key) + '=' + encodeURIComponent(value);
+
+			for (const optionKey in options) {
+				updatedCookie += '; ' + optionKey;
+
+				const optionValue = options[optionKey];
+
+				if (optionValue !== true) {
+					updatedCookie += '=' + optionValue;
+				}
+			}
+
+			this.document.cookie = updatedCookie;
+		}
 	}
 
 	removeItem(item: string): void {

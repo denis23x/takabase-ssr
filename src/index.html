@@ -58,81 +58,84 @@
 		<app-root></app-root>
 	</body>
 	<script type="application/javascript">
-		/** Cookie */
+		if (window) {
+			/** Cookie */
 
-		function getCookie(cookieName) {
-			let result = {}
+			function getCookie(cookieName) {
+				let result = {}
 
-			document.cookie.split(";").forEach(function (cookie) {
-				let [key, value] = cookie.split("=")
+				document.cookie.split(";").forEach(function (cookie) {
+					let [key, value] = cookie.split("=")
 
-				result[key.trim()] = value
-			})
-
-			return result[cookieName]
-		}
-
-		/** Theme */
-
-		const getThemeValue = () => {
-			const value = getCookie("theme")
-
-			if (!!value && value !== "") {
-				return value
-			} else {
-				return "light"
-			}
-		}
-
-		const themeValue = getThemeValue()
-
-		document.documentElement.setAttribute("data-theme", themeValue)
-
-		/** Background */
-
-		const getBackgroundValue = () => {
-			const value = getCookie("theme-background")
-
-			if (!!value && value !== "") {
-				return value
-			} else {
-				return "slanted-gradient"
-			}
-		}
-
-		const backgroundElement = document.querySelector("[data-theme-background]")
-		const backgroundValue = getBackgroundValue()
-
-		if (backgroundElement.dataset.themeBackground !== backgroundValue) {
-			fetch("/assets/backgrounds/" + backgroundValue + ".svg", {
-				cache: "force-cache",
-			})
-				.then((response) => response.text())
-				.then((svg) => {
-					backgroundElement.innerHTML = svg
-					backgroundElement.dataset.themeBackground = backgroundValue
+					result[key.trim()] = value
 				})
-		}
 
-		/** Prism */
-
-		const getPrismValue = () => {
-			const value = getCookie("theme-prism")
-
-			if (!!value && value !== "") {
-				return value
-			} else {
-				return "default"
+				return result[cookieName]
 			}
+
+			/** Theme */
+
+			const getThemeValue = () => {
+				const value = getCookie("theme")
+
+				if (!!value && value !== "") {
+					return value
+				} else {
+					return "light"
+				}
+			}
+
+			const themeValue = getThemeValue()
+
+			document.documentElement.setAttribute("data-theme", themeValue)
+
+			/** Background */
+
+			const getBackgroundValue = () => {
+				const value = getCookie("theme-background")
+
+				if (!!value && value !== "") {
+					return value
+				} else {
+					return "slanted-gradient"
+				}
+			}
+
+			// prettier-ignore
+			const backgroundElement = document.querySelector("[data-theme-background]")
+			const backgroundValue = getBackgroundValue()
+
+			if (backgroundElement.dataset.themeBackground !== backgroundValue) {
+				fetch("/assets/backgrounds/" + backgroundValue + ".svg", {
+					cache: "force-cache",
+				})
+					.then((response) => response.text())
+					.then((svg) => {
+						backgroundElement.innerHTML = svg
+						backgroundElement.dataset.themeBackground = backgroundValue
+					})
+			}
+
+			/** Prism */
+
+			const getPrismValue = () => {
+				const value = getCookie("theme-prism")
+
+				if (!!value && value !== "") {
+					return value
+				} else {
+					return "default"
+				}
+			}
+
+			const prismElement = document.createElement("link")
+			const prismValue = "prism-" + getPrismValue() + ".css"
+
+			prismElement.rel = "stylesheet"
+			prismElement.href = prismValue
+			prismElement.dataset.themePrism = getPrismValue()
+
+			document.head.appendChild(prismElement)
 		}
-
-		const prismElement = document.createElement("link")
-		const prismValue = "prism-" + getPrismValue() + ".css"
-
-		prismElement.rel = "stylesheet"
-		prismElement.href = prismValue
-		prismElement.dataset.themePrism = getPrismValue()
-
-		document.head.appendChild(prismElement)
 	</script>
 </html>

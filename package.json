@@ -6,21 +6,13 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "spa:start:dev": "ng run draft-ssr:serve:development --disable-host-check",
-    "spa:start:prod": "ng run draft-ssr:serve:production",
-    "spa:build:dev": "ng run draft-ssr:build:development",
-    "spa:build:prod": "ng run draft-ssr:build:production",
-    "ssr:start:dev": "ng run draft-ssr:serve-ssr:development",
-    "ssr:start:prod": "ng run draft-ssr:serve-ssr:production",
-    "ssr:build:dev": "ng run draft-ssr:build:development && ng run draft-ssr:server:development",
-    "ssr:build:prod": "ng run draft-ssr:build:production && ng run draft-ssr:server:production",
-    "ssr:prerender:dev": "ng run draft-ssr:prerender:development",
-    "ssr:prerender:prod": "ng run draft-ssr:prerender:production",
-    "spite:build": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --stripAttrs class --stripAttrs fill",
-    "sitemap:build": "node sitemap.js",
+    "start:dev": "ng run draft-ssr:serve:development",
+    "start:lint": "ng lint",
+    "build:ssr:prod": "ng run draft-ssr:prerender:production && ng run draft-ssr:server:production",
+    "build:spite": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --stripAttrs class --stripAttrs fill",
+    "build:sitemap": "node sitemap.js",
     "dist:start": "node dist/draft-ssr/server/main.js",
-    "dist:analyze": "webpack-bundle-analyzer dist/draft-ssr/browser/stats.json",
-    "lint": "ng lint"
+    "dist:analyze": "webpack-bundle-analyzer dist/draft-ssr/browser/stats.json"
   },
   "dependencies": {
     "@angular/animations": "^15.2.1",

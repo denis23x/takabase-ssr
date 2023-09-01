@@ -3,13 +3,15 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
 import { User } from '../models/user.model';
 import { ApiService } from './api.service';
 import { CookieService } from './cookie.service';
 import { LoginDto } from '../dto/auth/login.dto';
 import { LogoutDto } from '../dto/auth/logout.dto';
 import { AppearanceService } from './appearance.service';
+import { HelperService } from './helper.service';
+import { PlatformService } from './platform.service';
+import FingerprintJS, { Agent, GetResult } from '@fingerprintjs/fingerprintjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -17,22 +19,33 @@ import { AppearanceService } from './appearance.service';
 export class AuthService {
 	// prettier-ignore
 	user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
-	userAgent: Promise<Agent> = FingerprintJS.load();
+	userAgent: Promise<Agent> | undefined = undefined;
 
 	constructor(
 		private apiService: ApiService,
 		private cookieService: CookieService,
-		private appearanceService: AppearanceService
+		private appearanceService: AppearanceService,
+		private helperService: HelperService,
+		private platformService: PlatformService
 	) {}
 
 	getFingerprint(): Observable<string> {
-		return from(this.userAgent.then((agent: Agent) => agent.get())).pipe(
-			switchMap((getResult: GetResult) => {
-				const { platform, timezone, vendor } = getResult.components;
+		if (this.platformService.isBrowser()) {
+			if (this.userAgent === undefined) {
+				this.userAgent = FingerprintJS.load();
+			}
 
-				return of(FingerprintJS.hashComponents({ platform, timezone, vendor }));
-			})
-		);
+			return from(this.userAgent.then((agent: Agent) => agent.get())).pipe(
+				switchMap((getResult: GetResult) => {
+					const { platform, timezone, vendor } = getResult.components;
+
+					// prettier-ignore
+					return of(FingerprintJS.hashComponents({ platform, timezone, vendor }));
+				})
+			);
+		}
+
+		return of(this.helperService.getUUID());
 	}
 
 	/** Authorization API */

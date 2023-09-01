@@ -1,0 +1,16 @@
+/
+/login
+/registration
+/reset
+/reset/password
+/email/confirmation
+/error/500
+/error/400
+/help/features
+/help/code-highlight
+/help/style-safe-list
+/help/deep-dive
+/help/compatibility
+/help/road-map
+/terms/terms-of-use
+/terms/cookie-policy

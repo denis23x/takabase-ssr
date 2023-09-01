@@ -5,6 +5,7 @@ import { toSvg } from 'jdenticon';
 import { SanitizerPipe } from '../../pipes/sanitizer.pipe';
 import { User } from '../../../core/models/user.model';
 import { CommonModule } from '@angular/common';
+import { PlatformService } from '../../../core/services/platform.service';
 
 @Component({
 	standalone: true,
@@ -25,16 +26,23 @@ export class AvatarComponent {
 	user: Partial<User> | undefined;
 	userJdenticon: string | undefined;
 
-	constructor(private elementRef: ElementRef) {}
+	constructor(
+		private elementRef: ElementRef,
+		private platformService: PlatformService
+	) {}
 
-	// prettier-ignore
 	getJdenticon(): string {
-		const elementRefDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
+		if (this.platformService.isBrowser()) {
+			// prettier-ignore
+			const elementRefDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
 
-		return toSvg(this.user.name, elementRefDOMRect.width, {
-			backColor: '#00000000',
-			padding: 0,
-			replaceMode: 'observe'
-		});
+			return toSvg(this.user.name, elementRefDOMRect.width, {
+				backColor: '#00000000',
+				padding: 0,
+				replaceMode: 'observe'
+			});
+		}
+
+		return '';
 	}
 }

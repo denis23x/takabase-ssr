@@ -3,22 +3,30 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeValue } from '@angular/platform-browser';
 import DOMPurify, { Config } from 'dompurify';
+import { PlatformService } from '../../core/services/platform.service';
 
 @Pipe({
 	standalone: true,
 	name: 'sanitizer'
 })
 export class SanitizerPipe implements PipeTransform {
-	constructor(private domSanitizer: DomSanitizer) {}
+	constructor(
+		private domSanitizer: DomSanitizer,
+		private platformService: PlatformService
+	) {}
 
-	// prettier-ignore
 	transform(value: string, context: string): SafeValue | null {
-    const config: Config = {
-      ADD_TAGS: ['iframe'],
-      ADD_ATTR: ['target']
-    };
+		if (this.platformService.isBrowser()) {
+			const config: Config = {
+				ADD_TAGS: ['iframe'],
+				ADD_ATTR: ['target']
+			};
 
-    return this.bypassSecurityTrust(context, String(DOMPurify.sanitize(value, config)));
+			// prettier-ignore
+			return this.bypassSecurityTrust(context, String(DOMPurify.sanitize(value, config)));
+		}
+
+		return null;
 	}
 
 	// prettier-ignore

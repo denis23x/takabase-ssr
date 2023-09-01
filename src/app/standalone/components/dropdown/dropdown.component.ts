@@ -128,48 +128,50 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
 	// prettier-ignore
 	setStateStyle(state: boolean, emit: boolean = true): void {
-    const elementDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
+    if (this.platformService.isBrowser()) {
+      const elementDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
 
-    this.dropdownState = state;
+      this.dropdownState = state;
 
-		if (this.dropdownState) {
-      this.dropdownContent.style['position'] = 'fixed';
-      this.dropdownContent.style['visibility'] = 'visible';
+      if (this.dropdownState) {
+        this.dropdownContent.style['position'] = 'fixed';
+        this.dropdownContent.style['visibility'] = 'visible';
 
-      /** Apply position */
+        /** Apply position */
 
-      switch (this.dropdownPosition) {
-        case 'bottom-left': {
-          this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
-          this.dropdownContent.style['left'] = elementDOMRect.left + 'px';
+        switch (this.dropdownPosition) {
+          case 'bottom-left': {
+            this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
+            this.dropdownContent.style['left'] = elementDOMRect.left + 'px';
 
-          break;
+            break;
+          }
+          case 'bottom-right': {
+            const contentDOMRect: DOMRect = this.dropdownContent.getBoundingClientRect();
+
+            this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
+            this.dropdownContent.style['left'] = elementDOMRect.left - (contentDOMRect.width - elementDOMRect.width) + 'px';
+
+            break;
+          }
+          default: {
+            break;
+          }
         }
-        case 'bottom-right': {
-          const contentDOMRect: DOMRect = this.dropdownContent.getBoundingClientRect();
 
-          this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
-          this.dropdownContent.style['left'] = elementDOMRect.left - (contentDOMRect.width - elementDOMRect.width) + 'px';
-
-          break;
-        }
-        default: {
-          break;
-        }
+        this.dropdownContent.style['z-index'] = 2;
+      } else {
+        this.dropdownContent.style['position'] = 'fixed';
+        this.dropdownContent.style['visibility'] = 'hidden';
       }
 
-      this.dropdownContent.style['z-index'] = 2;
-    } else {
-      this.dropdownContent.style['position'] = 'fixed';
-      this.dropdownContent.style['visibility'] = 'hidden';
-    }
+      if (this.dropdownContentFitParentWidth) {
+        this.dropdownContent.style['width'] = elementDOMRect.width + 'px';
+      }
 
-    if (this.dropdownContentFitParentWidth) {
-      this.dropdownContent.style['width'] = elementDOMRect.width + 'px';
+      if (emit) {
+        this.toggled.emit(this.dropdownState);
+      }
     }
-
-    if (emit) {
-      this.toggled.emit(this.dropdownState);
-    }
-	}
+  }
 }

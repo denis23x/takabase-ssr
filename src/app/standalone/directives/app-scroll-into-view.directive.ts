@@ -1,6 +1,7 @@
 /** @format */
 
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
+import { PlatformService } from '../../core/services/platform.service';
 
 @Directive({
 	standalone: true,
@@ -17,7 +18,10 @@ export class AppScrollIntoViewDirective implements OnInit {
 	parentLi: HTMLElement | undefined;
 	parentUl: HTMLElement | undefined;
 
-	constructor(private elementRef: ElementRef) {}
+	constructor(
+		private elementRef: ElementRef,
+		private platformService: PlatformService
+	) {}
 
 	ngOnInit(): void {
 		setTimeout(() => this.setScroll(this.scrollActive));
@@ -27,11 +31,13 @@ export class AppScrollIntoViewDirective implements OnInit {
 		this.parentLi = this.elementRef.nativeElement.parentElement;
 		this.parentUl = this.parentLi.parentElement;
 
-		if (toggle) {
-			setTimeout(() => {
-				this.setScrollX();
-				this.setScrollY();
-			});
+		if (this.platformService.isBrowser()) {
+			if (toggle) {
+				setTimeout(() => {
+					this.setScrollX();
+					this.setScrollY();
+				});
+			}
 		}
 	}
 
