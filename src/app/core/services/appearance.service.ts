@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { fromEvent, Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Route, Router, Routes } from '@angular/router';
-import { routesRedirect } from '../../app-routing.module';
+import { routesRedirect } from '../../app.routing.module';
 import { Settings } from '../models/settings.model';
 import { HelperService } from './helper.service';
 import { CookieService } from './cookie.service';

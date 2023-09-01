@@ -2,10 +2,10 @@
 
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
-import { AppModule } from './app.module';
+import { AppConfigurationModule } from './app.configuration.module';
 
 @NgModule({
-	imports: [AppModule],
+	imports: [AppConfigurationModule],
 	bootstrap: [AppComponent]
 })
 export class AppBrowserModule {}
