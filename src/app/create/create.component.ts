@@ -415,7 +415,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	onSubmitPostFormImage(fileCreateDto?: FileCreateDto): void {
 		this.onTogglePostFormImage(false);
 
-		this.postForm.get('image').setValue(fileCreateDto.filename);
+		this.postForm.get('image').setValue(fileCreateDto.path);
 	}
 
 	onSubmitCategoryForm(): void {

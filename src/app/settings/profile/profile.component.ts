@@ -157,7 +157,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		this.onToggleProfileFormAvatar(false);
 
 		const userUpdateDto: UserUpdateDto = {
-			avatar: fileCreateDto.filename
+			avatar: fileCreateDto.path
 		};
 
 		this.userService.update(this.authUser.id, userUpdateDto).subscribe({
