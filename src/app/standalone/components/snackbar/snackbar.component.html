@@ -2,14 +2,17 @@
 
 <ng-container>
 	<ul
-		class="fixed top-0 left-1/2 -translate-x-1/2 z-40 flex max-w-lg flex-col items-center justify-center space-y-4 p-8"
+		class="fixed top-0 left-1/2 -translate-x-1/2 z-40 flex max-w-lg flex-col items-center justify-center space-y-4 p-8 pointer-events-none"
 	>
 		<li
 			class="flex relative overflow-hidden rounded-box shadow-xl"
 			*ngFor="let snack of snackbarList$ | async"
 			(click)="onClose(snack)"
 		>
-			<div class="alert" [ngClass]="snack.options.alertClassList">
+			<div
+				class="alert pointer-events-auto"
+				[ngClass]="snack.options.alertClassList"
+			>
 				<i
 					class="fill-current"
 					appSvgIcon

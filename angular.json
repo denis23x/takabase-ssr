@@ -128,6 +128,10 @@
                 "input": "node_modules/autosize/dist/autosize.js",
                 "inject": true,
                 "bundleName": "autosize"
+              },
+              {
+                "input": "ngsw.js",
+                "inject": false
               }
             ],
             "serviceWorker": true,

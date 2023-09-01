@@ -36,7 +36,7 @@ export class ApiService {
 				return String(error);
 			}
 
-			return 'Oops! Undefined error';
+			return 'Misfortune! Server offline';
 		};
 
 		const duration = (): number => {

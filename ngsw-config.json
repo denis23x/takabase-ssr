@@ -16,14 +16,41 @@
       }
     },
     {
-      "name": "assets",
+      "name": "assets-prefetch",
+      "installMode": "prefetch",
+      "updateMode": "lazy",
+      "resources": {
+        "files": [
+          "/assets/backgrounds/**",
+          "/assets/emoji/**",
+          "/assets/grammars/**",
+          "/assets/icons/favicon/**",
+          "/assets/icons/sprite.svg",
+          "/assets/markdown/**"
+        ]
+      }
+    },
+    {
+      "name": "assets-lazy",
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
         "files": [
-          "/assets/**",
-          "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+          "/*.(svg|jpg|jpeg|png|md|webp|js|css|json|gif|ttf|woff|woff2)"
         ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api",
+      "urls": [
+        "http://localhost:3323/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 200,
+        "maxAge": "3d",
+        "strategy": "freshness"
       }
     }
   ]

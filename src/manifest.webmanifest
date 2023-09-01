@@ -1,6 +1,6 @@
 {
-  "name": "draft-ssr",
-  "short_name": "draft-ssr",
+  "name": "Draft PWA Application",
+  "short_name": "Draft App",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",

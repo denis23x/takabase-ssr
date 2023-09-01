@@ -18,7 +18,7 @@ import { ScrollToTopComponent } from './standalone/components/scroll-to-top/scro
 		BrowserModule.withServerTransition({ appId: 'serverApp' }),
 		AppRoutingModule,
 		ServiceWorkerModule.register('ngsw-worker.js', {
-			enabled: environment.production,
+			enabled: environment.pwa,
 			registrationStrategy: 'registerWhenStable:30000'
 		}),
 		HttpClientModule,
