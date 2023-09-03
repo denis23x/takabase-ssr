@@ -1,53 +1,117 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="flex flex-col space-y-4 md:space-y-8">
-		<div
-			class="rounded-box flex flex-col justify-start gap-4 bg-base-100 p-4 shadow-xl md:flex-row md:items-center"
+	<section class="flex flex-col space-y-4 md:space-y-8">
+		<header
+			class="rounded-box flex flex-col items-stretch justify-start gap-4 bg-base-100 p-4 shadow-xl"
 		>
-			<img
-				class="rounded-box block h-24 w-24"
-				src="https://placehold.co/120x120"
-				alt="Placeholder"
-			/>
-			<div class="flex flex-col gap-2">
-				<h1 class="text-3xl font-bold md:text-4xl">
-					Your personal content base
-				</h1>
-				<span class="text-2xl">Absolutely free</span>
-			</div>
-		</div>
-		<div class="rounded-box flex flex-col gap-4 bg-base-100 p-4 shadow-xl">
-			<div class="flex flex-col gap-4">
-				<span class="text-2xl">About</span>
-				<hr class="my-0 border-base-content/20" />
-				<div class="flex flex-col gap-4">
-					<p class="inline">
+			<div class="flex items-stretch justify-between gap-4">
+				<div class="flex flex-col items-start justify-between gap-4 flex-1">
+					<a class="link" aria-label="Sign Up" [routerLink]="'/registration'">
+						Sign Up today
+					</a>
+					<h1 class="text-4xl text-base-content font-semibold">
+						The easiest post platform
+					</h1>
+					<p class="text-base text-base-content/50">
 						Our platform is designed to provide you with an easy-to-use,
-						<span class="font-bold">lightweight app</span> that is highly
-						customizable to your preferences. Whether you’re a blogger, writer,
-						or developer, our website is the perfect tool to bring your ideas to
-						life. We provide you a rich editor that supports
-						<span class="font-bold">media content</span>,
-						<span class="font-bold">markdown syntax</span>,
-						<span class="font-bold">code highlighting</span>, and even
-						<span class="font-bold">emoji</span>.
-					</p>
-					<p class="inline">
-						Another great feature of our site is that it
-						<span class="font-bold">works offline</span>, allowing you to
-						continue working even when you don’t have an internet connection.
-						This makes it ideal for working on the go, or in areas with limited
-						connectivity.
-					</p>
-					<p class="inline">
-						In addition, our site is fully
-						<span class="font-bold">optimized for mobile devices</span>,
-						ensuring that you can create and edit content on the go, and share
-						it with your audience quickly and easily.
+						lightweight app that is highly customizable to your preferences.
+						Whether you’re a blogger, writer, or developer, our website is the
+						perfect tool to bring your ideas to life.
 					</p>
 				</div>
+				<figure class="hidden md:flex items-start justify-end">
+					<img
+						class="rounded-box w-full"
+						src="https://placehold.co/200x200"
+						alt="Placeholder"
+					/>
+				</figure>
+			</div>
+			<a
+				class="btn btn-outline btn-info btn-md w-full"
+				aria-label="Go search"
+				[routerLink]="'/search'"
+			>
+				Go search
+			</a>
+		</header>
+		<div
+			class="rounded-box flex flex-col items-stretch justify-start gap-4 bg-base-100 p-4 shadow-xl"
+		>
+			<div
+				class="flex flex-col items-stretch justify-start gap-4"
+				*ngFor="let appFeature of appFeatureList; let i = index"
+			>
+				<div
+					class="flex sm:flex-row flex-col items-start sm:items-center justify-start gap-4 border-b border-base-content/20 pb-4"
+				>
+					<i
+						class="fill-current"
+						appSvgIcon
+						[appIcon]="appFeature.icon"
+						[appSquare]="'1.5em'"
+					></i>
+					<h3 class="text-2xl sm:text-4xl font-semibold text-base-content">
+						{{ appFeature.title }}
+					</h3>
+				</div>
+				<p class="text-base text-base-content/50">
+					{{ appFeature.description }}
+				</p>
+				<ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+					<li
+						class="flex flex-col items-start justify-start gap-4 col-span-1"
+						*ngFor="let feature of appFeature.featureList"
+					>
+						<span class="text-base sm:text-xl font-semibold text-base-content">
+							{{ feature.title }}
+						</span>
+						<p class="text-sm text-base-content/50">
+							{{ feature.description }}
+						</p>
+					</li>
+				</ul>
+				<ng-container [ngSwitch]="i">
+					<ng-container *ngSwitchCase="0">
+						<p class="alert">
+							<i
+								class="fill-current text-info"
+								appSvgIcon
+								[appIcon]="'info-circle'"
+								[appSquare]="'1.75em'"
+							></i>
+							<span class="block">
+								Link multiple authorization methods to a single account for
+								ultimate flexibility. With unified email address whether you
+								prefer advanced methods or social authorization, you can switch
+								seamlessly between them.
+							</span>
+						</p>
+					</ng-container>
+					<ng-container *ngSwitchCase="1">
+						<button
+							class="btn btn-outline btn-success btn-md w-full"
+							type="button"
+							aria-label="Install PWA"
+							*ngIf="appPWAAvailable"
+							(click)="onClickPWAInstall()"
+						>
+							Install PWA
+						</button>
+					</ng-container>
+					<ng-container *ngSwitchCase="2">
+						<a
+							class="btn btn-outline btn-primary btn-md w-full"
+							aria-label="Registration"
+							*appAuthenticated="false"
+							[routerLink]="'/registration'"
+						>
+							Registration
+						</a>
+					</ng-container>
+				</ng-container>
 			</div>
 		</div>
-	</div>
+	</section>
 </ng-container>
