@@ -84,4 +84,12 @@ export class HelperService {
 			this.document.body.removeChild(HTMLElement);
 		}
 	}
+
+	getIsUrl(value: string): boolean {
+		try {
+			return !!new URL(value);
+		} catch (e) {
+			return false;
+		}
+	}
 }

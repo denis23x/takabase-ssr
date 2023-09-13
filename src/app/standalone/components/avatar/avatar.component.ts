@@ -6,11 +6,12 @@ import { SanitizerPipe } from '../../pipes/sanitizer.pipe';
 import { User } from '../../../core/models/user.model';
 import { CommonModule } from '@angular/common';
 import { PlatformService } from '../../../core/services/platform.service';
+import { ImageTempPipe } from '../../pipes/image-temp.pipe';
 
 @Component({
 	standalone: true,
 	selector: 'app-avatar, [appAvatar]',
-	imports: [SanitizerPipe, CommonModule],
+	imports: [SanitizerPipe, CommonModule, ImageTempPipe],
 	templateUrl: './avatar.component.html'
 })
 export class AvatarComponent {

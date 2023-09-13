@@ -1,5 +1,5 @@
 /** @format */
 
 export interface FileGetOneDto {
-	url: string;
+	filename: string;
 }

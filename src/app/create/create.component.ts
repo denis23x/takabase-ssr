@@ -44,6 +44,7 @@ import { CookieService } from '../core/services/cookie.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 import { AppTextareaResizeDirective } from '../standalone/directives/app-textarea-resize.directive';
+import { ImageTempPipe } from '../standalone/pipes/image-temp.pipe';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -75,7 +76,8 @@ interface CategoryForm {
 		MarkdownComponent,
 		NgOptimizedImage,
 		AppScrollPresetDirective,
-		AppTextareaResizeDirective
+		AppTextareaResizeDirective,
+		ImageTempPipe
 	],
 	templateUrl: './create.component.html'
 })
@@ -415,7 +417,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	onSubmitPostFormImage(fileCreateDto?: FileCreateDto): void {
 		this.onTogglePostFormImage(false);
 
-		this.postForm.get('image').setValue(fileCreateDto.path);
+		this.postForm.get('image').setValue(fileCreateDto.filename);
 	}
 
 	onSubmitCategoryForm(): void {

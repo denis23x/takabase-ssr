@@ -30,7 +30,7 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { FileCreateDto } from '../../../core/dto/file/file-create.dto';
 import { HelperService } from '../../../core/services/helper.service';
 import { FileService } from '../../../core/services/file.service';
-import { FileGetOneDto } from '../../../core/dto/file/file-get-one.dto';
+import { FileGetOneProxyDto } from '../../../core/dto/file/file-get-one-proxy.dto';
 import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
 import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../../core/services/snackbar.service';
@@ -128,14 +128,16 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			if (this.helperService.getFormValidation(this.imageForm)) {
 				this.imageForm.disable();
 
-				const fileGetOneDto: FileGetOneDto = {
+				const fileGetOneProxyDto: FileGetOneProxyDto = {
 					...this.imageForm.value
 				};
 
-				this.fileService.getOne(fileGetOneDto).subscribe({
-					next: (file: File) => {
+				this.fileService.getOneProxy(fileGetOneProxyDto).subscribe({
+					next: (blob: Blob) => {
 						this.cropperPositionInitial = undefined;
-						this.cropperFile = file;
+						this.cropperFile = new File([blob], 'blob-image', {
+							type: blob.type
+						});
 
 						this.imageForm.enable();
 					},
@@ -271,9 +273,9 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	onSubmitCropper(): void {
-		const fileInput: File = this.imageFormFile.nativeElement.files.item(0);
-		const fileCropped: File = new File([this.cropperBlob], fileInput.name, {
-			type: fileInput.type
+		// prettier-ignore
+		const fileCropped: File = new File([this.cropperBlob], this.cropperFile.name, {
+			type: this.cropperFile.type
 		});
 
 		const formData: FormData = new FormData();

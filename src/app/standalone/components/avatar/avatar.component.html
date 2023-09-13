@@ -4,7 +4,7 @@
 	<img
 		loading="lazy"
 		*ngSwitchCase="true"
-		[src]="user.avatar"
+		[src]="user.avatar | imageTemp | async"
 		[alt]="user.name"
 	/>
 	<div *ngSwitchDefault [outerHTML]="userJdenticon | sanitizer: 'html'"></div>

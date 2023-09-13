@@ -1,7 +1,7 @@
 /** @format */
 
 export const environment = {
-	API_URL: 'http://localhost:3323/api',
+	API_URL: 'https://instance-1-xn7bqlfyzq-de.a.run.app/api',
 	pwa: true,
 	production: true,
 	grammars: [

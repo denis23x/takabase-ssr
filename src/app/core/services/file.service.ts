@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { FileCreateDto } from '../dto/file/file-create.dto';
 import { FileGetOneDto } from '../dto/file/file-get-one.dto';
+import { FileGetOneProxyDto } from '../dto/file/file-get-one-proxy.dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -28,8 +29,14 @@ export class FileService {
 		return this.apiService.post('/files/image', formData);
 	}
 
-	getOne(fileGetOneDto: FileGetOneDto): Observable<File> {
-		return this.apiService.get('/files/image/proxy', fileGetOneDto, {
+	getOne(fileGetOneDto: FileGetOneDto): Observable<Blob> {
+		return this.apiService.get('/files/image', fileGetOneDto, {
+			responseType: 'blob'
+		});
+	}
+
+	getOneProxy(fileGetOneProxyDto: FileGetOneProxyDto): Observable<Blob> {
+		return this.apiService.get('/files/image/proxy', fileGetOneProxyDto, {
 			responseType: 'blob'
 		});
 	}
