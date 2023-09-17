@@ -32,10 +32,12 @@ export class CookieService {
 
 	setItem(key: string, value: string, options?: any): void {
 		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
 			options = {
 				...options,
 				path: '/',
-				domain: 'localhost'
+				domain: window.location.host
 			};
 
 			if (options.expires instanceof Date) {
