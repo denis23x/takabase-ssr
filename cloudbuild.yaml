@@ -1,0 +1,19 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '--platform', 'linux/amd64', '--tag', '${_IMAGE_NAME}', '--cache-from', '${_IMAGE_NAME}', '.']
+
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '${_IMAGE_NAME}']
+
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['run', 'deploy', 'instance-2', '--image', '${_IMAGE_NAME}', '--region', '${_REGION}', '--allow-unauthenticated']
+
+substitutions:
+  _REGION: 'asia-east1'
+  _IMAGE_NAME: 'gcr.io/${PROJECT_ID}/draft-ssr-gcp'
+
+options:
+  dynamicSubstitutions: true

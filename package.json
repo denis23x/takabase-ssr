@@ -11,7 +11,7 @@
     "build:ssr:prod": "ng run draft-ssr:prerender:production && ng run draft-ssr:server:production",
     "build:spite": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --stripAttrs class --stripAttrs fill",
     "build:sitemap": "node sitemap.js",
-    "dist:start": "node dist/draft-ssr/server/main.js",
+    "dist:start": "pm2-runtime ecosystem.config.js",
     "dist:analyze": "webpack-bundle-analyzer dist/draft-ssr/browser/stats.json"
   },
   "dependencies": {
