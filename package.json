@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "start:dev": "ng run draft-ssr:serve:development",
+    "start:deploy": "firebase deploy",
     "start:lint": "ng lint",
     "build:ssr:prod": "ng run draft-ssr:prerender:production && ng run draft-ssr:server:production",
     "build:spite": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --stripAttrs class --stripAttrs fill",
@@ -19,6 +20,7 @@
     "@angular/common": "^15.1.0",
     "@angular/compiler": "^15.1.0",
     "@angular/core": "^15.1.0",
+    "@angular/fire": "^7.6.1",
     "@angular/forms": "^15.1.0",
     "@angular/platform-browser": "^15.1.0",
     "@angular/platform-browser-dynamic": "^15.1.0",
@@ -33,6 +35,7 @@
     "dompurify": "^3.0.0",
     "emoji-mart": "^5.5.2",
     "express": "^4.18.2",
+    "firebase": "^10.4.0",
     "jdenticon": "^3.2.0",
     "markdown-it": "^13.0.1",
     "markdown-it-attrs": "^4.1.6",

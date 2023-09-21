@@ -11,6 +11,7 @@ import { HeaderComponent } from './standalone/components/header/header.component
 import { SnackbarComponent } from './standalone/components/snackbar/snackbar.component';
 import { HttpAuthInterceptor } from './core/interceptors/http.auth.interceptor';
 import { ScrollToTopComponent } from './standalone/components/scroll-to-top/scroll-to-top.component';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 
 @NgModule({
 	declarations: [AppComponent],
@@ -21,6 +22,17 @@ import { ScrollToTopComponent } from './standalone/components/scroll-to-top/scro
 			enabled: environment.pwa,
 			registrationStrategy: 'registerWhenStable:30000'
 		}),
+		provideFirebaseApp(() =>
+			initializeApp({
+				apiKey: environment.firebase.apiKey,
+				authDomain: environment.firebase.authDomain,
+				projectId: environment.firebase.projectId,
+				storageBucket: environment.firebase.storageBucket,
+				messagingSenderId: environment.firebase.messagingSenderId,
+				appId: environment.firebase.appId,
+				measurementId: environment.firebase.measurementId
+			})
+		),
 		HttpClientModule,
 		HeaderComponent,
 		SnackbarComponent,

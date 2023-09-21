@@ -8,6 +8,15 @@ export const environment = {
 	API_URL: 'http://localhost:3323/api',
 	pwa: false,
 	production: false,
+	firebase: {
+		apiKey: 'AIzaSyDt88ljM_Bq3QvQlATnC-vrC4NdCwWIQzQ',
+		authDomain: 'draft-ssr.firebaseapp.com',
+		projectId: 'draft-ssr',
+		storageBucket: 'draft-ssr.appspot.com',
+		messagingSenderId: '231627312637',
+		appId: '1:231627312637:web:f5e2ff009dfd5d3d279d94',
+		measurementId: 'G-SYQEF6EH3K'
+	},
 	grammars: [
 		'zig',
 		'yang',

@@ -183,20 +183,6 @@
           },
           "defaultConfiguration": "development"
         },
-        "serve-ssr": {
-          "builder": "@nguniversal/builders:ssr-dev-server",
-          "configurations": {
-            "development": {
-              "browserTarget": "draft-ssr:build:development",
-              "serverTarget": "draft-ssr:server:development"
-            },
-            "production": {
-              "browserTarget": "draft-ssr:build:production",
-              "serverTarget": "draft-ssr:server:production"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
@@ -259,6 +245,15 @@
               "src/**/*.ts",
               "src/**/*.html"
             ]
+          }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "version": 2,
+            "browserTarget": "draft-ssr:build:production",
+            "serverTarget": "draft-ssr:server:production",
+            "prerenderTarget": "draft-ssr:prerender:production"
           }
         }
       }
