@@ -1,24 +1,14 @@
 /** @format */
 
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { AuthService } from './core/services/auth.service';
+import { AfterViewInit, Component } from '@angular/core';
 import { AppearanceService } from './core/services/appearance.service';
 
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html'
 })
-export class AppComponent implements OnInit, AfterViewInit {
-	constructor(
-		private authService: AuthService,
-		private appearanceService: AppearanceService
-	) {}
-
-	ngOnInit(): void {
-		this.authService.getUser().subscribe({
-			error: (error: any) => console.error(error)
-		});
-	}
+export class AppComponent implements AfterViewInit {
+	constructor(private appearanceService: AppearanceService) {}
 
 	ngAfterViewInit(): void {
 		this.appearanceService.setLoader(false);

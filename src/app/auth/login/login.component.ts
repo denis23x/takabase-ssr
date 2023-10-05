@@ -57,11 +57,11 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 		private metaService: MetaService
 	) {
 		this.loginForm = this.formBuilder.group<LoginForm>({
-			email: this.formBuilder.nonNullable.control('', [
+			email: this.formBuilder.nonNullable.control('denis@mail.ru', [
 				Validators.required,
 				Validators.email
 			]),
-			password: this.formBuilder.nonNullable.control('', [
+			password: this.formBuilder.nonNullable.control('denis@mail.ru', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
 			])

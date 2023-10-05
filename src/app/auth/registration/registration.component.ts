@@ -9,7 +9,6 @@ import {
 	Validators
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AuthService } from '../../core/services/auth.service';
@@ -17,7 +16,6 @@ import { UserService } from '../../core/services/user.service';
 import { HelperService } from '../../core/services/helper.service';
 import { UserCreateDto } from '../../core/dto/user/user-create.dto';
 import { User } from '../../core/models/user.model';
-import { LoginDto } from '../../core/dto/auth/login.dto';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
@@ -59,20 +57,20 @@ export class AuthRegistrationComponent implements OnInit {
 		private snackbarService: SnackbarService
 	) {
 		this.registrationForm = this.formBuilder.group<RegistrationForm>({
-			name: this.formBuilder.nonNullable.control('', [
+			name: this.formBuilder.nonNullable.control('denis', [
 				Validators.required,
 				Validators.minLength(4),
 				Validators.maxLength(24)
 			]),
-			email: this.formBuilder.nonNullable.control('', [
+			email: this.formBuilder.nonNullable.control('denis@mail.ru', [
 				Validators.required,
 				Validators.email
 			]),
-			password: this.formBuilder.nonNullable.control('', [
+			password: this.formBuilder.nonNullable.control('denis@mail.ru', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
 			]),
-			terms: this.formBuilder.nonNullable.control(false, [
+			terms: this.formBuilder.nonNullable.control(true, [
 				Validators.requiredTrue
 			])
 		});
@@ -112,27 +110,15 @@ export class AuthRegistrationComponent implements OnInit {
 				...this.registrationForm.value
 			};
 
-			this.userService
-				.create(userCreateDto)
-				.pipe(
-					switchMap(() => {
-						const loginDto: LoginDto = {
-							email: userCreateDto.email,
-							password: userCreateDto.password
-						};
-
-						return this.authService.onLogin(loginDto);
-					})
-				)
-				.subscribe({
-					next: (user: User) => {
-						// prettier-ignore
-						this.router
-							.navigate([this.userService.getUserUrl(user)])
-							.then(() => this.snackbarService.info('Success', 'Welcome to our website'));
-					},
-					error: () => this.registrationForm.enable()
-				});
+			this.authService.onRegistration(userCreateDto).subscribe({
+				next: (user: User) => {
+					// prettier-ignore
+					this.router
+            .navigate([this.userService.getUserUrl(user)])
+            .then(() => this.snackbarService.info('Success', 'Welcome to our website'));
+				},
+				error: () => this.registrationForm.enable()
+			});
 		}
 	}
 }
