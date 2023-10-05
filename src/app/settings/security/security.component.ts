@@ -54,7 +54,11 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
             };
           })
         }),
-				switchMap(() => this.authService.getFingerprint())
+				switchMap(() => {
+          // this.authService.getFingerprint()
+
+          return '';
+        })
 			)
 			.subscribe({
 				next: (fingerprint: string) => {

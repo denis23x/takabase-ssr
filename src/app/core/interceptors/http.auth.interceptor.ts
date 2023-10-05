@@ -9,59 +9,26 @@ import {
 	HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
-import { AuthService } from '../services/auth.service';
-import { User } from '../models/user.model';
+import { catchError } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class HttpAuthInterceptor implements HttpInterceptor {
-	constructor(private authService: AuthService) {}
-
-	private getToken(): string | undefined {
-		const user: User = this.authService.user.getValue();
-
-		return user?.token;
-	}
-
-	private setRequestHeaders(request: HttpRequest<any>): HttpRequest<any> {
-		const requestHeaders: any = {};
-
-		const token: string = this.getToken();
-
-		if (token) {
-			requestHeaders['Authorization'] = 'Bearer ' + token;
+	setRequestWithCredentials(request: HttpRequest<any>): HttpRequest<any> {
+		if (request.url.startsWith(environment.API_URL)) {
+			return request.clone({
+				withCredentials: true
+			});
 		}
 
-		return request.clone({
-			setHeaders: requestHeaders,
-			withCredentials: true
-		});
+		return request;
 	}
-
-	// prettier-ignore
-	private handleResponseError(httpErrorResponse: HttpErrorResponse, request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if ([401].includes(httpErrorResponse.status)) {
-      if (!request.url.endsWith('auth/refresh')) {
-        return this.authService
-          .onRefresh()
-          .pipe(switchMap(() => next.handle(this.setRequestHeaders(request))));
-      }
-    }
-
-    return throwError(() => httpErrorResponse);
-  }
 
 	// prettier-ignore
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-		return next.handle(this.setRequestHeaders(request)).pipe(
+		return next.handle(this.setRequestWithCredentials(request)).pipe(
 			catchError((httpErrorResponse: HttpErrorResponse) => {
-				const token: string = this.getToken();
-
-				if (token) {
-					return this.handleResponseError(httpErrorResponse, request, next);
-				}
-
-				return throwError(() => httpErrorResponse);
+        return throwError(() => httpErrorResponse);
 			})
 		);
 	}
