@@ -25,8 +25,9 @@ export class ApiService {
 	setError(httpErrorResponse: HttpErrorResponse): Observable<never> {
 		const title: string = 'Error';
 
+		// prettier-ignore
 		const message = (): string => {
-			const error: string | string[] = httpErrorResponse.error.message;
+			const error: string | string[] = httpErrorResponse.message || httpErrorResponse.error.message;
 
 			if (typeof error === 'object') {
 				return String(error.join(', '));
@@ -39,8 +40,9 @@ export class ApiService {
 			return 'Misfortune! Server offline';
 		};
 
+		// prettier-ignore
 		const duration = (): number => {
-			const error: string | string[] = httpErrorResponse.error.message;
+			const error: string | string[] = httpErrorResponse.message || httpErrorResponse.error.message;
 
 			if (typeof error === 'object') {
 				return error.length * 4000;

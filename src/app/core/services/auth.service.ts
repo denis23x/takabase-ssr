@@ -1,7 +1,7 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { User } from '../models/user.model';
 import { ApiService } from './api.service';
@@ -9,10 +9,8 @@ import { CookieService } from './cookie.service';
 import { LoginDto } from '../dto/auth/login.dto';
 import { AppearanceService } from './appearance.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Router } from '@angular/router';
 import { UserService } from './user.service';
 import { UserCreateDto } from '../dto/user/user-create.dto';
-import { SnackbarService } from './snackbar.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectDto } from '../dto/auth/connect.dto';
 import firebase from 'firebase/compat';
@@ -30,9 +28,7 @@ export class AuthService {
 		private cookieService: CookieService,
 		private appearanceService: AppearanceService,
 		private angularFireAuth: AngularFireAuth,
-		private router: Router,
-		private userService: UserService,
-		private snackbarService: SnackbarService
+		private userService: UserService
 	) {}
 
 	/** Connect to backend */
@@ -58,63 +54,46 @@ export class AuthService {
 
 	/** Authorization API */
 
+	// prettier-ignore
 	onRegistration(userCreateDto: UserCreateDto): Observable<User> {
-		// prettier-ignore
 		return from(this.angularFireAuth.createUserWithEmailAndPassword(
       userCreateDto.email,
       userCreateDto.password
     )).pipe(
+      tap((userCredential: UserCredential) => userCredential.user.sendEmailVerification()),
+      catchError((httpErrorResponse: HttpErrorResponse) => this.apiService.setError(httpErrorResponse)),
       switchMap((userCredential: UserCredential) => this.onAttach(userCredential)),
-      switchMap(() => {
-        return this.userService.create(userCreateDto).pipe(
-          switchMap(() => {
-            const loginDto: LoginDto = {
-              email: userCreateDto.email,
-              password: userCreateDto.password
-            };
-
-            return this.onLogin(loginDto);
-          })
-        );
-      }),
-      catchError((httpErrorResponse: HttpErrorResponse) => {
-        this.snackbarService.danger('Error', httpErrorResponse.message, {
-          icon: 'bug',
-          duration: 5000
-        });
-
-        return throwError(() => httpErrorResponse);
-      })
+      switchMap(() => this.userService.create(userCreateDto)),
+      switchMap(() => this.onLogin(userCreateDto as LoginDto))
     );
 	}
 
+	// prettier-ignore
 	onLogin(loginDto: LoginDto): Observable<User> {
-		// prettier-ignore
 		return from(this.angularFireAuth.signInWithEmailAndPassword(
       loginDto.email,
       loginDto.password
     )).pipe(
+      catchError((httpErrorResponse: HttpErrorResponse) => this.apiService.setError(httpErrorResponse)),
       switchMap((userCredential: UserCredential) => this.onAttach(userCredential)),
       switchMap(() => this.onVerify()),
-      catchError((httpErrorResponse: HttpErrorResponse) => {
-        this.snackbarService.danger('Error', httpErrorResponse.message, {
-          icon: 'bug',
-          duration: 5000
-        });
-
-        return throwError(() => httpErrorResponse);
-      })
     );
 	}
 
+	// prettier-ignore
 	onLogout(): Observable<void> {
 		return from(this.angularFireAuth.signOut()).pipe(
+      catchError((httpErrorResponse: HttpErrorResponse) => this.apiService.setError(httpErrorResponse)),
 			switchMap(() => this.onDetach()),
-			tap(() => this.removeUser())
+			tap(() => {
+				this.user.next(undefined);
+
+				this.appearanceService.setSettings(null);
+			})
 		);
 	}
 
-	/** Service */
+	/** App Service */
 
 	getUser(): Observable<User | undefined> {
 		const userInMemory: User | undefined = this.user.getValue();
@@ -144,40 +123,5 @@ export class AuthService {
 		}
 
 		return of(this.user.getValue());
-	}
-
-	removeUser(): Observable<void> {
-		// const userSaved: User = this.user.getValue();
-
-		/** Set user */
-
-		this.user.next(undefined);
-
-		/** Remove settings */
-
-		this.appearanceService.setSettings(null);
-
-		return of(null);
-	}
-
-	// FIREBASE
-
-	SendVerificationMail() {
-		return this.angularFireAuth.currentUser
-			.then((u: any) => u.sendEmailVerification())
-			.then(() => {
-				this.router.navigate(['verify-email-address']);
-			});
-	}
-
-	ForgotPassword(passwordResetEmail: string) {
-		return this.angularFireAuth
-			.sendPasswordResetEmail(passwordResetEmail)
-			.then(() => {
-				window.alert('Password reset email sent, check your inbox.');
-			})
-			.catch(error => {
-				window.alert(error);
-			});
 	}
 }

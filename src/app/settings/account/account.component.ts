@@ -148,12 +148,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			this.emailFormConfirmationIsSubmitted = true;
 
 			this.emailService.onConfirmationGet().subscribe({
-				next: (user: Partial<User>) => {
-					this.authService.setUser(user as User).subscribe({
-						next: () => (this.authUser = user as User),
-						error: (error: any) => console.error(error)
-					});
-
+				next: () => {
 					this.emailFormConfirmationIsSubmitted = false;
 
 					if (this.authUser.emailConfirmed) {

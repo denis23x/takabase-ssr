@@ -14,10 +14,6 @@ import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.
 import { HelperService } from '../../core/services/helper.service';
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../core/services/auth.service';
-import { User } from '../../core/models/user.model';
-import { LoginDto } from '../../core/dto/auth/login.dto';
-import { UserService } from '../../core/services/user.service';
 import { PasswordResetUpdateDto } from '../../core/dto/password/password-reset-update.dto';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
@@ -51,9 +47,7 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
 		private activatedRoute: ActivatedRoute,
-		private authService: AuthService,
 		private router: Router,
-		private userService: UserService,
 		private snackbarService: SnackbarService,
 		private passwordService: PasswordService
 	) {
@@ -69,7 +63,7 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		// prettier-ignore
 		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe({
-      next: (params: Params) => this.passwordForm.get('token').setValue(params.token),
+      next: (params: Params) => this.passwordForm.get('token').setValue(params.oobCode),
       error: (error: any) => console.error(error)
     });
 	}
@@ -88,21 +82,11 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 			};
 
 			this.passwordService.onResetUpdate(passwordResetUpdateDto).subscribe({
-				next: (user: Partial<User>) => {
-					const loginDto: LoginDto = {
-						email: user.email,
-						password: passwordResetUpdateDto.password
-					};
-
-					this.authService.onLogin(loginDto).subscribe({
-						next: (user: User) => {
-							// prettier-ignore
-							this.router
-								.navigate([this.userService.getUserUrl(user)])
-								.then(() => this.snackbarService.success('Success', 'Password has been changed'));
-						},
-						error: () => this.passwordForm.enable()
-					});
+				next: () => {
+					// prettier-ignore
+					this.router
+            .navigate(['/'])
+            .then(() => this.snackbarService.success('Success', 'Password has been changed'));
 				},
 				error: () => this.passwordForm.enable()
 			});
