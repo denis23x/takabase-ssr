@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "start:dev": "ng run draft-ssr:serve:development",
-    "start:deploy": "firebase deploy",
+    "start:deploy": "firebase use draft-ssr && firebase deploy --only functions,hosting",
     "start:lint": "ng lint",
     "build:ssr:prod": "ng run draft-ssr:prerender:production && ng run draft-ssr:server:production",
     "build:spite": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --stripAttrs class --stripAttrs fill",

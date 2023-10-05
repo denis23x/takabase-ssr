@@ -1,7 +1,7 @@
 /** @format */
 
 export const environment = {
-	API_URL: 'https://us-central1-draft-api-23x.cloudfunctions.net/denis/api',
+	API_URL: 'https://draft-api.web.app/api',
 	pwa: true,
 	production: true,
 	firebase: {

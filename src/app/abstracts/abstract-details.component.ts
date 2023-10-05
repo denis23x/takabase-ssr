@@ -1,10 +1,10 @@
 /** @format */
 
 import {
+	AfterContentInit,
 	Component,
 	ElementRef,
 	OnDestroy,
-	OnInit,
 	ViewChild
 } from '@angular/core';
 import { map } from 'rxjs/operators';
@@ -13,12 +13,12 @@ import { ActivatedRoute, Data, Router } from '@angular/router';
 import { Post } from '../core/models/post.model';
 import { PostService } from '../core/services/post.service';
 
+// prettier-ignore
 @Component({
 	selector: 'app-abstract-details',
 	template: ''
 })
-export abstract class AbstractDetailsComponent implements OnInit, OnDestroy {
-	// prettier-ignore
+export abstract class AbstractDetailsComponent implements AfterContentInit, OnDestroy {
 	@ViewChild('abstractPostProseModal', { static: true }) abstractPostProseModal: ElementRef<HTMLDialogElement> | undefined;
 
 	activatedRouteData$: Subscription | undefined;
@@ -31,7 +31,7 @@ export abstract class AbstractDetailsComponent implements OnInit, OnDestroy {
 		public postService: PostService
 	) {}
 
-	ngOnInit(): void {
+  ngAfterContentInit(): void {
 		this.activatedRouteData$ = this.activatedRoute.data
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
