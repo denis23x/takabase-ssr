@@ -20,7 +20,7 @@ import { OauthComponent } from '../../standalone/components/oauth/oauth.componen
 import { PasswordService } from '../../core/services/password.service';
 
 interface PasswordForm {
-	token: FormControl<string>;
+	code: FormControl<string>;
 	password: FormControl<string>;
 }
 
@@ -52,7 +52,7 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 		private passwordService: PasswordService
 	) {
 		this.passwordForm = this.formBuilder.group<PasswordForm>({
-			token: this.formBuilder.nonNullable.control('', [Validators.required]),
+			code: this.formBuilder.nonNullable.control('', [Validators.required]),
 			password: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
@@ -63,7 +63,7 @@ export class AuthResetPasswordComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		// prettier-ignore
 		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe({
-      next: (params: Params) => this.passwordForm.get('token').setValue(params.oobCode),
+      next: (params: Params) => this.passwordForm.get('code').setValue(params.oobCode),
       error: (error: any) => console.error(error)
     });
 	}

@@ -37,7 +37,7 @@ export class CookieService {
 			options = {
 				...options,
 				path: '/',
-				domain: window.location.host
+				domain: window.location.hostname
 			};
 
 			if (options.expires instanceof Date) {

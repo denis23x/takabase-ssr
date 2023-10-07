@@ -1,5 +1,5 @@
 /** @format */
 
 export interface EmailConfirmationUpdateDto {
-	token: string;
+	code: string;
 }

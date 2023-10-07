@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Params, RouterModule } from '@angular/router';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { Subscription } from 'rxjs';
@@ -35,12 +35,12 @@ export class AuthEmailConfirmationComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		// prettier-ignore
 		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe({
-      next: () => {
-        const token: string = String(this.activatedRoute.snapshot.queryParamMap.get('token') || '');
+      next: (params: Params) => {
+        const code: string = params.oobCode;
 
-        if (token.length) {
+        if (code) {
           const emailConfirmationUpdateDto: EmailConfirmationUpdateDto = {
-            token
+						code
           };
 
           this.emailService

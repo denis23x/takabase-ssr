@@ -200,32 +200,24 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				...this.passwordCheckForm.value
 			};
 
-			this.passwordService
-				.onCheckGet(passwordCheckGetDto)
-				.pipe(map((data: any) => data.valid))
-				.subscribe({
-					next: (valid: boolean) => {
-						this.passwordCheckForm.enable();
-						this.passwordCheckForm.reset();
+			this.passwordService.onCheckGet(passwordCheckGetDto).subscribe({
+				next: () => {
+					this.passwordCheckForm.enable();
+					this.passwordCheckForm.reset();
 
-						if (valid) {
-							this.passwordCheckIsValid = valid;
+					this.passwordCheckIsValid = true;
 
-							const dateNow: Date = new Date();
+					const dateNow: Date = new Date();
 
-							/** Set 1 hour cookie */
+					/** Set 1 hour cookie */
 
-							// prettier-ignore
-							this.cookieService.setItem('password-valid', '1', {
-								expires: new Date(dateNow.setTime(dateNow.getTime() + 1 * 3600 * 1000))
-							});
-						} else {
-							// prettier-ignore
-							this.snackbarService.danger('Nope', 'You entered the wrong password');
-						}
-					},
-					error: () => this.passwordCheckForm.enable()
-				});
+					// prettier-ignore
+					this.cookieService.setItem('password-valid', '1', {
+						expires: new Date(dateNow.setTime(dateNow.getTime() + 1 * 3600 * 1000))
+					});
+				},
+				error: () => this.passwordCheckForm.enable()
+			});
 		}
 	}
 }
