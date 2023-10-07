@@ -25,7 +25,7 @@ export class PasswordService {
 	onUpdate(passwordUpdateDto: PasswordUpdateDto): Observable<any> {
 		return from(this.angularFireAuth.currentUser).pipe(
 			switchMap((user: firebase.User) => {
-				return user.updatePassword(passwordUpdateDto.newPassword);
+				return from(user.updatePassword(passwordUpdateDto.newPassword));
 			}),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);
@@ -42,7 +42,7 @@ export class PasswordService {
 					passwordValidateGetDto.password
 				);
 
-				return user.reauthenticateWithCredential(credentials);
+				return from(user.reauthenticateWithCredential(credentials));
 			}),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);

@@ -12,8 +12,8 @@ import { UserService } from './user.service';
 import { UserCreateDto } from '../dto/user/user-create.dto';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectDto } from '../dto/auth/connect.dto';
+import { RegistrationDto } from '../dto/auth/registration.dto';
 import firebase from 'firebase/compat';
-import UserCredential = firebase.auth.UserCredential;
 
 @Injectable({
 	providedIn: 'root'
@@ -31,24 +31,40 @@ export class AuthService {
 
 	/** Authorization API */
 
-	onRegistration(userCreateDto: UserCreateDto): Observable<User> {
+	onRegistration(registrationDto: RegistrationDto): Observable<User> {
 		return from(
 			this.angularFireAuth.createUserWithEmailAndPassword(
-				userCreateDto.email,
-				userCreateDto.password
+				registrationDto.email,
+				registrationDto.password
 			)
 		).pipe(
-			tap((userCredential: UserCredential) => {
-				userCredential.user.sendEmailVerification();
+			switchMap((userCredential: firebase.auth.UserCredential) => {
+				return from(userCredential.user.sendEmailVerification()).pipe(
+					switchMap(() => {
+						return of(userCredential);
+					})
+				);
 			}),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);
 			}),
-			switchMap((userCredential: UserCredential) => {
-				return this.onAttach(userCredential);
+			switchMap((userCredential: firebase.auth.UserCredential) => {
+				return this.onAttach(userCredential).pipe(
+					switchMap(() => {
+						return of(userCredential);
+					})
+				);
 			}),
-			switchMap(() => this.userService.create(userCreateDto)),
-			switchMap(() => this.onLogin(userCreateDto as LoginDto))
+			switchMap((userCredential: firebase.auth.UserCredential) => {
+				const userCreateDto: UserCreateDto = {
+					firebaseId: userCredential.user.uid,
+					name: registrationDto.name,
+					terms: registrationDto.terms
+				};
+
+				return this.userService.create(userCreateDto);
+			}),
+			switchMap(() => this.onLogin(registrationDto))
 		);
 	}
 
@@ -62,7 +78,7 @@ export class AuthService {
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);
 			}),
-			switchMap((userCredential: UserCredential) => {
+			switchMap((userCredential: firebase.auth.UserCredential) => {
 				return this.onAttach(userCredential);
 			}),
 			switchMap(() => {
@@ -86,10 +102,9 @@ export class AuthService {
 
 	/** Connect to backend */
 
-	onAttach(userCredential: UserCredential): Observable<any> {
+	onAttach(userCredential: firebase.auth.UserCredential): Observable<any> {
 		const connectDto: ConnectDto = {
-			uid: userCredential.user.uid,
-			email: userCredential.user.email
+			firebaseId: userCredential.user.uid
 		};
 
 		return this.apiService.post('/authorization', connectDto);
@@ -142,7 +157,7 @@ export class AuthService {
 			tap((user: User) => {
 				const dateNow: Date = new Date();
 
-				/** Set 5 minutes cookie */
+				/** Set 60 minutes cookie */
 
 				this.cookieService.setItem('jwt-user', JSON.stringify(user), {
 					expires: new Date(dateNow.setTime(dateNow.getTime() + 60 * 60 * 1000))

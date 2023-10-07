@@ -20,11 +20,10 @@ export class EmailService {
 		private angularFireAuth: AngularFireAuth
 	) {}
 
-	// prettier-ignore
 	onUpdate(emailUpdateDto: EmailUpdateDto): Observable<any> {
 		return from(this.angularFireAuth.currentUser).pipe(
 			switchMap((user: firebase.User) => {
-				return user.updateEmail(emailUpdateDto.newEmail);
+				return from(user.verifyBeforeUpdateEmail(emailUpdateDto.newEmail));
 			}),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);
@@ -32,14 +31,15 @@ export class EmailService {
 		);
 	}
 
-	// prettier-ignore
 	onConfirmationGet(): Observable<any> {
 		return from(this.angularFireAuth.currentUser).pipe(
-      switchMap((user: firebase.User) => user.sendEmailVerification()),
-      catchError((httpErrorResponse: HttpErrorResponse) => {
-        return this.apiService.setError(httpErrorResponse);
-      })
-    );
+			switchMap((user: firebase.User) => {
+				return from(user.sendEmailVerification());
+			}),
+			catchError((httpErrorResponse: HttpErrorResponse) => {
+				return this.apiService.setError(httpErrorResponse);
+			})
+		);
 	}
 
 	// TODO: update

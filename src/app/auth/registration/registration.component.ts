@@ -14,7 +14,6 @@ import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.
 import { AuthService } from '../../core/services/auth.service';
 import { UserService } from '../../core/services/user.service';
 import { HelperService } from '../../core/services/helper.service';
-import { UserCreateDto } from '../../core/dto/user/user-create.dto';
 import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
@@ -22,6 +21,7 @@ import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { Subscription } from 'rxjs';
+import { RegistrationDto } from '../../core/dto/auth/registration.dto';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -106,11 +106,11 @@ export class AuthRegistrationComponent implements OnInit {
 		if (this.helperService.getFormValidation(this.registrationForm)) {
 			this.registrationForm.disable();
 
-			const userCreateDto: UserCreateDto = {
+			const registrationDto: RegistrationDto = {
 				...this.registrationForm.value
 			};
 
-			this.authService.onRegistration(userCreateDto).subscribe({
+			this.authService.onRegistration(registrationDto).subscribe({
 				next: (user: User) => {
 					// prettier-ignore
 					this.router

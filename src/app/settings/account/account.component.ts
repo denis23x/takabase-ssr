@@ -119,7 +119,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			this.emailForm.disable();
 
 			const emailUpdateDto: EmailUpdateDto = {
-				newEmail: this.emailForm.value.password
+				newEmail: this.emailForm.value.email
 			};
 
 			this.emailService.onUpdate(emailUpdateDto).subscribe({
@@ -128,7 +128,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 					this.emailForm.reset();
 
 					// prettier-ignore
-					this.snackbarService.success('Success', 'Email has been changed');
+					this.snackbarService.success(emailUpdateDto.newEmail, 'We sent you a verification email');
 				},
 				error: () => this.emailForm.enable()
 			});
@@ -143,15 +143,8 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.emailFormConfirmationIsSubmitted = false;
 
-					if (this.authUser.emailConfirmed) {
-						this.emailForm.reset();
-						this.emailForm.enable();
-
-						this.snackbarService.success('Well', 'Your email confirmed');
-					} else {
-						// prettier-ignore
-						this.snackbarService.info('Okey', 'We sent you a verification email');
-					}
+					// prettier-ignore
+					this.snackbarService.info('All right', 'We sent you a verification email');
 				},
 				error: () => (this.emailFormConfirmationIsSubmitted = false)
 			});
