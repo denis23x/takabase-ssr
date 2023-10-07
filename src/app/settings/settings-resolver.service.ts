@@ -18,7 +18,7 @@ export class SettingsResolverService {
 	) {}
 
 	resolve(): Observable<User> {
-		return this.authService.getUser().pipe(
+		return this.authService.getCurrentUser().pipe(
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				this.router
 					.navigate(['/error', httpErrorResponse.status])

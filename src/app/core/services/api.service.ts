@@ -46,7 +46,7 @@ export class ApiService {
 							return 'Your account has been disabled or deleted. Please contact the system administrator';
 						case 'auth/requires-recent-login':
 							return 'Please login again and try again!';
-						case 'auth/email-already-exists':
+						case 'auth/email-already-in-use':
 							return 'Email address is already in use by an existing user';
 						case 'auth/user-not-found':
 							return 'We could not find user account associated with the email address';

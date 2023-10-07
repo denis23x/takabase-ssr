@@ -8,6 +8,7 @@ import { EmailConfirmationUpdateDto } from '../dto/email/email-confirmation-upda
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+import { EmailUpdateDto } from '../dto/email/email-update.dto';
 import firebase from 'firebase/compat';
 
 @Injectable({
@@ -18,6 +19,18 @@ export class EmailService {
 		private apiService: ApiService,
 		private angularFireAuth: AngularFireAuth
 	) {}
+
+	// prettier-ignore
+	onUpdate(emailUpdateDto: EmailUpdateDto): Observable<any> {
+		return from(this.angularFireAuth.currentUser).pipe(
+			switchMap((user: firebase.User) => {
+				return user.updateEmail(emailUpdateDto.newEmail);
+			}),
+			catchError((httpErrorResponse: HttpErrorResponse) => {
+				return this.apiService.setError(httpErrorResponse);
+			})
+		);
+	}
 
 	// prettier-ignore
 	onConfirmationGet(): Observable<any> {

@@ -20,7 +20,7 @@ export class CanMatchPublicGuard implements CanMatch {
 	) {}
 
 	canMatch(): Observable<boolean> {
-		return this.authService.getUser().pipe(
+		return this.authService.getCurrentUser().pipe(
 			switchMap((user: User | undefined) => {
 				if (!user) {
 					return of(true);

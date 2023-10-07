@@ -45,7 +45,7 @@ export class CookieService {
 			}
 
 			// prettier-ignore
-			let updatedCookie: string = encodeURIComponent(key) + '=' + encodeURIComponent(value);
+			let updatedCookie: string = key + '=' + value;
 
 			for (const optionKey in options) {
 				updatedCookie += '; ' + optionKey;

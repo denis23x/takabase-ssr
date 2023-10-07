@@ -112,14 +112,15 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
           settingsUpdateDto[key] = this.getTransformListValue(settingsUpdateDto[key], key, true);
 				});
 
-				this.settingsService.update(settingsUpdateDto).subscribe({
-					next: (settings: Settings) => {
-						this.authService.setUser({ settings });
-
-						this.appearanceForm.enable({ emitEvent: false });
-					},
-					error: () => this.appearanceForm.enable({ emitEvent: false })
-				});
+				// TODO: update settings
+				// this.settingsService.update(settingsUpdateDto).subscribe({
+				// 	next: (settings: Settings) => {
+				// 		this.authService.setUser({ settings });
+				//
+				// 		this.appearanceForm.enable({ emitEvent: false });
+				// 	},
+				// 	error: () => this.appearanceForm.enable({ emitEvent: false })
+				// });
 			},
 			error: (error: any) => console.error(error)
 		});

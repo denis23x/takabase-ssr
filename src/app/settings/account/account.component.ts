@@ -16,15 +16,13 @@ import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.
 import { User } from '../../core/models/user.model';
 import { HelperService } from '../../core/services/helper.service';
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
-import { UserService } from '../../core/services/user.service';
-import { AuthService } from '../../core/services/auth.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { PasswordValidateGetDto } from '../../core/dto/password/password-validate-get.dto';
 import { CookieService } from '../../core/services/cookie.service';
 import { PasswordService } from '../../core/services/password.service';
 import { EmailService } from '../../core/services/email.service';
 import { PasswordUpdateDto } from '../../core/dto/password/password-update.dto';
+import { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
 
 interface PasswordValidateForm {
 	password: FormControl<string>;
@@ -68,8 +66,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
 		private activatedRoute: ActivatedRoute,
-		private userService: UserService,
-		private authService: AuthService,
 		private snackbarService: SnackbarService,
 		private cookieService: CookieService,
 		private emailService: EmailService,
@@ -122,17 +118,12 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.emailForm)) {
 			this.emailForm.disable();
 
-			const userUpdateDto: UserUpdateDto = {
+			const emailUpdateDto: EmailUpdateDto = {
 				newEmail: this.emailForm.value.password
 			};
 
-			this.userService.update(this.authUser.id, userUpdateDto).subscribe({
-				next: (user: User) => {
-					this.authService.setUser(user).subscribe({
-						next: () => (this.authUser = user),
-						error: (error: any) => console.error(error)
-					});
-
+			this.emailService.onUpdate(emailUpdateDto).subscribe({
+				next: () => {
 					this.emailForm.enable();
 					this.emailForm.reset();
 
