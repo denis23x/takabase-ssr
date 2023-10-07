@@ -20,12 +20,13 @@ import { UserService } from '../../core/services/user.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
-import { PasswordCheckGetDto } from '../../core/dto/password/password-check-get.dto';
+import { PasswordValidateGetDto } from '../../core/dto/password/password-validate-get.dto';
 import { CookieService } from '../../core/services/cookie.service';
 import { PasswordService } from '../../core/services/password.service';
 import { EmailService } from '../../core/services/email.service';
+import { PasswordUpdateDto } from '../../core/dto/password/password-update.dto';
 
-interface PasswordCheckForm {
+interface PasswordValidateForm {
 	password: FormControl<string>;
 }
 
@@ -55,8 +56,8 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	authUser: User | undefined;
 	authUser$: Subscription | undefined;
 
-	passwordCheckIsValid: boolean = false;
-	passwordCheckForm: FormGroup | undefined;
+	passwordValidateIsValid: boolean = false;
+	passwordValidateForm: FormGroup | undefined;
 
 	emailForm: FormGroup | undefined;
 	emailFormConfirmationIsSubmitted: boolean = false;
@@ -74,7 +75,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		private emailService: EmailService,
 		private passwordService: PasswordService
 	) {
-		this.passwordCheckForm = this.formBuilder.group<PasswordCheckForm>({
+		this.passwordValidateForm = this.formBuilder.group<PasswordValidateForm>({
 			password: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
@@ -110,7 +111,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			});
 
 		// prettier-ignore
-		this.passwordCheckIsValid = !!Number(this.cookieService.getItem('password-valid'))
+		this.passwordValidateIsValid = !!Number(this.cookieService.getItem('password-valid'))
 	}
 
 	ngOnDestroy(): void {
@@ -170,17 +171,12 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.passwordForm)) {
 			this.passwordForm.disable();
 
-			const userUpdateDto: UserUpdateDto = {
+			const passwordUpdateDto: PasswordUpdateDto = {
 				newPassword: this.passwordForm.value.password
 			};
 
-			this.userService.update(this.authUser.id, userUpdateDto).subscribe({
-				next: (user: User) => {
-					this.authService.setUser(user).subscribe({
-						next: () => (this.authUser = user),
-						error: (error: any) => console.error(error)
-					});
-
+			this.passwordService.onUpdate(passwordUpdateDto).subscribe({
+				next: () => {
 					this.passwordForm.enable();
 					this.passwordForm.reset();
 
@@ -192,31 +188,31 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onSubmitPasswordCheckForm(): void {
-		if (this.helperService.getFormValidation(this.passwordCheckForm)) {
-			this.passwordCheckForm.disable();
+	onSubmitPasswordValidateForm(): void {
+		if (this.helperService.getFormValidation(this.passwordValidateForm)) {
+			this.passwordValidateForm.disable();
 
-			const passwordCheckGetDto: PasswordCheckGetDto = {
-				...this.passwordCheckForm.value
+			const passwordValidateGetDto: PasswordValidateGetDto = {
+				...this.passwordValidateForm.value
 			};
 
-			this.passwordService.onCheckGet(passwordCheckGetDto).subscribe({
+			this.passwordService.onValidateGet(passwordValidateGetDto).subscribe({
 				next: () => {
-					this.passwordCheckForm.enable();
-					this.passwordCheckForm.reset();
+					this.passwordValidateForm.enable();
+					this.passwordValidateForm.reset();
 
-					this.passwordCheckIsValid = true;
+					this.passwordValidateIsValid = true;
 
 					const dateNow: Date = new Date();
 
-					/** Set 1 hour cookie */
+					/** Set 5 minutes cookie */
 
 					// prettier-ignore
 					this.cookieService.setItem('password-valid', '1', {
-						expires: new Date(dateNow.setTime(dateNow.getTime() + 1 * 3600 * 1000))
+						expires: new Date(dateNow.setTime(dateNow.getTime() + 5 * 60 * 1000))
 					});
 				},
-				error: () => this.passwordCheckForm.enable()
+				error: () => this.passwordValidateForm.enable()
 			});
 		}
 	}

@@ -7,6 +7,7 @@ import { from, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SnackbarService } from './snackbar.service';
 import { Router } from '@angular/router';
+import { FirebaseError } from '@angular/fire/app';
 
 @Injectable({
 	providedIn: 'root'
@@ -22,49 +23,60 @@ export class ApiService {
 		return environment.API_URL + url;
 	}
 
-	setError(httpErrorResponse: HttpErrorResponse): Observable<never> {
-		const title: string = 'Error';
-
+	setError(httpError: any): Observable<never> {
 		// prettier-ignore
-		const message = (): string => {
-			const error: string | string[] = httpErrorResponse.message || httpErrorResponse.error.message;
+		const defaultMessage: string = 'Oops! Something went wrong. Try again later.';
 
-			if (typeof error === 'object') {
-				return String(error.join(', '));
+		const getMessage = (): string => {
+			switch (true) {
+				case httpError instanceof HttpErrorResponse: {
+					return httpError.error.message;
+				}
+				case httpError instanceof FirebaseError: {
+					/** https://codinglatte.com/posts/angular/handling-firebase-password-resets-in-angular/ */
+
+					switch (httpError.code) {
+						case 'auth/invalid-login-credentials':
+							return 'Invalid email or password credentials';
+						case 'auth/network-request-failed':
+							return 'Please check your internet connection';
+						case 'auth/too-many-requests':
+							return 'We have detected too many requests from your device. Take a break please!';
+						case 'auth/user-disabled':
+							return 'Your account has been disabled or deleted. Please contact the system administrator';
+						case 'auth/requires-recent-login':
+							return 'Please login again and try again!';
+						case 'auth/email-already-exists':
+							return 'Email address is already in use by an existing user';
+						case 'auth/user-not-found':
+							return 'We could not find user account associated with the email address';
+						case 'auth/invalid-email':
+							return 'The email address is not a valid email address!';
+						case 'auth/cannot-delete-own-user-account':
+							return 'You cannot delete your own user account';
+						default:
+							return defaultMessage;
+					}
+				}
+				default: {
+					return defaultMessage;
+				}
 			}
-
-			if (typeof error === 'string') {
-				return String(error);
-			}
-
-			return 'Misfortune! Server offline';
 		};
 
-		// prettier-ignore
-		const duration = (): number => {
-			const error: string | string[] = httpErrorResponse.message || httpErrorResponse.error.message;
-
-			if (typeof error === 'object') {
-				return error.length * 4000;
-			}
-
-			return 4000;
-		};
-
-		this.snackbarService.danger(title, message(), {
+		this.snackbarService.danger('Error', getMessage(), {
 			icon: 'bug',
-			duration: duration()
+			duration: 6000
 		});
 
-		return throwError(() => httpErrorResponse);
+		return throwError(() => httpError);
 	}
 
-	// prettier-ignore
-	setErrorRedirect(httpErrorResponse: Partial<HttpErrorResponse>): Observable<any> {
+	setErrorRedirect(httpErrorResponse: any): Observable<any> {
 		return from(
 			this.router
 				.navigate(['/error', httpErrorResponse.status])
-				.then(() => this.setError(httpErrorResponse as HttpErrorResponse))
+				.then(() => this.setError(httpErrorResponse))
 		);
 	}
 

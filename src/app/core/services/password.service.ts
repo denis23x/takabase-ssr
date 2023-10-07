@@ -3,13 +3,14 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
-import { PasswordCheckGetDto } from '../dto/password/password-check-get.dto';
+import { PasswordValidateGetDto } from '../dto/password/password-validate-get.dto';
 import { PasswordResetGetDto } from '../dto/password/password-reset-get.dto';
 import { PasswordResetUpdateDto } from '../dto/password/password-reset-update.dto';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EmailAuthProvider } from 'firebase/auth';
+import { PasswordUpdateDto } from '../dto/password/password-update.dto';
 import firebase from 'firebase/compat';
 
 @Injectable({
@@ -21,13 +22,24 @@ export class PasswordService {
 		private angularFireAuth: AngularFireAuth
 	) {}
 
+	onUpdate(passwordUpdateDto: PasswordUpdateDto): Observable<any> {
+		return from(this.angularFireAuth.currentUser).pipe(
+			switchMap((user: firebase.User) => {
+				return user.updatePassword(passwordUpdateDto.newPassword);
+			}),
+			catchError((httpErrorResponse: HttpErrorResponse) => {
+				return this.apiService.setError(httpErrorResponse);
+			})
+		);
+	}
+
 	// prettier-ignore
-	onCheckGet(passwordCheckGetDto: PasswordCheckGetDto): Observable<any> {
+	onValidateGet(passwordValidateGetDto: PasswordValidateGetDto): Observable<any> {
 		return from(this.angularFireAuth.currentUser).pipe(
 			switchMap((user: firebase.User) => {
 				const credentials: firebase.auth.AuthCredential = EmailAuthProvider.credential(
 					user.email,
-					passwordCheckGetDto.password
+					passwordValidateGetDto.password
 				);
 
 				return user.reauthenticateWithCredential(credentials);

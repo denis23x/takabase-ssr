@@ -3,25 +3,25 @@
 <ng-container>
 	<div
 		class="flex flex-col items-start justify-start gap-4"
-		[ngSwitch]="passwordCheckIsValid"
+		[ngSwitch]="passwordValidateIsValid"
 	>
 		<form
 			class="flex w-full flex-col gap-4"
 			autocomplete="off"
 			*ngSwitchCase="false"
-			[formGroup]="passwordCheckForm"
-			(ngSubmit)="onSubmitPasswordCheckForm()"
+			[formGroup]="passwordValidateForm"
+			(ngSubmit)="onSubmitPasswordValidateForm()"
 		>
 			<fieldset
 				class="form-control"
-				*ngIf="passwordCheckForm.get('password') as password"
+				*ngIf="passwordValidateForm.get('password') as password"
 			>
-				<label class="label" for="passwordCheckFormPassword">
+				<label class="label" for="passwordValidateFormPassword">
 					<div class="indicator">
 						<!-- prettier-ignore -->
 						<span
               class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-              *ngIf="password.touched && !!password.errors && passwordCheckForm.enabled"
+              *ngIf="password.touched && !!password.errors && passwordValidateForm.enabled"
               [ngSwitch]="true"
             >
               <ng-container *ngSwitchCase="!!password.errors.required">
@@ -37,7 +37,7 @@
 				<div class="relative" *ngIf="{ value: false } as isVisible">
 					<input
 						class="input-bordered input input-md w-full truncate pr-12"
-						id="passwordCheckFormPassword"
+						id="passwordValidateFormPassword"
 						aria-label="Password"
 						formControlName="password"
 						autocomplete="new-password"
@@ -84,11 +84,11 @@
           class="btn btn-success w-full"
           type="submit"
           aria-label="Continue"
-          [disabled]="passwordCheckForm.invalid || passwordCheckForm.disabled"
+          [disabled]="passwordValidateForm.invalid || passwordValidateForm.disabled"
         >
           <span
             class="loading loading-spinner"
-            *ngIf="passwordCheckForm.disabled"
+            *ngIf="passwordValidateForm.disabled"
           ></span>
           Continue
         </button>
