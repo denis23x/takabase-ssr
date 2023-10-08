@@ -10,12 +10,15 @@ export interface User {
 	name: string;
 	description: string | null;
 	posts?: Post[];
-	categories?: Category[];
-	avatar: string | null;
+	firebaseId?: string;
+	facebookId?: string;
+	githubId?: string;
+	googleId?: string;
 	email?: string;
 	emailConfirmed?: boolean;
+	categories?: Category[];
+	avatar: string | null;
 	sessions: Session[];
-	token?: string;
 	settings?: Settings;
 	createdAt: string;
 	updatedAt: string;

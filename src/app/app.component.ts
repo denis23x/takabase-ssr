@@ -6,6 +6,9 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthService } from './core/services/auth.service';
 import { filter, first, switchMap } from 'rxjs/operators';
 import { User } from './core/models/user.model';
+import { from } from 'rxjs';
+import { ConnectDto } from './core/dto/auth/connect.dto';
+import firebase from 'firebase/compat';
 
 @Component({
 	selector: 'app-root',
@@ -22,14 +25,17 @@ export class AppComponent implements OnInit, AfterViewInit {
 		this.angularFireAuth.authState
 			.pipe(
 				first(),
-				filter((user: any) => !!user),
-				switchMap(() => this.authService.getCurrentUser()),
-				switchMap((user: User | undefined) => {
-					if (user) {
-						return this.authService.setCurrentUser(user);
-					} else {
-						return this.authService.getCurrentUserFromServer();
-					}
+				filter((user: firebase.User) => !!user),
+				switchMap((user: firebase.User) => {
+					return from(user.reload()).pipe(
+						switchMap(() => {
+							const connectDto: ConnectDto = {
+								firebaseId: user.uid
+							};
+
+							return this.authService.onAttach(connectDto);
+						})
+					);
 				})
 			)
 			.subscribe({

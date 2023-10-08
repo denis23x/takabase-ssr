@@ -49,13 +49,6 @@ export class AuthService {
 				return this.apiService.setError(httpErrorResponse);
 			}),
 			switchMap((userCredential: firebase.auth.UserCredential) => {
-				return this.onAttach(userCredential).pipe(
-					switchMap(() => {
-						return of(userCredential);
-					})
-				);
-			}),
-			switchMap((userCredential: firebase.auth.UserCredential) => {
 				const userCreateDto: UserCreateDto = {
 					firebaseId: userCredential.user.uid,
 					name: registrationDto.name,
@@ -79,10 +72,11 @@ export class AuthService {
 				return this.apiService.setError(httpErrorResponse);
 			}),
 			switchMap((userCredential: firebase.auth.UserCredential) => {
-				return this.onAttach(userCredential);
-			}),
-			switchMap(() => {
-				return this.getCurrentUserFromServer();
+				const connectDto: ConnectDto = {
+					firebaseId: userCredential.user.uid
+				};
+
+				return this.onAttach(connectDto);
 			})
 		);
 	}
@@ -92,7 +86,20 @@ export class AuthService {
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);
 			}),
-			switchMap(() => this.onDetach()),
+			switchMap(() => this.onDetach())
+		);
+	}
+
+	/** Connect to backend */
+
+	onAttach(connectDto: ConnectDto): Observable<User> {
+		return this.apiService
+			.post('/authorization', connectDto)
+			.pipe(switchMap((user: User) => this.setCurrentUser(user)));
+	}
+
+	onDetach(): Observable<any> {
+		return this.apiService.delete('/authorization').pipe(
 			tap(() => {
 				this.user.next(undefined);
 				this.cookieService.removeItem('jwt-user');
@@ -100,27 +107,7 @@ export class AuthService {
 		);
 	}
 
-	/** Connect to backend */
-
-	onAttach(userCredential: firebase.auth.UserCredential): Observable<any> {
-		const connectDto: ConnectDto = {
-			firebaseId: userCredential.user.uid
-		};
-
-		return this.apiService.post('/authorization', connectDto);
-	}
-
-	onDetach(): Observable<any> {
-		return this.apiService.delete('/authorization');
-	}
-
 	/** Current User */
-
-	getCurrentUserFromServer(): Observable<User> {
-		return this.apiService
-			.get('/authorization')
-			.pipe(switchMap((user: User) => this.setCurrentUser(user)));
-	}
 
 	getCurrentUser(): Observable<User | undefined> {
 		const userInMemory: User | undefined = this.user.getValue();
