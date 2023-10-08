@@ -36,6 +36,8 @@ export class ApiService {
 					/** https://codinglatte.com/posts/angular/handling-firebase-password-resets-in-angular/ */
 
 					switch (httpError.code) {
+						case 'auth/invalid-action-code':
+							return 'Invalid confirmation code';
 						case 'auth/invalid-login-credentials':
 							return 'Invalid email or password credentials';
 						case 'auth/network-request-failed':
@@ -43,7 +45,7 @@ export class ApiService {
 						case 'auth/too-many-requests':
 							return 'We have detected too many requests from your device. Take a break please!';
 						case 'auth/user-disabled':
-							return 'Your account has been disabled or deleted. Please contact the system administrator';
+							return 'Your account has been disabled or deleted. Please contact support team';
 						case 'auth/requires-recent-login':
 							return 'Please login again and try again!';
 						case 'auth/email-already-in-use':

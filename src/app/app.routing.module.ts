@@ -27,12 +27,38 @@ import { TitleService } from './core/services/title.service';
 
 export const routes: Routes = [
 	{
-		path: 'email/confirmation',
-		title: 'Email confirmation',
+		path: 'confirmation',
+		title: 'Confirmation',
 		// prettier-ignore
 		loadComponent: () => {
-      return import('./auth/email-confirmation/email-confirmation.component').then(m => m.AuthEmailConfirmationComponent);
-    }
+			return import('./auth/confirmation/confirmation.component').then(m => m.AuthConfirmationComponent);
+		},
+		children: [
+			{
+				path: 'email',
+				title: 'Email confirmation',
+				// prettier-ignore
+				loadComponent: () => {
+			    return import('./auth/confirmation/email/email.component').then(m => m.AuthConfirmationEmailComponent);
+			  }
+			},
+			{
+				path: 'password',
+				title: 'Set password',
+				// prettier-ignore
+				loadComponent: () => {
+					return import('./auth/confirmation/password/password.component').then(m => m.AuthConfirmationPasswordComponent);
+				}
+			},
+			{
+				path: 'recovery',
+				title: 'Email recovery',
+				// prettier-ignore
+				loadComponent: () => {
+					return import('./auth/confirmation/recovery/recovery.component').then(m => m.AuthConfirmationRecoveryComponent);
+				}
+			}
+		]
 	},
 	{
 		path: 'login',
@@ -58,15 +84,6 @@ export const routes: Routes = [
 		// prettier-ignore
 		loadComponent: () => {
       return import('./auth/reset/reset.component').then(m => m.AuthResetComponent);
-    },
-		canMatch: [CanMatchPublicGuard]
-	},
-	{
-		path: 'reset/password',
-		title: 'Set password',
-		// prettier-ignore
-		loadComponent: () => {
-      return import('./auth/reset-password/reset-password.component').then(m => m.AuthResetPasswordComponent);
     },
 		canMatch: [CanMatchPublicGuard]
 	},

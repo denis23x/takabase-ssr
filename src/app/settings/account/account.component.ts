@@ -128,7 +128,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 					this.emailForm.reset();
 
 					// prettier-ignore
-					this.snackbarService.success(emailUpdateDto.newEmail, 'We sent you a verification email');
+					this.snackbarService.success('All right', 'We sent you a verification email');
 				},
 				error: () => this.emailForm.enable()
 			});

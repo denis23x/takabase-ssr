@@ -1,14 +1,14 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { from, Observable, switchMap } from 'rxjs';
+import { from, Observable, of, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
-import { User } from '../models/user.model';
 import { EmailConfirmationUpdateDto } from '../dto/email/email-confirmation-update.dto';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EmailUpdateDto } from '../dto/email/email-update.dto';
+import { EmailRecoveryDto } from '../dto/email/email-recovery.dto';
 import firebase from 'firebase/compat';
 
 @Injectable({
@@ -31,6 +31,25 @@ export class EmailService {
 		);
 	}
 
+	// prettier-ignore
+	onRecovery(emailRecoveryDto: EmailRecoveryDto): Observable<any> {
+		return from(this.angularFireAuth.checkActionCode(emailRecoveryDto.code)).pipe(
+			switchMap((actionCodeInfo: firebase.auth.ActionCodeInfo) => {
+				return from(this.angularFireAuth.applyActionCode(emailRecoveryDto.code)).pipe(
+					switchMap(() => {
+						return of(actionCodeInfo);
+					})
+				);
+			}),
+			switchMap((actionCodeInfo: firebase.auth.ActionCodeInfo) => {
+				return from(this.angularFireAuth.sendPasswordResetEmail(actionCodeInfo.data.email));
+			}),
+			catchError((httpErrorResponse: HttpErrorResponse) => {
+				return this.apiService.setError(httpErrorResponse);
+			})
+		);
+	}
+
 	onConfirmationGet(): Observable<any> {
 		return from(this.angularFireAuth.currentUser).pipe(
 			switchMap((user: firebase.User) => {
@@ -42,16 +61,12 @@ export class EmailService {
 		);
 	}
 
-	// TODO: update
 	// prettier-ignore
-	onConfirmationUpdate(emailConfirmationUpdateDto: EmailConfirmationUpdateDto): Observable<Partial<User>> {
-    // return from(this.angularFireAuth.currentUser).pipe(
-    //   switchMap((user: firebase.User) => this.angularFireAuth.credential.),
-    //   catchError((httpErrorResponse: HttpErrorResponse) => {
-    //     return this.apiService.setError(httpErrorResponse);
-    //   })
-    // );
-
-    return this.apiService.put('/email/confirmation', emailConfirmationUpdateDto);
+	onConfirmationUpdate(emailConfirmationUpdateDto: EmailConfirmationUpdateDto): Observable<void> {
+		return from(this.angularFireAuth.applyActionCode(emailConfirmationUpdateDto.code)).pipe(
+      catchError((httpErrorResponse: HttpErrorResponse) => {
+        return this.apiService.setError(httpErrorResponse);
+      })
+    );
   }
 }

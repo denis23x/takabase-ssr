@@ -1,0 +1,63 @@
+<!-- @format -->
+
+<ng-container>
+	<div
+		class="rounded-box flex flex-col space-y-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+	>
+		<div class="flex flex-col border-b border-base-content/20 pb-4">
+			<h1 class="text-2xl font-bold">Email recovery</h1>
+		</div>
+		<ng-container [ngSwitch]="true">
+			<div class="flex flex-col space-y-4" *ngSwitchDefault>
+				<p class="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appIcon]="'info-circle'"
+						[appSquare]="'1.5em'"
+					></i>
+					<!-- prettier-ignore -->
+					<span class="block">Your email address has been successfully restored. <span class="inline font-bold">For security purposes, we recommend changing your password now.</span> Please check your email and proceed to update your password to ensure the safety of your account.</span>
+				</p>
+				<ng-container [ngSwitch]="recoveryIsSucceed">
+					<button
+						class="btn-success btn w-full"
+						aria-label="Recovery"
+						*ngSwitchDefault
+						[disabled]="true"
+					>
+						<span class="loading loading-spinner"></span>
+						Recovery
+					</button>
+					<a
+						class="btn-success btn-outline btn w-full"
+						aria-label="Create post"
+						*ngSwitchCase="true"
+						[routerLink]="'/'"
+					>
+						Success
+					</a>
+				</ng-container>
+			</div>
+			<div
+				class="flex flex-col space-y-4"
+				*ngSwitchCase="!recoveryIsSubmitted && !recoveryIsSucceed"
+			>
+				<p class="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appIcon]="'info-circle'"
+						[appSquare]="'1.5em'"
+					></i>
+					<span class="block">
+						We apologize, but we are unable to restore your password at the
+						moment due to a server error. Please try again later, and if the
+						issue persists, feel free to contact our support team for
+						assistance.
+					</span>
+				</p>
+			</div>
+		</ng-container>
+	</div>
+</ng-container>

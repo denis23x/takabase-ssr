@@ -22,7 +22,7 @@
 						exciting content delivered straight to you.
 					</span>
 				</p>
-				<ng-container [ngSwitch]="!!confirmationUser">
+				<ng-container [ngSwitch]="confirmationIsSucceed">
 					<button
 						class="btn-success btn w-full"
 						aria-label="Confirmation"
@@ -36,15 +36,15 @@
 						class="btn-success btn-outline btn w-full"
 						aria-label="Create post"
 						*ngSwitchCase="true"
-						[routerLink]="$any(confirmationUser) | userUrl"
+						[routerLink]="'/'"
 					>
-						My profile
+						Success
 					</a>
 				</ng-container>
 			</div>
 			<div
 				class="flex flex-col space-y-4"
-				*ngSwitchCase="!confirmationIsSubmitted && !confirmationUser"
+				*ngSwitchCase="!confirmationIsSubmitted && !confirmationIsSucceed"
 			>
 				<p class="alert">
 					<i
