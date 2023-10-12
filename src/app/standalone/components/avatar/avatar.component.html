@@ -1,11 +1,10 @@
 <!-- @format -->
 
-<ng-container [ngSwitch]="!!user.avatar">
+<ng-container>
 	<img
 		loading="lazy"
-		*ngSwitchCase="true"
+		*ngIf="user.avatar"
 		[src]="user.avatar | imageTemp | async"
 		[alt]="user.name"
 	/>
-	<div *ngSwitchDefault [outerHTML]="userJdenticon | sanitizer: 'html'"></div>
 </ng-container>

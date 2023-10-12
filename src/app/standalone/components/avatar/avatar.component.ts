@@ -2,7 +2,6 @@
 
 import { Component, ElementRef, Input } from '@angular/core';
 import { toSvg } from 'jdenticon';
-import { SanitizerPipe } from '../../pipes/sanitizer.pipe';
 import { User } from '../../../core/models/user.model';
 import { CommonModule } from '@angular/common';
 import { PlatformService } from '../../../core/services/platform.service';
@@ -11,39 +10,39 @@ import { ImageTempPipe } from '../../pipes/image-temp.pipe';
 @Component({
 	standalone: true,
 	selector: 'app-avatar, [appAvatar]',
-	imports: [SanitizerPipe, CommonModule, ImageTempPipe],
+	imports: [CommonModule, ImageTempPipe],
 	templateUrl: './avatar.component.html'
 })
 export class AvatarComponent {
 	@Input()
-	set appUser(user: User) {
+	set appUser(user: Partial<User>) {
 		this.user = user;
 
 		if (!this.user.avatar) {
-			this.userJdenticon = this.getJdenticon();
+			this.setIcon();
 		}
 	}
 
 	user: Partial<User> | undefined;
-	userJdenticon: string | undefined;
 
 	constructor(
 		private elementRef: ElementRef,
 		private platformService: PlatformService
 	) {}
 
-	getJdenticon(): string {
+	setIcon(): void {
 		if (this.platformService.isBrowser()) {
+			const elementRef: HTMLElement = this.elementRef.nativeElement;
+			const elementRefDOMRect: DOMRect = elementRef.getBoundingClientRect();
+
 			// prettier-ignore
-			const elementRefDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
+			const elementIcon: string = toSvg(this.user.name, elementRefDOMRect.width, {
+        backColor: '#00000000',
+        padding: 0,
+        replaceMode: 'observe'
+      });
 
-			return toSvg(this.user.name, elementRefDOMRect.width, {
-				backColor: '#00000000',
-				padding: 0,
-				replaceMode: 'observe'
-			});
+			elementRef.insertAdjacentHTML('afterbegin', elementIcon);
 		}
-
-		return '';
 	}
 }
