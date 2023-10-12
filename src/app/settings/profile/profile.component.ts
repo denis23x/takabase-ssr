@@ -14,7 +14,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -184,25 +184,25 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				...this.profileForm.value
 			};
 
-			this.userService.update(this.authUser.id, userUpdateDto).subscribe({
-				next: (user: User) => {
-					this.profileFormIsPristine = true;
+			this.userService
+				.update(this.authUser.id, userUpdateDto)
+				.pipe(
+					switchMap((user: User) => {
+						return this.authService
+							.setCurrentUser(user)
+							.pipe(tap((user: User) => (this.authUser = user)));
+					})
+				)
+				.subscribe({
+					next: () => {
+						// prettier-ignore
+						this.snackbarService.success('Success', 'Information has been updated');
 
-					this.authUser = {
-						...user,
-						settings: this.authUser.settings
-					};
-
-					// TODO: update
-					// this.authService.setUser(this.authUser);
-
-					// prettier-ignore
-					this.snackbarService.success('Success', 'Information has been updated');
-
-					this.profileForm.enable();
-				},
-				error: () => this.profileForm.enable()
-			});
+						this.profileFormIsPristine = true;
+						this.profileForm.enable();
+					},
+					error: () => this.profileForm.enable()
+				});
 		}
 	}
 }

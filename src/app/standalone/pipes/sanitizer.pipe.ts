@@ -23,14 +23,14 @@ export class SanitizerPipe implements PipeTransform {
 			};
 
 			// prettier-ignore
-			return this.bypassSecurityTrust(context, String(DOMPurify.sanitize(value, config)));
+			return this.bypassSecurityTrust(String(DOMPurify.sanitize(value, config)), context);
 		}
 
 		return null;
 	}
 
 	// prettier-ignore
-	private bypassSecurityTrust(context: string, value: string): SafeValue | null {
+	private bypassSecurityTrust(value: string, context: string): SafeValue | null {
 		switch (context) {
 			case 'html':
 				return this.domSanitizer.bypassSecurityTrustHtml(value);
