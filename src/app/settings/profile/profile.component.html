@@ -16,15 +16,19 @@
 					<div class="avatar">
             <figure
               class="h-12 w-12 rounded-btn relative overflow-hidden"
+              data-pw="app-settings-profile-image-avatar"
               appAvatar
               [ngClass]="{ 'cursor-not-allowed opacity-50 saturate-0 transition': profileForm.disabled }"
               [appUser]="authUser"
             ></figure>
           </div>
 					<div class="flex flex-col overflow-auto">
-						<span class="truncate text-xl font-bold text-base-content">
+						<h1
+							class="truncate text-xl font-bold text-base-content"
+							data-pw="app-settings-profile-heading-user-name"
+						>
 							{{ authUser.name }}
-						</span>
+						</h1>
 						<!-- prettier-ignore -->
 						<time
 							class="text-sm text-base-content/50 truncate"
@@ -37,6 +41,7 @@
 				<div class="flex items-center justify-end gap-4 w-full sm:w-auto">
 					<button
 						class="btn-ghost btn btn-square bg-base-200 fill-current"
+						data-pw="app-settings-profile-button-show-qr-code-modal"
 						type="button"
 						title="QR Code"
 						aria-label="QR Code"
@@ -48,6 +53,7 @@
 					></button>
 					<button
 						class="btn-success btn flex-1 sm:flex-auto"
+						data-pw="app-settings-profile-button-show-cropper-modal"
 						type="button"
 						aria-label="Avatar"
 						[class.btn-outline]="!authUser.avatar && profileForm.enabled"
@@ -65,6 +71,7 @@
 						<!-- prettier-ignore -->
 						<span
               class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+              data-pw="app-settings-profile-form-name-error"
               *ngIf="name.touched && !!name.errors && profileForm.enabled"
               [ngSwitch]="true"
             >
@@ -85,6 +92,7 @@
 					<input
 						class="input-bordered input input-md w-full truncate pr-12"
 						id="profileFormName"
+						data-pw="app-settings-profile-form-name"
 						type="text"
 						aria-label="Name"
 						formControlName="name"
@@ -95,6 +103,7 @@
 					/>
 					<button
 						class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+						data-pw="app-settings-profile-form-name-clear"
 						type="button"
 						aria-label="Clear"
 						appSvgIcon
@@ -109,7 +118,7 @@
 					></button>
 				</div>
 			</fieldset>
-			<p class="alert">
+			<p class="alert" data-pw="app-settings-profile-alert-change-name">
 				<i
 					class="fill-current text-info"
 					appSvgIcon
@@ -128,6 +137,7 @@
 					<div class="indicator">
             <span
               class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+              data-pw="app-settings-profile-form-description-error"
               *ngIf="!!description.value && !!description.errors && profileForm.enabled"
               [ngSwitch]="true"
             >
@@ -166,6 +176,7 @@
           <textarea
             class="textarea textarea-md w-full max-h-64"
             id="profileFormDescription"
+            data-pw="app-settings-profile-form-description"
             aria-label="Description"
             placeholder="Type your description"
             formControlName="description"
@@ -182,6 +193,7 @@
 				<!-- prettier-ignore -->
 				<button
           class="btn btn-success w-full"
+          data-pw="app-settings-profile-form-submit"
           type="submit"
           aria-label="Submit"
           [disabled]="profileForm.invalid || profileForm.disabled || profileFormIsPristine"
@@ -240,10 +252,12 @@
 				>
 					<canvas
 						class="aspect-square w-full border-b border-base-content/20"
+						data-pw="app-settings-profile-image-qr-code"
 						#QRCodeCanvas
 					></canvas>
 					<a
 						class="link text-center text-sm truncate p-4"
+						data-pw="app-settings-profile-link-to-profile"
 						target="_blank"
 						[href]="authUserQRCodeLink"
 					>
@@ -252,6 +266,7 @@
 				</div>
 				<button
 					class="btn-success btn w-full"
+					data-pw="app-settings-profile-button-download-qr-code"
 					type="button"
 					aria-label="Download"
 					appQrCode

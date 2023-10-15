@@ -95,7 +95,9 @@ export class AppQrCodeDirective implements OnInit, OnDestroy {
 
 		/** Subscribe for regenerate QRCode */
 
-		this.QRCodePath$.pipe(filter(() => !!this.QRCodeCanvas)).subscribe({
+		this.QRCodePath$.pipe(
+			filter((value: string) => !!value && !!this.QRCodeCanvas)
+		).subscribe({
 			next: () => this.setQRCodeToCanvas(),
 			error: (error: any) => console.error(error)
 		});

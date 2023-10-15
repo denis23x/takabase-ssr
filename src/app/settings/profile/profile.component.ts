@@ -105,15 +105,6 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 					this.profileForm.patchValue(this.authUser);
 					this.profileForm.markAllAsTouched();
-
-					/** Make URL for QR code */
-
-					if (this.platformService.isBrowser()) {
-						const window: Window = this.platformService.getWindow();
-
-						// prettier-ignore
-						this.authUserQRCodeLink = window.location.origin + this.userService.getUserUrl(this.authUser);
-					}
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -147,6 +138,13 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	onToggleQRCode(toggle: boolean): void {
 		if (toggle) {
+			if (this.platformService.isBrowser()) {
+				const window: Window = this.platformService.getWindow();
+
+				// prettier-ignore
+				this.authUserQRCodeLink = window.location.origin + this.userService.getUserUrl(this.authUser);
+			}
+
 			this.QRCodeModal.nativeElement.showModal();
 		} else {
 			this.QRCodeModal.nativeElement.close();
