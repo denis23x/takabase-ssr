@@ -10,5 +10,3 @@ rm:
 	docker rm -f app-ssr
 exec:
 	docker exec -it app-ssr sh
-deploy:
-	gcloud builds submit
