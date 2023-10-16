@@ -37,6 +37,8 @@ export class CookieService {
 			options = {
 				...options,
 				path: '/',
+				secure: true,
+				sameSite: 'strict',
 				domain: window.location.hostname
 			};
 
