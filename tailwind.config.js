@@ -21,9 +21,9 @@ module.exports = {
 
     /** WINDOW  */
 
-    "max-h-[calc(100vh-2rem)]",
+    "max-h-[calc(100dvh-2rem)]",
     "max-w-[calc(100vw-2rem)]",
-    "md:max-h-[80vh]",
+    "md:max-h-[80dvh]",
     "md:max-w-[calc(768px-4rem)]",
 
     /** MARKDOWN  */
@@ -488,9 +488,6 @@ module.exports = {
       maxHeight: {
         58: "14.5rem",
         76: "19rem",
-      },
-      width: {
-        window: "calc(100vw - 2rem - 2px)",
       },
       scale: {
         "-1": "-1",

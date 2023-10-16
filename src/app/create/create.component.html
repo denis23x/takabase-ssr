@@ -528,7 +528,7 @@
 			(closed)="onToggleCategoryForm(false)"
 		>
 			<form
-				class="flex w-window max-w-[512px] flex-col gap-4 p-4"
+				class="flex max-w-lg flex-col gap-4 p-4"
 				autocomplete="off"
 				slot="content"
 				[formGroup]="categoryForm"
@@ -705,10 +705,7 @@
 			[appButtons]="['close']"
 			(closed)="onToggleDeletePost(false)"
 		>
-			<div
-				class="flex w-window max-w-[425px] flex-col space-y-4 p-4"
-				slot="content"
-			>
+			<div class="flex max-w-md flex-col space-y-4 p-4" slot="content">
 				<p class="alert">
 					<i
 						class="fill-current text-info"

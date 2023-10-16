@@ -33,11 +33,11 @@ export class WindowComponent implements OnInit {
 	fullscreenClassList: string[] = [
 		'h-auto',
 		'w-auto',
-		'max-h-[calc(100vh-2rem)]',
+		'max-h-[calc(100dvh-2rem)]',
 		'max-w-[calc(100vw-2rem)]',
 		'border',
 		'border-base-content/20',
-		'md:max-h-[80vh]',
+		'md:max-h-[80dvh]',
 		'md:max-w-[calc(768px-4rem)]',
 		'shadow-xl',
 		'rounded-box'
@@ -75,11 +75,11 @@ export class WindowComponent implements OnInit {
 			this.fullscreenClassList = [
 				'h-auto',
 				'w-auto',
-				'max-h-[calc(100vh-2rem)]',
+				'max-h-[calc(100dvh-2rem)]',
 				'max-w-[calc(100vw-2rem)]',
 				'border',
 				'border-base-content/20',
-				'md:max-h-[80vh]',
+				'md:max-h-[80dvh]',
 				'md:max-w-[calc(768px-4rem)]',
 				'shadow-xl',
 				'rounded-box'
