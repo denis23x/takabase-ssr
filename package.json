@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "start:dev": "ng run draft-ssr:serve:development",
+    "start:dev": "ng run draft-ssr:serve:development --host 0.0.0.0 --disable-host-check",
     "start:deploy": "firebase use draft-ssr && firebase deploy --only functions,hosting",
     "start:lint": "ng lint",
     "build:ssr:prod": "ng run draft-ssr:prerender:production && ng run draft-ssr:server:production",

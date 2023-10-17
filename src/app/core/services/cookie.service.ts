@@ -3,6 +3,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -37,10 +38,16 @@ export class CookieService {
 			options = {
 				...options,
 				path: '/',
-				secure: true,
-				sameSite: 'strict',
 				domain: window.location.hostname
 			};
+
+			if (environment.production) {
+				options = {
+					...options,
+					secure: true,
+					sameSite: 'strict'
+				};
+			}
 
 			if (options.expires instanceof Date) {
 				options.expires = options.expires.toUTCString();
