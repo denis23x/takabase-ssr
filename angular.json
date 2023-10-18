@@ -21,7 +21,6 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "ua-parser-js",
               "prismjs",
               "dompurify",
               "qrcode",

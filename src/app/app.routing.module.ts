@@ -15,7 +15,6 @@ import { SearchCategoryResolverService } from './search/category/category-resolv
 import { SearchUserResolverService } from './search/user/user-resolver.service';
 import { SettingsResolverService } from './settings/settings-resolver.service';
 import { SettingsAppearanceResolverService } from './settings/appearance/appearance-resolver.service';
-import { SettingsSecurityResolverService } from './settings/security/security-resolver.service';
 import { UserResolverService } from './user/user-resolver.service';
 import { UserPostResolverService } from './user/post/post-resolver.service';
 import { UserPostDetailsResolverService } from './user/post/details/details-resolver.service';
@@ -257,17 +256,6 @@ export const routes: Routes = [
 				loadComponent: () => {
           return import('./settings/profile/profile.component').then(m => m.SettingsProfileComponent);
         }
-			},
-			{
-				path: 'security',
-				title: 'Security settings',
-				// prettier-ignore
-				loadComponent: () => {
-          return import('./settings/security/security.component').then(m => m.SettingsSecurityComponent);
-        },
-				resolve: {
-					data: SettingsSecurityResolverService
-				}
 			}
 		]
 	},
