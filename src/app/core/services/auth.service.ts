@@ -112,11 +112,7 @@ export class AuthService {
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);
 			}),
-			switchMap(() => {
-				return this.apiService
-					.delete('/authorization')
-					.pipe(tap(() => this.user.next(undefined)));
-			})
+			tap(() => this.user.next(undefined))
 		);
 	}
 

@@ -3,6 +3,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { AppearanceService } from './core/services/appearance.service';
 import { AuthService } from './core/services/auth.service';
+import { first } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-root',
@@ -15,10 +16,13 @@ export class AppComponent implements OnInit, AfterViewInit {
 	) {}
 
 	ngOnInit(): void {
-		this.authService.onPopulate().subscribe({
-			next: () => console.debug('Populated'),
-			error: (error: any) => console.error(error)
-		});
+		this.authService
+			.onPopulate()
+			.pipe(first())
+			.subscribe({
+				next: () => console.debug('Populated'),
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	ngAfterViewInit(): void {

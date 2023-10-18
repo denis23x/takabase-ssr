@@ -27,7 +27,11 @@
 			</a>
 		</div>
 		<div class="navbar-end">
-			<button class="btn-ghost btn text-xl normal-case" (click)="onLogout()">
+			<button
+				class="btn-ghost btn text-xl normal-case"
+				*appAuthenticated="true"
+				(click)="onLogout()"
+			>
 				logout
 			</button>
 			<ng-container *appAuthenticated="false">

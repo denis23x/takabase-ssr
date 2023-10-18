@@ -19,7 +19,11 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 	constructor(private authService: AuthService) {}
 
 	private handleRequest(request: HttpRequest<any>): HttpRequest<any> {
-		if (request.url.startsWith(environment.API_URL)) {
+		// prettier-ignore
+		const isMethodMatch: boolean = ['POST', 'PUT', 'DELETE'].includes(request.method);
+		const isUrlMatch: boolean = request.url.startsWith(environment.API_URL);
+
+		if (isMethodMatch && isUrlMatch) {
 			const user: User = this.authService.user.getValue();
 
 			if (user && user.bearer) {
