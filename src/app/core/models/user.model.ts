@@ -8,6 +8,7 @@ import firebase from 'firebase/compat';
 
 export interface User {
 	id: number;
+	bearer?: string;
 	name: string;
 	description: string | null;
 	posts?: Post[];

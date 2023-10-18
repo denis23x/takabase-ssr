@@ -27,6 +27,37 @@ export class AuthService {
 		private userService: UserService
 	) {}
 
+	onPopulate(): Observable<User | undefined> {
+		return this.getCurrentUser().pipe(
+			switchMap((currentUser: User | undefined) => {
+				if (currentUser) {
+					return of(currentUser);
+				}
+
+				return from(this.angularFireAuth.authState).pipe(
+					switchMap((firebaseUser: firebase.User | null) => {
+						if (firebaseUser) {
+							const connectDto: ConnectDto = {
+								firebaseId: firebaseUser.uid
+							};
+
+							return this.apiService.post('/authorization', connectDto).pipe(
+								switchMap((user: User) => {
+									return this.setCurrentUser({
+										...firebaseUser,
+										...user
+									});
+								})
+							);
+						}
+
+						return of(undefined);
+					})
+				);
+			})
+		);
+	}
+
 	/** Authorization API */
 
 	onRegistration(registrationDto: RegistrationDto): Observable<User> {
@@ -85,21 +116,6 @@ export class AuthService {
 				return this.apiService
 					.delete('/authorization')
 					.pipe(tap(() => this.user.next(undefined)));
-			})
-		);
-	}
-
-	onRefresh(currentUser: firebase.User): Observable<User> {
-		const connectDto: ConnectDto = {
-			firebaseId: currentUser.uid
-		};
-
-		return this.apiService.post('/authorization', connectDto).pipe(
-			switchMap((user: User) => {
-				return this.setCurrentUser({
-					...currentUser,
-					...user
-				});
 			})
 		);
 	}

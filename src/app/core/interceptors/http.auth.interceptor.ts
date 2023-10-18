@@ -10,15 +10,28 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service';
+import { User } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class HttpAuthInterceptor implements HttpInterceptor {
-	setRequestWithCredentials(request: HttpRequest<any>): HttpRequest<any> {
+	constructor(private authService: AuthService) {}
+
+	private handleRequest(request: HttpRequest<any>): HttpRequest<any> {
 		if (request.url.startsWith(environment.API_URL)) {
-			return request.clone({
-				withCredentials: true
-			});
+			const user: User = this.authService.user.getValue();
+
+			if (user && user.bearer) {
+				return request.clone({
+					setHeaders: {
+						['Authorization']: 'Bearer ' + user.bearer
+					},
+					withCredentials: false
+				});
+			}
+
+			return request;
 		}
 
 		return request;
@@ -26,10 +39,10 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 
 	// prettier-ignore
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-		return next.handle(this.setRequestWithCredentials(request)).pipe(
-			catchError((httpErrorResponse: HttpErrorResponse) => {
+    return next.handle(this.handleRequest(request)).pipe(
+      catchError((httpErrorResponse: HttpErrorResponse) => {
         return throwError(() => httpErrorResponse);
-			})
-		);
-	}
+      })
+    );
+  }
 }
