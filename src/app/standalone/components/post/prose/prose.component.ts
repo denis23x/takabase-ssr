@@ -9,9 +9,9 @@ import { MarkdownPipe } from '../../../pipes/markdown.pipe';
 import { UserUrlPipe } from '../../../pipes/user-url.pipe';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { Post } from '../../../../core/models/post.model';
-import { User } from '../../../../core/models/user.model';
-import { AuthService } from '../../../../core/services/auth.service';
+import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { SanitizerPipe } from '../../../pipes/sanitizer.pipe';
+import { CurrentUser } from '../../../../core/models/current-user.model';
 
 @Component({
 	standalone: true,
@@ -34,21 +34,21 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 		this.post = post;
 	}
 
-	authUser: User | undefined;
-	authUser$: Subscription | undefined;
+	currentUser: CurrentUser | undefined;
+	currentUser$: Subscription | undefined;
 
 	post: Post | undefined;
 
-	constructor(private authService: AuthService) {}
+	constructor(private authorizationService: AuthorizationService) {}
 
 	ngOnInit(): void {
-		this.authUser$ = this.authService.user.subscribe({
-			next: (user: User) => (this.authUser = user),
+		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
+			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
 	}
 
 	ngOnDestroy(): void {
-		[this.authUser$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 }

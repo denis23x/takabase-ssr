@@ -13,7 +13,7 @@ import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthorizationService } from '../../core/services/authorization.service';
 import { environment } from '../../../environments/environment';
 import { AppScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SettingsUpdateDto } from '../../core/dto/settings/settings-update.dto';
@@ -65,7 +65,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private authService: AuthService,
+		private authorizationService: AuthorizationService,
 		private settingsService: SettingsService,
 		private activatedRoute: ActivatedRoute
 	) {
@@ -115,7 +115,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 				// TODO: update settings
 				// this.settingsService.update(settingsUpdateDto).subscribe({
 				// 	next: (settings: Settings) => {
-				// 		this.authService.setUser({ settings });
+				// 		this.authorizationService.setUser({ settings });
 				//
 				// 		this.appearanceForm.enable({ emitEvent: false });
 				// 	},

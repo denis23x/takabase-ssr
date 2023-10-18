@@ -47,7 +47,10 @@
 				</nav>
 			</ng-container>
 			<ng-container *appAuthenticated="true">
-				<nav class="flex items-center justify-end space-x-2" *ngIf="!!authUser">
+				<nav
+					class="flex items-center justify-end space-x-2"
+					*ngIf="!!currentUser"
+				>
 					<a
 						class="btn-ghost btn-square btn fill-current"
 						title="Create post"
@@ -74,14 +77,14 @@
 					<a
 						class="avatar"
 						data-pw="app-header-link-to-profile"
-						[routerLink]="[authUser | userUrl]"
-						[attr.aria-label]="authUser.name"
-						[title]="authUser.name"
+						[routerLink]="[currentUser | userUrl]"
+						[attr.aria-label]="currentUser.name"
+						[title]="currentUser.name"
 					>
 						<figure
 							class="h-12 w-12 rounded-btn relative overflow-hidden"
 							appAvatar
-							[appUser]="authUser"
+							[appUser]="currentUser"
 						></figure>
 					</a>
 				</nav>

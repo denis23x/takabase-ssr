@@ -12,7 +12,7 @@ import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { Session } from '../../core/models/session.model';
 import { HelperService } from '../../core/services/helper.service';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthorizationService } from '../../core/services/authorization.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { SessionService } from '../../core/services/session.service';
 
@@ -35,7 +35,7 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
 		private activatedRoute: ActivatedRoute,
-		private authService: AuthService,
+		private authorizationService: AuthorizationService,
 		private sessionService: SessionService,
 		private router: Router,
 		private snackbarService: SnackbarService
@@ -55,7 +55,7 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
           })
         }),
 				switchMap(() => {
-          // this.authService.getFingerprint()
+          // this.authorizationService.getFingerprint()
 
           return '';
         })
@@ -79,7 +79,7 @@ export class SettingsSecurityComponent implements OnInit, OnDestroy {
 	}
 
 	onLogout(): void {
-		this.authService
+		this.authorizationService
 			.onLogout()
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {

@@ -34,7 +34,7 @@
 						class="btn-primary btn-outline btn w-12 h-12 sm:w-auto sm:h-auto"
 						data-pw="app-user-link-to-settings"
 						aria-label="Settings"
-						*ngIf="authUser?.id === user.id"
+						*ngIf="currentUser?.id === user.id"
 						[routerLink]="['/settings']"
 					>
 						<span class="hidden sm:block">Settings</span>
@@ -138,7 +138,7 @@
 									class="btn-success btn-outline btn focus:outline-0 w-12 h-12 sm:w-auto sm:h-auto"
 									type="button"
 									aria-label="Edit"
-									*ngIf="authUser?.id === user.id"
+									*ngIf="currentUser?.id === user.id"
 									(click)="onToggleCategoryEditForm(true)"
 								>
 									<span class="hidden sm:block">Edit</span>

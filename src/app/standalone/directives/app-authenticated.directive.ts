@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { AuthService } from '../../core/services/auth.service';
-import { User } from '../../core/models/user.model';
+import { AuthorizationService } from '../../core/services/authorization.service';
+import { CurrentUser } from '../../core/models/current-user.model';
 
 @Directive({
 	standalone: true,
@@ -28,17 +28,18 @@ export class AppAuthenticatedDirective implements OnInit, OnDestroy {
 
 	constructor(
 		private templateRef: TemplateRef<any>,
-		private authService: AuthService,
+		private authorizationService: AuthorizationService,
 		private viewContainerRef: ViewContainerRef
 	) {}
 
 	ngOnInit(): void {
-		this.authenticated$ = this.authService.user
+		this.authenticated$ = this.authorizationService
+			.getCurrentUser()
 			.pipe(tap(() => this.viewContainerRef.clear()))
 			.subscribe({
 				// prettier-ignore
-				next: (user: User | undefined) => {
-					if ((!!user && this.authenticated) || (!user && !this.authenticated)) {
+				next: (currentUser: CurrentUser | undefined) => {
+					if ((!!currentUser && this.authenticated) || (!currentUser && !this.authenticated)) {
 						this.viewContainerRef.createEmbeddedView(this.templateRef);
 					} else {
 						this.viewContainerRef.clear();

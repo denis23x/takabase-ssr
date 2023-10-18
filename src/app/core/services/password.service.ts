@@ -24,8 +24,8 @@ export class PasswordService {
 
 	onUpdate(passwordUpdateDto: PasswordUpdateDto): Observable<any> {
 		return from(this.angularFireAuth.currentUser).pipe(
-			switchMap((user: firebase.User) => {
-				return from(user.updatePassword(passwordUpdateDto.newPassword));
+			switchMap((firebaseUser: firebase.User) => {
+				return from(firebaseUser.updatePassword(passwordUpdateDto.newPassword));
 			}),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);
@@ -36,13 +36,13 @@ export class PasswordService {
 	// prettier-ignore
 	onValidateGet(passwordValidateGetDto: PasswordValidateGetDto): Observable<any> {
 		return from(this.angularFireAuth.currentUser).pipe(
-			switchMap((user: firebase.User) => {
+			switchMap((firebaseUser: firebase.User) => {
 				const credentials: firebase.auth.AuthCredential = EmailAuthProvider.credential(
-					user.email,
+					firebaseUser.email,
 					passwordValidateGetDto.password
 				);
 
-				return from(user.reauthenticateWithCredential(credentials));
+				return from(firebaseUser.reauthenticateWithCredential(credentials));
 			}),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);

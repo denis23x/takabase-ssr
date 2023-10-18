@@ -11,7 +11,7 @@ import {
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthorizationService } from '../../core/services/authorization.service';
 import { UserService } from '../../core/services/user.service';
 import { HelperService } from '../../core/services/helper.service';
 import { User } from '../../core/models/user.model';
@@ -49,7 +49,7 @@ export class AuthRegistrationComponent implements OnInit {
 
 	constructor(
 		private router: Router,
-		private authService: AuthService,
+		private authorizationService: AuthorizationService,
 		private userService: UserService,
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
@@ -110,7 +110,7 @@ export class AuthRegistrationComponent implements OnInit {
 				...this.registrationForm.value
 			};
 
-			this.authService.onRegistration(registrationDto).subscribe({
+			this.authorizationService.onRegistration(registrationDto).subscribe({
 				next: (user: User) => {
 					// prettier-ignore
 					this.router

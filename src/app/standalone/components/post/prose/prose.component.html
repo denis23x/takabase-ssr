@@ -7,7 +7,10 @@
 		<header
 			class="flex w-full flex-col items-start justify-start border-b border-base-content/20"
 		>
-			<div class="mt-4 flex" *ngIf="authUser?.id === post.user.id && post.id">
+			<div
+				class="mt-4 flex"
+				*ngIf="currentUser?.id === post.user.id && post.id"
+			>
 				<a
 					class="btn-primary btn"
 					aria-label="Settings"
@@ -62,7 +65,7 @@
 		>
 			<div
 				class="flex items-center justify-start space-x-4 py-4"
-				*ngIf="authUser?.id !== post.user.id"
+				*ngIf="currentUser?.id !== post.user.id"
 			>
 				<a
 					class="avatar"

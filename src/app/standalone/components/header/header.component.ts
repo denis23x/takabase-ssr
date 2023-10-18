@@ -8,11 +8,11 @@ import { AvatarComponent } from '../avatar/avatar.component';
 import { CommonModule } from '@angular/common';
 import { AppAuthenticatedDirective } from '../../directives/app-authenticated.directive';
 import { UserUrlPipe } from '../../pipes/user-url.pipe';
-import { User } from '../../../core/models/user.model';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthorizationService } from '../../../core/services/authorization.service';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '../../../core/services/snackbar.service';
+import { CurrentUser } from '../../../core/models/current-user.model';
 
 @Component({
 	standalone: true,
@@ -28,28 +28,28 @@ import { SnackbarService } from '../../../core/services/snackbar.service';
 	templateUrl: './header.component.html'
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-	authUser: User | undefined;
-	authUser$: Subscription | undefined;
+	currentUser: CurrentUser | undefined;
+	currentUser$: Subscription | undefined;
 
 	constructor(
-		private authService: AuthService,
+		private authorizationService: AuthorizationService,
 		private router: Router,
 		private snackbarService: SnackbarService
 	) {}
 
 	ngOnInit(): void {
-		this.authUser$ = this.authService.user.subscribe({
-			next: (user: User) => (this.authUser = user),
+		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
+			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
 	}
 
 	ngOnDestroy(): void {
-		[this.authUser$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onLogout(): void {
-		this.authService
+		this.authorizationService
 			.onLogout()
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {

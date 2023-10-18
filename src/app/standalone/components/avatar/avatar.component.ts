@@ -15,7 +15,7 @@ import { ImageTempPipe } from '../../pipes/image-temp.pipe';
 })
 export class AvatarComponent {
 	@Input()
-	set appUser(user: Partial<User>) {
+	set appUser(user: User) {
 		this.user = user;
 
 		if (!this.user.avatar) {
@@ -23,7 +23,7 @@ export class AvatarComponent {
 		}
 	}
 
-	user: Partial<User> | undefined;
+	user: User | undefined;
 
 	constructor(
 		private elementRef: ElementRef,

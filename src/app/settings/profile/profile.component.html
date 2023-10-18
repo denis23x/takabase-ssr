@@ -19,7 +19,7 @@
               data-pw="app-settings-profile-image-avatar"
               appAvatar
               [ngClass]="{ 'cursor-not-allowed opacity-50 saturate-0 transition': profileForm.disabled }"
-              [appUser]="authUser"
+              [appUser]="currentUser"
             ></figure>
           </div>
 					<div class="flex flex-col overflow-auto">
@@ -27,14 +27,14 @@
 							class="truncate text-xl font-bold text-base-content"
 							data-pw="app-settings-profile-heading-user-name"
 						>
-							{{ authUser.name }}
+							{{ currentUser.name }}
 						</h1>
 						<!-- prettier-ignore -->
 						<time
 							class="text-sm text-base-content/50 truncate"
-							[attr.datetime]="authUser.createdAt | dayjs : 'format' : 'YYYY-M-D'"
+							[attr.datetime]="currentUser.createdAt | dayjs : 'format' : 'YYYY-M-D'"
 						>
-							registered {{ authUser.createdAt | dayjs : "fromX" }}
+							registered {{ currentUser.createdAt | dayjs : "fromX" }}
 						</time>
 					</div>
 				</div>
@@ -56,7 +56,7 @@
 						data-pw="app-settings-profile-button-show-cropper-modal"
 						type="button"
 						aria-label="Avatar"
-						[class.btn-outline]="!authUser.avatar && profileForm.enabled"
+						[class.btn-outline]="!currentUser.avatar && profileForm.enabled"
 						[disabled]="profileForm.disabled"
 						(click)="onToggleProfileFormAvatar(true)"
 					>
@@ -126,7 +126,7 @@
 					[appSquare]="'1.5em'"
 				></i>
 				<!-- prettier-ignore -->
-				<span class="block">Change the name will set the <span class="inline font-bold">{{ authUser | userUrl : 1 }}</span> user profile not more available by direct link or QR code</span>
+				<span class="block">Change the name will set the <span class="inline font-bold">{{ currentUser | userUrl : 1 }}</span> user profile not more available by direct link or QR code</span>
 			</p>
 			<fieldset
 				class="form-control"
@@ -259,9 +259,9 @@
 						class="link text-center text-sm truncate p-4"
 						data-pw="app-settings-profile-link-to-profile"
 						target="_blank"
-						[href]="authUserQRCodeLink"
+						[href]="currentUserQRCodeUrl"
 					>
-						{{ authUserQRCodeLink }}
+						{{ currentUserQRCodeUrl }}
 					</a>
 				</div>
 				<button
@@ -271,7 +271,7 @@
 					aria-label="Download"
 					appQrCode
 					[appQRCodeDownloadOnClick]="true"
-					[appQRCodePath]="authUserQRCodeLink"
+					[appQRCodeText]="currentUserQRCodeUrl"
 					[appQRCodeCanvas]="QRCodeCanvas"
 				>
 					Download

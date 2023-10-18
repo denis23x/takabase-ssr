@@ -2,7 +2,7 @@
 
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { AppearanceService } from './core/services/appearance.service';
-import { AuthService } from './core/services/auth.service';
+import { AuthorizationService } from './core/services/authorization.service';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -12,15 +12,17 @@ import { first } from 'rxjs/operators';
 export class AppComponent implements OnInit, AfterViewInit {
 	constructor(
 		private appearanceService: AppearanceService,
-		private authService: AuthService
+		private authorizationService: AuthorizationService
 	) {}
 
 	ngOnInit(): void {
-		this.authService
+		this.authorizationService
 			.onPopulate()
 			.pipe(first())
 			.subscribe({
-				next: () => console.debug('Populated'),
+				next: (user: any) => {
+					console.log(user);
+				},
 				error: (error: any) => console.error(error)
 			});
 	}

@@ -10,26 +10,26 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthService } from '../services/auth.service';
-import { User } from '../models/user.model';
+import { AuthorizationService } from '../services/authorization.service';
 import { environment } from '../../../environments/environment';
+import { CurrentUser } from '../models/current-user.model';
 
 @Injectable()
 export class HttpAuthInterceptor implements HttpInterceptor {
-	constructor(private authService: AuthService) {}
+	constructor(private authorizationService: AuthorizationService) {}
 
+	// prettier-ignore
 	private handleRequest(request: HttpRequest<any>): HttpRequest<any> {
-		// prettier-ignore
 		const isMethodMatch: boolean = ['POST', 'PUT', 'DELETE'].includes(request.method);
 		const isUrlMatch: boolean = request.url.startsWith(environment.API_URL);
 
 		if (isMethodMatch && isUrlMatch) {
-			const user: User = this.authService.user.getValue();
+			const currentUser: CurrentUser = this.authorizationService.currentUser.getValue();
 
-			if (user && user.bearer) {
+			if (currentUser && currentUser.bearer) {
 				return request.clone({
 					setHeaders: {
-						['Authorization']: 'Bearer ' + user.bearer
+						['Authorization']: 'Bearer ' + currentUser.bearer
 					},
 					withCredentials: false
 				});

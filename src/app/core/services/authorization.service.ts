@@ -3,7 +3,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
-import { User } from '../models/user.model';
 import { ApiService } from './api.service';
 import { LoginDto } from '../dto/auth/login.dto';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -12,14 +11,15 @@ import { UserCreateDto } from '../dto/user/user-create.dto';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectDto } from '../dto/auth/connect.dto';
 import { RegistrationDto } from '../dto/auth/registration.dto';
+import { CurrentUser } from '../models/current-user.model';
 import firebase from 'firebase/compat';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class AuthService {
+export class AuthorizationService {
 	// prettier-ignore
-	user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
+	currentUser: BehaviorSubject<CurrentUser | undefined> = new BehaviorSubject<CurrentUser | undefined>(undefined);
 
 	constructor(
 		private apiService: ApiService,
@@ -27,9 +27,9 @@ export class AuthService {
 		private userService: UserService
 	) {}
 
-	onPopulate(): Observable<User | undefined> {
+	onPopulate(): Observable<CurrentUser | undefined> {
 		return this.getCurrentUser().pipe(
-			switchMap((currentUser: User | undefined) => {
+			switchMap((currentUser: CurrentUser | undefined) => {
 				if (currentUser) {
 					return of(currentUser);
 				}
@@ -42,9 +42,9 @@ export class AuthService {
 							};
 
 							return this.apiService.post('/authorization', connectDto).pipe(
-								switchMap((user: User) => {
+								switchMap((user: Partial<CurrentUser>) => {
 									return this.setCurrentUser({
-										...firebaseUser,
+										firebase: firebaseUser,
 										...user
 									});
 								})
@@ -60,10 +60,10 @@ export class AuthService {
 
 	/** Authorization API */
 
-	onRegistration(registrationDto: RegistrationDto): Observable<User> {
+	onRegistration(registrationDto: RegistrationDto): Observable<CurrentUser> {
 		// prettier-ignore
 		return from(this.angularFireAuth.createUserWithEmailAndPassword(registrationDto.email, registrationDto.password)).pipe(
-			switchMap((userCredential: any) => {
+			switchMap((userCredential: firebase.auth.UserCredential) => {
 				return from(userCredential.user.sendEmailVerification()).pipe(switchMap(() => of(userCredential)));
 			}),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
@@ -82,8 +82,8 @@ export class AuthService {
 		);
 	}
 
-	onLogin(loginDto: LoginDto): Observable<User> {
-		const currentUser: Partial<User> = {};
+	onLogin(loginDto: LoginDto): Observable<CurrentUser> {
+		const currentUser: Partial<CurrentUser> = {};
 
 		// prettier-ignore
 		return from(this.angularFireAuth.signInWithEmailAndPassword(loginDto.email, loginDto.password)).pipe(
@@ -98,7 +98,7 @@ export class AuthService {
 
 				return this.apiService.post('/authorization', connectDto);
 			}),
-			switchMap((user: User) => {
+			switchMap((user: Partial<CurrentUser>) => {
         return this.setCurrentUser({
           ...currentUser,
           ...user
@@ -112,24 +112,24 @@ export class AuthService {
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);
 			}),
-			tap(() => this.user.next(undefined))
+			tap(() => this.currentUser.next(undefined))
 		);
 	}
 
 	/** Current User */
 
-	getCurrentUser(): Observable<User | undefined> {
-		return this.user.asObservable();
+	getCurrentUser(): Observable<CurrentUser | undefined> {
+		return this.currentUser.asObservable();
 	}
 
-	setCurrentUser(user: User): Observable<User> {
-		const currentUser: User = this.user.getValue();
+	setCurrentUser(user: Partial<CurrentUser>): Observable<CurrentUser> {
+		const currentUser: CurrentUser = this.currentUser.getValue();
 
-		this.user.next({
+		this.currentUser.next({
 			...currentUser,
 			...user
 		});
 
-		return this.user.asObservable();
+		return this.currentUser.asObservable();
 	}
 }

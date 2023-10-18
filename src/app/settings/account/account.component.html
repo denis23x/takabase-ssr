@@ -150,7 +150,10 @@
 						></button>
 					</div>
 				</fieldset>
-				<fieldset class="form-control" [ngSwitch]="authUser.emailConfirmed">
+				<fieldset
+					class="form-control"
+					[ngSwitch]="currentUser.firebase.emailVerified"
+				>
 					<button
 						class="btn-success btn w-full"
 						type="submit"

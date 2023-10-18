@@ -5,20 +5,20 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { AuthService } from '../core/services/auth.service';
-import { User } from '../core/models/user.model';
+import { AuthorizationService } from '../core/services/authorization.service';
+import { CurrentUser } from '../core/models/current-user.model';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class SettingsResolverService {
 	constructor(
-		private authService: AuthService,
+		private authorizationService: AuthorizationService,
 		private router: Router
 	) {}
 
-	resolve(): Observable<User> {
-		return this.authService.getCurrentUser().pipe(
+	resolve(): Observable<CurrentUser> {
+		return this.authorizationService.getCurrentUser().pipe(
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				this.router
 					.navigate(['/error', httpErrorResponse.status])

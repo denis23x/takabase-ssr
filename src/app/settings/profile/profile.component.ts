@@ -25,16 +25,17 @@ import { WindowComponent } from '../../standalone/components/window/window.compo
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
-import { User } from '../../core/models/user.model';
 import { HelperService } from '../../core/services/helper.service';
 import { UserService } from '../../core/services/user.service';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthorizationService } from '../../core/services/authorization.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { FileCreateDto } from '../../core/dto/file/file-create.dto';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { AppTextareaResizeDirective } from '../../standalone/directives/app-textarea-resize.directive';
 import { AppQrCodeDirective } from '../../standalone/directives/app-qr-code.directive';
 import { PlatformService } from '../../core/services/platform.service';
+import { CurrentUser } from '../../core/models/current-user.model';
+import { User } from '../../core/models/user.model';
 
 interface ProfileForm {
 	name: FormControl<string>;
@@ -69,9 +70,9 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	activatedRouteData$: Subscription | undefined;
 
-	authUser: User | undefined;
-	authUser$: Subscription | undefined;
-	authUserQRCodeLink: string | undefined;
+	currentUser: CurrentUser | undefined;
+	currentUser$: Subscription | undefined;
+	currentUserQRCodeUrl: string | undefined;
 
 	profileForm: FormGroup | undefined;
 	profileForm$: Subscription | undefined;
@@ -82,7 +83,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		private helperService: HelperService,
 		private activatedRoute: ActivatedRoute,
 		private userService: UserService,
-		private authService: AuthService,
+		private authorizationService: AuthorizationService,
 		private snackbarService: SnackbarService,
 		private platformService: PlatformService
 	) {
@@ -100,10 +101,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		this.activatedRouteData$ = this.activatedRoute.parent.data
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
-				next: (user: User) => {
-					this.authUser = user;
+				next: (currentUser: CurrentUser) => {
+					this.currentUser = currentUser;
 
-					this.profileForm.patchValue(this.authUser);
+					this.profileForm.patchValue(this.currentUser);
 					this.profileForm.markAllAsTouched();
 				},
 				error: (error: any) => console.error(error)
@@ -115,7 +116,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				next: (value: any) => {
 					// prettier-ignore
 					this.profileFormIsPristine = Object.keys(value).every((key: string) => {
-            return value[key] === this.authUser[key];
+            return value[key] === this.currentUser[key];
           });
 				}
 			});
@@ -142,7 +143,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				const window: Window = this.platformService.getWindow();
 
 				// prettier-ignore
-				this.authUserQRCodeLink = window.location.origin + this.userService.getUserUrl(this.authUser);
+				this.currentUserQRCodeUrl = window.location.origin + this.userService.getUserUrl(this.currentUser);
 			}
 
 			this.QRCodeModal.nativeElement.showModal();
@@ -158,20 +159,23 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			avatar: fileCreateDto.filename
 		};
 
-		this.userService.update(this.authUser.id, userUpdateDto).subscribe({
-			next: (user: User) => {
-				this.authUser = {
-					...user,
-					settings: this.authUser.settings
-				};
-
-				// TODO: update
-				// this.authService.setUser(this.authUser);
-
-				this.snackbarService.success('Success', 'Avatar has been updated');
-			},
-			error: (error: any) => console.error(error)
-		});
+		// prettier-ignore
+		this.userService
+			.update(this.currentUser.id, userUpdateDto)
+			.pipe(
+				switchMap((user: User) => {
+					return this.authorizationService
+						.setCurrentUser(user)
+						.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)));
+				})
+			)
+			.subscribe({
+				next: () => {
+					// prettier-ignore
+					this.snackbarService.success('Success', 'Avatar has been updated');
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	onSubmitProfileForm(): void {
@@ -182,13 +186,14 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				...this.profileForm.value
 			};
 
+			// prettier-ignore
 			this.userService
-				.update(this.authUser.id, userUpdateDto)
+				.update(this.currentUser.id, userUpdateDto)
 				.pipe(
 					switchMap((user: User) => {
-						return this.authService
+						return this.authorizationService
 							.setCurrentUser(user)
-							.pipe(tap((user: User) => (this.authUser = user)));
+							.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)));
 					})
 				)
 				.subscribe({

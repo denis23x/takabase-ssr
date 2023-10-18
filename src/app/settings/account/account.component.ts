@@ -13,7 +13,6 @@ import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { User } from '../../core/models/user.model';
 import { HelperService } from '../../core/services/helper.service';
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
@@ -23,6 +22,7 @@ import { PasswordService } from '../../core/services/password.service';
 import { EmailService } from '../../core/services/email.service';
 import { PasswordUpdateDto } from '../../core/dto/password/password-update.dto';
 import { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
+import { CurrentUser } from '../../core/models/current-user.model';
 
 interface PasswordValidateForm {
 	password: FormControl<string>;
@@ -51,8 +51,8 @@ interface PasswordForm {
 export class SettingsAccountComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 
-	authUser: User | undefined;
-	authUser$: Subscription | undefined;
+	currentUser: CurrentUser | undefined;
+	currentUser$: Subscription | undefined;
 
 	passwordValidateIsValid: boolean = false;
 	passwordValidateForm: FormGroup | undefined;
@@ -95,11 +95,11 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		this.activatedRouteData$ = this.activatedRoute.parent.data
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
-				next: (user: User) => {
-					this.authUser = user;
+				next: (currentUser: CurrentUser) => {
+					this.currentUser = currentUser;
 
-					if (!this.authUser.emailConfirmed) {
-						this.emailForm.patchValue(this.authUser);
+					if (!this.currentUser.firebase.emailVerified) {
+						this.emailForm.patchValue(this.currentUser);
 						this.emailForm.disable();
 					}
 				},

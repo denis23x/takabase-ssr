@@ -1,12 +1,9 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { ActivatedRoute, Data, RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
-import { User } from '../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 
@@ -16,31 +13,13 @@ import { MetaService } from '../core/services/meta.service';
 	selector: 'app-settings',
 	templateUrl: './settings.component.html'
 })
-export class SettingsComponent implements OnInit, OnDestroy {
-	activatedRouteData$: Subscription | undefined;
+export class SettingsComponent implements OnInit {
+	constructor(private metaService: MetaService) {}
 
-	user: User | undefined;
-
-	constructor(
-		private activatedRoute: ActivatedRoute,
-		private metaService: MetaService
-	) {}
-
-	ngOnInit() {
-		this.activatedRouteData$ = this.activatedRoute.data
-			.pipe(map((data: Data) => data.data))
-			.subscribe({
-				next: (user: User) => (this.user = user),
-				error: (error: any) => console.error(error)
-			});
-
+	ngOnInit(): void {
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
-	}
-
-	ngOnDestroy(): void {
-		[this.activatedRouteData$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setMetaTags(): void {

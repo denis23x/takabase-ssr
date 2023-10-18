@@ -35,7 +35,7 @@ import { User } from '../core/models/user.model';
 import { Post } from '../core/models/post.model';
 import { Category } from '../core/models/category.model';
 import { HelperService } from '../core/services/helper.service';
-import { AuthService } from '../core/services/auth.service';
+import { AuthorizationService } from '../core/services/authorization.service';
 import { CategoryService } from '../core/services/category.service';
 import { SnackbarService } from '../core/services/snackbar.service';
 import { UserService } from '../core/services/user.service';
@@ -45,6 +45,7 @@ import { MarkdownPipe } from '../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../standalone/pipes/sanitizer.pipe';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
 import { AppTextareaResizeDirective } from '../standalone/directives/app-textarea-resize.directive';
+import { CurrentUser } from '../core/models/current-user.model';
 
 interface PostSearchForm {
 	query: FormControl<string>;
@@ -95,8 +96,8 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	user: User | undefined;
 
-	authUser: User | undefined;
-	authUser$: Subscription | undefined;
+	currentUser: CurrentUser | undefined;
+	currentUser$: Subscription | undefined;
 
 	post: Post | undefined;
 	postList: Post[] = [];
@@ -121,7 +122,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
 		private helperService: HelperService,
-		private authService: AuthService,
+		private authorizationService: AuthorizationService,
 		private categoryService: CategoryService,
 		private snackbarService: SnackbarService,
 		private userService: UserService
@@ -239,8 +240,8 @@ export class UserComponent implements OnInit, OnDestroy {
 				}
 			});
 
-		this.authUser$ = this.authService.user.subscribe({
-			next: (user: User) => (this.authUser = user),
+		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
+			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
 	}
@@ -254,7 +255,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.postSearchForm$,
 			this.categoryEditForm$,
 			this.categoryDeleteForm$,
-			this.authUser$
+			this.currentUser$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 

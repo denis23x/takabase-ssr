@@ -7,8 +7,8 @@ import { catchError, map } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '../services/snackbar.service';
 import { PlatformService } from '../services/platform.service';
-import { AuthService } from '../services/auth.service';
-import { User } from '../models/user.model';
+import { AuthorizationService } from '../services/authorization.service';
+import { CurrentUser } from '../models/current-user.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -18,13 +18,13 @@ export class CanMatchPrivateGuard implements CanMatch {
 		private router: Router,
 		private snackbarService: SnackbarService,
 		private platformService: PlatformService,
-		private authService: AuthService
+		private authorizationService: AuthorizationService
 	) {}
 
 	canMatch(): Observable<boolean> {
-		return this.authService.onPopulate().pipe(
-			map((user: User | undefined) => {
-				if (this.platformService.isBrowser() && !user) {
+		return this.authorizationService.onPopulate().pipe(
+			map((currentUser: CurrentUser | undefined) => {
+				if (this.platformService.isBrowser() && !currentUser) {
 					this.router.navigate(['/error', 401]).then(() => {
 						this.snackbarService.warning('Unauthorized', 'Login to continue');
 					});

@@ -29,11 +29,10 @@ import { MarkdownComponent } from '../standalone/components/markdown/markdown.co
 import { PostDetailComponent } from '../standalone/components/post/prose/prose.component';
 import { Category } from '../core/models/category.model';
 import { Post } from '../core/models/post.model';
-import { User } from '../core/models/user.model';
 import { HelperService } from '../core/services/helper.service';
 import { PostService } from '../core/services/post.service';
 import { SnackbarService } from '../core/services/snackbar.service';
-import { AuthService } from '../core/services/auth.service';
+import { AuthorizationService } from '../core/services/authorization.service';
 import { CategoryService } from '../core/services/category.service';
 import { UserService } from '../core/services/user.service';
 import { PostCreateDto } from '../core/dto/post/post-create.dto';
@@ -45,6 +44,7 @@ import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 import { AppTextareaResizeDirective } from '../standalone/directives/app-textarea-resize.directive';
 import { ImageTempPipe } from '../standalone/pipes/image-temp.pipe';
+import { CurrentUser } from '../core/models/current-user.model';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -111,8 +111,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	postDeleteIsSubmitted: boolean = false;
 
-	authUser: User | undefined;
-	authUser$: Subscription | undefined;
+	currentUser: CurrentUser | undefined;
+	currentUser$: Subscription | undefined;
 
 	fullscreenToggle: boolean = false;
 	fullscreenClassList: string[] = [
@@ -134,7 +134,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 		private helperService: HelperService,
 		private postService: PostService,
 		private snackbarService: SnackbarService,
-		private authService: AuthService,
+		private authorizationService: AuthorizationService,
 		private categoryService: CategoryService,
 		private userService: UserService,
 		private cookieService: CookieService,
@@ -220,8 +220,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 				}
 			});
 
-		this.authUser$ = this.authService.user.subscribe({
-			next: (user: User) => (this.authUser = user),
+		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
+			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
 
@@ -236,7 +236,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		// prettier-ignore
-		[this.activatedRouteData$, this.postForm$, this.authUser$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.activatedRouteData$, this.postForm$, this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setAppearance(): void {
@@ -307,7 +307,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			this.postFormPreviewModal.nativeElement.showModal();
 			this.postFormPreviewPost = {
 				...this.postForm.value,
-				user: this.authUser,
+				user: this.currentUser,
 				category: this.category
 			};
 		} else {

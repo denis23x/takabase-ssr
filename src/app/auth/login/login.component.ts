@@ -13,7 +13,7 @@ import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthorizationService } from '../../core/services/authorization.service';
 import { HelperService } from '../../core/services/helper.service';
 import { UserService } from '../../core/services/user.service';
 import { LoginDto } from '../../core/dto/auth/login.dto';
@@ -50,7 +50,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
-		private authService: AuthService,
+		private authorizationService: AuthorizationService,
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
 		private userService: UserService,
@@ -127,7 +127,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 			...value
 		};
 
-		this.authService.onLogin(loginDto).subscribe({
+		this.authorizationService.onLogin(loginDto).subscribe({
 			next: (user: User) => {
 				this.router
 					.navigate([this.userService.getUserUrl(user)])

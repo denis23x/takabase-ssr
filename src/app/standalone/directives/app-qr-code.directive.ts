@@ -32,8 +32,8 @@ export class AppQrCodeDirective implements OnInit, OnDestroy {
 	}
 
 	@Input()
-	set appQRCodePath(QRCodePath: string) {
-		this.QRCodePath$.next(QRCodePath);
+	set appQRCodeText(QRCodeText: string) {
+		this.QRCodeText$.next(QRCodeText);
 	}
 
 	@Input()
@@ -42,7 +42,7 @@ export class AppQrCodeDirective implements OnInit, OnDestroy {
 	}
 
 	QRCodeDownloadOnClick: boolean = false;
-	QRCodePath$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+	QRCodeText$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 	QRCodeCanvas: HTMLCanvasElement | undefined;
 
 	QRCodeOptions: QRCodeRenderersOptions = {
@@ -95,7 +95,7 @@ export class AppQrCodeDirective implements OnInit, OnDestroy {
 
 		/** Subscribe for regenerate QRCode */
 
-		this.QRCodePath$.pipe(
+		this.QRCodeText$.pipe(
 			filter((value: string) => !!value && !!this.QRCodeCanvas)
 		).subscribe({
 			next: () => this.setQRCodeToCanvas(),
@@ -104,11 +104,11 @@ export class AppQrCodeDirective implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.QRCodePath$.complete();
+		this.QRCodeText$.complete();
 	}
 
 	getQRCodeText(): string {
-		return this.QRCodePath$.getValue();
+		return this.QRCodeText$.getValue();
 	}
 
 	// prettier-ignore
