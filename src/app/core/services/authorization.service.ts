@@ -21,6 +21,9 @@ export class AuthorizationService {
 	// prettier-ignore
 	currentUser: BehaviorSubject<CurrentUser | undefined> = new BehaviorSubject<CurrentUser | undefined>(undefined);
 
+	// prettier-ignore
+	currentUserIsPopulated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
 	constructor(
 		private apiService: ApiService,
 		private angularFireAuth: AngularFireAuth,
@@ -54,7 +57,8 @@ export class AuthorizationService {
 						return of(undefined);
 					})
 				);
-			})
+			}),
+			tap(() => this.currentUserIsPopulated.next(true))
 		);
 	}
 

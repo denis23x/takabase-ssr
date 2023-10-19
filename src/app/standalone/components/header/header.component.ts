@@ -9,10 +9,11 @@ import { CommonModule } from '@angular/common';
 import { AppAuthenticatedDirective } from '../../directives/app-authenticated.directive';
 import { UserUrlPipe } from '../../pipes/user-url.pipe';
 import { AuthorizationService } from '../../../core/services/authorization.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, skip } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { CurrentUser } from '../../../core/models/current-user.model';
+import { AppSkeletonDirective } from '../../directives/app-skeleton.directive';
 
 @Component({
 	standalone: true,
@@ -23,13 +24,17 @@ import { CurrentUser } from '../../../core/models/current-user.model';
 		SvgIconComponent,
 		AvatarComponent,
 		AppAuthenticatedDirective,
-		UserUrlPipe
+		UserUrlPipe,
+		AppSkeletonDirective
 	],
 	templateUrl: './header.component.html'
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
+
+	currentUserSkeletonToggle: boolean = true;
+	currentUserSkeletonToggle$: Subscription | undefined;
 
 	constructor(
 		private authorizationService: AuthorizationService,
@@ -42,10 +47,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
+
+		// prettier-ignore
+		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated.pipe(skip(1)).subscribe({
+			next: () => (this.currentUserSkeletonToggle = false),
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.currentUser$, this.currentUserSkeletonToggle$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onLogout(): void {

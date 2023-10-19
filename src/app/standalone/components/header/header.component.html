@@ -27,68 +27,74 @@
 			</a>
 		</div>
 		<div class="navbar-end">
-			<button
-				class="btn-ghost btn text-xl normal-case"
-				*appAuthenticated="true"
-				(click)="onLogout()"
+			<div
+				class="bg-base-100 flex items-center justify-end rounded-btn overflow-hidden relative"
+				appSkeleton
+				[appSkeletonToggle]="currentUserSkeletonToggle"
 			>
-				logout
-			</button>
-			<ng-container *appAuthenticated="false">
-				<nav class="flex items-center justify-end space-x-4">
-					<a
-						class="btn-primary btn"
-						title="Login"
-						aria-label="Login"
-						[routerLink]="['/login']"
-					>
-						Login
-					</a>
-				</nav>
-			</ng-container>
-			<ng-container *appAuthenticated="true">
-				<nav
-					class="flex items-center justify-end space-x-2"
-					*ngIf="!!currentUser"
+				<button
+					class="btn-ghost btn text-xl normal-case"
+					*appAuthenticated="true"
+					(click)="onLogout()"
 				>
-					<a
-						class="btn-ghost btn-square btn fill-current"
-						title="Create post"
-						aria-label="Create post"
-						appSvgIcon
-						[routerLink]="['/create']"
-						[routerLinkActive]="['btn-active']"
-						[routerLinkActiveOptions]="{ exact: true }"
-						[appIcon]="'file-earmark-plus'"
-						[appSquare]="'1.5em'"
+					logout
+				</button>
+				<ng-container *appAuthenticated="false">
+					<nav class="flex items-center justify-end gap-4">
+						<a
+							class="btn-primary btn"
+							title="Login"
+							aria-label="Login"
+							[routerLink]="['/login']"
+						>
+							Login
+						</a>
+					</nav>
+				</ng-container>
+				<ng-container *appAuthenticated="true">
+					<nav
+						class="flex items-center justify-end gap-2"
+						*ngIf="!!currentUser"
 					>
-					</a>
-					<a
-						class="btn-ghost btn-square btn fill-current"
-						title="Search"
-						aria-label="Search"
-						appSvgIcon
-						[routerLink]="['/search']"
-						[routerLinkActive]="['btn-active']"
-						[appIcon]="'search'"
-						[appSquare]="'1.5em'"
-					>
-					</a>
-					<a
-						class="avatar"
-						data-pw="app-header-link-to-profile"
-						[routerLink]="[currentUser | userUrl]"
-						[attr.aria-label]="currentUser.name"
-						[title]="currentUser.name"
-					>
-						<figure
-							class="h-12 w-12 rounded-btn relative overflow-hidden"
-							appAvatar
-							[appUser]="currentUser"
-						></figure>
-					</a>
-				</nav>
-			</ng-container>
+						<a
+							class="btn-ghost btn-square btn fill-current"
+							title="Create post"
+							aria-label="Create post"
+							appSvgIcon
+							[routerLink]="['/create']"
+							[routerLinkActive]="['btn-active']"
+							[routerLinkActiveOptions]="{ exact: true }"
+							[appIcon]="'file-earmark-plus'"
+							[appSquare]="'1.5em'"
+						>
+						</a>
+						<a
+							class="btn-ghost btn-square btn fill-current"
+							title="Search"
+							aria-label="Search"
+							appSvgIcon
+							[routerLink]="['/search']"
+							[routerLinkActive]="['btn-active']"
+							[appIcon]="'search'"
+							[appSquare]="'1.5em'"
+						>
+						</a>
+						<a
+							class="avatar"
+							data-pw="app-header-link-to-profile"
+							[routerLink]="[currentUser | userUrl]"
+							[attr.aria-label]="currentUser.name"
+							[title]="currentUser.name"
+						>
+							<figure
+								class="h-12 w-12 rounded-btn relative overflow-hidden"
+								appAvatar
+								[appUser]="currentUser"
+							></figure>
+						</a>
+					</nav>
+				</ng-container>
+			</div>
 		</div>
 	</div>
 </ng-container>

@@ -7,7 +7,9 @@
 		<figure class="block" *ngIf="!!post.image">
 			<a
 				class="relative block aspect-square"
-				[routerLink]="[path, post.id]"
+				appSkeleton
+				[appSkeletonToggle]="postSkeletonToggle"
+				[routerLink]="[postUrl, post.id]"
 				[queryParamsHandling]="'preserve'"
 				[attr.aria-label]="post.name"
 			>
@@ -20,24 +22,42 @@
 				/>
 			</a>
 		</figure>
-		<div class="flex h-full w-full flex-col p-4">
-			<a
-				class="link mb-2 font-bold line-clamp-1 lg:line-clamp-2"
-				[routerLink]="[path, post.id]"
-				[queryParamsHandling]="'preserve'"
-				[attr.aria-label]="post.name"
+		<div class="flex h-full w-full flex-col gap-2 p-4">
+			<div
+				class="bg-base-100 relative rounded-btn overflow-hidden"
+				appSkeleton
+				[appSkeletonToggle]="postSkeletonToggle"
 			>
-				{{ post.name }}
-			</a>
-			<p class="mb-2 text-base-content line-clamp-2 lg:line-clamp-3">
-				{{ post.description }}
-			</p>
-			<time
-				class="!mt-auto text-sm text-base-content/50"
-				[attr.datetime]="post.updatedAt"
+				<a
+					class="link font-bold line-clamp-1 lg:line-clamp-2"
+					[routerLink]="[postUrl, post.id]"
+					[queryParamsHandling]="'preserve'"
+					[attr.aria-label]="post.name"
+				>
+					{{ post.name }}
+				</a>
+			</div>
+			<div
+				class="bg-base-100 relative rounded-btn overflow-hidden"
+				appSkeleton
+				[appSkeletonToggle]="postSkeletonToggle"
 			>
-				{{ post.updatedAt | dayjs : "fromX" }}
-			</time>
+				<p class="text-base-content line-clamp-2 lg:line-clamp-3">
+					{{ post.description }}
+				</p>
+			</div>
+			<div
+				class="!mt-auto bg-base-100 relative rounded-btn overflow-hidden"
+				appSkeleton
+				[appSkeletonToggle]="postSkeletonToggle"
+			>
+				<time
+					class="text-sm text-base-content/50"
+					[attr.datetime]="post.updatedAt"
+				>
+					{{ post.updatedAt | dayjs: "fromX" }}
+				</time>
+			</div>
 		</div>
 	</article>
 </ng-container>
