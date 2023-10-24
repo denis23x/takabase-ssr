@@ -3,7 +3,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Params } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { Share } from '../../../core/models/share.model';
 import { Subscription } from 'rxjs';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { PlatformService } from '../../../core/services/platform.service';
@@ -21,7 +20,7 @@ export class ShareComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 
 	shareUrl: string | undefined;
-	shareMap: Share = {
+	shareMap: Record<string, string> = {
 		facebook: 'https://facebook.com/sharer/sharer.php',
 		linkedin: 'https://linkedin.com/shareArticle',
 		pinterest: 'https://pinterest.com/pin/create/button/',
@@ -120,8 +119,9 @@ export class ShareComponent implements OnInit, OnDestroy {
 	}
 
 	getEncodedURI(data: any): string {
-		// prettier-ignore
-		return Object.keys(data).map((key: string) => [key, data[key]].map(encodeURIComponent).join('=')).join('&');
+		return Object.keys(data)
+			.map((key: string) => [key, data[key]].map(encodeURIComponent).join('='))
+			.join('&');
 	}
 
 	onCopyUrl(): void {
