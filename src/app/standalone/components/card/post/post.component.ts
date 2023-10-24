@@ -16,13 +16,18 @@ import { AppSkeletonDirective } from '../../../directives/app-skeleton.directive
 		NgOptimizedImage,
 		AppSkeletonDirective
 	],
-	selector: 'app-post-card, [appPostCard]',
-	templateUrl: './card.component.html'
+	selector: 'app-card-post, [appCardPost]',
+	templateUrl: './post.component.html'
 })
-export class PostCardComponent {
+export class CardPostComponent {
 	@Input()
 	set appPost(post: Post) {
 		this.post = post;
+	}
+
+	@Input()
+	set appPostSkeletonToggle(postSkeletonToggle: boolean) {
+		this.postSkeletonToggle = postSkeletonToggle;
 	}
 
 	@Input()

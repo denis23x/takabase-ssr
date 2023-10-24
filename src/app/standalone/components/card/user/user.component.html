@@ -1,0 +1,49 @@
+<!-- @format -->
+
+<ng-container>
+	<div
+		class="rounded-box flex flex-col space-y-2 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+	>
+		<a
+			class="avatar aspect-square rounded-btn overflow-hidden"
+			appSkeleton
+			[appSkeletonToggle]="userSkeletonToggle"
+			[routerLink]="[user | userUrl]"
+			[attr.aria-label]="user.name"
+			[title]="user.name"
+		>
+			<figure
+				class="h-full max-h-full w-full max-w-full rounded-btn relative overflow-hidden"
+				appAvatar
+				[appUser]="user"
+			></figure>
+		</a>
+		<div class="flex flex-col text-center gap-2">
+			<div
+				class="bg-base-100 relative rounded-btn overflow-hidden"
+				appSkeleton
+				[appSkeletonToggle]="userSkeletonToggle"
+			>
+				<a
+					class="link w-full truncate text-xl font-bold"
+					[routerLink]="[user | userUrl]"
+					[attr.aria-label]="user.name"
+				>
+					{{ user.name }}
+				</a>
+			</div>
+			<div
+				class="bg-base-100 relative rounded-btn overflow-hidden"
+				appSkeleton
+				[appSkeletonToggle]="userSkeletonToggle"
+			>
+				<time
+					class="text-sm text-base-content/50"
+					[attr.datetime]="user.createdAt | dayjs: 'format' : 'YYYY-M-D'"
+				>
+					{{ user.createdAt | dayjs: "fromX" }}
+				</time>
+			</div>
+		</div>
+	</div>
+</ng-container>
