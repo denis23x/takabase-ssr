@@ -52,7 +52,6 @@ export class WindowComponent implements OnInit {
 	}
 
 	setAppearance(): void {
-		// prettier-ignore
 		this.captionButtonsPosition = this.cookieService.getItem('window-button-position') || 'left';
 	}
 
@@ -64,13 +63,7 @@ export class WindowComponent implements OnInit {
 		this.fullscreenToggle = toggle;
 
 		if (this.fullscreenToggle) {
-			this.fullscreenClassList = [
-				'w-full',
-				'h-full',
-				'fixed',
-				'left-0',
-				'top-0'
-			];
+			this.fullscreenClassList = ['w-full', 'h-full', 'fixed', 'left-0', 'top-0'];
 		} else {
 			this.fullscreenClassList = [
 				'h-auto',

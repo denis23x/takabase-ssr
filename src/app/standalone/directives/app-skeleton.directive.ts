@@ -83,7 +83,7 @@ export class AppSkeletonDirective implements OnInit, OnDestroy {
 			this.elementRef.nativeElement.appendChild(this.getSkeleton());
 		} else {
 			this.elementRef.nativeElement.classList.remove(...this.skeletonClassListElementRef);
-			this.elementRef.nativeElement.querySelector('[skeleton]')?.remove();
+			this.elementRef.nativeElement.querySelector('[data-skeleton-parent]')?.remove();
 		}
 	}
 }
