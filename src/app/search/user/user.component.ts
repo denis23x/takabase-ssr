@@ -10,7 +10,7 @@ import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
-import { AbstractListComponent } from '../../abstracts/abstract-list.component';
+import { AbstractSearchListComponent } from '../../abstracts/abstract-search-list.component';
 import { CardUserComponent } from '../../standalone/components/card/user/user.component';
 
 @Component({
@@ -19,7 +19,7 @@ import { CardUserComponent } from '../../standalone/components/card/user/user.co
 	selector: 'app-search-user',
 	templateUrl: './user.component.html'
 })
-export class SearchUserComponent extends AbstractListComponent implements OnInit {
+export class SearchUserComponent extends AbstractSearchListComponent implements OnInit {
 	abstractList: User[] = [];
 
 	ngOnInit(): void {

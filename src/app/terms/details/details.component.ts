@@ -1,35 +1,19 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
-import { ActivatedRoute, Data } from '@angular/router';
+import { Component } from '@angular/core';
 import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
+import { AbstractProseComponent } from '../../abstracts/abstract-prose.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
 	standalone: true,
-	imports: [MarkdownPipe, SanitizerPipe],
+	imports: [CommonModule, MarkdownPipe, SanitizerPipe],
 	selector: 'app-terms-details',
 	templateUrl: './details.component.html'
 })
-export class TermsDetailsComponent implements OnInit, OnDestroy {
-	activatedRouteData$: Subscription | undefined;
-
-	prose: string | undefined;
-
-	constructor(private activatedRoute: ActivatedRoute) {}
-
-	ngOnInit(): void {
-		this.activatedRouteData$ = this.activatedRoute.data
-			.pipe(map((data: Data) => data.data))
-			.subscribe({
-				next: (prose: string) => (this.prose = prose),
-				error: (error: any) => console.error(error)
-			});
-	}
-
-	ngOnDestroy(): void {
-		[this.activatedRouteData$].forEach(($: Subscription) => $?.unsubscribe());
+export class TermsDetailsComponent extends AbstractProseComponent {
+	getAbstractProseUrl(markdown: string): string {
+		return '/assets/markdown/terms/' + markdown + '.md';
 	}
 }

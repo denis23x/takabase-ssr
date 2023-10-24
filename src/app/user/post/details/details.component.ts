@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { WindowComponent } from '../../../standalone/components/window/window.component';
 import { ShareComponent } from '../../../standalone/components/share/share.component';
 import { PostDetailComponent } from '../../../standalone/components/post/prose/prose.component';
-import { AbstractDetailsComponent } from '../../../abstracts/abstract-details.component';
+import { AbstractPostDetailsComponent } from '../../../abstracts/abstract-post-details.component';
 
 @Component({
 	standalone: true,
@@ -12,4 +12,4 @@ import { AbstractDetailsComponent } from '../../../abstracts/abstract-details.co
 	selector: 'app-user-post-details',
 	templateUrl: './details.component.html'
 })
-export class UserPostDetailsComponent extends AbstractDetailsComponent {}
+export class UserPostDetailsComponent extends AbstractPostDetailsComponent {}

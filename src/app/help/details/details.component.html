@@ -3,6 +3,7 @@
 <ng-container>
 	<div
 		class="prose max-w-none overflow-auto"
-		[innerHTML]="prose | markdown | sanitizer : 'html'"
+		*ngIf="abstractProse"
+		[innerHTML]="abstractProse | markdown | sanitizer: 'html'"
 	></div>
 </ng-container>

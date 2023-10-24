@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { AbstractListComponent } from '../../abstracts/abstract-list.component';
+import { AbstractSearchListComponent } from '../../abstracts/abstract-search-list.component';
 import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
@@ -16,7 +16,7 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 	selector: 'app-search-post',
 	templateUrl: './post.component.html'
 })
-export class SearchPostComponent extends AbstractListComponent implements OnInit {
+export class SearchPostComponent extends AbstractSearchListComponent implements OnInit {
 	abstractList: Post[] = [];
 
 	ngOnInit(): void {

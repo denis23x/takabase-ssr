@@ -13,10 +13,10 @@ import { UserService } from '../core/services/user.service';
 import { SkeletonService } from '../core/services/skeleton.service';
 
 @Component({
-	selector: 'app-abstract-list',
+	selector: 'app-abstract-search-list',
 	template: ''
 })
-export abstract class AbstractListComponent implements OnInit, OnDestroy {
+export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 	activatedRouteData$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
 
@@ -88,8 +88,7 @@ export abstract class AbstractListComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	// eslint-disable-next-line
-	getAbstractList(concat: boolean = false): void {}
+	abstract getAbstractList(concat: boolean): void;
 
 	getAbstractListLoadMore(): void {
 		this.abstractPage++;

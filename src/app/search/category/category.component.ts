@@ -8,7 +8,7 @@ import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { Category } from '../../core/models/category.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto';
-import { AbstractListComponent } from '../../abstracts/abstract-list.component';
+import { AbstractSearchListComponent } from '../../abstracts/abstract-search-list.component';
 import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { CardCategoryComponent } from '../../standalone/components/card/category/category.component';
 
@@ -18,7 +18,7 @@ import { CardCategoryComponent } from '../../standalone/components/card/category
 	selector: 'app-search-category',
 	templateUrl: './category.component.html'
 })
-export class SearchCategoryComponent extends AbstractListComponent implements OnInit {
+export class SearchCategoryComponent extends AbstractSearchListComponent implements OnInit {
 	abstractList: Category[] = [];
 
 	ngOnInit(): void {

@@ -15,7 +15,7 @@ import { TitleService } from '../core/services/title.service';
 	templateUrl: './error.component.html'
 })
 export class ErrorComponent implements OnInit, OnDestroy {
-	activatedRouteData$: Subscription | undefined;
+	activatedRouteParams$: Subscription | undefined;
 
 	statusCode: number | undefined;
 	statusCodeMap: number[][] = [
@@ -27,13 +27,7 @@ export class ErrorComponent implements OnInit, OnDestroy {
 	];
 
 	message: string | undefined;
-	messageMap: string[] = [
-		'Information message',
-		'Success',
-		'Redirect',
-		'Client error',
-		'Server error'
-	];
+	messageMap: string[] = ['Information message', 'Success', 'Redirect', 'Client error', 'Server error'];
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -43,44 +37,37 @@ export class ErrorComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
-		this.activatedRouteData$ = this.activatedRoute.params
-			.pipe(map((data: Data) => data.status))
-			.subscribe({
-				next: (status: string) => {
-					const statusCode: number = Number(status);
-					const message: string = this.getMessageMap(statusCode);
+		this.activatedRouteParams$ = this.activatedRoute.params.pipe(map((data: Data) => data.status)).subscribe({
+			next: (status: string) => {
+				const statusCode: number = Number(status);
+				const message: string = this.getMessageMap(statusCode);
 
-					if (!statusCode || !message) {
-						this.router
-							.navigate([[], 520])
-							.then(() => console.debug('Route changed'));
-					}
+				if (!statusCode || !message) {
+					this.router.navigate([[], 520]).then(() => console.debug('Route changed'));
+				}
 
-					this.statusCode = statusCode;
-					this.message = message;
+				this.statusCode = statusCode;
+				this.message = message;
 
-					/** Apply SEO meta tags */
+				/** Apply SEO meta tags */
 
-					this.setMetaTags();
+				this.setMetaTags();
 
-					/** Apply title */
+				/** Apply title */
 
-					// prettier-ignore
-					this.titleService.setTitle([this.statusCode, this.message].join(' '));
-				},
-				error: (error: any) => console.error(error)
-			});
+				this.titleService.setTitle([this.statusCode, this.message].join(' '));
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteData$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.activatedRouteParams$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setMetaTags(): void {
 		const title: string = this.message;
-
-		// prettier-ignore
-		const description: string = 'Oops! It looks like you\'ve landed on an error page on Draft';
+		const description: string = "Oops! It looks like you've landed on an error page on Draft";
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,
@@ -97,11 +84,9 @@ export class ErrorComponent implements OnInit, OnDestroy {
 	}
 
 	getMessageMap(status: number): string | undefined {
-		const index: number = this.statusCodeMap.findIndex(
-			([min, max]: number[]) => {
-				return min <= status === status < max;
-			}
-		);
+		const index: number = this.statusCodeMap.findIndex(([min, max]: number[]) => {
+			return min <= status === status < max;
+		});
 
 		return this.messageMap[index];
 	}

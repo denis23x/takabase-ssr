@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
-import { AbstractListComponent } from '../../abstracts/abstract-list.component';
+import { AbstractSearchListComponent } from '../../abstracts/abstract-search-list.component';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { User } from '../../core/models/user.model';
 import { Category } from '../../core/models/category.model';
@@ -21,7 +21,7 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 	selector: 'app-user-post',
 	templateUrl: './post.component.html'
 })
-export class UserPostComponent extends AbstractListComponent implements OnInit, OnDestroy {
+export class UserPostComponent extends AbstractSearchListComponent implements OnInit, OnDestroy {
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
 	private titleService: TitleService = inject(TitleService);

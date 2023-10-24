@@ -1,24 +1,18 @@
 /** @format */
 
-import {
-	AfterContentInit,
-	Component,
-	ElementRef,
-	OnDestroy,
-	ViewChild
-} from '@angular/core';
+import { AfterContentInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { Post } from '../core/models/post.model';
 import { PostService } from '../core/services/post.service';
 
-// prettier-ignore
 @Component({
-	selector: 'app-abstract-details',
+	selector: 'app-abstract-post-details',
 	template: ''
 })
-export abstract class AbstractDetailsComponent implements AfterContentInit, OnDestroy {
+export abstract class AbstractPostDetailsComponent implements AfterContentInit, OnDestroy {
+	// prettier-ignore
 	@ViewChild('abstractPostProseModal', { static: true }) abstractPostProseModal: ElementRef<HTMLDialogElement> | undefined;
 
 	activatedRouteData$: Subscription | undefined;
@@ -31,19 +25,17 @@ export abstract class AbstractDetailsComponent implements AfterContentInit, OnDe
 		public postService: PostService
 	) {}
 
-  ngAfterContentInit(): void {
-		this.activatedRouteData$ = this.activatedRoute.data
-			.pipe(map((data: Data) => data.data))
-			.subscribe({
-				next: (post: Post) => {
-					this.abstractPost = post;
-					this.abstractPostProseModal.nativeElement.showModal();
+	ngAfterContentInit(): void {
+		this.activatedRouteData$ = this.activatedRoute.data.pipe(map((data: Data) => data.data)).subscribe({
+			next: (post: Post) => {
+				this.abstractPost = post;
+				this.abstractPostProseModal.nativeElement.showModal();
 
-					this.postService.setPostMetaTags(this.abstractPost);
-					this.postService.setPostTitle(this.abstractPost.name);
-				},
-				error: (error: any) => console.error(error)
-			});
+				this.postService.setPostMetaTags(this.abstractPost);
+				this.postService.setPostTitle(this.abstractPost.name);
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	ngOnDestroy(): void {

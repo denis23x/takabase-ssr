@@ -10,8 +10,6 @@ import { UserResolverService } from './user/user-resolver.service';
 import { UserPostDetailsResolverService } from './user/post/details/details-resolver.service';
 import { CanMatchPublicGuard } from './core/guards/public-guard.service';
 import { CanMatchPrivateGuard } from './core/guards/private-guard.service';
-import { TermsDetailsResolverService } from './terms/details/details-resolver.service';
-import { HelpDetailsResolverService } from './help/details/details-resolver.service';
 import { TitleService } from './core/services/title.service';
 
 export const routes: Routes = [
@@ -88,9 +86,6 @@ export const routes: Routes = [
 				title: 'Terms',
 				loadComponent: () => {
 					return import('./terms/details/details.component').then(m => m.TermsDetailsComponent);
-				},
-				resolve: {
-					data: TermsDetailsResolverService
 				}
 			}
 		]
@@ -111,9 +106,6 @@ export const routes: Routes = [
 				title: 'Help',
 				loadComponent: () => {
 					return import('./help/details/details.component').then(m => m.HelpDetailsComponent);
-				},
-				resolve: {
-					data: HelpDetailsResolverService
 				}
 			}
 		]
