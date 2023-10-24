@@ -27,6 +27,7 @@ export class SearchCategoryComponent extends AbstractListComponent implements On
 		/** Apply skeleton */
 
 		this.abstractList = this.skeletonService.getCategoryList(this.abstractSize);
+		this.abstractListSkeletonToggle = true;
 		this.abstractListHasMore = false;
 
 		this.getAbstractList();

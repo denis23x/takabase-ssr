@@ -4,7 +4,6 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Data, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { PostCardComponent } from '../../standalone/components/post/card/card.component';
 import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { AbstractListComponent } from '../../abstracts/abstract-list.component';
@@ -14,11 +13,11 @@ import { Category } from '../../core/models/category.model';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { TitleService } from '../../core/services/title.service';
+import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 
-// prettier-ignore
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, PostCardComponent, SvgIconComponent],
+	imports: [CommonModule, RouterModule, CardPostComponent, SvgIconComponent],
 	selector: 'app-user-post',
 	templateUrl: './post.component.html'
 })
@@ -40,61 +39,59 @@ export class UserPostComponent extends AbstractListComponent implements OnInit, 
 	ngOnInit(): void {
 		super.ngOnInit();
 
-    // prettier-ignore
-		this.activatedRouteParentData$ = this.activatedRoute.parent.data
-			.pipe(map((data: Data) => data.data))
-			.subscribe({
-				next: ([user, categoryList]: [User, Category[]]) => {
-					this.user = user;
+		this.activatedRouteParentData$ = this.activatedRoute.parent.data.pipe(map((data: Data) => data.data)).subscribe({
+			next: ([user, categoryList]: [User, Category[]]) => {
+				this.user = user;
 
-					this.categoryList = categoryList;
+				this.categoryList = categoryList;
 
-          this.activatedRouteUrl$?.unsubscribe();
-          this.activatedRouteUrl$ = this.activatedRoute.url.subscribe({
-            next: () => {
-              const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
+				this.activatedRouteUrl$?.unsubscribe();
+				this.activatedRouteUrl$ = this.activatedRoute.url.subscribe({
+					next: () => {
+						this.category = this.categoryList.find((category: Category) => {
+							return category.id === Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
+						});
 
-              this.category = this.categoryList.find((category: Category) => {
-                return category.id === Number(categoryId);
-              });
+						/** Apply skeleton */
 
+						this.abstractList = this.skeletonService.getPostList(this.abstractSize);
+						this.abstractListSkeletonToggle = true;
+						this.abstractListHasMore = false;
 
-              /** Apply SEO meta tags */
+						this.getAbstractList();
 
-              this.setMetaTags();
+						/** Apply SEO meta tags */
 
-              /** Apply title */
+						this.setMetaTags();
 
-              this.setTitle();
-            },
-            error: (error: any) => console.error(error)
-          });
-				},
-				error: (error: any) => console.error(error)
-			});
+						/** Apply title */
+
+						this.setTitle();
+					},
+					error: (error: any) => console.error(error)
+				});
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		// prettier-ignore
 		[this.activatedRouteData$, this.activatedRouteUrl$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-  setTitle(): void {
-    this.titleService.setTitle(this.user.name);
+	setTitle(): void {
+		this.titleService.setTitle(this.user.name);
 
-    if (this.category) {
-      this.titleService.appendTitle(this.category.name);
-    }
-  }
+		if (this.category) {
+			this.titleService.appendTitle(this.category.name);
+		}
+	}
 
 	setMetaTags(): void {
-    const username: string = this.userService.getUserUrl(this.user, 1);
-
+		const username: string = this.userService.getUserUrl(this.user, 1);
 		const title: string = this.category?.name || username;
-
-		// prettier-ignore
 		const description: string = this.category?.description || this.user.description;
 
 		const metaOpenGraph: Partial<MetaOpenGraph> = {
@@ -112,7 +109,6 @@ export class UserPostComponent extends AbstractListComponent implements OnInit, 
 			metaOpenGraph['profile:username'] = username;
 		}
 
-		// prettier-ignore
 		const metaTwitter: MetaTwitter = {
 			['twitter:title']: title,
 			['twitter:description']: description,
@@ -123,7 +119,7 @@ export class UserPostComponent extends AbstractListComponent implements OnInit, 
 		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
 	}
 
-	getAbstractList(concat: boolean): void {
+	getAbstractList(concat: boolean = false): void {
 		this.abstractListLoading$.next(true);
 
 		/** Request */
@@ -133,7 +129,6 @@ export class UserPostComponent extends AbstractListComponent implements OnInit, 
 			size: this.abstractSize
 		};
 
-		// prettier-ignore
 		postGetAllDto = {
 			...this.postService.getUserPostGetAllDto(postGetAllDto, this.activatedRoute.snapshot)
 		};
@@ -141,6 +136,7 @@ export class UserPostComponent extends AbstractListComponent implements OnInit, 
 		this.postService.getAll(postGetAllDto).subscribe({
 			next: (postList: Post[]) => {
 				this.abstractList = concat ? this.abstractList.concat(postList) : postList;
+				this.abstractListSkeletonToggle = false;
 				this.abstractListHasMore = postList.length === this.abstractSize;
 				this.abstractListLoading$.next(false);
 			},

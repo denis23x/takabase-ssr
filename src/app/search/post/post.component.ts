@@ -25,6 +25,7 @@ export class SearchPostComponent extends AbstractListComponent implements OnInit
 		/** Apply skeleton */
 
 		this.abstractList = this.skeletonService.getPostList(this.abstractSize);
+		this.abstractListSkeletonToggle = true;
 		this.abstractListHasMore = false;
 
 		this.getAbstractList();

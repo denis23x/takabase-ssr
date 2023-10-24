@@ -28,6 +28,7 @@ export class SearchUserComponent extends AbstractListComponent implements OnInit
 		/** Apply skeleton */
 
 		this.abstractList = this.skeletonService.getUserList(this.abstractSize);
+		this.abstractListSkeletonToggle = true;
 		this.abstractListHasMore = false;
 
 		this.getAbstractList();

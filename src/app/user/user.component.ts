@@ -1,29 +1,10 @@
 /** @format */
 
-import {
-	Component,
-	ElementRef,
-	OnDestroy,
-	OnInit,
-	ViewChild
-} from '@angular/core';
-import {
-	ActivatedRoute,
-	Data,
-	Params,
-	Router,
-	RouterModule
-} from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Data, Params, Router, RouterModule } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 import { debounceTime, filter, map, startWith } from 'rxjs/operators';
-import {
-	AbstractControl,
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
@@ -46,6 +27,7 @@ import { SanitizerPipe } from '../standalone/pipes/sanitizer.pipe';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
 import { AppTextareaResizeDirective } from '../standalone/directives/app-textarea-resize.directive';
 import { CurrentUser } from '../core/models/current-user.model';
+import { UserPostComponent } from './post/post.component';
 
 interface PostSearchForm {
 	query: FormControl<string>;
@@ -83,28 +65,23 @@ interface CategoryDeleteForm {
 	templateUrl: './user.component.html'
 })
 export class UserComponent implements OnInit, OnDestroy {
-	// prettier-ignore
 	@ViewChild('categoryEditFormModal') categoryEditFormModal: ElementRef<HTMLDialogElement> | undefined;
-
-	// prettier-ignore
 	@ViewChild('categoryDeleteFormModal') categoryDeleteFormModal: ElementRef<HTMLDialogElement> | undefined;
 
 	activatedRouteData$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
-	activatedRouteFirstChildData$: Subscription | undefined;
 	activatedRouteFirstChildUrl$: Subscription | undefined;
 
 	user: User | undefined;
+	userPostComponent: UserPostComponent | undefined;
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
-	post: Post | undefined;
-	postList: Post[] = [];
-
 	postSearchForm: FormGroup | undefined;
 	postSearchForm$: Subscription | undefined;
 	postSearchFormToggle: boolean = false;
+	postSearchFormIsSubmitted$: Subscription | undefined;
 	postSearchFormOrderByList: string[] = ['newest', 'oldest'];
 
 	category: Category | undefined;
@@ -116,6 +93,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	categoryDeleteForm: FormGroup | undefined;
 	categoryDeleteForm$: Subscription | undefined;
+	categoryDeleteFormPostList: Post[] = [];
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -140,10 +118,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			categoryId: this.formBuilder.control(null, [])
 		});
 		this.postSearchForm = this.formBuilder.group<PostSearchForm>({
-			query: this.formBuilder.nonNullable.control('', [
-				Validators.minLength(2),
-				Validators.maxLength(24)
-			]),
+			query: this.formBuilder.nonNullable.control('', [Validators.minLength(2), Validators.maxLength(24)]),
 			orderBy: this.formBuilder.nonNullable.control('', [])
 		});
 	}
@@ -151,39 +126,27 @@ export class UserComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		/** Resolver */
 
-		this.activatedRouteData$ = this.activatedRoute.data
-			.pipe(map((data: Data) => data.data))
-			.subscribe({
-				next: ([user, categoryList]: [User, Category[]]) => {
-					this.user = user;
+		this.activatedRouteData$ = this.activatedRoute.data.pipe(map((data: Data) => data.data)).subscribe({
+			next: ([user, categoryList]: [User, Category[]]) => {
+				this.user = user;
 
-					this.categoryList = categoryList;
-				},
-				error: (error: any) => console.error(error)
-			});
-
-		/** Get postList for categoryDeleteForm modal */
-
-		this.activatedRouteFirstChildData$ = this.activatedRoute.firstChild.data
-			.pipe(map((data: Data) => data.data))
-			.subscribe({
-				next: (postList: Post[]) => (this.postList = postList),
-				error: (error: any) => console.error(error)
-			});
+				this.categoryList = categoryList;
+			},
+			error: (error: any) => console.error(error)
+		});
 
 		/** Get category for categoryEditForm modal */
 
-		// prettier-ignore
 		this.activatedRouteFirstChildUrl$ = this.activatedRoute.firstChild.url.subscribe({
-				next: () => {
-					const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
+			next: () => {
+				const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
 
-					this.category = this.categoryList.find((category: Category) => {
-						return category.id === Number(categoryId);
-					});
-				},
-				error: (error: any) => console.error(error)
-			});
+				this.category = this.categoryList.find((category: Category) => {
+					return category.id === Number(categoryId);
+				});
+			},
+			error: (error: any) => console.error(error)
+		});
 
 		/** Set queryParams to postSearchForm */
 
@@ -203,7 +166,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
 		this.postSearchForm$ = this.postSearchForm.valueChanges
 			.pipe(
-				debounceTime(400),
+				debounceTime(500),
 				filter(() => this.postSearchForm.valid)
 			)
 			.subscribe({
@@ -233,10 +196,9 @@ export class UserComponent implements OnInit, OnDestroy {
 			)
 			.subscribe({
 				next: (value: any) => {
-					// prettier-ignore
 					this.categoryEditFormIsPristine = Object.keys(value).every((key: string) => {
-            return value[key] === this.category[key];
-          });
+						return value[key] === this.category[key];
+					});
 				}
 			});
 
@@ -250,9 +212,9 @@ export class UserComponent implements OnInit, OnDestroy {
 		[
 			this.activatedRouteData$,
 			this.activatedRouteQueryParams$,
-			this.activatedRouteFirstChildData$,
 			this.activatedRouteFirstChildUrl$,
 			this.postSearchForm$,
+			this.postSearchFormIsSubmitted$,
 			this.categoryEditForm$,
 			this.categoryDeleteForm$,
 			this.currentUser$
@@ -303,11 +265,10 @@ export class UserComponent implements OnInit, OnDestroy {
 		if (toggle) {
 			this.categoryDeleteForm.reset();
 			this.categoryDeleteFormModal.nativeElement.showModal();
+			this.categoryDeleteFormPostList = this.userPostComponent.abstractList;
 
-			// prettier-ignore
 			const abstractControl: AbstractControl = this.categoryDeleteForm.get('name');
 
-			// prettier-ignore
 			abstractControl.setValidators([
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('exact', this.category.name))
@@ -317,6 +278,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		} else {
 			this.categoryDeleteForm.reset();
 			this.categoryDeleteFormModal.nativeElement.close();
+			this.categoryDeleteFormPostList = [];
 		}
 	}
 
@@ -353,11 +315,8 @@ export class UserComponent implements OnInit, OnDestroy {
 
 			const categoryId: number = this.category.id;
 			const categoryDeleteDto: CategoryDeleteDto = {};
-
-			// prettier-ignore
 			const categoryDeleteRedirect: string[] = [this.userService.getUserUrl(this.user)];
 
-			// prettier-ignore
 			const abstractControl: AbstractControl = this.categoryDeleteForm.get('categoryId');
 
 			if (abstractControl.value) {
@@ -379,12 +338,21 @@ export class UserComponent implements OnInit, OnDestroy {
 					this.onToggleCategoryDeleteForm(false);
 					this.onToggleCategoryEditForm(false);
 
-					this.router
-						.navigate(categoryDeleteRedirect)
-						.then(() => console.debug('Route changed'));
+					this.router.navigate(categoryDeleteRedirect).then(() => console.debug('Route changed'));
 				},
 				error: () => this.categoryDeleteForm.enable()
 			});
 		}
+	}
+
+	onRouterOutletActivate(event: any): void {
+		this.userPostComponent = event;
+
+		const isLoading$: Observable<boolean> = this.userPostComponent.abstractListLoading$;
+
+		this.postSearchFormIsSubmitted$ = isLoading$.subscribe({
+			next: (isSubmitted: boolean) => (isSubmitted ? this.postSearchForm.disable() : this.postSearchForm.enable()),
+			error: (error: any) => console.error(error)
+		});
 	}
 }
