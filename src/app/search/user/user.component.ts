@@ -11,18 +11,11 @@ import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 import { AbstractListComponent } from '../../abstracts/abstract-list.component';
+import { CardUserComponent } from '../../standalone/components/card/user/user.component';
 
-// prettier-ignore
 @Component({
 	standalone: true,
-	imports: [
-		CommonModule,
-		RouterModule,
-		AvatarComponent,
-		SvgIconComponent,
-		UserUrlPipe,
-		DayjsPipe
-	],
+	imports: [CommonModule, RouterModule, AvatarComponent, SvgIconComponent, UserUrlPipe, DayjsPipe, CardUserComponent],
 	selector: 'app-search-user',
 	templateUrl: './user.component.html'
 })
@@ -32,6 +25,13 @@ export class SearchUserComponent extends AbstractListComponent implements OnInit
 	ngOnInit(): void {
 		super.ngOnInit();
 
+		/** Apply skeleton */
+
+		this.abstractList = this.skeletonService.getUserList(this.abstractSize);
+		this.abstractListHasMore = false;
+
+		this.getAbstractList();
+
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
@@ -39,9 +39,7 @@ export class SearchUserComponent extends AbstractListComponent implements OnInit
 
 	setMetaTags(): void {
 		const title: string = 'Search users';
-
-		// prettier-ignore
-		const description: string = 'Use our search function to find what you\'re looking for on Draft';
+		const description: string = "Use our search function to find what you're looking for on Draft";
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,
@@ -57,7 +55,7 @@ export class SearchUserComponent extends AbstractListComponent implements OnInit
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	getAbstractList(concat: boolean): void {
+	getAbstractList(concat: boolean = false): void {
 		this.abstractListLoading$.next(true);
 
 		/** Request */
@@ -67,14 +65,14 @@ export class SearchUserComponent extends AbstractListComponent implements OnInit
 			size: this.abstractSize
 		};
 
-    // prettier-ignore
-    userGetAllDto = {
-      ...this.postService.getSearchPostGetAllDto(userGetAllDto, this.activatedRoute.snapshot)
-    };
+		userGetAllDto = {
+			...this.postService.getSearchPostGetAllDto(userGetAllDto, this.activatedRoute.snapshot)
+		};
 
 		this.userService.getAll(userGetAllDto).subscribe({
 			next: (userList: User[]) => {
 				this.abstractList = concat ? this.abstractList.concat(userList) : userList;
+				this.abstractListSkeletonToggle = false;
 				this.abstractListHasMore = userList.length === this.abstractSize;
 				this.abstractListLoading$.next(false);
 			},

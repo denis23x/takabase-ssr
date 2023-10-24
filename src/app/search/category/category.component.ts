@@ -9,11 +9,12 @@ import { Category } from '../../core/models/category.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto';
 import { AbstractListComponent } from '../../abstracts/abstract-list.component';
+import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
+import { CardCategoryComponent } from '../../standalone/components/card/category/category.component';
 
-// prettier-ignore
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, UserUrlPipe, SvgIconComponent],
+	imports: [CommonModule, RouterModule, UserUrlPipe, SvgIconComponent, AppSkeletonDirective, CardCategoryComponent],
 	selector: 'app-search-category',
 	templateUrl: './category.component.html'
 })
@@ -23,6 +24,13 @@ export class SearchCategoryComponent extends AbstractListComponent implements On
 	ngOnInit(): void {
 		super.ngOnInit();
 
+		/** Apply skeleton */
+
+		this.abstractList = this.skeletonService.getCategoryList(this.abstractSize);
+		this.abstractListHasMore = false;
+
+		this.getAbstractList();
+
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
@@ -30,9 +38,7 @@ export class SearchCategoryComponent extends AbstractListComponent implements On
 
 	setMetaTags(): void {
 		const title: string = 'Search categories';
-
-		// prettier-ignore
-		const description: string = 'Use our search function to find what you\'re looking for on Draft';
+		const description: string = "Use our search function to find what you're looking for on Draft";
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,
@@ -48,7 +54,7 @@ export class SearchCategoryComponent extends AbstractListComponent implements On
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	getAbstractList(concat: boolean): void {
+	getAbstractList(concat: boolean = false): void {
 		this.abstractListLoading$.next(true);
 
 		/** Request */
@@ -59,14 +65,14 @@ export class SearchCategoryComponent extends AbstractListComponent implements On
 			scope: ['user']
 		};
 
-    // prettier-ignore
-    categoryGetAllDto = {
-      ...this.categoryService.getSearchCategoryGetAllDto(categoryGetAllDto, this.activatedRoute.snapshot)
-    };
+		categoryGetAllDto = {
+			...this.categoryService.getSearchCategoryGetAllDto(categoryGetAllDto, this.activatedRoute.snapshot)
+		};
 
 		this.categoryService.getAll(categoryGetAllDto).subscribe({
 			next: (categoryList: Category[]) => {
 				this.abstractList = concat ? this.abstractList.concat(categoryList) : categoryList;
+				this.abstractListSkeletonToggle = false;
 				this.abstractListHasMore = categoryList.length === this.abstractSize;
 				this.abstractListLoading$.next(false);
 			},
