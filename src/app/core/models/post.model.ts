@@ -7,10 +7,10 @@ export interface Post {
 	id: number;
 	name: string;
 	description: string;
-	markdown: string;
+	markdown?: string;
 	image: string | null;
-	user: User;
-	category: Category;
+	user?: User;
+	category?: Category;
 	createdAt: string;
 	updatedAt: string;
 }

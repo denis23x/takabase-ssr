@@ -12,6 +12,7 @@ export interface User {
 	categories?: Category[];
 	avatar: string | null;
 	settings?: Settings;
+	terms: boolean;
 	createdAt: string;
 	updatedAt: string;
 }

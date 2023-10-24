@@ -7,8 +7,8 @@ export interface Category {
 	id: number;
 	name: string;
 	description: string;
-	user: User;
-	posts: Post[];
+	user?: User;
+	posts?: Post[];
 	createdAt: string;
 	updatedAt: string;
 }
