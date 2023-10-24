@@ -99,7 +99,8 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 					this.currentUser = currentUser;
 
 					if (!this.currentUser.firebase.emailVerified) {
-						this.emailForm.patchValue(this.currentUser);
+						// prettier-ignore
+						this.emailForm.get('email').setValue(this.currentUser.firebase.email);
 						this.emailForm.disable();
 					}
 				},
@@ -112,6 +113,35 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[this.activatedRouteData$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	onSubmitPasswordValidateForm(): void {
+		if (this.helperService.getFormValidation(this.passwordValidateForm)) {
+			this.passwordValidateForm.disable();
+
+			const passwordValidateGetDto: PasswordValidateGetDto = {
+				...this.passwordValidateForm.value
+			};
+
+			this.passwordService.onValidateGet(passwordValidateGetDto).subscribe({
+				next: () => {
+					this.passwordValidateForm.enable();
+					this.passwordValidateForm.reset();
+
+					this.passwordValidateIsValid = true;
+
+					const dateNow: Date = new Date();
+
+					/** Set 5 minutes cookie */
+
+					// prettier-ignore
+					this.cookieService.setItem('password-valid', '1', {
+            expires: new Date(dateNow.setTime(dateNow.getTime() + 5 * 60 * 1000))
+          });
+				},
+				error: () => this.passwordValidateForm.enable()
+			});
+		}
 	}
 
 	onSubmitEmailForm(): void {
@@ -168,35 +198,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 					this.snackbarService.success('Success', 'Password has been changed');
 				},
 				error: () => this.passwordForm.enable()
-			});
-		}
-	}
-
-	onSubmitPasswordValidateForm(): void {
-		if (this.helperService.getFormValidation(this.passwordValidateForm)) {
-			this.passwordValidateForm.disable();
-
-			const passwordValidateGetDto: PasswordValidateGetDto = {
-				...this.passwordValidateForm.value
-			};
-
-			this.passwordService.onValidateGet(passwordValidateGetDto).subscribe({
-				next: () => {
-					this.passwordValidateForm.enable();
-					this.passwordValidateForm.reset();
-
-					this.passwordValidateIsValid = true;
-
-					const dateNow: Date = new Date();
-
-					/** Set 5 minutes cookie */
-
-					// prettier-ignore
-					this.cookieService.setItem('password-valid', '1', {
-						expires: new Date(dateNow.setTime(dateNow.getTime() + 5 * 60 * 1000))
-					});
-				},
-				error: () => this.passwordValidateForm.enable()
 			});
 		}
 	}

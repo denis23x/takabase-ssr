@@ -22,7 +22,7 @@ export class PasswordService {
 		private angularFireAuth: AngularFireAuth
 	) {}
 
-	onUpdate(passwordUpdateDto: PasswordUpdateDto): Observable<any> {
+	onUpdate(passwordUpdateDto: PasswordUpdateDto): Observable<void> {
 		return from(this.angularFireAuth.currentUser).pipe(
 			switchMap((firebaseUser: firebase.User) => {
 				return from(firebaseUser.updatePassword(passwordUpdateDto.newPassword));
@@ -34,7 +34,7 @@ export class PasswordService {
 	}
 
 	// prettier-ignore
-	onValidateGet(passwordValidateGetDto: PasswordValidateGetDto): Observable<any> {
+	onValidateGet(passwordValidateGetDto: PasswordValidateGetDto): Observable<firebase.auth.UserCredential> {
 		return from(this.angularFireAuth.currentUser).pipe(
 			switchMap((firebaseUser: firebase.User) => {
 				const credentials: firebase.auth.AuthCredential = EmailAuthProvider.credential(
@@ -51,7 +51,7 @@ export class PasswordService {
 	}
 
 	// prettier-ignore
-	onResetGet(passwordResetGetDto: PasswordResetGetDto): Observable<any> {
+	onResetGet(passwordResetGetDto: PasswordResetGetDto): Observable<void> {
 		return from(this.angularFireAuth.sendPasswordResetEmail(passwordResetGetDto.email)).pipe(
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);
@@ -60,7 +60,7 @@ export class PasswordService {
 	}
 
 	// prettier-ignore
-	onResetUpdate(passwordResetUpdateDto: PasswordResetUpdateDto): Observable<any> {
+	onResetUpdate(passwordResetUpdateDto: PasswordResetUpdateDto): Observable<void> {
 		return from(this.angularFireAuth.verifyPasswordResetCode(passwordResetUpdateDto.code)).pipe(
 			switchMap(() => {
 				return from(this.angularFireAuth.confirmPasswordReset(
