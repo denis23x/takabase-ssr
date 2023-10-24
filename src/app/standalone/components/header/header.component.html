@@ -1,9 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<div
-		class="navbar rounded-box border border-base-content/20 bg-base-100 shadow-xl"
-	>
+	<div class="navbar rounded-box border border-base-content/20 bg-base-100 shadow-xl">
 		<div class="navbar-start">
 			<a
 				class="btn-ghost btn-square btn fill-current"
@@ -17,45 +15,18 @@
 			</a>
 		</div>
 		<div class="navbar-center">
-			<a
-				class="btn-ghost btn text-xl normal-case"
-				title="Draft"
-				aria-label="Draft"
-				[routerLink]="['/']"
-			>
-				Draft
-			</a>
+			<a class="btn-ghost btn text-xl normal-case" title="Draft" aria-label="Draft" [routerLink]="['/']"> Draft </a>
 		</div>
 		<div class="navbar-end">
-			<div
-				class="bg-base-100 flex items-center justify-end rounded-btn overflow-hidden relative"
-				appSkeleton
-				[appSkeletonToggle]="currentUserSkeletonToggle"
-			>
-				<button
-					class="btn-ghost btn text-xl normal-case"
-					*appAuthenticated="true"
-					(click)="onLogout()"
-				>
-					logout
-				</button>
+			<div class="flex items-center justify-end" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
+				<button class="btn-ghost btn text-xl normal-case" *appAuthenticated="true" (click)="onLogout()">logout</button>
 				<ng-container *appAuthenticated="false">
 					<nav class="flex items-center justify-end gap-4">
-						<a
-							class="btn-primary btn"
-							title="Login"
-							aria-label="Login"
-							[routerLink]="['/login']"
-						>
-							Login
-						</a>
+						<a class="btn-primary btn" title="Login" aria-label="Login" [routerLink]="['/login']"> Login </a>
 					</nav>
 				</ng-container>
 				<ng-container *appAuthenticated="true">
-					<nav
-						class="flex items-center justify-end gap-2"
-						*ngIf="!!currentUser"
-					>
+					<nav class="flex items-center justify-end gap-2" *ngIf="!!currentUser">
 						<a
 							class="btn-ghost btn-square btn fill-current"
 							title="Create post"
@@ -86,11 +57,7 @@
 							[attr.aria-label]="currentUser.name"
 							[title]="currentUser.name"
 						>
-							<figure
-								class="h-12 w-12 rounded-btn relative overflow-hidden"
-								appAvatar
-								[appUser]="currentUser"
-							></figure>
+							<figure class="h-12 w-12 rounded-btn relative overflow-hidden" appAvatar [appUser]="currentUser"></figure>
 						</a>
 					</nav>
 				</ng-container>

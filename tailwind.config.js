@@ -11,6 +11,11 @@ module.exports = {
     "!m-0",
     "!rounded",
 
+    /** ANIMATIONS  */
+
+    "animate-pulse",
+    "inset-0",
+
     /** ALERT  */
 
     "progress",

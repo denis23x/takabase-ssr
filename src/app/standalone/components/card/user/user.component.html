@@ -1,9 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<div
-		class="rounded-box flex flex-col space-y-2 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-	>
+	<div class="rounded-box flex h-full w-full flex-col gap-2 border border-base-content/20 bg-base-100 p-4 shadow-xl">
 		<a
 			class="avatar aspect-square rounded-btn overflow-hidden"
 			appSkeleton
@@ -18,32 +16,24 @@
 				[appUser]="user"
 			></figure>
 		</a>
-		<div class="flex flex-col text-center gap-2">
-			<div
-				class="bg-base-100 relative rounded-btn overflow-hidden"
+		<div class="flex flex-col items-center text-center gap-2">
+			<a
+				class="link w-full truncate text-xl font-bold"
 				appSkeleton
 				[appSkeletonToggle]="userSkeletonToggle"
+				[routerLink]="[user | userUrl]"
+				[attr.aria-label]="user.name"
 			>
-				<a
-					class="link w-full truncate text-xl font-bold"
-					[routerLink]="[user | userUrl]"
-					[attr.aria-label]="user.name"
-				>
-					{{ user.name }}
-				</a>
-			</div>
-			<div
-				class="bg-base-100 relative rounded-btn overflow-hidden"
+				{{ user.name }}
+			</a>
+			<time
+				class="text-sm text-base-content/50"
 				appSkeleton
 				[appSkeletonToggle]="userSkeletonToggle"
+				[attr.datetime]="user.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 			>
-				<time
-					class="text-sm text-base-content/50"
-					[attr.datetime]="user.createdAt | dayjs: 'format' : 'YYYY-M-D'"
-				>
-					{{ user.createdAt | dayjs: "fromX" }}
-				</time>
-			</div>
+				{{ user.createdAt | dayjs: "fromX" }}
+			</time>
 		</div>
 	</div>
 </ng-container>

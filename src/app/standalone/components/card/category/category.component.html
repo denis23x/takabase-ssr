@@ -2,42 +2,24 @@
 
 <ng-container>
 	<div
-		class="rounded-box flex flex-col space-y-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+		class="rounded-box flex h-full w-full flex-col overflow-hidden gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 	>
-		<div class="flex flex-col gap-2">
-			<!-- prettier-ignore -->
-			<div
-        class="bg-base-100 relative rounded-btn overflow-hidden"
-        appSkeleton
-        [appSkeletonToggle]="categorySkeletonToggle"
-      >
-        <a
-          class="link text-xl font-bold"
-          [routerLink]="[(category.user | userUrl), 'category', category.id]"
-          [attr.aria-label]="category.name"
-        >
-          {{ category.name }}
-        </a>
-      </div>
-			<div
-				class="bg-base-100 relative rounded-btn overflow-hidden"
+		<div class="flex flex-col items-start h-full w-full gap-2">
+			<a
+				class="link text-xl font-bold"
 				appSkeleton
 				[appSkeletonToggle]="categorySkeletonToggle"
+				[routerLink]="[category.user | userUrl, 'category', category.id]"
+				[attr.aria-label]="category.name"
 			>
-				<span class="text-sm text-base-content/50">
-					{{ category.user.name }}
-				</span>
-			</div>
+				{{ category.name }}
+			</a>
+			<span class="text-sm text-base-content/50" appSkeleton [appSkeletonToggle]="categorySkeletonToggle">
+				{{ category.user.name }}
+			</span>
 		</div>
-		<div
-			class="bg-base-100 relative rounded-btn overflow-hidden"
-			appSkeleton
-			*ngIf="!!category.description"
-			[appSkeletonToggle]="categorySkeletonToggle"
-		>
-			<p class="alert">
-				<span class="line-clamp-2">{{ category.description }}</span>
-			</p>
-		</div>
+		<p class="alert !mt-auto" appSkeleton *ngIf="!!category.description" [appSkeletonToggle]="categorySkeletonToggle">
+			<span class="line-clamp-2">{{ category.description }}</span>
+		</p>
 	</div>
 </ng-container>
