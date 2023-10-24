@@ -4,8 +4,6 @@ import { NgModule } from '@angular/core';
 import { Route, RouterModule, Routes, TitleStrategy, UrlSegment } from '@angular/router';
 import { CreateResolverService } from './create/create-resolver.service';
 import { SearchPostDetailsResolverService } from './search/post/details/details-resolver.service';
-import { SettingsResolverService } from './settings/settings-resolver.service';
-import { SettingsAppearanceResolverService } from './settings/appearance/appearance-resolver.service';
 import { UserResolverService } from './user/user-resolver.service';
 import { UserPostDetailsResolverService } from './user/post/details/details-resolver.service';
 import { CanMatchPublicGuard } from './core/guards/public-guard.service';
@@ -17,6 +15,7 @@ export const routes: Routes = [
 		path: 'confirmation',
 		title: 'Confirmation',
 		loadComponent: () => {
+			// prettier-ignore
 			return import('./authorization/confirmation/confirmation.component').then(m => m.AuthConfirmationComponent);
 		},
 		children: [
@@ -58,6 +57,7 @@ export const routes: Routes = [
 		path: 'registration',
 		title: 'Registration',
 		loadComponent: () => {
+			// prettier-ignore
 			return import('./authorization/registration/registration.component').then(m => m.AuthRegistrationComponent);
 		},
 		canMatch: [CanMatchPublicGuard]
@@ -153,6 +153,7 @@ export const routes: Routes = [
 					{
 						path: ':postId',
 						loadComponent: () => {
+							// prettier-ignore
 							return import('./search/post/details/details.component').then(m => m.SearchPostDetailsComponent);
 						},
 						resolve: {
@@ -165,6 +166,7 @@ export const routes: Routes = [
 				path: 'categories',
 				title: 'Categories search',
 				loadComponent: () => {
+					// prettier-ignore
 					return import('./search/category/category.component').then(m => m.SearchCategoryComponent);
 				}
 			},
@@ -182,9 +184,6 @@ export const routes: Routes = [
 		loadComponent: () => {
 			return import('./settings/settings.component').then(m => m.SettingsComponent);
 		},
-		resolve: {
-			data: SettingsResolverService
-		},
 		canMatch: [CanMatchPrivateGuard],
 		children: [
 			{
@@ -196,6 +195,7 @@ export const routes: Routes = [
 				path: 'account',
 				title: 'Account settings',
 				loadComponent: () => {
+					// prettier-ignore
 					return import('./settings/account/account.component').then(m => m.SettingsAccountComponent);
 				}
 			},
@@ -203,16 +203,15 @@ export const routes: Routes = [
 				path: 'appearance',
 				title: 'Appearance settings',
 				loadComponent: () => {
+					// prettier-ignore
 					return import('./settings/appearance/appearance.component').then(m => m.SettingsAppearanceComponent);
-				},
-				resolve: {
-					data: SettingsAppearanceResolverService
 				}
 			},
 			{
 				path: 'profile',
 				title: 'Profile settings',
 				loadComponent: () => {
+					// prettier-ignore
 					return import('./settings/profile/profile.component').then(m => m.SettingsProfileComponent);
 				}
 			}
@@ -278,6 +277,7 @@ export const routes: Routes = [
 						}
 					}
 
+					// prettier-ignore
 					if (urlSegment.length === 4 && urlSegment[0].path === 'category' && urlSegment[2].path === 'post') {
 						return {
 							consumed: urlSegment.slice(0, 2),
@@ -298,6 +298,7 @@ export const routes: Routes = [
 					{
 						path: 'post/:postId',
 						loadComponent: () => {
+							// prettier-ignore
 							return import('./user/post/details/details.component').then(m => m.UserPostDetailsComponent);
 						},
 						resolve: {

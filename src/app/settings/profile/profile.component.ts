@@ -1,12 +1,6 @@
 /** @format */
 
-import {
-	Component,
-	ElementRef,
-	OnDestroy,
-	OnInit,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -14,8 +8,8 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { map, startWith, switchMap, tap } from 'rxjs/operators';
-import { ActivatedRoute, Data, RouterModule } from '@angular/router';
+import { startWith, switchMap, tap } from 'rxjs/operators';
+import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -64,11 +58,7 @@ interface ProfileForm {
 export class SettingsProfileComponent implements OnInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild('profileFormAvatarModal') profileFormAvatarModal: ElementRef<HTMLDialogElement> | undefined;
-
-	// prettier-ignore
 	@ViewChild('QRCodeModal') QRCodeModal: ElementRef<HTMLDialogElement> | undefined;
-
-	activatedRouteData$: Subscription | undefined;
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -81,7 +71,6 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	constructor(
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
-		private activatedRoute: ActivatedRoute,
 		private userService: UserService,
 		private authorizationService: AuthorizationService,
 		private snackbarService: SnackbarService,
@@ -98,33 +87,29 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.activatedRouteData$ = this.activatedRoute.parent.data
-			.pipe(map((data: Data) => data.data))
-			.subscribe({
-				next: (currentUser: CurrentUser) => {
-					this.currentUser = currentUser;
+		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
+			next: (currentUser: CurrentUser) => {
+				this.currentUser = currentUser;
 
-					this.profileForm.patchValue(this.currentUser);
-					this.profileForm.markAllAsTouched();
-				},
-				error: (error: any) => console.error(error)
-			});
+				this.profileForm.patchValue(this.currentUser);
+				this.profileForm.markAllAsTouched();
+			},
+			error: (error: any) => console.error(error)
+		});
 
 		this.profileForm$ = this.profileForm.valueChanges
 			.pipe(startWith(this.profileForm.value))
 			.subscribe({
 				next: (value: any) => {
-					// prettier-ignore
 					this.profileFormIsPristine = Object.keys(value).every((key: string) => {
-            return value[key] === this.currentUser[key];
-          });
+						return value[key] === this.currentUser[key];
+					});
 				}
 			});
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.activatedRouteData$, this.profileForm$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$, this.profileForm$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleProfileFormAvatar(toggle: boolean): void {
@@ -159,7 +144,6 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			avatar: fileCreateDto.filename
 		};
 
-		// prettier-ignore
 		this.userService
 			.update(this.currentUser.id, userUpdateDto)
 			.pipe(
@@ -171,7 +155,6 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			)
 			.subscribe({
 				next: () => {
-					// prettier-ignore
 					this.snackbarService.success('Success', 'Avatar has been updated');
 				},
 				error: (error: any) => console.error(error)
@@ -186,7 +169,6 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				...this.profileForm.value
 			};
 
-			// prettier-ignore
 			this.userService
 				.update(this.currentUser.id, userUpdateDto)
 				.pipe(
@@ -198,7 +180,6 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				)
 				.subscribe({
 					next: () => {
-						// prettier-ignore
 						this.snackbarService.success('Success', 'Information has been updated');
 
 						this.profileFormIsPristine = true;

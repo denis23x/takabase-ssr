@@ -8,8 +8,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { map } from 'rxjs/operators';
-import { ActivatedRoute, Data, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -23,6 +22,7 @@ import { EmailService } from '../../core/services/email.service';
 import { PasswordUpdateDto } from '../../core/dto/password/password-update.dto';
 import { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
 import { CurrentUser } from '../../core/models/current-user.model';
+import { AuthorizationService } from '../../core/services/authorization.service';
 
 interface PasswordValidateForm {
 	password: FormControl<string>;
@@ -49,8 +49,6 @@ interface PasswordForm {
 	templateUrl: './account.component.html'
 })
 export class SettingsAccountComponent implements OnInit, OnDestroy {
-	activatedRouteData$: Subscription | undefined;
-
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
@@ -65,7 +63,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	constructor(
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
-		private activatedRoute: ActivatedRoute,
+		private authorizationService: AuthorizationService,
 		private snackbarService: SnackbarService,
 		private cookieService: CookieService,
 		private emailService: EmailService,
@@ -78,10 +76,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			])
 		});
 		this.emailForm = this.formBuilder.group<EmailForm>({
-			email: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.email
-			])
+			email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email])
 		});
 		this.passwordForm = this.formBuilder.group<PasswordForm>({
 			password: this.formBuilder.nonNullable.control('', [
@@ -92,27 +87,23 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.activatedRouteData$ = this.activatedRoute.parent.data
-			.pipe(map((data: Data) => data.data))
-			.subscribe({
-				next: (currentUser: CurrentUser) => {
-					this.currentUser = currentUser;
+		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
+			next: (currentUser: CurrentUser) => {
+				this.currentUser = currentUser;
 
-					if (!this.currentUser.firebase.emailVerified) {
-						// prettier-ignore
-						this.emailForm.get('email').setValue(this.currentUser.firebase.email);
-						this.emailForm.disable();
-					}
-				},
-				error: (error: any) => console.error(error)
-			});
+				if (!this.currentUser.firebase.emailVerified) {
+					this.emailForm.get('email').setValue(this.currentUser.firebase.email);
+					this.emailForm.disable();
+				}
+			},
+			error: (error: any) => console.error(error)
+		});
 
-		// prettier-ignore
-		this.passwordValidateIsValid = !!Number(this.cookieService.getItem('password-valid'))
+		this.passwordValidateIsValid = !!Number(this.cookieService.getItem('password-valid'));
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteData$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onSubmitPasswordValidateForm(): void {
@@ -134,10 +125,9 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 					/** Set 5 minutes cookie */
 
-					// prettier-ignore
 					this.cookieService.setItem('password-valid', '1', {
-            expires: new Date(dateNow.setTime(dateNow.getTime() + 5 * 60 * 1000))
-          });
+						expires: new Date(dateNow.setTime(dateNow.getTime() + 5 * 60 * 1000))
+					});
 				},
 				error: () => this.passwordValidateForm.enable()
 			});
@@ -157,7 +147,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 					this.emailForm.enable();
 					this.emailForm.reset();
 
-					// prettier-ignore
 					this.snackbarService.success('All right', 'We sent you a verification email');
 				},
 				error: () => this.emailForm.enable()
@@ -173,7 +162,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.emailFormConfirmationIsSubmitted = false;
 
-					// prettier-ignore
 					this.snackbarService.info('All right', 'We sent you a verification email');
 				},
 				error: () => (this.emailFormConfirmationIsSubmitted = false)
@@ -194,7 +182,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 					this.passwordForm.enable();
 					this.passwordForm.reset();
 
-					// prettier-ignore
 					this.snackbarService.success('Success', 'Password has been changed');
 				},
 				error: () => this.passwordForm.enable()
