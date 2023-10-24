@@ -2,34 +2,24 @@
 
 <ng-container>
 	<section class="flex flex-col space-y-4 md:space-y-8">
-		<header
-			class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-		>
+		<header class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
 			<h1 class="text-2xl font-bold">Search</h1>
 			<hr class="my-0 border-base-content/20" />
-			<form
-				class="flex items-end justify-between gap-4"
-				autocomplete="off"
-				[formGroup]="searchForm"
-			>
-				<fieldset
-					class="form-control flex-1"
-					*ngIf="searchForm.get('query') as query"
-				>
+			<form class="flex items-end justify-between gap-4" autocomplete="off" [formGroup]="searchForm">
+				<fieldset class="form-control flex-1" *ngIf="searchForm.get('query') as query">
 					<label class="label" for="searchFormSearch">
 						<div class="indicator">
-							<!-- prettier-ignore -->
 							<span
 								class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
 								*ngIf="query.touched && !!query.errors && searchForm.enabled"
 								[ngSwitch]="true"
 							>
 								<ng-container *ngSwitchCase="!!query.errors.minlength">
-                  Min length {{ query.errors.minlength["requiredLength"] }} characters
-                </ng-container>
+									Min length {{ query.errors.minlength["requiredLength"] }} characters
+								</ng-container>
 								<ng-container *ngSwitchCase="!!query.errors.maxlength">
-                  Max length {{ query.errors.maxlength["requiredLength"] }} characters
-                </ng-container>
+									Max length {{ query.errors.maxlength["requiredLength"] }} characters
+								</ng-container>
 							</span>
 							<span class="label-text mr-2">Query</span>
 						</div>
@@ -62,10 +52,7 @@
 						></button>
 					</div>
 				</fieldset>
-				<fieldset
-					class="form-control"
-					*ngIf="searchForm.get('orderBy') as orderBy"
-				>
+				<fieldset class="form-control" *ngIf="searchForm.get('orderBy') as orderBy">
 					<div class="block" appDropdown [appPosition]="'bottom-right'">
 						<div class="indicator" slot="target">
 							<span
@@ -93,10 +80,7 @@
 							slot="content"
 						>
 							<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
-								<li
-									class="flex w-full"
-									*ngFor="let searchFormOrderBy of searchFormOrderByList"
-								>
+								<li class="flex w-full" *ngFor="let searchFormOrderBy of searchFormOrderByList">
 									<!-- prettier-ignore -->
 									<button
                     class="rounded-btn block w-full truncate text-right first-letter:uppercase"
@@ -118,10 +102,7 @@
 		</header>
 		<div class="flex flex-col">
 			<nav class="block px-4">
-				<ul
-					class="tabs w-full translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg"
-				>
-					<!-- prettier-ignore -->
+				<ul class="tabs w-full translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg">
 					<li
 						class="tab tab-lifted tab-lg h-10"
 						*ngFor="let link of ['Posts', 'Categories', 'Users']"
@@ -142,11 +123,8 @@
 					</li>
 				</ul>
 			</nav>
-			<div
-				class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
-			>
-				<router-outlet (activate)="onRouterOutletActivate($event)">
-				</router-outlet>
+			<div class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl">
+				<router-outlet (activate)="onRouterOutletActivate($event)"> </router-outlet>
 			</div>
 		</div>
 	</section>

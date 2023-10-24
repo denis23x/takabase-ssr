@@ -1,22 +1,12 @@
 /** @format */
 
 import { NgModule } from '@angular/core';
-import {
-	Route,
-	RouterModule,
-	Routes,
-	TitleStrategy,
-	UrlSegment
-} from '@angular/router';
+import { Route, RouterModule, Routes, TitleStrategy, UrlSegment } from '@angular/router';
 import { CreateResolverService } from './create/create-resolver.service';
-import { SearchPostResolverService } from './search/post/post-resolver.service';
 import { SearchPostDetailsResolverService } from './search/post/details/details-resolver.service';
-import { SearchCategoryResolverService } from './search/category/category-resolver.service';
-import { SearchUserResolverService } from './search/user/user-resolver.service';
 import { SettingsResolverService } from './settings/settings-resolver.service';
 import { SettingsAppearanceResolverService } from './settings/appearance/appearance-resolver.service';
 import { UserResolverService } from './user/user-resolver.service';
-import { UserPostResolverService } from './user/post/post-resolver.service';
 import { UserPostDetailsResolverService } from './user/post/details/details-resolver.service';
 import { CanMatchPublicGuard } from './core/guards/public-guard.service';
 import { CanMatchPrivateGuard } from './core/guards/private-guard.service';
@@ -28,33 +18,32 @@ export const routes: Routes = [
 	{
 		path: 'confirmation',
 		title: 'Confirmation',
-		// prettier-ignore
 		loadComponent: () => {
-			return import('./auth/confirmation/confirmation.component').then(m => m.AuthConfirmationComponent);
+			return import('./authorization/confirmation/confirmation.component').then(m => m.AuthConfirmationComponent);
 		},
 		children: [
 			{
 				path: 'email',
 				title: 'Email confirmation',
-				// prettier-ignore
 				loadComponent: () => {
-			    return import('./auth/confirmation/email/email.component').then(m => m.AuthConfirmationEmailComponent);
-			  }
+					// prettier-ignore
+					return import('./authorization/confirmation/email/email.component').then(m => m.AuthConfirmationEmailComponent);
+				}
 			},
 			{
 				path: 'password',
 				title: 'Set password',
-				// prettier-ignore
 				loadComponent: () => {
-					return import('./auth/confirmation/password/password.component').then(m => m.AuthConfirmationPasswordComponent);
+					// prettier-ignore
+					return import('./authorization/confirmation/password/password.component').then(m => m.AuthConfirmationPasswordComponent);
 				}
 			},
 			{
 				path: 'recovery',
 				title: 'Email recovery',
-				// prettier-ignore
 				loadComponent: () => {
-					return import('./auth/confirmation/recovery/recovery.component').then(m => m.AuthConfirmationRecoveryComponent);
+					// prettier-ignore
+					return import('./authorization/confirmation/recovery/recovery.component').then(m => m.AuthConfirmationRecoveryComponent);
 				}
 			}
 		]
@@ -62,28 +51,25 @@ export const routes: Routes = [
 	{
 		path: 'login',
 		title: 'Login',
-		// prettier-ignore
 		loadComponent: () => {
-      return import('./auth/login/login.component').then(m => m.AuthLoginComponent);
-    },
+			return import('./authorization/login/login.component').then(m => m.AuthLoginComponent);
+		},
 		canMatch: [CanMatchPublicGuard]
 	},
 	{
 		path: 'registration',
 		title: 'Registration',
-		// prettier-ignore
 		loadComponent: () => {
-      return import('./auth/registration/registration.component').then(m => m.AuthRegistrationComponent);
-    },
+			return import('./authorization/registration/registration.component').then(m => m.AuthRegistrationComponent);
+		},
 		canMatch: [CanMatchPublicGuard]
 	},
 	{
 		path: 'reset',
 		title: 'Reset password',
-		// prettier-ignore
 		loadComponent: () => {
-      return import('./auth/reset/reset.component').then(m => m.AuthResetComponent);
-    },
+			return import('./authorization/reset/reset.component').then(m => m.AuthResetComponent);
+		},
 		canMatch: [CanMatchPublicGuard]
 	},
 	{
@@ -100,10 +86,9 @@ export const routes: Routes = [
 			{
 				path: '',
 				title: 'Terms',
-				// prettier-ignore
 				loadComponent: () => {
-          return import('./terms/details/details.component').then(m => m.TermsDetailsComponent);
-        },
+					return import('./terms/details/details.component').then(m => m.TermsDetailsComponent);
+				},
 				resolve: {
 					data: TermsDetailsResolverService
 				}
@@ -124,10 +109,9 @@ export const routes: Routes = [
 			{
 				path: '',
 				title: 'Help',
-				// prettier-ignore
 				loadComponent: () => {
-		      return import('./help/details/details.component').then(m => m.HelpDetailsComponent);
-		    },
+					return import('./help/details/details.component').then(m => m.HelpDetailsComponent);
+				},
 				resolve: {
 					data: HelpDetailsResolverService
 				}
@@ -170,20 +154,15 @@ export const routes: Routes = [
 			{
 				path: 'posts',
 				title: 'Posts search',
-				// prettier-ignore
 				loadComponent: () => {
 					return import('./search/post/post.component').then(m => m.SearchPostComponent);
-				},
-				resolve: {
-					data: SearchPostResolverService
 				},
 				children: [
 					{
 						path: ':postId',
-						// prettier-ignore
 						loadComponent: () => {
-              return import('./search/post/details/details.component').then(m => m.SearchPostDetailsComponent);
-            },
+							return import('./search/post/details/details.component').then(m => m.SearchPostDetailsComponent);
+						},
 						resolve: {
 							data: SearchPostDetailsResolverService
 						}
@@ -193,33 +172,24 @@ export const routes: Routes = [
 			{
 				path: 'categories',
 				title: 'Categories search',
-				// prettier-ignore
 				loadComponent: () => {
-          return import('./search/category/category.component').then(m => m.SearchCategoryComponent);
-        },
-				resolve: {
-					data: SearchCategoryResolverService
+					return import('./search/category/category.component').then(m => m.SearchCategoryComponent);
 				}
 			},
 			{
 				path: 'users',
 				title: 'Users search',
-				// prettier-ignore
 				loadComponent: () => {
-          return import('./search/user/user.component').then(m => m.SearchUserComponent);
-        },
-				resolve: {
-					data: SearchUserResolverService
+					return import('./search/user/user.component').then(m => m.SearchUserComponent);
 				}
 			}
 		]
 	},
 	{
 		path: 'settings',
-		// prettier-ignore
 		loadComponent: () => {
-      return import('./settings/settings.component').then(m => m.SettingsComponent);
-    },
+			return import('./settings/settings.component').then(m => m.SettingsComponent);
+		},
 		resolve: {
 			data: SettingsResolverService
 		},
@@ -233,18 +203,16 @@ export const routes: Routes = [
 			{
 				path: 'account',
 				title: 'Account settings',
-				// prettier-ignore
 				loadComponent: () => {
-          return import('./settings/account/account.component').then(m => m.SettingsAccountComponent);
-        }
+					return import('./settings/account/account.component').then(m => m.SettingsAccountComponent);
+				}
 			},
 			{
 				path: 'appearance',
 				title: 'Appearance settings',
-				// prettier-ignore
 				loadComponent: () => {
-          return import('./settings/appearance/appearance.component').then(m => m.SettingsAppearanceComponent);
-        },
+					return import('./settings/appearance/appearance.component').then(m => m.SettingsAppearanceComponent);
+				},
 				resolve: {
 					data: SettingsAppearanceResolverService
 				}
@@ -252,10 +220,9 @@ export const routes: Routes = [
 			{
 				path: 'profile',
 				title: 'Profile settings',
-				// prettier-ignore
 				loadComponent: () => {
-          return import('./settings/profile/profile.component').then(m => m.SettingsProfileComponent);
-        }
+					return import('./settings/profile/profile.component').then(m => m.SettingsProfileComponent);
+				}
 			}
 		]
 	},
@@ -319,7 +286,6 @@ export const routes: Routes = [
 						}
 					}
 
-					// prettier-ignore
 					if (urlSegment.length === 4 && urlSegment[0].path === 'category' && urlSegment[2].path === 'post') {
 						return {
 							consumed: urlSegment.slice(0, 2),
@@ -333,18 +299,13 @@ export const routes: Routes = [
 					return null;
 				},
 				loadComponent: () => {
-					// prettier-ignore
 					return import('./user/post/post.component').then(m => m.UserPostComponent);
 				},
 				runGuardsAndResolvers: 'pathParamsChange',
-				resolve: {
-					data: UserPostResolverService
-				},
 				children: [
 					{
 						path: 'post/:postId',
 						loadComponent: () => {
-							// prettier-ignore
 							return import('./user/post/details/details.component').then(m => m.UserPostDetailsComponent);
 						},
 						resolve: {
@@ -358,7 +319,6 @@ export const routes: Routes = [
 	{
 		path: 'error/:status',
 		loadComponent: () => {
-			// prettier-ignore
 			return import('./error/error.component').then(m => m.ErrorComponent);
 		}
 	},

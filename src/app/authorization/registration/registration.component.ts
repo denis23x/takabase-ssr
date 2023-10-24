@@ -1,13 +1,7 @@
 /** @format */
 
 import { Component, OnInit } from '@angular/core';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -40,7 +34,7 @@ interface RegistrationForm {
 		AppInputTrimWhitespaceDirective,
 		OauthComponent
 	],
-	selector: 'app-auth-registration',
+	selector: 'app-authorization-registration',
 	templateUrl: './registration.component.html'
 })
 export class AuthRegistrationComponent implements OnInit {
@@ -62,17 +56,12 @@ export class AuthRegistrationComponent implements OnInit {
 				Validators.minLength(4),
 				Validators.maxLength(24)
 			]),
-			email: this.formBuilder.nonNullable.control('denis@mail.ru', [
-				Validators.required,
-				Validators.email
-			]),
+			email: this.formBuilder.nonNullable.control('denis@mail.ru', [Validators.required, Validators.email]),
 			password: this.formBuilder.nonNullable.control('denis@mail.ru', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
 			]),
-			terms: this.formBuilder.nonNullable.control(true, [
-				Validators.requiredTrue
-			])
+			terms: this.formBuilder.nonNullable.control(true, [Validators.requiredTrue])
 		});
 	}
 

@@ -1,13 +1,7 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -38,7 +32,7 @@ interface LoginForm {
 		AppInputTrimWhitespaceDirective,
 		OauthComponent
 	],
-	selector: 'app-auth-login',
+	selector: 'app-authorization-login',
 	templateUrl: './login.component.html'
 })
 export class AuthLoginComponent implements OnInit, OnDestroy {
@@ -57,10 +51,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 		private metaService: MetaService
 	) {
 		this.loginForm = this.formBuilder.group<LoginForm>({
-			email: this.formBuilder.nonNullable.control('denis@mail.ru', [
-				Validators.required,
-				Validators.email
-			]),
+			email: this.formBuilder.nonNullable.control('denis@mail.ru', [Validators.required, Validators.email]),
 			password: this.formBuilder.nonNullable.control('denis@mail.ru', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
@@ -129,9 +120,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
 		this.authorizationService.onLogin(loginDto).subscribe({
 			next: (user: User) => {
-				this.router
-					.navigate([this.userService.getUserUrl(user)])
-					.then(() => console.debug('Route changed'));
+				this.router.navigate([this.userService.getUserUrl(user)]).then(() => console.debug('Route changed'));
 			},
 			error: () => this.loginForm.enable()
 		});

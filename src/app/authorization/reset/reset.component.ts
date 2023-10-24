@@ -1,13 +1,7 @@
 /** @format */
 
 import { Component, OnInit } from '@angular/core';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -35,7 +29,7 @@ interface ResetForm {
 		AppInputTrimWhitespaceDirective,
 		OauthComponent
 	],
-	selector: 'app-auth-reset',
+	selector: 'app-authorization-reset',
 	templateUrl: './reset.component.html'
 })
 export class AuthResetComponent implements OnInit {
@@ -50,10 +44,7 @@ export class AuthResetComponent implements OnInit {
 		private passwordService: PasswordService
 	) {
 		this.resetForm = this.formBuilder.group<ResetForm>({
-			email: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.email
-			])
+			email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email])
 		});
 	}
 

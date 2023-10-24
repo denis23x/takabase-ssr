@@ -1,13 +1,7 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
@@ -27,13 +21,8 @@ interface PasswordForm {
 
 @Component({
 	standalone: true,
-	imports: [
-		CommonModule,
-		ReactiveFormsModule,
-		SvgIconComponent,
-		AppInputTrimWhitespaceDirective
-	],
-	selector: 'app-auth-confirmation-password',
+	imports: [CommonModule, ReactiveFormsModule, SvgIconComponent, AppInputTrimWhitespaceDirective],
+	selector: 'app-authorization-confirmation-password',
 	templateUrl: './password.component.html'
 })
 export class AuthConfirmationPasswordComponent implements OnInit, OnDestroy {

@@ -7,21 +7,21 @@ import { MetaService } from '../../../core/services/meta.service';
 import { Subscription } from 'rxjs';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { CommonModule } from '@angular/common';
+import { EmailConfirmationUpdateDto } from '../../../core/dto/email/email-confirmation-update.dto';
 import { EmailService } from '../../../core/services/email.service';
 import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
-import { EmailRecoveryDto } from '../../../core/dto/email/email-recovery.dto';
 
 @Component({
 	standalone: true,
 	imports: [CommonModule, RouterModule, SvgIconComponent],
-	selector: 'app-auth-recovery-recovery',
-	templateUrl: './recovery.component.html'
+	selector: 'app-authorization-confirmation-email',
+	templateUrl: './email.component.html'
 })
-export class AuthConfirmationRecoveryComponent implements OnInit, OnDestroy {
+export class AuthConfirmationEmailComponent implements OnInit, OnDestroy {
 	activatedRouteQueryParams$: Subscription | undefined;
 
-	recoveryIsSucceed: boolean = false;
-	recoveryIsSubmitted: boolean = true;
+	confirmationIsSucceed: boolean = false;
+	confirmationIsSubmitted: boolean = true;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -31,27 +31,27 @@ export class AuthConfirmationRecoveryComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe(
-			{
-				next: (params: Params) => {
-					const emailRecoveryDto: EmailRecoveryDto = {
-						code: params.oobCode
-					};
+		// prettier-ignore
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe({
+      next: (params: Params) => {
+				const emailConfirmationUpdateDto: EmailConfirmationUpdateDto = {
+					code: params.oobCode
+				};
 
-					this.emailService.onRecovery(emailRecoveryDto).subscribe({
+				this.emailService
+					.onConfirmationUpdate(emailConfirmationUpdateDto)
+					.subscribe({
 						next: () => {
-							this.recoveryIsSucceed = true;
-							this.recoveryIsSubmitted = false;
+							this.confirmationIsSucceed = true;
+							this.confirmationIsSubmitted = false;
 
-							// prettier-ignore
-							this.snackbarService.success('Hooray, it worked', 'Email successfully restored');
+							this.snackbarService.success('Great', 'Email successfully confirmed');
 						},
-						error: () => (this.recoveryIsSubmitted = false)
+						error: () => (this.confirmationIsSubmitted = false)
 					});
-				},
-				error: (error: any) => console.error(error)
-			}
-		);
+      },
+      error: (error: any) => console.error(error)
+    });
 
 		/** Apply SEO meta tags */
 
@@ -64,10 +64,8 @@ export class AuthConfirmationRecoveryComponent implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Email recovery';
-
-		// prettier-ignore
-		const description: string = 'Follow the simple steps to regain access to your account';
+		const title: string = 'Email confirmation';
+		const description: string = 'Thank you for verifying your email address';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,
