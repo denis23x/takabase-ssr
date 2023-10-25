@@ -14,7 +14,14 @@ import { CardCategoryComponent } from '../../standalone/components/card/category
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, UserUrlPipe, SvgIconComponent, AppSkeletonDirective, CardCategoryComponent],
+	imports: [
+		CommonModule,
+		RouterModule,
+		UserUrlPipe,
+		SvgIconComponent,
+		AppSkeletonDirective,
+		CardCategoryComponent
+	],
 	selector: 'app-search-category',
 	templateUrl: './category.component.html'
 })
@@ -30,7 +37,9 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 		this.abstractListSkeletonToggle = true;
 		this.abstractListHasMore = false;
 
-		this.getAbstractList();
+		if (this.platformService.isBrowser()) {
+			this.getAbstractList();
+		}
 
 		/** Apply SEO meta tags */
 
@@ -66,6 +75,7 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 			scope: ['user']
 		};
 
+		// prettier-ignore
 		categoryGetAllDto = {
 			...this.categoryService.getSearchCategoryGetAllDto(categoryGetAllDto, this.activatedRoute.snapshot)
 		};

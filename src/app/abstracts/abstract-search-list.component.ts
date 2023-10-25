@@ -11,6 +11,7 @@ import { MetaService } from '../core/services/meta.service';
 import { CategoryService } from '../core/services/category.service';
 import { UserService } from '../core/services/user.service';
 import { SkeletonService } from '../core/services/skeleton.service';
+import { PlatformService } from '../core/services/platform.service';
 
 @Component({
 	selector: 'app-abstract-search-list',
@@ -39,7 +40,8 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 		public metaService: MetaService,
 		public cookieService: CookieService,
 		public appearanceService: AppearanceService,
-		public skeletonService: SkeletonService
+		public skeletonService: SkeletonService,
+		public platformService: PlatformService
 	) {}
 
 	ngOnInit(): void {
@@ -75,6 +77,7 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 	}
 
 	setAbstractAppearance(): void {
+		// prettier-ignore
 		this.abstractListLoadingPageScrollInfinite = !!Number(this.cookieService.getItem('page-scroll-infinite'));
 
 		if (this.abstractListLoadingPageScrollInfinite) {

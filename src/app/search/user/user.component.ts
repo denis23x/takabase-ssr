@@ -15,7 +15,15 @@ import { CardUserComponent } from '../../standalone/components/card/user/user.co
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, AvatarComponent, SvgIconComponent, UserUrlPipe, DayjsPipe, CardUserComponent],
+	imports: [
+		CommonModule,
+		RouterModule,
+		AvatarComponent,
+		SvgIconComponent,
+		UserUrlPipe,
+		DayjsPipe,
+		CardUserComponent
+	],
 	selector: 'app-search-user',
 	templateUrl: './user.component.html'
 })
@@ -31,7 +39,9 @@ export class SearchUserComponent extends AbstractSearchListComponent implements 
 		this.abstractListSkeletonToggle = true;
 		this.abstractListHasMore = false;
 
-		this.getAbstractList();
+		if (this.platformService.isBrowser()) {
+			this.getAbstractList();
+		}
 
 		/** Apply SEO meta tags */
 

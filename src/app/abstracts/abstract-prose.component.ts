@@ -32,7 +32,9 @@ export abstract class AbstractProseComponent implements OnInit, OnDestroy {
 					});
 				}),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
-					this.router.navigate(['/error', httpErrorResponse.status]).then(() => console.debug('Route changed'));
+					this.router
+						.navigate(['/error', httpErrorResponse.status])
+						.then(() => console.debug('Route changed'));
 
 					return throwError(() => httpErrorResponse);
 				})

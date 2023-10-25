@@ -28,7 +28,9 @@ export class SearchPostComponent extends AbstractSearchListComponent implements 
 		this.abstractListSkeletonToggle = true;
 		this.abstractListHasMore = false;
 
-		this.getAbstractList();
+		if (this.platformService.isBrowser()) {
+			this.getAbstractList();
+		}
 
 		/** Apply SEO meta tags */
 

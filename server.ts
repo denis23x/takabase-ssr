@@ -51,6 +51,7 @@ export function app(): express.Express {
 
 	// Example Express Rest API endpoints
 	// server.get('/api/**', (req, res) => { });
+
 	// Serve static files from /browser
 	server.get(
 		'*.*',
@@ -61,6 +62,12 @@ export function app(): express.Express {
 
 	// All regular routes use the Universal engine
 	server.get('*', (req, res) => {
+		const fullPath = join(distFolder, req.originalUrl);
+
+		if (existsSync(fullPath)) {
+			return res.sendFile(join(fullPath, 'index.html'));
+		}
+
 		res.render(indexHtml, {
 			req,
 			providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }]
@@ -75,6 +82,7 @@ function run(): void {
 
 	// Start up the Node server
 	const server = app();
+
 	server.listen(port, () => {
 		console.log(`Node Express server listening on http://localhost:${port}`);
 	});

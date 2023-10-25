@@ -66,12 +66,23 @@ export class AppSkeletonDirective implements OnInit, OnDestroy {
 		const spanElementSkeleton: HTMLSpanElement = this.document.createElement('span');
 
 		spanElementSkeleton.classList.add(...this.skeletonClassList);
-		spanElementSkeleton.dataset.skeleton = '';
+
+		/** Angular Universal issue */
+
+		if (typeof spanElementSkeleton.dataset !== 'undefined') {
+			spanElementSkeleton.dataset.skeleton = '';
+		}
 
 		const spanElementParent: HTMLSpanElement = this.document.createElement('span');
 
 		spanElementParent.classList.add(...this.skeletonClassListParent);
-		spanElementParent.dataset.skeletonParent = '';
+
+		/** Angular Universal issue */
+
+		if (typeof spanElementParent.dataset !== 'undefined') {
+			spanElementParent.dataset.skeletonParent = '';
+		}
+
 		spanElementParent.appendChild(spanElementSkeleton);
 
 		return spanElementParent;
