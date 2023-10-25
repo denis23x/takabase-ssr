@@ -24,7 +24,6 @@ export class ApiService {
 	}
 
 	setError(httpError: any): Observable<never> {
-		// prettier-ignore
 		const defaultMessage: string = 'Oops! Something went wrong. Try again later.';
 
 		const getMessage = (): string => {
@@ -61,7 +60,9 @@ export class ApiService {
 					}
 				}
 				default: {
-					return defaultMessage;
+					/** this.setErrorRedirect message OR default */
+
+					return httpError.error.message || defaultMessage;
 				}
 			}
 		};
@@ -74,12 +75,11 @@ export class ApiService {
 		return throwError(() => httpError);
 	}
 
-	setErrorRedirect(httpErrorResponse: any): Observable<any> {
-		return from(
-			this.router
-				.navigate(['/error', httpErrorResponse.status])
-				.then(() => this.setError(httpErrorResponse))
-		);
+	setErrorRedirect(httpError: any): Observable<any> {
+		// prettier-ignore
+		return from(this.router.navigate(['/error', httpError.status]).then(() => {
+			this.setError(httpError);
+		}));
 	}
 
 	get(url: string, params?: any, options?: any): Observable<any> {

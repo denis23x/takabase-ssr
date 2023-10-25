@@ -6,6 +6,10 @@ import { Post } from '../core/models/post.model';
 import { PostService } from '../core/services/post.service';
 import { ApiService } from '../core/services/api.service';
 import { SkeletonService } from '../core/services/skeleton.service';
+import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
+import { catchError } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
+import { throwError } from 'rxjs';
 
 @Component({
 	selector: 'app-abstract-post-details',
@@ -27,11 +31,39 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 	) {}
 
 	ngOnInit(): void {
-		console.debug('Abstract ngOnInit');
+		/** Apply skeleton */
+
+		this.abstractPost = this.skeletonService.getPost();
+		this.abstractPostSkeletonToggle = true;
+		this.abstractPostProseModal.nativeElement.showModal();
 	}
 
 	ngOnDestroy(): void {
 		this.setAbstractClosePostProseModal(false);
+	}
+
+	getAbstractPost(postId: number, postGetOneDto: PostGetOneDto): void {
+		this.postService
+			.getOne(postId, postGetOneDto)
+			.pipe(
+				catchError((httpErrorResponse: HttpErrorResponse) => {
+					this.router
+						.navigate(['/error', httpErrorResponse.status])
+						.then(() => console.debug('Route changed'));
+
+					return throwError(() => httpErrorResponse);
+				})
+			)
+			.subscribe({
+				next: (post: Post) => {
+					this.abstractPost = post;
+					this.abstractPostSkeletonToggle = false;
+
+					this.postService.setPostMetaTags(this.abstractPost);
+					this.postService.setPostTitle(this.abstractPost.name);
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	setAbstractClosePostProseModal(redirect: boolean = true): void {
