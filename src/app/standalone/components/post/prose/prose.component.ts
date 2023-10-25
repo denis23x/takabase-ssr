@@ -12,6 +12,7 @@ import { Post } from '../../../../core/models/post.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { SanitizerPipe } from '../../../pipes/sanitizer.pipe';
 import { CurrentUser } from '../../../../core/models/current-user.model';
+import { AppSkeletonDirective } from '../../../directives/app-skeleton.directive';
 
 @Component({
 	standalone: true,
@@ -23,7 +24,8 @@ import { CurrentUser } from '../../../../core/models/current-user.model';
 		UserUrlPipe,
 		DayjsPipe,
 		NgOptimizedImage,
-		SanitizerPipe
+		SanitizerPipe,
+		AppSkeletonDirective
 	],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
@@ -34,10 +36,16 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 		this.post = post;
 	}
 
+	@Input()
+	set appPostSkeletonToggle(postSkeletonToggle: boolean) {
+		this.postSkeletonToggle = postSkeletonToggle;
+	}
+
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
 	post: Post | undefined;
+	postSkeletonToggle: boolean = true;
 
 	constructor(private authorizationService: AuthorizationService) {}
 
