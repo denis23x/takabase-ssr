@@ -39,45 +39,49 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		this.activatedRouteParentData$ = this.activatedRoute.parent.data.pipe(map((data: Data) => data.data)).subscribe({
-			next: ([user, categoryList]: [User, Category[]]) => {
-				this.user = user;
+		this.activatedRouteParentData$ = this.activatedRoute.parent.data
+			.pipe(map((data: Data) => data.data))
+			.subscribe({
+				next: ([user, categoryList]: [User, Category[]]) => {
+					this.user = user;
 
-				this.categoryList = categoryList;
+					this.categoryList = categoryList;
 
-				this.activatedRouteUrl$?.unsubscribe();
-				this.activatedRouteUrl$ = this.activatedRoute.url.subscribe({
-					next: () => {
-						this.category = this.categoryList.find((category: Category) => {
-							return category.id === Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
-						});
+					this.activatedRouteUrl$?.unsubscribe();
+					this.activatedRouteUrl$ = this.activatedRoute.url.subscribe({
+						next: () => {
+							// prettier-ignore
+							this.category = this.categoryList.find((category: Category) => {
+								return category.id === Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
+							});
 
-						/** Apply skeleton */
+							/** Apply skeleton */
 
-						this.abstractList = this.skeletonService.getPostList(this.abstractSize);
-						this.abstractListSkeletonToggle = true;
-						this.abstractListHasMore = false;
+							this.abstractList = this.skeletonService.getPostList();
+							this.abstractListSkeletonToggle = true;
+							this.abstractListHasMore = false;
 
-						this.getAbstractList();
+							this.getAbstractList();
 
-						/** Apply SEO meta tags */
+							/** Apply SEO meta tags */
 
-						this.setMetaTags();
+							this.setMetaTags();
 
-						/** Apply title */
+							/** Apply title */
 
-						this.setTitle();
-					},
-					error: (error: any) => console.error(error)
-				});
-			},
-			error: (error: any) => console.error(error)
-		});
+							this.setTitle();
+						},
+						error: (error: any) => console.error(error)
+					});
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
+		// prettier-ignore
 		[this.activatedRouteData$, this.activatedRouteUrl$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 

@@ -5,6 +5,7 @@ import firebase from 'firebase/compat';
 
 export interface CurrentUser extends User {
 	bearer?: string;
+	terms: boolean;
 	firebase: firebase.User;
 	// firebaseId?: string;
 	// facebookId?: string;
