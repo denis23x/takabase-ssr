@@ -18,7 +18,6 @@ import { PlatformService } from '../core/services/platform.service';
 	template: ''
 })
 export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
-	activatedRouteData$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
 
 	abstractPage: number = 1;

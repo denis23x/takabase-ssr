@@ -82,7 +82,7 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 		super.ngOnDestroy();
 
 		// prettier-ignore
-		[this.activatedRouteData$, this.activatedRouteUrl$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.activatedRouteParentData$, this.activatedRouteUrl$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setTitle(): void {

@@ -21,7 +21,12 @@
 				[appPost]="abstractPost"
 				[appPostSkeletonToggle]="abstractPostSkeletonToggle"
 			></main>
-			<nav class="flex bg-base-200 overflow-auto p-2" appShare slot="footer"></nav>
+			<nav
+				class="flex bg-base-200 overflow-auto p-2"
+				appShare
+				slot="footer"
+				[appShareSkeletonToggle]="abstractPostSkeletonToggle"
+			></nav>
 		</div>
 	</dialog>
 </ng-container>
