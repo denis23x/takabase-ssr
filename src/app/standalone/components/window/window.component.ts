@@ -32,7 +32,7 @@ export class WindowComponent implements OnInit {
 	fullscreenToggle: boolean = false;
 	fullscreenClassList: string[] = [
 		'h-auto',
-		'w-auto',
+		'w-screen',
 		'max-h-[calc(100dvh-2rem)]',
 		'max-w-[calc(100vw-2rem)]',
 		'border',
@@ -67,7 +67,7 @@ export class WindowComponent implements OnInit {
 		} else {
 			this.fullscreenClassList = [
 				'h-auto',
-				'w-auto',
+				'w-screen',
 				'max-h-[calc(100dvh-2rem)]',
 				'max-w-[calc(100vw-2rem)]',
 				'border',

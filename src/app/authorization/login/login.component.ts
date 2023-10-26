@@ -1,7 +1,13 @@
 /** @format */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+	Validators
+} from '@angular/forms';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -36,7 +42,7 @@ interface LoginForm {
 	templateUrl: './login.component.html'
 })
 export class AuthLoginComponent implements OnInit, OnDestroy {
-	activatedRouteData$: Subscription | undefined;
+	activatedRouteQueryParams$: Subscription | undefined;
 
 	loginForm: FormGroup | undefined;
 	loginForm$: Subscription | undefined;
@@ -51,7 +57,10 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 		private metaService: MetaService
 	) {
 		this.loginForm = this.formBuilder.group<LoginForm>({
-			email: this.formBuilder.nonNullable.control('denis@mail.ru', [Validators.required, Validators.email]),
+			email: this.formBuilder.nonNullable.control('denis@mail.ru', [
+				Validators.required,
+				Validators.email
+			]),
 			password: this.formBuilder.nonNullable.control('denis@mail.ru', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
@@ -60,7 +69,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.activatedRouteData$ = this.activatedRoute.queryParams
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
 			.pipe(
 				filter((params: Params) => {
 					const email: string | undefined = params.email;
@@ -88,7 +97,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteData$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.activatedRouteQueryParams$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setMetaTags(): void {
@@ -120,7 +129,9 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
 		this.authorizationService.onLogin(loginDto).subscribe({
 			next: (user: User) => {
-				this.router.navigate([this.userService.getUserUrl(user)]).then(() => console.debug('Route changed'));
+				this.router
+					.navigate([this.userService.getUserUrl(user)])
+					.then(() => console.debug('Route changed'));
 			},
 			error: () => this.loginForm.enable()
 		});

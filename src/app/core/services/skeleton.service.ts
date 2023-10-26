@@ -11,7 +11,7 @@ import { User } from '../models/user.model';
 export class SkeletonService {
 	getCategory(): Category {
 		return {
-			id: 146,
+			id: 0,
 			name: 'Jewelery',
 			description: 'Dicta celebrer bis. Antepono deduco sonitus amplus vesper.',
 			createdAt: '2023-10-15T12:55:54.663Z',
@@ -22,70 +22,70 @@ export class SkeletonService {
 	getCategoryList(): Category[] {
 		return [
 			{
-				id: 146,
+				id: 0,
 				name: 'Jewelery',
 				description: 'Dicta celebrer bis.',
 				createdAt: '2023-10-15T12:55:54.663Z',
 				updatedAt: '2023-10-15T12:55:54.663Z'
 			},
 			{
-				id: 143,
+				id: 0,
 				name: 'Tools',
 				description: 'Antepono deduco sonitus amplus vesper.',
 				createdAt: '2023-10-15T12:55:54.663Z',
 				updatedAt: '2023-10-15T12:55:54.663Z'
 			},
 			{
-				id: 139,
+				id: 0,
 				name: 'Baby',
 				description: 'Timidus temeritas degero cresco complectus carus cursus ascit.',
 				createdAt: '2023-10-15T12:55:54.663Z',
 				updatedAt: '2023-10-15T12:55:54.663Z'
 			},
 			{
-				id: 103,
+				id: 0,
 				name: 'Computers',
 				description: 'Vobis vulgaris curvo apparatus cuppedia capitulus.',
 				createdAt: '2023-10-15T12:55:54.663Z',
 				updatedAt: '2023-10-15T12:55:54.663Z'
 			},
 			{
-				id: 94,
+				id: 0,
 				name: 'Health',
 				description: null,
 				createdAt: '2023-10-15T12:55:54.663Z',
 				updatedAt: '2023-10-15T12:55:54.663Z'
 			},
 			{
-				id: 73,
+				id: 0,
 				name: 'Electronics',
 				description: null,
 				createdAt: '2023-10-15T12:55:54.663Z',
 				updatedAt: '2023-10-15T12:55:54.663Z'
 			},
 			{
-				id: 48,
+				id: 0,
 				name: 'Sports',
 				description: null,
 				createdAt: '2023-10-15T12:55:54.663Z',
 				updatedAt: '2023-10-15T12:55:54.663Z'
 			},
 			{
-				id: 19,
+				id: 0,
 				name: 'Industrial',
 				description: null,
 				createdAt: '2023-10-15T12:55:54.663Z',
 				updatedAt: '2023-10-15T12:55:54.663Z'
 			},
 			{
-				id: 5,
+				id: 0,
 				name: 'Music',
 				description: 'Vix neque uter deorsum textilis corrupti colo.',
 				createdAt: '2023-10-15T12:55:54.663Z',
 				updatedAt: '2023-10-15T12:55:54.663Z'
 			},
 			{
-				id: 2,
+				id: 0,
 				name: 'Toys',
 				description: 'Cursus cernuus crur bellicus thymum delectatio fuga similique tum quaerat.',
 				createdAt: '2023-10-15T12:55:54.663Z',
@@ -99,14 +99,13 @@ export class SkeletonService {
 
 	getPost(): Post {
 		return {
-			id: 1574,
+			id: 0,
 			name: 'Paint it Black',
 			description: 'Synagoga absconditus depereo cedo.',
-			image: 'http://0.0.0.0:4400/upload/images/seed/21.webp?alt=media',
+			image: null,
 			category: this.getCategory(),
 			user: this.getUser(),
-			markdown:
-				'Tamquam soleo bene omnis crudelis cibo. Quidem volutabrum artificiose blanditiis aeneus corrupti voluntarius comprehendo.',
+			markdown: 'Quidem volutabrum artificiose blanditiis aeneus corrupti voluntarius comprehendo.',
 			createdAt: '2023-10-15T12:55:54.955Z',
 			updatedAt: '2023-10-15T12:55:54.955Z'
 		};
@@ -115,7 +114,7 @@ export class SkeletonService {
 	getPostList(): Post[] {
 		return [
 			{
-				id: 1574,
+				id: 0,
 				name: 'Paint it Black',
 				description: 'Synagoga absconditus depereo cedo id ulterius culpo adsum spectaculum umbra.',
 				image: null,
@@ -123,7 +122,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 1573,
+				id: 0,
 				name: 'You make Me Wanna',
 				description: 'Terminatio optio claustrum.',
 				image: null,
@@ -131,7 +130,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 1572,
+				id: 0,
 				name: 'Jailhouse Rock',
 				description: 'Compono adduco demitto curatio tabgo ipsum demo sto ubi.',
 				image: null,
@@ -139,15 +138,15 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 1571,
+				id: 0,
 				name: 'Can You Feel the Love Tonight',
 				description: 'Recusandae texo pauci terga compono.',
-				image: 'http://0.0.0.0:4400/upload/images/seed/21.webp?alt=media',
+				image: null,
 				createdAt: '2023-10-15T12:55:54.955Z',
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 1570,
+				id: 0,
 				name: 'Make it With You',
 				description: 'Adversus stips allatus paulatim.',
 				image: null,
@@ -155,7 +154,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 1569,
+				id: 0,
 				name: 'Morning Train (Nine to Five)',
 				description: 'Super tardus approbo vorago vulgus angustus creta tremo subito approbo.',
 				image: null,
@@ -163,7 +162,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 1568,
+				id: 0,
 				name: 'Be My Baby',
 				description: 'Taceo vulgo confugo derideo.',
 				image: null,
@@ -171,7 +170,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 1567,
+				id: 0,
 				name: 'White Christmas',
 				description: 'Turpis nesciunt tendo ago urbanus.',
 				image: null,
@@ -179,15 +178,15 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 1566,
+				id: 0,
 				name: 'Wichita Lineman',
 				description: 'Speciosus casso eligendi facilis amiculum.',
-				image: 'http://0.0.0.0:4400/upload/images/seed/36.webp?alt=media',
+				image: null,
 				createdAt: '2023-10-15T12:55:54.955Z',
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 1565,
+				id: 0,
 				name: 'Get Down Tonight',
 				description: 'Sonitus pax tabernus turba viriliter agnitio nulla arca.',
 				image: null,
@@ -199,8 +198,8 @@ export class SkeletonService {
 
 	getUser(): User {
 		return {
-			id: 21,
-			name: 'aaaaaDenis666',
+			id: 0,
+			name: 'Kayley75',
 			description: null,
 			avatar: null,
 			createdAt: '2023-10-16T13:47:47.360Z',
@@ -211,15 +210,15 @@ export class SkeletonService {
 	getUserList(): User[] {
 		return [
 			{
-				id: 21,
-				name: 'aaaaaDenis666',
+				id: 0,
+				name: 'Denis.23x',
 				description: null,
 				avatar: null,
 				createdAt: '2023-10-16T13:47:47.360Z',
 				updatedAt: '2023-10-16T13:47:47.360Z'
 			},
 			{
-				id: 20,
+				id: 0,
 				name: 'Duncan.Doyle35',
 				description: null,
 				avatar: null,
@@ -227,7 +226,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 19,
+				id: 0,
 				name: 'Tiara.Harvey',
 				description: null,
 				avatar: null,
@@ -235,23 +234,23 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 18,
+				id: 0,
 				name: 'Alessia_Rath',
 				description: null,
-				avatar: 'http://0.0.0.0:4400/upload/images/seed/107.webp?alt=media',
-				createdAt: '2023-10-15T12:55:54.635Z',
-				updatedAt: '2023-10-15T12:55:54.635Z'
-			},
-			{
-				id: 17,
-				name: 'Lambert_Wyman17',
-				description: 'Dynamic Mobility Technician',
 				avatar: null,
 				createdAt: '2023-10-15T12:55:54.635Z',
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 16,
+				id: 0,
+				name: 'Lambert_Wyman17',
+				description: null,
+				avatar: null,
+				createdAt: '2023-10-15T12:55:54.635Z',
+				updatedAt: '2023-10-15T12:55:54.635Z'
+			},
+			{
+				id: 0,
 				name: 'Scot_Shields7',
 				description: null,
 				avatar: null,
@@ -259,7 +258,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 15,
+				id: 0,
 				name: 'Eino35',
 				description: null,
 				avatar: null,
@@ -267,15 +266,15 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 14,
+				id: 0,
 				name: 'Kayley75',
 				description: null,
-				avatar: 'http://0.0.0.0:4400/upload/images/seed/49.webp?alt=media',
+				avatar: null,
 				createdAt: '2023-10-15T12:55:54.635Z',
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 13,
+				id: 0,
 				name: 'Lacey_OConner',
 				description: null,
 				avatar: null,
@@ -283,10 +282,10 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 12,
+				id: 0,
 				name: 'Sarai88',
-				description: 'District Directives Specialist',
-				avatar: 'http://0.0.0.0:4400/upload/images/seed/103.webp?alt=media',
+				description: null,
+				avatar: null,
 				createdAt: '2023-10-15T12:55:54.635Z',
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			}

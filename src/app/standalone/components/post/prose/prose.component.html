@@ -3,7 +3,7 @@
 <ng-container *ngIf="!!post">
 	<section class="flex h-full max-w-full flex-col items-start justify-start space-y-4 px-4">
 		<header class="flex w-full flex-col items-start justify-start border-b border-base-content/20">
-			<div class="mt-4 flex" *ngIf="!postSkeletonToggle && currentUser?.id === post.user.id">
+			<div class="mt-4 flex" *ngIf="currentUser?.id === post.user.id">
 				<a class="btn-primary btn" aria-label="Settings" [routerLink]="['/edit', post.id]">
 					Edit
 				</a>
@@ -66,10 +66,7 @@
 		<footer
 			class="flex w-full flex-col items-start justify-start space-y-4 border-t border-base-content/20 empty:invisible"
 		>
-			<div
-				class="flex items-center justify-start gap-4 py-4"
-				*ngIf="postSkeletonToggle || currentUser?.id !== post.user.id"
-			>
+			<div class="flex items-center justify-start gap-4 py-4">
 				<a
 					class="avatar"
 					appSkeleton

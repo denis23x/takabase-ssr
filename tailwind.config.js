@@ -26,6 +26,8 @@ module.exports = {
 
     /** WINDOW  */
 
+    "h-auto",
+    "w-screen",
     "max-h-[calc(100dvh-2rem)]",
     "max-w-[calc(100vw-2rem)]",
     "md:max-h-[80dvh]",
