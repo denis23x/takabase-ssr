@@ -16,6 +16,11 @@ export class AppSkeletonDirective implements OnInit, OnDestroy {
 	}
 
 	@Input()
+	set appSkeletonClassListElementRef(classList: string[]) {
+		this.skeletonClassListElementRef = this.skeletonClassListElementRef.concat(classList);
+	}
+
+	@Input()
 	set appSkeletonClassListParent(classList: string[]) {
 		this.skeletonClassListParent = this.skeletonClassListParent.concat(classList);
 	}

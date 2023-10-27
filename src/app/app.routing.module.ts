@@ -3,7 +3,6 @@
 import { NgModule } from '@angular/core';
 import { Route, RouterModule, Routes, TitleStrategy, UrlSegment } from '@angular/router';
 import { CreateResolverService } from './create/create-resolver.service';
-import { UserResolverService } from './user/user-resolver.service';
 import { CanMatchPublicGuard } from './core/guards/public-guard.service';
 import { CanMatchPrivateGuard } from './core/guards/private-guard.service';
 import { TitleService } from './core/services/title.service';
@@ -224,9 +223,6 @@ export const routes: Routes = [
 		},
 		loadComponent: () => {
 			return import('./user/user.component').then(m => m.UserComponent);
-		},
-		resolve: {
-			data: UserResolverService
 		},
 		children: [
 			{

@@ -55,41 +55,6 @@ export class SkeletonService {
 				description: null,
 				createdAt: '2023-10-15T12:55:54.663Z',
 				updatedAt: '2023-10-15T12:55:54.663Z'
-			},
-			{
-				id: 0,
-				name: 'Electronics',
-				description: null,
-				createdAt: '2023-10-15T12:55:54.663Z',
-				updatedAt: '2023-10-15T12:55:54.663Z'
-			},
-			{
-				id: 0,
-				name: 'Sports',
-				description: null,
-				createdAt: '2023-10-15T12:55:54.663Z',
-				updatedAt: '2023-10-15T12:55:54.663Z'
-			},
-			{
-				id: 0,
-				name: 'Industrial',
-				description: null,
-				createdAt: '2023-10-15T12:55:54.663Z',
-				updatedAt: '2023-10-15T12:55:54.663Z'
-			},
-			{
-				id: 0,
-				name: 'Music',
-				description: 'Vix neque uter deorsum textilis corrupti colo.',
-				createdAt: '2023-10-15T12:55:54.663Z',
-				updatedAt: '2023-10-15T12:55:54.663Z'
-			},
-			{
-				id: 0,
-				name: 'Toys',
-				description: 'Cursus cernuus crur bellicus thymum delectatio fuga similique tum quaerat.',
-				createdAt: '2023-10-15T12:55:54.663Z',
-				updatedAt: '2023-10-15T12:55:54.663Z'
 			}
 		].map((category: Category) => ({
 			...category,

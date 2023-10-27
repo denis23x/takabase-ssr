@@ -22,6 +22,7 @@ export class UserPostDetailsComponent extends AbstractPostDetailsComponent imple
 		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 		const postGetOneDto: PostGetOneDto = {
 			userId: 1,
+			categoryId: 1,
 			scope: ['user', 'category']
 		};
 
