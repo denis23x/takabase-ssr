@@ -167,7 +167,7 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 	{
 		key: 'url-link',
 		label: 'Link',
-		icon: 'link',
+		icon: 'link-45deg',
 		handler: (markdownTextarea: MarkdownTextarea, formGroupValue: any): string => {
 			return setWrapper(`[${formGroupValue.title}](${formGroupValue.url})`, markdownTextarea, 'inline');
 		}
@@ -197,43 +197,42 @@ export const MarkdownControlEmojiMart = (): MarkdownControl => ({
 	handler: (): string => ''
 });
 
-// prettier-ignore
 export const MarkdownControlTable = (): MarkdownControl => ({
-  key: 'table',
-  label: 'Table',
-  icon: 'table',
-  handler: (markdownTextarea: MarkdownTextarea, index: number): string => {
-    const columns: number = (index % 5) + 1;
-    const rows: number = ((index - (columns - 1)) / 5) + 1;
+	key: 'table',
+	label: 'Table',
+	icon: 'table',
+	handler: (markdownTextarea: MarkdownTextarea, index: number): string => {
+		const columns: number = (index % 5) + 1;
+		const rows: number = (index - (columns - 1)) / 5 + 1;
 
-    /** Get ready columns */
+		/** Get ready columns */
 
-    const getReadyColumns = (header: boolean, value?: string): string => {
-      const column: string[] = [];
-      const columnText: string = ` ${value} `;
+		const getReadyColumns = (header: boolean, value?: string): string => {
+			const column: string[] = [];
+			const columnText: string = ` ${value} `;
 
-      for(let i = 0; i < columns; i++){
-        column.push(header ? ' ------ ' : columnText);
-      }
+			for (let i = 0; i < columns; i++) {
+				column.push(header ? ' ------ ' : columnText);
+			}
 
-      return '|' + column.join('|') + '|';
-    }
+			return '|' + column.join('|') + '|';
+		};
 
-    /** Get ready rows */
+		/** Get ready rows */
 
-    const readyRows: string[] = [];
+		const readyRows: string[] = [];
 
-    readyRows.push(getReadyColumns(false, 'Header'));
-    readyRows.push(getReadyColumns(true));
+		readyRows.push(getReadyColumns(false, 'Header'));
+		readyRows.push(getReadyColumns(true));
 
-    for(let i = 0; i < rows; i++){
-      readyRows.push(getReadyColumns(false, 'Column'));
-    }
+		for (let i = 0; i < rows; i++) {
+			readyRows.push(getReadyColumns(false, 'Column'));
+		}
 
-    const value: string = readyRows.join('\n');
+		const value: string = readyRows.join('\n');
 
-    return setWrapper(value, markdownTextarea, 'block');
-  }
+		return setWrapper(value, markdownTextarea, 'block');
+	}
 });
 
 // prettier-ignore

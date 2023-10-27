@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { AppAuthenticatedDirective } from '../../directives/app-authenticated.directive';
 import { UserUrlPipe } from '../../pipes/user-url.pipe';
 import { AuthorizationService } from '../../../core/services/authorization.service';
-import { catchError, skip } from 'rxjs/operators';
+import { catchError, filter } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { CurrentUser } from '../../../core/models/current-user.model';
@@ -48,11 +48,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			error: (error: any) => console.error(error)
 		});
 
-		// prettier-ignore
-		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated.pipe(skip(1)).subscribe({
-			next: () => (this.currentUserSkeletonToggle = false),
-			error: (error: any) => console.error(error)
-		});
+		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
+			.pipe(filter((currentUserIsPopulated: boolean) => currentUserIsPopulated))
+			.subscribe({
+				next: () => (this.currentUserSkeletonToggle = false),
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	ngOnDestroy(): void {

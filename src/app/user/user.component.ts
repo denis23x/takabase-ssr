@@ -87,6 +87,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	activatedRouteFirstChildParams$: Subscription | undefined;
 
 	user: User | undefined;
+	user$: Subscription | undefined;
 	userSkeletonToggle: boolean = true;
 	userPostComponent: UserPostComponent | undefined;
 
@@ -172,7 +173,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
 		this.postSearchForm$ = this.postSearchForm.valueChanges
 			.pipe(
-				debounceTime(500),
+				debounceTime(1000),
 				filter(() => this.postSearchForm.valid)
 			)
 			.subscribe({
@@ -221,11 +222,12 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.activatedRouteUrl$,
 			this.activatedRouteQueryParams$,
 			this.activatedRouteFirstChildParams$,
+			this.user$,
+			this.currentUser$,
 			this.postSearchForm$,
 			this.postSearchFormIsSubmitted$,
 			this.categoryEditForm$,
-			this.categoryDeleteForm$,
-			this.currentUser$
+			this.categoryDeleteForm$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -242,6 +244,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
+		this.user$?.unsubscribe();
 		this.activatedRouteFirstChildParams$?.unsubscribe();
 
 		const [path]: UrlSegment[] = this.activatedRoute.snapshot.url;
@@ -253,7 +256,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			scope: ['categories']
 		};
 
-		this.userService.getAll(userGetAllDto).subscribe({
+		this.user$ = this.userService.getAll(userGetAllDto).subscribe({
 			next: (userList: User[]) => {
 				this.user = userList.shift();
 				this.userSkeletonToggle = false;

@@ -144,6 +144,7 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 	}
 
 	getAbstractList(concat: boolean = false): void {
+		this.abstractList$?.unsubscribe();
 		this.abstractListLoading$.next(true);
 
 		let postGetAllDto: PostGetAllDto = {
@@ -163,7 +164,7 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 			...this.postService.getSearchPostGetAllDto(postGetAllDto, this.activatedRoute.snapshot)
 		};
 
-		this.postService.getAll(postGetAllDto).subscribe({
+		this.abstractList$ = this.postService.getAll(postGetAllDto).subscribe({
 			next: (postList: Post[]) => {
 				this.abstractList = concat ? this.abstractList.concat(postList) : postList;
 				this.abstractListSkeletonToggle = false;

@@ -102,9 +102,7 @@
 						></button>
 					</div>
 				</fieldset>
-				<div
-					class="col-span-12 flex items-end justify-end space-x-4 sm:col-span-6"
-				>
+				<div class="col-span-12 flex items-end justify-end space-x-4 sm:col-span-6">
 					<fieldset
 						class="form-control w-full"
 						*ngIf="postForm.get('categoryName') as categoryName"
@@ -131,27 +129,24 @@
 							[class.cursor-not-allowed]="postForm.disabled"
 							(toggled)="onToggleCategory($event)"
 						>
-							<!-- prettier-ignore -->
 							<input
-                class="input input-bordered input-md w-full cursor-pointer truncate"
-                id="postFormCategoryName"
-                type="text"
-                aria-label="Category"
-                placeholder="Select post category"
-                formControlName="categoryName"
-                slot="target"
-                readonly
-                [class.input-success]="categoryName.touched && categoryName.value"
-                [class.input-error]="categoryName.touched && categoryName.invalid"
-              />
+								class="input input-bordered input-md w-full cursor-pointer truncate"
+								id="postFormCategoryName"
+								type="text"
+								aria-label="Category"
+								placeholder="Select post category"
+								formControlName="categoryName"
+								slot="target"
+								readonly
+								[class.input-success]="categoryName.touched && categoryName.value"
+								[class.input-error]="categoryName.touched && categoryName.invalid"
+							/>
 							<div
 								class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 								slot="content"
 								[class.hidden]="!categoryList.length"
 							>
-								<ul
-									class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2"
-								>
+								<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
 									<li
 										class="flex w-full snap-start scroll-my-2"
 										*ngFor="let category of categoryList"
@@ -191,22 +186,21 @@
 				>
 					<label class="label" for="postFormDescription">
 						<div class="indicator">
-							<!-- prettier-ignore -->
 							<span
-                class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                *ngIf="description.touched && !!description.errors && postForm.enabled"
-                [ngSwitch]="true"
-              >
-                <ng-container *ngSwitchCase="!!description.errors.required">
-                  Required
-                </ng-container>
-                <ng-container *ngSwitchCase="!!description.errors.minlength">
-                  Min length {{ description.errors.minlength["requiredLength"] }} characters
-                </ng-container>
-                <ng-container *ngSwitchCase="!!description.errors.maxlength">
-                  Max length {{ description.errors.maxlength["requiredLength"] }} characters
-                </ng-container>
-              </span>
+								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="description.touched && !!description.errors && postForm.enabled"
+								[ngSwitch]="true"
+							>
+								<ng-container *ngSwitchCase="!!description.errors.required">
+									Required
+								</ng-container>
+								<ng-container *ngSwitchCase="!!description.errors.minlength">
+									Min length {{ description.errors.minlength["requiredLength"] }} characters
+								</ng-container>
+								<ng-container *ngSwitchCase="!!description.errors.maxlength">
+									Max length {{ description.errors.maxlength["requiredLength"] }} characters
+								</ng-container>
+							</span>
 							<span class="label-text mr-2">Description</span>
 						</div>
 					</label>
@@ -240,13 +234,8 @@
 				</fieldset>
 			</form>
 		</div>
-		<div
-			class="z-[1] flex flex-col gap-4 bg-base-100 p-4"
-			[ngClass]="fullscreenClassList"
-		>
-			<div
-				class="flex h-full flex-col gap-y-4 overflow-y-auto overflow-x-hidden"
-			>
+		<div class="z-[1] flex flex-col gap-4 bg-base-100 p-4" [ngClass]="fullscreenClassList">
+			<div class="flex h-full flex-col gap-y-4 overflow-y-auto overflow-x-hidden">
 				<div
 					class="flex w-full items-start justify-between space-x-4"
 					[class.hidden]="fullscreenHiddenControls"
@@ -290,39 +279,34 @@
 						[formGroup]="postForm"
 						[class.hidden]="fullscreenToggle && fullscreenHiddenMarkdown"
 					>
-						<fieldset
-							class="form-control h-full"
-							*ngIf="postForm.get('markdown') as markdown"
-						>
+						<fieldset class="form-control h-full" *ngIf="postForm.get('markdown') as markdown">
 							<label class="label" for="postFormTextarea">
 								<div class="indicator">
-									<!-- prettier-ignore -->
 									<span
-                    class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                    *ngIf="markdown.touched && !!markdown.errors && postForm.enabled"
-                    [ngSwitch]="true"
-                  >
-                    <ng-container *ngSwitchCase="!!markdown.errors.required">
-                      Required
-                    </ng-container>
-                    <ng-container *ngSwitchCase="!!markdown.errors.minlength">
-                      Min length {{ markdown.errors.minlength["requiredLength"] }} characters
-                    </ng-container>
-                    <ng-container *ngSwitchCase="!!markdown.errors.maxlength">
-                      Max length {{ markdown.errors.maxlength["requiredLength"] }} characters
-                    </ng-container>
-                  </span>
+										class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+										*ngIf="markdown.touched && !!markdown.errors && postForm.enabled"
+										[ngSwitch]="true"
+									>
+										<ng-container *ngSwitchCase="!!markdown.errors.required">
+											Required
+										</ng-container>
+										<ng-container *ngSwitchCase="!!markdown.errors.minlength">
+											Min length {{ markdown.errors.minlength["requiredLength"] }} characters
+										</ng-container>
+										<ng-container *ngSwitchCase="!!markdown.errors.maxlength">
+											Max length {{ markdown.errors.maxlength["requiredLength"] }} characters
+										</ng-container>
+									</span>
 									<span class="label-text mr-2">Markdown</span>
 								</div>
-								<!-- prettier-ignore -->
 								<span
-                  class="label-text-alt"
-                  [class.text-base-content]="postForm.disabled"
-                  [class.text-success]="postForm.enabled && markdown.value && markdown.valid"
-                  [class.text-error]="postForm.enabled && markdown.touched && markdown.invalid"
-                >
-                  {{ markdown.value.length }}/7200
-                </span>
+									class="label-text-alt"
+									[class.text-base-content]="postForm.disabled"
+									[class.text-success]="postForm.enabled && markdown.value && markdown.valid"
+									[class.text-error]="postForm.enabled && markdown.touched && markdown.invalid"
+								>
+									{{ markdown.value.length }}/7200
+								</span>
 							</label>
 							<!-- prettier-ignore -->
 							<div
@@ -350,13 +334,10 @@
               </div>
 						</fieldset>
 					</form>
-					<div
-						class="flex items-center justify-center"
-						[class.hidden]="!fullscreenToggle"
-					>
-						<!-- prettier-ignore -->
+					<div class="flex items-center justify-center" [class.hidden]="!fullscreenToggle">
 						<div class="flex overflow-auto rounded-btn border border-base-content/20">
-              <ul
+							<!-- prettier-ignore -->
+							<ul
                 class="menu menu-md rounded-btn menu-horizontal flex-nowrap overflow-auto sm:menu-vertical p-0"
                 *ngIf="{ value: postForm.disabled || postFormPreviewModal.open || postDeleteModal.open } as disabled"
                 [ngClass]="{ 'bg-base-300 border-transparent': disabled.value }"
@@ -429,7 +410,7 @@
                   </button>
                 </li>
               </ul>
-            </div>
+						</div>
 					</div>
 					<div
 						class="flex h-full w-full flex-col overflow-auto"
@@ -449,11 +430,7 @@
 					</div>
 				</div>
 			</div>
-			<!-- prettier-ignore -->
-			<div
-				class="grid grid-cols-12 gap-4"
-				[class.hidden]="fullscreenHiddenControls"
-			>
+			<div class="grid grid-cols-12 gap-4" [class.hidden]="fullscreenToggle">
 				<button
 					class="btn btn-primary col-span-4 sm:col-span-3"
 					type="button"
@@ -471,7 +448,8 @@
 					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine"
 					(click)="onSubmitPostForm()"
 				>
-          <span
+					<!-- prettier-ignore -->
+					<span
             class="loading loading-spinner"
             *ngIf="postForm.disabled && !postFormImageModal.open && !categoryFormModal.open && !postFormPreviewModal.open && !postDeleteModal.open && !postMarkdownModalToggle"
           ></span>
@@ -546,22 +524,19 @@
 				<fieldset class="form-control" *ngIf="categoryForm.get('name') as name">
 					<label class="label" for="categoryFormName">
 						<div class="indicator">
-							<!-- prettier-ignore -->
 							<span
-                class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                *ngIf="name.touched && !!name.errors && categoryForm.enabled"
-                [ngSwitch]="true"
-              >
-                <ng-container *ngSwitchCase="!!name.errors.required">
-                  Required
-                </ng-container>
-                <ng-container *ngSwitchCase="!!name.errors.minlength">
-                  Min length {{ name.errors.minlength["requiredLength"] }} characters
-                </ng-container>
-                <ng-container *ngSwitchCase="!!name.errors.maxlength">
-                  Max length {{ name.errors.maxlength["requiredLength"] }} characters
-                </ng-container>
-              </span>
+								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="name.touched && !!name.errors && categoryForm.enabled"
+								[ngSwitch]="true"
+							>
+								<ng-container *ngSwitchCase="!!name.errors.required"> Required </ng-container>
+								<ng-container *ngSwitchCase="!!name.errors.minlength">
+									Min length {{ name.errors.minlength["requiredLength"] }} characters
+								</ng-container>
+								<ng-container *ngSwitchCase="!!name.errors.maxlength">
+									Max length {{ name.errors.maxlength["requiredLength"] }} characters
+								</ng-container>
+							</span>
 							<span class="label-text mr-2">Name</span>
 						</div>
 					</label>
@@ -593,42 +568,37 @@
 						></button>
 					</div>
 				</fieldset>
-				<fieldset
-					class="form-control"
-					*ngIf="categoryForm.get('description') as description"
-				>
+				<fieldset class="form-control" *ngIf="categoryForm.get('description') as description">
 					<label class="label" for="categoryFormDescription">
-						<!-- prettier-ignore -->
 						<div class="indicator">
-              <span
-                class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                *ngIf="!!description.value && !!description.errors && categoryForm.enabled"
-                [ngSwitch]="true"
-              >
-                <ng-container *ngSwitchCase="!!description.errors.maxlength">
-                  Max length {{ description.errors.maxlength["requiredLength"] }} characters
-                </ng-container>
-              </span>
-              <span
-                class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                *ngIf="!description.errors"
-                [class.badge-ghost]="!description.value"
-                [class.badge-success]="!!description.value && categoryForm.enabled"
-                [class.opacity-25]="categoryForm.disabled"
-              >
-                Optional
-              </span>
-              <span class="label-text mr-2">Description</span>
-            </div>
-						<!-- prettier-ignore -->
+							<span
+								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="!!description.value && !!description.errors && categoryForm.enabled"
+								[ngSwitch]="true"
+							>
+								<ng-container *ngSwitchCase="!!description.errors.maxlength">
+									Max length {{ description.errors.maxlength["requiredLength"] }} characters
+								</ng-container>
+							</span>
+							<span
+								class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="!description.errors"
+								[class.badge-ghost]="!description.value"
+								[class.badge-success]="!!description.value && categoryForm.enabled"
+								[class.opacity-25]="categoryForm.disabled"
+							>
+								Optional
+							</span>
+							<span class="label-text mr-2">Description</span>
+						</div>
 						<span
-              class="label-text-alt"
-              [class.text-base-content]="categoryForm.disabled"
-              [class.text-success]="categoryForm.enabled && description.value && description.valid"
-              [class.text-error]="categoryForm.enabled && description.value && description.invalid"
-            >
-              {{ description.value?.length || 0 }}/255
-            </span>
+							class="label-text-alt"
+							[class.text-base-content]="categoryForm.disabled"
+							[class.text-success]="categoryForm.enabled && description.value && description.valid"
+							[class.text-error]="categoryForm.enabled && description.value && description.invalid"
+						>
+							{{ description.value?.length || 0 }}/255
+						</span>
 					</label>
 					<!-- prettier-ignore -->
 					<div
@@ -659,10 +629,7 @@
 						aria-label="Submit"
 						[disabled]="categoryForm.invalid || categoryForm.disabled"
 					>
-						<span
-							class="loading loading-spinner"
-							*ngIf="categoryForm.disabled"
-						></span>
+						<span class="loading loading-spinner" *ngIf="categoryForm.disabled"></span>
 						Submit
 					</button>
 				</fieldset>
@@ -713,9 +680,7 @@
 						[appIcon]="'info-circle'"
 						[appSquare]="'1.5em'"
 					></i>
-					<span class="block">
-						Are you sure you want to delete this post?
-					</span>
+					<span class="block"> Are you sure you want to delete this post? </span>
 				</p>
 				<button
 					class="btn-success btn"
@@ -724,10 +689,7 @@
 					[disabled]="postDeleteIsSubmitted"
 					(click)="onSubmitPostDelete()"
 				>
-					<span
-						class="loading loading-spinner"
-						*ngIf="postDeleteIsSubmitted"
-					></span>
+					<span class="loading loading-spinner" *ngIf="postDeleteIsSubmitted"></span>
 					Submit
 				</button>
 			</div>

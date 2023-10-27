@@ -2,7 +2,13 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+	Validators
+} from '@angular/forms';
 import { debounceTime, filter } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -44,7 +50,10 @@ export class SearchComponent implements OnInit, OnDestroy {
 		private formBuilder: FormBuilder
 	) {
 		this.searchForm = this.formBuilder.group<SearchForm>({
-			query: this.formBuilder.nonNullable.control('', [Validators.minLength(2), Validators.maxLength(24)]),
+			query: this.formBuilder.nonNullable.control('', [
+				Validators.minLength(2),
+				Validators.maxLength(24)
+			]),
 			orderBy: this.formBuilder.nonNullable.control('', [])
 		});
 	}
@@ -62,7 +71,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 
 		this.searchForm$ = this.searchForm.valueChanges
 			.pipe(
-				debounceTime(500),
+				debounceTime(1000),
 				filter(() => this.searchForm.valid)
 			)
 			.subscribe({
@@ -92,8 +101,9 @@ export class SearchComponent implements OnInit, OnDestroy {
 	onRouterOutletActivate(event: any): void {
 		const isLoading$: Observable<boolean> = event.abstractListLoading$;
 
+		// prettier-ignore
 		this.searchFormIsSubmitted$ = isLoading$.subscribe({
-			next: (isSubmitted: boolean) => (isSubmitted ? this.searchForm.disable() : this.searchForm.enable()),
+			next: (isSubmitted: boolean) => isSubmitted ? this.searchForm.disable() : this.searchForm.enable(),
 			error: (error: any) => console.error(error)
 		});
 	}

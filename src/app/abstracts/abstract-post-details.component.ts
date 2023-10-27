@@ -9,7 +9,7 @@ import { SkeletonService } from '../core/services/skeleton.service';
 import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import { throwError } from 'rxjs';
+import { Subscription, throwError } from 'rxjs';
 
 @Component({
 	selector: 'app-abstract-post-details',
@@ -20,6 +20,7 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 	@ViewChild('abstractPostProseModal', { static: true }) abstractPostProseModal: ElementRef<HTMLDialogElement> | undefined;
 
 	abstractPost: Post | undefined;
+	abstractPost$: Subscription | undefined;
 	abstractPostSkeletonToggle: boolean = true;
 
 	constructor(
@@ -33,17 +34,19 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 	ngOnInit(): void {
 		/** Apply skeleton */
 
-		this.abstractPost = this.skeletonService.getPost();
+		this.abstractPost = this.skeletonService.getPost(['category', 'user']);
 		this.abstractPostSkeletonToggle = true;
 		this.abstractPostProseModal.nativeElement.showModal();
 	}
 
 	ngOnDestroy(): void {
+		[this.abstractPost$].forEach(($: Subscription) => $.unsubscribe());
+
 		this.setAbstractClosePostProseModal(false);
 	}
 
 	getAbstractPost(postId: number, postGetOneDto: PostGetOneDto): void {
-		this.postService
+		this.abstractPost$ = this.postService
 			.getOne(postId, postGetOneDto)
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
