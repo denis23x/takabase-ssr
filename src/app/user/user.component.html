@@ -7,15 +7,26 @@
 		>
 			<div class="flex w-full items-center justify-between gap-4">
 				<div class="flex items-center justify-start gap-4 overflow-auto">
-					<div class="avatar">
-						<figure class="h-12 w-12 rounded-btn relative overflow-hidden" appAvatar [appUser]="user"></figure>
+					<div class="avatar" appSkeleton [appSkeletonToggle]="userSkeletonToggle">
+						<figure
+							class="h-16 w-16 rounded-btn relative overflow-hidden"
+							appAvatar
+							[appUser]="user"
+						></figure>
 					</div>
-					<div class="flex flex-col overflow-auto">
-						<h1 class="truncate text-2xl font-bold text-base-content" data-pw="app-user-heading-user-name">
+					<div class="flex flex-col gap-2 overflow-auto">
+						<h1
+							class="truncate text-2xl font-bold text-base-content"
+							data-pw="app-user-heading-user-name"
+							appSkeleton
+							[appSkeletonToggle]="userSkeletonToggle"
+						>
 							{{ user.name }}
 						</h1>
 						<time
 							class="truncate text-sm text-base-content/50"
+							appSkeleton
+							[appSkeletonToggle]="userSkeletonToggle"
 							[attr.datetime]="user.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 						>
 							registered {{ user.createdAt | dayjs: "fromX" }}
@@ -31,23 +42,41 @@
 						[routerLink]="['/settings']"
 					>
 						<span class="hidden sm:block">Settings</span>
-						<i class="block sm:hidden fill-current" appSvgIcon [appIcon]="'gear-fill'" [appSquare]="'1.5em'"> </i>
+						<i
+							class="block sm:hidden fill-current"
+							appSvgIcon
+							[appIcon]="'gear-fill'"
+							[appSquare]="'1.5em'"
+						>
+						</i>
 					</a>
 				</div>
 			</div>
-			<article
-				class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
-				data-pw="app-user-heading-user-description"
+			<div
+				class="w-full"
+				appSkeleton
 				*ngIf="!!user.description"
-				[innerHTML]="user.description | markdown | sanitizer: 'html'"
-			></article>
+				[appSkeletonToggle]="userSkeletonToggle"
+				[appSkeletonClassListParent]="['!rounded-box']"
+				[appSkeletonClassList]="['!rounded-box']"
+			>
+				<article
+					class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
+					data-pw="app-user-heading-user-description"
+					[innerHTML]="user.description | markdown | sanitizer: 'html'"
+				></article>
+			</div>
 		</header>
 		<div class="flex flex-col">
 			<nav class="block px-4">
 				<ul class="tabs w-full translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg">
 					<li
 						class="tab tab-lifted tab-lg h-10"
-						[ngClass]="routerLinkActive.isActive || !category ? 'tab-active !h-12' : 'bg-base-200'"
+						appSkeleton
+						[appSkeletonToggle]="categoryListSkeletonToggle"
+						[appSkeletonClassListParent]="['rounded-t-lg']"
+						[appSkeletonClassList]="['rounded-b-none']"
+						[ngClass]="routerLinkActive.isActive && !category ? 'tab-active !h-12' : 'bg-base-200'"
 					>
 						<a
 							class="block whitespace-nowrap px-4"
@@ -62,8 +91,12 @@
 					</li>
 					<li
 						class="tab tab-lifted tab-lg h-10"
+						appSkeleton
 						*ngFor="let category of categoryList"
-						[ngClass]="routerLinkActive.isActive ? 'tab-active !h-12' : 'bg-base-200'"
+						[appSkeletonToggle]="categoryListSkeletonToggle"
+						[appSkeletonClassListParent]="['rounded-t-lg']"
+						[appSkeletonClassList]="['rounded-b-none']"
+						[ngClass]="routerLinkActive.isActive && category ? 'tab-active !h-12' : 'bg-base-200'"
 					>
 						<a
 							class="flex h-full items-center justify-center whitespace-nowrap px-4"
@@ -80,8 +113,10 @@
 					</li>
 				</ul>
 			</nav>
-			<div class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl">
-				<div class="mb-4 flex w-full flex-col items-stretch justify-between gap-4" *ngIf="!!category">
+			<div
+				class="rounded-box border border-base-content/20 bg-base-100 p-4 flex flex-col gap-4 shadow-xl"
+			>
+				<div class="flex w-full flex-col items-stretch justify-between gap-4" *ngIf="!!category">
 					<div class="flex w-full items-center justify-between gap-4">
 						<button
 							class="btn-ghost btn-square btn bg-base-200 fill-current p-3"
@@ -94,13 +129,22 @@
 							(click)="onTogglePostSearchForm()"
 						></button>
 						<ng-container [ngSwitch]="postSearchFormToggle">
-							<div class="flex items-center justify-start gap-4 overflow-hidden w-full" *ngSwitchCase="false">
-								<div class="flex flex-col overflow-hidden w-full">
-									<h2 class="block truncate text-xl font-bold text-base-content">
+							<div
+								class="flex items-center justify-start gap-4 overflow-hidden w-full"
+								*ngSwitchCase="false"
+							>
+								<div class="flex flex-col items-start overflow-hidden w-full">
+									<h2
+										class="block truncate text-xl font-bold text-base-content"
+										appSkeleton
+										[appSkeletonToggle]="categorySkeletonToggle"
+									>
 										{{ category.name }}
 									</h2>
 									<time
 										class="text-sm text-base-content/50 truncate"
+										appSkeleton
+										[appSkeletonToggle]="categorySkeletonToggle"
 										[attr.datetime]="category.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 									>
 										created {{ category.createdAt | dayjs: "fromX" }}
@@ -114,7 +158,12 @@
 									(click)="onToggleCategoryEditForm(true)"
 								>
 									<span class="hidden sm:block">Edit</span>
-									<i class="block sm:hidden fill-current" appSvgIcon [appIcon]="'pencil-fill'" [appSquare]="'1.5em'">
+									<i
+										class="block sm:hidden fill-current"
+										appSvgIcon
+										[appIcon]="'pencil-fill'"
+										[appSquare]="'1.5em'"
+									>
 									</i>
 								</button>
 							</div>
@@ -204,11 +253,19 @@
 							</form>
 						</ng-container>
 					</div>
-					<article
-						class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
+					<div
+						class="w-full"
+						appSkeleton
 						*ngIf="!!category.description"
-						[innerHTML]="category.description | markdown | sanitizer: 'html'"
-					></article>
+						[appSkeletonToggle]="categorySkeletonToggle"
+						[appSkeletonClassListParent]="['!rounded-box']"
+						[appSkeletonClassList]="['!rounded-box']"
+					>
+						<article
+							class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
+							[innerHTML]="category.description | markdown | sanitizer: 'html'"
+						></article>
+					</div>
 				</div>
 				<div class="block">
 					<router-outlet
@@ -227,7 +284,12 @@
 		(close)="onToggleCategoryEditForm(false)"
 		(click)="$event.target === $event.currentTarget ? categoryEditFormModal.close() : $event"
 	>
-		<div appWindow [appTitle]="'Category'" [appButtons]="['close']" (closed)="onToggleCategoryEditForm(false)">
+		<div
+			appWindow
+			[appTitle]="'Category'"
+			[appButtons]="['close']"
+			(closed)="onToggleCategoryEditForm(false)"
+		>
 			<form
 				class="flex max-w-lg flex-col gap-4 p-4"
 				autocomplete="off"
@@ -305,6 +367,7 @@
 							</span>
 							<span class="label-text mr-2">Description</span>
 						</div>
+						<!-- prettier-ignore -->
 						<span
 							class="label-text-alt"
 							[class.text-base-content]="categoryEditForm.disabled"
@@ -337,6 +400,7 @@
           </div>
 				</fieldset>
 				<fieldset class="form-control gap-4">
+					<!-- prettier-ignore -->
 					<button
 						class="btn btn-success"
 						type="submit"
@@ -371,7 +435,12 @@
 		(close)="onToggleCategoryDeleteForm(false)"
 		(click)="$event.target === $event.currentTarget ? categoryDeleteFormModal.close() : $event"
 	>
-		<div appWindow [appTitle]="'Delete'" [appButtons]="['close']" (closed)="onToggleCategoryDeleteForm(false)">
+		<div
+			appWindow
+			[appTitle]="'Delete'"
+			[appButtons]="['close']"
+			(closed)="onToggleCategoryDeleteForm(false)"
+		>
 			<form
 				class="flex max-w-md flex-col gap-4 p-4"
 				autocomplete="off"
@@ -380,7 +449,12 @@
 				(ngSubmit)="onSubmitCategoryDeleteForm()"
 			>
 				<p class="alert">
-					<i class="fill-current text-info" appSvgIcon [appIcon]="'info-circle'" [appSquare]="'1.5em'"></i>
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appIcon]="'info-circle'"
+						[appSquare]="'1.5em'"
+					></i>
 					<span class="block"> This action cannot be undone </span>
 				</p>
 				<fieldset class="form-control" *ngIf="categoryDeleteForm.get('name') as name">
@@ -430,7 +504,10 @@
 					</div>
 				</fieldset>
 				<ng-container *ngIf="categoryDeleteFormPostList.length && categoryList.length > 1">
-					<fieldset class="form-control grid" *ngIf="categoryDeleteForm.get('categoryId') as categoryId">
+					<fieldset
+						class="form-control grid"
+						*ngIf="categoryDeleteForm.get('categoryId') as categoryId"
+					>
 						<label class="label">
 							<div class="indicator">
 								<span class="label-text mr-2"> Move posts to category </span>

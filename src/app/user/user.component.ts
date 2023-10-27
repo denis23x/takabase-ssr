@@ -1,10 +1,17 @@
 /** @format */
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Data, Params, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule, UrlSegment } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { debounceTime, filter, map, startWith } from 'rxjs/operators';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { debounceTime, filter, startWith } from 'rxjs/operators';
+import {
+	AbstractControl,
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+	Validators
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
@@ -28,6 +35,9 @@ import { DropdownComponent } from '../standalone/components/dropdown/dropdown.co
 import { AppTextareaResizeDirective } from '../standalone/directives/app-textarea-resize.directive';
 import { CurrentUser } from '../core/models/current-user.model';
 import { UserPostComponent } from './post/post.component';
+import { SkeletonService } from '../core/services/skeleton.service';
+import { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
+import { AppSkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 
 interface PostSearchForm {
 	query: FormControl<string>;
@@ -59,20 +69,25 @@ interface CategoryDeleteForm {
 		MarkdownPipe,
 		SanitizerPipe,
 		DropdownComponent,
-		AppTextareaResizeDirective
+		AppTextareaResizeDirective,
+		AppSkeletonDirective
 	],
 	selector: 'app-user',
 	templateUrl: './user.component.html'
 })
 export class UserComponent implements OnInit, OnDestroy {
+	// prettier-ignore
 	@ViewChild('categoryEditFormModal') categoryEditFormModal: ElementRef<HTMLDialogElement> | undefined;
+
+	// prettier-ignore
 	@ViewChild('categoryDeleteFormModal') categoryDeleteFormModal: ElementRef<HTMLDialogElement> | undefined;
 
-	activatedRouteData$: Subscription | undefined;
+	activatedRouteUrl$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
-	activatedRouteFirstChildUrl$: Subscription | undefined;
+	activatedRouteFirstChildParams$: Subscription | undefined;
 
 	user: User | undefined;
+	userSkeletonToggle: boolean = true;
 	userPostComponent: UserPostComponent | undefined;
 
 	currentUser: CurrentUser | undefined;
@@ -85,7 +100,10 @@ export class UserComponent implements OnInit, OnDestroy {
 	postSearchFormOrderByList: string[] = ['newest', 'oldest'];
 
 	category: Category | undefined;
+	categorySkeletonToggle: boolean = true;
+
 	categoryList: Category[] = [];
+	categoryListSkeletonToggle: boolean = true;
 
 	categoryEditForm: FormGroup | undefined;
 	categoryEditForm$: Subscription | undefined;
@@ -103,7 +121,8 @@ export class UserComponent implements OnInit, OnDestroy {
 		private authorizationService: AuthorizationService,
 		private categoryService: CategoryService,
 		private snackbarService: SnackbarService,
-		private userService: UserService
+		private userService: UserService,
+		private skeletonService: SkeletonService
 	) {
 		this.categoryEditForm = this.formBuilder.group<CategoryEditForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -118,32 +137,19 @@ export class UserComponent implements OnInit, OnDestroy {
 			categoryId: this.formBuilder.control(null, [])
 		});
 		this.postSearchForm = this.formBuilder.group<PostSearchForm>({
-			query: this.formBuilder.nonNullable.control('', [Validators.minLength(2), Validators.maxLength(24)]),
+			query: this.formBuilder.nonNullable.control('', [
+				Validators.minLength(2),
+				Validators.maxLength(24)
+			]),
 			orderBy: this.formBuilder.nonNullable.control('', [])
 		});
 	}
 
 	ngOnInit(): void {
-		/** Resolver */
-
-		this.activatedRouteData$ = this.activatedRoute.data.pipe(map((data: Data) => data.data)).subscribe({
-			next: ([user, categoryList]: [User, Category[]]) => {
-				this.user = user;
-
-				this.categoryList = categoryList;
-			},
-			error: (error: any) => console.error(error)
-		});
-
-		/** Get category for categoryEditForm modal */
-
-		this.activatedRouteFirstChildUrl$ = this.activatedRoute.firstChild.url.subscribe({
+		this.activatedRouteUrl$ = this.activatedRoute.url.subscribe({
 			next: () => {
-				const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
-
-				this.category = this.categoryList.find((category: Category) => {
-					return category.id === Number(categoryId);
-				});
+				this.setSkeleton();
+				this.setResolver();
 			},
 			error: (error: any) => console.error(error)
 		});
@@ -202,6 +208,8 @@ export class UserComponent implements OnInit, OnDestroy {
 				}
 			});
 
+		/** Current User */
+
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
 			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
@@ -210,15 +218,66 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[
-			this.activatedRouteData$,
+			this.activatedRouteUrl$,
 			this.activatedRouteQueryParams$,
-			this.activatedRouteFirstChildUrl$,
+			this.activatedRouteFirstChildParams$,
 			this.postSearchForm$,
 			this.postSearchFormIsSubmitted$,
 			this.categoryEditForm$,
 			this.categoryDeleteForm$,
 			this.currentUser$
 		].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	setSkeleton(): void {
+		this.user = this.skeletonService.getUser(['categories']);
+		this.userSkeletonToggle = true;
+		this.userPostComponent?.user$.next(this.user);
+
+		this.category = this.skeletonService.getCategory();
+		this.categorySkeletonToggle = true;
+
+		this.categoryList = this.skeletonService.getCategoryList();
+		this.categoryListSkeletonToggle = true;
+	}
+
+	setResolver(): void {
+		this.activatedRouteFirstChildParams$?.unsubscribe();
+
+		const [path]: UrlSegment[] = this.activatedRoute.snapshot.url;
+
+		const name: string = path.path;
+
+		const userGetAllDto: UserGetAllDto = {
+			name: name.substring(1),
+			scope: ['categories']
+		};
+
+		this.userService.getAll(userGetAllDto).subscribe({
+			next: (userList: User[]) => {
+				this.user = userList.shift();
+				this.userSkeletonToggle = false;
+				this.userPostComponent.user$.next(this.user);
+
+				this.categoryList = this.user.categories;
+				this.categoryListSkeletonToggle = false;
+
+				/** Set category */
+
+				this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params.subscribe({
+					next: () => {
+						// prettier-ignore
+						this.category = this.categoryList.find((category: Category) => {
+								return category.id === Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
+							});
+
+						this.categorySkeletonToggle = false;
+					},
+					error: (error: any) => console.error(error)
+				});
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	onTogglePostSearchForm(): void {
@@ -345,13 +404,14 @@ export class UserComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onRouterOutletActivate(event: any): void {
-		this.userPostComponent = event;
+	onRouterOutletActivate(userPostComponent: UserPostComponent): void {
+		this.userPostComponent = userPostComponent;
 
 		const isLoading$: Observable<boolean> = this.userPostComponent.abstractListLoading$;
 
+		// prettier-ignore
 		this.postSearchFormIsSubmitted$ = isLoading$.subscribe({
-			next: (isSubmitted: boolean) => (isSubmitted ? this.postSearchForm.disable() : this.postSearchForm.enable()),
+			next: (isSubmitted: boolean) => isSubmitted ? this.postSearchForm.disable() : this.postSearchForm.enable(),
 			error: (error: any) => console.error(error)
 		});
 	}

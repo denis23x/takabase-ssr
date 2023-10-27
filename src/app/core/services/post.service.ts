@@ -6,8 +6,6 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { ApiService } from './api.service';
 import { UserService } from './user.service';
 import { PostGetAllDto } from '../dto/post/post-get-all.dto';
-import { User } from '../models/user.model';
-import { Category } from '../models/category.model';
 import { Post } from '../models/post.model';
 import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
 import { PostCreateDto } from '../dto/post/post-create.dto';
@@ -33,65 +31,6 @@ export class PostService {
 	) {}
 
 	/** Resolvers DTO */
-
-	// prettier-ignore
-	getUserPostGetAllDto(postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto {
-		const [user, categoryList]: [User, Category[]] = activatedRouteSnapshot.parent.data.data;
-
-		postGetAllDto = {
-			...postGetAllDto,
-			userId: user.id
-		};
-
-		const categoryId: number = Number(activatedRouteSnapshot.paramMap.get('categoryId'));
-
-    if (Number.isNaN(categoryId)) {
-      this.apiService.setErrorRedirect({
-        status: 404,
-        error: {
-          message: 'Not found'
-        }
-      })
-    }
-
-		if (categoryId) {
-			const category: Category | undefined = categoryList.find((category: Category) => category.id === categoryId);
-
-			if (category) {
-				postGetAllDto = {
-					...postGetAllDto,
-					categoryId
-				};
-			} else {
-        this.apiService.setErrorRedirect({
-          status: 404,
-          error: {
-            message: 'Not found'
-          }
-        })
-			}
-		}
-
-    const query: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
-
-    if (query.length) {
-      postGetAllDto = {
-        ...postGetAllDto,
-        query
-      };
-    }
-
-    const orderBy: string = String(activatedRouteSnapshot.parent.queryParamMap.get('orderBy') || '');
-
-    if (orderBy.length) {
-      postGetAllDto = {
-        ...postGetAllDto,
-        orderBy
-      };
-    }
-
-		return postGetAllDto;
-	}
 
 	// prettier-ignore
 	getSearchPostGetAllDto(postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto {

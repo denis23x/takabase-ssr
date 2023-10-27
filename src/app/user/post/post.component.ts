@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { Data, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { Post } from '../../core/models/post.model';
@@ -10,10 +10,10 @@ import { AbstractSearchListComponent } from '../../abstracts/abstract-search-lis
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { User } from '../../core/models/user.model';
 import { Category } from '../../core/models/category.model';
-import { map } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { TitleService } from '../../core/services/title.service';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
+import { filter } from 'rxjs/operators';
 
 @Component({
 	standalone: true,
@@ -26,12 +26,12 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 
 	private titleService: TitleService = inject(TitleService);
 
-	activatedRouteParentData$: Subscription | undefined;
 	activatedRouteUrl$: Subscription | undefined;
 
 	abstractList: Post[] = [];
 
 	user: User | undefined;
+	user$: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 
 	category: Category | undefined;
 	categoryList: Category[] = [];
@@ -39,13 +39,38 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		this.activatedRouteParentData$ = this.activatedRoute.parent.data
-			.pipe(map((data: Data) => data.data))
-			.subscribe({
-				next: ([user, categoryList]: [User, Category[]]) => {
-					this.user = user;
+		this.setSkeleton();
+		this.setResolver();
+	}
 
-					this.categoryList = categoryList;
+	ngOnDestroy(): void {
+		super.ngOnDestroy();
+
+		[this.activatedRouteUrl$].forEach(($: Subscription) => $?.unsubscribe());
+
+		[this.user$].forEach(($: BehaviorSubject<User | undefined>) => $?.complete());
+	}
+
+	setSkeleton(): void {
+		this.abstractList = this.skeletonService.getPostList();
+		this.abstractListSkeletonToggle = true;
+		this.abstractListHasMore = false;
+	}
+
+	setResolver(): void {
+		this.user$
+			.pipe(
+				filter(() => this.platformService.isBrowser()),
+				filter((user: User | undefined) => !!user)
+			)
+			.subscribe({
+				next: (user: User) => {
+					this.user = user;
+					this.categoryList = this.user.categories;
+
+					/** Apply skeleton */
+
+					this.setSkeleton();
 
 					this.activatedRouteUrl$?.unsubscribe();
 					this.activatedRouteUrl$ = this.activatedRoute.url.subscribe({
@@ -57,11 +82,13 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 
 							/** Apply skeleton */
 
-							this.abstractList = this.skeletonService.getPostList();
-							this.abstractListSkeletonToggle = true;
-							this.abstractListHasMore = false;
+							this.setSkeleton();
 
-							this.getAbstractList();
+							/** Request */
+
+							if (this.platformService.isBrowser()) {
+								this.getAbstractList();
+							}
 
 							/** Apply SEO meta tags */
 
@@ -76,13 +103,6 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 				},
 				error: (error: any) => console.error(error)
 			});
-	}
-
-	ngOnDestroy(): void {
-		super.ngOnDestroy();
-
-		// prettier-ignore
-		[this.activatedRouteParentData$, this.activatedRouteUrl$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setTitle(): void {
@@ -126,15 +146,21 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 	getAbstractList(concat: boolean = false): void {
 		this.abstractListLoading$.next(true);
 
-		/** Request */
-
 		let postGetAllDto: PostGetAllDto = {
 			page: this.abstractPage,
-			size: this.abstractSize
+			size: this.abstractSize,
+			userId: this.user.id
 		};
 
+		if (this.category?.id) {
+			postGetAllDto = {
+				...postGetAllDto,
+				categoryId: this.category.id
+			};
+		}
+
 		postGetAllDto = {
-			...this.postService.getUserPostGetAllDto(postGetAllDto, this.activatedRoute.snapshot)
+			...this.postService.getSearchPostGetAllDto(postGetAllDto, this.activatedRoute.snapshot)
 		};
 
 		this.postService.getAll(postGetAllDto).subscribe({
