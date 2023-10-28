@@ -150,22 +150,53 @@
 										created {{ category.createdAt | dayjs: "fromX" }}
 									</time>
 								</div>
-								<button
-									class="btn-success btn-outline btn focus:outline-0 w-12 h-12 sm:w-auto sm:h-auto"
-									type="button"
-									aria-label="Edit"
+								<div
+									class="flex p-0"
+									appDropdown
 									*ngIf="currentUser?.id === user.id"
-									(click)="onToggleCategoryEditForm(true)"
+									[appPosition]="'bottom-right'"
 								>
-									<span class="hidden sm:block">Edit</span>
-									<i
-										class="block sm:hidden fill-current"
+									<button
+										class="btn-ghost btn-square btn bg-base-200 fill-current p-3"
+										type="button"
+										title="Edit"
+										aria-label="Edit"
 										appSvgIcon
-										[appIcon]="'pencil-fill'"
+										slot="target"
+										[appIcon]="'three-dots-vertical'"
 										[appSquare]="'1.5em'"
+									></button>
+									<ul
+										class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
+										slot="content"
 									>
-									</i>
-								</button>
+										<li class="flex w-full snap-start scroll-my-2 menu-title text-right">
+											Category
+										</li>
+										<li class="flex w-full snap-start scroll-my-2">
+											<button
+												class="rounded-btn block w-full truncate text-right"
+												type="button"
+												title="Edit"
+												aria-label="Edit"
+												(click)="onToggleCategoryEditForm(true)"
+											>
+												Edit
+											</button>
+										</li>
+										<li class="flex w-full snap-start scroll-my-2">
+											<button
+												class="rounded-btn block w-full truncate text-right"
+												type="button"
+												title="Delete"
+												aria-label="Delete"
+												(click)="onToggleCategoryDeleteForm(true)"
+											>
+												Delete
+											</button>
+										</li>
+									</ul>
+								</div>
 							</div>
 							<form
 								class="flex items-end justify-between gap-4 w-full"
@@ -286,7 +317,7 @@
 	>
 		<div
 			appWindow
-			[appTitle]="'Category'"
+			[appTitle]="'Edit'"
 			[appButtons]="['close']"
 			(closed)="onToggleCategoryEditForm(false)"
 		>
@@ -409,19 +440,9 @@
 					>
 						<span
 							class="loading loading-spinner"
-							*ngIf="categoryEditForm.disabled && !categoryDeleteFormModal.open"
+							*ngIf="categoryEditForm.disabled"
 						></span>
 						Submit
-					</button>
-					<button
-						class="btn btn-error"
-						type="button"
-						aria-label="Delete"
-						[class.btn-outline]="categoryEditForm.enabled"
-						[disabled]="categoryEditForm.disabled"
-						(click)="onToggleCategoryDeleteForm(true)"
-					>
-						Delete
 					</button>
 				</fieldset>
 			</form>
