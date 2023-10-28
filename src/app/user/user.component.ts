@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Params, Router, RouterModule, UrlSegment } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, filter, startWith } from 'rxjs/operators';
 import {
@@ -247,9 +247,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.user$?.unsubscribe();
 		this.activatedRouteFirstChildParams$?.unsubscribe();
 
-		const [path]: UrlSegment[] = this.activatedRoute.snapshot.url;
-
-		const name: string = path.path;
+		const name: string = String(this.activatedRoute.snapshot.paramMap.get('name'));
 
 		const userGetAllDto: UserGetAllDto = {
 			name: name.substring(1),

@@ -215,7 +215,10 @@ export const routes: Routes = [
 		matcher: (urlSegment: UrlSegment[]) => {
 			if (urlSegment.length >= 1 && urlSegment[0].path.match(/^@\S+$/gm)) {
 				return {
-					consumed: urlSegment.slice(0, 1)
+					consumed: urlSegment.slice(0, 1),
+					posParams: {
+						name: new UrlSegment(urlSegment[0].path, {})
+					}
 				};
 			}
 
