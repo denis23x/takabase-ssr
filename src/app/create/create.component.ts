@@ -1,12 +1,6 @@
 /** @format */
 
-import {
-	Component,
-	ElementRef,
-	OnDestroy,
-	OnInit,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { iif, of, Subscription, switchMap } from 'rxjs';
 import { filter, map, startWith } from 'rxjs/operators';
@@ -115,17 +109,11 @@ export class CreateComponent implements OnInit, OnDestroy {
 	currentUser$: Subscription | undefined;
 
 	fullscreenToggle: boolean = false;
-	fullscreenClassList: string[] = [
-		'border',
-		'border-base-content/20',
-		'rounded-box',
-		'shadow-xl'
-	];
+	fullscreenClassList: string[] = ['border', 'border-base-content/20', 'rounded-box', 'shadow-xl'];
 	fullscreenScrollSync: boolean = false;
-	fullscreenDisableTextWrapping: boolean = false;
-	fullscreenHiddenMarkdown: boolean = false;
-	fullscreenHiddenRender: boolean = false;
-	fullscreenHiddenControls: boolean = false;
+	fullscreenTextWrapping: boolean = false;
+	fullscreenMarkdown: boolean = false;
+	fullscreenRender: boolean = false;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -347,37 +335,29 @@ export class CreateComponent implements OnInit, OnDestroy {
 		this.fullscreenToggle = toggle;
 
 		if (this.fullscreenToggle) {
-			this.fullscreenClassList = [
-				'fixed',
-				'top-0',
-				'left-0',
-				'!m-0',
-				'w-full',
-				'h-full'
-			];
+			this.fullscreenScrollSync = true;
+			this.fullscreenTextWrapping = true;
+			this.fullscreenMarkdown = true;
+			this.fullscreenRender = true;
+			this.fullscreenClassList = ['fixed', 'top-0', 'left-0', '!m-0', 'w-full', 'h-full'];
 		} else {
-			this.fullscreenClassList = [
-				'border',
-				'border-base-content/20',
-				'rounded-box',
-				'shadow-xl'
-			];
+			this.fullscreenScrollSync = false;
+			this.fullscreenTextWrapping = false;
+			this.fullscreenMarkdown = false;
+			this.fullscreenRender = false;
+			this.fullscreenClassList = ['border', 'border-base-content/20', 'rounded-box', 'shadow-xl'];
 		}
 	}
 
 	onFullscreenHide(view: string): void {
 		// prettier-ignore
-		if (view === 'fullscreenHiddenMarkdown' || view === 'fullscreenHiddenRender') {
-			const viewOpposite: string = view === 'fullscreenHiddenMarkdown' ? 'fullscreenHiddenRender' : 'fullscreenHiddenMarkdown';
+		const viewOpposite: string = view === 'fullscreenMarkdown' ? 'fullscreenRender' : 'fullscreenMarkdown';
 
-			if (this[viewOpposite]) {
-				this[viewOpposite] = !this[viewOpposite];
-			}
-
-			this[view] = !this[view];
-		} else {
-			this.fullscreenHiddenControls = !this.fullscreenHiddenControls;
+		if (!this[viewOpposite]) {
+			this[viewOpposite] = !this[viewOpposite];
 		}
+
+		this[view] = !this[view];
 	}
 
 	onSubmitPostFormStatus(toggle: boolean): void {
