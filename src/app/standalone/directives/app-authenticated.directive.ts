@@ -1,13 +1,6 @@
 /** @format */
 
-import {
-	Directive,
-	Input,
-	OnDestroy,
-	OnInit,
-	TemplateRef,
-	ViewContainerRef
-} from '@angular/core';
+import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthorizationService } from '../../core/services/authorization.service';
@@ -37,7 +30,6 @@ export class AppAuthenticatedDirective implements OnInit, OnDestroy {
 			.getCurrentUser()
 			.pipe(tap(() => this.viewContainerRef.clear()))
 			.subscribe({
-				// prettier-ignore
 				next: (currentUser: CurrentUser | undefined) => {
 					if ((!!currentUser && this.authenticated) || (!currentUser && !this.authenticated)) {
 						this.viewContainerRef.createEmbeddedView(this.templateRef);

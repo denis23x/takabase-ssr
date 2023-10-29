@@ -2,13 +2,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule, ViewportScroller, Location } from '@angular/common';
-import {
-	distinctUntilChanged,
-	fromEvent,
-	of,
-	Subscription,
-	switchMap
-} from 'rxjs';
+import { distinctUntilChanged, fromEvent, of, Subscription, switchMap } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { PlatformService } from '../../../core/services/platform.service';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -42,18 +36,17 @@ export class ScrollToTopComponent implements OnInit, OnDestroy {
 				this.windowScroll$?.unsubscribe();
 
 				if (Number(this.cookieService.getItem('page-scroll-to-top'))) {
-					// prettier-ignore
 					this.windowScroll$ = fromEvent(window, 'scroll')
-            .pipe(
-              debounceTime(10),
-              map(() => this.viewportScroller.getScrollPosition().pop()),
-              switchMap((y: number) => of(y > this.windowScrollToTopToggleValue)),
-              distinctUntilChanged()
-            )
-            .subscribe({
-              next: (toggle: boolean) => (this.windowScrollToTopToggle = toggle),
-              error: (error: any) => console.error(error)
-            });
+						.pipe(
+							debounceTime(10),
+							map(() => this.viewportScroller.getScrollPosition().pop()),
+							switchMap((y: number) => of(y > this.windowScrollToTopToggleValue)),
+							distinctUntilChanged()
+						)
+						.subscribe({
+							next: (toggle: boolean) => (this.windowScrollToTopToggle = toggle),
+							error: (error: any) => console.error(error)
+						});
 				}
 			});
 		}

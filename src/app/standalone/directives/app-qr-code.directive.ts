@@ -1,12 +1,6 @@
 /** @format */
 
-import {
-	Directive,
-	HostListener,
-	Input,
-	OnDestroy,
-	OnInit
-} from '@angular/core';
+import { Directive, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { PlatformService } from '../../core/services/platform.service';
 import { BehaviorSubject } from 'rxjs';
 import { AppearanceService } from '../../core/services/appearance.service';
@@ -95,9 +89,7 @@ export class AppQrCodeDirective implements OnInit, OnDestroy {
 
 		/** Subscribe for regenerate QRCode */
 
-		this.QRCodeText$.pipe(
-			filter((value: string) => !!value && !!this.QRCodeCanvas)
-		).subscribe({
+		this.QRCodeText$.pipe(filter((value: string) => !!value && !!this.QRCodeCanvas)).subscribe({
 			next: () => this.setQRCodeToCanvas(),
 			error: (error: any) => console.error(error)
 		});
@@ -111,29 +103,29 @@ export class AppQrCodeDirective implements OnInit, OnDestroy {
 		return this.QRCodeText$.getValue();
 	}
 
-	// prettier-ignore
 	setQRCodeToCanvas(): void {
-    if (this.platformService.isBrowser()) {
-      QRCode.toCanvas(this.QRCodeCanvas, this.getQRCodeText(), this.QRCodeOptions, (error: Error): void => {
+		if (this.platformService.isBrowser()) {
+			// prettier-ignore
+			QRCode.toCanvas(this.QRCodeCanvas, this.getQRCodeText(), this.QRCodeOptions, (error: Error): void => {
         if (error) {
           this.snackbarService.danger('Error', "Can't draw your QR Code");
         } else {
           this.QRCodeCanvas.removeAttribute('style');
         }
       });
-    }
+		}
 	}
 
-	// prettier-ignore
 	onQRCodeDownload(): void {
 		if (this.platformService.isBrowser()) {
-	    QRCode.toDataURL(this.getQRCodeText(), this.QRCodeOptions, (error: Error, dataURL: string): void => {
+			// prettier-ignore
+			QRCode.toDataURL(this.getQRCodeText(), this.QRCodeOptions, (error: Error, dataURL: string): void => {
 	      if (error) {
 	        this.snackbarService.danger('Error', "Can't download your QR Code");
 	      } else {
 	        this.helperService.getDownload(dataURL, this.getQRCodeText().split('/').pop());
 	      }
 	    });
-	  }
+		}
 	}
 }

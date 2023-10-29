@@ -24,10 +24,10 @@ export class MarkdownPipe implements PipeTransform {
 			const plainText: string = this.markdownIt.plainText.replace(/<\/?[a-z][a-z0-9]*[^<>]*>|<!--.*?-->/gim, '');
 
 			const timeToRead = (): number => {
-				const wpm: number = 225;
+				const wordsPerMinute: number = 225;
 				const words: number = plainText.trim().split(/\s+/).length;
 
-				return Math.ceil(words / wpm);
+				return Math.ceil(words / wordsPerMinute);
 			};
 
 			return String(timeToRead());

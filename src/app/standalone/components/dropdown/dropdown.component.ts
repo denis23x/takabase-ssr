@@ -59,18 +59,17 @@ export class DropdownComponent implements OnInit, OnDestroy {
 		private platformService: PlatformService
 	) {}
 
-	// prettier-ignore
 	ngOnInit(): void {
 		this.dropdownTarget = this.elementRef.nativeElement.querySelector('[slot=target]');
 		this.dropdownContent = this.elementRef.nativeElement.querySelector('[slot=content]');
 
-    /** Set initial state */
+		/** Set initial state */
 
 		this.setStateStyle(false, false);
 
-    /** Clicks handler */
+		/** Clicks handler */
 
-    this.windowClick$ = fromEvent(this.document, 'click').subscribe({
+		this.windowClick$ = fromEvent(this.document, 'click').subscribe({
 			next: (event: any) => {
 				const clickTarget: boolean = this.dropdownTarget.contains(event.target);
 				const clickContent: boolean = this.dropdownContent.contains(event.target);
@@ -81,16 +80,17 @@ export class DropdownComponent implements OnInit, OnDestroy {
 				 */
 
 				if (clickTarget) {
-          if (this.dropdownTargetCheckDisabled) {
-            const targetEnabled: boolean = !this.dropdownTarget.disabled;
-            const targetEnableChildren: boolean = !Array.from(this.dropdownTarget.querySelectorAll('[disabled]')).length;
+					if (this.dropdownTargetCheckDisabled) {
+						// prettier-ignore
+						const targetEnableChildren: boolean = !Array.from(this.dropdownTarget.querySelectorAll('[disabled]')).length;
+						const targetEnabled: boolean = !this.dropdownTarget.disabled;
 
-            if (!!targetEnabled && !!targetEnableChildren) {
-              this.setStateStyle(!this.dropdownState);
-            }
-          } else {
-            this.setStateStyle(!this.dropdownState);
-          }
+						if (!!targetEnabled && !!targetEnableChildren) {
+							this.setStateStyle(!this.dropdownState);
+						}
+					} else {
+						this.setStateStyle(!this.dropdownState);
+					}
 				} else if (this.dropdownState) {
 					if (clickContent) {
 						if (this.dropdownContentCloseOnClick) {
@@ -104,15 +104,12 @@ export class DropdownComponent implements OnInit, OnDestroy {
 			error: (error: any) => console.error(error)
 		});
 
-    /** Close on scroll && resize */
+		/** Close on scroll && resize */
 
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
-			this.windowAction$ = merge(
-				fromEvent(window, 'scroll'),
-				fromEvent(window, 'resize')
-			)
+			this.windowAction$ = merge(fromEvent(window, 'scroll'), fromEvent(window, 'resize'))
 				.pipe(filter(() => this.dropdownState))
 				.subscribe({
 					next: () => this.setStateStyle(false),
@@ -122,56 +119,55 @@ export class DropdownComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
 		[this.windowClick$, this.windowAction$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	// prettier-ignore
 	setStateStyle(state: boolean, emit: boolean = true): void {
-    if (this.platformService.isBrowser()) {
-      const elementDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
+		if (this.platformService.isBrowser()) {
+			const elementDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
 
-      this.dropdownState = state;
+			this.dropdownState = state;
 
-      if (this.dropdownState) {
-        this.dropdownContent.style['position'] = 'fixed';
-        this.dropdownContent.style['visibility'] = 'visible';
+			if (this.dropdownState) {
+				this.dropdownContent.style['position'] = 'fixed';
+				this.dropdownContent.style['visibility'] = 'visible';
 
-        /** Apply position */
+				/** Apply position */
 
-        switch (this.dropdownPosition) {
-          case 'bottom-left': {
-            this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
-            this.dropdownContent.style['left'] = elementDOMRect.left + 'px';
+				switch (this.dropdownPosition) {
+					case 'bottom-left': {
+						this.dropdownContent.style['left'] = elementDOMRect.left + 'px';
+						this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
 
-            break;
-          }
-          case 'bottom-right': {
-            const contentDOMRect: DOMRect = this.dropdownContent.getBoundingClientRect();
+						break;
+					}
+					case 'bottom-right': {
+						const contentDOMRect: DOMRect = this.dropdownContent.getBoundingClientRect();
 
-            this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
-            this.dropdownContent.style['left'] = elementDOMRect.left - (contentDOMRect.width - elementDOMRect.width) + 'px';
+						// prettier-ignore
+						this.dropdownContent.style['left'] = elementDOMRect.left - (contentDOMRect.width - elementDOMRect.width) + 'px';
+						this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
 
-            break;
-          }
-          default: {
-            break;
-          }
-        }
+						break;
+					}
+					default: {
+						break;
+					}
+				}
 
-        this.dropdownContent.style['z-index'] = 2;
-      } else {
-        this.dropdownContent.style['position'] = 'fixed';
-        this.dropdownContent.style['visibility'] = 'hidden';
-      }
+				this.dropdownContent.style['z-index'] = 2;
+			} else {
+				this.dropdownContent.style['position'] = 'fixed';
+				this.dropdownContent.style['visibility'] = 'hidden';
+			}
 
-      if (this.dropdownContentFitParentWidth) {
-        this.dropdownContent.style['width'] = elementDOMRect.width + 'px';
-      }
+			if (this.dropdownContentFitParentWidth) {
+				this.dropdownContent.style['width'] = elementDOMRect.width + 'px';
+			}
 
-      if (emit) {
-        this.toggled.emit(this.dropdownState);
-      }
-    }
-  }
+			if (emit) {
+				this.toggled.emit(this.dropdownState);
+			}
+		}
+	}
 }

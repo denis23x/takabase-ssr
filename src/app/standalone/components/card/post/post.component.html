@@ -14,7 +14,13 @@
 				[queryParamsHandling]="'preserve'"
 				[attr.aria-label]="post.name"
 			>
-				<img class="object-cover object-center" loading="lazy" [fill]="true" [ngSrc]="post.image" [alt]="post.name" />
+				<img
+					class="object-cover object-center"
+					loading="lazy"
+					[fill]="true"
+					[ngSrc]="post.image"
+					[alt]="post.name"
+				/>
 			</a>
 		</figure>
 		<div class="flex h-full w-full flex-col items-start gap-2 p-4">
@@ -28,7 +34,11 @@
 			>
 				{{ post.name }}
 			</a>
-			<p class="text-base-content line-clamp-2 lg:line-clamp-3" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+			<p
+				class="text-base-content line-clamp-2 lg:line-clamp-3"
+				appSkeleton
+				[appSkeletonToggle]="postSkeletonToggle"
+			>
 				{{ post.description }}
 			</p>
 			<time

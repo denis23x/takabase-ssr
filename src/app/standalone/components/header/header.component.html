@@ -15,14 +15,33 @@
 			</a>
 		</div>
 		<div class="navbar-center">
-			<a class="btn-ghost btn text-xl normal-case" title="Draft" aria-label="Draft" [routerLink]="['/']"> Draft </a>
+			<a
+				class="btn-ghost btn text-xl normal-case"
+				title="Draft"
+				aria-label="Draft"
+				[routerLink]="['/']"
+			>
+				Draft
+			</a>
 		</div>
 		<div class="navbar-end">
-			<div class="flex items-center justify-end" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
-				<button class="btn-ghost btn text-xl normal-case" *appAuthenticated="true" (click)="onLogout()">logout</button>
+			<div
+				class="flex items-center justify-end"
+				appSkeleton
+				[appSkeletonToggle]="currentUserSkeletonToggle"
+			>
+				<button
+					class="btn-ghost btn text-xl normal-case"
+					*appAuthenticated="true"
+					(click)="onLogout()"
+				>
+					logout
+				</button>
 				<ng-container *appAuthenticated="false">
 					<nav class="flex items-center justify-end gap-4">
-						<a class="btn-primary btn" title="Login" aria-label="Login" [routerLink]="['/login']"> Login </a>
+						<a class="btn-primary btn" title="Login" aria-label="Login" [routerLink]="['/login']">
+							Login
+						</a>
 					</nav>
 				</ng-container>
 				<ng-container *appAuthenticated="true">
@@ -57,7 +76,11 @@
 							[attr.aria-label]="currentUser.name"
 							[title]="currentUser.name"
 						>
-							<figure class="h-12 w-12 rounded-btn relative overflow-hidden" appAvatar [appUser]="currentUser"></figure>
+							<figure
+								class="h-12 w-12 rounded-btn relative overflow-hidden"
+								appAvatar
+								[appUser]="currentUser"
+							></figure>
 						</a>
 					</nav>
 				</ng-container>

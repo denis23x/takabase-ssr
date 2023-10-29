@@ -22,14 +22,12 @@ export class SanitizerPipe implements PipeTransform {
 				ADD_ATTR: ['target']
 			};
 
-			// prettier-ignore
 			return this.bypassSecurityTrust(String(DOMPurify.sanitize(value, config)), context);
 		}
 
 		return null;
 	}
 
-	// prettier-ignore
 	private bypassSecurityTrust(value: string, context: string): SafeValue | null {
 		switch (context) {
 			case 'html':

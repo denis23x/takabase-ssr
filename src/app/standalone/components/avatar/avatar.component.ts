@@ -35,12 +35,11 @@ export class AvatarComponent {
 			const elementRef: HTMLElement = this.elementRef.nativeElement;
 			const elementRefDOMRect: DOMRect = elementRef.getBoundingClientRect();
 
-			// prettier-ignore
 			const elementIcon: string = toSvg(this.user.name, elementRefDOMRect.width, {
-        backColor: '#00000000',
-        padding: 0,
-        replaceMode: 'observe'
-      });
+				backColor: '#00000000',
+				padding: 0,
+				replaceMode: 'observe'
+			});
 
 			elementRef.insertAdjacentHTML('afterbegin', elementIcon);
 		}

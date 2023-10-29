@@ -1,13 +1,6 @@
 /** @format */
 
-import {
-	Directive,
-	ElementRef,
-	HostListener,
-	Input,
-	OnDestroy,
-	OnInit
-} from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { PlatformService } from '../../core/services/platform.service';
 import { BehaviorSubject } from 'rxjs';
 
@@ -17,7 +10,6 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AppTextareaResizeDirective implements OnInit, OnDestroy {
 	@HostListener('input', ['$event']) onInput(inputEvent: InputEvent) {
-		// prettier-ignore
 		const textAreaElement: HTMLTextAreaElement = inputEvent.target as HTMLTextAreaElement;
 
 		/** Scroll to bottom */

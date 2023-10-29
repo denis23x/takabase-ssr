@@ -90,10 +90,7 @@
 						class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
 						slot="content"
 					>
-						<li
-							class="flex w-full"
-							*ngFor="let control of controlListFormatting"
-						>
+						<li class="flex w-full" *ngFor="let control of controlListFormatting">
 							<button
 								class="w-full whitespace-nowrap text-base-content"
 								type="button"
@@ -291,12 +288,10 @@
 					></i>
 					<span class="block" [ngSwitch]="urlFormControl?.key">
 						<ng-container *ngSwitchCase="'url-link'">
-							Enter the URL and link text to seamlessly connect your readers to
-							valuable resources
+							Enter the URL and link text to seamlessly connect your readers to valuable resources
 						</ng-container>
 						<ng-container *ngSwitchCase="'url-image'">
-							Add a link to an image and provide a dynamic visual experience of
-							your posts
+							Add a link to an image and provide a dynamic visual experience of your posts
 						</ng-container>
 						<ng-container *ngSwitchCase="'url-youtube'">
 							Embed engaging videos directly into your content
@@ -304,12 +299,9 @@
 					</span>
 				</p>
 				<!-- prettier-ignore -->
-				<ng-container
-					*ngIf="{ value: urlFormControl?.key === 'url-link' ? 'Text' : 'Title' } as label"
-				>
+				<ng-container *ngIf="{ value: urlFormControl?.key === 'url-link' ? 'Text' : 'Title' } as label">
 					<fieldset class="form-control" *ngIf="urlForm.get('title') as title">
 						<label class="label" for="urlFormTitle">
-							<!-- prettier-ignore -->
 							<div class="indicator" [ngSwitch]="true">
                 <span
                   class="badge badge-error indicator-item w-max translate-x-full translate-y-0 text-xs"
@@ -332,7 +324,6 @@
                 <span class="label-text mr-2">{{ label.value }}</span>
               </div>
 						</label>
-						<!-- prettier-ignore -->
 						<div class="relative">
               <input
                 class="input-bordered input input-md w-full truncate pr-12"
@@ -382,19 +373,18 @@
 						</div>
 					</label>
 					<div class="relative">
-						<!-- prettier-ignore -->
 						<input
-              class="input input-bordered input-md w-full truncate pr-12"
-              id="urlFormUrl"
-              type="text"
-              aria-label="URL"
-              appInputOnlyPaste
-              appInputTrimWhitespace
-              placeholder="Paste URL"
-              [formControl]="$any(url)"
-              [class.input-success]="url.value && url.valid"
-              [class.input-error]="url.touched && url.invalid"
-            />
+							class="input input-bordered input-md w-full truncate pr-12"
+							id="urlFormUrl"
+							type="text"
+							aria-label="URL"
+							appInputOnlyPaste
+							appInputTrimWhitespace
+							placeholder="Paste URL"
+							[formControl]="$any(url)"
+							[class.input-success]="url.value && url.valid"
+							[class.input-error]="url.touched && url.invalid"
+						/>
 						<button
 							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 							type="button"
@@ -418,10 +408,7 @@
 						aria-label="Submit"
 						[disabled]="urlForm.invalid || urlForm.disabled"
 					>
-						<span
-							class="loading loading-spinner"
-							*ngIf="urlForm.disabled"
-						></span>
+						<span class="loading loading-spinner" *ngIf="urlForm.disabled"></span>
 						Submit
 					</button>
 				</fieldset>

@@ -14,11 +14,20 @@
 			>
 				{{ category.name }}
 			</a>
-			<span class="text-sm text-base-content/50" appSkeleton [appSkeletonToggle]="categorySkeletonToggle">
+			<span
+				class="text-sm text-base-content/50"
+				appSkeleton
+				[appSkeletonToggle]="categorySkeletonToggle"
+			>
 				{{ category.user.name }}
 			</span>
 		</div>
-		<p class="alert !mt-auto" appSkeleton *ngIf="!!category.description" [appSkeletonToggle]="categorySkeletonToggle">
+		<p
+			class="alert !mt-auto"
+			appSkeleton
+			*ngIf="!!category.description"
+			[appSkeletonToggle]="categorySkeletonToggle"
+		>
 			<span class="line-clamp-2">{{ category.description }}</span>
 		</p>
 	</div>

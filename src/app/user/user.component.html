@@ -73,7 +73,7 @@
 					<li
 						class="tab tab-lifted tab-lg h-10"
 						appSkeleton
-						[appSkeletonToggle]="categoryListSkeletonToggle"
+						[appSkeletonToggle]="categoryListSkeletonToggle && !routerLinkActive.isActive"
 						[appSkeletonClassListParent]="['rounded-t-lg']"
 						[appSkeletonClassList]="['rounded-b-none']"
 						[ngClass]="routerLinkActive.isActive && !category ? 'tab-active !h-12' : 'bg-base-200'"
@@ -135,14 +135,14 @@
 							>
 								<div class="flex flex-col items-start overflow-hidden w-full">
 									<h2
-										class="block truncate text-xl font-bold text-base-content"
+										class="block truncate text-xl font-bold text-base-content w-full"
 										appSkeleton
 										[appSkeletonToggle]="categorySkeletonToggle"
 									>
 										{{ category.name }}
 									</h2>
 									<time
-										class="text-sm text-base-content/50 truncate"
+										class="text-sm text-base-content/50 truncate w-full"
 										appSkeleton
 										[appSkeletonToggle]="categorySkeletonToggle"
 										[attr.datetime]="category.createdAt | dayjs: 'format' : 'YYYY-M-D'"

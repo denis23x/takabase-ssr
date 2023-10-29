@@ -9,11 +9,7 @@ import {
 	Output,
 	ViewChild
 } from '@angular/core';
-import {
-	ImageCroppedEvent,
-	ImageCropperComponent,
-	ImageCropperModule
-} from 'ngx-image-cropper';
+import { ImageCroppedEvent, ImageCropperComponent, ImageCropperModule } from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
 import { Subscription } from 'rxjs';
@@ -53,17 +49,12 @@ interface ImageForm {
 	templateUrl: './cropper.component.html'
 })
 export class CropperComponent implements AfterViewInit, OnDestroy {
-	// prettier-ignore
 	@ViewChild('imageFormFile') imageFormFile: ElementRef<HTMLInputElement> | undefined;
-
-	// prettier-ignore
 	@ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent | undefined;
 
-	// prettier-ignore
 	@Output() submitted: EventEmitter<FileCreateDto> = new EventEmitter<FileCreateDto>();
 
 	imageForm: FormGroup | undefined;
-	imageForm$: Subscription | undefined;
 	imageFormMime: string[] = ['image/jpeg', 'image/jpg', 'image/png'];
 
 	imageTransform$: Subscription | undefined;
@@ -103,9 +94,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	ngAfterViewInit(): void {
 		this.imageTransform$ = this.imageCropper.transformChange.subscribe({
-			next: (imageTransform: ImageTransform) => {
-				this.imageTransform = imageTransform;
-			},
+			next: (imageTransform: ImageTransform) => (this.imageTransform = imageTransform),
 			error: (error: any) => console.error(error)
 		});
 	}
@@ -178,7 +167,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		} else {
 			this.onResetAll();
 
-			// prettier-ignore
 			Object.values(fileValidation)
 				.filter((file: any) => !file.valid)
 				.forEach((file: any) => this.snackbarService.danger('Error', file.message));
@@ -204,9 +192,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	onImageRotate(direction: boolean): void {
 		this.imageTransform = {
 			...this.imageTransform,
-			rotate: direction
-				? this.imageTransform.rotate + 15
-				: this.imageTransform.rotate - 15
+			rotate: direction ? this.imageTransform.rotate + 15 : this.imageTransform.rotate - 15
 		};
 	}
 
@@ -273,7 +259,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	onSubmitCropper(): void {
-		// prettier-ignore
 		const fileCropped: File = new File([this.cropperBlob], this.cropperFile.name, {
 			type: this.cropperFile.type
 		});

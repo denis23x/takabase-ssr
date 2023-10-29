@@ -4,27 +4,21 @@
 <!-- TODO: named outlet -->
 
 <ng-container>
-	<section
-		class="flex flex-col overflow-hidden bg-base-100"
-		[ngClass]="fullscreenClassList"
-	>
+	<section class="flex flex-col overflow-hidden bg-base-100" [ngClass]="fullscreenClassList">
 		<div class="fixed z-[1]" appSnackbar></div>
 		<ng-container [ngTemplateOutlet]="windowCaption"></ng-container>
 		<header class="flex flex-col empty:hidden">
 			<ng-content select="[slot=header]"></ng-content>
 		</header>
-		<!-- prettier-ignore -->
 		<div class="flex flex-col overflow-auto empty:hidden" [class.h-full]="fullscreenToggle">
-      <ng-content select="[slot=content]"></ng-content>
-    </div>
+			<ng-content select="[slot=content]"></ng-content>
+		</div>
 		<footer class="flex flex-col empty:hidden">
 			<ng-content select="[slot=footer]"></ng-content>
 		</footer>
 		<ng-template #windowCaption>
 			<div class="grid grid-cols-3 gap-2 bg-base-200 p-2">
-				<div
-					class="col-span-1 flex flex-row items-center justify-start space-x-2"
-				>
+				<div class="col-span-1 flex flex-row items-center justify-start space-x-2">
 					<ng-container
 						*ngIf="captionButtonsPosition === 'left'"
 						[ngTemplateOutlet]="windowCaptionButtons"

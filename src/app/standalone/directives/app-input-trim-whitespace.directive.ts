@@ -11,10 +11,9 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 })
 export class AppInputTrimWhitespaceDirective {
 	constructor(private ngControl: NgControl) {
-		this.trimValue(ngControl.valueAccessor);
+		this.trimValue(this.ngControl.valueAccessor);
 	}
 
-	// prettier-ignore
 	trimValue(controlValueAccessor: ControlValueAccessor) {
 		const originalControlValueAccessor: any = controlValueAccessor.registerOnChange;
 
