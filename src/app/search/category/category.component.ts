@@ -65,7 +65,7 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 	}
 
 	getAbstractList(concat: boolean = false): void {
-		this.abstractList$?.unsubscribe();
+		this.abstractListRequest$?.unsubscribe();
 		this.abstractListLoading$.next(true);
 
 		/** Request */
@@ -81,7 +81,7 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 			...this.categoryService.getSearchCategoryGetAllDto(categoryGetAllDto, this.activatedRoute.snapshot)
 		};
 
-		this.abstractList$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
+		this.abstractListRequest$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
 			next: (categoryList: Category[]) => {
 				this.abstractList = concat ? this.abstractList.concat(categoryList) : categoryList;
 				this.abstractListSkeletonToggle = false;

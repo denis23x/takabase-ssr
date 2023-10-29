@@ -87,9 +87,9 @@ export class UserComponent implements OnInit, OnDestroy {
 	activatedRouteFirstChildParams$: Subscription | undefined;
 
 	user: User | undefined;
-	user$: Subscription | undefined;
-	userSkeletonToggle: boolean = true;
+	userRequest$: Subscription | undefined;
 	userPostComponent: UserPostComponent | undefined;
+	userSkeletonToggle: boolean = true;
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -107,7 +107,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	categoryListSkeletonToggle: boolean = true;
 
 	categoryEditForm: FormGroup | undefined;
-	categoryEditForm$: Subscription | undefined;
+	categoryEditFormIsPristine$: Subscription | undefined;
 	categoryEditFormIsPristine: boolean = false;
 
 	categoryDeleteForm: FormGroup | undefined;
@@ -147,6 +147,8 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		/** Apply Data */
+
 		this.activatedRouteUrl$ = this.activatedRoute.url.subscribe({
 			next: () => {
 				this.setSkeleton();
@@ -154,60 +156,6 @@ export class UserComponent implements OnInit, OnDestroy {
 			},
 			error: (error: any) => console.error(error)
 		});
-
-		/** Set queryParams to postSearchForm */
-
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
-			.pipe(filter((params: Params) => params.query || params.orderBy))
-			.subscribe({
-				next: (params: Params) => {
-					this.postSearchForm.patchValue(params, { emitEvent: false });
-					this.postSearchForm.markAllAsTouched();
-
-					this.postSearchFormToggle = true;
-				},
-				error: (error: any) => console.error(error)
-			});
-
-		/** Set postSearchForm to queryParams */
-
-		this.postSearchForm$ = this.postSearchForm.valueChanges
-			.pipe(
-				debounceTime(1000),
-				filter(() => this.postSearchForm.valid)
-			)
-			.subscribe({
-				next: () => {
-					const value: any = this.postSearchForm.value;
-
-					this.router
-						.navigate([], {
-							relativeTo: this.activatedRoute,
-							queryParams: {
-								query: value.query || null,
-								orderBy: value.orderBy || null
-							},
-							queryParamsHandling: 'merge'
-						})
-						.then(() => console.debug('Route changed'));
-				},
-				error: (error: any) => console.error(error)
-			});
-
-		/** Pristine state of categoryEditForm */
-
-		this.categoryEditForm$ = this.categoryEditForm.valueChanges
-			.pipe(
-				startWith(this.categoryEditForm.value),
-				filter(() => !!this.category)
-			)
-			.subscribe({
-				next: (value: any) => {
-					this.categoryEditFormIsPristine = Object.keys(value).every((key: string) => {
-						return value[key] === this.category[key];
-					});
-				}
-			});
 
 		/** Current User */
 
@@ -222,11 +170,11 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.activatedRouteUrl$,
 			this.activatedRouteQueryParams$,
 			this.activatedRouteFirstChildParams$,
-			this.user$,
+			this.userRequest$,
 			this.currentUser$,
 			this.postSearchForm$,
 			this.postSearchFormIsSubmitted$,
-			this.categoryEditForm$,
+			this.categoryEditFormIsPristine$,
 			this.categoryDeleteForm$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
@@ -234,17 +182,22 @@ export class UserComponent implements OnInit, OnDestroy {
 	setSkeleton(): void {
 		this.user = this.skeletonService.getUser(['categories']);
 		this.userSkeletonToggle = true;
-		this.userPostComponent?.user$.next(this.user);
+		this.userPostComponent?.userComponent$.next(this.user);
 
-		this.category = this.skeletonService.getCategory();
-		this.categorySkeletonToggle = true;
+		// prettier-ignore
+		const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
+
+		if (categoryId) {
+			this.category = this.skeletonService.getCategory();
+			this.categorySkeletonToggle = true;
+		}
 
 		this.categoryList = this.skeletonService.getCategoryList();
 		this.categoryListSkeletonToggle = true;
 	}
 
 	setResolver(): void {
-		this.user$?.unsubscribe();
+		this.userRequest$?.unsubscribe();
 		this.activatedRouteFirstChildParams$?.unsubscribe();
 
 		const name: string = String(this.activatedRoute.snapshot.paramMap.get('name'));
@@ -254,23 +207,25 @@ export class UserComponent implements OnInit, OnDestroy {
 			scope: ['categories']
 		};
 
-		this.user$ = this.userService.getAll(userGetAllDto).subscribe({
+		this.userRequest$ = this.userService.getAll(userGetAllDto).subscribe({
 			next: (userList: User[]) => {
 				this.user = userList.shift();
 				this.userSkeletonToggle = false;
-				this.userPostComponent.user$.next(this.user);
+				this.userPostComponent.userComponent$.next(this.user);
 
 				this.categoryList = this.user.categories;
 				this.categoryListSkeletonToggle = false;
 
-				/** Set category */
+				// Set category
 
 				this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params.subscribe({
 					next: () => {
 						// prettier-ignore
+						const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
+
 						this.category = this.categoryList.find((category: Category) => {
-								return category.id === Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
-							});
+							return category.id === categoryId;
+						});
 
 						this.categorySkeletonToggle = false;
 					},
@@ -295,10 +250,45 @@ export class UserComponent implements OnInit, OnDestroy {
 				.then(() => console.debug('Route changed'));
 
 			this.postSearchForm.reset();
-
 			this.postSearchFormToggle = false;
 		} else {
 			this.postSearchFormToggle = true;
+
+			// Set postSearchForm to queryParams
+
+			this.postSearchForm$ = this.postSearchForm.valueChanges
+				.pipe(
+					debounceTime(1000),
+					filter(() => this.postSearchForm.valid)
+				)
+				.subscribe({
+					next: () => {
+						this.router
+							.navigate([], {
+								relativeTo: this.activatedRoute,
+								queryParams: {
+									query: this.postSearchForm.value.query || null,
+									orderBy: this.postSearchForm.value.orderBy || null
+								},
+								queryParamsHandling: 'merge'
+							})
+							.then(() => console.debug('Route changed'));
+					},
+					error: (error: any) => console.error(error)
+				});
+
+			// Set queryParams to postSearchForm
+
+			this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
+				.pipe(filter((params: Params) => params.query || params.orderBy))
+				.subscribe({
+					next: (params: Params) => {
+						this.postSearchForm.patchValue(params, { emitEvent: false });
+						this.postSearchForm.markAllAsTouched();
+						this.postSearchFormToggle = true;
+					},
+					error: (error: any) => console.error(error)
+				});
 		}
 	}
 
@@ -307,9 +297,21 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.categoryEditForm.patchValue(this.category);
 			this.categoryEditForm.markAllAsTouched();
 			this.categoryEditFormModal.nativeElement.showModal();
+			this.categoryEditFormIsPristine$ = this.categoryEditForm.valueChanges
+				.pipe(startWith(this.categoryEditForm.value))
+				.subscribe({
+					next: (value: any) => {
+						this.categoryEditFormIsPristine = Object.keys(value).every((key: string) => {
+							return value[key] === this.category[key];
+						});
+					},
+					error: (error: any) => console.error(error)
+				});
 		} else {
 			this.categoryEditForm.reset();
 			this.categoryEditFormModal.nativeElement.close();
+			this.categoryEditFormIsPristine = true;
+			this.categoryEditFormIsPristine$?.unsubscribe();
 		}
 	}
 

@@ -24,7 +24,7 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 	abstractSize: number = 20;
 
 	abstractList: any[] = [];
-	abstractList$: Subscription | undefined;
+	abstractListRequest$: Subscription | undefined;
 	abstractListSkeletonToggle: boolean = true;
 	abstractListHasMore: boolean = false;
 
@@ -72,7 +72,7 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		[
 			this.activatedRouteQueryParams$,
-			this.abstractList$,
+			this.abstractListRequest$,
 			this.abstractListLoadingPageScrollInfinite$
 		].forEach(($: Subscription) => $?.unsubscribe());
 

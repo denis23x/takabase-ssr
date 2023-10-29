@@ -3,7 +3,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { iif, Subscription } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { startWith, tap } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -162,8 +162,16 @@ export class CreateComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		/** Apply Data */
 
-		this.setSkeleton();
-		this.setResolver();
+		this.currentUser$ = this.authorizationService
+			.getCurrentUser()
+			.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)))
+			.subscribe({
+				next: () => {
+					this.setSkeleton();
+					this.setResolver();
+				},
+				error: (error: any) => console.error(error)
+			});
 
 		/** Apply appearance settings */
 
@@ -191,79 +199,72 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
-		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser) => {
-				this.currentUser = currentUser;
+		// Get categoryList
 
-				// Get categoryList
+		const categoryGetAllDto: CategoryGetAllDto = {
+			page: 1,
+			size: 999,
+			userId: this.currentUser.id
+		};
 
-				const categoryGetAllDto: CategoryGetAllDto = {
-					page: 1,
-					size: 999,
-					userId: this.currentUser.id
-				};
-
-				this.categoryService.getAll(categoryGetAllDto).subscribe({
-					next: (categoryList: Category[]) => {
-						this.categoryList = categoryList;
-						this.category = undefined;
-						this.categorySkeletonToggle = false;
-					},
-					error: (error: any) => console.error(error)
-				});
-
-				// Get post && Set category
-
-				const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-
-				if (postId) {
-					const postGetOneDto: PostGetOneDto = {
-						userId: this.currentUser.id,
-						scope: ['category']
-					};
-
-					this.postService.getOne(postId, postGetOneDto).subscribe({
-						next: (post: Post) => {
-							this.category = this.post.category;
-							this.categorySkeletonToggle = false;
-
-							this.post = post;
-							this.postSkeletonToggle = false;
-
-							this.postForm.patchValue({
-								...this.post,
-								categoryId: this.post.category.id,
-								categoryName: this.post.category.name
-							});
-
-							this.postForm.markAllAsTouched();
-
-							// Get postFormIsPristine
-
-							this.postFormIsPristine$ = this.postForm.valueChanges
-								.pipe(startWith(this.postForm.value))
-								.subscribe({
-									next: (value: any) => {
-										this.postFormIsPristine = Object.keys(value).every((key: string) => {
-											if (key === 'categoryId') {
-												return value[key] === this.post.category.id;
-											}
-
-											if (key === 'categoryName') {
-												return value[key] === this.post.category.name;
-											}
-
-											return value[key] === this.post[key];
-										});
-									}
-								});
-						},
-						error: (error: any) => console.error(error)
-					});
-				}
+		this.categoryService.getAll(categoryGetAllDto).subscribe({
+			next: (categoryList: Category[]) => {
+				this.categoryList = categoryList;
+				this.category = undefined;
+				this.categorySkeletonToggle = false;
 			},
 			error: (error: any) => console.error(error)
 		});
+
+		// Get post && Set category
+
+		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+
+		if (postId) {
+			const postGetOneDto: PostGetOneDto = {
+				userId: this.currentUser.id,
+				scope: ['category']
+			};
+
+			this.postService.getOne(postId, postGetOneDto).subscribe({
+				next: (post: Post) => {
+					this.post = post;
+					this.postSkeletonToggle = false;
+
+					this.category = this.post.category;
+					this.categorySkeletonToggle = false;
+
+					this.postForm.patchValue({
+						...this.post,
+						categoryId: this.post.category.id,
+						categoryName: this.post.category.name
+					});
+
+					this.postForm.markAllAsTouched();
+
+					// Get postFormIsPristine
+
+					this.postFormIsPristine$ = this.postForm.valueChanges
+						.pipe(startWith(this.postForm.value))
+						.subscribe({
+							next: (value: any) => {
+								this.postFormIsPristine = Object.keys(value).every((key: string) => {
+									if (key === 'categoryId') {
+										return value[key] === this.post.category.id;
+									}
+
+									if (key === 'categoryName') {
+										return value[key] === this.post.category.name;
+									}
+
+									return value[key] === this.post[key];
+								});
+							}
+						});
+				},
+				error: (error: any) => console.error(error)
+			});
+		}
 	}
 
 	setAppearance(): void {

@@ -56,7 +56,7 @@ export class SearchPostComponent extends AbstractSearchListComponent implements 
 	}
 
 	getAbstractList(concat: boolean = false): void {
-		this.abstractList$?.unsubscribe();
+		this.abstractListRequest$?.unsubscribe();
 		this.abstractListLoading$.next(true);
 
 		/** Request */
@@ -70,7 +70,7 @@ export class SearchPostComponent extends AbstractSearchListComponent implements 
 			...this.postService.getSearchPostGetAllDto(postGetAllDto, this.activatedRoute.snapshot)
 		};
 
-		this.abstractList$ = this.postService.getAll(postGetAllDto).subscribe({
+		this.abstractListRequest$ = this.postService.getAll(postGetAllDto).subscribe({
 			next: (postList: Post[]) => {
 				this.abstractList = concat ? this.abstractList.concat(postList) : postList;
 				this.abstractListSkeletonToggle = false;
