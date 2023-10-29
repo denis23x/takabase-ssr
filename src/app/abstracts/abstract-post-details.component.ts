@@ -30,17 +30,21 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 	) {}
 
 	ngOnInit(): void {
-		/** Apply skeleton */
+		/** Apply Data */
 
-		this.abstractPost = this.skeletonService.getPost(['category', 'user']);
-		this.abstractPostSkeletonToggle = true;
-		this.abstractPostProseModal.nativeElement.showModal();
+		this.setAbstractSkeleton();
 	}
 
 	ngOnDestroy(): void {
 		[this.abstractPostRequest$].forEach(($: Subscription) => $.unsubscribe());
 
 		this.setAbstractClosePostProseModal(false);
+	}
+
+	setAbstractSkeleton(): void {
+		this.abstractPost = this.skeletonService.getPost(['category', 'user']);
+		this.abstractPostSkeletonToggle = true;
+		this.abstractPostProseModal.nativeElement.showModal();
 	}
 
 	getAbstractPost(postId: number, postGetOneDto: PostGetOneDto): void {

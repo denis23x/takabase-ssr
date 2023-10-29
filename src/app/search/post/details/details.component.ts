@@ -17,9 +17,14 @@ export class SearchPostDetailsComponent extends AbstractPostDetailsComponent imp
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		/** Request */
+		/** Apply Data */
 
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+		this.setResolver();
+	}
+
+	setResolver(): void {
+		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId') || '');
+
 		const postGetOneDto: PostGetOneDto = {
 			scope: ['user', 'category']
 		};

@@ -185,7 +185,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.userPostComponent?.userComponent$.next(this.user);
 
 		// prettier-ignore
-		const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
+		const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId') || '');
 
 		if (categoryId) {
 			this.category = this.skeletonService.getCategory();
@@ -200,7 +200,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.userRequest$?.unsubscribe();
 		this.activatedRouteFirstChildParams$?.unsubscribe();
 
-		const name: string = String(this.activatedRoute.snapshot.paramMap.get('name'));
+		const name: string = String(this.activatedRoute.snapshot.paramMap.get('name') || '');
 
 		const userGetAllDto: UserGetAllDto = {
 			name: name.substring(1),
@@ -221,7 +221,7 @@ export class UserComponent implements OnInit, OnDestroy {
 				this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params.subscribe({
 					next: () => {
 						// prettier-ignore
-						const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
+						const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId') || '');
 
 						this.category = this.categoryList.find((category: Category) => {
 							return category.id === categoryId;

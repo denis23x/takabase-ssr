@@ -19,10 +19,7 @@ import {
 import { WindowComponent } from '../standalone/components/window/window.component';
 import { HelperService } from '../core/services/helper.service';
 import { SnackbarService } from '../core/services/snackbar.service';
-import { FeedbackService } from '../core/services/feedback.service';
-import { FeedbackCreateDto } from '../core/dto/feedback/feedback-create.dto';
 import { AppAuthenticatedDirective } from '../standalone/directives/app-authenticated.directive';
-import { Feedback } from '../core/models/feedback.model';
 
 interface FeedbackForm {
 	name: FormControl<string>;
@@ -46,12 +43,9 @@ interface FeedbackForm {
 	templateUrl: './help.component.html'
 })
 export class HelpComponent implements OnInit {
-	// prettier-ignore
-	@ViewChild('feedbackFormModal') feedbackFormModal: ElementRef<HTMLDialogElement> | undefined;
+	@ViewChild('helpFormModal') helpFormModal: ElementRef<HTMLDialogElement> | undefined;
 
-	feedback: Feedback | undefined;
-	feedbackForm: FormGroup | undefined;
-
+	helpForm: FormGroup | undefined;
 	helpNavigationList: any[] = [
 		{
 			path: 'features',
@@ -83,10 +77,9 @@ export class HelpComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
 		private snackbarService: SnackbarService,
-		private metaService: MetaService,
-		private feedbackService: FeedbackService
+		private metaService: MetaService
 	) {
-		this.feedbackForm = this.formBuilder.group<FeedbackForm>({
+		this.helpForm = this.formBuilder.group<FeedbackForm>({
 			name: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
@@ -101,6 +94,10 @@ export class HelpComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		/** Apply Data */
+
+		// Nothing to apply
+
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
@@ -118,10 +115,9 @@ export class HelpComponent implements OnInit {
 			['og:type']: 'website'
 		};
 
-		// prettier-ignore
 		const metaTwitter: MetaTwitter = {
 			['twitter:title']: title,
-			['twitter:description']: description,
+			['twitter:description']: description
 		};
 
 		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
@@ -129,32 +125,32 @@ export class HelpComponent implements OnInit {
 
 	onToggleFeedbackForm(toggle: boolean): void {
 		if (toggle) {
-			this.feedbackFormModal.nativeElement.showModal();
+			this.helpFormModal.nativeElement.showModal();
 		} else {
-			this.feedbackFormModal.nativeElement.close();
+			this.helpFormModal.nativeElement.close();
 		}
 
-		this.feedbackForm.reset();
+		this.helpForm.reset();
 	}
 
 	onSubmitFeedbackForm(): void {
-		if (this.helperService.getFormValidation(this.feedbackForm)) {
-			this.feedbackForm.disable();
+		if (this.helperService.getFormValidation(this.helpForm)) {
+			this.helpForm.disable();
 
-			const feedbackCreateDto: FeedbackCreateDto = {
-				...this.feedbackForm.value
-			};
-
-			this.feedbackService.create(feedbackCreateDto).subscribe({
-				next: () => {
-					this.snackbarService.success('Great!', 'Thanks for your feedback');
-
-					this.feedbackForm.enable();
-
-					this.onToggleFeedbackForm(false);
-				},
-				error: () => this.feedbackForm.enable()
-			});
+			// const feedbackCreateDto: FeedbackCreateDto = {
+			// 	...this.helpForm.value
+			// };
+			//
+			// this.feedbackService.create(feedbackCreateDto).subscribe({
+			// 	next: () => {
+			// 		this.snackbarService.success('Great!', 'Thanks for your feedback');
+			//
+			// 		this.helpForm.enable();
+			//
+			// 		this.onToggleFeedbackForm(false);
+			// 	},
+			// 	error: () => this.helpForm.enable()
+			// });
 		}
 	}
 }

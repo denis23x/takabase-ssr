@@ -17,12 +17,16 @@ export class UserPostDetailsComponent extends AbstractPostDetailsComponent imple
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		/** Request */
+		/** Apply Data */
 
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+		this.setResolver();
+	}
+
+	setResolver(): void {
+		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId') || '');
 
 		// prettier-ignore
-		const categoryId: number = Number(this.activatedRoute.parent.snapshot.paramMap.get('categoryId'));
+		const categoryId: number = Number(this.activatedRoute.parent.snapshot.paramMap.get('categoryId') || '');
 
 		const postGetOneDto: PostGetOneDto = {
 			categoryId,

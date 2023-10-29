@@ -187,7 +187,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	setSkeleton(): void {
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId') || '');
 
 		if (postId) {
 			this.post = this.skeletonService.getPost(['category']);
@@ -218,7 +218,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 		// Get post && Set category
 
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId') || '');
 
 		if (postId) {
 			const postGetOneDto: PostGetOneDto = {
@@ -409,7 +409,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.postForm)) {
 			this.postForm.disable();
 
-			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId') || '');
 			const postCreateDto: PostCreateDto = {
 				...this.postForm.value
 			};

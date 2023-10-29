@@ -50,7 +50,7 @@ export abstract class AbstractMarkdownProseComponent implements OnInit, OnDestro
 	}
 
 	setResolver(): void {
-		const markdown: string = String(this.activatedRoute.snapshot.paramMap.get('markdown'));
+		const markdown: string = String(this.activatedRoute.snapshot.paramMap.get('markdown') || '');
 
 		this.abstractProse$?.unsubscribe();
 		this.abstractProse$ = this.httpClient

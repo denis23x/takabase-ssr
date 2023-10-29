@@ -78,7 +78,7 @@ export class AuthLoginComponent implements OnInit {
 
 		// prettier-ignore
 		const social: any = ['facebookId', 'githubId', 'googleId']
-      .filter((social: string) => this.activatedRoute.snapshot.queryParamMap.get(social))
+      .filter((social: string) => !!this.activatedRoute.snapshot.queryParamMap.get(social))
       .map((social: string) => ({ [social]: this.activatedRoute.snapshot.queryParamMap.get(social) }))
       .shift();
 

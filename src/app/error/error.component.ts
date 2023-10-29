@@ -1,9 +1,7 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
@@ -14,9 +12,7 @@ import { TitleService } from '../core/services/title.service';
 	imports: [RouterModule, SvgIconComponent],
 	templateUrl: './error.component.html'
 })
-export class ErrorComponent implements OnInit, OnDestroy {
-	activatedRouteParams$: Subscription | undefined;
-
+export class ErrorComponent implements OnInit {
 	statusCode: number | undefined;
 	statusCodeMap: number[][] = [
 		[100, 199],
@@ -27,7 +23,13 @@ export class ErrorComponent implements OnInit, OnDestroy {
 	];
 
 	message: string | undefined;
-	messageMap: string[] = ['Information message', 'Success', 'Redirect', 'Client error', 'Server error'];
+	messageMap: string[] = [
+		'Information message',
+		'Success',
+		'Redirect',
+		'Client error',
+		'Server error'
+	];
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -37,32 +39,29 @@ export class ErrorComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
-		this.activatedRouteParams$ = this.activatedRoute.params.pipe(map((data: Data) => data.status)).subscribe({
-			next: (status: string) => {
-				const statusCode: number = Number(status);
-				const message: string = this.getMessageMap(statusCode);
+		/** Apply Data */
 
-				if (!statusCode || !message) {
-					this.router.navigate([[], 520]).then(() => console.debug('Route changed'));
-				}
+		this.setResolver();
 
-				this.statusCode = statusCode;
-				this.message = message;
+		/** Apply SEO meta tags */
 
-				/** Apply SEO meta tags */
+		this.setMetaTags();
 
-				this.setMetaTags();
+		/** Apply title */
 
-				/** Apply title */
-
-				this.titleService.setTitle([this.statusCode, this.message].join(' '));
-			},
-			error: (error: any) => console.error(error)
-		});
+		this.titleService.setTitle([this.statusCode, this.message].join(' '));
 	}
 
-	ngOnDestroy(): void {
-		[this.activatedRouteParams$].forEach(($: Subscription) => $?.unsubscribe());
+	setResolver(): void {
+		const statusCode: number = Number(this.activatedRoute.snapshot.paramMap.get('status') || '');
+		const message: string = this.getMessageMap(statusCode);
+
+		if (!statusCode || !message) {
+			this.router.navigate([[], 520]).then(() => console.debug('Route changed'));
+		}
+
+		this.statusCode = statusCode;
+		this.message = message;
 	}
 
 	setMetaTags(): void {

@@ -13,12 +13,7 @@ import { tap } from 'rxjs/operators';
 
 @Component({
 	standalone: true,
-	imports: [
-		RouterModule,
-		SvgIconComponent,
-		CommonModule,
-		AppAuthenticatedDirective
-	],
+	imports: [RouterModule, SvgIconComponent, CommonModule, AppAuthenticatedDirective],
 	selector: 'app-home',
 	templateUrl: './home.component.html'
 })
@@ -130,6 +125,20 @@ export class HomeComponent implements OnInit, OnDestroy {
 	appPWAInstallPromt$: Subscription | undefined;
 
 	ngOnInit(): void {
+		/** Apply Data */
+
+		this.setResolver();
+
+		/** Apply SEO meta tags */
+
+		this.setMetaTags();
+	}
+
+	ngOnDestroy(): void {
+		[this.appPWAInstallPromt$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	setResolver(): void {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
@@ -143,20 +152,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 					error: (error: any) => console.error(error)
 				});
 		}
-
-		/** Apply SEO meta tags */
-
-		this.setMetaTags();
-	}
-
-	ngOnDestroy(): void {
-		[this.appPWAInstallPromt$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setMetaTags(): void {
 		const title: string = 'Draft';
-
-		// prettier-ignore
 		const description: string = 'Stay up to date with the latest posts and insights from Draft';
 
 		const metaOpenGraph: MetaOpenGraph = {
@@ -174,7 +173,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	onClickPWAInstall(): void {
-		// prettier-ignore
 		this.appPWAInstallPromt
 			.prompt()
 			.then((event: any) => (this.appPWAAvailable = event.outcome !== 'accepted'));

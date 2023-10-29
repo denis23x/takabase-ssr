@@ -79,7 +79,7 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 		this.activatedRouteUrl$ = this.activatedRoute.url.subscribe({
 			next: () => {
 				// prettier-ignore
-				const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
+				const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId') || '');
 
 				this.category = this.categoryList.find((category: Category) => {
 					return category.id === categoryId;

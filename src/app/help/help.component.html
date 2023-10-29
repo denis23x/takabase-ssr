@@ -6,9 +6,7 @@
 			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
 			<div class="flex w-full flex-col items-stretch justify-between gap-4">
-				<h1 class="block truncate text-2xl font-bold text-base-content">
-					Help & Support
-				</h1>
+				<h1 class="block truncate text-2xl font-bold text-base-content">Help & Support</h1>
 				<hr class="my-0 border-base-content/20" />
 				<p class="alert">
 					<i
@@ -18,11 +16,10 @@
 						[appSquare]="'1.5em'"
 					></i>
 					<span class="block">
-						Get the assistance you need to navigate our website and make the
-						most of our services. Browse through our helpful resources to find
-						answers to your queries. Our goal is to provide you with clear and
-						concise guidance on account management, troubleshooting, feature
-						explanations, and more.
+						Get the assistance you need to navigate our website and make the most of our services.
+						Browse through our helpful resources to find answers to your queries. Our goal is to
+						provide you with clear and concise guidance on account management, troubleshooting,
+						feature explanations, and more.
 					</span>
 				</p>
 			</div>
@@ -39,10 +36,7 @@
 		</header>
 		<div class="flex flex-col">
 			<nav class="block px-4">
-				<ul
-					class="tabs w-full translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg"
-				>
-					<!-- prettier-ignore -->
+				<ul class="tabs w-full translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg">
 					<li
 						class="tab tab-lifted tab-lg h-10"
 						*ngFor="let help of helpNavigationList"
@@ -62,9 +56,7 @@
 					</li>
 				</ul>
 			</nav>
-			<div
-				class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
-			>
+			<div class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl">
 				<router-outlet></router-outlet>
 			</div>
 		</div>
@@ -72,10 +64,10 @@
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
-		#feedbackFormModal
-		(keydown.escape)="$event.preventDefault(); feedbackFormModal.close()"
+		#helpFormModal
+		(keydown.escape)="$event.preventDefault(); helpFormModal.close()"
 		(close)="onToggleFeedbackForm(false)"
-		(click)="$event.target === $event.currentTarget ? feedbackFormModal.close() : $event"
+		(click)="$event.target === $event.currentTarget ? helpFormModal.close() : $event"
 	>
 		<div
 			appWindow
@@ -87,7 +79,7 @@
 				class="flex max-w-lg flex-col gap-4 p-4"
 				autocomplete="off"
 				slot="content"
-				[formGroup]="feedbackForm"
+				[formGroup]="helpForm"
 				(ngSubmit)="onSubmitFeedbackForm()"
 			>
 				<p class="alert">
@@ -98,17 +90,17 @@
 						[appSquare]="'1.5em'"
 					></i>
 					<span class="block">
-						Your feedback is helping us enhance our services and create a more
-						satisfying experience for you
+						Your feedback is helping us enhance our services and create a more satisfying experience
+						for you
 					</span>
 				</p>
-				<fieldset class="form-control" *ngIf="feedbackForm.get('name') as name">
+				<fieldset class="form-control" *ngIf="helpForm.get('name') as name">
 					<label class="label" for="feedbackFormName">
 						<div class="indicator">
 							<!-- prettier-ignore -->
 							<span
                 class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                *ngIf="name.touched && !!name.errors && feedbackForm.enabled"
+                *ngIf="name.touched && !!name.errors && helpForm.enabled"
                 [ngSwitch]="true"
               >
                 <ng-container *ngSwitchCase="!!name.errors.required">
@@ -145,23 +137,20 @@
 							[class.btn-success]="name.valid"
 							[class.btn-error]="name.touched && name.invalid"
 							[class.btn-ghost]="name.untouched && name.invalid"
-							[disabled]="feedbackForm.disabled"
+							[disabled]="helpForm.disabled"
 							[appIcon]="'x'"
 							[appSquare]="'2em'"
 							(click)="name.setValue('')"
 						></button>
 					</div>
 				</fieldset>
-				<fieldset
-					class="form-control"
-					*ngIf="feedbackForm.get('description') as description"
-				>
+				<fieldset class="form-control" *ngIf="helpForm.get('description') as description">
 					<label class="label" for="feedbackFormDescription">
 						<!-- prettier-ignore -->
 						<div class="indicator">
               <span
                 class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                *ngIf="!!description.value && !!description.errors && feedbackForm.enabled"
+                *ngIf="!!description.value && !!description.errors && helpForm.enabled"
                 [ngSwitch]="true"
               >
                 <ng-container *ngSwitchCase="!!description.errors.required">
@@ -179,9 +168,9 @@
 						<!-- prettier-ignore -->
 						<span
               class="label-text-alt"
-              [class.text-base-content]="feedbackForm.disabled"
-              [class.text-success]="feedbackForm.enabled && description.value && description.valid"
-              [class.text-error]="feedbackForm.enabled && description.value && description.invalid"
+              [class.text-base-content]="helpForm.disabled"
+              [class.text-success]="helpForm.enabled && description.value && description.valid"
+              [class.text-error]="helpForm.enabled && description.value && description.invalid"
             >
               {{ description.value?.length || 0 }}/255
             </span>
@@ -189,7 +178,7 @@
 					<!-- prettier-ignore -->
 					<div
             class="textarea-autosize w-full"
-            [ngClass]="{ 'border-base-content/20': feedbackForm.enabled, 'border-transparent': feedbackForm.disabled }"
+            [ngClass]="{ 'border-base-content/20': helpForm.enabled, 'border-transparent': helpForm.disabled }"
             [class.textarea-autosize-success]="description.value && description.valid"
             [class.textarea-autosize-error]="description.value && description.invalid"
           >
@@ -213,12 +202,9 @@
 						class="btn-success btn w-full"
 						type="submit"
 						aria-label="Submit"
-						[disabled]="feedbackForm.invalid || feedbackForm.disabled"
+						[disabled]="helpForm.invalid || helpForm.disabled"
 					>
-						<span
-							class="loading loading-spinner"
-							*ngIf="feedbackForm.disabled"
-						></span>
+						<span class="loading loading-spinner" *ngIf="helpForm.disabled"></span>
 						Submit
 					</button>
 				</fieldset>
