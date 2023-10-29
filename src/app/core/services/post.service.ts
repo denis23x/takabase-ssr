@@ -2,7 +2,6 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ActivatedRouteSnapshot } from '@angular/router';
 import { ApiService } from './api.service';
 import { UserService } from './user.service';
 import { PostGetAllDto } from '../dto/post/post-get-all.dto';
@@ -29,31 +28,6 @@ export class PostService {
 		private metaService: MetaService,
 		private titleService: TitleService
 	) {}
-
-	/** Resolvers DTO */
-
-	// prettier-ignore
-	getSearchPostGetAllDto(postGetAllDto: PostGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto {
-    const query: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
-
-    if (query.length) {
-      postGetAllDto = {
-        ...postGetAllDto,
-        query
-      };
-    }
-
-    const orderBy: string = String(activatedRouteSnapshot.parent.queryParamMap.get('orderBy') || '');
-
-    if (orderBy.length) {
-      postGetAllDto = {
-        ...postGetAllDto,
-        orderBy
-      };
-    }
-
-    return postGetAllDto;
-  }
 
 	/** SEO Meta tags */
 

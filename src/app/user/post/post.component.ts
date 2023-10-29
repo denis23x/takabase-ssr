@@ -163,7 +163,7 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 		}
 
 		postGetAllDto = {
-			...this.postService.getSearchPostGetAllDto(postGetAllDto, this.activatedRoute.snapshot)
+			...this.searchService.getSearchGetAllDto(postGetAllDto, this.activatedRoute.parent.snapshot)
 		};
 
 		this.abstractListRequest$ = this.postService.getAll(postGetAllDto).subscribe({

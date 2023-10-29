@@ -8,38 +8,12 @@ import { UserCreateDto } from '../dto/user/user-create.dto';
 import { UserGetAllDto } from '../dto/user/user-get-all.dto';
 import { UserGetOneDto } from '../dto/user/user-get-one.dto';
 import { UserUpdateDto } from '../dto/user/user-update.dto';
-import { ActivatedRouteSnapshot } from '@angular/router';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class UserService {
 	constructor(private apiService: ApiService) {}
-
-	/** Resolvers DTO */
-
-	// prettier-ignore
-	getSearchUserGetAllDto(userGetAllDto: UserGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): UserGetAllDto {
-    const query: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
-
-    if (query.length) {
-      userGetAllDto = {
-        ...userGetAllDto,
-        query
-      };
-    }
-
-    const orderBy: string = String(activatedRouteSnapshot.parent.queryParamMap.get('orderBy') || '');
-
-    if (orderBy.length) {
-      userGetAllDto = {
-        ...userGetAllDto,
-        orderBy
-      };
-    }
-
-    return userGetAllDto;
-  }
 
 	/** Utility */
 

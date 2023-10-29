@@ -22,19 +22,26 @@ export class SearchPostComponent extends AbstractSearchListComponent implements 
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		/** Apply skeleton */
+		/** Apply Data */
 
-		this.abstractList = this.skeletonService.getPostList();
-		this.abstractListSkeletonToggle = true;
-		this.abstractListHasMore = false;
-
-		if (this.platformService.isBrowser()) {
-			this.getAbstractList();
-		}
+		this.setSkeleton();
+		this.setResolver();
 
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
+	}
+
+	setSkeleton(): void {
+		this.abstractList = this.skeletonService.getPostList();
+		this.abstractListSkeletonToggle = true;
+		this.abstractListHasMore = false;
+	}
+
+	setResolver(): void {
+		if (this.platformService.isBrowser()) {
+			this.getAbstractList();
+		}
 	}
 
 	setMetaTags(): void {
@@ -59,15 +66,13 @@ export class SearchPostComponent extends AbstractSearchListComponent implements 
 		this.abstractListRequest$?.unsubscribe();
 		this.abstractListLoading$.next(true);
 
-		/** Request */
-
 		let postGetAllDto: PostGetAllDto = {
 			page: this.abstractPage,
 			size: this.abstractSize
 		};
 
 		postGetAllDto = {
-			...this.postService.getSearchPostGetAllDto(postGetAllDto, this.activatedRoute.snapshot)
+			...this.searchService.getSearchGetAllDto(postGetAllDto, this.activatedRoute.parent.snapshot)
 		};
 
 		this.abstractListRequest$ = this.postService.getAll(postGetAllDto).subscribe({

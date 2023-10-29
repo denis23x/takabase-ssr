@@ -12,6 +12,7 @@ import { CategoryService } from '../core/services/category.service';
 import { UserService } from '../core/services/user.service';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { PlatformService } from '../core/services/platform.service';
+import { SearchService } from '../core/services/search.service';
 
 @Component({
 	selector: 'app-abstract-search-list',
@@ -41,11 +42,32 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 		public cookieService: CookieService,
 		public appearanceService: AppearanceService,
 		public skeletonService: SkeletonService,
-		public platformService: PlatformService
+		public platformService: PlatformService,
+		public searchService: SearchService
 	) {}
 
 	ngOnInit(): void {
-		/** Get data by search actions */
+		/** Apply Data */
+
+		this.setAbstractResolver();
+
+		/** Apply appearance settings */
+
+		this.setAbstractAppearance();
+	}
+
+	ngOnDestroy(): void {
+		[
+			this.activatedRouteQueryParams$,
+			this.abstractListRequest$,
+			this.abstractListLoadingPageScrollInfinite$
+		].forEach(($: Subscription) => $?.unsubscribe());
+
+		[this.abstractListLoading$].forEach(($: BehaviorSubject<boolean>) => $?.complete());
+	}
+
+	setAbstractResolver(): void {
+		// Get abstractList by queryParams
 
 		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
 			.pipe(
@@ -63,20 +85,6 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 				next: () => this.getAbstractList(false),
 				error: (error: any) => console.error(error)
 			});
-
-		/** Apply appearance settings */
-
-		this.setAbstractAppearance();
-	}
-
-	ngOnDestroy(): void {
-		[
-			this.activatedRouteQueryParams$,
-			this.abstractListRequest$,
-			this.abstractListLoadingPageScrollInfinite$
-		].forEach(($: Subscription) => $?.unsubscribe());
-
-		[this.abstractListLoading$].forEach(($: BehaviorSubject<boolean>) => $?.complete());
 	}
 
 	setAbstractAppearance(): void {

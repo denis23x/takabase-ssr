@@ -9,38 +9,12 @@ import { Category } from '../models/category.model';
 import { CategoryUpdateDto } from '../dto/category/category-update.dto';
 import { CategoryDeleteDto } from '../dto/category/category-delete.dto';
 import { CategoryGetOneDto } from '../dto/category/category-get-one.dto';
-import { ActivatedRouteSnapshot } from '@angular/router';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class CategoryService {
 	constructor(private apiService: ApiService) {}
-
-	/** Resolvers DTO */
-
-	// prettier-ignore
-	getSearchCategoryGetAllDto(categoryGetAllDto: CategoryGetAllDto, activatedRouteSnapshot: ActivatedRouteSnapshot): CategoryGetAllDto {
-    const query: string = String(activatedRouteSnapshot.parent.queryParamMap.get('query') || '');
-
-    if (query.length) {
-      categoryGetAllDto = {
-        ...categoryGetAllDto,
-        query
-      };
-    }
-
-    const orderBy: string = String(activatedRouteSnapshot.parent.queryParamMap.get('orderBy') || '');
-
-    if (orderBy.length) {
-      categoryGetAllDto = {
-        ...categoryGetAllDto,
-        orderBy
-      };
-    }
-
-    return categoryGetAllDto;
-  }
 
 	/** REST */
 

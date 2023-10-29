@@ -31,19 +31,26 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		/** Apply skeleton */
+		/** Apply Data */
 
-		this.abstractList = this.skeletonService.getCategoryList(['user']);
-		this.abstractListSkeletonToggle = true;
-		this.abstractListHasMore = false;
-
-		if (this.platformService.isBrowser()) {
-			this.getAbstractList();
-		}
+		this.setSkeleton();
+		this.setResolver();
 
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
+	}
+
+	setSkeleton(): void {
+		this.abstractList = this.skeletonService.getCategoryList(['user']);
+		this.abstractListSkeletonToggle = true;
+		this.abstractListHasMore = false;
+	}
+
+	setResolver(): void {
+		if (this.platformService.isBrowser()) {
+			this.getAbstractList();
+		}
 	}
 
 	setMetaTags(): void {
@@ -68,8 +75,6 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 		this.abstractListRequest$?.unsubscribe();
 		this.abstractListLoading$.next(true);
 
-		/** Request */
-
 		let categoryGetAllDto: CategoryGetAllDto = {
 			page: this.abstractPage,
 			size: this.abstractSize,
@@ -78,7 +83,7 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 
 		// prettier-ignore
 		categoryGetAllDto = {
-			...this.categoryService.getSearchCategoryGetAllDto(categoryGetAllDto, this.activatedRoute.snapshot)
+			...this.searchService.getSearchGetAllDto(categoryGetAllDto, this.activatedRoute.parent.snapshot)
 		};
 
 		this.abstractListRequest$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
