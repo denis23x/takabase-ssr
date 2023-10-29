@@ -71,23 +71,15 @@ interface UrlForm {
 	templateUrl: './markdown.component.html'
 })
 export class MarkdownComponent implements AfterViewInit, OnDestroy {
-	// prettier-ignore
 	@ViewChild('controlListElement') controlListElement: ElementRef<HTMLDivElement> | undefined;
 
 	// prettier-ignore
 	@ViewChild('controlListTableElement') controlListTableElement: ElementRef<HTMLDivElement> | undefined;
-
 	@ViewChild('dropdownHeading') dropdownHeading: DropdownComponent | undefined;
-	// prettier-ignore
 	@ViewChild('dropdownFormatting') dropdownFormatting: DropdownComponent | undefined;
 	@ViewChild('dropdownList') dropdownList: DropdownComponent | undefined;
-
-	// prettier-ignore
 	@ViewChild('dropdownEmojiMart') dropdownEmojiMart: DropdownComponent | undefined;
-
 	@ViewChild('dropdownTable') dropdownTable: DropdownComponent | undefined;
-
-	// prettier-ignore
 	@ViewChild('urlFormModal') urlFormModal: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() modalToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -132,7 +124,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	scrollSync: boolean = false;
 	scrollSync$: Subscription | undefined;
 
-	// prettier-ignore
 	textareaHistory$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 	textareaHistoryToggle: boolean = true;
 	textareaInput$: Subscription | undefined;
@@ -168,10 +159,11 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				.pipe(startWith(EMPTY), debounceTime(100))
 				.subscribe({
 					next: () => {
+						console.log(this.textarea.value, this.preview);
 						this.markdownService.setRender(this.textarea.value, this.preview);
 
-						// prettier-ignore
 						if (this.textareaHistoryToggle) {
+							// prettier-ignore
 							this.textareaHistory$.next(this.textareaHistory$.getValue().concat([this.textarea.value]));
 						} else {
 							this.textareaHistoryToggle = true;
@@ -188,18 +180,11 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		this.setScrollSyncHandler();
 	}
 
-	// prettier-ignore
 	ngOnDestroy(): void {
-		[
-			this.textareaInput$,
-			this.scrollSync$,
-			this.controlListScroll$,
-			this.urlForm$
-		].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.textareaInput$, this.scrollSync$, this.controlListScroll$, this.urlForm$].forEach(($: Subscription) => $?.unsubscribe());
 
-		[
-      this.textareaHistory$
-    ].forEach(($: BehaviorSubject<string[]>) => $?.complete());
+		[this.textareaHistory$].forEach(($: BehaviorSubject<string[]>) => $?.complete());
 	}
 
 	setEmojiMart(): void {
@@ -231,17 +216,17 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				}
 			];
 
-			// prettier-ignore
 			variablesCSSMap.forEach((variable: any) => {
 				const value: string = this.appearanceService.getCSSPropertyValue(variable.nameHSL);
 
+				// prettier-ignore
 				const [h, s, l]: number[] = value.split(/\s/g).map((value: string) => Number(value.replace('%', '')));
 				const [r, g, b]: number[] = this.appearanceService.getHSLToRGB(h, s, l);
 
 				const propertyValue: string = [r, g, b].join(variable.nameWithComma ? ',' : ' ');
 				const property: string = variable.nameRGB;
 
-        this.document.documentElement.style.setProperty(property, propertyValue);
+				this.document.documentElement.style.setProperty(property, propertyValue);
 			});
 
 			/** Init Emoji Mart */
@@ -250,8 +235,11 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			const emojiMartPicker: any = new window.EmojiMart.Picker({
 				/** https://github.com/rickstaa/github-emoji-picker */
 
-				// prettier-ignore
-				data: async () => fetch('/assets/emoji/github_emojis.json').then((response: Response) => response.json()),
+				data: async () => {
+					return fetch('/assets/emoji/github_emojis.json').then((response: Response) => {
+						return response.json();
+					});
+				},
 				onEmojiSelect: (event: any) => {
 					const markdownControl: MarkdownControl = {
 						...this.controlListEmojiMart,
@@ -268,22 +256,20 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				previewPosition: 'bottom'
 			});
 
-			this.document
-				.getElementById('emojiMartPicker')
-				.appendChild(emojiMartPicker);
+			this.document.getElementById('emojiMartPicker').appendChild(emojiMartPicker);
 		}
 	}
 
-	// prettier-ignore
 	onTableMouseEnter(mouseEvent: MouseEvent): void {
-    const parentElement: DOMRect = (mouseEvent.target as HTMLElement).parentElement.getBoundingClientRect();
-    const targetElement: DOMRect = (mouseEvent.target as HTMLElement).getBoundingClientRect();
+		// prettier-ignore
+		const parentElement: DOMRect = (mouseEvent.target as HTMLElement).parentElement.getBoundingClientRect();
+		const targetElement: DOMRect = (mouseEvent.target as HTMLElement).getBoundingClientRect();
 
-    const width: string = 'width:' + Math.abs(parentElement.left - targetElement.right) + 'px;';
-    const height: string = 'height:' + Math.abs(parentElement.top - targetElement.bottom) + 'px;';
+		const width: string = 'width:' + Math.abs(parentElement.left - targetElement.right) + 'px;';
+		const height: string = 'height:' + Math.abs(parentElement.top - targetElement.bottom) + 'px;';
 
-    this.controlListTableElement.nativeElement.setAttribute('style', width + height);
-  }
+		this.controlListTableElement.nativeElement.setAttribute('style', width + height);
+	}
 
 	setDropdownHandler(): void {
 		const dropdownComponentList: DropdownComponent[] = [
@@ -294,12 +280,11 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.dropdownTable
 		];
 
-		// prettier-ignore
 		const dropdownComponent = (): DropdownComponent | undefined => {
-      return dropdownComponentList.find((dropdownComponent: DropdownComponent) => {
-        return dropdownComponent.dropdownState;
-      })
-    };
+			return dropdownComponentList.find((dropdownComponent: DropdownComponent) => {
+				return dropdownComponent.dropdownState;
+			});
+		};
 
 		const controlListElement: any = this.controlListElement.nativeElement;
 
@@ -312,15 +297,12 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	}
 
 	setScrollSyncHandler(): void {
-		// prettier-ignore
 		const getScrollTop = (a: HTMLElement, b: HTMLElement): number => {
+			// prettier-ignore
 			return Math.round((b.scrollHeight - b.clientHeight) * ((a.scrollTop / (a.scrollHeight - a.clientHeight))));
 		};
 
-		this.scrollSync$ = merge(
-			fromEvent(this.textarea, 'scroll'),
-			fromEvent(this.preview, 'scroll')
-		)
+		this.scrollSync$ = merge(fromEvent(this.textarea, 'scroll'), fromEvent(this.preview, 'scroll'))
 			.pipe(filter(() => this.scrollSync))
 			.subscribe({
 				next: (event: Event) => {
@@ -351,7 +333,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	getMarkdownTextarea(textAreaElement: HTMLTextAreaElement): MarkdownTextarea {
 		const { selectionStart, selectionEnd, value } = textAreaElement;
 
-		// prettier-ignore
 		const getWrapperPayload = (value: string): MarkdownWrapperPayload => {
 			return {
 				space: !!value.length && value === ' ',
@@ -360,7 +341,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			};
 		};
 
-		// prettier-ignore
 		const wrapper: MarkdownWrapper = {
 			before: getWrapperPayload(value.substring(0, selectionStart).slice(-1)),
 			after: getWrapperPayload(value.substring(selectionEnd, value.length).slice(0, 1))
@@ -375,18 +355,17 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		};
 	}
 
-	// prettier-ignore
 	getTextareaValue(markdownControl: MarkdownControl, params?: any): string {
-    const markdownTextarea: MarkdownTextarea = this.getMarkdownTextarea(this.textarea);
+		const markdownTextarea: MarkdownTextarea = this.getMarkdownTextarea(this.textarea);
 
-    const selectionStart: number = markdownTextarea.selectionStart;
-    const selectionEnd: number = markdownTextarea.selectionEnd;
+		const selectionStart: number = markdownTextarea.selectionStart;
+		const selectionEnd: number = markdownTextarea.selectionEnd;
 
-    const before: string = markdownTextarea.value.substring(0, selectionStart);
-    const after: string = markdownTextarea.value.substring(selectionEnd);
-    const value: string = markdownControl.handler(markdownTextarea, params);
+		const before: string = markdownTextarea.value.substring(0, selectionStart);
+		const after: string = markdownTextarea.value.substring(selectionEnd);
+		const value: string = markdownControl.handler(markdownTextarea, params);
 
-    return before + value + after;
+		return before + value + after;
 	}
 
 	setTextareaValue(value: string): void {
@@ -442,7 +421,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 			/** Apply selection */
 
-			// prettier-ignore
 			const markdownTextarea: MarkdownTextarea = this.getMarkdownTextarea(this.textarea);
 
 			if (markdownTextarea.selection) {
@@ -479,7 +457,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 			this.urlForm.disable();
 
-			// prettier-ignore
 			this.setTextareaValue(this.getTextareaValue(this.urlFormControl, this.urlForm.value));
 
 			/** Clear urlForm && emit modalToggle  */

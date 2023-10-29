@@ -190,7 +190,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 
 		if (postId) {
-			this.post = this.skeletonService.getPost();
+			this.post = this.skeletonService.getPost(['category']);
 			this.postSkeletonToggle = true;
 		}
 
