@@ -10,12 +10,7 @@ import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.com
 
 @Component({
 	standalone: true,
-	imports: [
-		CommonModule,
-		RouterModule,
-		AppScrollPresetDirective,
-		SvgIconComponent
-	],
+	imports: [CommonModule, RouterModule, AppScrollPresetDirective, SvgIconComponent],
 	selector: 'app-terms',
 	templateUrl: './terms.component.html'
 })
@@ -34,6 +29,10 @@ export class TermsComponent implements OnInit {
 	constructor(private metaService: MetaService) {}
 
 	ngOnInit(): void {
+		/** Apply Data */
+
+		// Nothing to apply
+
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
@@ -51,10 +50,9 @@ export class TermsComponent implements OnInit {
 			['og:type']: 'website'
 		};
 
-		// prettier-ignore
 		const metaTwitter: MetaTwitter = {
 			['twitter:title']: title,
-			['twitter:description']: description,
+			['twitter:description']: description
 		};
 
 		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);

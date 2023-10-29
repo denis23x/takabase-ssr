@@ -73,7 +73,7 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 
 	getAbstractList(concat: boolean = false): void {
 		this.abstractListRequest$?.unsubscribe();
-		this.abstractListLoading$.next(true);
+		this.abstractListIsLoading$.next(true);
 
 		let categoryGetAllDto: CategoryGetAllDto = {
 			page: this.abstractPage,
@@ -91,7 +91,7 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 				this.abstractList = concat ? this.abstractList.concat(categoryList) : categoryList;
 				this.abstractListSkeletonToggle = false;
 				this.abstractListHasMore = categoryList.length === this.abstractSize;
-				this.abstractListLoading$.next(false);
+				this.abstractListIsLoading$.next(false);
 			},
 			error: (error: any) => console.error(error)
 		});

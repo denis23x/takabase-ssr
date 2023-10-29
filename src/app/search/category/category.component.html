@@ -2,9 +2,7 @@
 
 <ng-container>
 	<ng-container *ngIf="!!abstractList.length; else abstractListEmptyTemplate">
-		<ul
-			class="grid grid-cols-1 grid-rows-none gap-4 sm:grid-cols-2 lg:grid-cols-3"
-		>
+		<ul class="grid grid-cols-1 grid-rows-none gap-4 sm:grid-cols-2 lg:grid-cols-3">
 			<li
 				class="block"
 				appCardCategory
@@ -14,20 +12,22 @@
 				[appCategorySkeletonToggle]="abstractListSkeletonToggle"
 			></li>
 		</ul>
-		<ng-container *ngIf="!abstractListLoadingPageScrollInfinite">
+		<ng-container *ngIf="!abstractListPageScrollInfinite">
 			<button
 				class="btn-primary btn mt-4 w-full"
 				type="button"
 				aria-label="Load more"
 				*ngIf="abstractListHasMore"
+				[disabled]="abstractListIsLoading$ | async"
 				(click)="getAbstractListLoadMore()"
 			>
+				<span class="loading loading-spinner" *ngIf="abstractListIsLoading$ | async"></span>
 				Load more
 			</button>
 		</ng-container>
 	</ng-container>
 	<ng-template #abstractListEmptyTemplate>
-		<ng-container [ngSwitch]="abstractListLoading$ | async">
+		<ng-container [ngSwitch]="abstractListIsLoading$ | async">
 			<div class="flex flex-col items-center space-y-4" *ngSwitchDefault>
 				<i
 					class="fill-current text-base-content"

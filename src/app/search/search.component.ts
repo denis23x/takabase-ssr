@@ -99,7 +99,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 	}
 
 	onRouterOutletActivate(event: any): void {
-		const isLoading$: Observable<boolean> = event.abstractListLoading$;
+		const isLoading$: Observable<boolean> = event.abstractListIsLoading$;
 
 		// prettier-ignore
 		this.searchFormIsSubmitted$ = isLoading$.subscribe({

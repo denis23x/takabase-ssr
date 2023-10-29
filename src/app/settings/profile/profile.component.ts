@@ -65,8 +65,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	currentUserQRCodeUrl: string | undefined;
 
 	profileForm: FormGroup | undefined;
-	profileForm$: Subscription | undefined;
 	profileFormIsPristine: boolean = false;
+	profileFormIsPristine$: Subscription | undefined;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -87,29 +87,35 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser) => {
-				this.currentUser = currentUser;
+		/** Apply Data */
 
-				this.profileForm.patchValue(this.currentUser);
-				this.profileForm.markAllAsTouched();
-			},
-			error: (error: any) => console.error(error)
-		});
-
-		this.profileForm$ = this.profileForm.valueChanges
-			.pipe(startWith(this.profileForm.value))
-			.subscribe({
-				next: (value: any) => {
-					this.profileFormIsPristine = Object.keys(value).every((key: string) => {
-						return value[key] === this.currentUser[key];
-					});
-				}
-			});
+		this.setResolver();
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$, this.profileForm$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$, this.profileFormIsPristine$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	setResolver(): void {
+		this.currentUser$ = this.authorizationService
+			.getCurrentUser()
+			.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)))
+			.subscribe({
+				next: () => {
+					this.profileForm.patchValue(this.currentUser);
+					this.profileForm.markAllAsTouched();
+					this.profileFormIsPristine$ = this.profileForm.valueChanges
+						.pipe(startWith(this.profileForm.value))
+						.subscribe({
+							next: (value: any) => {
+								this.profileFormIsPristine = Object.keys(value).every((key: string) => {
+									return value[key] === this.currentUser[key];
+								});
+							}
+						});
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	onToggleProfileFormAvatar(toggle: boolean): void {

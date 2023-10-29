@@ -64,7 +64,7 @@ export class SearchPostComponent extends AbstractSearchListComponent implements 
 
 	getAbstractList(concat: boolean = false): void {
 		this.abstractListRequest$?.unsubscribe();
-		this.abstractListLoading$.next(true);
+		this.abstractListIsLoading$.next(true);
 
 		let postGetAllDto: PostGetAllDto = {
 			page: this.abstractPage,
@@ -80,7 +80,7 @@ export class SearchPostComponent extends AbstractSearchListComponent implements 
 				this.abstractList = concat ? this.abstractList.concat(postList) : postList;
 				this.abstractListSkeletonToggle = false;
 				this.abstractListHasMore = postList.length === this.abstractSize;
-				this.abstractListLoading$.next(false);
+				this.abstractListIsLoading$.next(false);
 			},
 			error: (error: any) => console.error(error)
 		});

@@ -6,9 +6,7 @@
 			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
 			<div class="flex w-full flex-col items-stretch justify-between gap-4">
-				<h1 class="block truncate text-2xl font-bold text-base-content">
-					Additional Information
-				</h1>
+				<h1 class="block truncate text-2xl font-bold text-base-content">Additional Information</h1>
 				<hr class="my-0 border-base-content/20" />
 				<p class="alert">
 					<i
@@ -18,19 +16,16 @@
 						[appSquare]="'1.5em'"
 					></i>
 					<span class="block">
-						By accessing and using this website, you agree to comply with and be
-						bound by the following terms and conditions of use. Please read
-						these terms carefully before using our website.
+						By accessing and using this website, you agree to comply with and be bound by the
+						following terms and conditions of use. Please read these terms carefully before using
+						our website.
 					</span>
 				</p>
 			</div>
 		</header>
 		<div class="flex flex-col">
 			<nav class="block px-4">
-				<ul
-					class="tabs w-full translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg"
-				>
-					<!-- prettier-ignore -->
+				<ul class="tabs w-full translate-y-px flex-nowrap space-x-1 overflow-auto rounded-t-lg">
 					<li
 						class="tab tab-lifted tab-lg h-10"
 						*ngFor="let term of termsNavigationList"
@@ -50,9 +45,7 @@
 					</li>
 				</ul>
 			</nav>
-			<div
-				class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl"
-			>
+			<div class="rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl">
 				<div class="rounded-box bg-base-200 p-4">
 					<router-outlet></router-outlet>
 				</div>

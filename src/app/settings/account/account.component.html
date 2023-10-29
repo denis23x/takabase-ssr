@@ -1,10 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<div
-		class="flex flex-col items-start justify-start gap-4"
-		[ngSwitch]="passwordValidateIsValid"
-	>
+	<div class="flex flex-col items-start justify-start gap-4" [ngSwitch]="passwordValidateIsValid">
 		<form
 			class="flex w-full flex-col gap-4"
 			autocomplete="off"
@@ -12,10 +9,7 @@
 			[formGroup]="passwordValidateForm"
 			(ngSubmit)="onSubmitPasswordValidateForm()"
 		>
-			<fieldset
-				class="form-control"
-				*ngIf="passwordValidateForm.get('password') as password"
-			>
+			<fieldset class="form-control" *ngIf="passwordValidateForm.get('password') as password">
 				<label class="label" for="passwordValidateFormPassword">
 					<div class="indicator">
 						<!-- prettier-ignore -->
@@ -47,7 +41,6 @@
 						[class.input-success]="password.dirty && password.valid"
 						[class.input-error]="password.touched && password.invalid"
 					/>
-					<!-- prettier-ignore -->
 					<button
 						class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 						type="button"
@@ -56,7 +49,7 @@
 						*ngIf="!!password.value.length"
 						[class.btn-success]="password.dirty && password.value"
 						[class.btn-error]="password.touched && password.invalid"
-            [class.btn-ghost]="password.untouched && password.dirty && password.invalid"
+						[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
 						[disabled]="password.disabled"
 						[appIcon]="'incognito'"
 						[appSquare]="'1.5em'"
@@ -74,24 +67,20 @@
 					[appSquare]="'1.5em'"
 				></i>
 				<span class="block">
-					Please provide your current password to continue. Your password
-					ensures the security and integrity of your account.
+					Please provide your current password to continue. Your password ensures the security and
+					integrity of your account.
 				</span>
 			</p>
 			<fieldset class="form-control">
-				<!-- prettier-ignore -->
 				<button
-          class="btn btn-success w-full"
-          type="submit"
-          aria-label="Continue"
-          [disabled]="passwordValidateForm.invalid || passwordValidateForm.disabled"
-        >
-          <span
-            class="loading loading-spinner"
-            *ngIf="passwordValidateForm.disabled"
-          ></span>
-          Continue
-        </button>
+					class="btn btn-success w-full"
+					type="submit"
+					aria-label="Continue"
+					[disabled]="passwordValidateForm.invalid || passwordValidateForm.disabled"
+				>
+					<span class="loading loading-spinner" *ngIf="passwordValidateForm.disabled"></span>
+					Continue
+				</button>
 			</fieldset>
 		</form>
 		<ng-container *ngSwitchCase="true">
@@ -133,7 +122,6 @@
 							[class.input-success]="email.dirty && email.valid"
 							[class.input-error]="email.touched && email.invalid"
 						/>
-						<!-- prettier-ignore -->
 						<button
 							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 							type="button"
@@ -145,15 +133,12 @@
 							[class.btn-ghost]="email.untouched && email.dirty && email.invalid"
 							[disabled]="email.disabled"
 							[appIcon]="'x'"
-              [appSquare]="'2em'"
+							[appSquare]="'2em'"
 							(click)="email.setValue('')"
 						></button>
 					</div>
 				</fieldset>
-				<fieldset
-					class="form-control"
-					[ngSwitch]="currentUser.firebase.emailVerified"
-				>
+				<fieldset class="form-control" [ngSwitch]="currentUser.firebase.emailVerified">
 					<button
 						class="btn-success btn w-full"
 						type="submit"
@@ -161,10 +146,7 @@
 						*ngSwitchCase="true"
 						[disabled]="emailForm.invalid || emailForm.disabled"
 					>
-						<span
-							class="loading loading-spinner"
-							*ngIf="emailForm.disabled"
-						></span>
+						<span class="loading loading-spinner" *ngIf="emailForm.disabled"></span>
 						Submit
 					</button>
 					<div class="flex flex-col gap-4" *ngSwitchCase="false">
@@ -176,10 +158,9 @@
 								[appSquare]="'1.5em'"
 							></i>
 							<span class="block">
-								To maintain the security and validity of your account, we
-								require email address verification before making any changes.
-								This verification step helps us ensure that you have full
-								control over your account and protects your information from
+								To maintain the security and validity of your account, we require email address
+								verification before making any changes. This verification step helps us ensure that
+								you have full control over your account and protects your information from
 								unauthorized access.
 							</span>
 						</p>
@@ -190,10 +171,7 @@
 							[disabled]="emailFormConfirmationIsSubmitted"
 							(click)="onSubmitEmailConfirmation()"
 						>
-							<span
-								class="loading loading-spinner"
-								*ngIf="emailFormConfirmationIsSubmitted"
-							></span>
+							<span class="loading loading-spinner" *ngIf="emailFormConfirmationIsSubmitted"></span>
 							Confirm
 						</button>
 					</div>
@@ -206,10 +184,7 @@
 				[formGroup]="passwordForm"
 				(ngSubmit)="onSubmitPasswordForm()"
 			>
-				<fieldset
-					class="form-control"
-					*ngIf="passwordForm.get('password') as password"
-				>
+				<fieldset class="form-control" *ngIf="passwordForm.get('password') as password">
 					<label class="label" for="passwordFormPassword">
 						<div class="indicator">
 							<!-- prettier-ignore -->
@@ -241,7 +216,6 @@
 							[class.input-success]="password.dirty && password.valid"
 							[class.input-error]="password.touched && password.invalid"
 						/>
-						<!-- prettier-ignore -->
 						<button
 							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 							type="button"
@@ -250,7 +224,7 @@
 							*ngIf="!!password.value.length"
 							[class.btn-success]="password.dirty && password.value"
 							[class.btn-error]="password.touched && password.invalid"
-              [class.btn-ghost]="password.untouched && password.dirty && password.invalid"
+							[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
 							[disabled]="password.disabled"
 							[appIcon]="'incognito'"
 							[appSquare]="'1.5em'"
@@ -268,24 +242,20 @@
 						[appSquare]="'1.5em'"
 					></i>
 					<span class="block">
-						The password must be 6-32 characters long, must contain at least one
-						number or special character
+						The password must be 6-32 characters long, must contain at least one number or special
+						character
 					</span>
 				</p>
 				<fieldset class="form-control">
-					<!-- prettier-ignore -->
 					<button
-            class="btn btn-success w-full"
-            type="submit"
-            aria-label="Submit"
-            [disabled]="passwordForm.invalid || passwordForm.disabled"
-          >
-            <span
-              class="loading loading-spinner"
-              *ngIf="passwordForm.disabled"
-            ></span>
-            Submit
-          </button>
+						class="btn btn-success w-full"
+						type="submit"
+						aria-label="Submit"
+						[disabled]="passwordForm.invalid || passwordForm.disabled"
+					>
+						<span class="loading loading-spinner" *ngIf="passwordForm.disabled"></span>
+						Submit
+					</button>
 				</fieldset>
 			</form>
 		</ng-container>

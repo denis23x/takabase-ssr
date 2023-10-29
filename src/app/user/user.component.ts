@@ -410,7 +410,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	onRouterOutletActivate(userPostComponent: UserPostComponent): void {
 		this.userPostComponent = userPostComponent;
 
-		const isLoading$: Observable<boolean> = this.userPostComponent.abstractListLoading$;
+		const isLoading$: Observable<boolean> = this.userPostComponent.abstractListIsLoading$;
 
 		// prettier-ignore
 		this.postSearchFormIsSubmitted$ = isLoading$.subscribe({

@@ -27,11 +27,11 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 	abstractList: any[] = [];
 	abstractListRequest$: Subscription | undefined;
 	abstractListSkeletonToggle: boolean = true;
+	abstractListIsLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	abstractListHasMore: boolean = false;
 
-	abstractListLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-	abstractListLoadingPageScrollInfinite: boolean = false;
-	abstractListLoadingPageScrollInfinite$: Subscription | undefined;
+	abstractListPageScrollInfinite: boolean = false;
+	abstractListPageScrollInfinite$: Subscription | undefined;
 
 	constructor(
 		public activatedRoute: ActivatedRoute,
@@ -60,10 +60,10 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 		[
 			this.activatedRouteQueryParams$,
 			this.abstractListRequest$,
-			this.abstractListLoadingPageScrollInfinite$
+			this.abstractListPageScrollInfinite$
 		].forEach(($: Subscription) => $?.unsubscribe());
 
-		[this.abstractListLoading$].forEach(($: BehaviorSubject<boolean>) => $?.complete());
+		[this.abstractListIsLoading$].forEach(($: BehaviorSubject<boolean>) => $?.complete());
 	}
 
 	setAbstractResolver(): void {
@@ -89,12 +89,12 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 
 	setAbstractAppearance(): void {
 		// prettier-ignore
-		this.abstractListLoadingPageScrollInfinite = !!Number(this.cookieService.getItem('page-scroll-infinite'));
+		this.abstractListPageScrollInfinite = !!Number(this.cookieService.getItem('page-scroll-infinite'));
 
-		if (this.abstractListLoadingPageScrollInfinite) {
-			this.abstractListLoadingPageScrollInfinite$ = this.appearanceService
+		if (this.abstractListPageScrollInfinite) {
+			this.abstractListPageScrollInfinite$ = this.appearanceService
 				.setPageScrollInfinite()
-				.pipe(filter(() => this.abstractListHasMore && !this.abstractListLoading$.getValue()))
+				.pipe(filter(() => this.abstractListHasMore && !this.abstractListIsLoading$.getValue()))
 				.subscribe({
 					next: () => this.getAbstractListLoadMore(),
 					error: (error: any) => console.error(error)

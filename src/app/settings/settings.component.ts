@@ -17,6 +17,10 @@ export class SettingsComponent implements OnInit {
 	constructor(private metaService: MetaService) {}
 
 	ngOnInit(): void {
+		/** Apply Data */
+
+		// Nothing to apply
+
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();

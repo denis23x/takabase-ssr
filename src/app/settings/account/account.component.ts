@@ -87,6 +87,16 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		/** Apply Data */
+
+		this.setResolver();
+	}
+
+	ngOnDestroy(): void {
+		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	setResolver(): void {
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
 			next: (currentUser: CurrentUser) => {
 				this.currentUser = currentUser;
@@ -95,15 +105,11 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 					this.emailForm.get('email').setValue(this.currentUser.firebase.email);
 					this.emailForm.disable();
 				}
+
+				this.passwordValidateIsValid = !!Number(this.cookieService.getItem('password-valid'));
 			},
 			error: (error: any) => console.error(error)
 		});
-
-		this.passwordValidateIsValid = !!Number(this.cookieService.getItem('password-valid'));
-	}
-
-	ngOnDestroy(): void {
-		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onSubmitPasswordValidateForm(): void {

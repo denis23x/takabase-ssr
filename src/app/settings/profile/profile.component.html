@@ -29,12 +29,11 @@
 						>
 							{{ currentUser.name }}
 						</h1>
-						<!-- prettier-ignore -->
 						<time
 							class="text-sm text-base-content/50 truncate"
-							[attr.datetime]="currentUser.createdAt | dayjs : 'format' : 'YYYY-M-D'"
+							[attr.datetime]="currentUser.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 						>
-							registered {{ currentUser.createdAt | dayjs : "fromX" }}
+							registered {{ currentUser.createdAt | dayjs: "fromX" }}
 						</time>
 					</div>
 				</div>
@@ -128,10 +127,7 @@
 				<!-- prettier-ignore -->
 				<span class="block">Change the name will set the <span class="inline font-bold">{{ currentUser | userUrl : 1 }}</span> user profile not more available by direct link or QR code</span>
 			</p>
-			<fieldset
-				class="form-control"
-				*ngIf="profileForm.get('description') as description"
-			>
+			<fieldset class="form-control" *ngIf="profileForm.get('description') as description">
 				<label class="label" for="profileFormDescription">
 					<!-- prettier-ignore -->
 					<div class="indicator">
@@ -156,15 +152,14 @@
             </span>
             <span class="label-text mr-2">Description</span>
           </div>
-					<!-- prettier-ignore -->
 					<span
-            class="label-text-alt"
-            [class.text-base-content]="profileForm.disabled"
-            [class.text-success]="profileForm.enabled && !!description.value && description.valid"
-            [class.text-error]="profileForm.enabled && !!description.value && description.invalid"
-          >
-            {{ description.value?.length || 0 }}/255
-          </span>
+						class="label-text-alt"
+						[class.text-base-content]="profileForm.disabled"
+						[class.text-success]="profileForm.enabled && !!description.value && description.valid"
+						[class.text-error]="profileForm.enabled && !!description.value && description.invalid"
+					>
+						{{ description.value?.length || 0 }}/255
+					</span>
 				</label>
 				<!-- prettier-ignore -->
 				<div
@@ -190,20 +185,19 @@
         </div>
 			</fieldset>
 			<fieldset class="form-control">
-				<!-- prettier-ignore -->
 				<button
-          class="btn btn-success w-full"
-          data-pw="app-settings-profile-form-submit"
-          type="submit"
-          aria-label="Submit"
-          [disabled]="profileForm.invalid || profileForm.disabled || profileFormIsPristine"
-        >
-          <span
-            class="loading loading-spinner"
-            *ngIf="profileForm.disabled && !profileFormAvatarModal.open"
-          ></span>
-          Submit
-        </button>
+					class="btn btn-success w-full"
+					data-pw="app-settings-profile-form-submit"
+					type="submit"
+					aria-label="Submit"
+					[disabled]="profileForm.invalid || profileForm.disabled || profileFormIsPristine"
+				>
+					<span
+						class="loading loading-spinner"
+						*ngIf="profileForm.disabled && !profileFormAvatarModal.open"
+					></span>
+					Submit
+				</button>
 			</fieldset>
 		</form>
 	</div>
@@ -237,16 +231,8 @@
 		(close)="onToggleQRCode(false)"
 		(click)="$event.target === $event.currentTarget ? QRCodeModal.close() : $event"
 	>
-		<div
-			appWindow
-			[appTitle]="'QR Code'"
-			[appButtons]="['close']"
-			(closed)="onToggleQRCode(false)"
-		>
-			<div
-				class="flex max-w-sm flex-col items-center justify-start space-y-4 p-4"
-				slot="content"
-			>
+		<div appWindow [appTitle]="'QR Code'" [appButtons]="['close']" (closed)="onToggleQRCode(false)">
+			<div class="flex max-w-sm flex-col items-center justify-start space-y-4 p-4" slot="content">
 				<div
 					class="flex flex-col bg-base-200 rounded-box border border-base-content/20 overflow-hidden w-full"
 				>
