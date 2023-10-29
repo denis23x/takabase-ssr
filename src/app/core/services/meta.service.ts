@@ -21,13 +21,11 @@ export class MetaService {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
-			// prettier-ignore
 			const linkElement: HTMLLinkElement = this.document.querySelector("link[rel='canonical']");
 
 			if (linkElement) {
 				linkElement.setAttribute('href', window.location.href);
 			} else {
-				// prettier-ignore
 				const linkElement: HTMLLinkElement = this.document.createElement('link');
 
 				linkElement.setAttribute('rel', 'canonical');
@@ -51,7 +49,6 @@ export class MetaService {
 		const metaTags: Partial<MetaOpenGraph | MetaTwitter> = {};
 
 		['og', 'article', 'profile'].forEach((selector: string) => {
-			// prettier-ignore
 			const metaElement: HTMLMetaElement[] = this.meta.getTags("property^='" + selector + ":'");
 
 			metaElement.forEach((metaElement: HTMLMetaElement) => {
@@ -81,11 +78,7 @@ export class MetaService {
 
 			/** Image absent case */
 
-			const metaOpenGraphImage: string[] = [
-				'og:image',
-				'og:image:alt',
-				'og:image:type'
-			];
+			const metaOpenGraphImage: string[] = ['og:image', 'og:image:alt', 'og:image:type'];
 
 			// prettier-ignore
 			if (metaOpenGraphImage.some((tag: string) => !metaOpenGraph[tag])) {
@@ -125,7 +118,6 @@ export class MetaService {
 		const metaTags: Partial<MetaOpenGraph | MetaTwitter> = {};
 
 		['twitter'].forEach((selector: string) => {
-			// prettier-ignore
 			const metaElement: HTMLMetaElement[] = this.meta.getTags("name^='" + selector + ":'");
 
 			metaElement.forEach((metaElement: HTMLMetaElement) => {

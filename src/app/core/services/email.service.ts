@@ -20,7 +20,6 @@ export class EmailService {
 		private angularFireAuth: AngularFireAuth
 	) {}
 
-	// prettier-ignore
 	onUpdate(emailUpdateDto: EmailUpdateDto): Observable<void> {
 		return from(this.angularFireAuth.currentUser).pipe(
 			switchMap((firebaseUser: firebase.User) => {
@@ -32,7 +31,6 @@ export class EmailService {
 		);
 	}
 
-	// prettier-ignore
 	onRecovery(emailRecoveryDto: EmailRecoveryDto): Observable<void> {
 		return from(this.angularFireAuth.checkActionCode(emailRecoveryDto.code)).pipe(
 			switchMap((actionCodeInfo: firebase.auth.ActionCodeInfo) => {
@@ -62,12 +60,11 @@ export class EmailService {
 		);
 	}
 
-	// prettier-ignore
 	onConfirmationUpdate(emailConfirmationUpdateDto: EmailConfirmationUpdateDto): Observable<void> {
 		return from(this.angularFireAuth.applyActionCode(emailConfirmationUpdateDto.code)).pipe(
-      catchError((httpErrorResponse: HttpErrorResponse) => {
-        return this.apiService.setError(httpErrorResponse);
-      })
-    );
-  }
+			catchError((httpErrorResponse: HttpErrorResponse) => {
+				return this.apiService.setError(httpErrorResponse);
+			})
+		);
+	}
 }

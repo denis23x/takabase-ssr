@@ -66,7 +66,6 @@ export class MarkdownService {
           return `<pre class="line-numbers language-${language}"><code class="language-${language} match-braces rainbow-braces">${getValue()}</code></pre>`;
         };
 
-				// prettier-ignore
 				if (!!language && environment.grammars.includes(language.toLowerCase())) {
 					return prismTemplate(value, language);
 				}
@@ -109,26 +108,17 @@ export class MarkdownService {
 
 		this.markdownIt.renderer.rules.image = this.setMarkdownItRule('image');
 		this.markdownIt.renderer.rules.video = this.setMarkdownItRule('video');
-
-		// prettier-ignore
 		this.markdownIt.renderer.rules.table_open = this.setMarkdownItRule('tableOpen');
-
-		// prettier-ignore
 		this.markdownIt.renderer.rules.table_close = this.setMarkdownItRule('tableClose');
-
-		// prettier-ignore
 		this.markdownIt.renderer.rules.collapsible_open = this.setMarkdownItRule('collapsibleOpen');
 
 		// prettier-ignore
 		this.markdownIt.renderer.rules.collapsible_summary = this.setMarkdownItRule('collapsibleSummary');
-
-		// prettier-ignore
 		this.markdownIt.renderer.rules.collapsible_close = this.setMarkdownItRule('collapsibleClose');
 
 		return this.markdownIt;
 	}
 
-	// prettier-ignore
 	setMarkdownItRule(rule: string): RenderRule {
 		const ruleImage: RenderRule = (tokenList: Token[], idx: number): string => {
 			const imageElement: HTMLImageElement = this.document.createElement('img');
@@ -154,68 +144,70 @@ export class MarkdownService {
 		};
 
 		const ruleVideo: RenderRule = (tokenList: Token[], idx: number): string => {
-      const iframeSrc: string = 'https://www.youtube-nocookie.com/embed/';
-      const iframeElement: HTMLIFrameElement = this.document.createElement('iframe');
+			const iframeSrc: string = 'https://www.youtube-nocookie.com/embed/';
+			const iframeElement: HTMLIFrameElement = this.document.createElement('iframe');
 
-      const token: Token = tokenList[idx];
+			const token: Token = tokenList[idx];
 
-      // @ts-ignore
-      iframeElement.loading = 'lazy';
+			// @ts-ignore
+			iframeElement.loading = 'lazy';
 
-      // @ts-ignore
-      iframeElement.src = iframeSrc + token.videoID;
-      iframeElement.width = String(640);
-      iframeElement.height = String(390);
-      iframeElement.title = 'YouTube video player';
-      iframeElement.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-      iframeElement.allowFullscreen = true;
+			// @ts-ignore
+			iframeElement.src = iframeSrc + token.videoID;
+			iframeElement.width = String(640);
+			iframeElement.height = String(390);
+			iframeElement.title = 'YouTube video player';
 
-      return iframeElement.outerHTML;
-    };
+			// prettier-ignore
+			iframeElement.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+			iframeElement.allowFullscreen = true;
+
+			return iframeElement.outerHTML;
+		};
 
 		const ruleTableOpen: RenderRule = (tokenList: Token[], idx: number): string => {
-      const tableElement: HTMLTableElement = this.document.createElement('table');
+			const tableElement: HTMLTableElement = this.document.createElement('table');
 
-      const token: Token = tokenList[idx];
+			const token: Token = tokenList[idx];
 
-      token.attrs?.forEach(([key, value]: string[]) => {
-        if (key === 'class') {
-          // prettier-ignore
-          const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
+			token.attrs?.forEach(([key, value]: string[]) => {
+				if (key === 'class') {
+					// prettier-ignore
+					const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
 
-          tableElement.classList.add(...classList);
-        } else {
-          tableElement[key] = value;
-        }
-      });
+					tableElement.classList.add(...classList);
+				} else {
+					tableElement[key] = value;
+				}
+			});
 
-      return `<div class="overflow-auto my-4">${tableElement.outerHTML.replace('</table>', '')}`;
-    };
+			return `<div class="overflow-auto my-4">${tableElement.outerHTML.replace('</table>', '')}`;
+		};
 
 		const ruleTableClose: RenderRule = (): string => {
 			return `</table></div>`;
 		};
 
-    const ruleCollapsibleOpen: RenderRule = (): string => {
-      return '<details class="collapse collapse-arrow bg-base-200 border border-base-content/20">';
-    };
+		const ruleCollapsibleOpen: RenderRule = (): string => {
+			return '<details class="collapse collapse-arrow bg-base-200 border border-base-content/20">';
+		};
 
-    const ruleCollapsibleSummary: RenderRule = (tokenList: Token[], idx: number): string => {
-      return `<summary class="collapse-title text-xl font-medium">${tokenList[idx].content}</summary><div class="collapse-content">`;
-    };
+		const ruleCollapsibleSummary: RenderRule = (tokenList: Token[], idx: number): string => {
+			return `<summary class="collapse-title text-xl font-medium">${tokenList[idx].content}</summary><div class="collapse-content">`;
+		};
 
-    const ruleCollapsibleClose: RenderRule = (): string => {
-      return '</div></details>';
-    };
+		const ruleCollapsibleClose: RenderRule = (): string => {
+			return '</div></details>';
+		};
 
 		const ruleMap: any = {
 			image: ruleImage,
 			video: ruleVideo,
 			tableOpen: ruleTableOpen,
 			tableClose: ruleTableClose,
-      collapsibleOpen: ruleCollapsibleOpen,
-      collapsibleSummary: ruleCollapsibleSummary,
-      collapsibleClose: ruleCollapsibleClose
+			collapsibleOpen: ruleCollapsibleOpen,
+			collapsibleSummary: ruleCollapsibleSummary,
+			collapsibleClose: ruleCollapsibleClose
 		};
 
 		return ruleMap[rule];

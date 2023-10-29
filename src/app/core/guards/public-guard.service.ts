@@ -35,9 +35,7 @@ export class CanMatchPublicGuard implements CanMatch {
 				return true;
 			}),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
-				this.router
-					.navigate(['/error', 401])
-					.then(() => console.debug('Route changed'));
+				this.router.navigate(['/error', 401]).then(() => console.debug('Route changed'));
 
 				return throwError(() => httpErrorResponse);
 			})

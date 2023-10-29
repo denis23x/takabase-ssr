@@ -16,22 +16,21 @@ export class HelperService {
 	) {}
 
 	setCamelCaseToDashCase(value: string): string {
-		// prettier-ignore
 		return value.replace(/[A-Z]/g, (value: string): string => '-' + value.toLowerCase());
 	}
 
 	getRegex(regex: string, payload?: any): RegExp {
-		// prettier-ignore
 		switch (regex) {
 			case 'exact':
 				return new RegExp('^' + payload + '$', 'm');
 			case 'password':
 				return new RegExp('^((?=.*\\d)|(?=.*[!@#$%^&*]))(?=.*[a-zA-Z]).{6,32}$', 'm');
-      case 'url':
-        // eslint-disable-next-line no-control-regex
+			case 'url':
+				// eslint-disable-next-line no-control-regex
 				return new RegExp('^([a-zA-Z][a-zA-Z0-9+.\\-]{1,31}):([^<>\x00-\x20]*)$', 'm');
-      case 'youtube':
-        return new RegExp('^.*((youtu.be\\/)|(v\\/)|(\\/u\\/\\w\\/)|(embed\\/)|(watch\\?))\\??v?=?([^#&?]*).*', 'm');
+			case 'youtube':
+				// prettier-ignore
+				return new RegExp('^.*((youtu.be\\/)|(v\\/)|(\\/u\\/\\w\\/)|(embed\\/)|(watch\\?))\\??v?=?([^#&?]*).*', 'm');
 			default:
 				throw new Error(`Invalid regex type specified: ${regex}`);
 		}
@@ -57,8 +56,6 @@ export class HelperService {
 			const source: string = [1e7] + -1e3 + -4e3 + -8e3 + -1e11;
 			const getUUID = (n: string): string => {
 				const m: number = Number(n);
-
-				// prettier-ignore
 				const uint8Array: Uint8Array = window.crypto.getRandomValues(new Uint8Array(1));
 
 				return (m ^ (uint8Array[0] & (15 >> (m / 4)))).toString(16);

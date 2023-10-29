@@ -53,7 +53,6 @@ export class CookieService {
 				options.expires = options.expires.toUTCString();
 			}
 
-			// prettier-ignore
 			let updatedCookie: string = key + '=' + value;
 
 			for (const optionKey in options) {

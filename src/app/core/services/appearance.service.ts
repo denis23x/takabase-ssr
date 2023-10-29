@@ -52,11 +52,7 @@ export class AppearanceService {
 			return l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
 		};
 
-		return [
-			Math.round(255 * f(0)),
-			Math.round(255 * f(8)),
-			Math.round(255 * f(4))
-		];
+		return [Math.round(255 * f(0)), Math.round(255 * f(8)), Math.round(255 * f(4))];
 	};
 
 	getHSLToHEX = (h: number, s: number, l: number): string[] => {
@@ -77,43 +73,42 @@ export class AppearanceService {
 		return [f(0), f(8), f(4)];
 	};
 
-	// prettier-ignore
 	setSettings(settings: Settings | null): void {
-    const settingsList: string[] = [
-      'theme',
-      'themePrism',
-      'themeBackground',
-      'language',
-      'markdownMonospace',
-      'windowButtonPosition',
-      'pageScrollToTop',
-      'pageScrollInfinite',
-      'pageRedirectHome'
-    ];
+		const settingsList: string[] = [
+			'theme',
+			'themePrism',
+			'themeBackground',
+			'language',
+			'markdownMonospace',
+			'windowButtonPosition',
+			'pageScrollToTop',
+			'pageScrollInfinite',
+			'pageRedirectHome'
+		];
 
-    if (settings) {
-      settingsList.forEach((key: string) => {
-        const value: any = settings[key];
+		if (settings) {
+			settingsList.forEach((key: string) => {
+				const value: any = settings[key];
 
-        const cookieKey: string = this.helperService.setCamelCaseToDashCase(key);
-        const cookieValue: any = typeof value === 'boolean' ? String(+value) : value;
+				const cookieKey: string = this.helperService.setCamelCaseToDashCase(key);
+				const cookieValue: any = typeof value === 'boolean' ? String(+value) : value;
 
-        this.cookieService.setItem(cookieKey, cookieValue);
-      });
-    } else {
-      settingsList.forEach((key: string) => {
-        this.cookieService.removeItem(this.helperService.setCamelCaseToDashCase(key));
-      });
-    }
+				this.cookieService.setItem(cookieKey, cookieValue);
+			});
+		} else {
+			settingsList.forEach((key: string) => {
+				this.cookieService.removeItem(this.helperService.setCamelCaseToDashCase(key));
+			});
+		}
 
-    this.setPageRedirectHome();
+		this.setPageRedirectHome();
 
-    /** Set theme settings */
+		/** Set theme settings */
 
-    this.setTheme(settings?.theme || null);
-    this.setThemeBackground(settings?.themeBackground || null);
-    this.setThemePrism(settings?.themePrism || null);
-  }
+		this.setTheme(settings?.theme || null);
+		this.setThemeBackground(settings?.themeBackground || null);
+		this.setThemePrism(settings?.themePrism || null);
+	}
 
 	setLoader(toggle: boolean): void {
 		if (toggle) {
@@ -176,7 +171,6 @@ export class AppearanceService {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
-			// prettier-ignore
 			return fromEvent(window, 'scroll').pipe(
 				map(() => {
 					const heightScrolled: number = window.innerHeight + Math.round(window.scrollY);
@@ -184,7 +178,7 @@ export class AppearanceService {
 
 					return heightScrolled >= heightBottom;
 				}),
-        filter((pageScrollInfinite: boolean) => pageScrollInfinite)
+				filter((pageScrollInfinite: boolean) => pageScrollInfinite)
 			);
 		}
 

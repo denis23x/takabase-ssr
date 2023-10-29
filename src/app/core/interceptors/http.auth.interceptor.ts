@@ -18,7 +18,6 @@ import { CurrentUser } from '../models/current-user.model';
 export class HttpAuthInterceptor implements HttpInterceptor {
 	constructor(private authorizationService: AuthorizationService) {}
 
-	// prettier-ignore
 	private handleRequest(request: HttpRequest<any>): HttpRequest<any> {
 		const isMethodMatch: boolean = ['POST', 'PUT', 'DELETE'].includes(request.method);
 		const isUrlMatch: boolean = request.url.startsWith(environment.API_URL);
@@ -41,12 +40,11 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 		return request;
 	}
 
-	// prettier-ignore
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(this.handleRequest(request)).pipe(
-      catchError((httpErrorResponse: HttpErrorResponse) => {
-        return throwError(() => httpErrorResponse);
-      })
-    );
-  }
+		return next.handle(this.handleRequest(request)).pipe(
+			catchError((httpErrorResponse: HttpErrorResponse) => {
+				return throwError(() => httpErrorResponse);
+			})
+		);
+	}
 }

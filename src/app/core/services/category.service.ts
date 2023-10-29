@@ -26,17 +26,14 @@ export class CategoryService {
 		return this.apiService.get('/categories', categoryGetAllDto);
 	}
 
-	// prettier-ignore
 	getOne(id: number, categoryGetOneDto: CategoryGetOneDto): Observable<Category> {
 		return this.apiService.get('/categories/' + id, categoryGetOneDto);
 	}
 
-	// prettier-ignore
 	update(id: number, categoryUpdateDto: CategoryUpdateDto): Observable<Category> {
 		return this.apiService.put('/categories/' + id, categoryUpdateDto);
 	}
 
-	// prettier-ignore
 	delete(id: number, categoryDeleteDto: CategoryDeleteDto): Observable<Category> {
 		return this.apiService.delete('/categories/' + id, categoryDeleteDto);
 	}

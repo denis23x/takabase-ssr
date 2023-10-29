@@ -3,10 +3,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { from, Observable, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SnackbarService } from './snackbar.service';
-import { Router } from '@angular/router';
 import { FirebaseError } from '@angular/fire/app';
 
 @Injectable({
@@ -14,7 +13,6 @@ import { FirebaseError } from '@angular/fire/app';
 })
 export class ApiService {
 	constructor(
-		private router: Router,
 		private httpClient: HttpClient,
 		private snackbarService: SnackbarService
 	) {}
@@ -75,46 +73,31 @@ export class ApiService {
 		return throwError(() => httpError);
 	}
 
-	setErrorRedirect(httpError: any): Observable<any> {
-		// prettier-ignore
-		return from(this.router.navigate(['/error', httpError.status]).then(() => {
-			this.setError(httpError);
-		}));
-	}
-
 	get(url: string, params?: any, options?: any): Observable<any> {
 		return this.httpClient.get(this.setUrl(url), { ...options, params }).pipe(
 			map((response: any) => response.data || response),
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				return this.setError(httpErrorResponse);
-			})
+			catchError((httpError: any) => this.setError(httpError))
 		);
 	}
 
 	put(url: string, body: any, options?: any): Observable<any> {
 		return this.httpClient.put(this.setUrl(url), body, options).pipe(
 			map((response: any) => response.data || response),
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				return this.setError(httpErrorResponse);
-			})
+			catchError((httpError: any) => this.setError(httpError))
 		);
 	}
 
 	post(url: string, body: any, options?: any): Observable<any> {
 		return this.httpClient.post(this.setUrl(url), body, options).pipe(
 			map((response: any) => response.data || response),
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				return this.setError(httpErrorResponse);
-			})
+			catchError((httpError: any) => this.setError(httpError))
 		);
 	}
 
 	delete(url: string, params?: any): Observable<any> {
 		return this.httpClient.delete(this.setUrl(url), { params }).pipe(
 			map((response: any) => response.data || response),
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				return this.setError(httpErrorResponse);
-			})
+			catchError((httpError: any) => this.setError(httpError))
 		);
 	}
 }

@@ -61,7 +61,6 @@ export class PostService {
 	}
 
 	removePostMeta(): void {
-		// prettier-ignore
 		this.metaService.setMeta(this.backupPostMetaOpenGraph, this.backupPostMetaTwitter);
 	}
 

@@ -50,7 +50,6 @@ export class PasswordService {
 		);
 	}
 
-	// prettier-ignore
 	onResetGet(passwordResetGetDto: PasswordResetGetDto): Observable<void> {
 		return from(this.angularFireAuth.sendPasswordResetEmail(passwordResetGetDto.email)).pipe(
 			catchError((httpErrorResponse: HttpErrorResponse) => {
@@ -59,10 +58,10 @@ export class PasswordService {
 		);
 	}
 
-	// prettier-ignore
 	onResetUpdate(passwordResetUpdateDto: PasswordResetUpdateDto): Observable<void> {
 		return from(this.angularFireAuth.verifyPasswordResetCode(passwordResetUpdateDto.code)).pipe(
 			switchMap(() => {
+				// prettier-ignore
 				return from(this.angularFireAuth.confirmPasswordReset(
           passwordResetUpdateDto.code,
           passwordResetUpdateDto.password

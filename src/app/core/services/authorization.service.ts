@@ -20,8 +20,6 @@ import firebase from 'firebase/compat';
 export class AuthorizationService {
 	// prettier-ignore
 	currentUser: BehaviorSubject<CurrentUser | undefined> = new BehaviorSubject<CurrentUser | undefined>(undefined);
-
-	// prettier-ignore
 	currentUserIsPopulated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	constructor(
