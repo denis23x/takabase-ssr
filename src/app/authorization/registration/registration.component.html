@@ -183,11 +183,11 @@
 							type="checkbox"
 							aria-label="Terms of use"
 							formControlName="terms"
-							[class.checkbox-success]="terms.dirty && terms.valid"
-							[class.checkbox-error]="terms.dirty && terms.invalid"
+							[class.checkbox-success]="terms.valid"
+							[class.checkbox-error]="terms.invalid"
 						/>
 						<!-- prettier-ignore -->
-						<span class="label-text inline">I agree with the <a class="link inline-block" target="_blank" [routerLink]="['/terms/terms-of-use']">terms of use</a> and <a class="link" target="_blank" [routerLink]="['/terms/cookie-policy']">cookie policy</a></span>
+						<span class="label-text inline">I agree with the <a class="link inline-block" [routerLink]="['/terms/terms-of-use']">terms of use</a> and <a class="link" target="_blank" [routerLink]="['/terms/cookie-policy']">cookie policy</a></span>
 					</label>
 				</fieldset>
 				<fieldset class="form-control">

@@ -51,7 +51,7 @@ Our layout is also highly customizable, allowing users to tailor it to their spe
 - Step {.step}
 - Step {.step}
 - Step {.step}
-{.steps .steps-horizontal .not-prose .p-0 .m-0}
+{.steps .steps-horizontal .not-prose .p-0 .m-0 .w-full}
 +++
 ++++
 
@@ -68,7 +68,7 @@ Our layout is also highly customizable, allowing users to tailor it to their spe
 - [Item 3](){.not-prose}
 - [Item 4](){.not-prose}
 - [Item 5](){.not-prose}
-{.menu .menu-horizontal .not-prose .overflow-auto .flex-nowrap .rounded-box .bg-base-200}
+{.menu .menu-horizontal .not-prose .overflow-auto .flex-nowrap .rounded-box .bg-base-200 .w-full}
 +++
 ++++
 

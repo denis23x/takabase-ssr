@@ -57,11 +57,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	appearanceLanguageList: string[] = ['en-US'];
 	appearanceButtonsList: string[] = ['left', 'right'];
 
-	appearanceTransformList: string[] = [
-		'theme',
-		'themeBackground',
-		'themePrism'
-	];
+	appearanceTransformList: string[] = ['theme', 'themeBackground', 'themePrism'];
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -69,17 +65,16 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		private settingsService: SettingsService,
 		private activatedRoute: ActivatedRoute
 	) {
-		// prettier-ignore
 		this.appearanceForm = this.formBuilder.group<AppearanceForm>({
 			theme: this.formBuilder.nonNullable.control('', [Validators.required]),
-      themeBackground: this.formBuilder.nonNullable.control('', [Validators.required]),
-      themePrism: this.formBuilder.nonNullable.control('', [Validators.required]),
-      language: this.formBuilder.nonNullable.control('', [Validators.required]),
-      pageScrollToTop: this.formBuilder.control(null, [Validators.required]),
-      pageScrollInfinite: this.formBuilder.control(null, [Validators.required]),
-      pageRedirectHome: this.formBuilder.control(null, [Validators.required]),
-      markdownMonospace: this.formBuilder.control(null, [Validators.required]),
-      windowButtonPosition: this.formBuilder.nonNullable.control('', [Validators.required]),
+			themeBackground: this.formBuilder.nonNullable.control('', [Validators.required]),
+			themePrism: this.formBuilder.nonNullable.control('', [Validators.required]),
+			language: this.formBuilder.nonNullable.control('', [Validators.required]),
+			pageScrollToTop: this.formBuilder.control(null, [Validators.required]),
+			pageScrollInfinite: this.formBuilder.control(null, [Validators.required]),
+			pageRedirectHome: this.formBuilder.control(null, [Validators.required]),
+			markdownMonospace: this.formBuilder.control(null, [Validators.required]),
+			windowButtonPosition: this.formBuilder.nonNullable.control('', [Validators.required])
 		});
 	}
 
@@ -88,9 +83,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
 				next: (settings: Settings) => {
-					// prettier-ignore
 					this.appearanceTransformList.forEach((key: string) => {
-					  settings[key] = this.getTransformListValue(settings[key], key);
+						settings[key] = this.getTransformListValue(settings[key], key);
 					});
 
 					this.appearanceForm.patchValue(settings);
@@ -107,9 +101,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 					...value
 				};
 
-				// prettier-ignore
 				this.appearanceTransformList.forEach((key: string) => {
-          settingsUpdateDto[key] = this.getTransformListValue(settingsUpdateDto[key], key, true);
+					settingsUpdateDto[key] = this.getTransformListValue(settingsUpdateDto[key], key, true);
 				});
 
 				// TODO: update settings
@@ -136,11 +129,9 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	}
 
 	setTransformList(): void {
-		this.appearanceThemeList = environment.themes
-			.sort()
-			.map((theme: string) => {
-				return this.getTransformListValue(theme, 'theme');
-			});
+		this.appearanceThemeList = environment.themes.sort().map((theme: string) => {
+			return this.getTransformListValue(theme, 'theme');
+		});
 
 		this.appearanceThemeBackgroundList = environment.backgrounds
 			.sort()
@@ -148,11 +139,9 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 				return this.getTransformListValue(themeBackground, 'themeBackground');
 			});
 
-		this.appearanceThemePrismList = environment.prism
-			.sort()
-			.map((themePrism: string) => {
-				return this.getTransformListValue(themePrism, 'themePrism');
-			});
+		this.appearanceThemePrismList = environment.prism.themes.sort().map((themePrism: string) => {
+			return this.getTransformListValue(themePrism, 'themePrism');
+		});
 	}
 
 	getTransformListValue(value: string, key: string, update?: boolean): string {

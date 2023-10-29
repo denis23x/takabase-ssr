@@ -6,6 +6,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, filter } from 'rxjs/operators';
 import { Subscription, throwError } from 'rxjs';
 import { SkeletonService } from '../core/services/skeleton.service';
+import { PlatformService } from '../core/services/platform.service';
 
 @Component({
 	selector: 'app-abstract-markdown-prose',
@@ -22,7 +23,8 @@ export abstract class AbstractMarkdownProseComponent implements OnInit, OnDestro
 		private httpClient: HttpClient,
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
-		private skeletonService: SkeletonService
+		private skeletonService: SkeletonService,
+		private platformService: PlatformService
 	) {}
 
 	ngOnInit(): void {
@@ -52,27 +54,29 @@ export abstract class AbstractMarkdownProseComponent implements OnInit, OnDestro
 	setResolver(): void {
 		const markdown: string = String(this.activatedRoute.snapshot.paramMap.get('markdown') || '');
 
-		this.abstractProse$?.unsubscribe();
-		this.abstractProse$ = this.httpClient
-			.get(this.getAbstractProseUrl(markdown), {
-				responseType: 'text'
-			})
-			.pipe(
-				catchError((httpErrorResponse: HttpErrorResponse) => {
-					this.router
-						.navigate(['/error', httpErrorResponse.status])
-						.then(() => console.debug('Route changed'));
-
-					return throwError(() => httpErrorResponse);
+		if (this.platformService.isBrowser()) {
+			this.abstractProse$?.unsubscribe();
+			this.abstractProse$ = this.httpClient
+				.get(this.getAbstractProseUrl(markdown), {
+					responseType: 'text'
 				})
-			)
-			.subscribe({
-				next: (prose: string) => {
-					this.abstractProse = prose;
-					this.abstractProseSkeleton = false;
-				},
-				error: (error: any) => console.error(error)
-			});
+				.pipe(
+					catchError((httpErrorResponse: HttpErrorResponse) => {
+						this.router
+							.navigate(['/error', httpErrorResponse.status])
+							.then(() => console.debug('Route changed'));
+
+						return throwError(() => httpErrorResponse);
+					})
+				)
+				.subscribe({
+					next: (prose: string) => {
+						this.abstractProse = prose;
+						this.abstractProseSkeleton = false;
+					},
+					error: (error: any) => console.error(error)
+				});
+		}
 	}
 
 	abstract getAbstractProseUrl(markdown: string): string;
