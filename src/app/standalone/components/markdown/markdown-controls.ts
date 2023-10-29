@@ -17,7 +17,8 @@ export const setWrapper = (value: string, markdownTextarea: MarkdownTextarea, ty
     /** Before */
 
     if (wrapper.before.space || wrapper.before.character) {
-      before = '\n\n';
+      // before = '\n\n';
+      before = '\n';
     }
 
     if (wrapper.before.newline) {
@@ -27,7 +28,8 @@ export const setWrapper = (value: string, markdownTextarea: MarkdownTextarea, ty
     /** After */
 
     if (wrapper.after.space || wrapper.after.character) {
-      after = '\n\n';
+      // after = '\n\n';
+      after = '\n';
     }
 
     if (wrapper.after.newline) {

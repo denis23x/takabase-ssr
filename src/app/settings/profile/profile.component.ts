@@ -62,6 +62,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
+	currentUserRequest$: Subscription | undefined;
 	currentUserQRCodeUrl: string | undefined;
 
 	profileForm: FormGroup | undefined;
@@ -93,7 +94,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$, this.profileFormIsPristine$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.currentUser$, this.currentUserRequest$, this.profileFormIsPristine$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setResolver(): void {
@@ -150,15 +152,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			avatar: fileCreateDto.filename
 		};
 
-		this.userService
+		this.currentUserRequest$?.unsubscribe();
+		this.currentUserRequest$ = this.userService
 			.update(this.currentUser.id, userUpdateDto)
-			.pipe(
-				switchMap((user: User) => {
-					return this.authorizationService
-						.setCurrentUser(user)
-						.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)));
-				})
-			)
+			.pipe(switchMap((user: User) => this.authorizationService.setCurrentUser(user)))
 			.subscribe({
 				next: () => {
 					this.snackbarService.success('Success', 'Avatar has been updated');
@@ -175,18 +172,15 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				...this.profileForm.value
 			};
 
-			this.userService
+			this.currentUserRequest$?.unsubscribe();
+			this.currentUserRequest$ = this.userService
 				.update(this.currentUser.id, userUpdateDto)
-				.pipe(
-					switchMap((user: User) => {
-						return this.authorizationService
-							.setCurrentUser(user)
-							.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)));
-					})
-				)
+				.pipe(switchMap((user: User) => this.authorizationService.setCurrentUser(user)))
 				.subscribe({
 					next: () => {
-						this.snackbarService.success('Success', 'Information has been updated');
+						this.snackbarService.success('Success', 'Information has been updated', {
+							duration: 9999999
+						});
 
 						this.profileFormIsPristine = true;
 						this.profileForm.enable();
