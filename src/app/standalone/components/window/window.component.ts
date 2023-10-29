@@ -46,7 +46,7 @@ export class WindowComponent implements OnInit {
 	constructor(private cookieService: CookieService) {}
 
 	ngOnInit(): void {
-		/** Set appearance settings */
+		/** Apply appearance settings */
 
 		this.setAppearance();
 	}

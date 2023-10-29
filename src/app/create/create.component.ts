@@ -1,9 +1,9 @@
 /** @format */
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Data, Router } from '@angular/router';
-import { iif, of, Subscription, switchMap } from 'rxjs';
-import { filter, map, startWith } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { iif, Subscription } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -39,6 +39,10 @@ import { MetaService } from '../core/services/meta.service';
 import { AppTextareaResizeDirective } from '../standalone/directives/app-textarea-resize.directive';
 import { ImageTempPipe } from '../standalone/pipes/image-temp.pipe';
 import { CurrentUser } from '../core/models/current-user.model';
+import { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
+import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
+import { AppSkeletonDirective } from '../standalone/directives/app-skeleton.directive';
+import { SkeletonService } from '../core/services/skeleton.service';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -71,34 +75,30 @@ interface CategoryForm {
 		NgOptimizedImage,
 		AppScrollPresetDirective,
 		AppTextareaResizeDirective,
-		ImageTempPipe
+		ImageTempPipe,
+		AppSkeletonDirective
 	],
 	templateUrl: './create.component.html'
 })
 export class CreateComponent implements OnInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild('postFormPreviewModal') postFormPreviewModal: ElementRef<HTMLDialogElement> | undefined;
-
-	// prettier-ignore
 	@ViewChild('categoryFormModal') categoryFormModal: ElementRef<HTMLDialogElement> | undefined;
-
-	// prettier-ignore
 	@ViewChild('postFormImageModal') postFormImageModal: ElementRef<HTMLDialogElement> | undefined;
-
-	// prettier-ignore
 	@ViewChild('postDeleteModal') postDeleteModal: ElementRef<HTMLDialogElement> | undefined;
 
-	activatedRouteData$: Subscription | undefined;
-
 	category: Category | undefined;
-	categoryList: Category[] = [];
 	categoryForm: FormGroup | undefined;
+	categoryList: Category[] = [];
+	categorySkeletonToggle: boolean = false;
 
 	post: Post | undefined;
+	postPreview: Post | undefined;
+	postSkeletonToggle: boolean = false;
+
 	postForm: FormGroup | undefined;
-	postForm$: Subscription | undefined;
 	postFormIsPristine: boolean = false;
-	postFormPreviewPost: Post | undefined;
+	postFormIsPristine$: Subscription | undefined;
 
 	postMarkdownModalToggle: boolean = false;
 	postMarkdownMonospace: boolean = false;
@@ -126,7 +126,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 		private categoryService: CategoryService,
 		private userService: UserService,
 		private cookieService: CookieService,
-		private metaService: MetaService
+		private metaService: MetaService,
+		private skeletonService: SkeletonService
 	) {
 		this.postForm = this.formBuilder.group<PostForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -148,7 +149,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 				Validators.maxLength(7200)
 			])
 		});
-
 		this.categoryForm = this.formBuilder.group<CategoryForm>({
 			name: this.formBuilder.nonNullable.control('', [
 				Validators.required,
@@ -160,60 +160,12 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.activatedRouteData$ = this.activatedRoute.data
-			.pipe(
-				map((data: Data) => data.data),
-				switchMap(([categoryList, post]: [Category[], Post]) => {
-					// prettier-ignore
-					this.category = categoryList.find((category: Category) => category.id === post?.category.id);
-					this.categoryList = categoryList;
+		/** Apply Data */
 
-					return of(post);
-				}),
-				filter((post: Post) => !!post)
-			)
-			.subscribe({
-				next: (post: Post) => {
-					this.post = post;
+		this.setSkeleton();
+		this.setResolver();
 
-					this.postForm.patchValue({
-						...this.post,
-						categoryId: this.post.category.id,
-						categoryName: this.post.category.name
-					});
-
-					this.postForm.markAllAsTouched();
-				},
-				error: (error: any) => console.error(error)
-			});
-
-		this.postForm$ = this.postForm.valueChanges
-			.pipe(
-				startWith(this.postForm.value),
-				filter(() => !!this.post)
-			)
-			.subscribe({
-				next: (value: any) => {
-					this.postFormIsPristine = Object.keys(value).every((key: string) => {
-						if (key === 'categoryId') {
-							return value[key] === this.post.category.id;
-						}
-
-						if (key === 'categoryName') {
-							return value[key] === this.post.category.name;
-						}
-
-						return value[key] === this.post[key];
-					});
-				}
-			});
-
-		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
-			error: (error: any) => console.error(error)
-		});
-
-		/** Set appearance settings */
+		/** Apply appearance settings */
 
 		this.setAppearance();
 
@@ -223,19 +175,103 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.activatedRouteData$, this.postForm$, this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$, this.postFormIsPristine$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	setSkeleton(): void {
+		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+
+		if (postId) {
+			this.post = this.skeletonService.getPost();
+			this.postSkeletonToggle = true;
+		}
+
+		this.category = this.skeletonService.getCategory();
+		this.categorySkeletonToggle = true;
+	}
+
+	setResolver(): void {
+		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
+			next: (currentUser: CurrentUser) => {
+				this.currentUser = currentUser;
+
+				// Get categoryList
+
+				const categoryGetAllDto: CategoryGetAllDto = {
+					page: 1,
+					size: 999,
+					userId: this.currentUser.id
+				};
+
+				this.categoryService.getAll(categoryGetAllDto).subscribe({
+					next: (categoryList: Category[]) => {
+						this.categoryList = categoryList;
+						this.category = undefined;
+						this.categorySkeletonToggle = false;
+					},
+					error: (error: any) => console.error(error)
+				});
+
+				// Get post && Set category
+
+				const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+
+				if (postId) {
+					const postGetOneDto: PostGetOneDto = {
+						userId: this.currentUser.id,
+						scope: ['category']
+					};
+
+					this.postService.getOne(postId, postGetOneDto).subscribe({
+						next: (post: Post) => {
+							this.category = this.post.category;
+							this.categorySkeletonToggle = false;
+
+							this.post = post;
+							this.postSkeletonToggle = false;
+
+							this.postForm.patchValue({
+								...this.post,
+								categoryId: this.post.category.id,
+								categoryName: this.post.category.name
+							});
+
+							this.postForm.markAllAsTouched();
+
+							// Get postFormIsPristine
+
+							this.postFormIsPristine$ = this.postForm.valueChanges
+								.pipe(startWith(this.postForm.value))
+								.subscribe({
+									next: (value: any) => {
+										this.postFormIsPristine = Object.keys(value).every((key: string) => {
+											if (key === 'categoryId') {
+												return value[key] === this.post.category.id;
+											}
+
+											if (key === 'categoryName') {
+												return value[key] === this.post.category.name;
+											}
+
+											return value[key] === this.post[key];
+										});
+									}
+								});
+						},
+						error: (error: any) => console.error(error)
+					});
+				}
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	setAppearance(): void {
-		// prettier-ignore
 		this.postMarkdownMonospace = !!Number(this.cookieService.getItem('markdown-monospace'));
 	}
 
 	setMetaTags(): void {
 		const title: string = 'Create post';
-
-		// prettier-ignore
 		const description: string = 'Create and share your thoughts with a new post on our platform';
 
 		const metaOpenGraph: MetaOpenGraph = {
@@ -293,14 +329,14 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 		if (toggle) {
 			this.postFormPreviewModal.nativeElement.showModal();
-			this.postFormPreviewPost = {
+			this.postPreview = {
 				...this.postForm.value,
 				user: this.currentUser,
 				category: this.category
 			};
 		} else {
 			this.postFormPreviewModal.nativeElement.close();
-			this.postFormPreviewPost = undefined;
+			this.postPreview = undefined;
 		}
 	}
 
@@ -372,7 +408,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.postForm)) {
 			this.postForm.disable();
 
-			// prettier-ignore
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 			const postCreateDto: PostCreateDto = {
 				...this.postForm.value

@@ -2,7 +2,6 @@
 
 import { NgModule } from '@angular/core';
 import { Route, RouterModule, Routes, TitleStrategy, UrlSegment } from '@angular/router';
-import { CreateResolverService } from './create/create-resolver.service';
 import { CanMatchPublicGuard } from './core/guards/public-guard.service';
 import { CanMatchPrivateGuard } from './core/guards/private-guard.service';
 import { TitleService } from './core/services/title.service';
@@ -113,9 +112,6 @@ export const routes: Routes = [
 		loadComponent: () => {
 			return import('./create/create.component').then(m => m.CreateComponent);
 		},
-		resolve: {
-			data: CreateResolverService
-		},
 		canMatch: [CanMatchPrivateGuard]
 	},
 	{
@@ -123,9 +119,6 @@ export const routes: Routes = [
 		title: 'Edit post',
 		loadComponent: () => {
 			return import('./create/create.component').then(m => m.CreateComponent);
-		},
-		resolve: {
-			data: CreateResolverService
 		},
 		canMatch: [CanMatchPrivateGuard]
 	},

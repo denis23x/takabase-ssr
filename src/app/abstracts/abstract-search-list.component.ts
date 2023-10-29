@@ -64,7 +64,7 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
-		/** Set appearance settings */
+		/** Apply appearance settings */
 
 		this.setAbstractAppearance();
 	}

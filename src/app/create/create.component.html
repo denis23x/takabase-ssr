@@ -9,16 +9,19 @@
 				<!-- prettier-ignore -->
 				<figure
 					class="block rounded-btn relative aspect-square border border-base-content/20 h-20 w-20 sm:h-44 sm:w-44"
+					appSkeleton
 					*ngIf="postForm.get('image') as image"
+					[appSkeletonToggle]="postSkeletonToggle"
+					[appSkeletonClassListElementRef]="['border-0']"
 					[ngClass]="{ 'cursor-not-allowed border-transparent bg-base-200': postForm.disabled, 'cursor-pointer': postForm.enabled, 'border-success': postForm.enabled && image.value }"
 				>
 					<img
 						class="rounded-btn aspect-square object-cover"
 						alt="Image"
-            width="256"
-            height="256"
+						width="256"
+						height="256"
 						loading="lazy"
-            *ngIf="!!image.value"
+						*ngIf="!!image.value"
 						[ngClass]="{ invisible: !image.value, 'pointer-events-none opacity-50 saturate-0 transition': postForm.disabled }"
 						[src]="image.value | imageTemp | async"
 						(click)="onTogglePostFormImage(true)"
@@ -40,8 +43,12 @@
 					</div>
 				</figure>
 				<div class="flex flex-col sm:hidden">
-					<span class="text-base-content">Image</span>
-					<p class="text-base-content/50">Upload post image</p>
+					<span class="text-base-content" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+						Image
+					</span>
+					<p class="text-base-content/50" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+						Upload post image
+					</p>
 				</div>
 			</div>
 			<form
@@ -50,10 +57,15 @@
 				[formGroup]="postForm"
 			>
 				<fieldset
-					class="form-control col-span-12 sm:col-span-6"
+					class="form-control items-start col-span-12 sm:col-span-6"
 					*ngIf="postForm.get('name') as name"
 				>
-					<label class="label" for="postFormTitle">
+					<label
+						class="label"
+						for="postFormTitle"
+						appSkeleton
+						[appSkeletonToggle]="postSkeletonToggle"
+					>
 						<div class="indicator">
 							<!-- prettier-ignore -->
 							<span
@@ -74,7 +86,7 @@
 							<span class="label-text mr-2">Name</span>
 						</div>
 					</label>
-					<div class="relative">
+					<div class="relative w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 						<input
 							class="input-bordered input input-md w-full truncate pr-12"
 							id="postFormTitle"
@@ -104,10 +116,15 @@
 				</fieldset>
 				<div class="col-span-12 flex items-end justify-end space-x-4 sm:col-span-6">
 					<fieldset
-						class="form-control w-full"
+						class="form-control items-start w-full"
 						*ngIf="postForm.get('categoryName') as categoryName"
 					>
-						<label class="label" for="postFormCategoryName">
+						<label
+							class="label"
+							for="postFormCategoryName"
+							appSkeleton
+							[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle"
+						>
 							<div class="indicator">
 								<!-- prettier-ignore -->
 								<span
@@ -123,8 +140,10 @@
 							</div>
 						</label>
 						<div
-							class="block"
+							class="block w-full"
+							appSkeleton
 							appDropdown
+							[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle"
 							[appFitParentWidth]="true"
 							[class.cursor-not-allowed]="postForm.disabled"
 							(toggled)="onToggleCategory($event)"
@@ -151,18 +170,17 @@
 										class="flex w-full snap-start scroll-my-2"
 										*ngFor="let category of categoryList"
 									>
-										<!-- prettier-ignore -->
 										<button
-                      class="rounded-btn block w-full truncate text-left"
-                      type="button"
-                      appScrollPreset
-                      [appScrollActive]="categoryName.value === category.name"
-                      [ngClass]="{ 'active': categoryName.value === category.name }"
-                      [attr.aria-label]="category.name"
-                      (click)="onSelectCategory(category)"
-                    >
-                      {{ category.name }}
-                    </button>
+											class="rounded-btn block w-full truncate text-left"
+											type="button"
+											appScrollPreset
+											[appScrollActive]="categoryName.value === category.name"
+											[ngClass]="{ active: categoryName.value === category.name }"
+											[attr.aria-label]="category.name"
+											(click)="onSelectCategory(category)"
+										>
+											{{ category.name }}
+										</button>
 									</li>
 								</ul>
 							</div>
@@ -173,6 +191,9 @@
 						type="button"
 						aria-label="Create"
 						appSvgIcon
+						appSkeleton
+						[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle"
+						[appSkeletonClassListElementRef]="['border-0']"
 						[appIcon]="'folder-plus'"
 						[appSquare]="'1.75em'"
 						[class.btn-outline]="postForm.enabled"
@@ -181,10 +202,15 @@
 					></button>
 				</div>
 				<fieldset
-					class="form-control col-span-12 sm:col-span-12"
+					class="form-control items-start col-span-12 sm:col-span-12"
 					*ngIf="postForm.get('description') as description"
 				>
-					<label class="label" for="postFormDescription">
+					<label
+						class="label"
+						for="postFormDescription"
+						appSkeleton
+						[appSkeletonToggle]="postSkeletonToggle"
+					>
 						<div class="indicator">
 							<span
 								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
@@ -204,7 +230,7 @@
 							<span class="label-text mr-2">Description</span>
 						</div>
 					</label>
-					<div class="relative">
+					<div class="relative w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 						<input
 							class="input-bordered input input-md w-full truncate pr-12"
 							id="postFormDescription"
@@ -240,6 +266,8 @@
 					<div
 						class="flex overflow-auto"
 						appMarkdown
+						appSkeleton
+						[appSkeletonToggle]="postSkeletonToggle"
 						[appTextareaId]="'postFormTextarea'"
 						[appPreviewId]="'postFormPreview'"
 						[appScrollSync]="fullscreenScrollSync"
@@ -251,6 +279,9 @@
 							class="btn-primary btn focus:outline-0 w-12 h-12 sm:w-auto sm:h-auto"
 							type="button"
 							aria-label="Fullscreen"
+							appSkeleton
+							[appSkeletonToggle]="postSkeletonToggle"
+							[appSkeletonClassListElementRef]="['border-0']"
 							[class.btn-outline]="postForm.enabled && !fullscreenToggle"
 							[disabled]="postForm.disabled"
 							(click)="onFullscreen(!fullscreenToggle)"
@@ -362,28 +393,31 @@
 						<fieldset class="form-control h-full" *ngIf="postForm.get('markdown') as markdown">
 							<!-- prettier-ignore -->
 							<div
-                class="textarea-autosize w-full h-full focus-within:outline-0"
-                [ngClass]="{ 'border-base-content/20': postForm.enabled, 'border-transparent': postForm.disabled }"
-                [class.textarea-autosize-success]="markdown.value && markdown.valid"
-                [class.textarea-autosize-error]="markdown.touched && markdown.invalid"
-              >
-                <textarea
-                  class="textarea textarea-md w-full h-full"
-                  id="postFormTextarea"
-                  aria-label="Markdown"
-                  placeholder="Type post markdown"
-                  formControlName="markdown"
-                  appInputTrimWhitespace
-                  appTextareaResize
-                  [rows]="8"
-                  [appToggleResize]="!fullscreenToggle"
-                  [class.max-h-96]="!fullscreenToggle"
-                  [class.whitespace-pre]="fullscreenToggle && !fullscreenTextWrapping"
-                  [class.font-mono]="postMarkdownMonospace"
-                >
+								class="textarea-autosize w-full h-full focus-within:outline-0"
+								appSkeleton
+								[appSkeletonToggle]="postSkeletonToggle"
+								[appSkeletonClassListElementRef]="['!border-0']"
+								[ngClass]="{ 'border-base-content/20': postForm.enabled, 'border-transparent': postForm.disabled }"
+								[class.textarea-autosize-success]="markdown.value && markdown.valid"
+								[class.textarea-autosize-error]="markdown.touched && markdown.invalid"
+							>
+								<textarea
+									class="textarea textarea-md w-full h-full"
+									id="postFormTextarea"
+									aria-label="Markdown"
+									placeholder="Type post markdown"
+									formControlName="markdown"
+									appInputTrimWhitespace
+									appTextareaResize
+									[rows]="8"
+									[appToggleResize]="!fullscreenToggle"
+									[class.max-h-96]="!fullscreenToggle"
+									[class.whitespace-pre]="fullscreenToggle && !fullscreenTextWrapping"
+									[class.font-mono]="postMarkdownMonospace"
+								>
                   {{ markdown.value }}
                 </textarea>
-              </div>
+							</div>
 						</fieldset>
 					</form>
 					<div
@@ -402,6 +436,9 @@
 					class="btn btn-primary col-span-4 sm:col-span-3"
 					type="button"
 					aria-label="Preview"
+					appSkeleton
+					[appSkeletonToggle]="postSkeletonToggle"
+					[appSkeletonClassListElementRef]="['border-0']"
 					[class.btn-outline]="postForm.valid && postForm.enabled"
 					[disabled]="postForm.invalid || postForm.disabled"
 					(click)="onTogglePreviewPost(true)"
@@ -412,6 +449,9 @@
 					class="btn btn-success col-span-8 sm:col-span-9"
 					type="button"
 					aria-label="Submit"
+					appSkeleton
+					[appSkeletonToggle]="postSkeletonToggle"
+					[appSkeletonClassListElementRef]="['border-0']"
 					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine"
 					(click)="onSubmitPostForm()"
 				>
@@ -426,7 +466,10 @@
 					class="btn btn-error col-span-12"
 					type="button"
 					aria-label="Delete"
+					appSkeleton
 					*ngIf="!!post"
+					[appSkeletonToggle]="postSkeletonToggle"
+					[appSkeletonClassListElementRef]="['border-0']"
 					[class.btn-outline]="postForm.enabled"
 					[disabled]="postForm.disabled"
 					(click)="onToggleDeletePost(true)"
@@ -450,7 +493,12 @@
 			[appButtons]="['close', 'fullscreen']"
 			(closed)="onTogglePreviewPost(false)"
 		>
-			<main appPostProse slot="content" [appPost]="postFormPreviewPost"></main>
+			<main
+				appPostProse
+				slot="content"
+				[appPost]="postPreview"
+				[appPostSkeletonToggle]="false"
+			></main>
 			<nav
 				class="pointer-events-none flex bg-base-200 opacity-50 overflow-auto p-2"
 				appShare
