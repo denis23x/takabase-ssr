@@ -27,7 +27,7 @@ export class WindowComponent implements OnInit {
 
 	captionTitle: string | undefined;
 	captionButtonsList: string[] = [];
-	captionButtonsPosition: string = 'left';
+	captionButtonsPosition: string | undefined;
 
 	fullscreenToggle: boolean = false;
 	fullscreenClassList: string[] = [

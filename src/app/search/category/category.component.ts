@@ -86,6 +86,10 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 			...this.searchService.getSearchGetAllDto(categoryGetAllDto, this.activatedRoute.parent.snapshot)
 		};
 
+		if (!concat) {
+			this.setSkeleton();
+		}
+
 		this.abstractListRequest$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
 			next: (categoryList: Category[]) => {
 				this.abstractList = concat ? this.abstractList.concat(categoryList) : categoryList;

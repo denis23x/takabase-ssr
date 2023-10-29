@@ -86,6 +86,10 @@ export class SearchUserComponent extends AbstractSearchListComponent implements 
 			...this.searchService.getSearchGetAllDto(userGetAllDto, this.activatedRoute.parent.snapshot)
 		};
 
+		if (!concat) {
+			this.setSkeleton();
+		}
+
 		this.abstractListRequest$ = this.userService.getAll(userGetAllDto).subscribe({
 			next: (userList: User[]) => {
 				this.abstractList = concat ? this.abstractList.concat(userList) : userList;

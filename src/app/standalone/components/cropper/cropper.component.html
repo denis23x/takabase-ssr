@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="flex max-w-lg flex-col space-y-4 p-4" [class.overflow-hidden]="!cropperIsAvailable">
+	<div class="flex max-w-lg flex-col gap-4 p-4" [class.overflow-hidden]="!cropperIsAvailable">
 		<form class="flex flex-col gap-4" autocomplete="off" [formGroup]="imageForm">
 			<p class="alert">
 				<i
@@ -91,7 +91,7 @@
 				</label>
 			</fieldset>
 		</form>
-		<div class="flex flex-col space-y-4" [ngClass]="{ 'invisible !m-0 !h-0': !cropperIsAvailable }">
+		<div class="flex flex-col gap-4" [ngClass]="{ 'invisible !m-0 !h-0': !cropperIsAvailable }">
 			<div [ngClass]="{ 'cursor-not-allowed saturate-0': imageForm.disabled }">
 				<image-cropper
 					class="ngx-cropper rounded-box !p-4"

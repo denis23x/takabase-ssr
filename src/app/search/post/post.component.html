@@ -28,33 +28,27 @@
 		</ng-container>
 	</ng-container>
 	<ng-template #abstractListEmptyTemplate>
-		<ng-container [ngSwitch]="abstractListIsLoading$ | async">
-			<div class="flex flex-col items-center space-y-4" *ngSwitchDefault>
-				<i
-					class="fill-current text-base-content"
-					appSvgIcon
-					[appIcon]="'exclamation-circle'"
-					[appSquare]="'3em'"
-				></i>
-				<div class="text-center">
-					<p class="text-xl font-bold text-base-content">
-						Posts <span class="text-error">not found</span>
-					</p>
-					<a
-						class="link text-sm"
-						title="Create your own post"
-						aria-label="Create your own post"
-						[routerLink]="['/create']"
-					>
-						Create your own post
-					</a>
-				</div>
+		<div class="flex flex-col items-center gap-4">
+			<i
+				class="fill-current text-base-content"
+				appSvgIcon
+				[appIcon]="'exclamation-circle'"
+				[appSquare]="'3em'"
+			></i>
+			<div class="text-center">
+				<p class="text-xl font-bold text-base-content">
+					Posts <span class="text-error">not found</span>
+				</p>
+				<a
+					class="link text-sm"
+					title="Create your own post"
+					aria-label="Create your own post"
+					[routerLink]="['/create']"
+				>
+					Create your own post
+				</a>
 			</div>
-			<div class="flex flex-col items-center" *ngSwitchCase="true">
-				<progress class="progress progress-primary my-5 w-56"></progress>
-				<span class="text-xl font-bold text-base-content">Loading</span>
-			</div>
-		</ng-container>
+		</div>
 	</ng-template>
 	<div class="block">
 		<router-outlet></router-outlet>

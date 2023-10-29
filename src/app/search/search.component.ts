@@ -98,8 +98,8 @@ export class SearchComponent implements OnInit, OnDestroy {
 		[this.activatedRouteQueryParams$, this.searchForm$, this.searchFormIsSubmitted$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	onRouterOutletActivate(event: any): void {
-		const isLoading$: Observable<boolean> = event.abstractListIsLoading$;
+	onRouterOutletActivate(component: any): void {
+		const isLoading$: Observable<boolean> = component.abstractListIsLoading$;
 
 		// prettier-ignore
 		this.searchFormIsSubmitted$ = isLoading$.subscribe({

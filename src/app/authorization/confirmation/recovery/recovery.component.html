@@ -2,13 +2,13 @@
 
 <ng-container>
 	<div
-		class="rounded-box flex flex-col space-y-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+		class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 	>
 		<div class="flex flex-col border-b border-base-content/20 pb-4">
 			<h1 class="text-2xl font-bold">Email recovery</h1>
 		</div>
 		<ng-container [ngSwitch]="true">
-			<div class="flex flex-col space-y-4" *ngSwitchDefault>
+			<div class="flex flex-col gap-4" *ngSwitchDefault>
 				<p class="alert">
 					<i
 						class="fill-current text-info"
@@ -39,10 +39,7 @@
 					</a>
 				</ng-container>
 			</div>
-			<div
-				class="flex flex-col space-y-4"
-				*ngSwitchCase="!recoveryIsSubmitted && !recoveryIsSucceed"
-			>
+			<div class="flex flex-col gap-4" *ngSwitchCase="!recoveryIsSubmitted && !recoveryIsSucceed">
 				<p class="alert">
 					<i
 						class="fill-current text-info"
@@ -51,10 +48,9 @@
 						[appSquare]="'1.5em'"
 					></i>
 					<span class="block">
-						We apologize, but we are unable to restore your password at the
-						moment due to a server error. Please try again later, and if the
-						issue persists, feel free to contact our support team for
-						assistance.
+						We apologize, but we are unable to restore your password at the moment due to a server
+						error. Please try again later, and if the issue persists, feel free to contact our
+						support team for assistance.
 					</span>
 				</p>
 			</div>

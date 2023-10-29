@@ -18,7 +18,7 @@
 		</footer>
 		<ng-template #windowCaption>
 			<div class="grid grid-cols-3 gap-2 bg-base-200 p-2">
-				<div class="col-span-1 flex flex-row items-center justify-start space-x-2">
+				<div class="col-span-1 flex flex-row items-center justify-start gap-2">
 					<ng-container
 						*ngIf="captionButtonsPosition === 'left'"
 						[ngTemplateOutlet]="windowCaptionButtons"
@@ -29,9 +29,7 @@
 						{{ captionTitle }}
 					</span>
 				</div>
-				<div
-					class="col-span-1 flex flex-row-reverse items-center justify-start space-x-2 space-x-reverse"
-				>
+				<div class="col-span-1 flex flex-row-reverse items-center justify-start gap-2">
 					<ng-container
 						*ngIf="captionButtonsPosition === 'right'"
 						[ngTemplateOutlet]="windowCaptionButtons"

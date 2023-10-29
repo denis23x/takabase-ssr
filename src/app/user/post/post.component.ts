@@ -166,6 +166,10 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 			...this.searchService.getSearchGetAllDto(postGetAllDto, this.activatedRoute.parent.snapshot)
 		};
 
+		if (!concat) {
+			this.setSkeleton();
+		}
+
 		this.abstractListRequest$ = this.postService.getAll(postGetAllDto).subscribe({
 			next: (postList: Post[]) => {
 				this.abstractList = concat ? this.abstractList.concat(postList) : postList;

@@ -232,7 +232,7 @@
 		(click)="$event.target === $event.currentTarget ? QRCodeModal.close() : $event"
 	>
 		<div appWindow [appTitle]="'QR Code'" [appButtons]="['close']" (closed)="onToggleQRCode(false)">
-			<div class="flex max-w-sm flex-col items-center justify-start space-y-4 p-4" slot="content">
+			<div class="flex max-w-sm flex-col items-center justify-start gap-4 p-4" slot="content">
 				<div
 					class="flex flex-col bg-base-200 rounded-box border border-base-content/20 overflow-hidden w-full"
 				>
