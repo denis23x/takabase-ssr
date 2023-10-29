@@ -4,3 +4,8 @@
 .btn[disabled] {
   @apply pointer-events-auto cursor-not-allowed no-animation;
 }
+
+.btn:focus-visible,
+.btn:focus {
+  @apply outline-0 #{!important};;
+}
