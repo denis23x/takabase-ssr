@@ -1,13 +1,18 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import {
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+	Validators
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../../core/services/helper.service';
 import { AppInputTrimWhitespaceDirective } from '../../../standalone/directives/app-input-trim-whitespace.directive';
-import { Subscription } from 'rxjs';
 import { PasswordResetUpdateDto } from '../../../core/dto/password/password-reset-update.dto';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { PasswordService } from '../../../core/services/password.service';
@@ -25,11 +30,8 @@ interface PasswordForm {
 	selector: 'app-authorization-confirmation-password',
 	templateUrl: './password.component.html'
 })
-export class AuthConfirmationPasswordComponent implements OnInit, OnDestroy {
-	activatedRouteQueryParams$: Subscription | undefined;
-
+export class AuthConfirmationPasswordComponent implements OnInit {
 	passwordForm: FormGroup | undefined;
-	passwordForm$: Subscription | undefined;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -50,26 +52,23 @@ export class AuthConfirmationPasswordComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		// prettier-ignore
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe({
-      next: (params: Params) => this.passwordForm.get('code').setValue(params.oobCode),
-      error: (error: any) => console.error(error)
-    });
+		/** Apply Data */
+
+		this.setResolver();
 
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
 	}
 
-	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.activatedRouteQueryParams$].forEach(($: Subscription) => $?.unsubscribe());
+	setResolver(): void {
+		const oobCode: string = String(this.activatedRoute.snapshot.queryParamMap.get('oobCode') || '');
+
+		this.passwordForm.get('code').setValue(oobCode);
 	}
 
 	setMetaTags(): void {
 		const title: string = 'Password reset';
-
-		// prettier-ignore
 		const description: string = 'Follow the simple steps to regain access to your account';
 
 		const metaOpenGraph: MetaOpenGraph = {
@@ -96,10 +95,9 @@ export class AuthConfirmationPasswordComponent implements OnInit, OnDestroy {
 
 			this.passwordService.onResetUpdate(passwordResetUpdateDto).subscribe({
 				next: () => {
-					// prettier-ignore
 					this.router
-            .navigate(['/'])
-            .then(() => this.snackbarService.success('Success', 'Password has been changed'));
+						.navigate(['/'])
+						.then(() => this.snackbarService.success('Success', 'Password has been changed'));
 				},
 				error: () => this.passwordForm.enable()
 			});

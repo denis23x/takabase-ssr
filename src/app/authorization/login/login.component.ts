@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -8,9 +8,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import { filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AuthorizationService } from '../../core/services/authorization.service';
@@ -41,11 +39,8 @@ interface LoginForm {
 	selector: 'app-authorization-login',
 	templateUrl: './login.component.html'
 })
-export class AuthLoginComponent implements OnInit, OnDestroy {
-	activatedRouteQueryParams$: Subscription | undefined;
-
+export class AuthLoginComponent implements OnInit {
 	loginForm: FormGroup | undefined;
-	loginForm$: Subscription | undefined;
 
 	constructor(
 		private activatedRoute: ActivatedRoute,
@@ -69,35 +64,30 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
-			.pipe(
-				filter((params: Params) => {
-					const email: string | undefined = params.email;
-					const social: any = ['facebookId', 'githubId', 'googleId']
-						.filter((social: string) => params[social])
-						.map((social: string) => ({ [social]: params[social] }))
-						.shift();
+		/** Apply Data */
 
-					return !!email && !!social;
-				})
-			)
-			.subscribe({
-				next: (params: Params) => {
-					this.loginForm.get('email').setValue(params.email);
-					this.loginForm.get('email').markAsTouched();
-
-					this.onLogin(params);
-				},
-				error: (error: any) => console.error(error)
-			});
+		this.setResolver();
 
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
 	}
 
-	ngOnDestroy(): void {
-		[this.activatedRouteQueryParams$].forEach(($: Subscription) => $?.unsubscribe());
+	setResolver(): void {
+		const email: string = String(this.activatedRoute.snapshot.queryParamMap.get('email') || '');
+
+		// prettier-ignore
+		const social: any = ['facebookId', 'githubId', 'googleId']
+      .filter((social: string) => this.activatedRoute.snapshot.queryParamMap.get(social))
+      .map((social: string) => ({ [social]: this.activatedRoute.snapshot.queryParamMap.get(social) }))
+      .shift();
+
+		if (!!email && !!social) {
+			this.loginForm.get('email').setValue(email);
+			this.loginForm.get('email').markAsTouched();
+
+			this.onLogin(this.activatedRoute.snapshot.queryParams);
+		}
 	}
 
 	setMetaTags(): void {

@@ -1,7 +1,13 @@
 /** @format */
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+	Validators
+} from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -14,7 +20,6 @@ import { MetaService } from '../../core/services/meta.service';
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
-import { Subscription } from 'rxjs';
 import { RegistrationDto } from '../../core/dto/auth/registration.dto';
 
 interface RegistrationForm {
@@ -39,7 +44,6 @@ interface RegistrationForm {
 })
 export class AuthRegistrationComponent implements OnInit {
 	registrationForm: FormGroup | undefined;
-	registrationForm$: Subscription | undefined;
 
 	constructor(
 		private router: Router,
@@ -56,7 +60,10 @@ export class AuthRegistrationComponent implements OnInit {
 				Validators.minLength(4),
 				Validators.maxLength(24)
 			]),
-			email: this.formBuilder.nonNullable.control('denis@mail.ru', [Validators.required, Validators.email]),
+			email: this.formBuilder.nonNullable.control('denis@mail.ru', [
+				Validators.required,
+				Validators.email
+			]),
 			password: this.formBuilder.nonNullable.control('denis@mail.ru', [
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('password'))
@@ -66,6 +73,10 @@ export class AuthRegistrationComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		/** Apply Data */
+
+		// Nothing to apply
+
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
@@ -73,8 +84,6 @@ export class AuthRegistrationComponent implements OnInit {
 
 	setMetaTags(): void {
 		const title: string = 'Registration';
-
-		// prettier-ignore
 		const description: string = 'Creating an account with us is quick and easy';
 
 		const metaOpenGraph: MetaOpenGraph = {
@@ -101,10 +110,9 @@ export class AuthRegistrationComponent implements OnInit {
 
 			this.authorizationService.onRegistration(registrationDto).subscribe({
 				next: (user: User) => {
-					// prettier-ignore
 					this.router
-            .navigate([this.userService.getUserUrl(user)])
-            .then(() => this.snackbarService.info('Success', 'Welcome to our website'));
+						.navigate([this.userService.getUserUrl(user)])
+						.then(() => this.snackbarService.info('Success', 'Welcome to our website'));
 				},
 				error: () => this.registrationForm.enable()
 			});

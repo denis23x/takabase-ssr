@@ -1,19 +1,16 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
-import { Subscription } from 'rxjs';
 
 @Component({
 	standalone: true,
 	imports: [RouterModule],
 	templateUrl: 'confirmation.component.html'
 })
-export class AuthConfirmationComponent implements OnInit, OnDestroy {
-	activatedRouteQueryParams$: Subscription | undefined;
-
+export class AuthConfirmationComponent implements OnInit {
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
@@ -21,54 +18,46 @@ export class AuthConfirmationComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe(
-			{
-				next: (params: Params) => {
-					const mode: string = params.mode;
+		/** Apply Data */
 
-					const navigateToMode = (commands: any[]) => {
-						this.router
-							.navigate(commands, {
-								queryParamsHandling: 'preserve',
-								relativeTo: this.activatedRoute
-							})
-							.then(() => console.debug('Route changed'));
-					};
-
-					switch (mode) {
-						case 'resetPassword':
-							navigateToMode(['password']);
-
-							break;
-						case 'recoverEmail':
-							navigateToMode(['recovery']);
-
-							break;
-						case 'verifyEmail':
-						case 'verifyAndChangeEmail':
-							navigateToMode(['email']);
-
-							break;
-						default:
-							this.router
-								.navigate(['error', 404])
-								.then(() => console.debug('Route changed'));
-
-							break;
-					}
-				},
-				error: (error: any) => console.error(error)
-			}
-		);
+		this.setResolver();
 
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
 	}
 
-	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.activatedRouteQueryParams$].forEach(($: Subscription) => $?.unsubscribe());
+	setResolver(): void {
+		const mode: string = String(this.activatedRoute.snapshot.queryParamMap.get('mode') || '');
+
+		const navigateToMode = (commands: any[]) => {
+			this.router
+				.navigate(commands, {
+					queryParamsHandling: 'preserve',
+					relativeTo: this.activatedRoute
+				})
+				.then(() => console.debug('Route changed'));
+		};
+
+		switch (mode) {
+			case 'resetPassword':
+				navigateToMode(['password']);
+
+				break;
+			case 'recoverEmail':
+				navigateToMode(['recovery']);
+
+				break;
+			case 'verifyEmail':
+			case 'verifyAndChangeEmail':
+				navigateToMode(['email']);
+
+				break;
+			default:
+				this.router.navigate(['error', 404]).then(() => console.debug('Route changed'));
+
+				break;
+		}
 	}
 
 	setMetaTags(): void {

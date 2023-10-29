@@ -1,10 +1,9 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 import { MetaService } from '../../../core/services/meta.service';
-import { Subscription } from 'rxjs';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { CommonModule } from '@angular/common';
 import { EmailService } from '../../../core/services/email.service';
@@ -17,9 +16,7 @@ import { EmailRecoveryDto } from '../../../core/dto/email/email-recovery.dto';
 	selector: 'app-authorization-recovery-recovery',
 	templateUrl: './recovery.component.html'
 })
-export class AuthConfirmationRecoveryComponent implements OnInit, OnDestroy {
-	activatedRouteQueryParams$: Subscription | undefined;
-
+export class AuthConfirmationRecoveryComponent implements OnInit {
 	recoveryIsSucceed: boolean = false;
 	recoveryIsSubmitted: boolean = true;
 
@@ -31,40 +28,35 @@ export class AuthConfirmationRecoveryComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe({
-			next: (params: Params) => {
-				const emailRecoveryDto: EmailRecoveryDto = {
-					code: params.oobCode
-				};
+		/** Apply Data */
 
-				this.emailService.onRecovery(emailRecoveryDto).subscribe({
-					next: () => {
-						this.recoveryIsSucceed = true;
-						this.recoveryIsSubmitted = false;
-
-						// prettier-ignore
-						this.snackbarService.success('Hooray, it worked', 'Email successfully restored');
-					},
-					error: () => (this.recoveryIsSubmitted = false)
-				});
-			},
-			error: (error: any) => console.error(error)
-		});
+		this.setResolver();
 
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
 	}
 
-	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.activatedRouteQueryParams$].forEach(($: Subscription) => $?.unsubscribe());
+	setResolver(): void {
+		const oobCode: string = String(this.activatedRoute.snapshot.queryParamMap.get('oobCode') || '');
+
+		const emailRecoveryDto: EmailRecoveryDto = {
+			code: oobCode
+		};
+
+		this.emailService.onRecovery(emailRecoveryDto).subscribe({
+			next: () => {
+				this.recoveryIsSucceed = true;
+				this.recoveryIsSubmitted = false;
+
+				this.snackbarService.success('Hooray, it worked', 'Email successfully restored');
+			},
+			error: () => (this.recoveryIsSubmitted = false)
+		});
 	}
 
 	setMetaTags(): void {
 		const title: string = 'Email recovery';
-
-		// prettier-ignore
 		const description: string = 'Follow the simple steps to regain access to your account';
 
 		const metaOpenGraph: MetaOpenGraph = {

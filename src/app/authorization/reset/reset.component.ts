@@ -1,7 +1,13 @@
 /** @format */
 
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+	Validators
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -12,7 +18,6 @@ import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
-import { Subscription } from 'rxjs';
 import { PasswordService } from '../../core/services/password.service';
 
 interface ResetForm {
@@ -34,7 +39,6 @@ interface ResetForm {
 })
 export class AuthResetComponent implements OnInit {
 	resetForm: FormGroup | undefined;
-	resetForm$: Subscription | undefined;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -49,6 +53,10 @@ export class AuthResetComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		/** Apply Data */
+
+		// Nothing to apply
+
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
@@ -56,8 +64,6 @@ export class AuthResetComponent implements OnInit {
 
 	setMetaTags(): void {
 		const title: string = 'Reset password';
-
-		// prettier-ignore
 		const description: string = 'To reset your password, please enter your email address below';
 
 		const metaOpenGraph: MetaOpenGraph = {
@@ -84,7 +90,6 @@ export class AuthResetComponent implements OnInit {
 
 			this.passwordService.onResetGet(passwordResetGetDto).subscribe({
 				next: () => {
-					// prettier-ignore
 					this.snackbarService.info('Success', 'Check your email to continue process');
 
 					this.resetForm.reset();

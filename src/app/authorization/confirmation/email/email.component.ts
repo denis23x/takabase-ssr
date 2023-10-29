@@ -1,10 +1,9 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 import { MetaService } from '../../../core/services/meta.service';
-import { Subscription } from 'rxjs';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { CommonModule } from '@angular/common';
 import { EmailConfirmationUpdateDto } from '../../../core/dto/email/email-confirmation-update.dto';
@@ -17,9 +16,7 @@ import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-ic
 	selector: 'app-authorization-confirmation-email',
 	templateUrl: './email.component.html'
 })
-export class AuthConfirmationEmailComponent implements OnInit, OnDestroy {
-	activatedRouteQueryParams$: Subscription | undefined;
-
+export class AuthConfirmationEmailComponent implements OnInit {
 	confirmationIsSucceed: boolean = false;
 	confirmationIsSubmitted: boolean = true;
 
@@ -31,36 +28,31 @@ export class AuthConfirmationEmailComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
-		// prettier-ignore
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe({
-      next: (params: Params) => {
-				const emailConfirmationUpdateDto: EmailConfirmationUpdateDto = {
-					code: params.oobCode
-				};
+		/** Apply Data */
 
-				this.emailService
-					.onConfirmationUpdate(emailConfirmationUpdateDto)
-					.subscribe({
-						next: () => {
-							this.confirmationIsSucceed = true;
-							this.confirmationIsSubmitted = false;
-
-							this.snackbarService.success('Great', 'Email successfully confirmed');
-						},
-						error: () => (this.confirmationIsSubmitted = false)
-					});
-      },
-      error: (error: any) => console.error(error)
-    });
+		this.setResolver();
 
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
 	}
 
-	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.activatedRouteQueryParams$].forEach(($: Subscription) => $?.unsubscribe());
+	setResolver(): void {
+		const oobCode: string = String(this.activatedRoute.snapshot.queryParamMap.get('oobCode') || '');
+
+		const emailConfirmationUpdateDto: EmailConfirmationUpdateDto = {
+			code: oobCode
+		};
+
+		this.emailService.onConfirmationUpdate(emailConfirmationUpdateDto).subscribe({
+			next: () => {
+				this.confirmationIsSucceed = true;
+				this.confirmationIsSubmitted = false;
+
+				this.snackbarService.success('Great', 'Email successfully confirmed');
+			},
+			error: () => (this.confirmationIsSubmitted = false)
+		});
 	}
 
 	setMetaTags(): void {
