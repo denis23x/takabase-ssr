@@ -9,6 +9,10 @@ import { User } from '../models/user.model';
 	providedIn: 'root'
 })
 export class SkeletonService {
+	getLoremIpsum(): string {
+		return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dui eros, facilisis nec tellus a, posuere faucibus sem. Cras nec elementum libero';
+	}
+
 	getCategory(scope: string[] = []): Category {
 		return {
 			id: 0,

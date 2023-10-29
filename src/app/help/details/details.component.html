@@ -1,9 +1,11 @@
 <!-- @format -->
 
 <ng-container>
-	<div
-		class="prose max-w-none overflow-auto"
-		*ngIf="abstractProse"
-		[innerHTML]="abstractProse | markdown | sanitizer: 'html'"
-	></div>
+	<div class="block" appSkeleton [appSkeletonToggle]="abstractProseSkeleton">
+		<div
+			class="prose max-w-none overflow-auto"
+			*ngIf="abstractProse"
+			[innerHTML]="abstractProse | markdown | sanitizer: 'html'"
+		></div>
+	</div>
 </ng-container>

@@ -4,7 +4,6 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from '../core/models/post.model';
 import { PostService } from '../core/services/post.service';
-import { ApiService } from '../core/services/api.service';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
 import { catchError } from 'rxjs/operators';
@@ -20,14 +19,13 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 	@ViewChild('abstractPostProseModal', { static: true }) abstractPostProseModal: ElementRef<HTMLDialogElement> | undefined;
 
 	abstractPost: Post | undefined;
-	abstractPost$: Subscription | undefined;
+	abstractPostRequest$: Subscription | undefined;
 	abstractPostSkeletonToggle: boolean = true;
 
 	constructor(
 		public activatedRoute: ActivatedRoute,
 		public router: Router,
 		public postService: PostService,
-		public apiService: ApiService,
 		public skeletonService: SkeletonService
 	) {}
 
@@ -40,13 +38,13 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 	}
 
 	ngOnDestroy(): void {
-		[this.abstractPost$].forEach(($: Subscription) => $.unsubscribe());
+		[this.abstractPostRequest$].forEach(($: Subscription) => $.unsubscribe());
 
 		this.setAbstractClosePostProseModal(false);
 	}
 
 	getAbstractPost(postId: number, postGetOneDto: PostGetOneDto): void {
-		this.abstractPost$ = this.postService
+		this.abstractPostRequest$ = this.postService
 			.getOne(postId, postGetOneDto)
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
