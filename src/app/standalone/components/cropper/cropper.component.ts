@@ -5,6 +5,7 @@ import {
 	Component,
 	ElementRef,
 	EventEmitter,
+	Input,
 	OnDestroy,
 	Output,
 	ViewChild
@@ -51,6 +52,11 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	@ViewChild('imageFormFile') imageFormFile: ElementRef<HTMLInputElement> | undefined;
 	@ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent | undefined;
 
+	@Input()
+	set appCropperUploadPath(cropperUploadPath: string) {
+		this.cropperUploadPath = cropperUploadPath;
+	}
+
 	@Output() submitted: EventEmitter<string> = new EventEmitter<string>();
 
 	imageForm: FormGroup | undefined;
@@ -66,6 +72,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		translateV: 0
 	};
 
+	cropperUploadPath: string | undefined;
 	cropperFile: File = undefined;
 	cropperRound: boolean = false;
 	cropperBlob: Blob = undefined;
@@ -258,13 +265,17 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	onSubmitCropper(): void {
+		const fileDate: number = Date.now();
 		const fileCropped: File = new File([this.cropperBlob], this.cropperFile.name, {
 			type: this.cropperFile.type
 		});
 
+		const fileName: string = fileDate + '-' + fileCropped.name;
+		const filePath: string = this.cropperUploadPath + '/' + fileName;
+
 		this.imageForm.disable();
 
-		this.fileService.create(fileCropped).subscribe({
+		this.fileService.create(fileCropped, filePath).subscribe({
 			next: (fileUrl: string) => {
 				this.imageForm.enable();
 

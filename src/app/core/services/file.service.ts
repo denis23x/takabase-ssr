@@ -30,9 +30,7 @@ export class FileService {
 
 	/** REST */
 
-	create(file: File): Observable<string> {
-		const filePath: string = `/upload/user-avatars/${file.name}`;
-
+	create(file: File, filePath: string): Observable<string> {
 		return from(this.angularFireStorage.upload(filePath, file)).pipe(
 			switchMap(() => this.angularFireStorage.ref(filePath).getDownloadURL()),
 			catchError((httpErrorResponse: HttpErrorResponse) => {

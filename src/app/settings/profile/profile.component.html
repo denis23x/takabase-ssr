@@ -219,6 +219,7 @@
 				appCropper
 				slot="content"
 				*ngIf="profileFormAvatarModal.open"
+				[appCropperUploadPath]="'/upload/user-avatars'"
 				(submitted)="onSubmitCropper($event)"
 			></div>
 		</div>
