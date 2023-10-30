@@ -5,7 +5,7 @@
 		class="bg-base-300"
 		loading="lazy"
 		*ngIf="user.avatar"
-		[src]="user.avatar | imageTemp | async"
+		[src]="user.avatar"
 		[alt]="user.name"
 	/>
 </ng-container>

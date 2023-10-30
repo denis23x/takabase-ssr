@@ -5,12 +5,11 @@ import { toSvg } from 'jdenticon';
 import { User } from '../../../core/models/user.model';
 import { CommonModule } from '@angular/common';
 import { PlatformService } from '../../../core/services/platform.service';
-import { ImageTempPipe } from '../../pipes/image-temp.pipe';
 
 @Component({
 	standalone: true,
 	selector: 'app-avatar, [appAvatar]',
-	imports: [CommonModule, ImageTempPipe],
+	imports: [CommonModule],
 	templateUrl: './avatar.component.html'
 })
 export class AvatarComponent {
@@ -18,7 +17,9 @@ export class AvatarComponent {
 	set appUser(user: User) {
 		this.user = user;
 
-		if (!this.user.avatar) {
+		if (this.user.avatar) {
+			this.setImage();
+		} else {
 			this.setIcon();
 		}
 	}
@@ -29,6 +30,10 @@ export class AvatarComponent {
 		private elementRef: ElementRef,
 		private platformService: PlatformService
 	) {}
+
+	setImage(): void {
+		this.elementRef.nativeElement.querySelector('svg')?.remove();
+	}
 
 	setIcon(): void {
 		if (this.platformService.isBrowser()) {

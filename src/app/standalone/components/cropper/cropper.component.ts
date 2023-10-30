@@ -23,7 +23,6 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { FileCreateDto } from '../../../core/dto/file/file-create.dto';
 import { HelperService } from '../../../core/services/helper.service';
 import { FileService } from '../../../core/services/file.service';
 import { FileGetOneProxyDto } from '../../../core/dto/file/file-get-one-proxy.dto';
@@ -52,7 +51,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	@ViewChild('imageFormFile') imageFormFile: ElementRef<HTMLInputElement> | undefined;
 	@ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent | undefined;
 
-	@Output() submitted: EventEmitter<FileCreateDto> = new EventEmitter<FileCreateDto>();
+	@Output() submitted: EventEmitter<string> = new EventEmitter<string>();
 
 	imageForm: FormGroup | undefined;
 	imageFormMime: string[] = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -263,17 +262,13 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			type: this.cropperFile.type
 		});
 
-		const formData: FormData = new FormData();
-
-		formData.append('image', fileCropped);
-
 		this.imageForm.disable();
 
-		this.fileService.create(formData).subscribe({
-			next: (fileCreateDto: FileCreateDto) => {
+		this.fileService.create(fileCropped).subscribe({
+			next: (fileUrl: string) => {
 				this.imageForm.enable();
 
-				this.submitted.emit(fileCreateDto);
+				this.submitted.emit(fileUrl);
 			},
 			error: () => this.imageForm.enable()
 		});

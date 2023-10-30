@@ -23,7 +23,6 @@ import { HelperService } from '../../core/services/helper.service';
 import { UserService } from '../../core/services/user.service';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { FileCreateDto } from '../../core/dto/file/file-create.dto';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { AppTextareaResizeDirective } from '../../standalone/directives/app-textarea-resize.directive';
 import { AppQrCodeDirective } from '../../standalone/directives/app-qr-code.directive';
@@ -145,11 +144,11 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onSubmitCropper(fileCreateDto: FileCreateDto): void {
+	onSubmitCropper(fileUrl: string): void {
 		this.onToggleProfileFormAvatar(false);
 
 		const userUpdateDto: UserUpdateDto = {
-			avatar: fileCreateDto.filename
+			avatar: fileUrl
 		};
 
 		this.currentUserRequest$?.unsubscribe();
@@ -178,9 +177,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				.pipe(switchMap((user: User) => this.authorizationService.setCurrentUser(user)))
 				.subscribe({
 					next: () => {
-						this.snackbarService.success('Success', 'Information has been updated', {
-							duration: 9999999
-						});
+						this.snackbarService.success('Success', 'Information has been updated');
 
 						this.profileFormIsPristine = true;
 						this.profileForm.enable();

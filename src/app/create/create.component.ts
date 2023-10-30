@@ -30,7 +30,6 @@ import { AuthorizationService } from '../core/services/authorization.service';
 import { CategoryService } from '../core/services/category.service';
 import { UserService } from '../core/services/user.service';
 import { PostCreateDto } from '../core/dto/post/post-create.dto';
-import { FileCreateDto } from '../core/dto/file/file-create.dto';
 import { CategoryCreateDto } from '../core/dto/category/category-create.dto';
 import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { CookieService } from '../core/services/cookie.service';
@@ -430,10 +429,10 @@ export class CreateComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onSubmitPostFormImage(fileCreateDto?: FileCreateDto): void {
+	onSubmitPostFormImage(fileUrl?: string): void {
 		this.onTogglePostFormImage(false);
 
-		this.postForm.get('image').setValue(fileCreateDto.filename);
+		this.postForm.get('image').setValue(fileUrl);
 	}
 
 	onSubmitCategoryForm(): void {

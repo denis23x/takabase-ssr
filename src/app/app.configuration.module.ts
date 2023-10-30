@@ -11,7 +11,9 @@ import { HeaderComponent } from './standalone/components/header/header.component
 import { SnackbarComponent } from './standalone/components/snackbar/snackbar.component';
 import { HttpAuthInterceptor } from './core/interceptors/http.auth.interceptor';
 import { ScrollToTopComponent } from './standalone/components/scroll-to-top/scroll-to-top.component';
-import { AngularFireModule } from '@angular/fire/compat';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+import { getStorage, provideStorage } from '@angular/fire/storage';
 
 @NgModule({
 	declarations: [AppComponent],
@@ -22,7 +24,8 @@ import { AngularFireModule } from '@angular/fire/compat';
 			enabled: environment.pwa,
 			registrationStrategy: 'registerWhenStable:30000'
 		}),
-		AngularFireModule.initializeApp(environment.firebase),
+		provideFirebaseApp(() => initializeApp()),
+		provideStorage(() => getStorage()),
 		HttpClientModule,
 		HeaderComponent,
 		SnackbarComponent,
@@ -33,6 +36,10 @@ import { AngularFireModule } from '@angular/fire/compat';
 			provide: HTTP_INTERCEPTORS,
 			useClass: HttpAuthInterceptor,
 			multi: true
+		},
+		{
+			provide: FIREBASE_OPTIONS,
+			useValue: environment.firebase
 		}
 	],
 	bootstrap: [AppComponent]
