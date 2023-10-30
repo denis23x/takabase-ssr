@@ -3,7 +3,7 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { debounceTime, filter, startWith } from 'rxjs/operators';
+import { debounceTime, filter, first, startWith } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -38,6 +38,9 @@ import { UserPostComponent } from './post/post.component';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
 import { AppSkeletonDirective } from '../standalone/directives/app-skeleton.directive';
+import { FileService } from '../core/services/file.service';
+import { PostService } from '../core/services/post.service';
+import { PostGetAllDto } from '../core/dto/post/post-get-all.dto';
 
 interface PostSearchForm {
 	query: FormControl<string>;
@@ -123,7 +126,9 @@ export class UserComponent implements OnInit, OnDestroy {
 		private categoryService: CategoryService,
 		private snackbarService: SnackbarService,
 		private userService: UserService,
-		private skeletonService: SkeletonService
+		private skeletonService: SkeletonService,
+		private postService: PostService,
+		private fileService: FileService
 	) {
 		this.categoryEditForm = this.formBuilder.group<CategoryEditForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -317,14 +322,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	onToggleCategoryDeleteForm(toggle: boolean): void {
 		if (toggle) {
-			this.categoryEditForm.disable();
-		} else {
-			this.categoryEditForm.enable();
-		}
-
-		/** Prepare categoryDeleteForm */
-
-		if (toggle) {
 			this.categoryDeleteForm.reset();
 			this.categoryDeleteFormModal.nativeElement.showModal();
 			this.categoryDeleteFormPostList = this.userPostComponent.abstractList;
@@ -381,9 +378,27 @@ export class UserComponent implements OnInit, OnDestroy {
 
 			const abstractControl: AbstractControl = this.categoryDeleteForm.get('categoryId');
 
+			// Move posts if provided categoryId OR delete their images at the same time
+
 			if (abstractControl.value) {
 				categoryDeleteDto.categoryId = abstractControl.value;
 				categoryDeleteRedirect.push('category', abstractControl.value);
+			} else {
+				const postGetAllDto: PostGetAllDto = {
+					categoryId
+				};
+
+				this.postService
+					.getAll(postGetAllDto)
+					.pipe(filter((postList: Post[]) => !!postList.length))
+					.subscribe({
+						next: (postList: Post[]) => {
+							postList
+								.filter((post: Post) => !!post.image)
+								.forEach((post: Post) => this.fileService.delete(post.image));
+						},
+						error: (error: any) => console.error(error)
+					});
 			}
 
 			this.categoryService.delete(categoryId, categoryDeleteDto).subscribe({
@@ -398,7 +413,6 @@ export class UserComponent implements OnInit, OnDestroy {
 					this.categoryDeleteForm.enable();
 
 					this.onToggleCategoryDeleteForm(false);
-					this.onToggleCategoryEditForm(false);
 
 					this.router.navigate(categoryDeleteRedirect).then(() => console.debug('Route changed'));
 				},

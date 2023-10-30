@@ -280,7 +280,6 @@ export const routes: Routes = [
 				loadComponent: () => {
 					return import('./user/post/post.component').then(m => m.UserPostComponent);
 				},
-				runGuardsAndResolvers: 'pathParamsChange',
 				children: [
 					{
 						path: 'post/:postId',

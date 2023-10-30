@@ -2,7 +2,7 @@
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { iif, Subscription } from 'rxjs';
+import { iif, Subscription, switchMap } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
 import {
 	AbstractControl,
@@ -42,6 +42,7 @@ import { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
 import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
 import { AppSkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
+import { FileService } from '../core/services/file.service';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -126,7 +127,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 		private userService: UserService,
 		private cookieService: CookieService,
 		private metaService: MetaService,
-		private skeletonService: SkeletonService
+		private skeletonService: SkeletonService,
+		private fileService: FileService
 	) {
 		this.postForm = this.formBuilder.group<PostForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -463,14 +465,16 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 		const postId: number = this.post.id;
 
-		this.postService.delete(postId).subscribe({
-			next: () => {
-				// prettier-ignore
-				this.router
-          .navigate([this.userService.getUserUrl(this.post.user), 'category', this.post.category.id])
-          .then(() => this.snackbarService.success('Sadly..', 'Post has been deleted'));
-			},
-			error: () => (this.postDeleteIsSubmitted = false)
-		});
+		this.postService
+			.delete(postId)
+			.pipe(switchMap((post: Post) => this.fileService.delete(post.image)))
+			.subscribe({
+				next: () => {
+					this.router
+						.navigate([this.userService.getUserUrl(this.currentUser)])
+						.then(() => this.snackbarService.success('Sadly..', 'Post has been deleted'));
+				},
+				error: () => (this.postDeleteIsSubmitted = false)
+			});
 	}
 }

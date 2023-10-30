@@ -50,4 +50,8 @@ export class FileService {
 			responseType: 'blob'
 		});
 	}
+
+	delete(filePath: string): Observable<any> {
+		return this.angularFireStorage.refFromURL(filePath).delete();
+	}
 }
