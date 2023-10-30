@@ -28,7 +28,7 @@
 					class="btn-success btn-outline btn w-full"
 					type="button"
 					aria-label="Send feedback"
-					(click)="onToggleFeedbackForm(true)"
+					(click)="onToggleHelpForm(true)"
 				>
 					Send feedback
 				</button>
@@ -66,21 +66,21 @@
 		class="modal"
 		#helpFormModal
 		(keydown.escape)="$event.preventDefault(); helpFormModal.close()"
-		(close)="onToggleFeedbackForm(false)"
+		(close)="onToggleHelpForm(false)"
 		(click)="$event.target === $event.currentTarget ? helpFormModal.close() : $event"
 	>
 		<div
 			appWindow
 			[appTitle]="'Feedback'"
 			[appButtons]="['close']"
-			(closed)="onToggleFeedbackForm(false)"
+			(closed)="onToggleHelpForm(false)"
 		>
 			<form
 				class="flex max-w-lg flex-col gap-4 p-4"
 				autocomplete="off"
 				slot="content"
 				[formGroup]="helpForm"
-				(ngSubmit)="onSubmitFeedbackForm()"
+				(ngSubmit)="onSubmitHelpForm()"
 			>
 				<p class="alert">
 					<i
@@ -95,7 +95,7 @@
 					</span>
 				</p>
 				<fieldset class="form-control" *ngIf="helpForm.get('name') as name">
-					<label class="label" for="feedbackFormName">
+					<label class="label" for="helpFormName">
 						<div class="indicator">
 							<!-- prettier-ignore -->
 							<span
@@ -119,7 +119,7 @@
 					<div class="relative">
 						<input
 							class="input-bordered input input-md w-full truncate pr-12"
-							id="feedbackFormName"
+							id="helpFormName"
 							type="text"
 							aria-label="Name"
 							formControlName="name"
@@ -145,7 +145,7 @@
 					</div>
 				</fieldset>
 				<fieldset class="form-control" *ngIf="helpForm.get('description') as description">
-					<label class="label" for="feedbackFormDescription">
+					<label class="label" for="helpFormDescription">
 						<!-- prettier-ignore -->
 						<div class="indicator">
               <span
@@ -170,7 +170,7 @@
               class="label-text-alt"
               [class.text-base-content]="helpForm.disabled"
               [class.text-success]="helpForm.enabled && description.value && description.valid"
-              [class.text-error]="helpForm.enabled && description.value && description.invalid"
+              [class.text-error]="helpForm.enabled && description.touched && description.invalid"
             >
               {{ description.value?.length || 0 }}/255
             </span>
@@ -180,11 +180,11 @@
             class="textarea-autosize w-full"
             [ngClass]="{ 'border-base-content/20': helpForm.enabled, 'border-transparent': helpForm.disabled }"
             [class.textarea-autosize-success]="description.value && description.valid"
-            [class.textarea-autosize-error]="description.value && description.invalid"
+            [class.textarea-autosize-error]="description.touched && description.invalid"
           >
             <textarea
               class="textarea textarea-md w-full max-h-64"
-              id="feedbackFormDescription"
+              id="helpFormDescription"
               aria-label="Description"
               placeholder="Type feedback description"
               formControlName="description"

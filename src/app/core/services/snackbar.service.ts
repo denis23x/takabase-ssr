@@ -35,7 +35,7 @@ export class SnackbarService {
 				if (snack.progress.value >= 100) {
 					this.removeSnack(snack as Snack);
 				}
-			}, 50)
+			}, 30)
 		};
 
 		this.snackbarList$.next([...this.snackbarList$.getValue(), snack as Snack]);

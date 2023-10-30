@@ -1,17 +1,22 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { from, Observable, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
-import { FileCreateDto } from '../dto/file/file-create.dto';
 import { FileGetOneDto } from '../dto/file/file-get-one.dto';
 import { FileGetOneProxyDto } from '../dto/file/file-get-one-proxy.dto';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { catchError } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class FileService {
-	constructor(private apiService: ApiService) {}
+	constructor(
+		private apiService: ApiService,
+		private angularFireStorage: AngularFireStorage
+	) {}
 
 	/** Utility */
 
@@ -25,8 +30,15 @@ export class FileService {
 
 	/** REST */
 
-	create(formData: FormData): Observable<FileCreateDto> {
-		return this.apiService.post('/files/image', formData);
+	create(file: File): Observable<string> {
+		const filePath: string = `/upload/user-avatars/${file.name}`;
+
+		return from(this.angularFireStorage.upload(filePath, file)).pipe(
+			switchMap(() => this.angularFireStorage.ref(filePath).getDownloadURL()),
+			catchError((httpErrorResponse: HttpErrorResponse) => {
+				return this.apiService.setError(httpErrorResponse);
+			})
+		);
 	}
 
 	getOne(fileGetOneDto: FileGetOneDto): Observable<Blob> {

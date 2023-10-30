@@ -21,7 +21,7 @@ import { HelperService } from '../core/services/helper.service';
 import { SnackbarService } from '../core/services/snackbar.service';
 import { AppAuthenticatedDirective } from '../standalone/directives/app-authenticated.directive';
 
-interface FeedbackForm {
+interface HelpForm {
 	name: FormControl<string>;
 	description: FormControl<string>;
 }
@@ -79,7 +79,7 @@ export class HelpComponent implements OnInit {
 		private snackbarService: SnackbarService,
 		private metaService: MetaService
 	) {
-		this.helpForm = this.formBuilder.group<FeedbackForm>({
+		this.helpForm = this.formBuilder.group<HelpForm>({
 			name: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
@@ -123,7 +123,7 @@ export class HelpComponent implements OnInit {
 		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
 	}
 
-	onToggleFeedbackForm(toggle: boolean): void {
+	onToggleHelpForm(toggle: boolean): void {
 		if (toggle) {
 			this.helpFormModal.nativeElement.showModal();
 		} else {
@@ -133,21 +133,21 @@ export class HelpComponent implements OnInit {
 		this.helpForm.reset();
 	}
 
-	onSubmitFeedbackForm(): void {
+	onSubmitHelpForm(): void {
 		if (this.helperService.getFormValidation(this.helpForm)) {
 			this.helpForm.disable();
 
-			// const feedbackCreateDto: FeedbackCreateDto = {
+			// const helpCreateDto: HelpCreateDto = {
 			// 	...this.helpForm.value
 			// };
 			//
-			// this.feedbackService.create(feedbackCreateDto).subscribe({
+			// this.helpService.create(helpCreateDto).subscribe({
 			// 	next: () => {
 			// 		this.snackbarService.success('Great!', 'Thanks for your feedback');
 			//
 			// 		this.helpForm.enable();
 			//
-			// 		this.onToggleFeedbackForm(false);
+			// 		this.onToggleHelpForm(false);
 			// 	},
 			// 	error: () => this.helpForm.enable()
 			// });
