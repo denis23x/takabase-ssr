@@ -1,11 +1,23 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="block" appSkeleton [appSkeletonToggle]="abstractProseSkeleton">
+	<ng-container [ngSwitch]="abstractProseSkeleton">
+		<div class="flex flex-col items-start justify-start gap-4" *ngSwitchCase="true">
+			<h3 class="block" appSkeleton [appSkeletonToggle]="true">What is Lorem Ipsum?</h3>
+			<p class="block" appSkeleton [appSkeletonToggle]="true">
+				Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
+				unknown printer took a galley of type and scrambled it to make a type specimen book.
+			</p>
+			<h3 class="block" appSkeleton [appSkeletonToggle]="true">Where does it come from?</h3>
+			<p class="block" appSkeleton [appSkeletonToggle]="true">
+				Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece
+				of classical Latin literature from 45 BC, making it over 2000 years old.
+			</p>
+		</div>
 		<div
 			class="prose max-w-none overflow-auto"
-			*ngIf="abstractProse"
+			*ngSwitchCase="false"
 			[innerHTML]="abstractProse | markdown | sanitizer: 'html'"
 		></div>
-	</div>
+	</ng-container>
 </ng-container>
