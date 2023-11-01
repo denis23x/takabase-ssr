@@ -37,7 +37,7 @@ import { PostDeleteComponent } from '../delete/delete.component';
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
 })
-export class PostDetailComponent implements OnInit, OnDestroy {
+export class PostProseComponent implements OnInit, OnDestroy {
 	@Input()
 	set appPost(post: Post) {
 		this.post = post;
