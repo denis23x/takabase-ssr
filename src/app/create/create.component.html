@@ -42,11 +42,19 @@
 						></button>
 					</div>
 				</figure>
-				<div class="flex flex-col sm:hidden">
-					<span class="text-base-content" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+				<div class="flex flex-col items-start gap-2 sm:hidden">
+					<span
+						class="text-lg leading-6 font-bold text-base-content max-w-full"
+						appSkeleton
+						[appSkeletonToggle]="postSkeletonToggle"
+					>
 						Image
 					</span>
-					<p class="text-base-content/50" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+					<p
+						class="text-sm text-base-content/50 leading-4 truncate max-w-full"
+						appSkeleton
+						[appSkeletonToggle]="postSkeletonToggle"
+					>
 						Upload post image
 					</p>
 				</div>
