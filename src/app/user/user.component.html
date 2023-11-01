@@ -6,7 +6,7 @@
 			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
 			<div class="flex w-full items-center justify-between gap-4">
-				<div class="flex items-center justify-start gap-4 overflow-auto">
+				<div class="flex items-center justify-start gap-4 overflow-hidden">
 					<div class="avatar" appSkeleton [appSkeletonToggle]="userSkeletonToggle">
 						<figure
 							class="h-12 w-12 rounded-btn relative overflow-hidden"
@@ -60,34 +60,17 @@
 						</li>
 						<ng-container [ngSwitch]="currentUser?.id === user.id">
 							<ng-container *ngSwitchCase="true">
-								<li class="flex w-full snap-start scroll-my-2">
+								<li
+									class="flex w-full snap-start scroll-my-2"
+									*ngFor="let link of ['Profile', 'Account', 'Appearance']"
+								>
 									<a
 										class="rounded-btn block w-full truncate text-right"
-										title="Profile"
-										aria-label="Profile"
-										[routerLink]="['/settings', 'profile']"
+										[title]="link"
+										[attr.aria-label]="link"
+										[routerLink]="['/settings', link.toLowerCase()]"
 									>
-										Profile
-									</a>
-								</li>
-								<li class="flex w-full snap-start scroll-my-2">
-									<a
-										class="rounded-btn block w-full truncate text-right"
-										title="Account"
-										aria-label="Account"
-										[routerLink]="['/settings', 'account']"
-									>
-										Account
-									</a>
-								</li>
-								<li class="flex w-full snap-start scroll-my-2">
-									<a
-										class="rounded-btn block w-full truncate text-right"
-										title="Appearance"
-										aria-label="Appearance"
-										[routerLink]="['/settings', 'appearance']"
-									>
-										Appearance
+										{{ link }}
 									</a>
 								</li>
 							</ng-container>
@@ -188,16 +171,16 @@
 								class="flex items-center justify-start gap-4 overflow-hidden w-full"
 								*ngSwitchCase="false"
 							>
-								<div class="flex flex-col items-start overflow-hidden w-full">
+								<div class="flex flex-col gap-2 items-start overflow-hidden w-full">
 									<h2
-										class="block truncate text-xl font-bold text-base-content w-full"
+										class="block truncate text-xl leading-6 font-bold text-base-content max-w-full"
 										appSkeleton
 										[appSkeletonToggle]="categorySkeletonToggle"
 									>
 										{{ category.name }}
 									</h2>
 									<time
-										class="text-sm text-base-content/50 truncate w-full"
+										class="text-sm text-base-content/50 leading-4 truncate max-w-full"
 										appSkeleton
 										[appSkeletonToggle]="categorySkeletonToggle"
 										[attr.datetime]="category.createdAt | dayjs: 'format' : 'YYYY-M-D'"
@@ -237,7 +220,7 @@
 												type="button"
 												title="Edit"
 												aria-label="Edit"
-												(click)="onToggleCategoryEditForm(true)"
+												(click)="appCategoryUpdateComponent.onToggleCategoryUpdateForm(true)"
 											>
 												Edit
 											</button>
@@ -248,7 +231,7 @@
 												type="button"
 												title="Delete"
 												aria-label="Delete"
-												(click)="onToggleCategoryDeleteForm(true)"
+												(click)="appCategoryDeleteComponent.onToggleCategoryDeleteForm(true)"
 											>
 												Delete
 											</button>
@@ -326,8 +309,6 @@
                           <button
                             class="rounded-btn block w-full truncate text-right first-letter:uppercase"
                             type="button"
-                            appScrollPreset
-                            [appScrollActive]="searchFormOrderBy === orderBy.value"
                             [ngClass]="{ 'active': searchFormOrderBy === orderBy.value }"
                             [attr.aria-label]="searchFormOrderBy"
                             (click)="searchFormOrderBy === orderBy.value ? orderBy.reset() : orderBy.setValue(searchFormOrderBy)"
@@ -365,287 +346,19 @@
 			</div>
 		</div>
 	</section>
-	<!-- prettier-ignore-attribute (click) -->
-	<dialog
-		class="modal"
-		#categoryEditFormModal
-		(keydown.escape)="$event.preventDefault(); categoryEditFormModal.close()"
-		(close)="onToggleCategoryEditForm(false)"
-		(click)="$event.target === $event.currentTarget ? categoryEditFormModal.close() : $event"
-	>
-		<div
-			appWindow
-			[appTitle]="'Edit'"
-			[appButtons]="['close']"
-			(closed)="onToggleCategoryEditForm(false)"
-		>
-			<form
-				class="flex max-w-lg flex-col gap-4 p-4"
-				autocomplete="off"
-				slot="content"
-				[formGroup]="categoryEditForm"
-				(ngSubmit)="onSubmitCategoryEditForm()"
-			>
-				<fieldset class="form-control" *ngIf="categoryEditForm.get('name') as name">
-					<label class="label" for="categoryEditFormName">
-						<div class="indicator">
-							<span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="name.touched && !!name.errors && categoryEditForm.enabled"
-								[ngSwitch]="true"
-							>
-								<ng-container *ngSwitchCase="!!name.errors.required"> Required </ng-container>
-								<ng-container *ngSwitchCase="!!name.errors.minlength">
-									Min length {{ name.errors.minlength["requiredLength"] }} characters
-								</ng-container>
-								<ng-container *ngSwitchCase="!!name.errors.maxlength">
-									Max length {{ name.errors.maxlength["requiredLength"] }} characters
-								</ng-container>
-							</span>
-							<span class="label-text mr-2">Name</span>
-						</div>
-					</label>
-					<div class="relative">
-						<input
-							class="input input-bordered input-md w-full truncate pr-12"
-							id="categoryEditFormName"
-							type="text"
-							aria-label="Name"
-							formControlName="name"
-							placeholder="Type category name"
-							appInputTrimWhitespace
-							[class.input-success]="name.touched && name.valid"
-							[class.input-error]="name.touched && name.invalid"
-						/>
-						<button
-							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
-							type="button"
-							aria-label="Clear"
-							appSvgIcon
-							*ngIf="!!name.value.length"
-							[class.btn-success]="name.touched && name.valid"
-							[class.btn-error]="name.touched && name.invalid"
-							[class.btn-ghost]="name.untouched"
-							[disabled]="categoryEditForm.disabled"
-							[appIcon]="'x'"
-							[appSquare]="'2em'"
-							(click)="name.setValue('')"
-						></button>
-					</div>
-				</fieldset>
-				<fieldset class="form-control" *ngIf="categoryEditForm.get('description') as description">
-					<label class="label" for="categoryEditFormDescription">
-						<div class="indicator">
-							<span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="!!description.value && !!description.errors && categoryEditForm.enabled"
-								[ngSwitch]="true"
-							>
-								<ng-container *ngSwitchCase="!!description.errors.maxlength">
-									Max length {{ description.errors.maxlength["requiredLength"] }} characters
-								</ng-container>
-							</span>
-							<span
-								class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="!description.errors"
-								[class.badge-ghost]="!description.value"
-								[class.badge-success]="!!description.value && categoryEditForm.enabled"
-								[class.opacity-25]="categoryEditForm.disabled"
-							>
-								Optional
-							</span>
-							<span class="label-text mr-2">Description</span>
-						</div>
-						<!-- prettier-ignore -->
-						<span
-							class="label-text-alt"
-							[class.text-base-content]="categoryEditForm.disabled"
-							[class.text-success]="categoryEditForm.enabled && !!description.value && description.valid"
-							[class.text-error]="categoryEditForm.enabled && !!description.value && description.invalid"
-						>
-							{{ description.value?.length || 0 }}/255
-						</span>
-					</label>
-					<!-- prettier-ignore -->
-					<div
-            class="textarea-autosize w-full"
-            [ngClass]="{ 'border-base-content/20': categoryEditForm.enabled, 'border-transparent': categoryEditForm.disabled }"
-            [class.textarea-autosize-success]="description.value && description.valid"
-            [class.textarea-autosize-error]="description.value && description.invalid"
-          >
-            <textarea
-              class="textarea textarea-md w-full max-h-64"
-              id="categoryEditFormDescription"
-              aria-label="Description"
-              placeholder="Type category description"
-              formControlName="description"
-              appInputTrimWhitespace
-              appTextareaResize
-              [appToggleResize]="true"
-              [rows]="4"
-            >
-              {{ description.value }}
-            </textarea>
-          </div>
-				</fieldset>
-				<fieldset class="form-control gap-4">
-					<!-- prettier-ignore -->
-					<button
-						class="btn btn-success"
-						type="submit"
-						aria-label="Submit"
-						[disabled]="categoryEditForm.invalid || categoryEditForm.disabled || categoryEditFormIsPristine"
-					>
-						<span
-							class="loading loading-spinner"
-							*ngIf="categoryEditForm.disabled"
-						></span>
-						Submit
-					</button>
-				</fieldset>
-			</form>
-		</div>
-	</dialog>
-	<!-- prettier-ignore-attribute (click) -->
-	<dialog
-		class="modal"
-		#categoryDeleteFormModal
-		(keydown.escape)="$event.preventDefault(); categoryDeleteFormModal.close()"
-		(close)="onToggleCategoryDeleteForm(false)"
-		(click)="$event.target === $event.currentTarget ? categoryDeleteFormModal.close() : $event"
-	>
-		<div
-			appWindow
-			[appTitle]="'Delete'"
-			[appButtons]="['close']"
-			(closed)="onToggleCategoryDeleteForm(false)"
-		>
-			<form
-				class="flex max-w-md flex-col gap-4 p-4"
-				autocomplete="off"
-				slot="content"
-				[formGroup]="categoryDeleteForm"
-				(ngSubmit)="onSubmitCategoryDeleteForm()"
-			>
-				<p class="alert">
-					<i
-						class="fill-current text-info"
-						appSvgIcon
-						[appIcon]="'info-circle'"
-						[appSquare]="'1.5em'"
-					></i>
-					<span class="block"> This action cannot be undone </span>
-				</p>
-				<fieldset class="form-control" *ngIf="categoryDeleteForm.get('name') as name">
-					<label class="label" for="categoryDeleteFormName">
-						<div class="indicator">
-							<span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="name.touched && !!name.errors && categoryDeleteForm.enabled"
-								[ngSwitch]="true"
-							>
-								<ng-container *ngSwitchCase="!!name.errors.required"> Required </ng-container>
-								<ng-container *ngSwitchCase="!!name.errors.pattern"> Incorrect name </ng-container>
-							</span>
-							<span class="label-text mr-2">
-								Please type
-								<span class="font-bold">{{ category?.name }}</span>
-								to confirm
-							</span>
-						</div>
-					</label>
-					<div class="relative">
-						<input
-							class="input-bordered input input-md w-full truncate pr-12"
-							id="categoryDeleteFormName"
-							type="text"
-							aria-label="Name"
-							formControlName="name"
-							placeholder="Type category name"
-							appInputTrimWhitespace
-							[class.input-success]="name.dirty && name.valid"
-							[class.input-error]="name.touched && name.invalid"
-						/>
-						<button
-							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-							type="button"
-							aria-label="Clear"
-							appSvgIcon
-							*ngIf="!!name.value.length"
-							[class.btn-success]="name.dirty && name.value"
-							[class.btn-error]="name.touched && name.invalid"
-							[class.btn-ghost]="name.untouched && name.dirty && name.invalid"
-							[disabled]="categoryDeleteForm.disabled"
-							[appIcon]="'x'"
-							[appSquare]="'2em'"
-							(click)="name.setValue('')"
-						></button>
-					</div>
-				</fieldset>
-				<ng-container *ngIf="categoryDeleteFormPostList.length && categoryList.length > 1">
-					<fieldset
-						class="form-control grid"
-						*ngIf="categoryDeleteForm.get('categoryId') as categoryId"
-					>
-						<label class="label">
-							<div class="indicator">
-								<span class="label-text mr-2"> Move posts to category </span>
-								<span
-									class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="!categoryId.errors"
-									[class.badge-ghost]="!categoryId.value"
-									[class.badge-success]="!!categoryId.value && categoryDeleteForm.enabled"
-									[class.opacity-25]="categoryDeleteForm.disabled"
-								>
-									Optional
-								</span>
-							</div>
-						</label>
-						<div
-							class="menu menu-vertical menu-md rounded-btn mt-2 overflow-hidden border border-base-content/20 p-0 bg-base-100"
-							[class.border-success]="categoryId.value && categoryDeleteForm.enabled"
-						>
-							<ul
-								class="flex max-h-58 flex-col flex-nowrap overflow-y-auto w-full snap-mandatory snap-y p-2"
-								*ngIf="category as categoryActive"
-								[class.cursor-not-allowed]="categoryDeleteForm.disabled"
-							>
-								<ng-container *ngFor="let category of categoryList">
-									<li
-										class="flex w-full snap-start scroll-my-2"
-										*ngIf="category.id !== categoryActive.id"
-										[ngClass]="{ 'disabled pointer-events-none': categoryDeleteForm.disabled }"
-									>
-										<!-- prettier-ignore -->
-										<button
-                      *ngIf="{ value: categoryId.value === category.id } as isActive"
-                      class="rounded-btn block w-full truncate text-left"
-                      type="button"
-                      appScrollPreset
-                      [ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
-                      [attr.aria-label]="category.name"
-                      (click)="categoryId.patchValue(category.id)"
-                    >
-                      {{ category.name }}
-                    </button>
-									</li>
-								</ng-container>
-							</ul>
-						</div>
-					</fieldset>
-				</ng-container>
-				<fieldset class="form-control">
-					<button
-						class="btn btn-success"
-						type="submit"
-						aria-label="Submit"
-						[disabled]="categoryDeleteForm.invalid || categoryDeleteForm.disabled"
-					>
-						<span class="loading loading-spinner" *ngIf="categoryDeleteForm.disabled"></span>
-						Submit
-					</button>
-				</fieldset>
-			</form>
-		</div>
-	</dialog>
+	<div
+		appCategoryDelete
+		#appCategoryDeleteComponent
+		[appCategoryDeleteCategory]="category"
+		[appCategoryDeleteCategoryList]="categoryList"
+		[appCategoryDeletePostList]="userPostComponent.abstractList"
+	></div>
+	<div
+		appCategoryUpdate
+		#appCategoryUpdateComponent
+		[appCategoryUpdateCategory]="category"
+		[appCategoryUpdateCategoryList]="categoryList"
+		(appCategoryUpdateUpdatedCategory)="category = $event"
+		(appCategoryUpdateUpdatedCategoryList)="categoryList = $event"
+	></div>
 </ng-container>

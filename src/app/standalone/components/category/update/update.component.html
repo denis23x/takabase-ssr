@@ -1,0 +1,145 @@
+<!-- @format -->
+
+<ng-container>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#categoryUpdateDialogElement
+		(keydown.escape)="$event.preventDefault(); categoryUpdateDialogElement.close()"
+		(close)="onToggleCategoryUpdateForm(false)"
+		(click)="$event.target === $event.currentTarget ? categoryUpdateDialogElement.close() : $event"
+	>
+		<div
+			appWindow
+			[appTitle]="'Update'"
+			[appButtons]="['close']"
+			(closed)="onToggleCategoryUpdateForm(false)"
+		>
+			<form
+				class="flex max-w-lg flex-col gap-4 p-4"
+				autocomplete="off"
+				slot="content"
+				[formGroup]="categoryUpdateForm"
+				(ngSubmit)="onSubmitCategoryUpdateForm()"
+			>
+				<fieldset class="form-control" *ngIf="categoryUpdateForm.get('name') as name">
+					<label class="label" for="categoryUpdateFormName">
+						<div class="indicator">
+							<span
+								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="name.touched && !!name.errors && categoryUpdateForm.enabled"
+								[ngSwitch]="true"
+							>
+								<ng-container *ngSwitchCase="!!name.errors.required"> Required </ng-container>
+								<ng-container *ngSwitchCase="!!name.errors.minlength">
+									Min length {{ name.errors.minlength["requiredLength"] }} characters
+								</ng-container>
+								<ng-container *ngSwitchCase="!!name.errors.maxlength">
+									Max length {{ name.errors.maxlength["requiredLength"] }} characters
+								</ng-container>
+							</span>
+							<span class="label-text mr-2">Name</span>
+						</div>
+					</label>
+					<div class="relative">
+						<input
+							class="input input-bordered input-md w-full truncate pr-12"
+							id="categoryUpdateFormName"
+							type="text"
+							aria-label="Name"
+							formControlName="name"
+							placeholder="Type category name"
+							appInputTrimWhitespace
+							[class.input-success]="name.touched && name.valid"
+							[class.input-error]="name.touched && name.invalid"
+						/>
+						<button
+							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+							type="button"
+							aria-label="Clear"
+							appSvgIcon
+							*ngIf="!!name.value.length"
+							[class.btn-success]="name.touched && name.valid"
+							[class.btn-error]="name.touched && name.invalid"
+							[class.btn-ghost]="name.untouched"
+							[disabled]="categoryUpdateForm.disabled"
+							[appIcon]="'x'"
+							[appSquare]="'2em'"
+							(click)="name.setValue('')"
+						></button>
+					</div>
+				</fieldset>
+				<fieldset class="form-control" *ngIf="categoryUpdateForm.get('description') as description">
+					<label class="label" for="categoryUpdateFormDescription">
+						<div class="indicator">
+							<span
+								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="!!description.value && !!description.errors && categoryUpdateForm.enabled"
+								[ngSwitch]="true"
+							>
+								<ng-container *ngSwitchCase="!!description.errors.maxlength">
+									Max length {{ description.errors.maxlength["requiredLength"] }} characters
+								</ng-container>
+							</span>
+							<span
+								class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="!description.errors"
+								[class.badge-ghost]="!description.value"
+								[class.badge-success]="!!description.value && categoryUpdateForm.enabled"
+								[class.opacity-25]="categoryUpdateForm.disabled"
+							>
+								Optional
+							</span>
+							<span class="label-text mr-2">Description</span>
+						</div>
+						<!-- prettier-ignore -->
+						<span
+							class="label-text-alt"
+							[class.text-base-content]="categoryUpdateForm.disabled"
+							[class.text-success]="categoryUpdateForm.enabled && !!description.value && description.valid"
+							[class.text-error]="categoryUpdateForm.enabled && !!description.value && description.invalid"
+						>
+							{{ description.value?.length || 0 }}/255
+						</span>
+					</label>
+					<!-- prettier-ignore -->
+					<div
+						class="textarea-autosize w-full"
+						[ngClass]="{ 'border-base-content/20': categoryUpdateForm.enabled, 'border-transparent': categoryUpdateForm.disabled }"
+						[class.textarea-autosize-success]="description.value && description.valid"
+						[class.textarea-autosize-error]="description.value && description.invalid"
+					>
+            <textarea
+							class="textarea textarea-md w-full max-h-64"
+							id="categoryUpdateFormDescription"
+							aria-label="Description"
+							placeholder="Type category description"
+							formControlName="description"
+							appInputTrimWhitespace
+							appTextareaResize
+							[appToggleResize]="true"
+							[rows]="4"
+						>
+              {{ description.value }}
+            </textarea>
+					</div>
+				</fieldset>
+				<fieldset class="form-control gap-4">
+					<!-- prettier-ignore -->
+					<button
+						class="btn btn-success"
+						type="submit"
+						aria-label="Submit"
+						[disabled]="categoryUpdateForm.invalid || categoryUpdateForm.disabled || categoryUpdateFormIsPristine"
+					>
+						<span
+							class="loading loading-spinner"
+							*ngIf="categoryUpdateForm.disabled"
+						></span>
+						Submit
+					</button>
+				</fieldset>
+			</form>
+		</div>
+	</dialog>
+</ng-container>

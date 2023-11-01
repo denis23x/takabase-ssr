@@ -1,0 +1,145 @@
+<!-- @format -->
+
+<ng-container>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#categoryDeleteDialogElement
+		(keydown.escape)="$event.preventDefault(); categoryDeleteDialogElement.close()"
+		(close)="onToggleCategoryDeleteForm(false)"
+		(click)="$event.target === $event.currentTarget ? categoryDeleteDialogElement.close() : $event"
+	>
+		<div
+			appWindow
+			[appTitle]="'Delete'"
+			[appButtons]="['close']"
+			(closed)="onToggleCategoryDeleteForm(false)"
+		>
+			<form
+				class="flex max-w-md flex-col gap-4 p-4"
+				autocomplete="off"
+				slot="content"
+				[formGroup]="categoryDeleteForm"
+				(ngSubmit)="onSubmitCategoryDeleteForm()"
+			>
+				<p class="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appIcon]="'info-circle'"
+						[appSquare]="'1.5em'"
+					></i>
+					<span class="block"> This action cannot be undone </span>
+				</p>
+				<fieldset class="form-control" *ngIf="categoryDeleteForm.get('name') as name">
+					<label class="label" for="categoryDeleteFormName">
+						<div class="indicator">
+							<span
+								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="name.touched && !!name.errors && categoryDeleteForm.enabled"
+								[ngSwitch]="true"
+							>
+								<ng-container *ngSwitchCase="!!name.errors.required"> Required </ng-container>
+								<ng-container *ngSwitchCase="!!name.errors.pattern"> Incorrect name </ng-container>
+							</span>
+							<!-- prettier-ignore -->
+							<span class="label-text mr-2">
+								Please type <span class="font-bold">{{ category?.name }}</span> to confirm
+							</span>
+						</div>
+					</label>
+					<div class="relative">
+						<input
+							class="input-bordered input input-md w-full truncate pr-12"
+							id="categoryDeleteFormName"
+							type="text"
+							aria-label="Name"
+							formControlName="name"
+							placeholder="Type category name"
+							appInputTrimWhitespace
+							[class.input-success]="name.dirty && name.valid"
+							[class.input-error]="name.touched && name.invalid"
+						/>
+						<button
+							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+							type="button"
+							aria-label="Clear"
+							appSvgIcon
+							*ngIf="!!name.value.length"
+							[class.btn-success]="name.dirty && name.value"
+							[class.btn-error]="name.touched && name.invalid"
+							[class.btn-ghost]="name.untouched && name.dirty && name.invalid"
+							[disabled]="categoryDeleteForm.disabled"
+							[appIcon]="'x'"
+							[appSquare]="'2em'"
+							(click)="name.setValue('')"
+						></button>
+					</div>
+				</fieldset>
+				<ng-container *ngIf="postList.length && categoryList.length > 1">
+					<fieldset
+						class="form-control grid"
+						*ngIf="categoryDeleteForm.get('categoryId') as categoryId"
+					>
+						<label class="label">
+							<div class="indicator">
+								<span class="label-text mr-2"> Move posts to category </span>
+								<span
+									class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+									*ngIf="!categoryId.errors"
+									[class.badge-ghost]="!categoryId.value"
+									[class.badge-success]="!!categoryId.value && categoryDeleteForm.enabled"
+									[class.opacity-25]="categoryDeleteForm.disabled"
+								>
+									Optional
+								</span>
+							</div>
+						</label>
+						<div
+							class="menu menu-vertical menu-md rounded-btn mt-2 overflow-hidden border border-base-content/20 p-0 bg-base-100"
+							[class.border-success]="categoryId.value && categoryDeleteForm.enabled"
+						>
+							<ul
+								class="flex max-h-58 flex-col flex-nowrap overflow-y-auto w-full snap-mandatory snap-y p-2"
+								*ngIf="category as categoryActive"
+								[class.cursor-not-allowed]="categoryDeleteForm.disabled"
+							>
+								<ng-container *ngFor="let category of categoryList">
+									<li
+										class="flex w-full snap-start scroll-my-2"
+										*ngIf="category.id !== categoryActive.id"
+										[ngClass]="{ 'disabled pointer-events-none': categoryDeleteForm.disabled }"
+									>
+										<!-- prettier-ignore -->
+										<button
+											*ngIf="{ value: categoryId.value === category.id } as isActive"
+											class="rounded-btn block w-full truncate text-left"
+											type="button"
+											appScrollPreset
+											[ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
+											[attr.aria-label]="category.name"
+											(click)="categoryId.patchValue(category.id)"
+										>
+											{{ category.name }}
+										</button>
+									</li>
+								</ng-container>
+							</ul>
+						</div>
+					</fieldset>
+				</ng-container>
+				<fieldset class="form-control">
+					<button
+						class="btn btn-success"
+						type="submit"
+						aria-label="Submit"
+						[disabled]="categoryDeleteForm.invalid || categoryDeleteForm.disabled"
+					>
+						<span class="loading loading-spinner" *ngIf="categoryDeleteForm.disabled"></span>
+						Submit
+					</button>
+				</fieldset>
+			</form>
+		</div>
+	</dialog>
+</ng-container>

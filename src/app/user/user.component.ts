@@ -1,11 +1,10 @@
 /** @format */
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { debounceTime, filter, first, startWith } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
 import {
-	AbstractControl,
 	FormBuilder,
 	FormControl,
 	FormGroup,
@@ -20,41 +19,23 @@ import { WindowComponent } from '../standalone/components/window/window.componen
 import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { DayjsPipe } from '../standalone/pipes/dayjs.pipe';
 import { User } from '../core/models/user.model';
-import { Post } from '../core/models/post.model';
 import { Category } from '../core/models/category.model';
-import { HelperService } from '../core/services/helper.service';
 import { AuthorizationService } from '../core/services/authorization.service';
-import { CategoryService } from '../core/services/category.service';
-import { SnackbarService } from '../core/services/snackbar.service';
 import { UserService } from '../core/services/user.service';
-import { CategoryUpdateDto } from '../core/dto/category/category-update.dto';
-import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
 import { MarkdownPipe } from '../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../standalone/pipes/sanitizer.pipe';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
-import { AppTextareaResizeDirective } from '../standalone/directives/app-textarea-resize.directive';
 import { CurrentUser } from '../core/models/current-user.model';
 import { UserPostComponent } from './post/post.component';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
 import { AppSkeletonDirective } from '../standalone/directives/app-skeleton.directive';
-import { FileService } from '../core/services/file.service';
-import { PostService } from '../core/services/post.service';
-import { PostGetAllDto } from '../core/dto/post/post-get-all.dto';
+import { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
+import { CategoryDeleteComponent } from '../standalone/components/category/delete/delete.component';
 
 interface PostSearchForm {
 	query: FormControl<string>;
 	orderBy: FormControl<string>;
-}
-
-interface CategoryEditForm {
-	name: FormControl<string>;
-	description: FormControl<string | null>;
-}
-
-interface CategoryDeleteForm {
-	name: FormControl<string>;
-	categoryId: FormControl<number>;
 }
 
 @Component({
@@ -72,19 +53,14 @@ interface CategoryDeleteForm {
 		MarkdownPipe,
 		SanitizerPipe,
 		DropdownComponent,
-		AppTextareaResizeDirective,
-		AppSkeletonDirective
+		AppSkeletonDirective,
+		CategoryUpdateComponent,
+		CategoryDeleteComponent
 	],
 	selector: 'app-user',
 	templateUrl: './user.component.html'
 })
 export class UserComponent implements OnInit, OnDestroy {
-	// prettier-ignore
-	@ViewChild('categoryEditFormModal') categoryEditFormModal: ElementRef<HTMLDialogElement> | undefined;
-
-	// prettier-ignore
-	@ViewChild('categoryDeleteFormModal') categoryDeleteFormModal: ElementRef<HTMLDialogElement> | undefined;
-
 	activatedRouteUrl$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
 	activatedRouteFirstChildParams$: Subscription | undefined;
@@ -112,39 +88,14 @@ export class UserComponent implements OnInit, OnDestroy {
 	categoryList: Category[] = [];
 	categoryListSkeletonToggle: boolean = true;
 
-	categoryEditForm: FormGroup | undefined;
-	categoryEditFormIsPristine$: Subscription | undefined;
-	categoryEditFormIsPristine: boolean = false;
-
-	categoryDeleteForm: FormGroup | undefined;
-	categoryDeleteForm$: Subscription | undefined;
-	categoryDeleteFormPostList: Post[] = [];
-
 	constructor(
 		private formBuilder: FormBuilder,
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
-		private helperService: HelperService,
 		private authorizationService: AuthorizationService,
-		private categoryService: CategoryService,
-		private snackbarService: SnackbarService,
 		private userService: UserService,
-		private skeletonService: SkeletonService,
-		private postService: PostService,
-		private fileService: FileService
+		private skeletonService: SkeletonService
 	) {
-		this.categoryEditForm = this.formBuilder.group<CategoryEditForm>({
-			name: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.minLength(4),
-				Validators.maxLength(36)
-			]),
-			description: this.formBuilder.control(null, [Validators.maxLength(255)])
-		});
-		this.categoryDeleteForm = this.formBuilder.group<CategoryDeleteForm>({
-			name: this.formBuilder.nonNullable.control('', []),
-			categoryId: this.formBuilder.control(null, [])
-		});
 		this.postSearchForm = this.formBuilder.group<PostSearchForm>({
 			query: this.formBuilder.nonNullable.control('', [
 				Validators.minLength(2),
@@ -189,9 +140,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.currentUser$,
 			this.currentUserSkeletonToggle$,
 			this.postSearchForm$,
-			this.postSearchFormIsSubmitted$,
-			this.categoryEditFormIsPristine$,
-			this.categoryDeleteForm$
+			this.postSearchFormIsSubmitted$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -305,130 +254,6 @@ export class UserComponent implements OnInit, OnDestroy {
 					},
 					error: (error: any) => console.error(error)
 				});
-		}
-	}
-
-	onToggleCategoryEditForm(toggle: boolean): void {
-		if (toggle) {
-			this.categoryEditForm.patchValue(this.category);
-			this.categoryEditForm.markAllAsTouched();
-			this.categoryEditFormModal.nativeElement.showModal();
-			this.categoryEditFormIsPristine$ = this.categoryEditForm.valueChanges
-				.pipe(startWith(this.categoryEditForm.value))
-				.subscribe({
-					next: (value: any) => {
-						this.categoryEditFormIsPristine = Object.keys(value).every((key: string) => {
-							return value[key] === this.category[key];
-						});
-					},
-					error: (error: any) => console.error(error)
-				});
-		} else {
-			this.categoryEditForm.reset();
-			this.categoryEditFormModal.nativeElement.close();
-			this.categoryEditFormIsPristine = true;
-			this.categoryEditFormIsPristine$?.unsubscribe();
-		}
-	}
-
-	onToggleCategoryDeleteForm(toggle: boolean): void {
-		if (toggle) {
-			this.categoryDeleteForm.reset();
-			this.categoryDeleteFormModal.nativeElement.showModal();
-			this.categoryDeleteFormPostList = this.userPostComponent.abstractList;
-
-			const abstractControl: AbstractControl = this.categoryDeleteForm.get('name');
-
-			abstractControl.setValidators([
-				Validators.required,
-				Validators.pattern(this.helperService.getRegex('exact', this.category.name))
-			]);
-
-			abstractControl.updateValueAndValidity();
-		} else {
-			this.categoryDeleteForm.reset();
-			this.categoryDeleteFormModal.nativeElement.close();
-			this.categoryDeleteFormPostList = [];
-		}
-	}
-
-	onSubmitCategoryEditForm(): void {
-		if (this.helperService.getFormValidation(this.categoryEditForm)) {
-			this.categoryEditForm.disable();
-
-			const categoryId: number = this.category.id;
-			const categoryUpdateDto: CategoryUpdateDto = {
-				...this.categoryEditForm.value
-			};
-
-			this.categoryService.update(categoryId, categoryUpdateDto).subscribe({
-				next: (category: Category) => {
-					this.snackbarService.success(null, 'Category updated');
-
-					this.category = category;
-					this.categoryList = this.categoryList.map((category: Category) => {
-						return category.id === this.category.id ? this.category : category;
-					});
-
-					this.categoryEditForm.enable();
-
-					this.onToggleCategoryEditForm(false);
-				},
-				error: () => this.categoryEditForm.enable()
-			});
-		}
-	}
-
-	onSubmitCategoryDeleteForm(): void {
-		if (this.helperService.getFormValidation(this.categoryDeleteForm)) {
-			this.categoryDeleteForm.disable();
-
-			const categoryId: number = this.category.id;
-			const categoryDeleteDto: CategoryDeleteDto = {};
-			const categoryDeleteRedirect: string[] = [this.userService.getUserUrl(this.user)];
-
-			const abstractControl: AbstractControl = this.categoryDeleteForm.get('categoryId');
-
-			// Move posts if provided categoryId OR delete their images at the same time
-
-			if (abstractControl.value) {
-				categoryDeleteDto.categoryId = abstractControl.value;
-				categoryDeleteRedirect.push('category', abstractControl.value);
-			} else {
-				const postGetAllDto: PostGetAllDto = {
-					categoryId
-				};
-
-				this.postService
-					.getAll(postGetAllDto)
-					.pipe(filter((postList: Post[]) => !!postList.length))
-					.subscribe({
-						next: (postList: Post[]) => {
-							postList
-								.filter((post: Post) => !!post.image)
-								.forEach((post: Post) => this.fileService.delete(post.image));
-						},
-						error: (error: any) => console.error(error)
-					});
-			}
-
-			this.categoryService.delete(categoryId, categoryDeleteDto).subscribe({
-				next: () => {
-					this.snackbarService.success(null, 'Category deleted');
-
-					this.category = undefined;
-					this.categoryList = this.categoryList.filter((category: Category) => {
-						return category.id !== categoryId;
-					});
-
-					this.categoryDeleteForm.enable();
-
-					this.onToggleCategoryDeleteForm(false);
-
-					this.router.navigate(categoryDeleteRedirect).then(() => console.debug('Route changed'));
-				},
-				error: () => this.categoryDeleteForm.enable()
-			});
 		}
 	}
 
