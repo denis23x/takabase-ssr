@@ -9,14 +9,14 @@
 				<div class="flex items-center justify-start gap-4 overflow-auto">
 					<div class="avatar" appSkeleton [appSkeletonToggle]="userSkeletonToggle">
 						<figure
-							class="h-16 w-16 rounded-btn relative overflow-hidden"
+							class="h-12 w-12 rounded-btn relative overflow-hidden"
 							appAvatar
 							[appUser]="user"
 						></figure>
 					</div>
-					<div class="flex flex-col gap-2 overflow-auto">
+					<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
 						<h1
-							class="truncate text-2xl font-bold text-base-content"
+							class="truncate text-xl leading-6 font-bold text-base-content max-w-full"
 							data-pw="app-user-heading-user-name"
 							appSkeleton
 							[appSkeletonToggle]="userSkeletonToggle"
@@ -24,7 +24,7 @@
 							{{ user.name }}
 						</h1>
 						<time
-							class="truncate text-sm text-base-content/50"
+							class="truncate text-sm leading-4 text-base-content/50 max-w-full"
 							appSkeleton
 							[appSkeletonToggle]="userSkeletonToggle"
 							[attr.datetime]="user.createdAt | dayjs: 'format' : 'YYYY-M-D'"
@@ -33,23 +33,78 @@
 						</time>
 					</div>
 				</div>
-				<div class="flex items-center justify-end gap-4">
-					<a
-						class="btn-primary btn-outline btn w-12 h-12 sm:w-auto sm:h-auto"
-						data-pw="app-user-link-to-settings"
+				<div
+					class="flex p-0"
+					appDropdown
+					appSkeleton
+					[appSkeletonToggle]="userSkeletonToggle || currentUserSkeletonToggle"
+					[appPosition]="'bottom-right'"
+				>
+					<button
+						class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current p-3"
+						type="button"
+						title="Settings"
 						aria-label="Settings"
-						*ngIf="currentUser?.id === user.id"
-						[routerLink]="['/settings']"
+						appSvgIcon
+						slot="target"
+						[appIcon]="'three-dots-vertical'"
+						[appSquare]="'1.5em'"
+					></button>
+					<ul
+						class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
+						slot="content"
 					>
-						<span class="hidden sm:block">Settings</span>
-						<i
-							class="block sm:hidden fill-current"
-							appSvgIcon
-							[appIcon]="'gear-fill'"
-							[appSquare]="'1.5em'"
-						>
-						</i>
-					</a>
+						<li class="flex w-full snap-start scroll-my-2 menu-title text-right">User</li>
+						<li class="flex w-full snap-start scroll-my-2 menu-title">
+							<hr class="my-0 border-base-content/20" />
+						</li>
+						<ng-container [ngSwitch]="currentUser?.id === user.id">
+							<ng-container *ngSwitchCase="true">
+								<li class="flex w-full snap-start scroll-my-2">
+									<a
+										class="rounded-btn block w-full truncate text-right"
+										title="Profile"
+										aria-label="Profile"
+										[routerLink]="['/settings', 'profile']"
+									>
+										Profile
+									</a>
+								</li>
+								<li class="flex w-full snap-start scroll-my-2">
+									<a
+										class="rounded-btn block w-full truncate text-right"
+										title="Account"
+										aria-label="Account"
+										[routerLink]="['/settings', 'account']"
+									>
+										Account
+									</a>
+								</li>
+								<li class="flex w-full snap-start scroll-my-2">
+									<a
+										class="rounded-btn block w-full truncate text-right"
+										title="Appearance"
+										aria-label="Appearance"
+										[routerLink]="['/settings', 'appearance']"
+									>
+										Appearance
+									</a>
+								</li>
+							</ng-container>
+							<ng-container *ngSwitchCase="false">
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										type="button"
+										title="Complain"
+										aria-label="Complain"
+									>
+										Complain
+									</button>
+								</li>
+							</ng-container>
+						</ng-container>
+					</ul>
 				</div>
 			</div>
 			<div

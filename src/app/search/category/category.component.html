@@ -3,18 +3,40 @@
 <ng-container>
 	<ng-container *ngIf="!!abstractList.length; else abstractListEmptyTemplate">
 		<ul class="grid grid-cols-1 grid-rows-none gap-4 sm:grid-cols-2 lg:grid-cols-3">
-			<li
-				class="block"
-				appCardCategory
-				*ngFor="let category of abstractList"
-				[ngClass]="category.description ? 'row-span-6' : 'row-span-3'"
-				[appCategory]="category"
-				[appCategorySkeletonToggle]="abstractListSkeletonToggle"
-			></li>
+			<ng-container *ngFor="let category of abstractList; let i = index">
+				<li
+					class="block"
+					appCardCategory
+					[ngClass]="category.description ? 'row-span-6' : 'row-span-3'"
+					[appCategory]="category"
+					[appCategorySkeletonToggle]="abstractListSkeletonToggle"
+				></li>
+				<!--
+				<li class="block row-span-6" *ngIf="i === 10 || i === 20 || i === 30">
+					<a
+						class="block w-full h-full"
+						title="Placeholder"
+						aria-label="Placeholder"
+						appSkeleton
+						[routerLink]="['.']"
+						[appSkeletonToggle]="false"
+					>
+						<figure class="rounded-btn relative overflow-hidden w-full h-full">
+							<img
+								class="object-cover w-full h-full bg-base-300"
+								src="https://placehold.co/298x194/?text=Placeholder"
+								alt="Advertise"
+								loading="lazy"
+							/>
+						</figure>
+					</a>
+				</li>
+				-->
+			</ng-container>
 		</ul>
 		<ng-container *ngIf="!abstractListPageScrollInfinite">
 			<button
-				class="btn-primary btn mt-4 w-full"
+				class="btn-success btn mt-4 w-full"
 				type="button"
 				aria-label="Load more"
 				*ngIf="abstractListHasMore"
@@ -40,11 +62,11 @@
 				</p>
 				<a
 					class="link text-sm"
-					title="Create your own category"
-					aria-label="Create your own category"
+					title="Create category"
+					aria-label="Create category"
 					[routerLink]="['/create']"
 				>
-					Create your own category
+					Create category
 				</a>
 			</div>
 		</div>

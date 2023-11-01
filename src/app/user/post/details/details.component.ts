@@ -3,13 +3,13 @@
 import { Component, OnInit } from '@angular/core';
 import { WindowComponent } from '../../../standalone/components/window/window.component';
 import { ShareComponent } from '../../../standalone/components/share/share.component';
-import { PostDetailComponent } from '../../../standalone/components/post/prose/prose.component';
+import { PostProseComponent } from '../../../standalone/components/post/prose/prose.component';
 import { AbstractPostDetailsComponent } from '../../../abstracts/abstract-post-details.component';
 import { PostGetOneDto } from '../../../core/dto/post/post-get-one.dto';
 
 @Component({
 	standalone: true,
-	imports: [WindowComponent, PostDetailComponent, ShareComponent],
+	imports: [WindowComponent, PostProseComponent, ShareComponent],
 	selector: 'app-user-post-details',
 	templateUrl: './details.component.html'
 })

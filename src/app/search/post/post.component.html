@@ -3,15 +3,37 @@
 <ng-container>
 	<ng-container *ngIf="!!abstractList.length; else abstractListEmptyTemplate">
 		<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4">
-			<li
-				class="block"
-				appCardPost
-				*ngFor="let post of abstractList"
-				[ngClass]="post.image ? 'row-span-6' : 'row-span-3'"
-				[appPost]="post"
-				[appPostSkeletonToggle]="abstractListSkeletonToggle"
-				[appPostUrl]="'./'"
-			></li>
+			<ng-container *ngFor="let post of abstractList; let i = index">
+				<li
+					class="block"
+					appCardPost
+					[ngClass]="post.image ? 'row-span-6' : 'row-span-3'"
+					[appPost]="post"
+					[appPostSkeletonToggle]="abstractListSkeletonToggle"
+					[appPostUrl]="'./'"
+				></li>
+				<!--
+				<li class="block row-span-6" *ngIf="i === 10 || i === 20 || i === 30">
+					<a
+						class="block w-full h-full"
+						title="Placeholder"
+						aria-label="Placeholder"
+						appSkeleton
+						[routerLink]="['.']"
+						[appSkeletonToggle]="false"
+					>
+						<figure class="rounded-btn relative overflow-hidden w-full h-full">
+							<img
+								class="object-cover w-full h-full bg-base-300"
+								src="https://placehold.co/220x360/?text=Placeholder"
+								alt="Advertise"
+								loading="lazy"
+							/>
+						</figure>
+					</a>
+				</li>
+				-->
+			</ng-container>
 		</ul>
 		<ng-container *ngIf="!abstractListPageScrollInfinite">
 			<button
@@ -41,11 +63,11 @@
 				</p>
 				<a
 					class="link text-sm"
-					title="Create your own post"
-					aria-label="Create your own post"
+					title="Create post"
+					aria-label="Create post"
 					[routerLink]="['/create']"
 				>
-					Create your own post
+					Create post
 				</a>
 			</div>
 		</div>

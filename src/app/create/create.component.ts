@@ -2,7 +2,7 @@
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { iif, Subscription, switchMap } from 'rxjs';
+import { iif, Subscription } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
 import {
 	AbstractControl,
@@ -20,7 +20,7 @@ import { WindowComponent } from '../standalone/components/window/window.componen
 import { CropperComponent } from '../standalone/components/cropper/cropper.component';
 import { ShareComponent } from '../standalone/components/share/share.component';
 import { MarkdownComponent } from '../standalone/components/markdown/markdown.component';
-import { PostDetailComponent } from '../standalone/components/post/prose/prose.component';
+import { PostProseComponent } from '../standalone/components/post/prose/prose.component';
 import { Category } from '../core/models/category.model';
 import { Post } from '../core/models/post.model';
 import { HelperService } from '../core/services/helper.service';
@@ -30,19 +30,18 @@ import { AuthorizationService } from '../core/services/authorization.service';
 import { CategoryService } from '../core/services/category.service';
 import { UserService } from '../core/services/user.service';
 import { PostCreateDto } from '../core/dto/post/post-create.dto';
-import { CategoryCreateDto } from '../core/dto/category/category-create.dto';
 import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { CookieService } from '../core/services/cookie.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 import { AppTextareaResizeDirective } from '../standalone/directives/app-textarea-resize.directive';
-import { ImageTempPipe } from '../standalone/pipes/image-temp.pipe';
 import { CurrentUser } from '../core/models/current-user.model';
 import { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
 import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
 import { AppSkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
-import { FileService } from '../core/services/file.service';
+import { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
+import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -51,11 +50,6 @@ interface PostForm {
 	categoryId: FormControl<number>;
 	categoryName: FormControl<string>;
 	markdown: FormControl<string>;
-}
-
-interface CategoryForm {
-	name: FormControl<string>;
-	description: FormControl<string | null>;
 }
 
 @Component({
@@ -69,26 +63,27 @@ interface CategoryForm {
 		DropdownComponent,
 		WindowComponent,
 		CropperComponent,
-		PostDetailComponent,
+		PostProseComponent,
 		ShareComponent,
 		MarkdownComponent,
 		NgOptimizedImage,
 		AppScrollPresetDirective,
 		AppTextareaResizeDirective,
-		ImageTempPipe,
-		AppSkeletonDirective
+		AppSkeletonDirective,
+		PostDeleteComponent,
+		CategoryCreateComponent
 	],
 	templateUrl: './create.component.html'
 })
 export class CreateComponent implements OnInit, OnDestroy {
 	// prettier-ignore
+	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
+
+	// prettier-ignore
 	@ViewChild('postFormPreviewModal') postFormPreviewModal: ElementRef<HTMLDialogElement> | undefined;
-	@ViewChild('categoryFormModal') categoryFormModal: ElementRef<HTMLDialogElement> | undefined;
 	@ViewChild('postFormImageModal') postFormImageModal: ElementRef<HTMLDialogElement> | undefined;
-	@ViewChild('postDeleteModal') postDeleteModal: ElementRef<HTMLDialogElement> | undefined;
 
 	category: Category | undefined;
-	categoryForm: FormGroup | undefined;
 	categoryList: Category[] = [];
 	categorySkeletonToggle: boolean = false;
 
@@ -102,8 +97,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	postMarkdownModalToggle: boolean = false;
 	postMarkdownMonospace: boolean = false;
-
-	postDeleteIsSubmitted: boolean = false;
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -127,8 +120,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 		private userService: UserService,
 		private cookieService: CookieService,
 		private metaService: MetaService,
-		private skeletonService: SkeletonService,
-		private fileService: FileService
+		private skeletonService: SkeletonService
 	) {
 		this.postForm = this.formBuilder.group<PostForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -149,14 +141,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 				Validators.minLength(24),
 				Validators.maxLength(7200)
 			])
-		});
-		this.categoryForm = this.formBuilder.group<CategoryForm>({
-			name: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.minLength(4),
-				Validators.maxLength(36)
-			]),
-			description: this.formBuilder.control(null, [Validators.maxLength(255)])
 		});
 	}
 
@@ -309,21 +293,9 @@ export class CreateComponent implements OnInit, OnDestroy {
 			}
 		} else {
 			if (toggle) {
-				this.onToggleCategoryForm(true);
+				this.appCategoryCreateComponent.onToggleCategoryForm(true);
 			}
 		}
-	}
-
-	onToggleCategoryForm(toggle: boolean): void {
-		this.onSubmitPostFormStatus(toggle);
-
-		if (toggle) {
-			this.categoryFormModal.nativeElement.showModal();
-		} else {
-			this.categoryFormModal.nativeElement.close();
-		}
-
-		this.categoryForm.reset();
 	}
 
 	onTogglePreviewPost(toggle: boolean): void {
@@ -339,16 +311,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 		} else {
 			this.postFormPreviewModal.nativeElement.close();
 			this.postPreview = undefined;
-		}
-	}
-
-	onToggleDeletePost(toggle: boolean): void {
-		this.onSubmitPostFormStatus(toggle);
-
-		if (toggle) {
-			this.postDeleteModal.nativeElement.showModal();
-		} else {
-			this.postDeleteModal.nativeElement.close();
 		}
 	}
 
@@ -435,46 +397,5 @@ export class CreateComponent implements OnInit, OnDestroy {
 		this.onTogglePostFormImage(false);
 
 		this.postForm.get('image').setValue(fileUrl);
-	}
-
-	onSubmitCategoryForm(): void {
-		if (this.helperService.getFormValidation(this.categoryForm)) {
-			this.categoryForm.disable();
-
-			const categoryCreateDto: CategoryCreateDto = {
-				...this.categoryForm.value
-			};
-
-			this.categoryService.create(categoryCreateDto).subscribe({
-				next: (category: Category) => {
-					this.snackbarService.success('Cheers!', 'Category created');
-
-					this.categoryList.unshift(category);
-					this.categoryForm.enable();
-
-					this.onSelectCategory(category);
-					this.onToggleCategoryForm(false);
-				},
-				error: () => this.categoryForm.enable()
-			});
-		}
-	}
-
-	onSubmitPostDelete(): void {
-		this.postDeleteIsSubmitted = true;
-
-		const postId: number = this.post.id;
-
-		this.postService
-			.delete(postId)
-			.pipe(switchMap((post: Post) => this.fileService.delete(post.image)))
-			.subscribe({
-				next: () => {
-					this.router
-						.navigate([this.userService.getUserUrl(this.currentUser)])
-						.then(() => this.snackbarService.success('Sadly..', 'Post has been deleted'));
-				},
-				error: () => (this.postDeleteIsSubmitted = false)
-			});
 	}
 }

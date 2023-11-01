@@ -3,17 +3,39 @@
 <ng-container>
 	<ng-container *ngIf="!!abstractList.length; else abstractListEmptyTemplate">
 		<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-			<li
-				class="block"
-				appCardUser
-				*ngFor="let user of abstractList"
-				[appUser]="user"
-				[appUserSkeletonToggle]="abstractListSkeletonToggle"
-			></li>
+			<ng-container *ngFor="let user of abstractList; let i = index">
+				<li
+					class="block"
+					appCardUser
+					[appUser]="user"
+					[appUserSkeletonToggle]="abstractListSkeletonToggle"
+				></li>
+				<!--
+				<li class="block" *ngIf="i === 10 || i === 20 || i === 30">
+					<a
+						class="block w-full h-full"
+						title="Placeholder"
+						aria-label="Placeholder"
+						appSkeleton
+						[routerLink]="['.']"
+						[appSkeletonToggle]="false"
+					>
+						<figure class="rounded-btn relative overflow-hidden w-full h-full">
+							<img
+								class="object-cover w-full h-full bg-base-300"
+								src="https://placehold.co/172x236/?text=Placeholder"
+								alt="Advertise"
+								loading="lazy"
+							/>
+						</figure>
+					</a>
+				</li>
+				-->
+			</ng-container>
 		</ul>
 		<ng-container *ngIf="!abstractListPageScrollInfinite">
 			<button
-				class="btn-primary btn mt-4 w-full"
+				class="btn-success btn mt-4 w-full"
 				type="button"
 				aria-label="Load more"
 				*ngIf="abstractListHasMore"

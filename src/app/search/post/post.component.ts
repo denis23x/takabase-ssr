@@ -9,10 +9,11 @@ import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
+import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, SvgIconComponent, CardPostComponent],
+	imports: [CommonModule, RouterModule, SvgIconComponent, CardPostComponent, AppSkeletonDirective],
 	selector: 'app-search-post',
 	templateUrl: './post.component.html'
 })

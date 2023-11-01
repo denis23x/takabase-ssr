@@ -12,6 +12,7 @@ import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 import { AbstractSearchListComponent } from '../../abstracts/abstract-search-list.component';
 import { CardUserComponent } from '../../standalone/components/card/user/user.component';
+import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 
 @Component({
 	standalone: true,
@@ -22,7 +23,8 @@ import { CardUserComponent } from '../../standalone/components/card/user/user.co
 		SvgIconComponent,
 		UserUrlPipe,
 		DayjsPipe,
-		CardUserComponent
+		CardUserComponent,
+		AppSkeletonDirective
 	],
 	selector: 'app-search-user',
 	templateUrl: './user.component.html'

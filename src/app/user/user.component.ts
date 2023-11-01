@@ -97,6 +97,9 @@ export class UserComponent implements OnInit, OnDestroy {
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
+	currentUserSkeletonToggle: boolean = true;
+	currentUserSkeletonToggle$: Subscription | undefined;
+
 	postSearchForm: FormGroup | undefined;
 	postSearchForm$: Subscription | undefined;
 	postSearchFormToggle: boolean = false;
@@ -168,6 +171,13 @@ export class UserComponent implements OnInit, OnDestroy {
 			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
+
+		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
+			.pipe(filter((currentUserIsPopulated: boolean) => currentUserIsPopulated))
+			.subscribe({
+				next: () => (this.currentUserSkeletonToggle = false),
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	ngOnDestroy(): void {
@@ -177,6 +187,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.activatedRouteFirstChildParams$,
 			this.userRequest$,
 			this.currentUser$,
+			this.currentUserSkeletonToggle$,
 			this.postSearchForm$,
 			this.postSearchFormIsSubmitted$,
 			this.categoryEditFormIsPristine$,

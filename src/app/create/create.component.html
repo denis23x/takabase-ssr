@@ -23,7 +23,7 @@
 						loading="lazy"
 						*ngIf="!!image.value"
 						[ngClass]="{ invisible: !image.value, 'pointer-events-none opacity-50 saturate-0 transition': postForm.disabled }"
-						[src]="image.value | imageTemp | async"
+						[src]="image.value"
 						(click)="onTogglePostFormImage(true)"
 					/>
 					<div
@@ -60,13 +60,13 @@
 					class="form-control items-start col-span-12 sm:col-span-6"
 					*ngIf="postForm.get('name') as name"
 				>
-					<label
-						class="label"
-						for="postFormTitle"
-						appSkeleton
-						[appSkeletonToggle]="postSkeletonToggle"
-					>
-						<div class="indicator">
+					<label class="label" for="postFormTitle">
+						<div
+							class="indicator"
+							appSkeleton
+							[appSkeletonToggle]="postSkeletonToggle"
+							[appSkeletonClassListElementRef]="['!-mx-1']"
+						>
 							<!-- prettier-ignore -->
 							<span
                 class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
@@ -119,13 +119,13 @@
 						class="form-control items-start w-full"
 						*ngIf="postForm.get('categoryName') as categoryName"
 					>
-						<label
-							class="label"
-							for="postFormCategoryName"
-							appSkeleton
-							[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle"
-						>
-							<div class="indicator">
+						<label class="label" for="postFormCategoryName">
+							<div
+								class="indicator"
+								appSkeleton
+								[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle"
+								[appSkeletonClassListElementRef]="['!-mx-1']"
+							>
 								<!-- prettier-ignore -->
 								<span
                   class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
@@ -198,20 +198,20 @@
 						[appSquare]="'1.75em'"
 						[class.btn-outline]="postForm.enabled"
 						[disabled]="postForm.disabled"
-						(click)="onToggleCategoryForm(true)"
+						(click)="appCategoryCreateComponent.onToggleCategoryForm(true)"
 					></button>
 				</div>
 				<fieldset
 					class="form-control items-start col-span-12 sm:col-span-12"
 					*ngIf="postForm.get('description') as description"
 				>
-					<label
-						class="label"
-						for="postFormDescription"
-						appSkeleton
-						[appSkeletonToggle]="postSkeletonToggle"
-					>
-						<div class="indicator">
+					<label class="label" for="postFormDescription">
+						<div
+							class="indicator"
+							appSkeleton
+							[appSkeletonToggle]="postSkeletonToggle"
+							[appSkeletonClassListElementRef]="['!-mx-1']"
+						>
 							<span
 								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 								*ngIf="description.touched && !!description.errors && postForm.enabled"
@@ -458,7 +458,7 @@
 					<!-- prettier-ignore -->
 					<span
             class="loading loading-spinner"
-            *ngIf="postForm.disabled && !postFormImageModal.open && !categoryFormModal.open && !postFormPreviewModal.open && !postDeleteModal.open && !postMarkdownModalToggle"
+            *ngIf="postForm.disabled && !postFormImageModal.open && !appCategoryCreateComponent.categoryCreateDialogToggle && !postFormPreviewModal.open && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownModalToggle"
           ></span>
 					Submit
 				</button>
@@ -472,7 +472,7 @@
 					[appSkeletonClassListElementRef]="['border-0']"
 					[class.btn-outline]="postForm.enabled"
 					[disabled]="postForm.disabled"
-					(click)="onToggleDeletePost(true)"
+					(click)="appPostDeleteComponent.onTogglePostDelete(true)"
 				>
 					Delete
 				</button>
@@ -509,151 +509,6 @@
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
-		#categoryFormModal
-		(keydown.escape)="$event.preventDefault(); categoryFormModal.close()"
-		(close)="onToggleCategoryForm(false)"
-		(click)="$event.target === $event.currentTarget ? categoryFormModal.close() : $event"
-	>
-		<div
-			appWindow
-			[appTitle]="'Category'"
-			[appButtons]="['close']"
-			(closed)="onToggleCategoryForm(false)"
-		>
-			<form
-				class="flex max-w-lg flex-col gap-4 p-4"
-				autocomplete="off"
-				slot="content"
-				[formGroup]="categoryForm"
-				(ngSubmit)="onSubmitCategoryForm()"
-			>
-				<p class="alert">
-					<i
-						class="fill-current text-info"
-						appSvgIcon
-						[appIcon]="'info-circle'"
-						[appSquare]="'1.5em'"
-					></i>
-					<span class="block">You can change category information later</span>
-				</p>
-				<fieldset class="form-control" *ngIf="categoryForm.get('name') as name">
-					<label class="label" for="categoryFormName">
-						<div class="indicator">
-							<span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="name.touched && !!name.errors && categoryForm.enabled"
-								[ngSwitch]="true"
-							>
-								<ng-container *ngSwitchCase="!!name.errors.required"> Required </ng-container>
-								<ng-container *ngSwitchCase="!!name.errors.minlength">
-									Min length {{ name.errors.minlength["requiredLength"] }} characters
-								</ng-container>
-								<ng-container *ngSwitchCase="!!name.errors.maxlength">
-									Max length {{ name.errors.maxlength["requiredLength"] }} characters
-								</ng-container>
-							</span>
-							<span class="label-text mr-2">Name</span>
-						</div>
-					</label>
-					<div class="relative">
-						<input
-							class="input-bordered input input-md w-full truncate pr-12"
-							id="categoryFormName"
-							type="text"
-							aria-label="Name"
-							formControlName="name"
-							placeholder="Type category name"
-							appInputTrimWhitespace
-							[class.input-success]="name.value && name.valid"
-							[class.input-error]="name.touched && name.invalid"
-						/>
-						<button
-							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-							type="button"
-							aria-label="Clear"
-							appSvgIcon
-							*ngIf="!!name.value.length"
-							[class.btn-success]="name.valid"
-							[class.btn-error]="name.touched && name.invalid"
-							[class.btn-ghost]="name.untouched && name.invalid"
-							[disabled]="categoryForm.disabled"
-							[appIcon]="'x'"
-							[appSquare]="'2em'"
-							(click)="name.setValue('')"
-						></button>
-					</div>
-				</fieldset>
-				<fieldset class="form-control" *ngIf="categoryForm.get('description') as description">
-					<label class="label" for="categoryFormDescription">
-						<div class="indicator">
-							<span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="!!description.value && !!description.errors && categoryForm.enabled"
-								[ngSwitch]="true"
-							>
-								<ng-container *ngSwitchCase="!!description.errors.maxlength">
-									Max length {{ description.errors.maxlength["requiredLength"] }} characters
-								</ng-container>
-							</span>
-							<span
-								class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="!description.errors"
-								[class.badge-ghost]="!description.value"
-								[class.badge-success]="!!description.value && categoryForm.enabled"
-								[class.opacity-25]="categoryForm.disabled"
-							>
-								Optional
-							</span>
-							<span class="label-text mr-2">Description</span>
-						</div>
-						<span
-							class="label-text-alt"
-							[class.text-base-content]="categoryForm.disabled"
-							[class.text-success]="categoryForm.enabled && description.value && description.valid"
-							[class.text-error]="categoryForm.enabled && description.value && description.invalid"
-						>
-							{{ description.value?.length || 0 }}/255
-						</span>
-					</label>
-					<!-- prettier-ignore -->
-					<div
-            class="textarea-autosize w-full"
-            [ngClass]="{ 'border-base-content/20': categoryForm.enabled, 'border-transparent': categoryForm.disabled }"
-            [class.textarea-autosize-success]="description.value && description.valid"
-            [class.textarea-autosize-error]="description.value && description.invalid"
-          >
-            <textarea
-              class="textarea textarea-md w-full max-h-64"
-              id="categoryFormDescription"
-              aria-label="Description"
-              placeholder="Type category description"
-              formControlName="description"
-              appInputTrimWhitespace
-              appTextareaResize
-              [appToggleResize]="true"
-              [rows]="4"
-            >
-              {{ description.value }}
-            </textarea>
-          </div>
-				</fieldset>
-				<fieldset class="form-control">
-					<button
-						class="btn-success btn w-full"
-						type="submit"
-						aria-label="Submit"
-						[disabled]="categoryForm.invalid || categoryForm.disabled"
-					>
-						<span class="loading loading-spinner" *ngIf="categoryForm.disabled"></span>
-						Submit
-					</button>
-				</fieldset>
-			</form>
-		</div>
-	</dialog>
-	<!-- prettier-ignore-attribute (click) -->
-	<dialog
-		class="modal"
 		#postFormImageModal
 		(keydown.escape)="$event.preventDefault(); postFormImageModal.close()"
 		(close)="onTogglePostFormImage(false)"
@@ -674,41 +529,17 @@
 			></div>
 		</div>
 	</dialog>
-	<!-- prettier-ignore-attribute (click) -->
-	<dialog
-		class="modal"
-		#postDeleteModal
-		(keydown.escape)="$event.preventDefault(); postDeleteModal.close()"
-		(close)="onToggleDeletePost(false)"
-		(click)="$event.target === $event.currentTarget ? postDeleteModal.close() : $event"
-	>
-		<div
-			appWindow
-			[appTitle]="'Delete'"
-			[appButtons]="['close']"
-			(closed)="onToggleDeletePost(false)"
-		>
-			<div class="flex max-w-md flex-col gap-4 p-4" slot="content">
-				<p class="alert">
-					<i
-						class="fill-current text-info"
-						appSvgIcon
-						[appIcon]="'info-circle'"
-						[appSquare]="'1.5em'"
-					></i>
-					<span class="block"> Are you sure you want to delete this post? </span>
-				</p>
-				<button
-					class="btn-success btn"
-					type="button"
-					aria-label="Submit"
-					[disabled]="postDeleteIsSubmitted"
-					(click)="onSubmitPostDelete()"
-				>
-					<span class="loading loading-spinner" *ngIf="postDeleteIsSubmitted"></span>
-					Submit
-				</button>
-			</div>
-		</div>
-	</dialog>
+	<div
+		appCategoryCreate
+		#appCategoryCreateComponent
+		(appCategoryCreateToggled)="onSubmitPostFormStatus($event)"
+		(appCategoryCreateCreated)="categoryList.unshift($event)"
+		(appCategoryCreateSelected)="onSelectCategory($event)"
+	></div>
+	<div
+		appPostDelete
+		#appPostDeleteComponent
+		[appPostDeletePost]="post"
+		(appPostDeleteToggled)="onSubmitPostFormStatus($event)"
+	></div>
 </ng-container>

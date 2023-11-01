@@ -1,0 +1,41 @@
+<!-- @format -->
+
+<ng-container>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#postDeleteDialogElement
+		(keydown.escape)="$event.preventDefault(); postDeleteDialogElement.close()"
+		(close)="onTogglePostDelete(false)"
+		(click)="$event.target === $event.currentTarget ? postDeleteDialogElement.close() : $event"
+	>
+		<div
+			appWindow
+			[appTitle]="'Delete'"
+			[appButtons]="['close']"
+			(closed)="onTogglePostDelete(false)"
+		>
+			<div class="flex max-w-md flex-col gap-4 p-4" slot="content">
+				<p class="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appIcon]="'info-circle'"
+						[appSquare]="'1.5em'"
+					></i>
+					<span class="block"> Are you sure you want to delete this post? </span>
+				</p>
+				<button
+					class="btn-success btn"
+					type="button"
+					aria-label="Submit"
+					[disabled]="postDeleteIsSubmitted"
+					(click)="onSubmitPostDelete()"
+				>
+					<span class="loading loading-spinner" *ngIf="postDeleteIsSubmitted"></span>
+					Submit
+				</button>
+			</div>
+		</div>
+	</dialog>
+</ng-container>

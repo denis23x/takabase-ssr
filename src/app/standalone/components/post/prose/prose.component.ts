@@ -13,6 +13,10 @@ import { AuthorizationService } from '../../../../core/services/authorization.se
 import { SanitizerPipe } from '../../../pipes/sanitizer.pipe';
 import { CurrentUser } from '../../../../core/models/current-user.model';
 import { AppSkeletonDirective } from '../../../directives/app-skeleton.directive';
+import { DropdownComponent } from '../../dropdown/dropdown.component';
+import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
+import { filter } from 'rxjs/operators';
+import { PostDeleteComponent } from '../delete/delete.component';
 
 @Component({
 	standalone: true,
@@ -25,7 +29,10 @@ import { AppSkeletonDirective } from '../../../directives/app-skeleton.directive
 		DayjsPipe,
 		NgOptimizedImage,
 		SanitizerPipe,
-		AppSkeletonDirective
+		AppSkeletonDirective,
+		DropdownComponent,
+		SvgIconComponent,
+		PostDeleteComponent
 	],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
@@ -44,6 +51,9 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
+	currentUserSkeletonToggle: boolean = true;
+	currentUserSkeletonToggle$: Subscription | undefined;
+
 	post: Post | undefined;
 	postSkeletonToggle: boolean = true;
 
@@ -54,9 +64,17 @@ export class PostDetailComponent implements OnInit, OnDestroy {
 			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
+
+		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
+			.pipe(filter((currentUserIsPopulated: boolean) => currentUserIsPopulated))
+			.subscribe({
+				next: () => (this.currentUserSkeletonToggle = false),
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.currentUser$, this.currentUserSkeletonToggle$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 }
