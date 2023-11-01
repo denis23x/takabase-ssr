@@ -79,12 +79,17 @@ export class MarkdownService {
 			.use(bracketedSpans)
 			.use(collapsible)
 			.use(emoji)
-			.use(linkAttributes, {
-				attrs: {
-					target: '_blank',
-					rel: 'ugc noopener noreferrer'
+			.use(linkAttributes, [
+				{
+					matcher(href: string) {
+						return href.match(/^https?:\/\//);
+					},
+					attrs: {
+						target: '_blank',
+						rel: 'ugc noopener noreferrer'
+					}
 				}
-			})
+			])
 			.use(mark)
 			.use(multiMdTable, {
 				multiline: true,

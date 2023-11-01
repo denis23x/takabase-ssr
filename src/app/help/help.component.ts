@@ -48,8 +48,8 @@ export class HelpComponent implements OnInit {
 	helpForm: FormGroup | undefined;
 	helpNavigationList: any[] = [
 		{
-			path: 'features',
-			name: 'Features'
+			path: 'about',
+			name: 'About'
 		},
 		{
 			path: 'code-highlight',

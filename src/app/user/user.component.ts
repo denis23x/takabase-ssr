@@ -2,8 +2,8 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import { debounceTime, filter } from 'rxjs/operators';
+import { Observable, Subscription, throwError } from 'rxjs';
+import { catchError, debounceTime, filter } from 'rxjs/operators';
 import {
 	FormBuilder,
 	FormControl,
@@ -32,6 +32,8 @@ import { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
 import { AppSkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
 import { CategoryDeleteComponent } from '../standalone/components/category/delete/delete.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { SnackbarService } from '../core/services/snackbar.service';
 
 interface PostSearchForm {
 	query: FormControl<string>;
@@ -94,7 +96,8 @@ export class UserComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private authorizationService: AuthorizationService,
 		private userService: UserService,
-		private skeletonService: SkeletonService
+		private skeletonService: SkeletonService,
+		private snackbarService: SnackbarService
 	) {
 		this.postSearchForm = this.formBuilder.group<PostSearchForm>({
 			query: this.formBuilder.nonNullable.control('', [
@@ -216,6 +219,9 @@ export class UserComponent implements OnInit, OnDestroy {
 
 			this.postSearchForm.reset();
 			this.postSearchFormToggle = false;
+
+			this.postSearchForm$?.unsubscribe();
+			this.activatedRouteQueryParams$?.unsubscribe();
 		} else {
 			this.postSearchFormToggle = true;
 
@@ -267,5 +273,27 @@ export class UserComponent implements OnInit, OnDestroy {
 			next: (isSubmitted: boolean) => isSubmitted ? this.postSearchForm.disable() : this.postSearchForm.enable(),
 			error: (error: any) => console.error(error)
 		});
+	}
+
+	onLogout(): void {
+		this.authorizationService
+			.onLogout()
+			.pipe(
+				catchError((httpErrorResponse: HttpErrorResponse) => {
+					this.router
+						.navigate(['/error', httpErrorResponse.status])
+						.then(() => console.debug('Route changed'));
+
+					return throwError(() => httpErrorResponse);
+				})
+			)
+			.subscribe({
+				next: () => {
+					this.router.navigateByUrl('/').then(() => {
+						this.snackbarService.success(null, 'Bye bye');
+					});
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 }

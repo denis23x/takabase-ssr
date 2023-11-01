@@ -39,9 +39,13 @@
     }
   }
 
+  /* https://stackoverflow.com/questions/5379752/css-style-external-links */
+
   a {
-    &:not(.not-prose) {
-      @apply link after:content-['\279A'] after:inline-block after:px-1;
+    &[href]:not(:where([href^="#"],[href^="/"]:not([href^="//"]),[href*="//localhost"])) {
+      &:not(.not-prose) {
+        @apply link after:content-['\279A'] after:inline-block after:px-1;
+      }
     }
   }
 

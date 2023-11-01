@@ -89,7 +89,7 @@ export const routes: Routes = [
 	{
 		path: 'help',
 		pathMatch: 'full',
-		redirectTo: 'help/features'
+		redirectTo: 'help/about'
 	},
 	{
 		path: 'help/:markdown',
@@ -115,8 +115,8 @@ export const routes: Routes = [
 		canMatch: [CanMatchPrivateGuard]
 	},
 	{
-		path: 'edit/:postId',
-		title: 'Edit post',
+		path: 'update/:postId',
+		title: 'Update post',
 		loadComponent: () => {
 			return import('./create/create.component').then(m => m.CreateComponent);
 		},

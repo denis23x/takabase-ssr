@@ -54,24 +54,41 @@
 						class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
 						slot="content"
 					>
-						<li class="flex w-full snap-start scroll-my-2 menu-title text-right">User</li>
-						<li class="flex w-full snap-start scroll-my-2 menu-title">
-							<hr class="my-0 border-base-content/20" />
-						</li>
 						<ng-container [ngSwitch]="currentUser?.id === user.id">
 							<ng-container *ngSwitchCase="true">
-								<li
-									class="flex w-full snap-start scroll-my-2"
-									*ngFor="let link of ['Profile', 'Account', 'Appearance']"
-								>
+								<li class="flex w-full snap-start scroll-my-2">
 									<a
 										class="rounded-btn block w-full truncate text-right"
-										[title]="link"
-										[attr.aria-label]="link"
-										[routerLink]="['/settings', link.toLowerCase()]"
+										title="Settings"
+										aria-label="Settings"
+										[routerLink]="['/settings']"
 									>
-										{{ link }}
+										Settings
 									</a>
+								</li>
+								<li class="flex w-full snap-start scroll-my-2">
+									<a
+										class="rounded-btn block w-full truncate text-right"
+										title="About"
+										aria-label="About"
+										[routerLink]="['/help/about']"
+									>
+										About
+									</a>
+								</li>
+								<li class="flex w-full snap-start scroll-my-2 menu-title">
+									<hr class="my-0 border-base-content/20" />
+								</li>
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										type="button"
+										title="Logout"
+										aria-label="Logout"
+										(click)="onLogout()"
+									>
+										Logout
+									</button>
 								</li>
 							</ng-container>
 							<ng-container *ngSwitchCase="false">
@@ -162,6 +179,8 @@
 							title="Search"
 							aria-label="Search"
 							appSvgIcon
+							appSkeleton
+							[appSkeletonToggle]="categorySkeletonToggle"
 							[appIcon]="postSearchFormToggle ? 'x-lg' : 'search'"
 							[appSquare]="'1.5em'"
 							(click)="onTogglePostSearchForm()"
@@ -191,14 +210,16 @@
 								<div
 									class="flex p-0"
 									appDropdown
+									appSkeleton
 									*ngIf="currentUser?.id === user.id"
+									[appSkeletonToggle]="categorySkeletonToggle || currentUserSkeletonToggle"
 									[appPosition]="'bottom-right'"
 								>
 									<button
 										class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current p-3"
 										type="button"
-										title="Edit"
-										aria-label="Edit"
+										title="Settings"
+										aria-label="Settings"
 										appSvgIcon
 										slot="target"
 										[appIcon]="'three-dots-vertical'"
@@ -208,21 +229,25 @@
 										class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
 										slot="content"
 									>
-										<li class="flex w-full snap-start scroll-my-2 menu-title text-right">
-											Category
-										</li>
-										<li class="flex w-full snap-start scroll-my-2 menu-title">
-											<hr class="my-0 border-base-content/20" />
+										<li class="flex w-full snap-start scroll-my-2">
+											<button
+												class="rounded-btn block w-full truncate text-right"
+												type="button"
+												title="Create"
+												aria-label="Create"
+											>
+												Create
+											</button>
 										</li>
 										<li class="flex w-full snap-start scroll-my-2">
 											<button
 												class="rounded-btn block w-full truncate text-right"
 												type="button"
-												title="Edit"
-												aria-label="Edit"
+												title="Update"
+												aria-label="Update"
 												(click)="appCategoryUpdateComponent.onToggleCategoryUpdateForm(true)"
 											>
-												Edit
+												Update
 											</button>
 										</li>
 										<li class="flex w-full snap-start scroll-my-2">

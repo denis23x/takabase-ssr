@@ -1,7 +1,7 @@
 User-agent: *
 
 Disallow: /create
-Disallow: /edit/*
+Disallow: /update/*
 Disallow: /settings/*
 
 Sitemap: http://localhost:4200/sitemap.xml
