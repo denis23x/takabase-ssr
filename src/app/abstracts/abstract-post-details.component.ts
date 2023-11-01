@@ -16,7 +16,7 @@ import { Subscription, throwError } from 'rxjs';
 })
 export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy {
 	// prettier-ignore
-	@ViewChild('abstractPostProseModal', { static: true }) abstractPostProseModal: ElementRef<HTMLDialogElement> | undefined;
+	@ViewChild('abstractPostProseDialog', { static: true }) abstractPostProseDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	abstractPost: Post | undefined;
 	abstractPostRequest$: Subscription | undefined;
@@ -38,13 +38,13 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 	ngOnDestroy(): void {
 		[this.abstractPostRequest$].forEach(($: Subscription) => $.unsubscribe());
 
-		this.setAbstractClosePostProseModal(false);
+		this.setAbstractPostProseDialogClose(false);
 	}
 
 	setAbstractSkeleton(): void {
 		this.abstractPost = this.skeletonService.getPost(['category', 'user']);
 		this.abstractPostSkeletonToggle = true;
-		this.abstractPostProseModal.nativeElement.showModal();
+		this.abstractPostProseDialog.nativeElement.showModal();
 	}
 
 	getAbstractPost(postId: number, postGetOneDto: PostGetOneDto): void {
@@ -71,9 +71,9 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 			});
 	}
 
-	setAbstractClosePostProseModal(redirect: boolean = true): void {
+	setAbstractPostProseDialogClose(redirect: boolean = true): void {
 		this.abstractPost = undefined;
-		this.abstractPostProseModal.nativeElement.close();
+		this.abstractPostProseDialog.nativeElement.close();
 
 		this.postService.removePostMeta();
 		this.postService.removePostTitle();

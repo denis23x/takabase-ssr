@@ -280,7 +280,7 @@
 						[appPreviewId]="'postFormPreview'"
 						[appScrollSync]="fullscreenScrollSync"
 						[appDisabled]="postForm.disabled"
-						(modalToggle)="onToggleMarkdownModal($event)"
+						(modalToggle)="onToggleMarkdownDialog($event)"
 					></div>
 					<div class="flex items-center justify-end gap-4">
 						<button
@@ -460,7 +460,7 @@
 					<!-- prettier-ignore -->
 					<span
             class="loading loading-spinner"
-            *ngIf="postForm.disabled && !postFormImageModal.open && !appCategoryCreateComponent.categoryCreateDialogToggle && !postFormPreviewModal.open && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownModalToggle"
+            *ngIf="postForm.disabled && !postFormImageDialog.open && !appCategoryCreateComponent.categoryCreateDialogToggle && !postFormPreviewDialog.open && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownDialogToggle"
           ></span>
 					Submit
 				</button>
@@ -484,10 +484,10 @@
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
-		#postFormPreviewModal
-		(keydown.escape)="$event.preventDefault(); postFormPreviewModal.close()"
+		#postFormPreviewDialog
+		(keydown.escape)="$event.preventDefault(); postFormPreviewDialog.close()"
 		(close)="onTogglePreviewPost(false)"
-		(click)="$event.target === $event.currentTarget ? postFormPreviewModal.close() : $event"
+		(click)="$event.target === $event.currentTarget ? postFormPreviewDialog.close() : $event"
 	>
 		<div
 			appWindow
@@ -511,10 +511,10 @@
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
-		#postFormImageModal
-		(keydown.escape)="$event.preventDefault(); postFormImageModal.close()"
+		#postFormImageDialog
+		(keydown.escape)="$event.preventDefault(); postFormImageDialog.close()"
 		(close)="onTogglePostFormImage(false)"
-		(click)="$event.target === $event.currentTarget ? postFormImageModal.close() : $event"
+		(click)="$event.target === $event.currentTarget ? postFormImageDialog.close() : $event"
 	>
 		<div
 			appWindow
@@ -525,7 +525,7 @@
 			<div
 				appCropper
 				slot="content"
-				*ngIf="postFormImageModal.open"
+				*ngIf="postFormImageDialog.open"
 				[appCropperUploadPath]="'/upload/post-images'"
 				(submitted)="onSubmitPostFormImage($event)"
 			></div>

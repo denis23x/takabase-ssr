@@ -194,7 +194,7 @@
 				>
 					<span
 						class="loading loading-spinner"
-						*ngIf="profileForm.disabled && !profileFormAvatarModal.open"
+						*ngIf="profileForm.disabled && !profileFormAvatarDialog.open"
 					></span>
 					Submit
 				</button>
@@ -204,10 +204,10 @@
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
-		#profileFormAvatarModal
-		(keydown.escape)="$event.preventDefault(); profileFormAvatarModal.close()"
+		#profileFormAvatarDialog
+		(keydown.escape)="$event.preventDefault(); profileFormAvatarDialog.close()"
 		(close)="onToggleProfileFormAvatar(false)"
-		(click)="$event.target === $event.currentTarget ? profileFormAvatarModal.close() : $event"
+		(click)="$event.target === $event.currentTarget ? profileFormAvatarDialog.close() : $event"
 	>
 		<div
 			appWindow
@@ -218,7 +218,7 @@
 			<div
 				appCropper
 				slot="content"
-				*ngIf="profileFormAvatarModal.open"
+				*ngIf="profileFormAvatarDialog.open"
 				[appCropperUploadPath]="'/upload/user-avatars'"
 				(submitted)="onSubmitCropper($event)"
 			></div>
@@ -227,10 +227,10 @@
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
-		#QRCodeModal
-		(keydown.escape)="$event.preventDefault(); QRCodeModal.close()"
+		#QRCodeDialog
+		(keydown.escape)="$event.preventDefault(); QRCodeDialog.close()"
 		(close)="onToggleQRCode(false)"
-		(click)="$event.target === $event.currentTarget ? QRCodeModal.close() : $event"
+		(click)="$event.target === $event.currentTarget ? QRCodeDialog.close() : $event"
 	>
 		<div appWindow [appTitle]="'QR Code'" [appButtons]="['close']" (closed)="onToggleQRCode(false)">
 			<div class="flex flex-col items-center justify-start gap-4 p-4" slot="content">

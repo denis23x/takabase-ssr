@@ -80,8 +80,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
 
 	// prettier-ignore
-	@ViewChild('postFormPreviewModal') postFormPreviewModal: ElementRef<HTMLDialogElement> | undefined;
-	@ViewChild('postFormImageModal') postFormImageModal: ElementRef<HTMLDialogElement> | undefined;
+	@ViewChild('postFormPreviewDialog') postFormPreviewDialog: ElementRef<HTMLDialogElement> | undefined;
+	@ViewChild('postFormImageDialog') postFormImageDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	category: Category | undefined;
 	categoryList: Category[] = [];
@@ -95,7 +95,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	postFormIsPristine: boolean = false;
 	postFormIsPristine$: Subscription | undefined;
 
-	postMarkdownModalToggle: boolean = false;
+	postMarkdownDialogToggle: boolean = false;
 	postMarkdownMonospace: boolean = false;
 
 	currentUser: CurrentUser | undefined;
@@ -278,9 +278,9 @@ export class CreateComponent implements OnInit, OnDestroy {
 		this.onSubmitPostFormStatus(toggle);
 
 		if (toggle) {
-			this.postFormImageModal.nativeElement.showModal();
+			this.postFormImageDialog.nativeElement.showModal();
 		} else {
-			this.postFormImageModal.nativeElement.close();
+			this.postFormImageDialog.nativeElement.close();
 		}
 	}
 
@@ -302,22 +302,22 @@ export class CreateComponent implements OnInit, OnDestroy {
 		this.onSubmitPostFormStatus(toggle);
 
 		if (toggle) {
-			this.postFormPreviewModal.nativeElement.showModal();
+			this.postFormPreviewDialog.nativeElement.showModal();
 			this.postPreview = {
 				...this.postForm.value,
 				user: this.currentUser,
 				category: this.category
 			};
 		} else {
-			this.postFormPreviewModal.nativeElement.close();
+			this.postFormPreviewDialog.nativeElement.close();
 			this.postPreview = undefined;
 		}
 	}
 
-	onToggleMarkdownModal(toggle: boolean): void {
+	onToggleMarkdownDialog(toggle: boolean): void {
 		this.onSubmitPostFormStatus(toggle);
 
-		this.postMarkdownModalToggle = toggle;
+		this.postMarkdownDialogToggle = toggle;
 	}
 
 	onSelectCategory(category: Category): void {

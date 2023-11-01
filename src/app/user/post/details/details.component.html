@@ -4,16 +4,16 @@
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
-		#abstractPostProseModal
-		(keydown.escape)="$event.preventDefault(); abstractPostProseModal.close()"
-		(close)="setAbstractClosePostProseModal()"
-		(click)="$event.target === $event.currentTarget ? abstractPostProseModal.close() : $event"
+		#abstractPostProseDialog
+		(keydown.escape)="$event.preventDefault(); abstractPostProseDialog.close()"
+		(close)="setAbstractPostProseDialogClose()"
+		(click)="$event.target === $event.currentTarget ? abstractPostProseDialog.close() : $event"
 	>
 		<div
 			appWindow
 			[appTitle]="'View'"
 			[appButtons]="['close', 'fullscreen']"
-			(closed)="setAbstractClosePostProseModal()"
+			(closed)="setAbstractPostProseDialogClose()"
 		>
 			<main
 				appPostProse

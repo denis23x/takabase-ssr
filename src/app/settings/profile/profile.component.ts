@@ -56,8 +56,8 @@ interface ProfileForm {
 })
 export class SettingsProfileComponent implements OnInit, OnDestroy {
 	// prettier-ignore
-	@ViewChild('profileFormAvatarModal') profileFormAvatarModal: ElementRef<HTMLDialogElement> | undefined;
-	@ViewChild('QRCodeModal') QRCodeModal: ElementRef<HTMLDialogElement> | undefined;
+	@ViewChild('profileFormAvatarDialog') profileFormAvatarDialog: ElementRef<HTMLDialogElement> | undefined;
+	@ViewChild('QRCodeDialog') QRCodeDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -122,10 +122,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	onToggleProfileFormAvatar(toggle: boolean): void {
 		if (toggle) {
 			this.profileForm.disable();
-			this.profileFormAvatarModal.nativeElement.showModal();
+			this.profileFormAvatarDialog.nativeElement.showModal();
 		} else {
 			this.profileForm.enable();
-			this.profileFormAvatarModal.nativeElement.close();
+			this.profileFormAvatarDialog.nativeElement.close();
 		}
 	}
 
@@ -138,9 +138,9 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				this.currentUserQRCodeUrl = window.location.origin + this.userService.getUserUrl(this.currentUser);
 			}
 
-			this.QRCodeModal.nativeElement.showModal();
+			this.QRCodeDialog.nativeElement.showModal();
 		} else {
-			this.QRCodeModal.nativeElement.close();
+			this.QRCodeDialog.nativeElement.close();
 		}
 	}
 

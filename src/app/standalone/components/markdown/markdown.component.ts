@@ -80,7 +80,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	@ViewChild('dropdownList') dropdownList: DropdownComponent | undefined;
 	@ViewChild('dropdownEmojiMart') dropdownEmojiMart: DropdownComponent | undefined;
 	@ViewChild('dropdownTable') dropdownTable: DropdownComponent | undefined;
-	@ViewChild('urlFormModal') urlFormModal: ElementRef<HTMLDialogElement> | undefined;
+	@ViewChild('urlFormDialog') urlFormDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() modalToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -438,14 +438,14 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			}
 
 			this.urlFormControl = markdownControl;
-			this.urlFormModal.nativeElement.showModal();
+			this.urlFormDialog.nativeElement.showModal();
 		} else {
 			// prettier-ignore
 			Object.keys(this.urlForm.controls).forEach((key: string) => this.urlForm.removeControl(key));
 
 			this.urlForm$?.unsubscribe();
 			this.urlFormControl = undefined;
-			this.urlFormModal.nativeElement.close();
+			this.urlFormDialog.nativeElement.close();
 		}
 
 		this.modalToggle.emit(toggle);

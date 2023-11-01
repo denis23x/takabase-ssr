@@ -261,10 +261,10 @@
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
-		#urlFormModal
-		(keydown.escape)="$event.preventDefault(); urlFormModal.close()"
+		#urlFormDialog
+		(keydown.escape)="$event.preventDefault(); urlFormDialog.close()"
 		(close)="onToggleUrlForm(false)"
-		(click)="$event.target === $event.currentTarget ? urlFormModal.close() : $event"
+		(click)="$event.target === $event.currentTarget ? urlFormDialog.close() : $event"
 	>
 		<div
 			appWindow

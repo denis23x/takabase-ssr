@@ -43,7 +43,7 @@ interface HelpForm {
 	templateUrl: './help.component.html'
 })
 export class HelpComponent implements OnInit {
-	@ViewChild('helpFormModal') helpFormModal: ElementRef<HTMLDialogElement> | undefined;
+	@ViewChild('helpFormDialog') helpFormDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	helpForm: FormGroup | undefined;
 	helpNavigationList: any[] = [
@@ -125,9 +125,9 @@ export class HelpComponent implements OnInit {
 
 	onToggleHelpForm(toggle: boolean): void {
 		if (toggle) {
-			this.helpFormModal.nativeElement.showModal();
+			this.helpFormDialog.nativeElement.showModal();
 		} else {
-			this.helpFormModal.nativeElement.close();
+			this.helpFormDialog.nativeElement.close();
 		}
 
 		this.helpForm.reset();

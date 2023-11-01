@@ -64,10 +64,10 @@
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
-		#helpFormModal
-		(keydown.escape)="$event.preventDefault(); helpFormModal.close()"
+		#helpFormDialog
+		(keydown.escape)="$event.preventDefault(); helpFormDialog.close()"
 		(close)="onToggleHelpForm(false)"
-		(click)="$event.target === $event.currentTarget ? helpFormModal.close() : $event"
+		(click)="$event.target === $event.currentTarget ? helpFormDialog.close() : $event"
 	>
 		<div
 			appWindow
