@@ -24,12 +24,12 @@ import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 })
 export class CardCategoryComponent {
 	@Input()
-	set appCategory(category: Category) {
+	set appCardCategoryCategory(category: Category) {
 		this.category = category;
 	}
 
 	@Input()
-	set appCategorySkeletonToggle(categorySkeletonToggle: boolean) {
+	set appCardCategorySkeletonToggle(categorySkeletonToggle: boolean) {
 		this.categorySkeletonToggle = categorySkeletonToggle;
 	}
 

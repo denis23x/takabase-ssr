@@ -8,8 +8,8 @@
 					class="block"
 					appCardCategory
 					[ngClass]="category.description ? 'row-span-6' : 'row-span-3'"
-					[appCategory]="category"
-					[appCategorySkeletonToggle]="abstractListSkeletonToggle"
+					[appCardCategoryCategory]="category"
+					[appCardCategorySkeletonToggle]="abstractListSkeletonToggle"
 				></li>
 				<!-- TODO: ads
 				<li class="block row-span-6" *ngIf="i === 10 || i === 20 || i === 30">
@@ -52,8 +52,8 @@
 			<i
 				class="fill-current text-base-content"
 				appSvgIcon
-				[appIcon]="'exclamation-circle'"
-				[appSquare]="'3em'"
+				[appSvgIconIcon]="'exclamation-circle'"
+				[appSvgIconSquare]="'3em'"
 			></i>
 			<div class="text-center">
 				<p class="text-xl font-bold text-base-content">

@@ -11,9 +11,9 @@
 	>
 		<div
 			appWindow
-			[appTitle]="'Create'"
-			[appButtons]="['close']"
-			(closed)="onToggleCategoryForm(false)"
+			[appWindowTitle]="'Create'"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onToggleCategoryForm(false)"
 		>
 			<form
 				class="flex flex-col gap-4 p-4"
@@ -26,8 +26,8 @@
 					<i
 						class="fill-current text-info"
 						appSvgIcon
-						[appIcon]="'info-circle'"
-						[appSquare]="'1.5em'"
+						[appSvgIconIcon]="'info-circle'"
+						[appSvgIconSquare]="'1.5em'"
 					></i>
 					<span class="block">You can change category information later</span>
 				</p>
@@ -72,8 +72,8 @@
 							[class.btn-error]="name.touched && name.invalid"
 							[class.btn-ghost]="name.untouched && name.invalid"
 							[disabled]="categoryForm.disabled"
-							[appIcon]="'x'"
-							[appSquare]="'2em'"
+							[appSvgIconIcon]="'x'"
+							[appSvgIconSquare]="'2em'"
 							(click)="name.setValue('')"
 						></button>
 					</div>

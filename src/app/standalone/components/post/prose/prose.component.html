@@ -15,7 +15,7 @@
 						<figure
 							class="h-12 w-12 rounded-btn relative overflow-hidden"
 							appAvatar
-							[appUser]="post.user"
+							[appAvatarUser]="post.user"
 						></figure>
 					</a>
 					<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
@@ -43,7 +43,7 @@
 					appSkeleton
 					*ngIf="!postPreview"
 					[appSkeletonToggle]="postSkeletonToggle || currentUserSkeletonToggle"
-					[appPosition]="'bottom-right'"
+					[appDropdownPosition]="'bottom-right'"
 				>
 					<button
 						class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current p-3"
@@ -52,8 +52,8 @@
 						aria-label="Settings"
 						appSvgIcon
 						slot="target"
-						[appIcon]="'three-dots-vertical'"
-						[appSquare]="'1.5em'"
+						[appSvgIconIcon]="'three-dots-vertical'"
+						[appSvgIconSquare]="'1.5em'"
 					></button>
 					<ul
 						class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"

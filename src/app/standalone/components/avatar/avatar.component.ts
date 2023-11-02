@@ -14,7 +14,7 @@ import { PlatformService } from '../../../core/services/platform.service';
 })
 export class AvatarComponent {
 	@Input()
-	set appUser(user: User) {
+	set appAvatarUser(user: User) {
 		this.user = user;
 
 		if (this.user.avatar) {

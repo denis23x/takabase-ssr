@@ -37,7 +37,12 @@
 				<div
 					class="flex sm:flex-row flex-col items-start sm:items-center justify-start gap-4 border-b border-base-content/20 pb-4"
 				>
-					<i class="fill-current" appSvgIcon [appIcon]="appFeature.icon" [appSquare]="'1.5em'"></i>
+					<i
+						class="fill-current"
+						appSvgIcon
+						[appSvgIconIcon]="appFeature.icon"
+						[appSvgIconSquare]="'1.5em'"
+					></i>
 					<h3 class="text-2xl sm:text-4xl font-semibold text-base-content">
 						{{ appFeature.title }}
 					</h3>
@@ -64,8 +69,8 @@
 							<i
 								class="fill-current text-info"
 								appSvgIcon
-								[appIcon]="'info-circle'"
-								[appSquare]="'1.75em'"
+								[appSvgIconIcon]="'info-circle'"
+								[appSvgIconSquare]="'1.75em'"
 							></i>
 							<span class="block">
 								Link multiple authorization methods to a single account for ultimate flexibility.

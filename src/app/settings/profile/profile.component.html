@@ -19,7 +19,7 @@
               data-pw="app-settings-profile-image-avatar"
               appAvatar
               [ngClass]="{ 'cursor-not-allowed opacity-50 saturate-0 transition': profileForm.disabled }"
-              [appUser]="currentUser"
+              [appAvatarUser]="currentUser"
             ></figure>
           </div>
 					<div class="flex flex-col overflow-auto">
@@ -46,8 +46,8 @@
 						aria-label="QR Code"
 						appSvgIcon
 						[disabled]="profileForm.disabled"
-						[appIcon]="'qr-code'"
-						[appSquare]="'1.75em'"
+						[appSvgIconIcon]="'qr-code'"
+						[appSvgIconSquare]="'1.75em'"
 						(click)="onToggleQRCode(true)"
 					></button>
 					<button
@@ -111,8 +111,8 @@
 						[class.btn-error]="name.touched && name.invalid"
 						[class.btn-ghost]="name.untouched"
 						[disabled]="profileForm.disabled"
-						[appIcon]="'x'"
-						[appSquare]="'2em'"
+						[appSvgIconIcon]="'x'"
+						[appSvgIconSquare]="'2em'"
 						(click)="name.setValue('')"
 					></button>
 				</div>
@@ -121,8 +121,8 @@
 				<i
 					class="fill-current text-info"
 					appSvgIcon
-					[appIcon]="'info-circle'"
-					[appSquare]="'1.5em'"
+					[appSvgIconIcon]="'info-circle'"
+					[appSvgIconSquare]="'1.5em'"
 				></i>
 				<!-- prettier-ignore -->
 				<span class="block">Change the name will set the <span class="inline font-bold">{{ currentUser | userUrl : 1 }}</span> user profile not more available by direct link or QR code</span>
@@ -211,16 +211,16 @@
 	>
 		<div
 			appWindow
-			[appTitle]="'Avatar'"
-			[appButtons]="['close']"
-			(closed)="onToggleProfileFormAvatar(false)"
+			[appWindowTitle]="'Avatar'"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onToggleProfileFormAvatar(false)"
 		>
 			<div
 				appCropper
 				slot="content"
 				*ngIf="profileFormAvatarDialog.open"
 				[appCropperUploadPath]="'/upload/user-avatars'"
-				(submitted)="onSubmitCropper($event)"
+				(appCropperSubmit)="onSubmitCropper($event)"
 			></div>
 		</div>
 	</dialog>
@@ -232,7 +232,12 @@
 		(close)="onToggleQRCode(false)"
 		(click)="$event.target === $event.currentTarget ? QRCodeDialog.close() : $event"
 	>
-		<div appWindow [appTitle]="'QR Code'" [appButtons]="['close']" (closed)="onToggleQRCode(false)">
+		<div
+			appWindow
+			[appWindowTitle]="'QR Code'"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onToggleQRCode(false)"
+		>
 			<div class="flex flex-col items-center justify-start gap-4 p-4" slot="content">
 				<div
 					class="flex flex-col bg-base-200 rounded-box border border-base-content/20 overflow-hidden w-full"

@@ -24,12 +24,12 @@ import { User } from '../../../../core/models/user.model';
 })
 export class CardUserComponent {
 	@Input()
-	set appUser(user: User) {
+	set appCardUserUser(user: User) {
 		this.user = user;
 	}
 
 	@Input()
-	set appUserSkeletonToggle(userSkeletonToggle: boolean) {
+	set appCardUserSkeletonToggle(userSkeletonToggle: boolean) {
 		this.userSkeletonToggle = userSkeletonToggle;
 	}
 

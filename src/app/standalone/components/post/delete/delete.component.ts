@@ -33,7 +33,7 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild('postDeleteDialogElement') postDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
-	@Output() appPostDeleteToggled: EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() appPostDeleteToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input()
 	set appPostDeletePost(post: Post) {
@@ -68,7 +68,7 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	onTogglePostDelete(toggle: boolean): void {
-		this.appPostDeleteToggled.emit(toggle);
+		this.appPostDeleteToggle.emit(toggle);
 
 		this.postDeleteDialogToggle = toggle;
 

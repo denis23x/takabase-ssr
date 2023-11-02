@@ -7,13 +7,8 @@
 			autocomplete="off"
 			[formGroup]="appearanceForm"
 		>
-			<div
-				class="flex w-full flex-col items-start gap-4 sm:flex-row sm:justify-between"
-			>
-				<fieldset
-					class="form-control w-full"
-					*ngIf="appearanceForm.get('theme') as theme"
-				>
+			<div class="flex w-full flex-col items-start gap-4 sm:flex-row sm:justify-between">
+				<fieldset class="form-control w-full" *ngIf="appearanceForm.get('theme') as theme">
 					<label class="label" for="appearanceFormTheme">
 						<span class="label-text">Theme</span>
 						<a
@@ -28,7 +23,7 @@
 					<div
 						class="block"
 						appDropdown
-						[appFitParentWidth]="true"
+						[appDropdownFitParentWidth]="true"
 						[class.cursor-not-allowed]="appearanceForm.disabled"
 					>
 						<input
@@ -47,9 +42,7 @@
 							class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 							slot="content"
 						>
-							<ul
-								class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2"
-							>
+							<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
 								<li
 									class="flex w-full snap-start scroll-my-2"
 									*ngFor="let themeValue of appearanceThemeList"
@@ -89,7 +82,7 @@
 					<div
 						class="block"
 						appDropdown
-						[appFitParentWidth]="true"
+						[appDropdownFitParentWidth]="true"
 						[class.cursor-not-allowed]="appearanceForm.disabled"
 					>
 						<!-- prettier-ignore -->
@@ -109,9 +102,7 @@
 							class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 							slot="content"
 						>
-							<ul
-								class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2"
-							>
+							<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
 								<!-- prettier-ignore -->
 								<li
                   class="flex w-full snap-start scroll-my-2"
@@ -134,9 +125,7 @@
 					</div>
 				</fieldset>
 			</div>
-			<div
-				class="flex w-full flex-col items-start gap-4 sm:flex-row sm:justify-between"
-			>
+			<div class="flex w-full flex-col items-start gap-4 sm:flex-row sm:justify-between">
 				<fieldset
 					class="form-control w-full"
 					*ngIf="appearanceForm.get('themePrism') as themePrism"
@@ -155,7 +144,7 @@
 					<div
 						class="block"
 						appDropdown
-						[appFitParentWidth]="true"
+						[appDropdownFitParentWidth]="true"
 						[class.cursor-not-allowed]="appearanceForm.disabled"
 					>
 						<input
@@ -174,9 +163,7 @@
 							class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 							slot="content"
 						>
-							<ul
-								class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2"
-							>
+							<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
 								<li
 									class="flex w-full snap-start scroll-my-2"
 									*ngFor="let themePrismValue of appearanceThemePrismList"
@@ -198,17 +185,14 @@
 						</div>
 					</div>
 				</fieldset>
-				<fieldset
-					class="form-control w-full"
-					*ngIf="appearanceForm.get('language') as language"
-				>
+				<fieldset class="form-control w-full" *ngIf="appearanceForm.get('language') as language">
 					<label class="label" for="appearanceFormLanguage">
 						<span class="label-text">Language</span>
 					</label>
 					<div
 						class="block"
 						appDropdown
-						[appFitParentWidth]="true"
+						[appDropdownFitParentWidth]="true"
 						[class.cursor-not-allowed]="appearanceForm.disabled"
 					>
 						<input
@@ -227,9 +211,7 @@
 							class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
 							slot="content"
 						>
-							<ul
-								class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2"
-							>
+							<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
 								<li
 									class="flex w-full snap-start scroll-my-2"
 									*ngFor="let languageValue of appearanceLanguageList"
@@ -257,10 +239,7 @@
 					class="form-control"
 					*ngIf="appearanceForm.get('pageScrollToTop') as pageScrollToTop"
 				>
-					<label
-						class="label gap-4 cursor-pointer"
-						for="appearanceFormPageScrollToTop"
-					>
+					<label class="label gap-4 cursor-pointer" for="appearanceFormPageScrollToTop">
 						<span class="label-text"> Scroll to top </span>
 						<!-- prettier-ignore -->
 						<input
@@ -278,13 +257,8 @@
 					class="form-control"
 					*ngIf="appearanceForm.get('pageScrollInfinite') as pageScrollInfinite"
 				>
-					<label
-						class="label gap-4 cursor-pointer"
-						for="appearanceFormPageScrollInfinite"
-					>
-						<span class="label-text">
-							Infinite scroll (when viewing lists)
-						</span>
+					<label class="label gap-4 cursor-pointer" for="appearanceFormPageScrollInfinite">
+						<span class="label-text"> Infinite scroll (when viewing lists) </span>
 						<!-- prettier-ignore -->
 						<input
               class="toggle toggle-md"
@@ -301,13 +275,8 @@
 					class="form-control"
 					*ngIf="appearanceForm.get('pageRedirectHome') as pageRedirectHome"
 				>
-					<label
-						class="label gap-4 cursor-pointer"
-						for="appearanceFormPageRedirectHome"
-					>
-						<span class="label-text">
-							Redirect from home page (to profile)
-						</span>
+					<label class="label gap-4 cursor-pointer" for="appearanceFormPageRedirectHome">
+						<span class="label-text"> Redirect from home page (to profile) </span>
 						<!-- prettier-ignore -->
 						<input
               class="toggle toggle-md"
@@ -324,10 +293,7 @@
 					class="form-control"
 					*ngIf="appearanceForm.get('markdownMonospace') as markdownMonospace"
 				>
-					<label
-						class="label gap-4 cursor-pointer"
-						for="appearanceFormMarkdownMonospace"
-					>
+					<label class="label gap-4 cursor-pointer" for="appearanceFormMarkdownMonospace">
 						<span class="label-text">
 							Use a fixed-width (monospace) font when editing Markdown
 						</span>

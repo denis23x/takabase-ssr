@@ -57,7 +57,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		this.cropperUploadPath = cropperUploadPath;
 	}
 
-	@Output() submitted: EventEmitter<string> = new EventEmitter<string>();
+	@Output() appCropperSubmit: EventEmitter<string> = new EventEmitter<string>();
 
 	imageForm: FormGroup | undefined;
 	imageFormMime: string[] = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -279,7 +279,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			next: (fileUrl: string) => {
 				this.imageForm.enable();
 
-				this.submitted.emit(fileUrl);
+				this.appCropperSubmit.emit(fileUrl);
 			},
 			error: () => this.imageForm.enable()
 		});

@@ -22,20 +22,20 @@ import { PlatformService } from '../../../core/services/platform.service';
 	templateUrl: './dropdown.component.html'
 })
 export class DropdownComponent implements OnInit, OnDestroy {
-	@Output() toggled: EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() appDropdownToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input()
-	set appPosition(dropdownPosition: string) {
+	set appDropdownPosition(dropdownPosition: string) {
 		this.dropdownPosition = dropdownPosition;
 	}
 
 	@Input()
-	set appFitParentWidth(dropdownContentFitParentWidth: boolean) {
+	set appDropdownFitParentWidth(dropdownContentFitParentWidth: boolean) {
 		this.dropdownContentFitParentWidth = dropdownContentFitParentWidth;
 	}
 
 	@Input()
-	set appCloseOnClick(dropdownContentCloseOnClick: boolean) {
+	set appDropdownCloseOnClick(dropdownContentCloseOnClick: boolean) {
 		this.dropdownContentCloseOnClick = dropdownContentCloseOnClick;
 	}
 
@@ -166,7 +166,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 			}
 
 			if (emit) {
-				this.toggled.emit(this.dropdownState);
+				this.appDropdownToggle.emit(this.dropdownState);
 			}
 		}
 	}

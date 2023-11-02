@@ -13,17 +13,17 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
 	templateUrl: 'window.component.html'
 })
 export class WindowComponent implements OnInit {
+	@Output() appWindowClose: EventEmitter<void> = new EventEmitter<void>();
+
 	@Input()
-	set appTitle(title: string) {
+	set appWindowTitle(title: string) {
 		this.captionTitle = title;
 	}
 
 	@Input()
-	set appButtons(buttonsList: string[]) {
+	set appWindowButtons(buttonsList: string[]) {
 		this.captionButtonsList = buttonsList;
 	}
-
-	@Output() closed: EventEmitter<void> = new EventEmitter<void>();
 
 	captionTitle: string | undefined;
 	captionButtonsList: string[] = [];
@@ -54,7 +54,7 @@ export class WindowComponent implements OnInit {
 	}
 
 	onClose(): void {
-		this.closed.emit();
+		this.appWindowClose.emit();
 	}
 
 	onFullscreen(toggle: boolean): void {

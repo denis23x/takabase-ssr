@@ -35,14 +35,14 @@
 							[class.btn-error]="query.touched && query.invalid"
 							[class.btn-ghost]="query.untouched && query.invalid"
 							[disabled]="searchForm.disabled"
-							[appIcon]="'x'"
-							[appSquare]="'2em'"
+							[appSvgIconIcon]="'x'"
+							[appSvgIconSquare]="'2em'"
 							(click)="query.setValue('')"
 						></button>
 					</div>
 				</fieldset>
 				<fieldset class="form-control" *ngIf="searchForm.get('orderBy') as orderBy">
-					<div class="block" appDropdown [appPosition]="'bottom-right'">
+					<div class="block" appDropdown [appDropdownPosition]="'bottom-right'">
 						<div class="indicator" slot="target">
 							<span
 								class="indicator-item badge"
@@ -60,8 +60,8 @@
 								slot="target"
 								[disabled]="searchForm.disabled"
 								[class.btn-outline]="searchForm.enabled"
-								[appIcon]="'filter'"
-								[appSquare]="'1.75em'"
+								[appSvgIconIcon]="'filter'"
+								[appSvgIconSquare]="'1.75em'"
 							></button>
 						</div>
 						<div

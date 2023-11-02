@@ -9,24 +9,18 @@ import { AppSkeletonDirective } from '../../../directives/app-skeleton.directive
 
 @Component({
 	standalone: true,
-	imports: [
-		CommonModule,
-		RouterModule,
-		DayjsPipe,
-		NgOptimizedImage,
-		AppSkeletonDirective
-	],
+	imports: [CommonModule, RouterModule, DayjsPipe, NgOptimizedImage, AppSkeletonDirective],
 	selector: 'app-card-post, [appCardPost]',
 	templateUrl: './post.component.html'
 })
 export class CardPostComponent {
 	@Input()
-	set appPost(post: Post) {
+	set appCardPostPost(post: Post) {
 		this.post = post;
 	}
 
 	@Input()
-	set appPostSkeletonToggle(postSkeletonToggle: boolean) {
+	set appCardPostSkeletonToggle(postSkeletonToggle: boolean) {
 		this.postSkeletonToggle = postSkeletonToggle;
 	}
 

@@ -11,9 +11,9 @@
 	>
 		<div
 			appWindow
-			[appTitle]="'View'"
-			[appButtons]="['close', 'fullscreen']"
-			(closed)="setAbstractPostProseDialogClose()"
+			[appWindowTitle]="'View'"
+			[appWindowButtons]="['close', 'fullscreen']"
+			(appWindowClose)="setAbstractPostProseDialogClose()"
 		>
 			<main
 				class="w-full h-full"

@@ -11,9 +11,9 @@
 	>
 		<div
 			appWindow
-			[appTitle]="'Update'"
-			[appButtons]="['close']"
-			(closed)="onToggleCategoryUpdateForm(false)"
+			[appWindowTitle]="'Update'"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onToggleCategoryUpdateForm(false)"
 		>
 			<form
 				class="flex flex-col gap-4 p-4"
@@ -63,8 +63,8 @@
 							[class.btn-error]="name.touched && name.invalid"
 							[class.btn-ghost]="name.untouched"
 							[disabled]="categoryUpdateForm.disabled"
-							[appIcon]="'x'"
-							[appSquare]="'2em'"
+							[appSvgIconIcon]="'x'"
+							[appSvgIconSquare]="'2em'"
 							(click)="name.setValue('')"
 						></button>
 					</div>

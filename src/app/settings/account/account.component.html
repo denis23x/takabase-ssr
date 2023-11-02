@@ -51,8 +51,8 @@
 						[class.btn-error]="password.touched && password.invalid"
 						[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
 						[disabled]="password.disabled"
-						[appIcon]="'incognito'"
-						[appSquare]="'1.5em'"
+						[appSvgIconIcon]="'incognito'"
+						[appSvgIconSquare]="'1.5em'"
 						(touchstart)="isVisible.value = !isVisible.value"
 						(mouseenter)="isVisible.value = true"
 						(mouseleave)="isVisible.value = false"
@@ -63,8 +63,8 @@
 				<i
 					class="fill-current text-info"
 					appSvgIcon
-					[appIcon]="'info-circle'"
-					[appSquare]="'1.5em'"
+					[appSvgIconIcon]="'info-circle'"
+					[appSvgIconSquare]="'1.5em'"
 				></i>
 				<span class="block">
 					Please provide your current password to continue. Your password ensures the security and
@@ -132,8 +132,8 @@
 							[class.btn-error]="email.touched && email.invalid"
 							[class.btn-ghost]="email.untouched && email.dirty && email.invalid"
 							[disabled]="email.disabled"
-							[appIcon]="'x'"
-							[appSquare]="'2em'"
+							[appSvgIconIcon]="'x'"
+							[appSvgIconSquare]="'2em'"
 							(click)="email.setValue('')"
 						></button>
 					</div>
@@ -154,8 +154,8 @@
 							<i
 								class="fill-current text-info"
 								appSvgIcon
-								[appIcon]="'info-circle'"
-								[appSquare]="'1.5em'"
+								[appSvgIconIcon]="'info-circle'"
+								[appSvgIconSquare]="'1.5em'"
 							></i>
 							<span class="block">
 								To maintain the security and validity of your account, we require email address
@@ -226,8 +226,8 @@
 							[class.btn-error]="password.touched && password.invalid"
 							[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
 							[disabled]="password.disabled"
-							[appIcon]="'incognito'"
-							[appSquare]="'1.5em'"
+							[appSvgIconIcon]="'incognito'"
+							[appSvgIconSquare]="'1.5em'"
 							(touchstart)="isVisible.value = !isVisible.value"
 							(mouseenter)="isVisible.value = true"
 							(mouseleave)="isVisible.value = false"
@@ -238,8 +238,8 @@
 					<i
 						class="fill-current text-info"
 						appSvgIcon
-						[appIcon]="'info-circle'"
-						[appSquare]="'1.5em'"
+						[appSvgIconIcon]="'info-circle'"
+						[appSvgIconSquare]="'1.5em'"
 					></i>
 					<span class="block">
 						The password must be 6-32 characters long, must contain at least one number or special

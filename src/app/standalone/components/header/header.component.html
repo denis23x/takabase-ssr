@@ -20,8 +20,8 @@
 				appSvgIcon
 				[routerLink]="['/search']"
 				[routerLinkActive]="['btn-active']"
-				[appIcon]="'search'"
-				[appSquare]="'1.5em'"
+				[appSvgIconIcon]="'search'"
+				[appSvgIconSquare]="'1.5em'"
 			>
 			</a>
 			<nav
@@ -37,8 +37,8 @@
 						appSvgIcon
 						[routerLink]="['/login']"
 						[routerLinkActive]="['btn-active']"
-						[appIcon]="'person-circle'"
-						[appSquare]="'1.5em'"
+						[appSvgIconIcon]="'person-circle'"
+						[appSvgIconSquare]="'1.5em'"
 					>
 					</a>
 				</ng-container>
@@ -51,8 +51,8 @@
 						[routerLink]="['/create']"
 						[routerLinkActive]="['btn-active']"
 						[routerLinkActiveOptions]="{ exact: true }"
-						[appIcon]="'file-earmark-plus'"
-						[appSquare]="'1.5em'"
+						[appSvgIconIcon]="'file-earmark-plus'"
+						[appSvgIconSquare]="'1.5em'"
 					>
 					</a>
 					<a
@@ -65,7 +65,7 @@
 						<figure
 							class="h-12 w-12 rounded-btn relative overflow-hidden"
 							appAvatar
-							[appUser]="currentUser"
+							[appAvatarUser]="currentUser"
 						></figure>
 					</a>
 				</ng-container>

@@ -35,8 +35,8 @@
 							title="Image"
 							aria-label="Image"
 							appSvgIcon
-							[appIcon]="'plus'"
-							[appSquare]="'2em'"
+							[appSvgIconIcon]="'plus'"
+							[appSvgIconSquare]="'2em'"
 							[disabled]="postForm.disabled"
 							(click)="onTogglePostFormImage(true)"
 						></button>
@@ -116,8 +116,8 @@
 							[class.btn-error]="name.touched && name.invalid"
 							[class.btn-ghost]="name.untouched && name.invalid"
 							[disabled]="postForm.disabled"
-							[appIcon]="'x'"
-							[appSquare]="'2em'"
+							[appSvgIconIcon]="'x'"
+							[appSvgIconSquare]="'2em'"
 							(click)="name.setValue('')"
 						></button>
 					</div>
@@ -152,9 +152,9 @@
 							appSkeleton
 							appDropdown
 							[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle"
-							[appFitParentWidth]="true"
+							[appDropdownFitParentWidth]="true"
 							[class.cursor-not-allowed]="postForm.disabled"
-							(toggled)="onToggleCategory($event)"
+							(appDropdownToggle)="onToggleCategory($event)"
 						>
 							<input
 								class="input input-bordered input-md w-full cursor-pointer truncate"
@@ -199,7 +199,7 @@
 						appDropdown
 						appSkeleton
 						[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle"
-						[appPosition]="'bottom-right'"
+						[appDropdownPosition]="'bottom-right'"
 					>
 						<button
 							class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current p-3"
@@ -209,8 +209,8 @@
 							appSvgIcon
 							slot="target"
 							[disabled]="postForm.disabled"
-							[appIcon]="'three-dots-vertical'"
-							[appSquare]="'1.5em'"
+							[appSvgIconIcon]="'three-dots-vertical'"
+							[appSvgIconSquare]="'1.5em'"
 						></button>
 						<ul
 							class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
@@ -294,8 +294,8 @@
 							[class.btn-error]="description.touched && description.invalid"
 							[class.btn-ghost]="description.untouched && description.invalid"
 							[disabled]="postForm.disabled"
-							[appIcon]="'x'"
-							[appSquare]="'2em'"
+							[appSvgIconIcon]="'x'"
+							[appSvgIconSquare]="'2em'"
 							(click)="description.setValue('')"
 						></button>
 					</div>
@@ -310,11 +310,11 @@
 						appMarkdown
 						appSkeleton
 						[appSkeletonToggle]="postSkeletonToggle"
-						[appTextareaId]="'postFormTextarea'"
-						[appPreviewId]="'postFormPreview'"
-						[appScrollSync]="fullscreenScrollSync"
-						[appDisabled]="postForm.disabled"
-						(modalToggle)="onToggleMarkdownDialog($event)"
+						[appMarkdownTextareaId]="'postFormTextarea'"
+						[appMarkdownPreviewId]="'postFormPreview'"
+						[appMarkdownScrollSync]="fullscreenScrollSync"
+						[appMarkdownDisabled]="postForm.disabled"
+						(appMarkdownDialogToggle)="onToggleMarkdownDialog($event)"
 					></div>
 					<div class="flex items-center justify-end gap-4">
 						<button
@@ -332,8 +332,8 @@
 							<i
 								class="block sm:hidden fill-current"
 								appSvgIcon
-								[appIcon]="'fullscreen'"
-								[appSquare]="'1.5em'"
+								[appSvgIconIcon]="'fullscreen'"
+								[appSvgIconSquare]="'1.5em'"
 							>
 							</i>
 						</button>
@@ -341,8 +341,8 @@
 							<div
 								class="flex p-0"
 								appDropdown
-								[appPosition]="'bottom-right'"
-								[appCloseOnClick]="false"
+								[appDropdownPosition]="'bottom-right'"
+								[appDropdownCloseOnClick]="false"
 							>
 								<button
 									class="btn-ghost btn-square btn bg-base-200 w-12 h-12 fill-current p-3"
@@ -352,8 +352,8 @@
 									appSvgIcon
 									slot="target"
 									[disabled]="postForm.disabled"
-									[appIcon]="'three-dots-vertical'"
-									[appSquare]="'1.5em'"
+									[appSvgIconIcon]="'three-dots-vertical'"
+									[appSvgIconSquare]="'1.5em'"
 								></button>
 								<ul
 									class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
@@ -525,9 +525,9 @@
 	>
 		<div
 			appWindow
-			[appTitle]="'Preview'"
-			[appButtons]="['close', 'fullscreen']"
-			(closed)="onTogglePreviewPost(false)"
+			[appWindowTitle]="'Preview'"
+			[appWindowButtons]="['close', 'fullscreen']"
+			(appWindowClose)="onTogglePreviewPost(false)"
 		>
 			<main
 				class="w-full h-full"
@@ -549,16 +549,16 @@
 	>
 		<div
 			appWindow
-			[appTitle]="'Image'"
-			[appButtons]="['close']"
-			(closed)="onTogglePostFormImage(false)"
+			[appWindowTitle]="'Image'"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onTogglePostFormImage(false)"
 		>
 			<div
 				appCropper
 				slot="content"
 				*ngIf="postFormImageDialog.open"
 				[appCropperUploadPath]="'/upload/post-images'"
-				(submitted)="onSubmitPostFormImage($event)"
+				(appCropperSubmit)="onSubmitPostFormImage($event)"
 			></div>
 		</div>
 	</dialog>
@@ -579,6 +579,6 @@
 		appPostDelete
 		#appPostDeleteComponent
 		[appPostDeletePost]="post"
-		(appPostDeleteToggled)="onSubmitPostFormStatus($event)"
+		(appPostDeleteToggle)="onSubmitPostFormStatus($event)"
 	></div>
 </ng-container>

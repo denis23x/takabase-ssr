@@ -22,8 +22,8 @@
 					aria-label="Undo"
 					appSvgIcon
 					[class.pointer-events-none]="disabled.value"
-					[appIcon]="'arrow-left'"
-					[appSquare]="'1.5725em'"
+					[appSvgIconIcon]="'arrow-left'"
+					[appSvgIconSquare]="'1.5725em'"
 					(click)="setBack()"
 				></button>
 			</li>
@@ -34,7 +34,7 @@
 					#dropdownHeading
 					*ngIf="{ value: false } as toggle"
 					[ngClass]="{ 'bg-base-content/10': toggle.value }"
-					(toggled)="toggle.value = $event"
+					(appDropdownToggle)="toggle.value = $event"
 				>
 					<button
 						class="fill-current p-3"
@@ -44,8 +44,8 @@
 						appSvgIcon
 						slot="target"
 						[disabled]="controlListDisabled"
-						[appSquare]="'1.5725em'"
-						[appIcon]="'type-h1'"
+						[appSvgIconSquare]="'1.5725em'"
+						[appSvgIconIcon]="'type-h1'"
 					></button>
 					<ul
 						class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
@@ -73,7 +73,7 @@
 					#dropdownFormatting
 					*ngIf="{ value: false } as toggle"
 					[ngClass]="{ 'bg-base-content/10': toggle.value }"
-					(toggled)="toggle.value = $event"
+					(appDropdownToggle)="toggle.value = $event"
 				>
 					<button
 						class="fill-current p-3"
@@ -83,8 +83,8 @@
 						appSvgIcon
 						slot="target"
 						[disabled]="controlListDisabled"
-						[appSquare]="'1.5725em'"
-						[appIcon]="'type-bold'"
+						[appSvgIconSquare]="'1.5725em'"
+						[appSvgIconIcon]="'type-bold'"
 					></button>
 					<ul
 						class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
@@ -112,7 +112,7 @@
 					#dropdownList
 					*ngIf="{ value: false } as toggle"
 					[ngClass]="{ 'bg-base-content/10': toggle.value }"
-					(toggled)="toggle.value = $event"
+					(appDropdownToggle)="toggle.value = $event"
 				>
 					<button
 						class="fill-current p-3"
@@ -122,8 +122,8 @@
 						appSvgIcon
 						slot="target"
 						[disabled]="controlListDisabled"
-						[appSquare]="'1.5725em'"
-						[appIcon]="'list-ul'"
+						[appSvgIconSquare]="'1.5725em'"
+						[appSvgIconIcon]="'list-ul'"
 					></button>
 					<ul
 						class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
@@ -153,8 +153,8 @@
 					appSvgIcon
 					[attr.aria-label]="control.label"
 					[attr.title]="control.label"
-					[appIcon]="control.icon"
-					[appSquare]="'1.5725em'"
+					[appSvgIconIcon]="control.icon"
+					[appSvgIconSquare]="'1.5725em'"
 					(click)="onToggleUrlForm(true, control)"
 				></button>
 			</li>
@@ -165,8 +165,8 @@
 					#dropdownEmojiMart
 					*ngIf="{ value: false } as toggle"
 					[ngClass]="{ 'bg-base-content/10': toggle.value }"
-					[appCloseOnClick]="false"
-					(toggled)="toggle.value = $event"
+					[appDropdownCloseOnClick]="false"
+					(appDropdownToggle)="toggle.value = $event"
 				>
 					<button
 						class="fill-current p-3"
@@ -176,8 +176,8 @@
 						[disabled]="controlListDisabled"
 						[attr.aria-label]="controlListEmojiMart.label"
 						[attr.title]="controlListEmojiMart.label"
-						[appIcon]="controlListEmojiMart.icon"
-						[appSquare]="'1.5725em'"
+						[appSvgIconIcon]="controlListEmojiMart.icon"
+						[appSvgIconSquare]="'1.5725em'"
 					></button>
 					<div
 						class="menu menu-vertical menu-md ml-0 mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow before:hidden"
@@ -193,7 +193,7 @@
 					#dropdownTable
 					*ngIf="{ value: false } as toggle"
 					[ngClass]="{ 'bg-base-content/10': toggle.value }"
-					(toggled)="toggle.value = $event"
+					(appDropdownToggle)="toggle.value = $event"
 				>
 					<button
 						class="fill-current p-3"
@@ -203,8 +203,8 @@
 						[disabled]="controlListDisabled"
 						[attr.aria-label]="controlListTable.label"
 						[attr.title]="controlListTable.label"
-						[appIcon]="controlListTable.icon"
-						[appSquare]="'1.5725em'"
+						[appSvgIconIcon]="controlListTable.icon"
+						[appSvgIconSquare]="'1.5725em'"
 					></button>
 					<div
 						class="menu menu-vertical menu-md ml-0 mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
@@ -240,8 +240,8 @@
 					appSvgIcon
 					[attr.aria-label]="controlListSpoiler.label"
 					[attr.title]="controlListSpoiler.label"
-					[appIcon]="controlListSpoiler.icon"
-					[appSquare]="'1.5725em'"
+					[appSvgIconIcon]="controlListSpoiler.icon"
+					[appSvgIconSquare]="'1.5725em'"
 					(click)="setTextareaValue(getTextareaValue(controlListSpoiler))"
 				></button>
 			</li>
@@ -249,10 +249,10 @@
 				<button
 					class="fill-current p-3"
 					appSvgIcon
-					[appSquare]="'1.5725em'"
+					[appSvgIconSquare]="'1.5725em'"
 					[attr.aria-label]="controlListCode.label"
 					[attr.title]="controlListCode.label"
-					[appIcon]="controlListCode.icon"
+					[appSvgIconIcon]="controlListCode.icon"
 					(click)="setTextareaValue(getTextareaValue(controlListCode))"
 				></button>
 			</li>
@@ -268,9 +268,9 @@
 	>
 		<div
 			appWindow
-			[appTitle]="urlFormControl?.label"
-			[appButtons]="['close']"
-			(closed)="onToggleUrlForm(false)"
+			[appWindowTitle]="urlFormControl?.label"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onToggleUrlForm(false)"
 		>
 			<form
 				class="flex flex-col gap-4 bg-base-100 p-4"
@@ -283,8 +283,8 @@
 					<i
 						class="fill-current text-info"
 						appSvgIcon
-						[appIcon]="'info-circle'"
-						[appSquare]="'1.5em'"
+						[appSvgIconIcon]="'info-circle'"
+						[appSvgIconSquare]="'1.5em'"
 					></i>
 					<span class="block" [ngSwitch]="urlFormControl?.key">
 						<ng-container *ngSwitchCase="'url-link'">
@@ -346,8 +346,8 @@
                 [class.btn-error]="title.touched && title.invalid"
                 [class.btn-ghost]="title.untouched && title.invalid"
                 [disabled]="urlForm.disabled"
-                [appIcon]="'x'"
-                [appSquare]="'2em'"
+                [appSvgIconIcon]="'x'"
+                [appSvgIconSquare]="'2em'"
                 (click)="title.setValue('')"
               ></button>
             </div>
@@ -395,8 +395,8 @@
 							[class.btn-error]="url.touched && url.invalid"
 							[class.btn-ghost]="url.untouched && url.invalid"
 							[disabled]="urlForm.disabled"
-							[appIcon]="'x'"
-							[appSquare]="'2em'"
+							[appSvgIconIcon]="'x'"
+							[appSvgIconSquare]="'2em'"
 							(click)="url.setValue('')"
 						></button>
 					</div>

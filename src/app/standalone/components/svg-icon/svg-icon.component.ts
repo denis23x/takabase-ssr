@@ -9,27 +9,27 @@ import { Component, Input } from '@angular/core';
 })
 export class SvgIconComponent {
 	@Input()
-	set appSquare(square: string) {
+	set appSvgIconSquare(square: string) {
 		this.square = square;
 	}
 
 	@Input()
-	set appViewBox(viewBox: string) {
+	set appSvgIconViewBox(viewBox: string) {
 		this.viewBox = viewBox;
 	}
 
 	@Input()
-	set appWidth(width: string) {
+	set appSvgIconWidth(width: string) {
 		this.width = width;
 	}
 
 	@Input()
-	set appHeight(height: string) {
+	set appSvgIconHeight(height: string) {
 		this.height = height;
 	}
 
 	@Input()
-	set appIcon(icon: string) {
+	set appSvgIconIcon(icon: string) {
 		this.icon = icon;
 	}
 

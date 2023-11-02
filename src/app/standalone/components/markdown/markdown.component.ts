@@ -82,10 +82,10 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	@ViewChild('dropdownTable') dropdownTable: DropdownComponent | undefined;
 	@ViewChild('urlFormDialog') urlFormDialog: ElementRef<HTMLDialogElement> | undefined;
 
-	@Output() modalToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() appMarkdownDialogToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input()
-	set appScrollSync(scrollSync: boolean) {
+	set appMarkdownScrollSync(scrollSync: boolean) {
 		this.scrollSync = scrollSync;
 
 		if (this.platformService.isBrowser()) {
@@ -96,17 +96,17 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	}
 
 	@Input()
-	set appDisabled(disabled: boolean) {
+	set appMarkdownDisabled(disabled: boolean) {
 		this.controlListDisabled = disabled;
 	}
 
 	@Input()
-	set appTextareaId(markdownId: string) {
+	set appMarkdownTextareaId(markdownId: string) {
 		this.textareaId = markdownId;
 	}
 
 	@Input()
-	set appPreviewId(previewId: string) {
+	set appMarkdownPreviewId(previewId: string) {
 		this.previewId = previewId;
 	}
 
@@ -448,7 +448,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.urlFormDialog.nativeElement.close();
 		}
 
-		this.modalToggle.emit(toggle);
+		this.appMarkdownDialogToggle.emit(toggle);
 	}
 
 	onSubmitUrlForm(): void {

@@ -12,8 +12,8 @@
 					<i
 						class="fill-current text-info"
 						appSvgIcon
-						[appIcon]="'info-circle'"
-						[appSquare]="'1.5em'"
+						[appSvgIconIcon]="'info-circle'"
+						[appSvgIconSquare]="'1.5em'"
 					></i>
 					<span class="block">
 						Get the assistance you need to navigate our website and make the most of our services.
@@ -71,9 +71,9 @@
 	>
 		<div
 			appWindow
-			[appTitle]="'Message'"
-			[appButtons]="['close']"
-			(closed)="onToggleHelpForm(false)"
+			[appWindowTitle]="'Message'"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onToggleHelpForm(false)"
 		>
 			<form
 				class="flex flex-col gap-4 p-4"
@@ -86,8 +86,8 @@
 					<i
 						class="fill-current text-info"
 						appSvgIcon
-						[appIcon]="'info-circle'"
-						[appSquare]="'1.5em'"
+						[appSvgIconIcon]="'info-circle'"
+						[appSvgIconSquare]="'1.5em'"
 					></i>
 					<span class="block">
 						Your feedback is helping us enhance our services and create a more satisfying experience
@@ -138,8 +138,8 @@
 							[class.btn-error]="name.touched && name.invalid"
 							[class.btn-ghost]="name.untouched && name.invalid"
 							[disabled]="helpForm.disabled"
-							[appIcon]="'x'"
-							[appSquare]="'2em'"
+							[appSvgIconIcon]="'x'"
+							[appSvgIconSquare]="'2em'"
 							(click)="name.setValue('')"
 						></button>
 					</div>
