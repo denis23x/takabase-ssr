@@ -65,8 +65,8 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	@Input()
-	set appCategoryDeletePostList(postList: Post[]) {
-		this.postList = postList;
+	set appCategoryDeleteCategoryPostList(categoryPostList: Post[]) {
+		this.categoryPostList = categoryPostList;
 	}
 
 	currentUser: CurrentUser | undefined;
@@ -74,11 +74,10 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 
 	category: Category | undefined;
 	categoryList: Category[] = [];
+	categoryPostList: Post[] = [];
 
 	categoryDeleteForm: FormGroup | undefined;
 	categoryDeleteForm$: Subscription | undefined;
-
-	postList: Post[] = [];
 
 	constructor(
 		private formBuilder: FormBuilder,

@@ -41,6 +41,7 @@ import { AppSkeletonDirective } from '../standalone/directives/app-skeleton.dire
 import { SkeletonService } from '../core/services/skeleton.service';
 import { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
 import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
+import { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -69,7 +70,8 @@ interface PostForm {
 		AppTextareaResizeDirective,
 		AppSkeletonDirective,
 		PostDeleteComponent,
-		CategoryCreateComponent
+		CategoryCreateComponent,
+		CategoryUpdateComponent
 	],
 	templateUrl: './create.component.html'
 })
@@ -327,6 +329,20 @@ export class CreateComponent implements OnInit, OnDestroy {
 		});
 
 		this.postForm.get('categoryName').markAsTouched();
+	}
+
+	onCreateCategory(category: Category): void {
+		this.categoryList.unshift(category);
+
+		this.onSelectCategory(category);
+	}
+
+	onUpdateCategory(categoryUpdate: Category): void {
+		this.categoryList = this.categoryList.map((category: Category) => {
+			return category.id === categoryUpdate.id ? categoryUpdate : category;
+		});
+
+		this.onSelectCategory(categoryUpdate);
 	}
 
 	onFullscreen(toggle: boolean): void {

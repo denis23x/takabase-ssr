@@ -235,6 +235,7 @@
 												type="button"
 												title="Create"
 												aria-label="Create"
+												(click)="appCategoryCreateComponent.onToggleCategoryForm(true)"
 											>
 												Create
 											</button>
@@ -372,18 +373,22 @@
 		</div>
 	</section>
 	<div
-		appCategoryDelete
-		#appCategoryDeleteComponent
-		[appCategoryDeleteCategory]="category"
-		[appCategoryDeleteCategoryList]="categoryList"
-		[appCategoryDeletePostList]="userPostComponent.abstractList"
+		appCategoryCreate
+		#appCategoryCreateComponent
+		(appCategoryCreateSuccess)="onCreateCategory($event)"
 	></div>
 	<div
 		appCategoryUpdate
 		#appCategoryUpdateComponent
 		[appCategoryUpdateCategory]="category"
 		[appCategoryUpdateCategoryList]="categoryList"
-		(appCategoryUpdateUpdatedCategory)="category = $event"
-		(appCategoryUpdateUpdatedCategoryList)="categoryList = $event"
+		(appCategoryUpdateSuccess)="onUpdateCategory($event)"
+	></div>
+	<div
+		appCategoryDelete
+		#appCategoryDeleteComponent
+		[appCategoryDeleteCategory]="category"
+		[appCategoryDeleteCategoryList]="categoryList"
+		[appCategoryDeleteCategoryPostList]="userPostComponent.abstractList"
 	></div>
 </ng-container>

@@ -34,6 +34,7 @@ import { CategoryUpdateComponent } from '../standalone/components/category/updat
 import { CategoryDeleteComponent } from '../standalone/components/category/delete/delete.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '../core/services/snackbar.service';
+import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 
 interface PostSearchForm {
 	query: FormControl<string>;
@@ -57,7 +58,8 @@ interface PostSearchForm {
 		DropdownComponent,
 		AppSkeletonDirective,
 		CategoryUpdateComponent,
-		CategoryDeleteComponent
+		CategoryDeleteComponent,
+		CategoryCreateComponent
 	],
 	selector: 'app-user',
 	templateUrl: './user.component.html'
@@ -273,6 +275,26 @@ export class UserComponent implements OnInit, OnDestroy {
 			next: (isSubmitted: boolean) => isSubmitted ? this.postSearchForm.disable() : this.postSearchForm.enable(),
 			error: (error: any) => console.error(error)
 		});
+	}
+
+	onCreateCategory(category: Category): void {
+		this.category = category;
+		this.categoryList.unshift(category);
+
+		this.router
+			.navigate(['./category', category.id], {
+				queryParamsHandling: 'merge',
+				relativeTo: this.activatedRoute
+			})
+			.then(() => console.debug('Route changed'));
+	}
+
+	onUpdateCategory(categoryUpdate: Category): void {
+		this.categoryList = this.categoryList.map((category: Category) => {
+			return category.id === categoryUpdate.id ? categoryUpdate : category;
+		});
+
+		this.category = categoryUpdate;
 	}
 
 	onLogout(): void {

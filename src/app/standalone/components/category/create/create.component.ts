@@ -41,9 +41,8 @@ export class CategoryCreateComponent {
 	// prettier-ignore
 	@ViewChild('categoryCreateDialogElement') categoryCreateDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
-	@Output() appCategoryCreateToggled: EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Output() appCategoryCreateCreated: EventEmitter<Category> = new EventEmitter<Category>();
-	@Output() appCategoryCreateSelected: EventEmitter<Category> = new EventEmitter<Category>();
+	@Output() appCategoryCreateToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() appCategoryCreateSuccess: EventEmitter<Category> = new EventEmitter<Category>();
 
 	categoryForm: FormGroup | undefined;
 	categoryCreateDialogToggle: boolean = false;
@@ -65,7 +64,7 @@ export class CategoryCreateComponent {
 	}
 
 	onToggleCategoryForm(toggle: boolean): void {
-		this.appCategoryCreateToggled.emit(toggle);
+		this.appCategoryCreateToggle.emit(toggle);
 
 		this.categoryCreateDialogToggle = toggle;
 
@@ -90,11 +89,9 @@ export class CategoryCreateComponent {
 				next: (category: Category) => {
 					this.snackbarService.success('Cheers!', 'Category created');
 
-					this.appCategoryCreateCreated.emit(category);
+					this.appCategoryCreateSuccess.emit(category);
 
 					this.categoryForm.enable();
-
-					this.appCategoryCreateSelected.emit(category);
 
 					this.onToggleCategoryForm(false);
 				},

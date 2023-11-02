@@ -194,20 +194,54 @@
 							</div>
 						</div>
 					</fieldset>
-					<button
-						class="btn-success btn-square btn fill-current p-3"
-						type="button"
-						aria-label="Create"
-						appSvgIcon
+					<div
+						class="flex p-0"
+						appDropdown
 						appSkeleton
 						[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle"
-						[appSkeletonClassListElementRef]="['border-0']"
-						[appIcon]="'folder-plus'"
-						[appSquare]="'1.75em'"
-						[class.btn-outline]="postForm.enabled"
-						[disabled]="postForm.disabled"
-						(click)="appCategoryCreateComponent.onToggleCategoryForm(true)"
-					></button>
+						[appPosition]="'bottom-right'"
+					>
+						<button
+							class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current p-3"
+							type="button"
+							title="Settings"
+							aria-label="Settings"
+							appSvgIcon
+							slot="target"
+							[disabled]="postForm.disabled"
+							[appIcon]="'three-dots-vertical'"
+							[appSquare]="'1.5em'"
+						></button>
+						<ul
+							class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
+							slot="content"
+						>
+							<li class="flex w-full snap-start scroll-my-2">
+								<button
+									class="rounded-btn block w-full truncate text-right"
+									type="button"
+									title="Create"
+									aria-label="Create"
+									(click)="appCategoryCreateComponent.onToggleCategoryForm(true)"
+								>
+									Create
+								</button>
+							</li>
+							<ng-container *ngIf="!!category">
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										type="button"
+										title="Update"
+										aria-label="Update"
+										(click)="appCategoryUpdateComponent.onToggleCategoryUpdateForm(true)"
+									>
+										Update
+									</button>
+								</li>
+							</ng-container>
+						</ul>
+					</div>
 				</div>
 				<fieldset
 					class="form-control items-start col-span-12 sm:col-span-12"
@@ -531,9 +565,15 @@
 	<div
 		appCategoryCreate
 		#appCategoryCreateComponent
-		(appCategoryCreateToggled)="onSubmitPostFormStatus($event)"
-		(appCategoryCreateCreated)="categoryList.unshift($event)"
-		(appCategoryCreateSelected)="onSelectCategory($event)"
+		(appCategoryCreateToggle)="onSubmitPostFormStatus($event)"
+		(appCategoryCreateSuccess)="onCreateCategory($event)"
+	></div>
+	<div
+		appCategoryUpdate
+		#appCategoryUpdateComponent
+		[appCategoryUpdateCategory]="category"
+		[appCategoryUpdateCategoryList]="categoryList"
+		(appCategoryUpdateSuccess)="onUpdateCategory($event)"
 	></div>
 	<div
 		appPostDelete

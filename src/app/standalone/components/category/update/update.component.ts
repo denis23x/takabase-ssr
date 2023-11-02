@@ -51,10 +51,7 @@ export class CategoryUpdateComponent implements OnDestroy {
 	// prettier-ignore
 	@ViewChild('categoryUpdateDialogElement') categoryUpdateDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
-	@Output() appCategoryUpdateUpdatedCategory: EventEmitter<Category> = new EventEmitter<Category>();
-
-	// prettier-ignore
-	@Output() appCategoryUpdateUpdatedCategoryList: EventEmitter<Category[]> = new EventEmitter<Category[]>();
+	@Output() appCategoryUpdateSuccess: EventEmitter<Category> = new EventEmitter<Category>();
 
 	@Input()
 	set appCategoryUpdateCategory(category: Category) {
@@ -129,15 +126,7 @@ export class CategoryUpdateComponent implements OnDestroy {
 				next: (category: Category) => {
 					this.snackbarService.success(null, 'Category updated');
 
-					this.category = category;
-
-					this.categoryList = this.categoryList.map((category: Category) => {
-						return category.id === this.category.id ? this.category : category;
-					});
-
-					this.appCategoryUpdateUpdatedCategory.emit(this.category);
-
-					this.appCategoryUpdateUpdatedCategoryList.emit(this.categoryList);
+					this.appCategoryUpdateSuccess.emit(category);
 
 					this.categoryUpdateForm.enable();
 
