@@ -1,24 +1,28 @@
-* {
-  @screen mouse {
-    $color-track: hsl(var(--b1));
-    $color-thumb: hsl(var(--b3));
+body {
+  scrollbar-gutter: stable;
 
-    scrollbar-color: $color-thumb $color-track;
+  * {
+    @screen mouse {
+      $color-track: hsl(var(--b1));
+      $color-thumb: hsl(var(--b3));
 
-    &::-webkit-scrollbar {
-      @apply w-2 h-2 cursor-default;
-    }
+      scrollbar-color: $color-thumb $color-track;
 
-    &::-webkit-scrollbar-track {
-      background-color: $color-track;
-    }
+      &::-webkit-scrollbar {
+        @apply w-2 h-2 cursor-default;
+      }
 
-    &::-webkit-scrollbar-thumb {
-      background-color: $color-thumb;
-    }
+      &::-webkit-scrollbar-track {
+        background-color: $color-track;
+      }
 
-    &::-webkit-scrollbar-corner {
-      background: $color-track;
+      &::-webkit-scrollbar-thumb {
+        background-color: $color-thumb;
+      }
+
+      &::-webkit-scrollbar-corner {
+        background: $color-track;
+      }
     }
   }
 }

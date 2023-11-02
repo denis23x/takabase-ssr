@@ -47,7 +47,7 @@ export abstract class AbstractMarkdownProseComponent implements OnInit, OnDestro
 	}
 
 	setSkeleton(): void {
-		this.abstractProse = this.skeletonService.getLoremIpsum();
+		this.abstractProse = 'Lorem Ipsum';
 		this.abstractProseSkeleton = true;
 	}
 
