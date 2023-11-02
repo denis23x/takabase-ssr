@@ -42,6 +42,7 @@ import { SkeletonService } from '../core/services/skeleton.service';
 import { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
 import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
+import { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -71,7 +72,8 @@ interface PostForm {
 		AppSkeletonDirective,
 		PostDeleteComponent,
 		CategoryCreateComponent,
-		CategoryUpdateComponent
+		CategoryUpdateComponent,
+		PostPreviewComponent
 	],
 	templateUrl: './create.component.html'
 })
@@ -79,8 +81,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
 
-	// prettier-ignore
-	@ViewChild('postFormPreviewDialog') postFormPreviewDialog: ElementRef<HTMLDialogElement> | undefined;
 	@ViewChild('postFormImageDialog') postFormImageDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	category: Category | undefined;
@@ -88,7 +88,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 	categorySkeletonToggle: boolean = false;
 
 	post: Post | undefined;
-	postPreview: Post | undefined;
 	postSkeletonToggle: boolean = false;
 
 	postForm: FormGroup | undefined;
@@ -284,6 +283,14 @@ export class CreateComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	onToggleMarkdownDialog(toggle: boolean): void {
+		this.onSubmitPostFormStatus(toggle);
+
+		this.postMarkdownDialogToggle = toggle;
+	}
+
+	/** Category */
+
 	onToggleCategory(toggle: boolean): void {
 		const abstractControl: AbstractControl = this.postForm.get('categoryName');
 
@@ -296,39 +303,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 				this.appCategoryCreateComponent.onToggleCategoryForm(true);
 			}
 		}
-	}
-
-	onTogglePreviewPost(toggle: boolean): void {
-		this.onSubmitPostFormStatus(toggle);
-
-		if (toggle) {
-			this.postFormPreviewDialog.nativeElement.showModal();
-			this.postPreview = {
-				...this.postForm.value,
-				user: this.currentUser,
-				category: this.category
-			};
-		} else {
-			this.postFormPreviewDialog.nativeElement.close();
-			this.postPreview = undefined;
-		}
-	}
-
-	onToggleMarkdownDialog(toggle: boolean): void {
-		this.onSubmitPostFormStatus(toggle);
-
-		this.postMarkdownDialogToggle = toggle;
-	}
-
-	onSelectCategory(category: Category): void {
-		this.category = category;
-
-		this.postForm.patchValue({
-			categoryId: this.category.id,
-			categoryName: this.category.name
-		});
-
-		this.postForm.get('categoryName').markAsTouched();
 	}
 
 	onCreateCategory(category: Category): void {
@@ -344,6 +318,19 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 		this.onSelectCategory(categoryUpdate);
 	}
+
+	onSelectCategory(category: Category): void {
+		this.category = category;
+
+		this.postForm.patchValue({
+			categoryId: this.category.id,
+			categoryName: this.category.name
+		});
+
+		this.postForm.get('categoryName').markAsTouched();
+	}
+
+	/** Fullscreen */
 
 	onFullscreen(toggle: boolean): void {
 		this.fullscreenToggle = toggle;
@@ -373,6 +360,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 		this[view] = !this[view];
 	}
+
+	/** PostForm */
 
 	onSubmitPostFormStatus(toggle: boolean): void {
 		if (toggle) {

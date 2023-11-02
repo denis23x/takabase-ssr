@@ -104,7 +104,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$, this.categoryDeleteForm$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleCategoryDeleteForm(toggle: boolean): void {

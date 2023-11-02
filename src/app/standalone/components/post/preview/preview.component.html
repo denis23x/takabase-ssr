@@ -1,0 +1,28 @@
+<!-- @format -->
+
+<ng-container>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#postPreviewDialogElement
+		(keydown.escape)="$event.preventDefault(); postPreviewDialogElement.close()"
+		(close)="onTogglePreviewPost(false)"
+		(click)="$event.target === $event.currentTarget ? postPreviewDialogElement.close() : $event"
+	>
+		<div
+			appWindow
+			[appWindowTitle]="'Preview'"
+			[appWindowButtons]="['close', 'fullscreen']"
+			(appWindowClose)="onTogglePreviewPost(false)"
+		>
+			<main
+				class="w-full h-full"
+				appPostProse
+				slot="content"
+				[appPostProsePost]="postPreview"
+				[appPostProsePreview]="true"
+				[appPostProsePostSkeletonToggle]="false"
+			></main>
+		</div>
+	</dialog>
+</ng-container>

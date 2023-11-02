@@ -477,7 +477,7 @@
 					[appSkeletonClassListElementRef]="['border-0']"
 					[class.btn-outline]="postForm.valid && postForm.enabled"
 					[disabled]="postForm.invalid || postForm.disabled"
-					(click)="onTogglePreviewPost(true)"
+					(click)="appPostPreviewComponent.onTogglePreviewPost(true)"
 				>
 					Preview
 				</button>
@@ -494,7 +494,7 @@
 					<!-- prettier-ignore -->
 					<span
             class="loading loading-spinner"
-            *ngIf="postForm.disabled && !postFormImageDialog.open && !appCategoryCreateComponent.categoryCreateDialogToggle && !postFormPreviewDialog.open && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownDialogToggle"
+            *ngIf="postForm.disabled && !postFormImageDialog.open && !appCategoryCreateComponent.categoryCreateDialogToggle && !appPostPreviewComponent.postPreviewDialogToggle && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownDialogToggle"
           ></span>
 					Submit
 				</button>
@@ -518,30 +518,6 @@
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
-		#postFormPreviewDialog
-		(keydown.escape)="$event.preventDefault(); postFormPreviewDialog.close()"
-		(close)="onTogglePreviewPost(false)"
-		(click)="$event.target === $event.currentTarget ? postFormPreviewDialog.close() : $event"
-	>
-		<div
-			appWindow
-			[appWindowTitle]="'Preview'"
-			[appWindowButtons]="['close', 'fullscreen']"
-			(appWindowClose)="onTogglePreviewPost(false)"
-		>
-			<main
-				class="w-full h-full"
-				appPostProse
-				slot="content"
-				[appPostProsePost]="postPreview"
-				[appPostProsePreview]="true"
-				[appPostProsePostSkeletonToggle]="false"
-			></main>
-		</div>
-	</dialog>
-	<!-- prettier-ignore-attribute (click) -->
-	<dialog
-		class="modal"
 		#postFormImageDialog
 		(keydown.escape)="$event.preventDefault(); postFormImageDialog.close()"
 		(close)="onTogglePostFormImage(false)"
@@ -562,6 +538,13 @@
 			></div>
 		</div>
 	</dialog>
+	<div
+		appPostPreview
+		#appPostPreviewComponent
+		[appPostPreviewPost]="postForm.value"
+		[appPostPreviewPostCategory]="category"
+		(appPostPreviewToggle)="onSubmitPostFormStatus($event)"
+	></div>
 	<div
 		appCategoryCreate
 		#appCategoryCreateComponent
