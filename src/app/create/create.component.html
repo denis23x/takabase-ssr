@@ -498,14 +498,10 @@
 			<main
 				appPostProse
 				slot="content"
-				[appPost]="postPreview"
-				[appPostSkeletonToggle]="false"
+				[appPostProsePost]="postPreview"
+				[appPostProsePreview]="true"
+				[appPostProsePostSkeletonToggle]="false"
 			></main>
-			<nav
-				class="pointer-events-none flex bg-base-200 opacity-50 overflow-auto p-2"
-				appShare
-				slot="footer"
-			></nav>
 		</div>
 	</dialog>
 	<!-- prettier-ignore-attribute (click) -->

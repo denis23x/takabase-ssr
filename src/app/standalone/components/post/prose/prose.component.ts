@@ -39,12 +39,17 @@ import { PostDeleteComponent } from '../delete/delete.component';
 })
 export class PostProseComponent implements OnInit, OnDestroy {
 	@Input()
-	set appPost(post: Post) {
+	set appPostProsePost(post: Post) {
 		this.post = post;
 	}
 
 	@Input()
-	set appPostSkeletonToggle(postSkeletonToggle: boolean) {
+	set appPostProsePreview(postPreview: boolean) {
+		this.postPreview = postPreview;
+	}
+
+	@Input()
+	set appPostProsePostSkeletonToggle(postSkeletonToggle: boolean) {
 		this.postSkeletonToggle = postSkeletonToggle;
 	}
 
@@ -55,6 +60,7 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	currentUserSkeletonToggle$: Subscription | undefined;
 
 	post: Post | undefined;
+	postPreview: boolean = false;
 	postSkeletonToggle: boolean = true;
 
 	constructor(private authorizationService: AuthorizationService) {}

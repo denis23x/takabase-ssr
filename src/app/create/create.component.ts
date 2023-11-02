@@ -18,7 +18,6 @@ import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-in
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
 import { WindowComponent } from '../standalone/components/window/window.component';
 import { CropperComponent } from '../standalone/components/cropper/cropper.component';
-import { ShareComponent } from '../standalone/components/share/share.component';
 import { MarkdownComponent } from '../standalone/components/markdown/markdown.component';
 import { PostProseComponent } from '../standalone/components/post/prose/prose.component';
 import { Category } from '../core/models/category.model';
@@ -64,7 +63,6 @@ interface PostForm {
 		WindowComponent,
 		CropperComponent,
 		PostProseComponent,
-		ShareComponent,
 		MarkdownComponent,
 		NgOptimizedImage,
 		AppScrollPresetDirective,
