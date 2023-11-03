@@ -10,22 +10,29 @@
 			[appSvgIconIcon]="'robot'"
 			[appSvgIconSquare]="'3em'"
 		></i>
-		<div class="flex flex-col items-center gap-2">
-			<p class="text-xl font-bold">
-				<span class="text-base-content">Oops!</span>
-				<span class="text-error"> {{ statusCode }}</span>
-				<span class="text-base-content"> {{ message }}</span>
+		<div class="flex flex-col items-center justify-start gap-4">
+			<div class="flex flex-col items-center justify-start">
+				<p class="text-xl font-bold">
+					<span class="text-base-content">Oops!</span>
+					<span class="text-error"> {{ statusCode }}</span>
+					<span class="text-base-content"> {{ message }}</span>
+				</p>
+				<p class="text-sm text-base-content/50">
+					It looks like you've landed on an error page on Draft
+				</p>
+			</div>
+			<p class="alert">
+				<i
+					class="fill-current text-info"
+					appSvgIcon
+					[appSvgIconIcon]="'info-circle'"
+					[appSvgIconSquare]="'1.5em'"
+				></i>
+				<span class="block">
+					If you believe this is a technical glitch or if you need assistance, don't hesitate to
+					<a class="link" aria-label="help" [routerLink]="['/help']">contact us</a>.
+				</span>
 			</p>
-			<div class="text-sm text-base-content/50">
-				It looks like you've landed on an error page on Draft
-			</div>
-			<!-- prettier-ignore -->
-			<div class="text-sm text-base-content/50">
-				Please provide a
-				<a class="link text-base-content" aria-label="new issue" [routerLink]="['/help']">new issue</a>
-				or go
-				<a class="link text-base-content" aria-label="home" [routerLink]="['/']">home</a>
-			</div>
 		</div>
 	</div>
 </ng-container>

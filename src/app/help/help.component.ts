@@ -10,6 +10,7 @@ import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.com
 import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { AppTextareaResizeDirective } from '../standalone/directives/app-textarea-resize.directive';
 import {
+	AbstractControl,
 	FormBuilder,
 	FormControl,
 	FormGroup,
@@ -20,6 +21,8 @@ import { WindowComponent } from '../standalone/components/window/window.componen
 import { HelperService } from '../core/services/helper.service';
 import { SnackbarService } from '../core/services/snackbar.service';
 import { AppAuthenticatedDirective } from '../standalone/directives/app-authenticated.directive';
+import { AppSkeletonDirective } from '../standalone/directives/app-skeleton.directive';
+import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
 
 interface HelpForm {
 	name: FormControl<string>;
@@ -37,7 +40,9 @@ interface HelpForm {
 		AppTextareaResizeDirective,
 		ReactiveFormsModule,
 		WindowComponent,
-		AppAuthenticatedDirective
+		AppAuthenticatedDirective,
+		AppSkeletonDirective,
+		DropdownComponent
 	],
 	selector: 'app-help',
 	templateUrl: './help.component.html'
@@ -46,6 +51,15 @@ export class HelpComponent implements OnInit {
 	@ViewChild('helpFormDialog') helpFormDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	helpForm: FormGroup | undefined;
+
+	helpFormNameList: string[] = [
+		'Terms and conditions',
+		'Sex, sexuality and nudity',
+		'Spam Everywhere',
+		'Time spent waiting',
+		'Technical glitch'
+	];
+
 	helpNavigationList: any[] = [
 		{
 			path: 'about',
@@ -131,6 +145,13 @@ export class HelpComponent implements OnInit {
 		}
 
 		this.helpForm.reset();
+	}
+
+	onSelectHelpFormName(helpFormName: string): void {
+		const abstractControl: AbstractControl = this.helpForm.get('name');
+
+		abstractControl.setValue(helpFormName);
+		abstractControl.updateValueAndValidity();
 	}
 
 	onSubmitHelpForm(): void {

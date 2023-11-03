@@ -25,7 +25,7 @@
 			</div>
 			<ng-container *appAuthenticated="true">
 				<button
-					class="btn-success btn-outline btn w-full"
+					class="btn-success btn w-full"
 					type="button"
 					aria-label="Send message"
 					(click)="onToggleHelpForm(true)"
@@ -99,49 +99,84 @@
 						<div class="indicator">
 							<!-- prettier-ignore -->
 							<span
-                class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                *ngIf="name.touched && !!name.errors && helpForm.enabled"
-                [ngSwitch]="true"
-              >
-                <ng-container *ngSwitchCase="!!name.errors.required">
-                  Required
-                </ng-container>
-                <ng-container *ngSwitchCase="!!name.errors.minlength">
-                  Min length {{ name.errors.minlength["requiredLength"] }} characters
-                </ng-container>
-                <ng-container *ngSwitchCase="!!name.errors.maxlength">
-                  Max length {{ name.errors.maxlength["requiredLength"] }} characters
-                </ng-container>
-              </span>
+								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+								*ngIf="name.touched && !!name.errors && helpForm.enabled"
+								[ngSwitch]="true"
+							>
+								<ng-container *ngSwitchCase="!!name.errors.required">
+									Required
+								</ng-container>
+								<ng-container *ngSwitchCase="!!name.errors.minlength">
+									Min length {{ name.errors.minlength["requiredLength"] }} characters
+								</ng-container>
+								<ng-container *ngSwitchCase="!!name.errors.maxlength">
+									Max length {{ name.errors.maxlength["requiredLength"] }} characters
+								</ng-container>
+							</span>
 							<span class="label-text mr-2">Name</span>
 						</div>
 					</label>
-					<div class="relative">
-						<input
-							class="input-bordered input input-md w-full truncate pr-12"
-							id="helpFormName"
-							type="text"
-							aria-label="Name"
-							formControlName="name"
-							placeholder="Type message name"
-							appInputTrimWhitespace
-							[class.input-success]="name.value && name.valid"
-							[class.input-error]="name.touched && name.invalid"
-						/>
-						<button
-							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-							type="button"
-							aria-label="Clear"
-							appSvgIcon
-							*ngIf="!!name.value.length"
-							[class.btn-success]="name.valid"
-							[class.btn-error]="name.touched && name.invalid"
-							[class.btn-ghost]="name.untouched && name.invalid"
-							[disabled]="helpForm.disabled"
-							[appSvgIconIcon]="'x'"
-							[appSvgIconSquare]="'2em'"
-							(click)="name.setValue('')"
-						></button>
+					<div class="flex items-center justify-between gap-4">
+						<div class="relative w-full">
+							<input
+								class="input-bordered input input-md w-full truncate pr-12"
+								id="helpFormName"
+								type="text"
+								aria-label="Name"
+								formControlName="name"
+								placeholder="Type name"
+								appInputTrimWhitespace
+								[class.input-success]="name.value && name.valid"
+								[class.input-error]="name.touched && name.invalid"
+							/>
+							<button
+								class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+								type="button"
+								aria-label="Clear"
+								appSvgIcon
+								*ngIf="!!name.value.length"
+								[class.btn-success]="name.valid"
+								[class.btn-error]="name.touched && name.invalid"
+								[class.btn-ghost]="name.untouched && name.invalid"
+								[disabled]="helpForm.disabled"
+								[appSvgIconIcon]="'x'"
+								[appSvgIconSquare]="'2em'"
+								(click)="name.setValue('')"
+							></button>
+						</div>
+						<div class="flex p-0" appDropdown [appDropdownPosition]="'bottom-right'">
+							<button
+								class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"
+								type="button"
+								title="List"
+								aria-label="List"
+								appSvgIcon
+								slot="target"
+								[disabled]="helpForm.disabled"
+								[appSvgIconIcon]="'list'"
+								[appSvgIconSquare]="'1.75em'"
+							></button>
+							<ul
+								class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
+								slot="content"
+							>
+								<li
+									class="flex w-full snap-start scroll-my-2"
+									*ngFor="let helpFormName of helpFormNameList"
+								>
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										type="button"
+										[title]="helpFormName"
+										[attr.aria-label]="helpFormName"
+										[ngClass]="{ active: name.value === helpFormName }"
+										(click)="onSelectHelpFormName(helpFormName)"
+									>
+										{{ helpFormName }}
+									</button>
+								</li>
+							</ul>
+						</div>
 					</div>
 				</fieldset>
 				<fieldset class="form-control" *ngIf="helpForm.get('description') as description">
@@ -186,7 +221,7 @@
               class="textarea textarea-md w-full max-h-64"
               id="helpFormDescription"
               aria-label="Description"
-              placeholder="Type message description"
+              placeholder="Type description"
               formControlName="description"
               appInputTrimWhitespace
               appTextareaResize

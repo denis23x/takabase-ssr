@@ -181,42 +181,46 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.userRequest$?.unsubscribe();
 		this.userRequest$ = this.userService.getAll(userGetAllDto).subscribe({
 			next: (userList: User[]) => {
-				this.user = userList.shift();
-				this.userSkeletonToggle = false;
-				this.userPostComponent.userComponent$.next(this.user);
+				if (!userList.length) {
+					this.router.navigate(['error', 404]).then(() => console.debug('Route changed'));
+				} else {
+					this.user = userList.shift();
+					this.userSkeletonToggle = false;
+					this.userPostComponent.userComponent$.next(this.user);
 
-				this.categoryList = this.user.categories;
-				this.categoryListSkeletonToggle = false;
+					this.categoryList = this.user.categories;
+					this.categoryListSkeletonToggle = false;
 
-				// Set category
+					// Set category
 
-				this.activatedRouteFirstChildParams$?.unsubscribe();
-				this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params.subscribe({
-					next: () => {
-						// prettier-ignore
-						const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId') || '');
+					this.activatedRouteFirstChildParams$?.unsubscribe();
+					this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params.subscribe({
+						next: () => {
+							// prettier-ignore
+							const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId') || '');
 
-						if (categoryId) {
-							if (categoryId !== this.category?.id) {
-								this.category = this.skeletonService.getCategory();
-								this.categorySkeletonToggle = true;
+							if (categoryId) {
+								if (categoryId !== this.category?.id) {
+									this.category = this.skeletonService.getCategory();
+									this.categorySkeletonToggle = true;
 
-								this.categoryRequest$?.unsubscribe();
-								this.categoryRequest$ = this.categoryService.getOne(categoryId).subscribe({
-									next: (category: Category) => {
-										this.category = category;
-										this.categorySkeletonToggle = false;
-									},
-									error: (error: any) => console.error(error)
-								});
+									this.categoryRequest$?.unsubscribe();
+									this.categoryRequest$ = this.categoryService.getOne(categoryId).subscribe({
+										next: (category: Category) => {
+											this.category = category;
+											this.categorySkeletonToggle = false;
+										},
+										error: (error: any) => console.error(error)
+									});
+								}
+							} else {
+								this.category = undefined;
+								this.categorySkeletonToggle = false;
 							}
-						} else {
-							this.category = undefined;
-							this.categorySkeletonToggle = false;
-						}
-					},
-					error: (error: any) => console.error(error)
-				});
+						},
+						error: (error: any) => console.error(error)
+					});
+				}
 			},
 			error: (error: any) => console.error(error)
 		});

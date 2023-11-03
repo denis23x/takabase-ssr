@@ -2,14 +2,14 @@
 
 .menu {
   li {
-    button[appScrollPreset],
-    button[appSvgIcon] {
-      &:first-child:active {
-        @apply bg-base-content/10 text-base-content;
+    div,
+    button {
+      &:active {
+        @apply bg-base-content/10 text-base-content #{!important};
       }
 
       &.active {
-        @apply bg-success text-success-content;
+        @apply bg-success text-success-content #{!important};
       }
     }
 
