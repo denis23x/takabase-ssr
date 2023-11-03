@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { iif, Subscription } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
@@ -85,10 +85,13 @@ export class CreateComponent implements OnInit, OnDestroy {
 	@ViewChild('postFormImageDialog') postFormImageDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	category: Category | undefined;
-	categoryList: Category[] = [];
 	categorySkeletonToggle: boolean = false;
 
+	categoryList: Category[] = [];
+	categoryListRequest$: Subscription | undefined;
+
 	post: Post | undefined;
+	postRequest$: Subscription | undefined;
 	postSkeletonToggle: boolean = false;
 
 	postForm: FormGroup | undefined;
@@ -112,6 +115,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 	fullscreenRender: boolean = false;
 
 	constructor(
+		@Inject(DOCUMENT)
+		private document: Document,
 		private formBuilder: FormBuilder,
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
@@ -171,7 +176,12 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$, this.postFormIsPristine$].forEach(($: Subscription) => $?.unsubscribe());
+		[
+			this.currentUser$,
+			this.categoryListRequest$,
+			this.postRequest$,
+			this.postFormIsPristine$
+		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
@@ -195,7 +205,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			userId: this.currentUser.id
 		};
 
-		this.categoryService.getAll(categoryGetAllDto).subscribe({
+		this.categoryListRequest$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
 			next: (categoryList: Category[]) => {
 				this.categoryList = categoryList;
 				this.category = undefined;
@@ -214,7 +224,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 				scope: ['category']
 			};
 
-			this.postService.getOne(postId, postGetOneDto).subscribe({
+			this.postRequest$ = this.postService.getOne(postId, postGetOneDto).subscribe({
 				next: (post: Post) => {
 					this.post = post;
 					this.postSkeletonToggle = false;
@@ -346,6 +356,10 @@ export class CreateComponent implements OnInit, OnDestroy {
 			this.fullscreenMarkdown = true;
 			this.fullscreenRender = true;
 			this.fullscreenClassList = ['fixed', 'top-0', 'left-0', '!m-0', 'w-full', 'h-full'];
+
+			// Force dispatch input event
+
+			this.document.getElementById(this.postFormTextareaId).dispatchEvent(new Event('input'));
 		} else {
 			this.fullscreenScrollSync = false;
 			this.fullscreenTextWrapping = false;
