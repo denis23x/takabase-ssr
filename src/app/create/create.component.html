@@ -309,9 +309,10 @@
 						class="flex overflow-auto"
 						appMarkdown
 						appSkeleton
+						#appMarkdownComponent
 						[appSkeletonToggle]="postSkeletonToggle"
-						[appMarkdownTextareaId]="'postFormTextarea'"
-						[appMarkdownPreviewId]="'postFormPreview'"
+						[appMarkdownTextareaId]="postFormTextareaId"
+						[appMarkdownPreviewId]="postFormPreviewId"
 						[appMarkdownScrollSync]="fullscreenScrollSync"
 						[appMarkdownDisabled]="postForm.disabled"
 						(appMarkdownDialogToggle)="onToggleMarkdownDialog($event)"
@@ -461,7 +462,7 @@
 						[class.hidden]="!fullscreenToggle || !fullscreenRender"
 					>
 						<article
-							class="prose max-w-none overflow-auto px-4 py-2"
+							class="prose max-w-none overflow-auto px-4 py-3"
 							id="postFormPreview"
 						></article>
 					</div>

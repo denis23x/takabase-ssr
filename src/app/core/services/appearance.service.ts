@@ -151,7 +151,8 @@ export class AppearanceService {
 					next: (svg: string) => {
 						backgroundElement.innerHTML = svg;
 						backgroundElement.dataset.themeBackground = backgroundValue;
-					}
+					},
+					error: (error: any) => console.error(error)
 				});
 		}
 	}

@@ -112,7 +112,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 								this.profileFormIsPristine = Object.keys(value).every((key: string) => {
 									return value[key] === this.currentUser[key];
 								});
-							}
+							},
+							error: (error: any) => console.error(error)
 						});
 				},
 				error: (error: any) => console.error(error)

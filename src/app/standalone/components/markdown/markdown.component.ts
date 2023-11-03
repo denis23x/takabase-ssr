@@ -71,15 +71,16 @@ interface UrlForm {
 	templateUrl: './markdown.component.html'
 })
 export class MarkdownComponent implements AfterViewInit, OnDestroy {
-	@ViewChild('controlListElement') controlListElement: ElementRef<HTMLDivElement> | undefined;
-
 	// prettier-ignore
 	@ViewChild('controlListTableElement') controlListTableElement: ElementRef<HTMLDivElement> | undefined;
+	@ViewChild('controlListElement') controlListElement: ElementRef<HTMLDivElement> | undefined;
+
 	@ViewChild('dropdownHeading') dropdownHeading: DropdownComponent | undefined;
 	@ViewChild('dropdownFormatting') dropdownFormatting: DropdownComponent | undefined;
 	@ViewChild('dropdownList') dropdownList: DropdownComponent | undefined;
 	@ViewChild('dropdownEmojiMart') dropdownEmojiMart: DropdownComponent | undefined;
 	@ViewChild('dropdownTable') dropdownTable: DropdownComponent | undefined;
+
 	@ViewChild('urlFormDialog') urlFormDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() appMarkdownDialogToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -156,10 +157,9 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.preview = this.document.getElementById(this.previewId);
 
 			this.textareaInput$ = fromEvent(this.textarea, 'input')
-				.pipe(startWith(EMPTY), debounceTime(100))
+				.pipe(startWith(EMPTY), debounceTime(200))
 				.subscribe({
 					next: () => {
-						console.log(this.textarea.value, this.preview);
 						this.markdownService.setRender(this.textarea.value, this.preview);
 
 						if (this.textareaHistoryToggle) {

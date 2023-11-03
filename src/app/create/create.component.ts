@@ -80,6 +80,7 @@ interface PostForm {
 export class CreateComponent implements OnInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
+	@ViewChild('appMarkdownComponent') appMarkdownComponent: MarkdownComponent | undefined;
 
 	@ViewChild('postFormImageDialog') postFormImageDialog: ElementRef<HTMLDialogElement> | undefined;
 
@@ -93,6 +94,9 @@ export class CreateComponent implements OnInit, OnDestroy {
 	postForm: FormGroup | undefined;
 	postFormIsPristine: boolean = false;
 	postFormIsPristine$: Subscription | undefined;
+
+	postFormTextareaId: string = 'postFormTextarea';
+	postFormPreviewId: string = 'postFormPreview';
 
 	postMarkdownDialogToggle: boolean = false;
 	postMarkdownMonospace: boolean = false;
@@ -243,7 +247,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 									return value[key] === this.post[key];
 								});
-							}
+							},
+							error: (error: any) => console.error(error)
 						});
 				},
 				error: (error: any) => console.error(error)

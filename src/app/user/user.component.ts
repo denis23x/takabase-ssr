@@ -234,6 +234,8 @@ export class UserComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	/** Search */
+
 	onTogglePostSearchForm(): void {
 		if (this.postSearchFormToggle) {
 			this.router
@@ -293,17 +295,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onRouterOutletActivate(userPostComponent: UserPostComponent): void {
-		this.userPostComponent = userPostComponent;
-
-		const isLoading$: Observable<boolean> = this.userPostComponent.abstractListIsLoading$;
-
-		// prettier-ignore
-		this.postSearchFormIsSubmitted$ = isLoading$.pipe(skip(1)).subscribe({
-			next: (isSubmitted: boolean) => isSubmitted ? this.postSearchForm.disable() : this.postSearchForm.enable(),
-			error: (error: any) => console.error(error)
-		});
-	}
+	/** Category */
 
 	onCreateCategory(category: Category): void {
 		this.category = category;
@@ -323,6 +315,18 @@ export class UserComponent implements OnInit, OnDestroy {
 		});
 
 		this.category = categoryUpdate;
+	}
+
+	onRouterOutletActivate(userPostComponent: UserPostComponent): void {
+		this.userPostComponent = userPostComponent;
+
+		const isLoading$: Observable<boolean> = this.userPostComponent.abstractListIsLoading$;
+
+		// prettier-ignore
+		this.postSearchFormIsSubmitted$ = isLoading$.pipe(skip(1)).subscribe({
+			next: (isSubmitted: boolean) => isSubmitted ? this.postSearchForm.disable() : this.postSearchForm.enable(),
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	onLogout(): void {
