@@ -31,9 +31,9 @@
 						</h1>
 						<time
 							class="text-sm text-base-content/50 truncate"
-							[attr.datetime]="currentUser.createdAt | dayjs: 'format' : 'YYYY-M-D'"
+							[attr.datetime]="currentUser.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
 						>
-							registered {{ currentUser.createdAt | dayjs: "fromX" }}
+							Last updated {{ currentUser.updatedAt | dayjs: "fromX" }}
 						</time>
 					</div>
 				</div>

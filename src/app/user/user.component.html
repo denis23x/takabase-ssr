@@ -29,7 +29,7 @@
 							[appSkeletonToggle]="userSkeletonToggle"
 							[attr.datetime]="user.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 						>
-							registered {{ user.createdAt | dayjs: "fromX" }}
+							Registered {{ user.createdAt | dayjs: "fromX" }}
 						</time>
 					</div>
 				</div>
@@ -128,18 +128,16 @@
 					<li
 						class="tab tab-lifted tab-lg h-10"
 						appSkeleton
-						[appSkeletonToggle]="categoryListSkeletonToggle && !routerLinkActive.isActive"
+						[appSkeletonToggle]="categoryListSkeletonToggle && !!category"
 						[appSkeletonClassListParent]="['rounded-t-lg']"
 						[appSkeletonClassList]="['rounded-b-none']"
-						[ngClass]="routerLinkActive.isActive && !category ? 'tab-active !h-12' : 'bg-base-200'"
+						[ngClass]="!category ? 'tab-active !h-12' : 'bg-base-200'"
 					>
 						<a
 							class="block whitespace-nowrap px-4"
 							aria-label="All"
-							#routerLinkActive="routerLinkActive"
 							[routerLink]="['.']"
-							[routerLinkActive]="''"
-							[routerLinkActiveOptions]="{ exact: true }"
+							[queryParamsHandling]="'merge'"
 						>
 							All
 						</a>
@@ -171,26 +169,32 @@
 			<div
 				class="rounded-box border border-base-content/20 bg-base-100 p-4 flex flex-col gap-4 shadow-xl"
 			>
-				<div class="flex w-full flex-col items-stretch justify-between gap-4" *ngIf="!!category">
-					<div class="flex w-full items-center justify-between gap-4">
-						<button
-							class="btn-ghost btn-square btn bg-base-200 fill-current p-3"
-							type="button"
-							title="Search"
-							aria-label="Search"
-							appSvgIcon
-							appSkeleton
-							[appSkeletonToggle]="categorySkeletonToggle"
-							[appSvgIconIcon]="postSearchFormToggle ? 'x-lg' : 'search'"
-							[appSvgIconSquare]="'1.5em'"
-							(click)="onTogglePostSearchForm()"
-						></button>
-						<ng-container [ngSwitch]="postSearchFormToggle">
+				<div class="flex w-full items-center justify-between gap-4">
+					<!-- prettier-ignore -->
+					<button
+						class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"
+						type="button"
+						title="Search"
+						aria-label="Search"
+						appSvgIcon
+						appSkeleton
+						[disabled]="postSearchForm.disabled && postSearchFormToggle"
+						[appSkeletonToggle]="(categorySkeletonToggle || userPostComponent.abstractListSkeletonToggle) && !postSearchFormToggle"
+						[appSkeletonClassListElementRef]="['border-0']"
+						[appSvgIconIcon]="postSearchFormToggle ? 'x-lg' : 'search'"
+						[appSvgIconSquare]="'1.5em'"
+						(click)="onTogglePostSearchForm()"
+					></button>
+					<ng-container [ngSwitch]="postSearchFormToggle">
+						<div
+							class="flex items-center justify-start gap-4 overflow-hidden w-full"
+							*ngSwitchCase="false"
+						>
 							<div
-								class="flex items-center justify-start gap-4 overflow-hidden w-full"
-								*ngSwitchCase="false"
+								class="flex flex-col gap-2 items-start overflow-hidden w-full"
+								[ngSwitch]="!!category"
 							>
-								<div class="flex flex-col gap-2 items-start overflow-hidden w-full">
+								<ng-container *ngSwitchCase="true">
 									<h2
 										class="block truncate text-xl leading-6 font-bold text-base-content max-w-full"
 										appSkeleton
@@ -202,166 +206,200 @@
 										class="text-sm text-base-content/50 leading-4 truncate max-w-full"
 										appSkeleton
 										[appSkeletonToggle]="categorySkeletonToggle"
-										[attr.datetime]="category.createdAt | dayjs: 'format' : 'YYYY-M-D'"
+										[attr.datetime]="category.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
 									>
-										created {{ category.createdAt | dayjs: "fromX" }}
+										Updated {{ category.updatedAt | dayjs: "fromX" }}
 									</time>
-								</div>
-								<div
-									class="flex p-0"
-									appDropdown
-									appSkeleton
-									*ngIf="currentUser?.id === user.id"
-									[appSkeletonToggle]="categorySkeletonToggle || currentUserSkeletonToggle"
-									[appDropdownPosition]="'bottom-right'"
-								>
-									<button
-										class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current p-3"
-										type="button"
-										title="Settings"
-										aria-label="Settings"
-										appSvgIcon
-										slot="target"
-										[appSvgIconIcon]="'three-dots-vertical'"
-										[appSvgIconSquare]="'1.5em'"
-									></button>
-									<ul
-										class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
-										slot="content"
+								</ng-container>
+								<ng-container *ngSwitchCase="false">
+									<h2
+										class="block truncate text-xl leading-6 font-bold text-base-content max-w-full"
+										appSkeleton
+										[appSkeletonToggle]="userPostComponent.abstractListSkeletonToggle"
 									>
-										<li class="flex w-full snap-start scroll-my-2">
-											<button
-												class="rounded-btn block w-full truncate text-right"
-												type="button"
-												title="Create"
-												aria-label="Create"
-												(click)="appCategoryCreateComponent.onToggleCategoryForm(true)"
-											>
-												Create
-											</button>
-										</li>
-										<li class="flex w-full snap-start scroll-my-2">
-											<button
-												class="rounded-btn block w-full truncate text-right"
-												type="button"
-												title="Update"
-												aria-label="Update"
-												(click)="appCategoryUpdateComponent.onToggleCategoryUpdateForm(true)"
-											>
-												Update
-											</button>
-										</li>
-										<li class="flex w-full snap-start scroll-my-2">
-											<button
-												class="rounded-btn block w-full truncate text-right"
-												type="button"
-												title="Delete"
-												aria-label="Delete"
-												(click)="appCategoryDeleteComponent.onToggleCategoryDeleteForm(true)"
-											>
-												Delete
-											</button>
-										</li>
-									</ul>
-								</div>
+										All posts
+									</h2>
+									<span
+										class="text-sm text-base-content/50 leading-4 truncate max-w-full"
+										appSkeleton
+										[appSkeletonToggle]="userPostComponent.abstractListSkeletonToggle"
+									>
+										Everything written by {{ user.name }}
+									</span>
+								</ng-container>
 							</div>
-							<form
-								class="flex items-end justify-between gap-4 w-full"
-								autocomplete="off"
-								*ngSwitchCase="true"
-								[formGroup]="postSearchForm"
+							<!-- prettier-ignore -->
+							<div
+								class="flex p-0"
+								appDropdown
+								appSkeleton
+								[appSkeletonToggle]="categorySkeletonToggle || currentUserSkeletonToggle || userPostComponent.abstractListSkeletonToggle"
+								[appDropdownPosition]="'bottom-right'"
 							>
-								<fieldset class="form-control flex-1" *ngIf="postSearchForm.get('query') as query">
-									<div class="relative">
-										<input
-											class="input-bordered input input-md w-full truncate pr-12"
-											id="searchFormSearch"
-											type="search"
-											aria-label="Search"
-											formControlName="query"
-											placeholder="Type search query"
-											appInputTrimWhitespace
-											[class.input-success]="query.value && query.valid"
-											[class.input-error]="query.touched && query.invalid"
-										/>
+								<button
+									class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current p-3"
+									type="button"
+									title="Settings"
+									aria-label="Settings"
+									appSvgIcon
+									slot="target"
+									[appSvgIconIcon]="'three-dots-vertical'"
+									[appSvgIconSquare]="'1.5em'"
+								></button>
+								<ul
+									class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
+									slot="content"
+								>
+									<ng-container [ngSwitch]="currentUser?.id === user.id">
+										<ng-container *ngSwitchCase="true">
+											<li class="flex w-full snap-start scroll-my-2">
+												<button
+													class="rounded-btn block w-full truncate text-right"
+													type="button"
+													title="Create"
+													aria-label="Create"
+													(click)="appCategoryCreateComponent.onToggleCategoryForm(true)"
+												>
+													Create
+												</button>
+											</li>
+											<ng-container *ngIf="!!category">
+												<li class="flex w-full snap-start scroll-my-2">
+													<button
+														class="rounded-btn block w-full truncate text-right"
+														type="button"
+														title="Update"
+														aria-label="Update"
+														(click)="appCategoryUpdateComponent.onToggleCategoryUpdateForm(true)"
+													>
+														Update
+													</button>
+												</li>
+												<li class="flex w-full snap-start scroll-my-2">
+													<button
+														class="rounded-btn block w-full truncate text-right"
+														type="button"
+														title="Delete"
+														aria-label="Delete"
+														(click)="appCategoryDeleteComponent.onToggleCategoryDeleteForm(true)"
+													>
+														Delete
+													</button>
+												</li>
+											</ng-container>
+										</ng-container>
+										<ng-container *ngSwitchCase="false">
+											<li class="flex w-full snap-start scroll-my-2">
+												<button
+													class="rounded-btn block w-full truncate text-right"
+													type="button"
+													title="Complain"
+													aria-label="Complain"
+												>
+													Complain
+												</button>
+											</li>
+										</ng-container>
+									</ng-container>
+								</ul>
+							</div>
+						</div>
+						<form
+							class="flex items-end justify-between gap-4 w-full"
+							autocomplete="off"
+							*ngSwitchCase="true"
+							[formGroup]="postSearchForm"
+						>
+							<fieldset class="form-control flex-1" *ngIf="postSearchForm.get('query') as query">
+								<div class="relative">
+									<input
+										class="input-bordered input input-md w-full truncate pr-12"
+										id="searchFormSearch"
+										type="search"
+										aria-label="Search"
+										formControlName="query"
+										placeholder="Type search query"
+										appInputTrimWhitespace
+										[class.input-success]="query.value && query.valid"
+										[class.input-error]="query.touched && query.invalid"
+									/>
+									<button
+										class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+										type="button"
+										aria-label="Clear query"
+										appSvgIcon
+										*ngIf="!!query.value.length"
+										[class.btn-success]="query.valid"
+										[class.btn-error]="query.touched && query.invalid"
+										[class.btn-ghost]="query.untouched && query.invalid"
+										[disabled]="postSearchForm.disabled"
+										[appSvgIconIcon]="'x'"
+										[appSvgIconSquare]="'2em'"
+										(click)="query.setValue('')"
+									></button>
+								</div>
+							</fieldset>
+							<fieldset class="form-control" *ngIf="postSearchForm.get('orderBy') as orderBy">
+								<div class="block" appDropdown [appDropdownPosition]="'bottom-right'">
+									<div class="indicator" slot="target">
+										<span
+											class="indicator-item badge"
+											*ngIf="orderBy.value"
+											[class.badge-ghost]="postSearchForm.disabled"
+											[class.badge-success]="postSearchForm.enabled"
+										>
+										</span>
 										<button
-											class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+											class="btn-success btn-outline btn-square btn fill-current p-3"
 											type="button"
-											aria-label="Clear query"
+											title="Sorting"
+											aria-label="Sorting"
 											appSvgIcon
-											*ngIf="!!query.value.length"
-											[class.btn-success]="query.valid"
-											[class.btn-error]="query.touched && query.invalid"
-											[class.btn-ghost]="query.untouched && query.invalid"
 											[disabled]="postSearchForm.disabled"
-											[appSvgIconIcon]="'x'"
-											[appSvgIconSquare]="'2em'"
-											(click)="query.setValue('')"
+											[class.btn-outline]="postSearchForm.enabled"
+											[appSvgIconIcon]="'filter'"
+											[appSvgIconSquare]="'1.75em'"
 										></button>
 									</div>
-								</fieldset>
-								<fieldset class="form-control" *ngIf="postSearchForm.get('orderBy') as orderBy">
-									<div class="block" appDropdown [appDropdownPosition]="'bottom-right'">
-										<div class="indicator" slot="target">
-											<span
-												class="indicator-item badge"
-												*ngIf="orderBy.value"
-												[class.badge-ghost]="postSearchForm.disabled"
-												[class.badge-success]="postSearchForm.enabled"
+									<div
+										class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
+										slot="content"
+									>
+										<!-- prettier-ignore -->
+										<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
+											<li
+												class="flex w-full"
+												*ngFor="let searchFormOrderBy of postSearchFormOrderByList"
 											>
-											</span>
-											<button
-												class="btn-success btn-outline btn-square btn fill-current p-3"
-												type="button"
-												title="Sorting"
-												aria-label="Sorting"
-												appSvgIcon
-												[disabled]="postSearchForm.disabled"
-												[class.btn-outline]="postSearchForm.enabled"
-												[appSvgIconIcon]="'filter'"
-												[appSvgIconSquare]="'1.75em'"
-											></button>
-										</div>
-										<div
-											class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
-											slot="content"
-										>
-											<!-- prettier-ignore -->
-											<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
-                        <li
-                          class="flex w-full"
-                          *ngFor="let searchFormOrderBy of postSearchFormOrderByList"
-                        >
-                          <button
-                            class="rounded-btn block w-full truncate text-right first-letter:uppercase"
-                            type="button"
-                            [ngClass]="{ 'active': searchFormOrderBy === orderBy.value }"
-                            [attr.aria-label]="searchFormOrderBy"
-                            (click)="searchFormOrderBy === orderBy.value ? orderBy.reset() : orderBy.setValue(searchFormOrderBy)"
-                          >
-                            {{ searchFormOrderBy }}
-                          </button>
-                        </li>
-                      </ul>
-										</div>
+												<button
+													class="rounded-btn block w-full truncate text-right first-letter:uppercase"
+													type="button"
+													[ngClass]="{ 'active': searchFormOrderBy === orderBy.value }"
+													[attr.aria-label]="searchFormOrderBy"
+													(click)="searchFormOrderBy === orderBy.value ? orderBy.reset() : orderBy.setValue(searchFormOrderBy)"
+												>
+													{{ searchFormOrderBy }}
+												</button>
+											</li>
+										</ul>
 									</div>
-								</fieldset>
-							</form>
-						</ng-container>
-					</div>
-					<div
-						class="w-full"
-						appSkeleton
-						*ngIf="!!category.description"
-						[appSkeletonToggle]="categorySkeletonToggle"
-						[appSkeletonClassListParent]="['!rounded-box']"
-						[appSkeletonClassList]="['!rounded-box']"
-					>
-						<article
-							class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
-							[innerHTML]="category.description | markdown | sanitizer: 'html'"
-						></article>
-					</div>
+								</div>
+							</fieldset>
+						</form>
+					</ng-container>
+				</div>
+				<div
+					class="block"
+					appSkeleton
+					*ngIf="!!category && !!category.description"
+					[appSkeletonToggle]="categorySkeletonToggle"
+					[appSkeletonClassListParent]="['!rounded-box']"
+					[appSkeletonClassList]="['!rounded-box']"
+				>
+					<article
+						class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
+						[innerHTML]="category.description | markdown | sanitizer: 'html'"
+					></article>
 				</div>
 				<div class="block">
 					<router-outlet

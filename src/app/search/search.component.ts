@@ -9,7 +9,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { debounceTime, filter } from 'rxjs/operators';
+import { debounceTime, filter, skip } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
@@ -102,7 +102,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 		const isLoading$: Observable<boolean> = component.abstractListIsLoading$;
 
 		// prettier-ignore
-		this.searchFormIsSubmitted$ = isLoading$.subscribe({
+		this.searchFormIsSubmitted$ = isLoading$.pipe(skip(1)).subscribe({
 			next: (isSubmitted: boolean) => isSubmitted ? this.searchForm.disable() : this.searchForm.enable(),
 			error: (error: any) => console.error(error)
 		});

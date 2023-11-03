@@ -49,10 +49,10 @@
 		<time
 			class="!mt-auto text-sm text-base-content/50"
 			appSkeleton
-			[attr.datetime]="category.updatedAt"
 			[appSkeletonToggle]="categorySkeletonToggle"
+			[attr.datetime]="category.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
 		>
-			{{ category.updatedAt | dayjs: "fromX" }}
+			Updated {{ category.updatedAt | dayjs: "fromX" }}
 		</time>
 	</div>
 </ng-container>

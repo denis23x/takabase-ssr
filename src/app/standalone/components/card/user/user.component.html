@@ -32,9 +32,9 @@
 				class="text-sm text-base-content/50"
 				appSkeleton
 				[appSkeletonToggle]="userSkeletonToggle"
-				[attr.datetime]="user.createdAt | dayjs: 'format' : 'YYYY-M-D'"
+				[attr.datetime]="user.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
 			>
-				{{ user.createdAt | dayjs: "fromX" }}
+				{{ user.updatedAt | dayjs: "fromX" }}
 			</time>
 		</div>
 	</div>

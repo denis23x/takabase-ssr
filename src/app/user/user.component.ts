@@ -3,7 +3,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { Observable, Subscription, throwError } from 'rxjs';
-import { catchError, debounceTime, filter } from 'rxjs/operators';
+import { catchError, debounceTime, filter, skip } from 'rxjs/operators';
 import {
 	FormBuilder,
 	FormControl,
@@ -35,6 +35,7 @@ import { CategoryDeleteComponent } from '../standalone/components/category/delet
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '../core/services/snackbar.service';
 import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
+import { CategoryService } from '../core/services/category.service';
 
 interface PostSearchForm {
 	query: FormControl<string>;
@@ -87,6 +88,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	postSearchFormOrderByList: string[] = ['newest', 'oldest'];
 
 	category: Category | undefined;
+	categoryRequest$: Subscription | undefined;
 	categorySkeletonToggle: boolean = true;
 
 	categoryList: Category[] = [];
@@ -98,6 +100,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private authorizationService: AuthorizationService,
 		private userService: UserService,
+		private categoryService: CategoryService,
 		private skeletonService: SkeletonService,
 		private snackbarService: SnackbarService
 	) {
@@ -142,6 +145,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.activatedRouteQueryParams$,
 			this.activatedRouteFirstChildParams$,
 			this.userRequest$,
+			this.categoryRequest$,
 			this.currentUser$,
 			this.currentUserSkeletonToggle$,
 			this.postSearchForm$,
@@ -154,6 +158,9 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.userSkeletonToggle = true;
 		this.userPostComponent?.userComponent$.next(this.user);
 
+		this.categoryList = this.skeletonService.getCategoryList();
+		this.categoryListSkeletonToggle = true;
+
 		// prettier-ignore
 		const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId') || '');
 
@@ -161,15 +168,9 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.category = this.skeletonService.getCategory();
 			this.categorySkeletonToggle = true;
 		}
-
-		this.categoryList = this.skeletonService.getCategoryList();
-		this.categoryListSkeletonToggle = true;
 	}
 
 	setResolver(): void {
-		this.userRequest$?.unsubscribe();
-		this.activatedRouteFirstChildParams$?.unsubscribe();
-
 		const name: string = String(this.activatedRoute.snapshot.paramMap.get('name') || '');
 
 		const userGetAllDto: UserGetAllDto = {
@@ -177,6 +178,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			scope: ['categories']
 		};
 
+		this.userRequest$?.unsubscribe();
 		this.userRequest$ = this.userService.getAll(userGetAllDto).subscribe({
 			next: (userList: User[]) => {
 				this.user = userList.shift();
@@ -188,22 +190,44 @@ export class UserComponent implements OnInit, OnDestroy {
 
 				// Set category
 
+				this.activatedRouteFirstChildParams$?.unsubscribe();
 				this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params.subscribe({
 					next: () => {
 						// prettier-ignore
 						const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId') || '');
 
-						this.category = this.categoryList.find((category: Category) => {
-							return category.id === categoryId;
-						});
+						if (categoryId) {
+							if (categoryId !== this.category?.id) {
+								this.category = this.skeletonService.getCategory();
+								this.categorySkeletonToggle = true;
 
-						this.categorySkeletonToggle = false;
+								this.categoryRequest$?.unsubscribe();
+								this.categoryRequest$ = this.categoryService.getOne(categoryId).subscribe({
+									next: (category: Category) => {
+										this.category = category;
+										this.categorySkeletonToggle = false;
+									},
+									error: (error: any) => console.error(error)
+								});
+							}
+						} else {
+							this.category = undefined;
+							this.categorySkeletonToggle = false;
+						}
 					},
 					error: (error: any) => console.error(error)
 				});
 			},
 			error: (error: any) => console.error(error)
 		});
+
+		// Init postSearchForm if url have a queryParams
+
+		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
+			this.postSearchForm.disable();
+
+			this.onTogglePostSearchForm();
+		}
 	}
 
 	onTogglePostSearchForm(): void {
@@ -271,7 +295,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		const isLoading$: Observable<boolean> = this.userPostComponent.abstractListIsLoading$;
 
 		// prettier-ignore
-		this.postSearchFormIsSubmitted$ = isLoading$.subscribe({
+		this.postSearchFormIsSubmitted$ = isLoading$.pipe(skip(1)).subscribe({
 			next: (isSubmitted: boolean) => isSubmitted ? this.postSearchForm.disable() : this.postSearchForm.enable(),
 			error: (error: any) => console.error(error)
 		});

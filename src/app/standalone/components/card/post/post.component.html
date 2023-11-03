@@ -44,7 +44,7 @@
 			<time
 				class="!mt-auto text-sm text-base-content/50"
 				appSkeleton
-				[attr.datetime]="post.updatedAt"
+				[attr.datetime]="post.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
 				[appSkeletonToggle]="postSkeletonToggle"
 			>
 				{{ post.updatedAt | dayjs: "fromX" }}

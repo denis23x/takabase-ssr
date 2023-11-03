@@ -26,7 +26,7 @@ export class CategoryService {
 		return this.apiService.get('/categories', categoryGetAllDto);
 	}
 
-	getOne(id: number, categoryGetOneDto: CategoryGetOneDto): Observable<Category> {
+	getOne(id: number, categoryGetOneDto?: CategoryGetOneDto): Observable<Category> {
 		return this.apiService.get('/categories/' + id, categoryGetOneDto);
 	}
 

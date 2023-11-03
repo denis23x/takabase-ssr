@@ -2,7 +2,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { filter, skip, tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { PostService } from '../core/services/post.service';
 import { CookieService } from '../core/services/cookie.service';
@@ -67,12 +67,10 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 	}
 
 	setAbstractResolver(): void {
-		// Get abstractList by queryParams
+		// Get abstractList by search queryParams
 
 		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
 			.pipe(
-				skip(1),
-				filter(() => !!this.activatedRoute.snapshot.url.length),
 				tap(() => {
 					this.abstractPage = 1;
 					this.abstractSize = 20;
