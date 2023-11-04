@@ -28,16 +28,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
 	</head>
 	<body>
-		<noscript>
-			Please enable JavaScript to continue using this application
-		</noscript>
-		<div
-			class="fixed z-[2] flex h-full w-full items-center justify-center bg-base-100"
-			data-loader
-		>
-			<span class="rounded-box bg-base-200 p-4 text-base-content">
-				Loading
-			</span>
+		<noscript> Please enable JavaScript to continue using this application </noscript>
+		<div class="fixed z-[2] flex h-full w-full items-center justify-center bg-base-100" data-loader>
+			<span class="rounded-box bg-base-200 p-4 text-base-content"> Loading </span>
 		</div>
 		<div
 			class="pointer-events-none fixed z-[1] h-full min-h-[800px] w-full"
@@ -80,14 +73,16 @@
 
 				if (!!value && value !== "") {
 					return value
-				} else {
-					return "light"
 				}
+
+				return false
 			}
 
 			const themeValue = getThemeValue()
 
-			document.documentElement.setAttribute("data-theme", themeValue)
+			if (themeValue) {
+				document.documentElement.setAttribute("data-theme", themeValue)
+			}
 
 			/** Background */
 
