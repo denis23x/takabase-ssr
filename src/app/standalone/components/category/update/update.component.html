@@ -6,14 +6,14 @@
 		class="modal"
 		#categoryUpdateDialogElement
 		(keydown.escape)="$event.preventDefault(); categoryUpdateDialogElement.close()"
-		(close)="onToggleCategoryUpdateForm(false)"
+		(close)="onToggleCategoryUpdateDialog(false)"
 		(click)="$event.target === $event.currentTarget ? categoryUpdateDialogElement.close() : $event"
 	>
 		<div
 			appWindow
 			[appWindowTitle]="'Update'"
 			[appWindowButtons]="['close']"
-			(appWindowClose)="onToggleCategoryUpdateForm(false)"
+			(appWindowClose)="onToggleCategoryUpdateDialog(false)"
 		>
 			<form
 				class="flex flex-col gap-4 p-4"

@@ -64,7 +64,7 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	onTogglePreviewPost(toggle: boolean): void {
+	onTogglePostPreviewDialog(toggle: boolean): void {
 		this.appPostPreviewToggle.emit(toggle);
 
 		this.postPreviewDialogToggle = toggle;

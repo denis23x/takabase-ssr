@@ -6,14 +6,14 @@
 		class="modal"
 		#categoryCreateDialogElement
 		(keydown.escape)="$event.preventDefault(); categoryCreateDialogElement.close()"
-		(close)="onToggleCategoryForm(false)"
+		(close)="onToggleCategoryCreateDialog(false)"
 		(click)="$event.target === $event.currentTarget ? categoryCreateDialogElement.close() : $event"
 	>
 		<div
 			appWindow
 			[appWindowTitle]="'Create'"
 			[appWindowButtons]="['close']"
-			(appWindowClose)="onToggleCategoryForm(false)"
+			(appWindowClose)="onToggleCategoryCreateDialog(false)"
 		>
 			<form
 				class="flex flex-col gap-4 p-4"

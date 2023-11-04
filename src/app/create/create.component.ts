@@ -317,7 +317,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			}
 		} else {
 			if (toggle) {
-				this.appCategoryCreateComponent.onToggleCategoryForm(true);
+				this.appCategoryCreateComponent.onToggleCategoryCreateDialog(true);
 			}
 		}
 	}

@@ -67,7 +67,7 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	onTogglePostDelete(toggle: boolean): void {
+	onTogglePostDeleteDialog(toggle: boolean): void {
 		this.appPostDeleteToggle.emit(toggle);
 
 		this.postDeleteDialogToggle = toggle;

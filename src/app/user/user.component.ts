@@ -37,6 +37,9 @@ import { SnackbarService } from '../core/services/snackbar.service';
 import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import { CategoryService } from '../core/services/category.service';
 import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
+import { TitleService } from '../core/services/title.service';
+import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
+import { MetaService } from '../core/services/meta.service';
 
 interface PostSearchForm {
 	query: FormControl<string>;
@@ -101,6 +104,8 @@ export class UserComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private authorizationService: AuthorizationService,
 		private userService: UserService,
+		private titleService: TitleService,
+		private metaService: MetaService,
 		private categoryService: CategoryService,
 		private skeletonService: SkeletonService,
 		private snackbarService: SnackbarService
@@ -202,10 +207,20 @@ export class UserComponent implements OnInit, OnDestroy {
 						.pipe(
 							switchMap(() => this.activatedRoute.firstChild.params),
 							distinctUntilKeyChanged('categoryId'),
-							tap(() => this.userPostComponent.setSkeleton())
+							tap(() => {
+								this.userPostComponent.setSkeleton();
+								this.userPostComponent.setResolver();
+							})
 						)
 						.subscribe({
 							next: () => {
+								// Apply SEO meta tags && title
+
+								const setMeta = (): void => {
+									this.setMetaTags();
+									this.setTitle();
+								};
+
 								// prettier-ignore
 								const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId') || '');
 
@@ -219,9 +234,7 @@ export class UserComponent implements OnInit, OnDestroy {
 											this.category = category;
 											this.categorySkeletonToggle = false;
 
-											// Invoke child component
-
-											this.setResolverChild();
+											setMeta();
 										},
 										error: (error: any) => console.error(error)
 									});
@@ -229,9 +242,7 @@ export class UserComponent implements OnInit, OnDestroy {
 									this.category = undefined;
 									this.categorySkeletonToggle = false;
 
-									// Invoke child component
-
-									this.setResolverChild();
+									setMeta();
 								}
 							},
 							error: (error: any) => console.error(error)
@@ -250,10 +261,42 @@ export class UserComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	setResolverChild(): void {
-		this.userPostComponent.user = this.user;
-		this.userPostComponent.category = this.category;
-		this.userPostComponent.setResolver();
+	setTitle(): void {
+		this.titleService.setTitle(this.user.name);
+
+		if (this.category) {
+			this.titleService.appendTitle(this.category.name);
+		}
+	}
+
+	setMetaTags(): void {
+		const username: string = this.userService.getUserUrl(this.user, 1);
+		const title: string = this.category?.name || username;
+		const description: string = this.category?.description || this.user.description;
+
+		const metaOpenGraph: Partial<MetaOpenGraph> = {
+			['og:title']: title,
+			['og:description']: description,
+			['og:image']: this.user.avatar,
+			['og:image:alt']: username,
+			['og:image:type']: 'image/png'
+		};
+
+		if (this.category) {
+			metaOpenGraph['og:type'] = 'website';
+		} else {
+			metaOpenGraph['og:type'] = 'profile';
+			metaOpenGraph['profile:username'] = username;
+		}
+
+		const metaTwitter: MetaTwitter = {
+			['twitter:title']: title,
+			['twitter:description']: description,
+			['twitter:image']: this.user.avatar,
+			['twitter:image:alt']: username
+		};
+
+		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
 	}
 
 	/** Search */

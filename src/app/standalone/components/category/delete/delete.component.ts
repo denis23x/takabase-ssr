@@ -115,7 +115,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	onToggleCategoryDeleteForm(toggle: boolean): void {
+	onToggleCategoryDeleteDialog(toggle: boolean): void {
 		if (toggle) {
 			this.categoryDeleteForm.reset();
 			this.categoryDeleteDialogElement.nativeElement.showModal();
@@ -165,7 +165,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 
 					this.categoryDeleteForm.enable();
 
-					this.onToggleCategoryDeleteForm(false);
+					this.onToggleCategoryDeleteDialog(false);
 
 					// Delete post images
 

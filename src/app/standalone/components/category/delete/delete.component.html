@@ -6,14 +6,14 @@
 		class="modal"
 		#categoryDeleteDialogElement
 		(keydown.escape)="$event.preventDefault(); categoryDeleteDialogElement.close()"
-		(close)="onToggleCategoryDeleteForm(false)"
+		(close)="onToggleCategoryDeleteDialog(false)"
 		(click)="$event.target === $event.currentTarget ? categoryDeleteDialogElement.close() : $event"
 	>
 		<div
 			appWindow
 			[appWindowTitle]="'Delete'"
 			[appWindowButtons]="['close']"
-			(appWindowClose)="onToggleCategoryDeleteForm(false)"
+			(appWindowClose)="onToggleCategoryDeleteDialog(false)"
 		>
 			<form
 				class="flex flex-col gap-4 p-4"

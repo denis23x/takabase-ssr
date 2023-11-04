@@ -222,7 +222,7 @@
 									type="button"
 									title="Create"
 									aria-label="Create"
-									(click)="appCategoryCreateComponent.onToggleCategoryForm(true)"
+									(click)="appCategoryCreateComponent.onToggleCategoryCreateDialog(true)"
 								>
 									Create
 								</button>
@@ -234,7 +234,7 @@
 										type="button"
 										title="Update"
 										aria-label="Update"
-										(click)="appCategoryUpdateComponent.onToggleCategoryUpdateForm(true)"
+										(click)="appCategoryUpdateComponent.onToggleCategoryUpdateDialog(true)"
 									>
 										Update
 									</button>
@@ -478,7 +478,7 @@
 					[appSkeletonClassListElementRef]="['border-0']"
 					[class.btn-outline]="postForm.valid && postForm.enabled"
 					[disabled]="postForm.invalid || postForm.disabled"
-					(click)="appPostPreviewComponent.onTogglePreviewPost(true)"
+					(click)="appPostPreviewComponent.onTogglePostPreviewDialog(true)"
 				>
 					Preview
 				</button>
@@ -509,7 +509,7 @@
 					[appSkeletonClassListElementRef]="['border-0']"
 					[class.btn-outline]="postForm.enabled"
 					[disabled]="postForm.disabled"
-					(click)="appPostDeleteComponent.onTogglePostDelete(true)"
+					(click)="appPostDeleteComponent.onTogglePostDeleteDialog(true)"
 				>
 					Delete
 				</button>

@@ -63,7 +63,7 @@ export class CategoryCreateComponent {
 		});
 	}
 
-	onToggleCategoryForm(toggle: boolean): void {
+	onToggleCategoryCreateDialog(toggle: boolean): void {
 		this.appCategoryCreateToggle.emit(toggle);
 
 		this.categoryCreateDialogToggle = toggle;
@@ -93,7 +93,7 @@ export class CategoryCreateComponent {
 
 					this.categoryForm.enable();
 
-					this.onToggleCategoryForm(false);
+					this.onToggleCategoryCreateDialog(false);
 				},
 				error: () => this.categoryForm.enable()
 			});

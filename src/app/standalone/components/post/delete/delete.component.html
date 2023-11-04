@@ -6,14 +6,14 @@
 		class="modal"
 		#postDeleteDialogElement
 		(keydown.escape)="$event.preventDefault(); postDeleteDialogElement.close()"
-		(close)="onTogglePostDelete(false)"
+		(close)="onTogglePostDeleteDialog(false)"
 		(click)="$event.target === $event.currentTarget ? postDeleteDialogElement.close() : $event"
 	>
 		<div
 			appWindow
 			[appWindowTitle]="'Delete'"
 			[appWindowButtons]="['close']"
-			(appWindowClose)="onTogglePostDelete(false)"
+			(appWindowClose)="onTogglePostDeleteDialog(false)"
 		>
 			<div class="flex flex-col gap-4 p-4" slot="content">
 				<p class="alert">

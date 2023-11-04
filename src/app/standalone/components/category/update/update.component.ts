@@ -90,7 +90,7 @@ export class CategoryUpdateComponent implements OnDestroy {
 		[this.categoryUpdateFormIsPristine$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	onToggleCategoryUpdateForm(toggle: boolean): void {
+	onToggleCategoryUpdateDialog(toggle: boolean): void {
 		if (toggle) {
 			this.categoryUpdateForm.patchValue(this.category);
 			this.categoryUpdateForm.markAllAsTouched();
@@ -130,7 +130,7 @@ export class CategoryUpdateComponent implements OnDestroy {
 
 					this.categoryUpdateForm.enable();
 
-					this.onToggleCategoryUpdateForm(false);
+					this.onToggleCategoryUpdateDialog(false);
 				},
 				error: () => this.categoryUpdateForm.enable()
 			});

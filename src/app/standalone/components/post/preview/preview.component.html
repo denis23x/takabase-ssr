@@ -6,14 +6,14 @@
 		class="modal"
 		#postPreviewDialogElement
 		(keydown.escape)="$event.preventDefault(); postPreviewDialogElement.close()"
-		(close)="onTogglePreviewPost(false)"
+		(close)="onTogglePostPreviewDialog(false)"
 		(click)="$event.target === $event.currentTarget ? postPreviewDialogElement.close() : $event"
 	>
 		<div
 			appWindow
 			[appWindowTitle]="'Preview'"
 			[appWindowButtons]="['close', 'fullscreen']"
-			(appWindowClose)="onTogglePreviewPost(false)"
+			(appWindowClose)="onTogglePostPreviewDialog(false)"
 		>
 			<main
 				class="w-full h-full"

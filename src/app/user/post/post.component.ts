@@ -7,10 +7,7 @@ import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.
 import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { AbstractSearchListComponent } from '../../abstracts/abstract-search-list.component';
-import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { User } from '../../core/models/user.model';
-import { Category } from '../../core/models/category.model';
 
 @Component({
 	standalone: true,
@@ -20,10 +17,6 @@ import { Category } from '../../core/models/category.model';
 })
 export class UserPostComponent extends AbstractSearchListComponent implements OnInit, OnDestroy {
 	abstractList: Post[] = [];
-
-	user: User | undefined;
-
-	category: Category | undefined;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -47,52 +40,6 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 		if (this.platformService.isBrowser()) {
 			this.getAbstractList();
 		}
-
-		/** Apply SEO meta tags */
-
-		this.setMetaTags();
-
-		/** Apply title */
-
-		this.setTitle();
-	}
-
-	setTitle(): void {
-		this.titleService.setTitle(this.user.name);
-
-		if (this.category) {
-			this.titleService.appendTitle(this.category.name);
-		}
-	}
-
-	setMetaTags(): void {
-		const username: string = this.userService.getUserUrl(this.user, 1);
-		const title: string = this.category?.name || username;
-		const description: string = this.category?.description || this.user.description;
-
-		const metaOpenGraph: Partial<MetaOpenGraph> = {
-			['og:title']: title,
-			['og:description']: description,
-			['og:image']: this.user.avatar,
-			['og:image:alt']: username,
-			['og:image:type']: 'image/png'
-		};
-
-		if (this.category) {
-			metaOpenGraph['og:type'] = 'website';
-		} else {
-			metaOpenGraph['og:type'] = 'profile';
-			metaOpenGraph['profile:username'] = username;
-		}
-
-		const metaTwitter: MetaTwitter = {
-			['twitter:title']: title,
-			['twitter:description']: description,
-			['twitter:image']: this.user.avatar,
-			['twitter:image:alt']: username
-		};
-
-		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
 	}
 
 	getAbstractList(concat: boolean = false): void {
@@ -100,14 +47,26 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 
 		let postGetAllDto: PostGetAllDto = {
 			page: this.abstractPage,
-			size: this.abstractSize,
-			userId: this.user.id
+			size: this.abstractSize
 		};
 
-		if (this.category?.id) {
+		// prettier-ignore
+		const userName: string = String(this.activatedRoute.parent.snapshot.paramMap.get('name') || '');
+
+		if (userName) {
 			postGetAllDto = {
 				...postGetAllDto,
-				categoryId: this.category.id
+				userName: userName.substring(1)
+			};
+		}
+
+		// prettier-ignore
+		const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId') || '');
+
+		if (categoryId) {
+			postGetAllDto = {
+				...postGetAllDto,
+				categoryId
 			};
 		}
 
