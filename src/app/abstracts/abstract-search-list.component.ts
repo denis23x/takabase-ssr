@@ -13,12 +13,15 @@ import { UserService } from '../core/services/user.service';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { PlatformService } from '../core/services/platform.service';
 import { SearchService } from '../core/services/search.service';
+import { TitleService } from '../core/services/title.service';
 
 @Component({
 	selector: 'app-abstract-search-list',
 	template: ''
 })
 export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
+	/** https://unicorn-utterances.com/posts/angular-extend-class */
+
 	activatedRouteQueryParams$: Subscription | undefined;
 
 	abstractPage: number = 1;
@@ -38,6 +41,7 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 		public postService: PostService,
 		public categoryService: CategoryService,
 		public userService: UserService,
+		public titleService: TitleService,
 		public metaService: MetaService,
 		public cookieService: CookieService,
 		public appearanceService: AppearanceService,

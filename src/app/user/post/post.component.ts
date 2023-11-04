@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -8,12 +8,9 @@ import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { AbstractSearchListComponent } from '../../abstracts/abstract-search-list.component';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
+import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 import { User } from '../../core/models/user.model';
 import { Category } from '../../core/models/category.model';
-import { BehaviorSubject, distinctUntilKeyChanged, Subscription } from 'rxjs';
-import { TitleService } from '../../core/services/title.service';
-import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { filter, switchMap, tap } from 'rxjs/operators';
 
 @Component({
 	standalone: true,
@@ -22,51 +19,22 @@ import { filter, switchMap, tap } from 'rxjs/operators';
 	templateUrl: './post.component.html'
 })
 export class UserPostComponent extends AbstractSearchListComponent implements OnInit, OnDestroy {
-	/** https://unicorn-utterances.com/posts/angular-extend-class */
-
-	private titleService: TitleService = inject(TitleService);
-
-	activatedRouteUrl$: Subscription | undefined;
-
 	abstractList: Post[] = [];
 
-	// prettier-ignore
-	userComponent$: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 	user: User | undefined;
 
 	category: Category | undefined;
-	categoryList: Category[] = [];
 
 	ngOnInit(): void {
 		super.ngOnInit();
 
 		/** Apply Data */
 
-		this.userComponent$
-			.pipe(
-				tap(() => this.setSkeleton()),
-				filter(() => this.platformService.isBrowser()),
-				filter((user: User | undefined) => !!user),
-				tap((user: User) => {
-					this.user = user;
-					this.categoryList = this.user.categories;
-				})
-			)
-			.subscribe({
-				next: () => {
-					this.setSkeleton();
-					this.setResolver();
-				},
-				error: (error: any) => console.error(error)
-			});
+		this.setSkeleton();
 	}
 
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
-
-		[this.activatedRouteUrl$].forEach(($: Subscription) => $?.unsubscribe());
-
-		[this.userComponent$].forEach(($: BehaviorSubject<User | undefined>) => $?.complete());
 	}
 
 	setSkeleton(): void {
@@ -76,41 +44,17 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 	}
 
 	setResolver(): void {
-		this.activatedRouteUrl$?.unsubscribe();
-		this.activatedRouteUrl$ = this.activatedRoute.url
-			.pipe(
-				switchMap(() => this.activatedRoute.params),
-				distinctUntilKeyChanged('categoryId')
-			)
-			.subscribe({
-				next: () => {
-					// prettier-ignore
-					const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId') || '');
+		if (this.platformService.isBrowser()) {
+			this.getAbstractList();
+		}
 
-					this.category = this.categoryList.find((category: Category) => {
-						return category.id === categoryId;
-					});
+		/** Apply SEO meta tags */
 
-					// Set skeleton
+		this.setMetaTags();
 
-					this.setSkeleton();
+		/** Apply title */
 
-					// Get abstractList
-
-					if (this.platformService.isBrowser()) {
-						this.getAbstractList();
-					}
-
-					/** Apply SEO meta tags */
-
-					this.setMetaTags();
-
-					/** Apply title */
-
-					this.setTitle();
-				},
-				error: (error: any) => console.error(error)
-			});
+		this.setTitle();
 	}
 
 	setTitle(): void {

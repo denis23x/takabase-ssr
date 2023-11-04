@@ -15,6 +15,8 @@ import { Subscription, throwError } from 'rxjs';
 	template: ''
 })
 export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy {
+	/** https://unicorn-utterances.com/posts/angular-extend-class */
+
 	// prettier-ignore
 	@ViewChild('abstractPostProseDialog', { static: true }) abstractPostProseDialog: ElementRef<HTMLDialogElement> | undefined;
 

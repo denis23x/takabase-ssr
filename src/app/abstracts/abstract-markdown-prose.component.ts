@@ -5,7 +5,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, filter } from 'rxjs/operators';
 import { Subscription, throwError } from 'rxjs';
-import { SkeletonService } from '../core/services/skeleton.service';
 import { PlatformService } from '../core/services/platform.service';
 
 @Component({
@@ -13,6 +12,8 @@ import { PlatformService } from '../core/services/platform.service';
 	template: ''
 })
 export abstract class AbstractMarkdownProseComponent implements OnInit, OnDestroy {
+	/** https://unicorn-utterances.com/posts/angular-extend-class */
+
 	activatedRouteParams$: Subscription | undefined;
 
 	abstractProse: string | undefined;
@@ -23,7 +24,6 @@ export abstract class AbstractMarkdownProseComponent implements OnInit, OnDestro
 		private httpClient: HttpClient,
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
-		private skeletonService: SkeletonService,
 		private platformService: PlatformService
 	) {}
 

@@ -3,7 +3,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, Observable, Subscription, throwError } from 'rxjs';
-import { catchError, debounceTime, filter, skip, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, filter, skip, switchMap, tap } from 'rxjs/operators';
 import {
 	FormBuilder,
 	FormControl,
@@ -162,7 +162,6 @@ export class UserComponent implements OnInit, OnDestroy {
 	setSkeleton(): void {
 		this.user = this.skeletonService.getUser(['categories']);
 		this.userSkeletonToggle = true;
-		this.userPostComponent?.userComponent$.next(this.user);
 
 		this.categoryList = this.skeletonService.getCategoryList();
 		this.categoryListSkeletonToggle = true;
@@ -192,7 +191,6 @@ export class UserComponent implements OnInit, OnDestroy {
 				} else {
 					this.user = userList.shift();
 					this.userSkeletonToggle = false;
-					this.userPostComponent.userComponent$.next(this.user);
 
 					this.categoryList = this.user.categories;
 					this.categoryListSkeletonToggle = false;
@@ -200,13 +198,18 @@ export class UserComponent implements OnInit, OnDestroy {
 					// Set category
 
 					this.activatedRouteFirstChildParams$?.unsubscribe();
-					this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params.subscribe({
-						next: () => {
-							// prettier-ignore
-							const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId') || '');
+					this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params
+						.pipe(
+							switchMap(() => this.activatedRoute.firstChild.params),
+							distinctUntilKeyChanged('categoryId'),
+							tap(() => this.userPostComponent.setSkeleton())
+						)
+						.subscribe({
+							next: () => {
+								// prettier-ignore
+								const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId') || '');
 
-							if (categoryId) {
-								if (categoryId !== this.category?.id) {
+								if (categoryId) {
 									this.category = this.skeletonService.getCategory();
 									this.categorySkeletonToggle = true;
 
@@ -215,17 +218,24 @@ export class UserComponent implements OnInit, OnDestroy {
 										next: (category: Category) => {
 											this.category = category;
 											this.categorySkeletonToggle = false;
+
+											// Invoke child component
+
+											this.setResolverChild();
 										},
 										error: (error: any) => console.error(error)
 									});
+								} else {
+									this.category = undefined;
+									this.categorySkeletonToggle = false;
+
+									// Invoke child component
+
+									this.setResolverChild();
 								}
-							} else {
-								this.category = undefined;
-								this.categorySkeletonToggle = false;
-							}
-						},
-						error: (error: any) => console.error(error)
-					});
+							},
+							error: (error: any) => console.error(error)
+						});
 				}
 			},
 			error: (error: any) => console.error(error)
@@ -238,6 +248,12 @@ export class UserComponent implements OnInit, OnDestroy {
 
 			this.onTogglePostSearchForm();
 		}
+	}
+
+	setResolverChild(): void {
+		this.userPostComponent.user = this.user;
+		this.userPostComponent.category = this.category;
+		this.userPostComponent.setResolver();
 	}
 
 	/** Search */
@@ -308,9 +324,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
 		this.category = categoryCreate;
 
-		// this.user.categories = this.categoryList;
-		// this.userPostComponent.userComponent$.next(this.user);
-
 		this.router
 			.navigate(['./category', this.category.id], {
 				queryParamsHandling: 'merge',
@@ -325,9 +338,6 @@ export class UserComponent implements OnInit, OnDestroy {
 		});
 
 		this.category = categoryUpdate;
-
-		// this.user.categories = this.categoryList;
-		// this.userPostComponent.userComponent$.next(this.user);
 	}
 
 	onDeleteCategory(categoryDelete: Category & CategoryDeleteDto): void {
@@ -336,9 +346,6 @@ export class UserComponent implements OnInit, OnDestroy {
 		});
 
 		this.category = undefined;
-
-		// this.user.categories = this.categoryList;
-		// this.userPostComponent.userComponent$.next(this.user);
 
 		// Redirect
 
