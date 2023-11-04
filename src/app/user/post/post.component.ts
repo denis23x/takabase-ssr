@@ -10,10 +10,10 @@ import { AbstractSearchListComponent } from '../../abstracts/abstract-search-lis
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { User } from '../../core/models/user.model';
 import { Category } from '../../core/models/category.model';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilKeyChanged, Subscription } from 'rxjs';
 import { TitleService } from '../../core/services/title.service';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { filter, tap } from 'rxjs/operators';
+import { filter, switchMap, tap } from 'rxjs/operators';
 
 @Component({
 	standalone: true,
@@ -77,35 +77,40 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 
 	setResolver(): void {
 		this.activatedRouteUrl$?.unsubscribe();
-		this.activatedRouteUrl$ = this.activatedRoute.url.subscribe({
-			next: () => {
-				// prettier-ignore
-				const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId') || '');
+		this.activatedRouteUrl$ = this.activatedRoute.url
+			.pipe(
+				switchMap(() => this.activatedRoute.params),
+				distinctUntilKeyChanged('categoryId')
+			)
+			.subscribe({
+				next: () => {
+					// prettier-ignore
+					const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId') || '');
 
-				this.category = this.categoryList.find((category: Category) => {
-					return category.id === categoryId;
-				});
+					this.category = this.categoryList.find((category: Category) => {
+						return category.id === categoryId;
+					});
 
-				// Set skeleton
+					// Set skeleton
 
-				this.setSkeleton();
+					this.setSkeleton();
 
-				// Get abstractList
+					// Get abstractList
 
-				if (this.platformService.isBrowser()) {
-					this.getAbstractList();
-				}
+					if (this.platformService.isBrowser()) {
+						this.getAbstractList();
+					}
 
-				/** Apply SEO meta tags */
+					/** Apply SEO meta tags */
 
-				this.setMetaTags();
+					this.setMetaTags();
 
-				/** Apply title */
+					/** Apply title */
 
-				this.setTitle();
-			},
-			error: (error: any) => console.error(error)
-		});
+					this.setTitle();
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	setTitle(): void {

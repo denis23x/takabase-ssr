@@ -2,8 +2,8 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import { Observable, Subscription, throwError } from 'rxjs';
-import { catchError, debounceTime, filter, skip } from 'rxjs/operators';
+import { distinctUntilKeyChanged, Observable, Subscription, throwError } from 'rxjs';
+import { catchError, debounceTime, filter, skip, switchMap } from 'rxjs/operators';
 import {
 	FormBuilder,
 	FormControl,
@@ -117,13 +117,18 @@ export class UserComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		/** Apply Data */
 
-		this.activatedRouteUrl$ = this.activatedRoute.url.subscribe({
-			next: () => {
-				this.setSkeleton();
-				this.setResolver();
-			},
-			error: (error: any) => console.error(error)
-		});
+		this.activatedRouteUrl$ = this.activatedRoute.url
+			.pipe(
+				switchMap(() => this.activatedRoute.params),
+				distinctUntilKeyChanged('name')
+			)
+			.subscribe({
+				next: () => {
+					this.setSkeleton();
+					this.setResolver();
+				},
+				error: (error: any) => console.error(error)
+			});
 
 		/** Current User */
 
