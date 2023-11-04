@@ -1,6 +1,15 @@
 /** @format */
 
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+	Component,
+	ElementRef,
+	EventEmitter,
+	Input,
+	OnDestroy,
+	OnInit,
+	Output,
+	ViewChild
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
@@ -26,8 +35,6 @@ import { Category } from '../../../../core/models/category.model';
 import { PostService } from '../../../../core/services/post.service';
 import { FileService } from '../../../../core/services/file.service';
 import { HelperService } from '../../../../core/services/helper.service';
-import { UserService } from '../../../../core/services/user.service';
-import { Router } from '@angular/router';
 import { CurrentUser } from '../../../../core/models/current-user.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
 
@@ -53,6 +60,9 @@ interface CategoryDeleteForm {
 export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild('categoryDeleteDialogElement') categoryDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
+
+	// prettier-ignore
+	@Output() appCategoryDeleteSuccess: EventEmitter<Category & CategoryDeleteDto> = new EventEmitter<Category & CategoryDeleteDto>();
 
 	@Input()
 	set appCategoryDeleteCategory(category: Category) {
@@ -85,8 +95,6 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 		private snackbarService: SnackbarService,
 		private helperService: HelperService,
 		private postService: PostService,
-		private userService: UserService,
-		private router: Router,
 		private fileService: FileService,
 		private authorizationService: AuthorizationService
 	) {
@@ -132,36 +140,23 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 
 			const categoryId: number = this.category.id;
 			const categoryDeleteDto: CategoryDeleteDto = {};
-			const categoryDeleteRedirect: string[] = [this.userService.getUserUrl(this.currentUser)];
 
 			const abstractControl: AbstractControl = this.categoryDeleteForm.get('categoryId');
 
-			// Move posts if provided categoryId OR delete their images at the same time
+			// Move posts to another category
 
 			if (abstractControl.value) {
 				categoryDeleteDto.categoryId = abstractControl.value;
-				categoryDeleteRedirect.push('category', abstractControl.value);
-			} else {
-				const postGetAllDto: PostGetAllDto = {
-					categoryId
-				};
-
-				this.postService
-					.getAll(postGetAllDto)
-					.pipe(filter((postList: Post[]) => !!postList.length))
-					.subscribe({
-						next: (postList: Post[]) => {
-							postList
-								.filter((post: Post) => !!post.image)
-								.forEach((post: Post) => this.fileService.delete(post.image));
-						},
-						error: (error: any) => console.error(error)
-					});
 			}
 
 			this.categoryService.delete(categoryId, categoryDeleteDto).subscribe({
 				next: () => {
 					this.snackbarService.success(null, 'Category deleted');
+
+					this.appCategoryDeleteSuccess.emit({
+						...this.category,
+						...categoryDeleteDto
+					});
 
 					this.category = undefined;
 					this.categoryList = this.categoryList.filter((category: Category) => {
@@ -172,7 +167,25 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 
 					this.onToggleCategoryDeleteForm(false);
 
-					this.router.navigate(categoryDeleteRedirect).then(() => console.debug('Route changed'));
+					// Delete post images
+
+					if (!categoryDeleteDto.categoryId) {
+						const postGetAllDto: PostGetAllDto = {
+							categoryId
+						};
+
+						this.postService
+							.getAll(postGetAllDto)
+							.pipe(filter((postList: Post[]) => !!postList.length))
+							.subscribe({
+								next: (postList: Post[]) => {
+									postList
+										.filter((post: Post) => !!post.image)
+										.forEach((post: Post) => this.fileService.delete(post.image));
+								},
+								error: (error: any) => console.error(error)
+							});
+					}
 				},
 				error: () => this.categoryDeleteForm.enable()
 			});

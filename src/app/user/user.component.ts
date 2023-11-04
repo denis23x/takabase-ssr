@@ -36,6 +36,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '../core/services/snackbar.service';
 import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import { CategoryService } from '../core/services/category.service';
+import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
 
 interface PostSearchForm {
 	query: FormControl<string>;
@@ -298,8 +299,8 @@ export class UserComponent implements OnInit, OnDestroy {
 	/** Category */
 
 	onCreateCategory(category: Category): void {
-		this.category = category;
 		this.categoryList.unshift(category);
+		this.category = category;
 
 		this.router
 			.navigate(['./category', category.id], {
@@ -316,6 +317,31 @@ export class UserComponent implements OnInit, OnDestroy {
 
 		this.category = categoryUpdate;
 	}
+
+	onDeleteCategory(categoryDelete: Category & CategoryDeleteDto): void {
+		this.categoryList = this.categoryList.filter((category: Category) => {
+			return category.id !== categoryDelete.id;
+		});
+
+		this.category = undefined;
+
+		// Redirect
+
+		const categoryDeleteRedirect: string[] = [this.userService.getUserUrl(this.currentUser)];
+
+		if (categoryDelete.categoryId) {
+			categoryDeleteRedirect.push('category', String(categoryDelete.categoryId));
+		}
+
+		this.router
+			.navigate(categoryDeleteRedirect, {
+				queryParamsHandling: 'merge',
+				relativeTo: this.activatedRoute
+			})
+			.then(() => console.debug('Route changed'));
+	}
+
+	/** Misc */
 
 	onRouterOutletActivate(userPostComponent: UserPostComponent): void {
 		this.userPostComponent = userPostComponent;

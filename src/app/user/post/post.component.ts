@@ -42,6 +42,7 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 
 		/** Apply Data */
 
+		this.userComponent$?.unsubscribe();
 		this.userComponent$
 			.pipe(
 				tap(() => this.setSkeleton()),
@@ -76,6 +77,7 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 	}
 
 	setResolver(): void {
+		this.activatedRouteUrl$?.unsubscribe();
 		this.activatedRouteUrl$ = this.activatedRoute.url.subscribe({
 			next: () => {
 				// prettier-ignore
