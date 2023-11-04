@@ -327,7 +327,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
 		// Redirect
 
-		const categoryDeleteRedirect: string[] = [this.userService.getUserUrl(this.currentUser)];
+		const categoryDeleteRedirect: string[] = ['.'];
 
 		if (categoryDelete.categoryId) {
 			categoryDeleteRedirect.push('category', String(categoryDelete.categoryId));

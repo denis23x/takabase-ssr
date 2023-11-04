@@ -42,7 +42,6 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 
 		/** Apply Data */
 
-		this.userComponent$?.unsubscribe();
 		this.userComponent$
 			.pipe(
 				tap(() => this.setSkeleton()),
@@ -148,7 +147,6 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 	}
 
 	getAbstractList(concat: boolean = false): void {
-		this.abstractListRequest$?.unsubscribe();
 		this.abstractListIsLoading$.next(true);
 
 		let postGetAllDto: PostGetAllDto = {
@@ -172,6 +170,7 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 			this.setSkeleton();
 		}
 
+		this.abstractListRequest$?.unsubscribe();
 		this.abstractListRequest$ = this.postService.getAll(postGetAllDto).subscribe({
 			next: (postList: Post[]) => {
 				this.abstractList = concat ? this.abstractList.concat(postList) : postList;

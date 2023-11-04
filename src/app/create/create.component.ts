@@ -205,6 +205,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			userId: this.currentUser.id
 		};
 
+		this.categoryListRequest$?.unsubscribe();
 		this.categoryListRequest$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
 			next: (categoryList: Category[]) => {
 				this.categoryList = categoryList;
@@ -224,6 +225,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 				scope: ['category']
 			};
 
+			this.postRequest$?.unsubscribe();
 			this.postRequest$ = this.postService.getOne(postId, postGetOneDto).subscribe({
 				next: (post: Post) => {
 					this.post = post;

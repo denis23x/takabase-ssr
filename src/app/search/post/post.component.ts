@@ -64,7 +64,6 @@ export class SearchPostComponent extends AbstractSearchListComponent implements 
 	}
 
 	getAbstractList(concat: boolean = false): void {
-		this.abstractListRequest$?.unsubscribe();
 		this.abstractListIsLoading$.next(true);
 
 		let postGetAllDto: PostGetAllDto = {
@@ -80,6 +79,7 @@ export class SearchPostComponent extends AbstractSearchListComponent implements 
 			this.setSkeleton();
 		}
 
+		this.abstractListRequest$?.unsubscribe();
 		this.abstractListRequest$ = this.postService.getAll(postGetAllDto).subscribe({
 			next: (postList: Post[]) => {
 				this.abstractList = concat ? this.abstractList.concat(postList) : postList;

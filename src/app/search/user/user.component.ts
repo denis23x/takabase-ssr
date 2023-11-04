@@ -76,7 +76,6 @@ export class SearchUserComponent extends AbstractSearchListComponent implements 
 	}
 
 	getAbstractList(concat: boolean = false): void {
-		this.abstractListRequest$?.unsubscribe();
 		this.abstractListIsLoading$.next(true);
 
 		let userGetAllDto: UserGetAllDto = {
@@ -92,6 +91,7 @@ export class SearchUserComponent extends AbstractSearchListComponent implements 
 			this.setSkeleton();
 		}
 
+		this.abstractListRequest$?.unsubscribe();
 		this.abstractListRequest$ = this.userService.getAll(userGetAllDto).subscribe({
 			next: (userList: User[]) => {
 				this.abstractList = concat ? this.abstractList.concat(userList) : userList;

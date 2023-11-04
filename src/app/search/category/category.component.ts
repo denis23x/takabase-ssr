@@ -72,7 +72,6 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 	}
 
 	getAbstractList(concat: boolean = false): void {
-		this.abstractListRequest$?.unsubscribe();
 		this.abstractListIsLoading$.next(true);
 
 		let categoryGetAllDto: CategoryGetAllDto = {
@@ -90,6 +89,7 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 			this.setSkeleton();
 		}
 
+		this.abstractListRequest$?.unsubscribe();
 		this.abstractListRequest$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
 			next: (categoryList: Category[]) => {
 				this.abstractList = concat ? this.abstractList.concat(categoryList) : categoryList;
