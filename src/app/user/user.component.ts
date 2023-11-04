@@ -303,12 +303,16 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	/** Category */
 
-	onCreateCategory(category: Category): void {
-		this.categoryList.unshift(category);
-		this.category = category;
+	onCreateCategory(categoryCreate: Category): void {
+		this.categoryList.unshift(categoryCreate);
+
+		this.category = categoryCreate;
+
+		// this.user.categories = this.categoryList;
+		// this.userPostComponent.userComponent$.next(this.user);
 
 		this.router
-			.navigate(['./category', category.id], {
+			.navigate(['./category', this.category.id], {
 				queryParamsHandling: 'merge',
 				relativeTo: this.activatedRoute
 			})
@@ -321,6 +325,9 @@ export class UserComponent implements OnInit, OnDestroy {
 		});
 
 		this.category = categoryUpdate;
+
+		// this.user.categories = this.categoryList;
+		// this.userPostComponent.userComponent$.next(this.user);
 	}
 
 	onDeleteCategory(categoryDelete: Category & CategoryDeleteDto): void {
@@ -329,6 +336,9 @@ export class UserComponent implements OnInit, OnDestroy {
 		});
 
 		this.category = undefined;
+
+		// this.user.categories = this.categoryList;
+		// this.userPostComponent.userComponent$.next(this.user);
 
 		// Redirect
 

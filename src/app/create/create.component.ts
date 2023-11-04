@@ -322,10 +322,10 @@ export class CreateComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onCreateCategory(category: Category): void {
-		this.categoryList.unshift(category);
+	onCreateCategory(categoryCreate: Category): void {
+		this.categoryList.unshift(categoryCreate);
 
-		this.onSelectCategory(category);
+		this.onSelectCategory(categoryCreate);
 	}
 
 	onUpdateCategory(categoryUpdate: Category): void {
@@ -336,8 +336,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 		this.onSelectCategory(categoryUpdate);
 	}
 
-	onSelectCategory(category: Category): void {
-		this.category = category;
+	onSelectCategory(categorySelect: Category): void {
+		this.category = categorySelect;
 
 		this.postForm.patchValue({
 			categoryId: this.category.id,
