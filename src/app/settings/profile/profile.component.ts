@@ -80,7 +80,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			name: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
-				Validators.maxLength(24)
+				Validators.maxLength(24),
+				Validators.pattern(this.helperService.getRegex('no-whitespace'))
 			]),
 			description: this.formBuilder.control(null, [Validators.maxLength(255)])
 		});

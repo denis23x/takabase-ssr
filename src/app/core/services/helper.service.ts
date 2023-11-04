@@ -21,6 +21,8 @@ export class HelperService {
 
 	getRegex(regex: string, payload?: any): RegExp {
 		switch (regex) {
+			case 'no-whitespace':
+				return new RegExp('^\\S*$', 'm');
 			case 'exact':
 				return new RegExp('^' + payload + '$', 'm');
 			case 'password':

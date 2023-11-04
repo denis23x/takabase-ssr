@@ -83,6 +83,9 @@
               <ng-container *ngSwitchCase="!!name.errors.maxlength">
                 Max length {{ name.errors.maxlength["requiredLength"] }} characters
               </ng-container>
+							<ng-container *ngSwitchCase="!!name.errors.pattern">
+								Unacceptable name
+							</ng-container>
             </span>
 						<span class="label-text mr-2">Name</span>
 					</div>
