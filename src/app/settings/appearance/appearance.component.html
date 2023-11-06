@@ -240,13 +240,13 @@
 					*ngIf="appearanceForm.get('pageScrollToTop') as pageScrollToTop"
 				>
 					<label class="label gap-4 cursor-pointer" for="appearanceFormPageScrollToTop">
-						<span class="label-text"> Scroll to top </span>
+						<span class="label-text"> Enable Scroll to top </span>
 						<!-- prettier-ignore -->
 						<input
 							class="toggle toggle-md"
 							id="appearanceFormPageScrollToTop"
 							type="checkbox"
-							aria-label="Scroll to top"
+							aria-label="Enable Scroll to top"
 							formControlName="pageScrollToTop"
 							[class.toggle-success]="pageScrollToTop.touched && pageScrollToTop.value"
 						/>
@@ -258,13 +258,13 @@
 					*ngIf="appearanceForm.get('pageScrollInfinite') as pageScrollInfinite"
 				>
 					<label class="label gap-4 cursor-pointer" for="appearanceFormPageScrollInfinite">
-						<span class="label-text"> Infinite scroll (when viewing lists) </span>
+						<span class="label-text"> Enable Infinite scroll </span>
 						<!-- prettier-ignore -->
 						<input
               class="toggle toggle-md"
               id="appearanceFormPageScrollInfinite"
               type="checkbox"
-              aria-label="Infinite scroll"
+              aria-label="Enable Infinite scroll"
               formControlName="pageScrollInfinite"
               [class.toggle-success]="pageScrollInfinite.touched && pageScrollInfinite.value"
             />
@@ -276,13 +276,13 @@
 					*ngIf="appearanceForm.get('pageRedirectHome') as pageRedirectHome"
 				>
 					<label class="label gap-4 cursor-pointer" for="appearanceFormPageRedirectHome">
-						<span class="label-text"> Redirect from home page (to profile) </span>
+						<span class="label-text"> Enable Redirect from home page </span>
 						<!-- prettier-ignore -->
 						<input
               class="toggle toggle-md"
               id="appearanceFormPageRedirectHome"
               type="checkbox"
-              aria-label="Redirect home page"
+              aria-label="Enable Redirect home page"
               formControlName="pageRedirectHome"
               [class.toggle-success]="pageRedirectHome.touched && pageRedirectHome.value"
             />
@@ -294,17 +294,33 @@
 					*ngIf="appearanceForm.get('markdownMonospace') as markdownMonospace"
 				>
 					<label class="label gap-4 cursor-pointer" for="appearanceFormMarkdownMonospace">
-						<span class="label-text">
-							Use a fixed-width (monospace) font when editing Markdown
-						</span>
+						<span class="label-text"> Enable a monospace font when editing Markdown </span>
 						<!-- prettier-ignore -->
 						<input
 							class="toggle toggle-md"
 							id="appearanceFormMarkdownMonospace"
 							type="checkbox"
-							aria-label="Markdown monospace"
+							aria-label="Enable Markdown monospace"
 							formControlName="markdownMonospace"
 							[class.toggle-success]="markdownMonospace.touched && markdownMonospace.value"
+						/>
+					</label>
+				</fieldset>
+				<hr class="my-2 w-full border-base-content/20" />
+				<fieldset
+					class="form-control"
+					*ngIf="appearanceForm.get('dropdownBackdrop') as dropdownBackdrop"
+				>
+					<label class="label gap-4 cursor-pointer" for="appearanceFormDropdownBackdrop">
+						<span class="label-text"> Enable a dropdown backdrop </span>
+						<!-- prettier-ignore -->
+						<input
+							class="toggle toggle-md"
+							id="appearanceFormDropdownBackdrop"
+							type="checkbox"
+							aria-label="Enable a dropdown backdrop"
+							formControlName="dropdownBackdrop"
+							[class.toggle-success]="dropdownBackdrop.touched && dropdownBackdrop.value"
 						/>
 					</label>
 				</fieldset>

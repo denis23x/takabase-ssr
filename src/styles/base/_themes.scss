@@ -1,0 +1,7 @@
+/* Add feature by default */
+
+@media (prefers-color-scheme: dark) {
+  img {
+    @apply opacity-75;
+  }
+}

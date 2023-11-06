@@ -70,6 +70,10 @@ export class HelpComponent implements OnInit {
 			name: 'Code highlight'
 		},
 		{
+			path: 'markdown',
+			name: 'Markdown'
+		},
+		{
 			path: 'style-safe-list',
 			name: 'Style safe list'
 		},

@@ -17,10 +17,10 @@
 				word in classical literature, discovered the undoubtable source.
 			</p>
 		</div>
-		<div
+		<article
 			class="prose max-w-none overflow-auto"
 			*ngSwitchCase="false"
 			[innerHTML]="abstractProse | markdown | sanitizer: 'html'"
-		></div>
+		></article>
 	</ng-container>
 </ng-container>

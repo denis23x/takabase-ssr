@@ -21,10 +21,10 @@ export abstract class AbstractMarkdownProseComponent implements OnInit, OnDestro
 	abstractProseSkeleton: boolean = false;
 
 	constructor(
-		private httpClient: HttpClient,
-		private activatedRoute: ActivatedRoute,
-		private router: Router,
-		private platformService: PlatformService
+		public httpClient: HttpClient,
+		public activatedRoute: ActivatedRoute,
+		public router: Router,
+		public platformService: PlatformService
 	) {}
 
 	ngOnInit(): void {

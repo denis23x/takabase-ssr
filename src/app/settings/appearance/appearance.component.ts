@@ -29,6 +29,7 @@ interface AppearanceForm {
 	pageScrollInfinite: FormControl<boolean>;
 	pageRedirectHome: FormControl<boolean>;
 	markdownMonospace: FormControl<boolean>;
+	dropdownBackdrop: FormControl<boolean>;
 	windowButtonPosition: FormControl<string>;
 }
 
@@ -74,6 +75,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 			pageScrollInfinite: this.formBuilder.control(null, [Validators.required]),
 			pageRedirectHome: this.formBuilder.control(null, [Validators.required]),
 			markdownMonospace: this.formBuilder.control(null, [Validators.required]),
+			dropdownBackdrop: this.formBuilder.control(null, [Validators.required]),
 			windowButtonPosition: this.formBuilder.nonNullable.control('', [Validators.required])
 		});
 	}
