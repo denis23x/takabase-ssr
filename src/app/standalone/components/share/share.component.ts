@@ -6,11 +6,10 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { PlatformService } from '../../../core/services/platform.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { Post } from '../../../core/models/post.model';
-import { AppQrCodeDirective } from '../../directives/app-qr-code.directive';
 
 @Component({
 	standalone: true,
-	imports: [SvgIconComponent, AppQrCodeDirective],
+	imports: [SvgIconComponent],
 	selector: 'app-share, [appShare]',
 	templateUrl: './share.component.html'
 })
