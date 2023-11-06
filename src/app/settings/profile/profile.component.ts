@@ -25,10 +25,9 @@ import { AuthorizationService } from '../../core/services/authorization.service'
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { AppTextareaResizeDirective } from '../../standalone/directives/app-textarea-resize.directive';
-import { AppQrCodeDirective } from '../../standalone/directives/app-qr-code.directive';
-import { PlatformService } from '../../core/services/platform.service';
 import { CurrentUser } from '../../core/models/current-user.model';
 import { User } from '../../core/models/user.model';
+import { QrCodeComponent } from '../../standalone/components/qr-code/qr-code.component';
 
 interface ProfileForm {
 	name: FormControl<string>;
@@ -49,7 +48,7 @@ interface ProfileForm {
 		UserUrlPipe,
 		AppInputTrimWhitespaceDirective,
 		AppTextareaResizeDirective,
-		AppQrCodeDirective
+		QrCodeComponent
 	],
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'
@@ -57,12 +56,10 @@ interface ProfileForm {
 export class SettingsProfileComponent implements OnInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild('profileFormAvatarDialog') profileFormAvatarDialog: ElementRef<HTMLDialogElement> | undefined;
-	@ViewChild('QRCodeDialog') QRCodeDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 	currentUserRequest$: Subscription | undefined;
-	currentUserQRCodeUrl: string | undefined;
 
 	profileForm: FormGroup | undefined;
 	profileFormIsPristine: boolean = false;
@@ -73,8 +70,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		private helperService: HelperService,
 		private userService: UserService,
 		private authorizationService: AuthorizationService,
-		private snackbarService: SnackbarService,
-		private platformService: PlatformService
+		private snackbarService: SnackbarService
 	) {
 		this.profileForm = this.formBuilder.group<ProfileForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -128,21 +124,6 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		} else {
 			this.profileForm.enable();
 			this.profileFormAvatarDialog.nativeElement.close();
-		}
-	}
-
-	onToggleQRCode(toggle: boolean): void {
-		if (toggle) {
-			if (this.platformService.isBrowser()) {
-				const window: Window = this.platformService.getWindow();
-
-				// prettier-ignore
-				this.currentUserQRCodeUrl = window.location.origin + this.userService.getUserUrl(this.currentUser);
-			}
-
-			this.QRCodeDialog.nativeElement.showModal();
-		} else {
-			this.QRCodeDialog.nativeElement.close();
 		}
 	}
 

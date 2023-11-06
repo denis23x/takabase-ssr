@@ -1,0 +1,51 @@
+<!-- @format -->
+
+<ng-container>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#QRCodeDialog
+		(keydown.escape)="$event.preventDefault(); QRCodeDialog.close()"
+		(close)="onToggleQRCodeDialog(false)"
+		(click)="$event.target === $event.currentTarget ? QRCodeDialog.close() : $event"
+	>
+		<div
+			appWindow
+			[appWindowTitle]="'QR Code'"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onToggleQRCodeDialog(false)"
+		>
+			<div class="flex flex-col items-center justify-start gap-4 p-4" slot="content">
+				<figure
+					class="flex flex-col bg-base-200 rounded-box border border-base-content/20 overflow-hidden w-full"
+				>
+					<canvas
+						class="aspect-square w-full border-b border-base-content/20"
+						data-pw="app-qr-code-image-qr-code"
+						#QRCodeCanvas
+					></canvas>
+					<figcaption class="text-center p-4">
+						<a
+							class="link text-sm truncate"
+							data-pw="app-qr-code-link-to-profile"
+							target="_blank"
+							[href]="QRCodeData$ | async"
+						>
+							{{ QRCodeData$ | async }}
+						</a>
+					</figcaption>
+				</figure>
+				<button
+					class="btn-success btn w-full"
+					data-pw="app-qr-code-button-download-qr-code"
+					type="button"
+					title="Download"
+					aria-label="Download"
+					(click)="onDownloadQRCode()"
+				>
+					Download
+				</button>
+			</div>
+		</div>
+	</dialog>
+</ng-container>

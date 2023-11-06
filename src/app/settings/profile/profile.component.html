@@ -48,7 +48,7 @@
 						[disabled]="profileForm.disabled"
 						[appSvgIconIcon]="'qr-code'"
 						[appSvgIconSquare]="'1.75em'"
-						(click)="onToggleQRCode(true)"
+						(click)="appQrCodeComponent.onToggleQRCodeDialog(true)"
 					></button>
 					<button
 						class="btn-success btn flex-1 sm:flex-auto"
@@ -128,7 +128,7 @@
 					[appSvgIconSquare]="'1.5em'"
 				></i>
 				<!-- prettier-ignore -->
-				<span class="block">Change the name will set the <span class="inline font-bold">{{ currentUser | userUrl : 1 }}</span> user profile not more available by direct link or QR code</span>
+				<span class="block">Change the name will set the <span class="inline font-bold">{{ currentUser | userUrl: 1 }}</span> user profile not more available by direct link or QR code</span>
 			</p>
 			<fieldset class="form-control" *ngIf="profileForm.get('description') as description">
 				<label class="label" for="profileFormDescription">
@@ -227,51 +227,5 @@
 			></div>
 		</div>
 	</dialog>
-	<!-- prettier-ignore-attribute (click) -->
-	<dialog
-		class="modal"
-		#QRCodeDialog
-		(keydown.escape)="$event.preventDefault(); QRCodeDialog.close()"
-		(close)="onToggleQRCode(false)"
-		(click)="$event.target === $event.currentTarget ? QRCodeDialog.close() : $event"
-	>
-		<div
-			appWindow
-			[appWindowTitle]="'QR Code'"
-			[appWindowButtons]="['close']"
-			(appWindowClose)="onToggleQRCode(false)"
-		>
-			<div class="flex flex-col items-center justify-start gap-4 p-4" slot="content">
-				<div
-					class="flex flex-col bg-base-200 rounded-box border border-base-content/20 overflow-hidden w-full"
-				>
-					<canvas
-						class="aspect-square w-full border-b border-base-content/20"
-						data-pw="app-settings-profile-image-qr-code"
-						#QRCodeCanvas
-					></canvas>
-					<a
-						class="link text-center text-sm truncate p-4"
-						data-pw="app-settings-profile-link-to-profile"
-						target="_blank"
-						[href]="currentUserQRCodeUrl"
-					>
-						{{ currentUserQRCodeUrl }}
-					</a>
-				</div>
-				<button
-					class="btn-success btn w-full"
-					data-pw="app-settings-profile-button-download-qr-code"
-					type="button"
-					aria-label="Download"
-					appQrCode
-					[appQRCodeDownloadOnClick]="true"
-					[appQRCodeText]="currentUserQRCodeUrl"
-					[appQRCodeCanvas]="QRCodeCanvas"
-				>
-					Download
-				</button>
-			</div>
-		</div>
-	</dialog>
+	<div appQRCode #appQrCodeComponent [appQRCodeData]="currentUser | userUrl: 1"></div>
 </ng-container>
