@@ -8,7 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AppearanceService } from '../../../core/services/appearance.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { HelperService } from '../../../core/services/helper.service';
-import { filter } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 
 @Component({
@@ -23,16 +23,18 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 
 	@Input()
 	set appQRCodeData(QRCodeData: string) {
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			QRCodeData = [window.location.origin, QRCodeData].join('/');
-		}
-
 		this.QRCodeData$.next(QRCodeData);
 	}
 
+	@Input()
+	set appQRCodeOrigin(QRCodeOrigin: boolean) {
+		this.QRCodeOrigin = QRCodeOrigin;
+	}
+
 	QRCodeData$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+	QRCodeOrigin: boolean = true;
+
+	QRCodeValue: string | undefined;
 	QRCodeOptions: QRCodeRenderersOptions = {
 		margin: 2,
 		scale: 1,
@@ -84,7 +86,19 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 		/** Subscribe for regenerate QRCode */
 
 		this.QRCodeData$.pipe(
-			filter((value: string) => !!value && !!this.QRCodeCanvas?.nativeElement)
+			filter((value: string) => !!value && !!this.QRCodeCanvas?.nativeElement),
+			map((value: string) => {
+				if (this.platformService.isBrowser()) {
+					const window: Window = this.platformService.getWindow();
+
+					if (this.QRCodeOrigin) {
+						value = [window.location.origin, value].join('/');
+					}
+				}
+
+				return value;
+			}),
+			tap((value: string) => (this.QRCodeValue = value))
 		).subscribe({
 			next: () => this.setQRCodeToCanvas(),
 			error: (error: any) => console.error(error)
@@ -106,24 +120,20 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 	onDownloadQRCode(): void {
 		if (this.platformService.isBrowser()) {
 			// prettier-ignore
-			QRCode.toDataURL(this.getQRCodeText(), this.QRCodeOptions, (error: Error, dataURL: string): void => {
+			QRCode.toDataURL(this.QRCodeValue, this.QRCodeOptions, (error: Error, dataURL: string): void => {
 				if (error) {
 					this.snackbarService.danger('Error', "Can't download your QR Code");
 				} else {
-					this.helperService.getDownload(dataURL, this.getQRCodeText().split('/').pop());
+					this.helperService.getDownload(dataURL, this.QRCodeValue.split('/').pop());
 				}
 			});
 		}
 	}
 
-	getQRCodeText(): string {
-		return this.QRCodeData$.getValue();
-	}
-
 	setQRCodeToCanvas(): void {
 		if (this.platformService.isBrowser()) {
 			// prettier-ignore
-			QRCode.toCanvas(this.QRCodeCanvas.nativeElement, this.getQRCodeText(), this.QRCodeOptions, (error: Error): void => {
+			QRCode.toCanvas(this.QRCodeCanvas.nativeElement, this.QRCodeValue, this.QRCodeOptions, (error: Error): void => {
 				if (error) {
 					this.snackbarService.danger('Error', "Can't draw your QR Code");
 				} else {

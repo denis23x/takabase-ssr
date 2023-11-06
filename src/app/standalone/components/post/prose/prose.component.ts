@@ -17,6 +17,9 @@ import { DropdownComponent } from '../../dropdown/dropdown.component';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { filter } from 'rxjs/operators';
 import { PostDeleteComponent } from '../delete/delete.component';
+import { PlatformService } from '../../../../core/services/platform.service';
+import { SnackbarService } from '../../../../core/services/snackbar.service';
+import { QrCodeComponent } from '../../qr-code/qr-code.component';
 
 @Component({
 	standalone: true,
@@ -32,7 +35,8 @@ import { PostDeleteComponent } from '../delete/delete.component';
 		AppSkeletonDirective,
 		DropdownComponent,
 		SvgIconComponent,
-		PostDeleteComponent
+		PostDeleteComponent,
+		QrCodeComponent
 	],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
@@ -61,11 +65,22 @@ export class PostProseComponent implements OnInit, OnDestroy {
 
 	post: Post | undefined;
 	postPreview: boolean = false;
+	postShareUrl: string | undefined;
 	postSkeletonToggle: boolean = true;
 
-	constructor(private authorizationService: AuthorizationService) {}
+	constructor(
+		private authorizationService: AuthorizationService,
+		private platformService: PlatformService,
+		private snackbarService: SnackbarService
+	) {}
 
 	ngOnInit(): void {
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
+			this.postShareUrl = window.location.origin + window.location.pathname;
+		}
+
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
 			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
@@ -82,5 +97,15 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		// prettier-ignore
 		[this.currentUser$, this.currentUserSkeletonToggle$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	onCopyUrl(): void {
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
+			window.navigator.clipboard.writeText(this.postShareUrl).then(() => {
+				this.snackbarService.success(null, 'Post URL has been copied');
+			});
+		}
 	}
 }

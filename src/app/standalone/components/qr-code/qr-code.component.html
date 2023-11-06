@@ -29,9 +29,9 @@
 							class="link text-sm truncate"
 							data-pw="app-qr-code-link-to-profile"
 							target="_blank"
-							[href]="QRCodeData$ | async"
+							[href]="QRCodeValue"
 						>
-							{{ QRCodeData$ | async }}
+							{{ QRCodeValue }}
 						</a>
 					</figcaption>
 				</figure>
