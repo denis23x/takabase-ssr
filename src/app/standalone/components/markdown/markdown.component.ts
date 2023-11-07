@@ -21,7 +21,7 @@ import {
 	MarkdownControlTable,
 	MarkdownControlUrl
 } from './markdown-controls';
-import { BehaviorSubject, EMPTY, fromEvent, merge, Subscription } from 'rxjs';
+import { EMPTY, fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, filter, startWith } from 'rxjs/operators';
 import {
 	AbstractControl,
@@ -125,8 +125,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	scrollSync: boolean = false;
 	scrollSync$: Subscription | undefined;
 
-	textareaHistory$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
-	textareaHistoryToggle: boolean = true;
 	textareaInput$: Subscription | undefined;
 	textareaId: string | undefined;
 	textarea: HTMLTextAreaElement | undefined;
@@ -159,16 +157,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.textareaInput$ = fromEvent(this.textarea, 'input')
 				.pipe(startWith(EMPTY), debounceTime(200))
 				.subscribe({
-					next: () => {
-						this.markdownService.setRender(this.textarea.value, this.preview);
-
-						if (this.textareaHistoryToggle) {
-							// prettier-ignore
-							this.textareaHistory$.next(this.textareaHistory$.getValue().concat([this.textarea.value]));
-						} else {
-							this.textareaHistoryToggle = true;
-						}
-					},
+					next: () => this.markdownService.setRender(this.textarea.value, this.preview),
 					error: (error: any) => console.error(error)
 				});
 		}
@@ -183,8 +172,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	ngOnDestroy(): void {
 		// prettier-ignore
 		[this.textareaInput$, this.scrollSync$, this.controlListScroll$, this.urlForm$].forEach(($: Subscription) => $?.unsubscribe());
-
-		[this.textareaHistory$].forEach(($: BehaviorSubject<string[]>) => $?.complete());
 	}
 
 	setEmojiMart(): void {
@@ -318,16 +305,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				},
 				error: (error: any) => console.error(error)
 			});
-	}
-
-	setBack(): void {
-		const history: string[] = this.textareaHistory$.getValue().slice(0, -1);
-		const historyValue: string = history[history.length - 1];
-
-		this.textareaHistory$.next(history);
-		this.textareaHistoryToggle = false;
-
-		this.setTextareaValue(historyValue);
 	}
 
 	getMarkdownTextarea(textAreaElement: HTMLTextAreaElement): MarkdownTextarea {

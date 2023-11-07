@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { iif, Subscription } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
 import {
@@ -58,6 +58,7 @@ interface PostForm {
 	selector: 'app-markdown',
 	imports: [
 		CommonModule,
+		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
 		AppInputTrimWhitespaceDirective,

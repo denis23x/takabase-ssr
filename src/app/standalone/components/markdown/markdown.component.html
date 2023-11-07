@@ -10,23 +10,6 @@
 			class="menu menu-horizontal menu-md flex-nowrap overflow-auto rounded-btn bg-base-100 p-0"
 			[ngClass]="{ 'pointer-events-none bg-base-300': controlListDisabled }"
 		>
-			<li
-				class="inline-block"
-				*ngIf="{ value: textareaHistory$.getValue().length <= 1 } as disabled"
-				[class.disabled]="disabled.value || controlListDisabled"
-			>
-				<button
-					class="fill-current p-3 active:!bg-error active:!text-error-content"
-					type="button"
-					title="Undo"
-					aria-label="Undo"
-					appSvgIcon
-					[class.pointer-events-none]="disabled.value"
-					[appSvgIconIcon]="'arrow-left'"
-					[appSvgIconSquare]="'1.5725em'"
-					(click)="setBack()"
-				></button>
-			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
 					class="flex p-0"
