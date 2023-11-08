@@ -60,8 +60,7 @@ export class UserPostComponent extends AbstractSearchListComponent implements On
 			};
 		}
 
-		// prettier-ignore
-		const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId') || '');
+		const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
 
 		if (categoryId) {
 			postGetAllDto = {

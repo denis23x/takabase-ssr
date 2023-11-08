@@ -53,7 +53,7 @@ export class ErrorComponent implements OnInit {
 	}
 
 	setResolver(): void {
-		const statusCode: number = Number(this.activatedRoute.snapshot.paramMap.get('status') || '');
+		const statusCode: number = Number(this.activatedRoute.snapshot.paramMap.get('status'));
 		const message: string = this.getMessageMap(statusCode);
 
 		if (!statusCode || !message) {

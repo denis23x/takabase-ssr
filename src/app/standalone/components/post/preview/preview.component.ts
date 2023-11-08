@@ -38,16 +38,16 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 	}
 
 	@Input()
-	set appPostPreviewPostCategory(category: Category) {
-		this.postCategory = category;
+	set appPostPreviewCategory(category: Category) {
+		this.category = category;
 	}
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
-	post: Post | undefined;
-	postCategory: Category | undefined;
+	category: Category | undefined;
 
+	post: Post | undefined;
 	postPreview: Post | undefined;
 	postPreviewDialogToggle: boolean = false;
 
@@ -74,7 +74,7 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 			this.postPreview = {
 				...this.post,
 				user: this.currentUser,
-				category: this.postCategory
+				category: this.category
 			};
 		} else {
 			this.postPreviewDialogElement.nativeElement.close();

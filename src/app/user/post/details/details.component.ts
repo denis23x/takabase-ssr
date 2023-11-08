@@ -23,10 +23,10 @@ export class UserPostDetailsComponent extends AbstractPostDetailsComponent imple
 	}
 
 	setResolver(): void {
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId') || '');
+		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 
 		// prettier-ignore
-		const categoryId: number = Number(this.activatedRoute.parent.snapshot.paramMap.get('categoryId') || '');
+		const categoryId: number = Number(this.activatedRoute.parent.snapshot.paramMap.get('categoryId'));
 
 		const postGetOneDto: PostGetOneDto = {
 			categoryId,

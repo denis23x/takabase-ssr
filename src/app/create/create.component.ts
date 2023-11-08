@@ -186,7 +186,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	setSkeleton(): void {
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId') || '');
+		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 
 		if (postId) {
 			this.post = this.skeletonService.getPost(['category']);
@@ -208,17 +208,13 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 		this.categoryListRequest$?.unsubscribe();
 		this.categoryListRequest$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
-			next: (categoryList: Category[]) => {
-				this.categoryList = categoryList;
-				this.category = undefined;
-				this.categorySkeletonToggle = false;
-			},
+			next: (categoryList: Category[]) => (this.categoryList = categoryList),
 			error: (error: any) => console.error(error)
 		});
 
 		// Get post && Set category
 
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId') || '');
+		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 
 		if (postId) {
 			const postGetOneDto: PostGetOneDto = {
@@ -237,8 +233,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 					this.postForm.patchValue({
 						...this.post,
-						categoryId: this.post.category.id,
-						categoryName: this.post.category.name
+						categoryId: this.category.id,
+						categoryName: this.category.name
 					});
 
 					this.postForm.markAllAsTouched();
@@ -266,6 +262,9 @@ export class CreateComponent implements OnInit, OnDestroy {
 				},
 				error: (error: any) => console.error(error)
 			});
+		} else {
+			this.category = undefined;
+			this.categorySkeletonToggle = false;
 		}
 	}
 
@@ -397,7 +396,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.postForm)) {
 			this.postForm.disable();
 
-			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId') || '');
+			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 			const postCreateDto: PostCreateDto = {
 				...this.postForm.value
 			};

@@ -172,7 +172,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.categoryListSkeletonToggle = true;
 
 		// prettier-ignore
-		const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId') || '');
+		const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
 
 		if (categoryId) {
 			this.category = this.skeletonService.getCategory();
@@ -222,7 +222,7 @@ export class UserComponent implements OnInit, OnDestroy {
 								};
 
 								// prettier-ignore
-								const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId') || '');
+								const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
 
 								if (categoryId) {
 									this.category = this.skeletonService.getCategory();
