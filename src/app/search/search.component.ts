@@ -59,6 +59,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		this.activatedRouteQueryParams$?.unsubscribe();
 		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
 			.pipe(filter((params: Params) => params.query || params.orderBy))
 			.subscribe({
@@ -69,6 +70,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
+		this.searchForm$?.unsubscribe();
 		this.searchForm$ = this.searchForm.valueChanges
 			.pipe(
 				debounceTime(1000),
@@ -101,9 +103,13 @@ export class SearchComponent implements OnInit, OnDestroy {
 	onRouterOutletActivate(component: any): void {
 		const isLoading$: Observable<boolean> = component.abstractListIsLoading$;
 
-		// prettier-ignore
+		this.searchFormIsSubmitted$?.unsubscribe();
 		this.searchFormIsSubmitted$ = isLoading$.pipe(skip(1)).subscribe({
-			next: (isSubmitted: boolean) => isSubmitted ? this.searchForm.disable() : this.searchForm.enable(),
+			next: (isSubmitted: boolean) => {
+				// Control searchForm state from children
+
+				isSubmitted ? this.searchForm.disable() : this.searchForm.enable();
+			},
 			error: (error: any) => console.error(error)
 		});
 	}

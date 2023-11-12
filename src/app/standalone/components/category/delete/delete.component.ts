@@ -75,8 +75,8 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	@Input()
-	set appCategoryDeleteCategoryPostList(categoryPostList: Post[]) {
-		this.categoryPostList = categoryPostList;
+	set appCategoryDeletePostList(postList: Post[]) {
+		this.postList = postList;
 	}
 
 	currentUser: CurrentUser | undefined;
@@ -84,10 +84,12 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 
 	category: Category | undefined;
 	categoryList: Category[] = [];
-	categoryPostList: Post[] = [];
+
+	postList: Post[] = [];
+	postListRequest$: Subscription | undefined;
 
 	categoryDeleteForm: FormGroup | undefined;
-	categoryDeleteForm$: Subscription | undefined;
+	categoryDeleteFormRequest$: Subscription | undefined;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -105,6 +107,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
 			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
@@ -112,7 +115,8 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.currentUser$, this.categoryDeleteFormRequest$, this.postListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleCategoryDeleteDialog(toggle: boolean): void {
@@ -149,46 +153,50 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 				categoryDeleteDto.categoryId = abstractControl.value;
 			}
 
-			this.categoryService.delete(categoryId, categoryDeleteDto).subscribe({
-				next: () => {
-					this.snackbarService.success(null, 'Category deleted');
+			this.categoryDeleteFormRequest$?.unsubscribe();
+			this.categoryDeleteFormRequest$ = this.categoryService
+				.delete(categoryId, categoryDeleteDto)
+				.subscribe({
+					next: () => {
+						this.snackbarService.success(null, 'Category deleted');
 
-					this.appCategoryDeleteSuccess.emit({
-						...this.category,
-						...categoryDeleteDto
-					});
+						this.appCategoryDeleteSuccess.emit({
+							...this.category,
+							...categoryDeleteDto
+						});
 
-					this.category = undefined;
-					this.categoryList = this.categoryList.filter((category: Category) => {
-						return category.id !== categoryId;
-					});
+						this.category = undefined;
+						this.categoryList = this.categoryList.filter((category: Category) => {
+							return category.id !== categoryId;
+						});
 
-					this.categoryDeleteForm.enable();
+						this.categoryDeleteForm.enable();
 
-					this.onToggleCategoryDeleteDialog(false);
+						this.onToggleCategoryDeleteDialog(false);
 
-					// Delete post images
+						// Delete post images
 
-					if (!categoryDeleteDto.categoryId) {
-						const postGetAllDto: PostGetAllDto = {
-							categoryId
-						};
+						if (!categoryDeleteDto.categoryId) {
+							const postGetAllDto: PostGetAllDto = {
+								categoryId
+							};
 
-						this.postService
-							.getAll(postGetAllDto)
-							.pipe(filter((postList: Post[]) => !!postList.length))
-							.subscribe({
-								next: (postList: Post[]) => {
-									postList
-										.filter((post: Post) => !!post.image)
-										.forEach((post: Post) => this.fileService.delete(post.image));
-								},
-								error: (error: any) => console.error(error)
-							});
-					}
-				},
-				error: () => this.categoryDeleteForm.enable()
-			});
+							this.postListRequest$?.unsubscribe();
+							this.postListRequest$ = this.postService
+								.getAll(postGetAllDto)
+								.pipe(filter((postList: Post[]) => !!postList.length))
+								.subscribe({
+									next: (postList: Post[]) => {
+										postList
+											.filter((post: Post) => !!post.image)
+											.forEach((post: Post) => this.fileService.delete(post.image));
+									},
+									error: (error: any) => console.error(error)
+								});
+						}
+					},
+					error: () => this.categoryDeleteForm.enable()
+				});
 		}
 	}
 }

@@ -46,7 +46,7 @@ export class AppTextareaResizeDirective implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.toggleResize$.complete();
+		[this.toggleResize$].forEach(($: BehaviorSubject<boolean>) => $?.complete());
 	}
 
 	setAutoresize(toggle: boolean): void {

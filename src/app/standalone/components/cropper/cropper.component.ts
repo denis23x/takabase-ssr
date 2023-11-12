@@ -60,6 +60,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	@Output() appCropperSubmit: EventEmitter<string> = new EventEmitter<string>();
 
 	imageForm: FormGroup | undefined;
+	imageFormRequest$: Subscription | undefined;
 	imageFormMime: string[] = ['image/jpeg', 'image/jpg', 'image/png'];
 
 	imageTransform$: Subscription | undefined;
@@ -99,6 +100,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngAfterViewInit(): void {
+		this.imageTransform$?.unsubscribe();
 		this.imageTransform$ = this.imageCropper.transformChange.subscribe({
 			next: (imageTransform: ImageTransform) => (this.imageTransform = imageTransform),
 			error: (error: any) => console.error(error)
@@ -106,7 +108,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.imageTransform$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.imageFormRequest$, this.imageTransform$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onInputUrl(): void {
@@ -127,7 +129,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 					...this.imageForm.value
 				};
 
-				this.fileService.getOneProxy(fileGetOneProxyDto).subscribe({
+				this.imageFormRequest$?.unsubscribe();
+				this.imageFormRequest$ = this.fileService.getOneProxy(fileGetOneProxyDto).subscribe({
 					next: (blob: Blob) => {
 						this.cropperPositionInitial = undefined;
 						this.cropperFile = new File([blob], 'blob-image', {
@@ -275,7 +278,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		this.imageForm.disable();
 
-		this.fileService.create(fileCropped, filePath).subscribe({
+		this.imageFormRequest$?.unsubscribe();
+		this.imageFormRequest$ = this.fileService.create(fileCropped, filePath).subscribe({
 			next: (fileUrl: string) => {
 				this.imageForm.enable();
 

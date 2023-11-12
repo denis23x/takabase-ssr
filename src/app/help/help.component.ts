@@ -162,6 +162,7 @@ export class HelpComponent implements OnInit {
 		if (this.helperService.getFormValidation(this.helpForm)) {
 			this.helpForm.disable();
 
+			// TODO: update feedback
 			// const helpCreateDto: HelpCreateDto = {
 			// 	...this.helpForm.value
 			// };

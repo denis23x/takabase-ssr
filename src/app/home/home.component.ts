@@ -142,6 +142,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
+			this.appPWAInstallPromt$?.unsubscribe();
 			this.appPWAInstallPromt$ = fromEvent(window, 'beforeinstallprompt')
 				.pipe(tap((event: Event) => event.preventDefault()))
 				.subscribe({

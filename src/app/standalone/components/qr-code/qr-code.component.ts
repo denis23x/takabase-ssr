@@ -106,7 +106,7 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		this.QRCodeData$.complete();
+		[this.QRCodeData$].forEach(($: BehaviorSubject<string>) => $?.complete());
 	}
 
 	onToggleQRCodeDialog(toggle: boolean): void {

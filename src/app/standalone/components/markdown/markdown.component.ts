@@ -154,6 +154,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.textarea = this.document.getElementById(this.textareaId);
 			this.preview = this.document.getElementById(this.previewId);
 
+			this.textareaInput$?.unsubscribe();
 			this.textareaInput$ = fromEvent(this.textarea, 'input')
 				.pipe(startWith(EMPTY), debounceTime(200))
 				.subscribe({
@@ -275,6 +276,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 		const controlListElement: any = this.controlListElement.nativeElement;
 
+		this.controlListScroll$?.unsubscribe();
 		this.controlListScroll$ = fromEvent(controlListElement, 'scroll')
 			.pipe(filter(() => !!dropdownComponent()))
 			.subscribe({
@@ -289,6 +291,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			return Math.round((b.scrollHeight - b.clientHeight) * ((a.scrollTop / (a.scrollHeight - a.clientHeight))));
 		};
 
+		this.scrollSync$?.unsubscribe();
 		this.scrollSync$ = merge(fromEvent(this.textarea, 'scroll'), fromEvent(this.preview, 'scroll'))
 			.pipe(filter(() => this.scrollSync))
 			.subscribe({

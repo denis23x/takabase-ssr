@@ -26,6 +26,7 @@ export class AppAuthenticatedDirective implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
+		this.authenticated$?.unsubscribe();
 		this.authenticated$ = this.authorizationService
 			.getCurrentUser()
 			.pipe(tap(() => this.viewContainerRef.clear()))

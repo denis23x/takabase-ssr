@@ -37,11 +37,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	constructor(private authorizationService: AuthorizationService) {}
 
 	ngOnInit(): void {
+		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
 			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
 
+		this.currentUserSkeletonToggle$?.unsubscribe();
 		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
 			.pipe(filter((currentUserIsPopulated: boolean) => currentUserIsPopulated))
 			.subscribe({

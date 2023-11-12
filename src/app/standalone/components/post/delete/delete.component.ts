@@ -44,8 +44,9 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	currentUser$: Subscription | undefined;
 
 	post: Post | undefined;
-	postDeleteIsSubmitted: boolean = false;
+	postDeleteRequest$: Subscription | undefined;
 	postDeleteDialogToggle: boolean = false;
+	postDeleteIsSubmitted: boolean = false;
 
 	constructor(
 		private router: Router,
@@ -57,6 +58,7 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
+		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
 			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
@@ -64,7 +66,7 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$, this.postDeleteRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onTogglePostDeleteDialog(toggle: boolean): void {
@@ -84,7 +86,8 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 
 		const postId: number = this.post.id;
 
-		this.postService.delete(postId).subscribe({
+		this.postDeleteRequest$?.unsubscribe();
+		this.postDeleteRequest$ = this.postService.delete(postId).subscribe({
 			next: (post: Post) => {
 				if (post.image) {
 					this.fileService.delete(post.image).subscribe({

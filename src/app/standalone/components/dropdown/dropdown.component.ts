@@ -69,6 +69,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
 		/** Clicks handler */
 
+		this.windowClick$?.unsubscribe();
 		this.windowClick$ = fromEvent(this.document, 'click').subscribe({
 			next: (event: any) => {
 				const clickTarget: boolean = this.dropdownTarget.contains(event.target);
@@ -109,6 +110,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
+			this.windowAction$?.unsubscribe();
 			this.windowAction$ = merge(fromEvent(window, 'scroll'), fromEvent(window, 'resize'))
 				.pipe(filter(() => this.dropdownState))
 				.subscribe({

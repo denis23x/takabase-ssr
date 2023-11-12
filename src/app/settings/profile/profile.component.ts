@@ -95,6 +95,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
+		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService
 			.getCurrentUser()
 			.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)))
@@ -102,6 +103,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.profileForm.patchValue(this.currentUser);
 					this.profileForm.markAllAsTouched();
+
+					this.profileFormIsPristine$?.unsubscribe();
 					this.profileFormIsPristine$ = this.profileForm.valueChanges
 						.pipe(startWith(this.profileForm.value))
 						.subscribe({

@@ -52,6 +52,7 @@ export class AppSkeletonDirective implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
+		this.skeletonToggle$?.unsubscribe();
 		this.skeletonToggle$
 			.pipe(
 				distinctUntilChanged(),

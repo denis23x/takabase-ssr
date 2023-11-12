@@ -50,6 +50,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 	appearanceForm: FormGroup | undefined;
 	appearanceForm$: Subscription | undefined;
+	appearanceFormRequest$: Subscription | undefined;
 
 	appearanceThemeList: string[] = [];
 	appearanceThemeBackgroundList: string[] = [];
@@ -81,6 +82,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		this.activatedRouteData$?.unsubscribe();
 		this.activatedRouteData$ = this.activatedRoute.data
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
@@ -95,6 +97,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
+		this.appearanceForm$?.unsubscribe();
 		this.appearanceForm$ = this.appearanceForm.valueChanges.subscribe({
 			next: (value: any) => {
 				this.appearanceForm.disable({ emitEvent: false });
@@ -108,7 +111,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 				});
 
 				// TODO: update settings
-				// this.settingsService.update(settingsUpdateDto).subscribe({
+				// this.appearanceFormRequest$?.unsubscribe();
+				// this.appearanceFormRequest$ = this.settingsService.update(settingsUpdateDto).subscribe({
 				// 	next: (settings: Settings) => {
 				// 		this.authorizationService.setUser({ settings });
 				//
@@ -127,7 +131,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		// prettier-ignore
-		[this.activatedRouteData$, this.appearanceForm$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.activatedRouteData$, this.appearanceForm$, this.appearanceFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setTransformList(): void {

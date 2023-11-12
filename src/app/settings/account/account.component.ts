@@ -52,13 +52,16 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
-	passwordValidateIsValid: boolean = false;
 	passwordValidateForm: FormGroup | undefined;
+	passwordValidateFormRequest$: Subscription | undefined;
+	passwordValidateIsValid: boolean = false;
 
 	emailForm: FormGroup | undefined;
+	emailFormRequest$: Subscription | undefined;
 	emailFormConfirmationIsSubmitted: boolean = false;
 
 	passwordForm: FormGroup | undefined;
+	passwordFormRequest$: Subscription | undefined;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -93,10 +96,16 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
+		[
+			this.currentUser$,
+			this.passwordValidateFormRequest$,
+			this.emailFormRequest$,
+			this.passwordFormRequest$
+		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setResolver(): void {
+		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
 			next: (currentUser: CurrentUser) => {
 				this.currentUser = currentUser;
@@ -120,23 +129,26 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				...this.passwordValidateForm.value
 			};
 
-			this.passwordService.onValidateGet(passwordValidateGetDto).subscribe({
-				next: () => {
-					this.passwordValidateForm.enable();
-					this.passwordValidateForm.reset();
+			this.passwordValidateFormRequest$?.unsubscribe();
+			this.passwordValidateFormRequest$ = this.passwordService
+				.onValidateGet(passwordValidateGetDto)
+				.subscribe({
+					next: () => {
+						this.passwordValidateForm.enable();
+						this.passwordValidateForm.reset();
 
-					this.passwordValidateIsValid = true;
+						this.passwordValidateIsValid = true;
 
-					const dateNow: Date = new Date();
+						const dateNow: Date = new Date();
 
-					/** Set 5 minutes cookie */
+						/** Set 5 minutes cookie */
 
-					this.cookieService.setItem('password-valid', '1', {
-						expires: new Date(dateNow.setTime(dateNow.getTime() + 5 * 60 * 1000))
-					});
-				},
-				error: () => this.passwordValidateForm.enable()
-			});
+						this.cookieService.setItem('password-valid', '1', {
+							expires: new Date(dateNow.setTime(dateNow.getTime() + 5 * 60 * 1000))
+						});
+					},
+					error: () => this.passwordValidateForm.enable()
+				});
 		}
 	}
 
@@ -148,7 +160,8 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				newEmail: this.emailForm.value.email
 			};
 
-			this.emailService.onUpdate(emailUpdateDto).subscribe({
+			this.emailFormRequest$?.unsubscribe();
+			this.emailFormRequest$ = this.emailService.onUpdate(emailUpdateDto).subscribe({
 				next: () => {
 					this.emailForm.enable();
 					this.emailForm.reset();
@@ -164,7 +177,8 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.emailForm)) {
 			this.emailFormConfirmationIsSubmitted = true;
 
-			this.emailService.onConfirmationGet().subscribe({
+			this.emailFormRequest$?.unsubscribe();
+			this.emailFormRequest$ = this.emailService.onConfirmationGet().subscribe({
 				next: () => {
 					this.emailFormConfirmationIsSubmitted = false;
 
@@ -183,7 +197,8 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				newPassword: this.passwordForm.value.password
 			};
 
-			this.passwordService.onUpdate(passwordUpdateDto).subscribe({
+			this.passwordFormRequest$?.unsubscribe();
+			this.passwordFormRequest$ = this.passwordService.onUpdate(passwordUpdateDto).subscribe({
 				next: () => {
 					this.passwordForm.enable();
 					this.passwordForm.reset();

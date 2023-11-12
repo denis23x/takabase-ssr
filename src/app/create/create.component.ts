@@ -96,6 +96,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	postSkeletonToggle: boolean = false;
 
 	postForm: FormGroup | undefined;
+	postFormRequest$: Subscription | undefined;
 	postFormIsPristine: boolean = false;
 	postFormIsPristine$: Subscription | undefined;
 
@@ -156,6 +157,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		/** Apply Data */
 
+		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService
 			.getCurrentUser()
 			.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)))
@@ -181,6 +183,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			this.currentUser$,
 			this.categoryListRequest$,
 			this.postRequest$,
+			this.postFormRequest$,
 			this.postFormIsPristine$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
@@ -241,6 +244,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 					// Get postFormIsPristine
 
+					this.postFormIsPristine$?.unsubscribe();
 					this.postFormIsPristine$ = this.postForm.valueChanges
 						.pipe(startWith(this.postForm.value))
 						.subscribe({
@@ -401,19 +405,26 @@ export class CreateComponent implements OnInit, OnDestroy {
 				...this.postForm.value
 			};
 
-			iif(
-				() => !!postId,
-				this.postService.update(postId, postCreateDto),
-				this.postService.create(postCreateDto)
-			).subscribe({
-				next: (post: Post) => {
-					// prettier-ignore
-					this.router
-            .navigate([this.userService.getUserUrl(post.user), 'category', post.category.id, 'post', post.id])
-            .then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
-				},
-				error: () => this.postForm.enable()
-			});
+			// prettier-ignore
+			const postFormRequestRedirect = (post: Post): void => {
+				this.router
+          .navigate([this.userService.getUserUrl(post.user), 'category', post.category.id, 'post', post.id])
+          .then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
+			};
+
+			if (postId) {
+				this.postFormRequest$?.unsubscribe();
+				this.postFormRequest$ = this.postService.update(postId, postCreateDto).subscribe({
+					next: (post: Post) => postFormRequestRedirect(post),
+					error: () => this.postForm.enable()
+				});
+			} else {
+				this.postFormRequest$?.unsubscribe();
+				this.postFormRequest$ = this.postService.create(postCreateDto).subscribe({
+					next: (post: Post) => postFormRequestRedirect(post),
+					error: () => this.postForm.enable()
+				});
+			}
 		}
 	}
 

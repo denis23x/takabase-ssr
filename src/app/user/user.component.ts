@@ -81,6 +81,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
+	currentUserLogoutRequest$: Subscription | undefined;
 
 	currentUserSkeletonToggle: boolean = true;
 	currentUserSkeletonToggle$: Subscription | undefined;
@@ -122,6 +123,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		/** Apply Data */
 
+		this.activatedRouteUrl$?.unsubscribe();
 		this.activatedRouteUrl$ = this.activatedRoute.url
 			.pipe(
 				switchMap(() => this.activatedRoute.params),
@@ -137,11 +139,13 @@ export class UserComponent implements OnInit, OnDestroy {
 
 		/** Current User */
 
+		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
 			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
 
+		this.currentUserSkeletonToggle$?.unsubscribe();
 		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
 			.pipe(filter((currentUserIsPopulated: boolean) => currentUserIsPopulated))
 			.subscribe({
@@ -158,6 +162,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.userRequest$,
 			this.categoryRequest$,
 			this.currentUser$,
+			this.currentUserLogoutRequest$,
 			this.currentUserSkeletonToggle$,
 			this.postSearchForm$,
 			this.postSearchFormIsSubmitted$
@@ -324,6 +329,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
 			// Set postSearchForm to queryParams
 
+			this.postSearchForm$?.unsubscribe();
 			this.postSearchForm$ = this.postSearchForm.valueChanges
 				.pipe(
 					debounceTime(1000),
@@ -347,6 +353,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
 			// Set queryParams to postSearchForm
 
+			this.activatedRouteQueryParams$?.unsubscribe();
 			this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
 				.pipe(filter((params: Params) => params.query || params.orderBy))
 				.subscribe({
@@ -413,15 +420,20 @@ export class UserComponent implements OnInit, OnDestroy {
 
 		const isLoading$: Observable<boolean> = this.userPostComponent.abstractListIsLoading$;
 
-		// prettier-ignore
+		this.postSearchFormIsSubmitted$?.unsubscribe();
 		this.postSearchFormIsSubmitted$ = isLoading$.pipe(skip(1)).subscribe({
-			next: (isSubmitted: boolean) => isSubmitted ? this.postSearchForm.disable() : this.postSearchForm.enable(),
+			next: (isSubmitted: boolean) => {
+				// Control postSearchForm state from children
+
+				isSubmitted ? this.postSearchForm.disable() : this.postSearchForm.enable();
+			},
 			error: (error: any) => console.error(error)
 		});
 	}
 
 	onLogout(): void {
-		this.authorizationService
+		this.currentUserLogoutRequest$?.unsubscribe();
+		this.currentUserLogoutRequest$ = this.authorizationService
 			.onLogout()
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {

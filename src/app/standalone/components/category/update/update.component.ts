@@ -67,6 +67,8 @@ export class CategoryUpdateComponent implements OnDestroy {
 	categoryList: Category[] = [];
 
 	categoryUpdateForm: FormGroup | undefined;
+	categoryUpdateFormRequest$: Subscription | undefined;
+
 	categoryUpdateFormIsPristine$: Subscription | undefined;
 	categoryUpdateFormIsPristine: boolean = false;
 
@@ -87,14 +89,18 @@ export class CategoryUpdateComponent implements OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.categoryUpdateFormIsPristine$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.categoryUpdateFormIsPristine$, this.categoryUpdateFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleCategoryUpdateDialog(toggle: boolean): void {
 		if (toggle) {
 			this.categoryUpdateForm.patchValue(this.category);
 			this.categoryUpdateForm.markAllAsTouched();
+
 			this.categoryUpdateDialogElement.nativeElement.showModal();
+
+			this.categoryUpdateFormIsPristine$?.unsubscribe();
 			this.categoryUpdateFormIsPristine$ = this.categoryUpdateForm.valueChanges
 				.pipe(startWith(this.categoryUpdateForm.value))
 				.subscribe({
@@ -107,7 +113,9 @@ export class CategoryUpdateComponent implements OnDestroy {
 				});
 		} else {
 			this.categoryUpdateForm.reset();
+
 			this.categoryUpdateDialogElement.nativeElement.close();
+
 			this.categoryUpdateFormIsPristine = true;
 			this.categoryUpdateFormIsPristine$?.unsubscribe();
 		}
@@ -122,18 +130,21 @@ export class CategoryUpdateComponent implements OnDestroy {
 				...this.categoryUpdateForm.value
 			};
 
-			this.categoryService.update(categoryId, categoryUpdateDto).subscribe({
-				next: (category: Category) => {
-					this.snackbarService.success(null, 'Category updated');
+			this.categoryUpdateFormRequest$?.unsubscribe();
+			this.categoryUpdateFormRequest$ = this.categoryService
+				.update(categoryId, categoryUpdateDto)
+				.subscribe({
+					next: (category: Category) => {
+						this.snackbarService.success(null, 'Category updated');
 
-					this.appCategoryUpdateSuccess.emit(category);
+						this.appCategoryUpdateSuccess.emit(category);
 
-					this.categoryUpdateForm.enable();
+						this.categoryUpdateForm.enable();
 
-					this.onToggleCategoryUpdateDialog(false);
-				},
-				error: () => this.categoryUpdateForm.enable()
-			});
+						this.onToggleCategoryUpdateDialog(false);
+					},
+					error: () => this.categoryUpdateForm.enable()
+				});
 		}
 	}
 }
