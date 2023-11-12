@@ -14,6 +14,7 @@ import { ScrollToTopComponent } from './standalone/components/scroll-to-top/scro
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { getStorage, provideStorage } from '@angular/fire/storage';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
 @NgModule({
 	declarations: [AppComponent],
@@ -26,6 +27,7 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
 		}),
 		provideFirebaseApp(() => initializeApp()),
 		provideStorage(() => getStorage()),
+		provideFirestore(() => getFirestore()),
 		HttpClientModule,
 		HeaderComponent,
 		SnackbarComponent,

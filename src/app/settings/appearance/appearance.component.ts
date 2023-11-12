@@ -19,6 +19,7 @@ import { AppScrollPresetDirective } from '../../standalone/directives/app-scroll
 import { SettingsUpdateDto } from '../../core/dto/settings/settings-update.dto';
 import { SettingsService } from '../../core/services/settings.service';
 import { Settings } from '../../core/models/settings.model';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
@@ -65,7 +66,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		private formBuilder: FormBuilder,
 		private authorizationService: AuthorizationService,
 		private settingsService: SettingsService,
-		private activatedRoute: ActivatedRoute
+		private activatedRoute: ActivatedRoute,
+		private angularFirestore: AngularFirestore
 	) {
 		this.appearanceForm = this.formBuilder.group<AppearanceForm>({
 			theme: this.formBuilder.nonNullable.control('', [Validators.required]),
@@ -82,6 +84,12 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
+		// const tutRef = this.angularFirestore.doc('tutorial');
+		//
+		// tutRef.set({
+		// 	title: 'zkoder Tutorial'
+		// });
+
 		this.activatedRouteData$?.unsubscribe();
 		this.activatedRouteData$ = this.activatedRoute.data
 			.pipe(map((data: Data) => data.data))
