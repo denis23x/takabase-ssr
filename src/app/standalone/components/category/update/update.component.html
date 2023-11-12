@@ -10,6 +10,7 @@
 		(click)="$event.target === $event.currentTarget ? categoryUpdateDialogElement.close() : $event"
 	>
 		<div
+			class="w-full max-w-lg"
 			appWindow
 			[appWindowTitle]="'Update'"
 			[appWindowButtons]="['close']"

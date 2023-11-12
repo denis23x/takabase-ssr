@@ -10,6 +10,7 @@
 		(click)="$event.target === $event.currentTarget ? abstractPostProseDialog.close() : $event"
 	>
 		<div
+			class="w-full max-w-2xl"
 			appWindow
 			[appWindowTitle]="'View'"
 			[appWindowButtons]="['close', 'fullscreen']"
