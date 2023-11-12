@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import {
 	FormBuilder,
@@ -47,7 +47,8 @@ export class SearchComponent implements OnInit, OnDestroy {
 	constructor(
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
-		private formBuilder: FormBuilder
+		private formBuilder: FormBuilder,
+		private changeDetectorRef: ChangeDetectorRef
 	) {
 		this.searchForm = this.formBuilder.group<SearchForm>({
 			query: this.formBuilder.nonNullable.control('', [
@@ -101,13 +102,17 @@ export class SearchComponent implements OnInit, OnDestroy {
 	}
 
 	onRouterOutletActivate(component: any): void {
+		// ExpressionChangedAfterItHasBeenCheckedError (searchForm)
+
+		this.changeDetectorRef.detectChanges();
+
+		// Control searchForm state from children
+
 		const isLoading$: Observable<boolean> = component.abstractListIsLoading$;
 
 		this.searchFormIsSubmitted$?.unsubscribe();
 		this.searchFormIsSubmitted$ = isLoading$.pipe(skip(1)).subscribe({
 			next: (isSubmitted: boolean) => {
-				// Control searchForm state from children
-
 				isSubmitted ? this.searchForm.disable() : this.searchForm.enable();
 			},
 			error: (error: any) => console.error(error)

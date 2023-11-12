@@ -1,6 +1,14 @@
 /** @format */
 
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import {
+	AfterViewInit,
+	ChangeDetectorRef,
+	Component,
+	ElementRef,
+	Input,
+	OnDestroy,
+	ViewChild
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WindowComponent } from '../window/window.component';
 import { PlatformService } from '../../../core/services/platform.service';
@@ -8,7 +16,7 @@ import { BehaviorSubject } from 'rxjs';
 import { AppearanceService } from '../../../core/services/appearance.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { HelperService } from '../../../core/services/helper.service';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 
 @Component({
@@ -49,7 +57,8 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 		private platformService: PlatformService,
 		private appearanceService: AppearanceService,
 		private snackbarService: SnackbarService,
-		private helperService: HelperService
+		private helperService: HelperService,
+		private changeDetectorRef: ChangeDetectorRef
 	) {}
 
 	ngAfterViewInit(): void {
@@ -97,10 +106,19 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 				}
 
 				return value;
-			}),
-			tap((value: string) => (this.QRCodeValue = value))
+			})
 		).subscribe({
-			next: () => this.setQRCodeToCanvas(),
+			next: (value: string) => {
+				this.QRCodeValue = value;
+
+				// ExpressionChangedAfterItHasBeenCheckedError (QRCodeValue)
+
+				this.changeDetectorRef.detectChanges();
+
+				// Draw QR
+
+				this.setQRCodeToCanvas();
+			},
 			error: (error: any) => console.error(error)
 		});
 	}

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, Observable, Subscription, throwError } from 'rxjs';
 import { catchError, debounceTime, filter, skip, switchMap, tap } from 'rxjs/operators';
@@ -109,7 +109,8 @@ export class UserComponent implements OnInit, OnDestroy {
 		private metaService: MetaService,
 		private categoryService: CategoryService,
 		private skeletonService: SkeletonService,
-		private snackbarService: SnackbarService
+		private snackbarService: SnackbarService,
+		private changeDetectorRef: ChangeDetectorRef
 	) {
 		this.postSearchForm = this.formBuilder.group<PostSearchForm>({
 			query: this.formBuilder.nonNullable.control('', [
@@ -418,13 +419,17 @@ export class UserComponent implements OnInit, OnDestroy {
 	onRouterOutletActivate(userPostComponent: UserPostComponent): void {
 		this.userPostComponent = userPostComponent;
 
+		// ExpressionChangedAfterItHasBeenCheckedError (appCategoryDeleteComponent => userPostComponent.abstractList)
+
+		this.changeDetectorRef.detectChanges();
+
+		// Control postSearchForm state from children
+
 		const isLoading$: Observable<boolean> = this.userPostComponent.abstractListIsLoading$;
 
 		this.postSearchFormIsSubmitted$?.unsubscribe();
 		this.postSearchFormIsSubmitted$ = isLoading$.pipe(skip(1)).subscribe({
 			next: (isSubmitted: boolean) => {
-				// Control postSearchForm state from children
-
 				isSubmitted ? this.postSearchForm.disable() : this.postSearchForm.enable();
 			},
 			error: (error: any) => console.error(error)
