@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -19,6 +19,7 @@ import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
 import { PasswordService } from '../../core/services/password.service';
+import { Subscription } from 'rxjs';
 
 interface ResetForm {
 	email: FormControl<string>;
@@ -37,7 +38,8 @@ interface ResetForm {
 	selector: 'app-authorization-reset',
 	templateUrl: './reset.component.html'
 })
-export class AuthResetComponent implements OnInit {
+export class AuthResetComponent implements OnInit, OnDestroy {
+	resetRequest$: Subscription | undefined;
 	resetForm: FormGroup | undefined;
 
 	constructor(
@@ -60,6 +62,10 @@ export class AuthResetComponent implements OnInit {
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
+	}
+
+	ngOnDestroy(): void {
+		[this.resetRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setMetaTags(): void {
@@ -88,7 +94,8 @@ export class AuthResetComponent implements OnInit {
 				...this.resetForm.value
 			};
 
-			this.passwordService.onResetGet(passwordResetGetDto).subscribe({
+			this.resetRequest$?.unsubscribe();
+			this.resetRequest$ = this.passwordService.onResetGet(passwordResetGetDto).subscribe({
 				next: () => {
 					this.snackbarService.info('Success', 'Check your email to continue process');
 

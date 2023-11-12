@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 import { MetaService } from '../../../core/services/meta.service';
@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { EmailService } from '../../../core/services/email.service';
 import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
 import { EmailRecoveryDto } from '../../../core/dto/email/email-recovery.dto';
+import { Subscription } from 'rxjs';
 
 @Component({
 	standalone: true,
@@ -16,7 +17,8 @@ import { EmailRecoveryDto } from '../../../core/dto/email/email-recovery.dto';
 	selector: 'app-authorization-recovery-recovery',
 	templateUrl: './recovery.component.html'
 })
-export class AuthConfirmationRecoveryComponent implements OnInit {
+export class AuthConfirmationRecoveryComponent implements OnInit, OnDestroy {
+	recoveryRequest$: Subscription | undefined;
 	recoveryIsSucceed: boolean = false;
 	recoveryIsSubmitted: boolean = true;
 
@@ -37,6 +39,10 @@ export class AuthConfirmationRecoveryComponent implements OnInit {
 		this.setMetaTags();
 	}
 
+	ngOnDestroy(): void {
+		[this.recoveryRequest$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
 	setResolver(): void {
 		const oobCode: string = String(this.activatedRoute.snapshot.queryParamMap.get('oobCode') || '');
 
@@ -44,7 +50,8 @@ export class AuthConfirmationRecoveryComponent implements OnInit {
 			code: oobCode
 		};
 
-		this.emailService.onRecovery(emailRecoveryDto).subscribe({
+		this.recoveryRequest$?.unsubscribe();
+		this.recoveryRequest$ = this.emailService.onRecovery(emailRecoveryDto).subscribe({
 			next: () => {
 				this.recoveryIsSucceed = true;
 				this.recoveryIsSubmitted = false;

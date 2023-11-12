@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -18,6 +18,7 @@ import { SnackbarService } from '../../../core/services/snackbar.service';
 import { PasswordService } from '../../../core/services/password.service';
 import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 import { MetaService } from '../../../core/services/meta.service';
+import { Subscription } from 'rxjs';
 
 interface PasswordForm {
 	code: FormControl<string>;
@@ -30,7 +31,8 @@ interface PasswordForm {
 	selector: 'app-authorization-confirmation-password',
 	templateUrl: './password.component.html'
 })
-export class AuthConfirmationPasswordComponent implements OnInit {
+export class AuthConfirmationPasswordComponent implements OnInit, OnDestroy {
+	passwordRequest$: Subscription | undefined;
 	passwordForm: FormGroup | undefined;
 
 	constructor(
@@ -59,6 +61,10 @@ export class AuthConfirmationPasswordComponent implements OnInit {
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
+	}
+
+	ngOnDestroy(): void {
+		[this.passwordRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setResolver(): void {
@@ -93,7 +99,8 @@ export class AuthConfirmationPasswordComponent implements OnInit {
 				...this.passwordForm.value
 			};
 
-			this.passwordService.onResetUpdate(passwordResetUpdateDto).subscribe({
+			this.passwordRequest$?.unsubscribe();
+			this.passwordRequest$ = this.passwordService.onResetUpdate(passwordResetUpdateDto).subscribe({
 				next: () => {
 					this.router
 						.navigate(['/'])

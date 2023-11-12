@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -21,6 +21,7 @@ import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { RegistrationDto } from '../../core/dto/auth/registration.dto';
+import { Subscription } from 'rxjs';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -42,7 +43,8 @@ interface RegistrationForm {
 	selector: 'app-authorization-registration',
 	templateUrl: './registration.component.html'
 })
-export class AuthRegistrationComponent implements OnInit {
+export class AuthRegistrationComponent implements OnInit, OnDestroy {
+	registrationRequest$: Subscription | undefined;
 	registrationForm: FormGroup | undefined;
 
 	constructor(
@@ -82,6 +84,10 @@ export class AuthRegistrationComponent implements OnInit {
 		this.setMetaTags();
 	}
 
+	ngOnDestroy(): void {
+		[this.registrationRequest$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
 	setMetaTags(): void {
 		const title: string = 'Registration';
 		const description: string = 'Creating an account with us is quick and easy';
@@ -108,14 +114,17 @@ export class AuthRegistrationComponent implements OnInit {
 				...this.registrationForm.value
 			};
 
-			this.authorizationService.onRegistration(registrationDto).subscribe({
-				next: (user: User) => {
-					this.router
-						.navigate([this.userService.getUserUrl(user)])
-						.then(() => this.snackbarService.info('Success', 'Welcome to our website'));
-				},
-				error: () => this.registrationForm.enable()
-			});
+			this.registrationRequest$?.unsubscribe();
+			this.registrationRequest$ = this.authorizationService
+				.onRegistration(registrationDto)
+				.subscribe({
+					next: (user: User) => {
+						this.router
+							.navigate([this.userService.getUserUrl(user)])
+							.then(() => this.snackbarService.info('Success', 'Welcome to our website'));
+					},
+					error: () => this.registrationForm.enable()
+				});
 		}
 	}
 }

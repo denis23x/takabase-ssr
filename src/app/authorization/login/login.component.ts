@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -20,6 +20,7 @@ import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
+import { Subscription } from 'rxjs';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -39,7 +40,8 @@ interface LoginForm {
 	selector: 'app-authorization-login',
 	templateUrl: './login.component.html'
 })
-export class AuthLoginComponent implements OnInit {
+export class AuthLoginComponent implements OnInit, OnDestroy {
+	loginRequest$: Subscription | undefined;
 	loginForm: FormGroup | undefined;
 
 	constructor(
@@ -71,6 +73,10 @@ export class AuthLoginComponent implements OnInit {
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
+	}
+
+	ngOnDestroy(): void {
+		[this.loginRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setResolver(): void {
@@ -117,7 +123,8 @@ export class AuthLoginComponent implements OnInit {
 			...value
 		};
 
-		this.authorizationService.onLogin(loginDto).subscribe({
+		this.loginRequest$?.unsubscribe();
+		this.loginRequest$ = this.authorizationService.onLogin(loginDto).subscribe({
 			next: (user: User) => {
 				this.router
 					.navigate([this.userService.getUserUrl(user)])
