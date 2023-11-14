@@ -208,13 +208,15 @@
               "optimization": true,
               "sourceMap": true,
               "extractLicenses": true,
-              "namedChunks": false
+              "namedChunks": false,
+              "buildOptimizer": true
             },
             "development": {
               "optimization": false,
               "sourceMap": true,
               "extractLicenses": false,
-              "vendorChunk": true
+              "vendorChunk": true,
+              "buildOptimizer": false
             }
           },
           "defaultConfiguration": "production"

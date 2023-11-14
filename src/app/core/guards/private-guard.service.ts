@@ -1,7 +1,7 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { CanMatch, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -13,7 +13,7 @@ import { CurrentUser } from '../models/current-user.model';
 @Injectable({
 	providedIn: 'root'
 })
-export class CanMatchPrivateGuard implements CanMatch {
+export class CanMatchPrivateGuard  {
 	constructor(
 		private router: Router,
 		private snackbarService: SnackbarService,
