@@ -12,6 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectDto } from '../dto/auth/connect.dto';
 import { RegistrationDto } from '../dto/auth/registration.dto';
 import { CurrentUser } from '../models/current-user.model';
+import { AppearanceService } from './appearance.service';
 import firebase from 'firebase/compat';
 
 @Injectable({
@@ -25,7 +26,8 @@ export class AuthorizationService {
 	constructor(
 		private apiService: ApiService,
 		private angularFireAuth: AngularFireAuth,
-		private userService: UserService
+		private userService: UserService,
+		private appearanceService: AppearanceService
 	) {}
 
 	onPopulate(): Observable<CurrentUser | undefined> {
@@ -68,6 +70,9 @@ export class AuthorizationService {
 			switchMap((userCredential: firebase.auth.UserCredential) => {
 				return from(userCredential.user.sendEmailVerification()).pipe(switchMap(() => of(userCredential)));
 			}),
+      switchMap((userCredential: firebase.auth.UserCredential) => {
+        return this.appearanceService.setFirestoreCollectionAppearanceDefault(userCredential).pipe(switchMap(() => of(userCredential)));
+      }),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);
 			}),

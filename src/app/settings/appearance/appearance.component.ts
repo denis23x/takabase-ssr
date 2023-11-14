@@ -13,13 +13,10 @@ import { map } from 'rxjs/operators';
 import { ActivatedRoute, Data, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
-import { AuthorizationService } from '../../core/services/authorization.service';
 import { environment } from '../../../environments/environment';
 import { AppScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SettingsUpdateDto } from '../../core/dto/settings/settings-update.dto';
-import { SettingsService } from '../../core/services/settings.service';
-import { Settings } from '../../core/models/settings.model';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Appearance } from '../../core/models/appearance.model';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
@@ -64,10 +61,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private authorizationService: AuthorizationService,
-		private settingsService: SettingsService,
-		private activatedRoute: ActivatedRoute,
-		private angularFirestore: AngularFirestore
+		private activatedRoute: ActivatedRoute
 	) {
 		this.appearanceForm = this.formBuilder.group<AppearanceForm>({
 			theme: this.formBuilder.nonNullable.control('', [Validators.required]),
@@ -84,22 +78,16 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		// const tutRef = this.angularFirestore.doc('tutorial');
-		//
-		// tutRef.set({
-		// 	title: 'zkoder Tutorial'
-		// });
-
 		this.activatedRouteData$?.unsubscribe();
 		this.activatedRouteData$ = this.activatedRoute.data
 			.pipe(map((data: Data) => data.data))
 			.subscribe({
-				next: (settings: Settings) => {
+				next: (appearance: Appearance) => {
 					this.appearanceTransformList.forEach((key: string) => {
-						settings[key] = this.getTransformListValue(settings[key], key);
+						appearance[key] = this.getTransformListValue(appearance[key], key);
 					});
 
-					this.appearanceForm.patchValue(settings);
+					this.appearanceForm.patchValue(appearance);
 					this.appearanceForm.markAllAsTouched();
 				},
 				error: (error: any) => console.error(error)
@@ -118,11 +106,11 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 					settingsUpdateDto[key] = this.getTransformListValue(settingsUpdateDto[key], key, true);
 				});
 
-				// TODO: update settings
+				// TODO: update appearance
 				// this.appearanceFormRequest$?.unsubscribe();
 				// this.appearanceFormRequest$ = this.settingsService.update(settingsUpdateDto).subscribe({
-				// 	next: (settings: Settings) => {
-				// 		this.authorizationService.setUser({ settings });
+				// 	next: (appearance: Appearance) => {
+				// 		this.authorizationService.setUser({ appearance });
 				//
 				// 		this.appearanceForm.enable({ emitEvent: false });
 				// 	},

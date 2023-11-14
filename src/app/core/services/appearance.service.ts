@@ -4,18 +4,23 @@ import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
 import { HttpClient } from '@angular/common/http';
-import { fromEvent, Observable, of } from 'rxjs';
+import { from, fromEvent, Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { Route, Router, Routes } from '@angular/router';
 import { routesRedirect } from '../../app.routing.module';
-import { Settings } from '../models/settings.model';
+import { Appearance } from '../models/appearance.model';
 import { HelperService } from './helper.service';
 import { CookieService } from './cookie.service';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import firebase from 'firebase/compat';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class AppearanceService {
+	firestoreCollectionAppearancePath: string = '/appearance';
+	firestoreCollectionAppearance: AngularFirestoreCollection<Appearance> | undefined;
+
 	constructor(
 		@Inject(DOCUMENT)
 		private document: Document,
@@ -23,8 +28,11 @@ export class AppearanceService {
 		private httpClient: HttpClient,
 		private router: Router,
 		private helperService: HelperService,
-		private cookieService: CookieService
+		private cookieService: CookieService,
+		private angularFirestore: AngularFirestore
 	) {}
+
+	/** Utility */
 
 	getCSSPropertyValue(property: string): string {
 		if (this.platformService.isBrowser()) {
@@ -73,7 +81,7 @@ export class AppearanceService {
 		return [f(0), f(8), f(4)];
 	};
 
-	setSettings(settings: Settings | null): void {
+	setSettings(appearance: Appearance | null): void {
 		const settingsList: string[] = [
 			'theme',
 			'themePrism',
@@ -86,9 +94,9 @@ export class AppearanceService {
 			'pageRedirectHome'
 		];
 
-		if (settings) {
+		if (appearance) {
 			settingsList.forEach((key: string) => {
-				const value: any = settings[key];
+				const value: any = appearance[key];
 
 				const cookieKey: string = this.helperService.setCamelCaseToDashCase(key);
 				const cookieValue: any = typeof value === 'boolean' ? String(+value) : value;
@@ -105,9 +113,9 @@ export class AppearanceService {
 
 		/** Set theme settings */
 
-		this.setTheme(settings?.theme || null);
-		this.setThemeBackground(settings?.themeBackground || null);
-		this.setThemePrism(settings?.themePrism || null);
+		this.setTheme(appearance?.theme || null);
+		this.setThemeBackground(appearance?.themeBackground || null);
+		this.setThemePrism(appearance?.themePrism || null);
 	}
 
 	setLoader(toggle: boolean): void {
@@ -200,5 +208,34 @@ export class AppearanceService {
 		if (previousHome.redirectTo !== nextHome.redirectTo) {
 			this.router.resetConfig(nextConfig);
 		}
+	}
+
+	/** REST */
+
+	getFirestoreCollectionAppearance(): AngularFirestoreCollection<Appearance> {
+		if (this.firestoreCollectionAppearance) {
+			return this.firestoreCollectionAppearance;
+		}
+
+		// prettier-ignore
+		return this.firestoreCollectionAppearance = this.angularFirestore.collection(this.firestoreCollectionAppearancePath);
+	}
+
+	// prettier-ignore
+	setFirestoreCollectionAppearanceDefault(userCredential: firebase.auth.UserCredential): Observable<any> {
+    const appearance: Appearance = {
+      firebaseId: userCredential.user.uid,
+      language: 'en-US',
+      markdownMonospace: true,
+      pageRedirectHome: false,
+      pageScrollInfinite: false,
+      pageScrollToTop: false,
+      theme: 'auto',
+      themeBackground: 'slanted-gradient',
+      themePrism: 'default',
+      windowButtonPosition: 'left'
+    };
+
+		return from(this.getFirestoreCollectionAppearance().add(appearance));
 	}
 }

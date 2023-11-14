@@ -1,6 +1,7 @@
 /** @format */
 
-export interface Settings {
+export interface Appearance {
+	firebaseId: string;
 	theme: string;
 	themePrism: string;
 	themeBackground: string;
@@ -10,6 +11,4 @@ export interface Settings {
 	pageScrollToTop: boolean;
 	pageScrollInfinite: boolean;
 	pageRedirectHome: boolean;
-	createdAt: string;
-	updatedAt: string;
 }
