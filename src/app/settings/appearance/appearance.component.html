@@ -23,6 +23,8 @@
 					<div
 						class="block"
 						appDropdown
+						appSkeleton
+						[appSkeletonToggle]="appearanceFormSkeletonToggle"
 						[appDropdownFitParentWidth]="true"
 						[class.cursor-not-allowed]="appearanceForm.disabled"
 					>
@@ -82,6 +84,8 @@
 					<div
 						class="block"
 						appDropdown
+						appSkeleton
+						[appSkeletonToggle]="appearanceFormSkeletonToggle"
 						[appDropdownFitParentWidth]="true"
 						[class.cursor-not-allowed]="appearanceForm.disabled"
 					>
@@ -144,6 +148,8 @@
 					<div
 						class="block"
 						appDropdown
+						appSkeleton
+						[appSkeletonToggle]="appearanceFormSkeletonToggle"
 						[appDropdownFitParentWidth]="true"
 						[class.cursor-not-allowed]="appearanceForm.disabled"
 					>
@@ -192,6 +198,8 @@
 					<div
 						class="block"
 						appDropdown
+						appSkeleton
+						[appSkeletonToggle]="appearanceFormSkeletonToggle"
 						[appDropdownFitParentWidth]="true"
 						[class.cursor-not-allowed]="appearanceForm.disabled"
 					>
@@ -239,17 +247,24 @@
 					class="form-control"
 					*ngIf="appearanceForm.get('pageScrollToTop') as pageScrollToTop"
 				>
-					<label class="label gap-4 cursor-pointer" for="appearanceFormPageScrollToTop">
+					<label class="label gap-4" for="appearanceFormPageScrollToTop">
 						<span class="label-text"> Enable Scroll to top </span>
-						<!-- prettier-ignore -->
-						<input
-							class="toggle toggle-md"
-							id="appearanceFormPageScrollToTop"
-							type="checkbox"
-							aria-label="Enable Scroll to top"
-							formControlName="pageScrollToTop"
-							[class.toggle-success]="pageScrollToTop.touched && pageScrollToTop.value"
-						/>
+						<div
+							class="flex"
+							appSkeleton
+							[appSkeletonToggle]="appearanceFormSkeletonToggle"
+							[appSkeletonClassList]="['rounded-full']"
+						>
+							<!-- prettier-ignore -->
+							<input
+                class="toggle toggle-md"
+                id="appearanceFormPageScrollToTop"
+                type="checkbox"
+                aria-label="Enable Scroll to top"
+                formControlName="pageScrollToTop"
+                [class.toggle-success]="pageScrollToTop.touched && pageScrollToTop.value"
+              />
+						</div>
 					</label>
 				</fieldset>
 				<hr class="my-2 w-full border-base-content/20" />
@@ -257,17 +272,24 @@
 					class="form-control"
 					*ngIf="appearanceForm.get('pageScrollInfinite') as pageScrollInfinite"
 				>
-					<label class="label gap-4 cursor-pointer" for="appearanceFormPageScrollInfinite">
+					<label class="label gap-4" for="appearanceFormPageScrollInfinite">
 						<span class="label-text"> Enable Infinite scroll </span>
-						<!-- prettier-ignore -->
-						<input
-              class="toggle toggle-md"
-              id="appearanceFormPageScrollInfinite"
-              type="checkbox"
-              aria-label="Enable Infinite scroll"
-              formControlName="pageScrollInfinite"
-              [class.toggle-success]="pageScrollInfinite.touched && pageScrollInfinite.value"
-            />
+						<div
+							class="flex"
+							appSkeleton
+							[appSkeletonToggle]="appearanceFormSkeletonToggle"
+							[appSkeletonClassList]="['rounded-full']"
+						>
+							<!-- prettier-ignore -->
+							<input
+                class="toggle toggle-md"
+                id="appearanceFormPageScrollInfinite"
+                type="checkbox"
+                aria-label="Enable Infinite scroll"
+                formControlName="pageScrollInfinite"
+                [class.toggle-success]="pageScrollInfinite.touched && pageScrollInfinite.value"
+              />
+						</div>
 					</label>
 				</fieldset>
 				<hr class="my-2 w-full border-base-content/20" />
@@ -275,17 +297,24 @@
 					class="form-control"
 					*ngIf="appearanceForm.get('pageRedirectHome') as pageRedirectHome"
 				>
-					<label class="label gap-4 cursor-pointer" for="appearanceFormPageRedirectHome">
+					<label class="label gap-4" for="appearanceFormPageRedirectHome">
 						<span class="label-text"> Enable Redirect from home page </span>
-						<!-- prettier-ignore -->
-						<input
-              class="toggle toggle-md"
-              id="appearanceFormPageRedirectHome"
-              type="checkbox"
-              aria-label="Enable Redirect home page"
-              formControlName="pageRedirectHome"
-              [class.toggle-success]="pageRedirectHome.touched && pageRedirectHome.value"
-            />
+						<div
+							class="flex"
+							appSkeleton
+							[appSkeletonToggle]="appearanceFormSkeletonToggle"
+							[appSkeletonClassList]="['rounded-full']"
+						>
+							<!-- prettier-ignore -->
+							<input
+                class="toggle toggle-md"
+                id="appearanceFormPageRedirectHome"
+                type="checkbox"
+                aria-label="Enable Redirect home page"
+                formControlName="pageRedirectHome"
+                [class.toggle-success]="pageRedirectHome.touched && pageRedirectHome.value"
+              />
+						</div>
 					</label>
 				</fieldset>
 				<hr class="my-2 w-full border-base-content/20" />
@@ -293,17 +322,24 @@
 					class="form-control"
 					*ngIf="appearanceForm.get('markdownMonospace') as markdownMonospace"
 				>
-					<label class="label gap-4 cursor-pointer" for="appearanceFormMarkdownMonospace">
+					<label class="label gap-4" for="appearanceFormMarkdownMonospace">
 						<span class="label-text"> Enable a monospace font when editing Markdown </span>
-						<!-- prettier-ignore -->
-						<input
-							class="toggle toggle-md"
-							id="appearanceFormMarkdownMonospace"
-							type="checkbox"
-							aria-label="Enable Markdown monospace"
-							formControlName="markdownMonospace"
-							[class.toggle-success]="markdownMonospace.touched && markdownMonospace.value"
-						/>
+						<div
+							class="flex"
+							appSkeleton
+							[appSkeletonToggle]="appearanceFormSkeletonToggle"
+							[appSkeletonClassList]="['rounded-full']"
+						>
+							<!-- prettier-ignore -->
+							<input
+                class="toggle toggle-md"
+                id="appearanceFormMarkdownMonospace"
+                type="checkbox"
+                aria-label="Enable Markdown monospace"
+                formControlName="markdownMonospace"
+                [class.toggle-success]="markdownMonospace.touched && markdownMonospace.value"
+              />
+						</div>
 					</label>
 				</fieldset>
 				<hr class="my-2 w-full border-base-content/20" />
@@ -311,17 +347,24 @@
 					class="form-control"
 					*ngIf="appearanceForm.get('dropdownBackdrop') as dropdownBackdrop"
 				>
-					<label class="label gap-4 cursor-pointer" for="appearanceFormDropdownBackdrop">
+					<label class="label gap-4" for="appearanceFormDropdownBackdrop">
 						<span class="label-text"> Enable a dropdown backdrop </span>
-						<!-- prettier-ignore -->
-						<input
-							class="toggle toggle-md"
-							id="appearanceFormDropdownBackdrop"
-							type="checkbox"
-							aria-label="Enable a dropdown backdrop"
-							formControlName="dropdownBackdrop"
-							[class.toggle-success]="dropdownBackdrop.touched && dropdownBackdrop.value"
-						/>
+						<div
+							class="flex"
+							appSkeleton
+							[appSkeletonToggle]="appearanceFormSkeletonToggle"
+							[appSkeletonClassList]="['rounded-full']"
+						>
+							<!-- prettier-ignore -->
+							<input
+                class="toggle toggle-md"
+                id="appearanceFormDropdownBackdrop"
+                type="checkbox"
+                aria-label="Enable a dropdown backdrop"
+                formControlName="dropdownBackdrop"
+                [class.toggle-success]="dropdownBackdrop.touched && dropdownBackdrop.value"
+              />
+						</div>
 					</label>
 				</fieldset>
 				<hr class="my-2 w-full border-base-content/20" />
@@ -335,25 +378,27 @@
 							Position of caption buttons (close, minimize, maximize)
 						</span>
 					</div>
-					<ul class="join join-horizontal">
-						<li class="block" *ngFor="let buttonsValue of appearanceButtonsList">
-							<label
-                class="btn btn-success btn-sm join-item"
-                [class.btn-outline]="windowButtonPosition.value !== buttonsValue && appearanceForm.enabled"
-                [class.btn-inline]="windowButtonPosition.value === buttonsValue && appearanceForm.disabled"
-                [class.disabled]="appearanceForm.disabled"
-              >
-								<input
-									class="hidden"
-									type="radio"
-									aria-label="Window button position"
-									formControlName="windowButtonPosition"
-									[value]="buttonsValue"
-								/>
-								<span class="block">{{ buttonsValue }}</span>
-							</label>
-						</li>
-					</ul>
+          <div class="flex" appSkeleton [appSkeletonToggle]="appearanceFormSkeletonToggle">
+            <ul class="join join-horizontal">
+              <li class="block" *ngFor="let buttonsValue of appearanceButtonsList">
+                <label
+                  class="btn btn-success btn-sm join-item"
+                  [class.btn-outline]="windowButtonPosition.value !== buttonsValue && appearanceForm.enabled"
+                  [class.btn-inline]="windowButtonPosition.value === buttonsValue && appearanceForm.disabled"
+                  [class.btn-disabled]="appearanceForm.disabled"
+                >
+                  <input
+                    class="hidden"
+                    type="radio"
+                    aria-label="Window button position"
+                    formControlName="windowButtonPosition"
+                    [value]="buttonsValue"
+                  />
+                  <span class="block">{{ buttonsValue }}</span>
+                </label>
+              </li>
+            </ul>
+          </div>
 				</fieldset>
 			</div>
 		</form>

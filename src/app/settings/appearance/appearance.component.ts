@@ -8,15 +8,20 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ActivatedRoute, Data, RouterModule } from '@angular/router';
+import { from, Observable, Subscription } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { environment } from '../../../environments/environment';
 import { AppScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
-import { SettingsUpdateDto } from '../../core/dto/settings/settings-update.dto';
 import { Appearance } from '../../core/models/appearance.model';
+import { AppearanceService } from '../../core/services/appearance.service';
+import { CurrentUser } from '../../core/models/current-user.model';
+import { AuthorizationService } from '../../core/services/authorization.service';
+import { DocumentData } from '@angular/fire/compat/firestore';
+import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
+import firebase from 'firebase/compat';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
@@ -38,17 +43,23 @@ interface AppearanceForm {
 		RouterModule,
 		ReactiveFormsModule,
 		DropdownComponent,
-		AppScrollPresetDirective
+		AppScrollPresetDirective,
+		AppSkeletonDirective
 	],
 	selector: 'app-settings-appearance',
 	templateUrl: './appearance.component.html'
 })
 export class SettingsAppearanceComponent implements OnInit, OnDestroy {
-	activatedRouteData$: Subscription | undefined;
+	currentUser: CurrentUser | undefined;
+	currentUser$: Subscription | undefined;
 
 	appearanceForm: FormGroup | undefined;
 	appearanceForm$: Subscription | undefined;
-	appearanceFormRequest$: Subscription | undefined;
+	appearanceFormSkeletonToggle: boolean = true;
+
+	appearanceCollection: firebase.firestore.QueryDocumentSnapshot<DocumentData> | undefined;
+	appearanceCollection$: Subscription | undefined;
+	appearanceCollectionUpdate$: Subscription | undefined;
 
 	appearanceThemeList: string[] = [];
 	appearanceThemeBackgroundList: string[] = [];
@@ -61,7 +72,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private activatedRoute: ActivatedRoute
+		private appearanceService: AppearanceService,
+		private authorizationService: AuthorizationService
 	) {
 		this.appearanceForm = this.formBuilder.group<AppearanceForm>({
 			theme: this.formBuilder.nonNullable.control('', [Validators.required]),
@@ -78,18 +90,14 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.activatedRouteData$?.unsubscribe();
-		this.activatedRouteData$ = this.activatedRoute.data
-			.pipe(map((data: Data) => data.data))
-			.subscribe({
-				next: (appearance: Appearance) => {
-					this.appearanceTransformList.forEach((key: string) => {
-						appearance[key] = this.getTransformListValue(appearance[key], key);
-					});
+		/** Apply Data */
 
-					this.appearanceForm.patchValue(appearance);
-					this.appearanceForm.markAllAsTouched();
-				},
+		this.currentUser$?.unsubscribe();
+		this.currentUser$ = this.authorizationService
+			.getCurrentUser()
+			.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)))
+			.subscribe({
+				next: () => this.setResolver(),
 				error: (error: any) => console.error(error)
 			});
 
@@ -98,24 +106,28 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 			next: (value: any) => {
 				this.appearanceForm.disable({ emitEvent: false });
 
-				const settingsUpdateDto: SettingsUpdateDto = {
+				const appearance: Appearance = {
 					...value
 				};
 
 				this.appearanceTransformList.forEach((key: string) => {
-					settingsUpdateDto[key] = this.getTransformListValue(settingsUpdateDto[key], key, true);
+					appearance[key] = this.getTransformListValue(appearance[key], key, true);
 				});
 
-				// TODO: update appearance
-				// this.appearanceFormRequest$?.unsubscribe();
-				// this.appearanceFormRequest$ = this.settingsService.update(settingsUpdateDto).subscribe({
-				// 	next: (appearance: Appearance) => {
-				// 		this.authorizationService.setUser({ appearance });
-				//
-				// 		this.appearanceForm.enable({ emitEvent: false });
-				// 	},
-				// 	error: () => this.appearanceForm.enable({ emitEvent: false })
-				// });
+				// prettier-ignore
+				const appearanceCollectionUpdate$: Observable<void> = from(this.appearanceCollection.ref.update(appearance));
+
+				/** Firestore */
+
+				this.appearanceCollectionUpdate$?.unsubscribe();
+				this.appearanceCollectionUpdate$ = appearanceCollectionUpdate$.subscribe({
+					next: () => {
+						this.appearanceService.setSettings(appearance as Appearance);
+
+						this.appearanceForm.enable({ emitEvent: false });
+					},
+					error: () => this.appearanceForm.enable({ emitEvent: false })
+				});
 			},
 			error: (error: any) => console.error(error)
 		});
@@ -126,8 +138,36 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.activatedRouteData$, this.appearanceForm$, this.appearanceFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[
+			this.currentUser$,
+			this.appearanceForm$,
+			this.appearanceCollection$,
+			this.appearanceCollectionUpdate$
+		].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	// prettier-ignore
+	setResolver(): void {
+		this.appearanceCollection$?.unsubscribe();
+    this.appearanceCollection$ = this.appearanceService
+			.getCollection(this.currentUser)
+			.pipe(map((documentData: firebase.firestore.QueryDocumentSnapshot<DocumentData>) => {
+        this.appearanceCollection = documentData;
+
+        return this.appearanceCollection.data() as Appearance;
+      }))
+			.subscribe({
+				next: (appearance: Appearance) => {
+					this.appearanceTransformList.forEach((key: string) => {
+						appearance[key] = this.getTransformListValue(appearance[key], key);
+					});
+
+					this.appearanceForm.patchValue(appearance, { emitEvent: false });
+					this.appearanceForm.markAllAsTouched();
+          this.appearanceFormSkeletonToggle = false;
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	setTransformList(): void {

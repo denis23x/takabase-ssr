@@ -217,7 +217,7 @@ export class AppearanceService {
 		}
 	}
 
-	/** FIRESTORE */
+	/** Firestore */
 
 	// prettier-ignore
 	getCollection(currentUser: CurrentUser): Observable<firebase.firestore.QueryDocumentSnapshot<DocumentData>> {
