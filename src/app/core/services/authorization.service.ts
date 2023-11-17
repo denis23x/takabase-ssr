@@ -71,7 +71,7 @@ export class AuthorizationService {
 				return from(userCredential.user.sendEmailVerification()).pipe(switchMap(() => of(userCredential)));
 			}),
       switchMap((userCredential: firebase.auth.UserCredential) => {
-        return this.appearanceService.setFirestoreCollectionAppearanceDefault(userCredential).pipe(switchMap(() => of(userCredential)));
+        return this.appearanceService.setCollectionDefault(userCredential).pipe(switchMap(() => of(userCredential)));
       }),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);
@@ -105,6 +105,9 @@ export class AuthorizationService {
 
 				return this.apiService.post('/authorization', connectDto);
 			}),
+      switchMap((user: Partial<CurrentUser>) => {
+        return this.appearanceService.getCollection(currentUser as CurrentUser).pipe(switchMap(() => of(user)));
+      }),
 			switchMap((user: Partial<CurrentUser>) => {
         return this.setCurrentUser({
           ...currentUser,
@@ -119,6 +122,7 @@ export class AuthorizationService {
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);
 			}),
+			tap(() => this.appearanceService.setSettings(null)),
 			tap(() => this.currentUser.next(undefined))
 		);
 	}

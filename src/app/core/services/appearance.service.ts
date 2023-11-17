@@ -5,21 +5,26 @@ import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
 import { HttpClient } from '@angular/common/http';
 import { from, fromEvent, Observable, of } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { Route, Router, Routes } from '@angular/router';
 import { routesRedirect } from '../../app.routing.module';
 import { Appearance } from '../models/appearance.model';
 import { HelperService } from './helper.service';
 import { CookieService } from './cookie.service';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import {
+	AngularFirestore,
+	CollectionReference,
+	DocumentData
+} from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat';
+import { DocumentReference } from '@angular/fire/compat/firestore/interfaces';
+import { CurrentUser } from '../models/current-user.model';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class AppearanceService {
-	firestoreCollectionAppearancePath: string = '/appearance';
-	firestoreCollectionAppearance: AngularFirestoreCollection<Appearance> | undefined;
+	collectionOrigin: string = '/appearance';
 
 	constructor(
 		@Inject(DOCUMENT)
@@ -127,9 +132,11 @@ export class AppearanceService {
 	}
 
 	setTheme(theme: string | null): void {
-		const themeValue: string = theme || 'light';
-
-		this.document.documentElement.setAttribute('data-theme', themeValue);
+		if (theme) {
+			this.document.documentElement.setAttribute('data-theme', theme);
+		} else {
+			this.document.documentElement.removeAttribute('data-theme');
+		}
 
 		/** TODO: Update meta */
 
@@ -210,32 +217,36 @@ export class AppearanceService {
 		}
 	}
 
-	/** REST */
+	/** FIRESTORE */
 
-	getFirestoreCollectionAppearance(): AngularFirestoreCollection<Appearance> {
-		if (this.firestoreCollectionAppearance) {
-			return this.firestoreCollectionAppearance;
-		}
-
-		// prettier-ignore
-		return this.firestoreCollectionAppearance = this.angularFirestore.collection(this.firestoreCollectionAppearancePath);
+	// prettier-ignore
+	getCollection(currentUser: CurrentUser): Observable<firebase.firestore.QueryDocumentSnapshot<DocumentData>> {
+		return this.angularFirestore
+			.collection(this.collectionOrigin, (collectionReference: CollectionReference) => {
+				return collectionReference.where('firebaseId', '==', currentUser.firebase.uid);
+			})
+			.get()
+			.pipe(
+        map((querySnapshot: firebase.firestore.QuerySnapshot) => querySnapshot.docs.shift()),
+        tap((queryDocumentSnapshot: firebase.firestore.QueryDocumentSnapshot<DocumentData>) => this.setSettings(queryDocumentSnapshot.data() as Appearance))
+      );
 	}
 
 	// prettier-ignore
-	setFirestoreCollectionAppearanceDefault(userCredential: firebase.auth.UserCredential): Observable<any> {
-    const appearance: Appearance = {
-      firebaseId: userCredential.user.uid,
-      language: 'en-US',
-      markdownMonospace: true,
-      pageRedirectHome: false,
-      pageScrollInfinite: false,
-      pageScrollToTop: false,
-      theme: 'auto',
-      themeBackground: 'slanted-gradient',
-      themePrism: 'default',
-      windowButtonPosition: 'left'
-    };
+	setCollectionDefault(userCredential: firebase.auth.UserCredential): Observable<DocumentReference<unknown>> {
+		const appearance: Appearance = {
+			firebaseId: userCredential.user.uid,
+			language: 'en-US',
+			markdownMonospace: true,
+			pageRedirectHome: false,
+			pageScrollInfinite: false,
+			pageScrollToTop: false,
+			theme: 'auto',
+			themeBackground: 'slanted-gradient',
+			themePrism: 'default',
+			windowButtonPosition: 'left'
+		};
 
-		return from(this.getFirestoreCollectionAppearance().add(appearance));
+		return from(this.angularFirestore.collection(this.collectionOrigin).add(appearance));
 	}
 }
