@@ -20,6 +20,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 		private authorizationService: AuthorizationService
 	) {}
 
+	// prettier-ignore
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService
@@ -29,7 +30,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 				filter((currentUser: CurrentUser | undefined) => !!currentUser)
 			)
 			.subscribe({
-				next: (currentUser: CurrentUser) => this.appearanceService.getCollection(currentUser),
+				next: (currentUser: CurrentUser) => this.appearanceService.getCollection(currentUser.firebase.uid),
 				error: (error: any) => console.error(error)
 			});
 	}

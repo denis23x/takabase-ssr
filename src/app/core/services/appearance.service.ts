@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
 import { HttpClient } from '@angular/common/http';
-import { from, fromEvent, Observable, of } from 'rxjs';
+import { from, fromEvent, Observable, of, switchMap } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { Route, Router, Routes } from '@angular/router';
 import { routesRedirect } from '../../app.routing.module';
@@ -18,7 +18,6 @@ import {
 } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat';
 import { DocumentReference } from '@angular/fire/compat/firestore/interfaces';
-import { CurrentUser } from '../models/current-user.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -219,34 +218,42 @@ export class AppearanceService {
 
 	/** Firestore */
 
-	// prettier-ignore
-	getCollection(currentUser: CurrentUser): Observable<firebase.firestore.QueryDocumentSnapshot<DocumentData>> {
+	getCollection(firebaseId: string): Observable<firebase.firestore.DocumentSnapshot<DocumentData>> {
 		return this.angularFirestore
 			.collection(this.collectionOrigin, (collectionReference: CollectionReference) => {
-				return collectionReference.where('firebaseId', '==', currentUser.firebase.uid);
+				return collectionReference.where('firebaseId', '==', firebaseId);
 			})
 			.get()
 			.pipe(
-        map((querySnapshot: firebase.firestore.QuerySnapshot) => querySnapshot.docs.shift()),
-        tap((queryDocumentSnapshot: firebase.firestore.QueryDocumentSnapshot<DocumentData>) => this.setSettings(queryDocumentSnapshot.data() as Appearance))
-      );
-	}
+				switchMap((querySnapshot: firebase.firestore.QuerySnapshot) => {
+					if (querySnapshot.docs.length) {
+						return of(querySnapshot.docs.shift());
+					} else {
+						const appearance: Appearance = {
+							dropdownBackdrop: false,
+							firebaseId,
+							language: 'en-US',
+							markdownMonospace: true,
+							pageRedirectHome: false,
+							pageScrollInfinite: false,
+							pageScrollToTop: false,
+							theme: 'auto',
+							themeBackground: 'slanted-gradient',
+							themePrism: 'default',
+							windowButtonPosition: 'left'
+						};
 
-	// prettier-ignore
-	setCollectionDefault(userCredential: firebase.auth.UserCredential): Observable<DocumentReference<unknown>> {
-		const appearance: Appearance = {
-			firebaseId: userCredential.user.uid,
-			language: 'en-US',
-			markdownMonospace: true,
-			pageRedirectHome: false,
-			pageScrollInfinite: false,
-			pageScrollToTop: false,
-			theme: 'auto',
-			themeBackground: 'slanted-gradient',
-			themePrism: 'default',
-			windowButtonPosition: 'left'
-		};
-
-		return from(this.angularFirestore.collection(this.collectionOrigin).add(appearance));
+						// prettier-ignore
+						return from(this.angularFirestore.collection(this.collectionOrigin).add(appearance)).pipe(
+							switchMap((documentReference: DocumentReference<unknown>) => {
+								return from(documentReference.get());
+							})
+						);
+					}
+				}),
+				tap((queryDocumentSnapshot: firebase.firestore.DocumentSnapshot<DocumentData>) => {
+					this.setSettings(queryDocumentSnapshot.data() as Appearance);
+				})
+			);
 	}
 }

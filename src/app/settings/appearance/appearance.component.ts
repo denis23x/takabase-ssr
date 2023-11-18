@@ -150,7 +150,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	setResolver(): void {
 		this.appearanceCollection$?.unsubscribe();
     this.appearanceCollection$ = this.appearanceService
-			.getCollection(this.currentUser)
+			.getCollection(this.currentUser.firebase.uid)
 			.pipe(map((documentData: firebase.firestore.QueryDocumentSnapshot<DocumentData>) => {
         this.appearanceCollection = documentData;
 
