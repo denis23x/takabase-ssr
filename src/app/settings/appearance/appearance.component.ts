@@ -122,8 +122,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 				this.appearanceCollectionUpdate$?.unsubscribe();
 				this.appearanceCollectionUpdate$ = appearanceCollectionUpdate$.subscribe({
 					next: () => {
-						this.appearanceService.setSettings(appearance as Appearance);
-
+						this.appearanceService.setSettings(appearance);
 						this.appearanceForm.enable({ emitEvent: false });
 					},
 					error: () => this.appearanceForm.enable({ emitEvent: false })
@@ -171,7 +170,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	}
 
 	setTransformList(): void {
-		this.appearanceThemeList = environment.themes.sort().map((theme: string) => {
+		this.appearanceThemeList = ['auto', ...environment.themes.sort()].map((theme: string) => {
 			return this.getTransformListValue(theme, 'theme');
 		});
 

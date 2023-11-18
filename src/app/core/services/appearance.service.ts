@@ -18,6 +18,7 @@ import {
 } from '@angular/fire/compat/firestore';
 import firebase from 'firebase/compat';
 import { DocumentReference } from '@angular/fire/compat/firestore/interfaces';
+import { Meta } from '@angular/platform-browser';
 
 @Injectable({
 	providedIn: 'root'
@@ -31,6 +32,7 @@ export class AppearanceService {
 		private platformService: PlatformService,
 		private httpClient: HttpClient,
 		private router: Router,
+		private meta: Meta,
 		private helperService: HelperService,
 		private cookieService: CookieService,
 		private angularFirestore: AngularFirestore
@@ -87,15 +89,16 @@ export class AppearanceService {
 
 	setSettings(appearance: Appearance | null): void {
 		const settingsList: string[] = [
-			'theme',
-			'themePrism',
-			'themeBackground',
+			'dropdownBackdrop',
 			'language',
 			'markdownMonospace',
-			'windowButtonPosition',
 			'pageScrollToTop',
 			'pageScrollInfinite',
-			'pageRedirectHome'
+			'pageRedirectHome',
+			'theme',
+			'themeBackground',
+			'themePrism',
+			'windowButtonPosition'
 		];
 
 		if (appearance) {
@@ -131,24 +134,46 @@ export class AppearanceService {
 	}
 
 	setTheme(theme: string | null): void {
-		if (theme) {
+		if (theme && theme !== 'auto') {
 			this.document.documentElement.setAttribute('data-theme', theme);
 		} else {
 			this.document.documentElement.removeAttribute('data-theme');
 		}
 
-		/** TODO: Update meta */
+		/** Update theme-color meta tag */
 
-		// const value: string = this.getCSSPropertyValue('--su');
-		//
-		// // prettier-ignore
-		// const [h, s, l]: number[] = value.split(/\s/g).map((value: string) => Number(value.replace('%', '')));
-		// const valueList: string[] = this.getHSLToHEX(h, s, l);
-		//
-		// const propertyValue: string = '#' + valueList.join('');
-		// const property: string = 'theme-color';
-		//
-		// this.meta.updateTag({ name: property, content: propertyValue });
+		this.setThemeColor(theme);
+	}
+
+	// prettier-ignore
+	setThemeColor(theme: string | null): void {
+		const valueName: string = 'theme-color';
+
+		/** https://css-tricks.com/meta-theme-color-and-trickery/ */
+
+		if (theme && theme !== 'auto') {
+			const value: string = this.getCSSPropertyValue('--b2');
+
+			const [h, s, l]: number[] = value.split(/\s/g).map((value: string) => Number(value.replace('%', '')));
+
+			const valueList: string[] = this.getHSLToHEX(h, s, l);
+			const valueContent: string = '#' + valueList.join('');
+
+			/** Set */
+
+			this.cookieService.setItem(valueName, valueContent);
+
+			this.meta.updateTag({ name: valueName, content: valueContent }, 'media="(prefers-color-scheme: light)"');
+			this.meta.updateTag({ name: valueName, content: valueContent }, 'media="(prefers-color-scheme: dark)"');
+		} else {
+
+			/** Remove */
+
+			this.cookieService.removeItem(valueName);
+
+			this.meta.updateTag({ name: valueName, content: '#f2f2f2' }, 'media="(prefers-color-scheme: light)"');
+			this.meta.updateTag({ name: valueName, content: '#191e24' }, 'media="(prefers-color-scheme: dark)"');
+		}
 	}
 
 	setThemeBackground(themeBackground: string | null): void {

@@ -8,7 +8,6 @@
     <base href="/" />
 
     <meta charset="utf-8" />
-    <meta name="theme-color" content="#ffffff" />
 		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=1"/>
 		<meta name="copyright" content="Draft" />
 		<meta name="language" content="en-US" />
@@ -17,23 +16,27 @@
 		<meta name="contact" content="mail@draft.app" />
 		<meta name="url" content="https://draft.app" />
 
+		<meta name="theme-color" content="#f2f2f2" media="(prefers-color-scheme: light)">
+		<meta name="theme-color" content="#191e24" media="(prefers-color-scheme: dark)">
+
 		<link type="image/x-icon" href="favicon.ico" rel="icon" />
 		<link href="manifest.webmanifest" rel="manifest" />
 		<link href="assets/icons/sprite.svg" rel="prefetch" as="image" />
 
     <link rel="preconnect" href="http://0.0.0.0:4400">
+    <link rel="preconnect" href="https://draft-api.web.app">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
 	</head>
-	<body>
+	<body class="bg-base-200">
 		<noscript> Please enable JavaScript to continue using this application </noscript>
 		<div class="fixed z-20 flex h-full w-full items-center justify-center bg-base-100" data-loader>
 			<span class="rounded-box bg-base-200 p-4 text-base-content"> Loading </span>
 		</div>
 		<div
-			class="pointer-events-none fixed z-10 h-full min-h-[800px] w-full"
+			class="pointer-events-none fixed z-10 h-full min-h-[800px] w-full invisible"
 			data-theme-background="slanted-gradient"
 		>
 			<!-- prettier-ignore -->
@@ -68,20 +71,20 @@
 
 			/** Theme */
 
-			const getThemeValue = () => {
-				const value = getCookie("theme")
+			const themeValue = getCookie("theme")
 
-				if (!!value && value !== "") {
-					return value
-				}
-
-				return false
+			if (themeValue && themeValue !== "auto") {
+				document.documentElement.setAttribute("data-theme", themeValue)
 			}
 
-			const themeValue = getThemeValue()
+			/** Theme Color */
 
-			if (themeValue) {
-				document.documentElement.setAttribute("data-theme", themeValue)
+			const themeColorValue = getCookie("theme-color")
+
+			// prettier-ignore
+			if (themeColorValue) {
+				document.querySelector('meta[media="(prefers-color-scheme: light)"]').content = themeColorValue;
+				document.querySelector('meta[media="(prefers-color-scheme: dark)"]').content = themeColorValue;
 			}
 
 			/** Background */

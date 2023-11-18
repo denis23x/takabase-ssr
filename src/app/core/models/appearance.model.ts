@@ -9,7 +9,7 @@ export interface Appearance {
 	pageScrollInfinite: boolean;
 	pageRedirectHome: boolean;
 	theme: string;
-	themePrism: string;
 	themeBackground: string;
+	themePrism: string;
 	windowButtonPosition: string;
 }
