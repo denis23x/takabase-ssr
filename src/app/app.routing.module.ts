@@ -331,11 +331,11 @@ export const routesRedirect = (routes: Routes): Routes => {
 		title: 'Home'
 	};
 
-	const userAuthed: string = String(getCookie('user-authed'));
 	const pageRedirectHome: number = Number(getCookie('page-redirect-home'));
+	const pageRedirectHomeToProfile: string = String(getCookie('page-redirect-home-to-profile'));
 
 	if (pageRedirectHome) {
-		routeHome.redirectTo = '@' + userAuthed;
+		routeHome.redirectTo = '@' + pageRedirectHomeToProfile;
 		routeHome.pathMatch = 'full';
 	} else {
 		routeHome.loadComponent = () => {

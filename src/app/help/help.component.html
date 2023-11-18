@@ -186,7 +186,7 @@
 						<div class="indicator">
               <span
                 class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                *ngIf="!!description.value && !!description.errors && helpForm.enabled"
+                *ngIf="description.touched && !!description.errors && helpForm.enabled"
                 [ngSwitch]="true"
               >
                 <ng-container *ngSwitchCase="!!description.errors.required">
