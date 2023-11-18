@@ -145,50 +145,67 @@
 							prismjs.com
 						</a>
 					</label>
-					<div
-						class="block"
-						appDropdown
-						appSkeleton
-						[appSkeletonToggle]="appearanceFormSkeletonToggle"
-						[appDropdownFitParentWidth]="true"
-						[class.cursor-not-allowed]="appearanceForm.disabled"
-					>
-						<input
-							class="input-bordered input input-md w-full cursor-pointer truncate"
-							id="appearanceFormPrism"
-							type="text"
-							aria-label="Prism"
-							placeholder="Select prism"
-							formControlName="themePrism"
-							slot="target"
-							readonly
-							[class.input-success]="themePrism.touched && themePrism.value"
-							[class.input-error]="themePrism.touched && themePrism.invalid"
-						/>
+					<div class="flex items-center justify-between gap-4">
 						<div
-							class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
-							slot="content"
+							class="relative w-full"
+							appDropdown
+							appSkeleton
+							[appSkeletonToggle]="appearanceFormSkeletonToggle"
+							[appDropdownFitParentWidth]="true"
+							[class.cursor-not-allowed]="appearanceForm.disabled"
 						>
-							<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
-								<li
-									class="flex w-full snap-start scroll-my-2"
-									*ngFor="let themePrismValue of appearanceThemePrismList"
-								>
-									<!-- prettier-ignore -->
-									<button
-                    class="rounded-btn block w-full truncate text-left"
-                    type="button"
-                    appScrollPreset
-                    [appScrollActive]="themePrism.value === themePrismValue"
-                    [ngClass]="{ 'active': themePrism.value === themePrismValue }"
-                    [attr.aria-label]="themePrismValue"
-                    (click)="themePrism.setValue(themePrismValue)"
-                  >
-                    {{ themePrismValue }}
-                  </button>
-								</li>
-							</ul>
+							<input
+								class="input-bordered input input-md w-full cursor-pointer truncate"
+								id="appearanceFormPrism"
+								type="text"
+								aria-label="Prism"
+								placeholder="Select prism"
+								formControlName="themePrism"
+								slot="target"
+								readonly
+								[class.input-success]="themePrism.touched && themePrism.value"
+								[class.input-error]="themePrism.touched && themePrism.invalid"
+							/>
+							<div
+								class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
+								slot="content"
+							>
+								<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
+									<li
+										class="flex w-full snap-start scroll-my-2"
+										*ngFor="let themePrismValue of appearanceThemePrismList"
+									>
+										<!-- prettier-ignore -->
+										<button
+											class="rounded-btn block w-full truncate text-left"
+											type="button"
+											appScrollPreset
+											[appScrollActive]="themePrism.value === themePrismValue"
+											[ngClass]="{ 'active': themePrism.value === themePrismValue }"
+											[attr.aria-label]="themePrismValue"
+											(click)="themePrism.setValue(themePrismValue)"
+										>
+											{{ themePrismValue }}
+										</button>
+									</li>
+								</ul>
+							</div>
 						</div>
+						<!-- prettier-ignore -->
+						<button
+							class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"
+							type="button"
+							title="Preview"
+							aria-label="Preview"
+							appSvgIcon
+							appSkeleton
+							[appSkeletonToggle]="appearanceFormSkeletonToggle || appearanceThemePrismMarkdownSkeleton"
+							[appSkeletonClassListElementRef]="['border-0']"
+							[disabled]="appearanceForm.disabled"
+							[appSvgIconIcon]="'code-slash'"
+							[appSvgIconSquare]="'1.75em'"
+							(click)="appearanceThemePrismPreviewToggle = !appearanceThemePrismPreviewToggle"
+						></button>
 					</div>
 				</fieldset>
 				<fieldset class="form-control w-full" *ngIf="appearanceForm.get('language') as language">
@@ -241,6 +258,12 @@
 						</div>
 					</div>
 				</fieldset>
+			</div>
+			<div class="flex w-full flex-col items-start gap-4" *ngIf="appearanceThemePrismPreviewToggle">
+				<article
+					class="prose max-w-none overflow-auto w-full"
+					[innerHTML]="appearanceThemePrismMarkdown | markdown | sanitizer: 'html'"
+				></article>
 			</div>
 			<div class="flex w-full flex-col">
 				<fieldset

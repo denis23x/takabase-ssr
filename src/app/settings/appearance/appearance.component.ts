@@ -21,6 +21,11 @@ import { CurrentUser } from '../../core/models/current-user.model';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { DocumentData } from '@angular/fire/compat/firestore';
 import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
+import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
+import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
+import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
+import { HttpClient } from '@angular/common/http';
+import { PlatformService } from '../../core/services/platform.service';
 import firebase from 'firebase/compat';
 
 interface AppearanceForm {
@@ -44,7 +49,10 @@ interface AppearanceForm {
 		ReactiveFormsModule,
 		DropdownComponent,
 		AppScrollPresetDirective,
-		AppSkeletonDirective
+		AppSkeletonDirective,
+		SvgIconComponent,
+		MarkdownPipe,
+		SanitizerPipe
 	],
 	selector: 'app-settings-appearance',
 	templateUrl: './appearance.component.html'
@@ -64,6 +72,10 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	appearanceThemeList: string[] = [];
 	appearanceThemeBackgroundList: string[] = [];
 	appearanceThemePrismList: string[] = [];
+	appearanceThemePrismMarkdown: string | undefined;
+	appearanceThemePrismMarkdown$: Subscription | undefined;
+	appearanceThemePrismMarkdownSkeleton: boolean = true;
+	appearanceThemePrismPreviewToggle: boolean = false;
 
 	appearanceLanguageList: string[] = ['en-US'];
 	appearanceButtonsList: string[] = ['left', 'right'];
@@ -72,8 +84,10 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private formBuilder: FormBuilder,
+		private httpClient: HttpClient,
 		private appearanceService: AppearanceService,
-		private authorizationService: AuthorizationService
+		private authorizationService: AuthorizationService,
+		private platformService: PlatformService
 	) {
 		this.appearanceForm = this.formBuilder.group<AppearanceForm>({
 			theme: this.formBuilder.nonNullable.control('', [Validators.required]),
@@ -134,6 +148,10 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		/** Transform appearance list */
 
 		this.setTransformList();
+
+		/** Download Prism example */
+
+		this.setPrismMarkdown();
 	}
 
 	ngOnDestroy(): void {
@@ -141,7 +159,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 			this.currentUser$,
 			this.appearanceForm$,
 			this.appearanceCollection$,
-			this.appearanceCollectionUpdate$
+			this.appearanceCollectionUpdate$,
+			this.appearanceThemePrismMarkdown$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -183,6 +202,23 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		this.appearanceThemePrismList = environment.prism.themes.sort().map((themePrism: string) => {
 			return this.getTransformListValue(themePrism, 'themePrism');
 		});
+	}
+
+	setPrismMarkdown(): void {
+		if (this.platformService.isBrowser()) {
+			this.appearanceThemePrismMarkdown$?.unsubscribe();
+			this.appearanceThemePrismMarkdown$ = this.httpClient
+				.get('/assets/markdown/settings/appearance/prism.md', {
+					responseType: 'text'
+				})
+				.subscribe({
+					next: (prose: string) => {
+						this.appearanceThemePrismMarkdown = prose;
+						this.appearanceThemePrismMarkdownSkeleton = false;
+					},
+					error: (error: any) => console.error(error)
+				});
+		}
 	}
 
 	getTransformListValue(value: string, key: string, update?: boolean): string {
