@@ -10,7 +10,7 @@
 		(click)="$event.target === $event.currentTarget ? postPreviewDialogElement.close() : $event"
 	>
 		<div
-			class="w-full max-w-2xl"
+			class="flex items-center justify-center w-full max-w-2xl"
 			appWindow
 			[appWindowTitle]="'Preview'"
 			[appWindowButtons]="['close', 'fullscreen']"

@@ -46,7 +46,7 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 	QRCodeOptions: QRCodeRenderersOptions = {
 		margin: 2,
 		scale: 1,
-		width: 384,
+		width: 256,
 		color: {
 			dark: '#000000ff',
 			light: '#ffffffff'

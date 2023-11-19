@@ -147,7 +147,7 @@
 		</header>
 		<hr class="my-0 w-full border-base-content/20" />
 		<article
-			class="prose h-full w-full max-w-full overflow-hidden"
+			class="prose h-full w-full max-w-full"
 			appSkeleton
 			[appSkeletonToggle]="postSkeletonToggle"
 			[innerHTML]="post?.markdown || 'No post markdown' | markdown | sanitizer: 'html'"

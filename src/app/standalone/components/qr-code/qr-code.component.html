@@ -10,7 +10,7 @@
 		(click)="$event.target === $event.currentTarget ? QRCodeDialog.close() : $event"
 	>
 		<div
-			class="w-full max-w-xs"
+			class="flex items-center justify-center w-full max-w-xs"
 			appWindow
 			[appWindowTitle]="'QR Code'"
 			[appWindowButtons]="['close']"
@@ -27,7 +27,7 @@
 					></canvas>
 					<figcaption class="flex text-center p-4">
 						<a
-							class="link text-sm truncate"
+							class="link text-sm truncate w-full"
 							data-pw="app-qr-code-link-to-profile"
 							target="_blank"
 							[href]="QRCodeValue"
