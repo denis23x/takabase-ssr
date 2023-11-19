@@ -113,7 +113,7 @@ export class PostProseComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onToggleReportForm(toggle: boolean): void {
-		this.reportService.reportFormDialogToggle$.next(toggle);
+	onToggleReportDialog(toggle: boolean): void {
+		this.reportService.reportDialogToggle$.next(toggle);
 	}
 }

@@ -10,7 +10,7 @@ import { ReportCreateDto } from '../dto/report/report-create.dto';
 	providedIn: 'root'
 })
 export class ReportService {
-	reportFormDialogToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	reportDialogToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	constructor(private apiService: ApiService) {}
 

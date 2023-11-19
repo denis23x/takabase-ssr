@@ -91,7 +91,7 @@ export class HelpComponent implements OnInit {
 		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
 	}
 
-	onToggleReportForm(toggle: boolean): void {
-		this.reportService.reportFormDialogToggle$.next(toggle);
+	onToggleReportDialog(toggle: boolean): void {
+		this.reportService.reportDialogToggle$.next(toggle);
 	}
 }

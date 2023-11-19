@@ -41,12 +41,13 @@ interface ReportForm {
 	templateUrl: './report.component.html'
 })
 export class ReportComponent implements OnInit, OnDestroy {
-	@ViewChild('reportFormDialog') reportFormDialog: ElementRef<HTMLDialogElement> | undefined;
+	@ViewChild('reportDialog') reportDialog: ElementRef<HTMLDialogElement> | undefined;
+
+	reportDialogToggle: boolean = false;
+	reportDialogToggle$: Subscription | undefined;
 
 	reportForm: FormGroup | undefined;
 	reportFormRequest$: Subscription | undefined;
-	reportFormDialogToggle: boolean = false;
-	reportFormDialogToggle$: Subscription | undefined;
 	reportFormNameList: string[] = [
 		'Terms and conditions',
 		'Sex, sexuality and nudity',
@@ -76,24 +77,25 @@ export class ReportComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.reportFormDialogToggle$ = this.reportService.reportFormDialogToggle$.subscribe({
-			next: (reportFormDialogToggle: boolean) => this.onToggleReportForm(reportFormDialogToggle),
+		this.reportDialogToggle$ = this.reportService.reportDialogToggle$.subscribe({
+			next: (reportDialogToggle: boolean) => this.onToggleReportDialog(reportDialogToggle),
 			error: (error: any) => console.error(error)
 		});
 	}
 
 	ngOnDestroy(): void {
 		// prettier-ignore
-		[this.reportFormDialogToggle$, this.reportFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.reportDialogToggle$, this.reportFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	onToggleReportForm(toggle: boolean): void {
+	onToggleReportDialog(toggle: boolean): void {
 		if (toggle) {
-			this.reportFormDialog.nativeElement.showModal();
+			this.reportDialog.nativeElement.showModal();
 		} else {
-			this.reportFormDialog.nativeElement.close();
+			this.reportDialog.nativeElement.close();
 		}
 
+		this.reportDialogToggle = toggle;
 		this.reportForm.reset();
 	}
 
@@ -112,13 +114,14 @@ export class ReportComponent implements OnInit, OnDestroy {
 				...this.reportForm.value
 			};
 
+			this.reportFormRequest$?.unsubscribe();
 			this.reportFormRequest$ = this.reportService.create(reportCreateDto).subscribe({
 				next: () => {
 					this.snackbarService.success('Great!', 'Thanks for your feedback');
 
 					this.reportForm.enable();
 
-					this.onToggleReportForm(false);
+					this.onToggleReportDialog(false);
 				},
 				error: () => this.reportForm.enable()
 			});

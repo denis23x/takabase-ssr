@@ -4,17 +4,17 @@
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
-		#reportFormDialog
-		(keydown.escape)="$event.preventDefault(); reportFormDialog.close()"
-		(close)="onToggleReportForm(false)"
-		(click)="$event.target === $event.currentTarget ? reportFormDialog.close() : $event"
+		#reportDialog
+		(keydown.escape)="$event.preventDefault(); reportDialog.close()"
+		(close)="onToggleReportDialog(false)"
+		(click)="$event.target === $event.currentTarget ? reportDialog.close() : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-lg"
 			appWindow
 			[appWindowTitle]="'Report'"
 			[appWindowButtons]="['close']"
-			(appWindowClose)="onToggleReportForm(false)"
+			(appWindowClose)="onToggleReportDialog(false)"
 		>
 			<form
 				class="flex flex-col gap-4 p-4"
