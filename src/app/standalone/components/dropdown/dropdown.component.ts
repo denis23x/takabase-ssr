@@ -14,6 +14,7 @@ import { fromEvent, merge, Subscription } from 'rxjs';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { PlatformService } from '../../../core/services/platform.service';
+import { CookieService } from '../../../core/services/cookie.service';
 
 @Component({
 	standalone: true,
@@ -44,6 +45,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
 	dropdownState: boolean = false;
 	dropdownPosition: string = 'bottom-left';
+	dropdownBackdrop: boolean = false;
 
 	dropdownTarget: any;
 	dropdownTargetCheckDisabled: boolean = true;
@@ -56,6 +58,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 		@Inject(DOCUMENT)
 		private document: Document,
 		private elementRef: ElementRef,
+		private cookieService: CookieService,
 		private platformService: PlatformService
 	) {}
 
@@ -105,7 +108,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 			error: (error: any) => console.error(error)
 		});
 
-		/** Close on scroll && resize */
+		/** Close onScroll && onResize */
 
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
@@ -129,6 +132,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 			const elementDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
 
 			this.dropdownState = state;
+			this.dropdownBackdrop = !!Number(this.cookieService.getItem('dropdown-backdrop'));
 
 			if (this.dropdownState) {
 				this.dropdownContent.style['position'] = 'fixed';
@@ -157,7 +161,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 					}
 				}
 
-				this.dropdownContent.style['z-index'] = 2;
+				this.dropdownContent.style['z-index'] = 30;
 			} else {
 				this.dropdownContent.style['position'] = 'fixed';
 				this.dropdownContent.style['visibility'] = 'hidden';
