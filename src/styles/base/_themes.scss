@@ -1,7 +1,20 @@
 /* Add feature by default */
 
-@media (prefers-color-scheme: dark) {
+html[data-theme="black"],
+html[data-theme="business"],
+html[data-theme="coffee"],
+html[data-theme="dark"],
+html[data-theme="forest"],
+html[data-theme="halloween"] {
   img {
-    @apply opacity-75;
+    @apply opacity-80;
+  }
+}
+
+html:not([data-theme]) {
+  @media (prefers-color-scheme: dark) {
+    img {
+      @apply opacity-80;
+    }
   }
 }

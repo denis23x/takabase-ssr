@@ -3,11 +3,10 @@
 <ng-container>
 	<section class="flex flex-col gap-4 md:gap-8">
 		<header
-			class="rounded-box flex flex-col items-stretch justify-start gap-4 bg-base-100 p-4 shadow-xl"
+			class="rounded-box flex flex-col items-stretch justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
 			<div class="flex items-stretch justify-between gap-4">
 				<div class="flex flex-col items-start justify-between gap-4 flex-1">
-					<a class="link" aria-label="Sign Up" [routerLink]="'/registration'"> Sign Up today </a>
 					<h1 class="text-4xl text-base-content font-semibold">The easiest post platform</h1>
 					<p class="text-base text-base-content/50">
 						Our platform is designed to provide you with an easy-to-use, lightweight app that is
@@ -20,15 +19,16 @@
 				</figure>
 			</div>
 			<a
-				class="btn btn-outline btn-info btn-md w-full"
-				aria-label="Go search"
-				[routerLink]="'/search'"
+				class="btn btn-outline btn-success btn-md w-full"
+				aria-label="Registration"
+				*appAuthenticated="false"
+				[routerLink]="'/registration'"
 			>
-				Go search
+				Registration
 			</a>
 		</header>
 		<div
-			class="rounded-box flex flex-col items-stretch justify-start gap-4 bg-base-100 p-4 shadow-xl"
+			class="rounded-box flex flex-col items-stretch justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
 			<div
 				class="flex flex-col items-stretch justify-start gap-4"
@@ -78,6 +78,13 @@
 								authorization, you can switch seamlessly between them.
 							</span>
 						</p>
+						<a
+							class="btn btn-outline btn-info btn-md w-full"
+							aria-label="Search"
+							[routerLink]="'/search'"
+						>
+							Search
+						</a>
 					</ng-container>
 					<ng-container *ngSwitchCase="1">
 						<button
@@ -93,11 +100,11 @@
 					<ng-container *ngSwitchCase="2">
 						<a
 							class="btn btn-outline btn-primary btn-md w-full"
-							aria-label="Registration"
+							aria-label="About"
 							*appAuthenticated="false"
-							[routerLink]="'/registration'"
+							[routerLink]="'/help/markdown'"
 						>
-							Registration
+							About
 						</a>
 					</ng-container>
 				</ng-container>
