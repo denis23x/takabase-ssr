@@ -128,13 +128,13 @@
 						*ngIf="postForm.get('categoryName') as categoryName"
 					>
 						<label class="label" for="postFormCategoryName">
+							<!-- prettier-ignore -->
 							<div
 								class="indicator"
 								appSkeleton
-								[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle"
+								[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
 								[appSkeletonClassListElementRef]="['!-mx-1']"
 							>
-								<!-- prettier-ignore -->
 								<span
                   class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
                   *ngIf="categoryName.touched && !!categoryName.errors && postForm.enabled"
@@ -147,11 +147,12 @@
 								<span class="label-text mr-2">Category</span>
 							</div>
 						</label>
+						<!-- prettier-ignore -->
 						<div
-							class="block w-full relative z-20"
+							class="block w-full relative"
 							appSkeleton
 							appDropdown
-							[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle"
+							[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
 							[appDropdownFitParentWidth]="true"
 							[class.cursor-not-allowed]="postForm.disabled"
 							(appDropdownToggle)="onToggleCategory($event)"
@@ -194,11 +195,12 @@
 							</div>
 						</div>
 					</fieldset>
+					<!-- prettier-ignore -->
 					<div
-						class="flex p-0 relative z-20"
+						class="flex p-0 relative"
 						appDropdown
 						appSkeleton
-						[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle"
+						[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
 						[appDropdownPosition]="'bottom-right'"
 					>
 						<button

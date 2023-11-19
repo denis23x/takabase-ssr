@@ -108,7 +108,7 @@
 						appSkeleton
 						[appSkeletonToggle]="categoryListSkeletonToggle && !!category"
 						[appSkeletonClassListParent]="['rounded-t-lg']"
-						[appSkeletonClassList]="['rounded-b-none']"
+						[appSkeletonClassList]="['rounded-t-lg', 'rounded-b-none']"
 						[ngClass]="!category ? 'tab-active !h-12' : 'bg-base-200'"
 					>
 						<a
@@ -126,7 +126,7 @@
 						*ngFor="let category of categoryList"
 						[appSkeletonToggle]="categoryListSkeletonToggle"
 						[appSkeletonClassListParent]="['rounded-t-lg']"
-						[appSkeletonClassList]="['rounded-b-none']"
+						[appSkeletonClassList]="['rounded-t-lg', 'rounded-b-none']"
 						[ngClass]="routerLinkActive.isActive && category ? 'tab-active !h-12' : 'bg-base-200'"
 					>
 						<a

@@ -2,7 +2,7 @@
 
 import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { iif, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
 import {
 	AbstractControl,
@@ -90,6 +90,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	categoryList: Category[] = [];
 	categoryListRequest$: Subscription | undefined;
+	categoryListSkeletonToggle: boolean = false;
 
 	post: Post | undefined;
 	postRequest$: Subscription | undefined;
@@ -189,6 +190,13 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	setSkeleton(): void {
+		// Get categoryList
+
+		this.categoryList = this.skeletonService.getCategoryList();
+		this.categoryListSkeletonToggle = true;
+
+		// Get post && Set category
+
 		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 
 		if (postId) {
@@ -211,7 +219,10 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 		this.categoryListRequest$?.unsubscribe();
 		this.categoryListRequest$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
-			next: (categoryList: Category[]) => (this.categoryList = categoryList),
+			next: (categoryList: Category[]) => {
+				this.categoryList = categoryList;
+				this.categoryListSkeletonToggle = false;
+			},
 			error: (error: any) => console.error(error)
 		});
 
