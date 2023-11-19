@@ -1,7 +1,6 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { PostGetAllDto } from '../dto/post/post-get-all.dto';
 import { ActivatedRouteSnapshot } from '@angular/router';
 
 @Injectable({
@@ -9,7 +8,7 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 })
 export class SearchService {
 	// prettier-ignore
-	getSearchGetAllDto(getAllDto: any, activatedRouteSnapshot: ActivatedRouteSnapshot): PostGetAllDto {
+	getSearchGetAllDto(getAllDto: any, activatedRouteSnapshot: ActivatedRouteSnapshot): any {
     const query: string = String(activatedRouteSnapshot.queryParamMap.get('query') || '');
 
     if (query.length) {

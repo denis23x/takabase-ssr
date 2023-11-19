@@ -40,6 +40,7 @@ import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
 import { TitleService } from '../core/services/title.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
+import { ReportService } from '../core/services/report.service';
 
 interface PostSearchForm {
 	query: FormControl<string>;
@@ -107,6 +108,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		private userService: UserService,
 		private titleService: TitleService,
 		private metaService: MetaService,
+		private reportService: ReportService,
 		private categoryService: CategoryService,
 		private skeletonService: SkeletonService,
 		private snackbarService: SnackbarService,
@@ -366,6 +368,12 @@ export class UserComponent implements OnInit, OnDestroy {
 					error: (error: any) => console.error(error)
 				});
 		}
+	}
+
+	/** Report */
+
+	onToggleReportForm(toggle: boolean): void {
+		this.reportService.reportFormDialogToggle$.next(toggle);
 	}
 
 	/** Category */

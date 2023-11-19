@@ -96,10 +96,11 @@
 									<button
 										class="rounded-btn block w-full truncate text-right"
 										type="button"
-										title="Complain"
-										aria-label="Complain"
+										title="Report user"
+										aria-label="Report user"
+										(click)="onToggleReportForm(true)"
 									>
-										Complain
+										Report user
 									</button>
 								</li>
 							</ng-container>
@@ -293,10 +294,11 @@
 												<button
 													class="rounded-btn block w-full truncate text-right"
 													type="button"
-													title="Complain"
-													aria-label="Complain"
+													title="Report"
+													aria-label="Report"
+													(click)="onToggleReportForm(true)"
 												>
-													Complain
+													Report
 												</button>
 											</li>
 										</ng-container>

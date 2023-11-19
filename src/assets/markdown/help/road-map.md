@@ -7,7 +7,7 @@ We're excited to share with you our plans to improve our app in the near future.
   - [ ] [Rendered as .pdf file]{.block}
   - [ ] [RAW]{.block}
 - [ ] [User experience]{.block}
-  - [ ] [Complain and block UGC]{.block}
+  - [x] [Complain and block UGC]{.block}
   - [ ] [Subscriptions]{.block}
   - [ ] [Public settings]{.block}
   - [ ] [Private posts and categories]{.block}
@@ -22,7 +22,7 @@ We're excited to share with you our plans to improve our app in the near future.
   - [ ] [Auto conversion links to media]{.block}
   - [ ] [Auto formatting improvements]{.block}
   - [ ] [Images]{.block}
-    - [ ] [Upload to backend]{.block}
+    - [ ] [Extra images upload to backend]{.block}
     - [ ] [Cropping]{.block}
     - [ ] [Paste from clipboard]{.block}
     - [ ] [Lightbox]{.block}

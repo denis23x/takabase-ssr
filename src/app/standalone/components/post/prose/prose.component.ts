@@ -20,6 +20,7 @@ import { PostDeleteComponent } from '../delete/delete.component';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { QrCodeComponent } from '../../qr-code/qr-code.component';
+import { ReportService } from '../../../../core/services/report.service';
 
 @Component({
 	standalone: true,
@@ -71,6 +72,7 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	constructor(
 		private authorizationService: AuthorizationService,
 		private platformService: PlatformService,
+		private reportService: ReportService,
 		private snackbarService: SnackbarService
 	) {}
 
@@ -109,5 +111,9 @@ export class PostProseComponent implements OnInit, OnDestroy {
 				this.snackbarService.success(null, 'Post URL has been copied');
 			});
 		}
+	}
+
+	onToggleReportForm(toggle: boolean): void {
+		this.reportService.reportFormDialogToggle$.next(toggle);
 	}
 }

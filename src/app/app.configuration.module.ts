@@ -11,6 +11,7 @@ import { HeaderComponent } from './standalone/components/header/header.component
 import { SnackbarComponent } from './standalone/components/snackbar/snackbar.component';
 import { HttpAuthInterceptor } from './core/interceptors/http.auth.interceptor';
 import { ScrollToTopComponent } from './standalone/components/scroll-to-top/scroll-to-top.component';
+import { ReportComponent } from './standalone/components/report/report.component';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { FIREBASE_OPTIONS } from '@angular/fire/compat';
 import { getStorage, provideStorage } from '@angular/fire/storage';
@@ -31,7 +32,8 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 		HttpClientModule,
 		HeaderComponent,
 		SnackbarComponent,
-		ScrollToTopComponent
+		ScrollToTopComponent,
+		ReportComponent
 	],
 	providers: [
 		{
