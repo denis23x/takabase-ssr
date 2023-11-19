@@ -12,6 +12,7 @@ import { AuthorizationService } from '../../../core/services/authorization.servi
 import { filter } from 'rxjs/operators';
 import { CurrentUser } from '../../../core/models/current-user.model';
 import { AppSkeletonDirective } from '../../directives/app-skeleton.directive';
+import { DropdownComponent } from '../dropdown/dropdown.component';
 
 @Component({
 	standalone: true,
@@ -23,7 +24,8 @@ import { AppSkeletonDirective } from '../../directives/app-skeleton.directive';
 		AvatarComponent,
 		AppAuthenticatedDirective,
 		UserUrlPipe,
-		AppSkeletonDirective
+		AppSkeletonDirective,
+		DropdownComponent
 	],
 	templateUrl: './header.component.html'
 })

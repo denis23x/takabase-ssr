@@ -57,29 +57,6 @@
 						<ng-container [ngSwitch]="currentUser?.id === user.id">
 							<ng-container *ngSwitchCase="true">
 								<li class="flex w-full snap-start scroll-my-2">
-									<a
-										class="rounded-btn block w-full truncate text-right"
-										title="Settings"
-										aria-label="Settings"
-										[routerLink]="['/settings']"
-									>
-										Settings
-									</a>
-								</li>
-								<li class="flex w-full snap-start scroll-my-2">
-									<a
-										class="rounded-btn block w-full truncate text-right"
-										title="About"
-										aria-label="About"
-										[routerLink]="['/help/about']"
-									>
-										About
-									</a>
-								</li>
-								<li class="flex w-full snap-start scroll-my-2 menu-title">
-									<hr class="my-0 border-base-content/20" />
-								</li>
-								<li class="flex w-full snap-start scroll-my-2">
 									<button
 										class="rounded-btn block w-full truncate text-right"
 										type="button"

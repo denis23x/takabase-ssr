@@ -55,19 +55,55 @@
 						[appSvgIconSquare]="'1.5em'"
 					>
 					</a>
-					<a
-						class="avatar"
-						data-pw="app-header-link-to-profile"
-						[routerLink]="[currentUser | userUrl]"
-						[attr.aria-label]="currentUser.name"
-						[title]="currentUser.name"
+					<div
+						class="flex cursor-pointer relative z-30"
+						data-pw="app-header-profile-dropdown"
+						appDropdown
+						[appDropdownPosition]="'bottom-right'"
 					>
-						<figure
-							class="h-12 w-12 rounded-btn relative overflow-hidden"
-							appAvatar
-							[appAvatarUser]="currentUser"
-						></figure>
-					</a>
+						<div class="avatar" slot="target">
+							<figure
+								class="h-12 w-12 rounded-btn relative overflow-hidden"
+								appAvatar
+								[appAvatarUser]="currentUser"
+							></figure>
+						</div>
+						<ul
+							class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
+							slot="content"
+						>
+							<li class="flex w-full snap-start scroll-my-2">
+								<a
+									class="rounded-btn block w-full truncate text-right"
+									[title]="currentUser.name"
+									[attr.aria-label]="currentUser.name"
+									[routerLink]="[currentUser | userUrl]"
+								>
+									Profile
+								</a>
+							</li>
+							<li class="flex w-full snap-start scroll-my-2">
+								<a
+									class="rounded-btn block w-full truncate text-right"
+									title="Settings"
+									aria-label="Settings"
+									[routerLink]="['/settings']"
+								>
+									Settings
+								</a>
+							</li>
+							<li class="flex w-full snap-start scroll-my-2">
+								<a
+									class="rounded-btn block w-full truncate text-right"
+									title="About"
+									aria-label="About"
+									[routerLink]="['/help/about']"
+								>
+									About
+								</a>
+							</li>
+						</ul>
+					</div>
 				</ng-container>
 			</nav>
 		</div>
