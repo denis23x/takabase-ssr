@@ -19,6 +19,8 @@ import {
 import firebase from 'firebase/compat';
 import { DocumentReference } from '@angular/fire/compat/firestore/interfaces';
 import { Meta } from '@angular/platform-browser';
+import { Coords } from 'colorjs.io/types/src/color';
+import Color from 'colorjs.io';
 
 @Injectable({
 	providedIn: 'root'
@@ -40,52 +42,34 @@ export class AppearanceService {
 
 	/** Utility */
 
-	getCSSPropertyValue(property: string): string {
+	getCSSColor(name: string, format: string): string {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
-			return window
+			const colorName: string = window
 				.getComputedStyle(this.document.documentElement)
-				.getPropertyValue(property)
+				.getPropertyValue(name)
 				.trim();
+
+			if (colorName) {
+				const colorCoords: Coords = [0, 0, 0];
+				const color: Color = new Color({
+					space: 'oklch',
+					coords: colorCoords
+				});
+
+				colorName
+					.split(/\s/g)
+					.forEach((value: string, index: number) => (color.coords[index] = parseFloat(value)));
+
+				return color.to('srgb').toString({ format });
+			} else {
+				return '';
+			}
 		}
 
 		return '';
 	}
-
-	getHSLToRGB = (h: number, s: number, l: number): number[] => {
-		s /= 100;
-		l /= 100;
-
-		/** https://www.30secondsofcode.org/js/s/hsl-to-rgb */
-
-		const k = (n: number): number => (n + h / 30) % 12;
-		const a: number = s * Math.min(l, 1 - l);
-
-		const f = (n: number): number => {
-			return l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-		};
-
-		return [Math.round(255 * f(0)), Math.round(255 * f(8)), Math.round(255 * f(4))];
-	};
-
-	getHSLToHEX = (h: number, s: number, l: number): string[] => {
-		l /= 100;
-
-		/** https://stackoverflow.com/questions/36721830/convert-hsl-to-rgb-and-hex/54014428#54014428 */
-
-		const a: number = (s * Math.min(l, 1 - l)) / 100;
-		const f = (n: number) => {
-			const k: number = (n + h / 30) % 12;
-			const color: number = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-
-			return Math.round(255 * color)
-				.toString(16)
-				.padStart(2, '0');
-		};
-
-		return [f(0), f(8), f(4)];
-	};
 
 	setSettings(appearance: Appearance | null): void {
 		const settingsList: string[] = [
@@ -145,34 +129,30 @@ export class AppearanceService {
 		this.setThemeColor(theme);
 	}
 
-	// prettier-ignore
 	setThemeColor(theme: string | null): void {
-		const valueName: string = 'theme-color';
+		const name: string = 'theme-color';
+
+		const selectorDark: string = 'media="(prefers-color-scheme: dark)"';
+		const selectorLight: string = 'media="(prefers-color-scheme: light)"';
 
 		/** https://css-tricks.com/meta-theme-color-and-trickery/ */
 
 		if (theme && theme !== 'auto') {
-			const value: string = this.getCSSPropertyValue('--b2');
-
-			const [h, s, l]: number[] = value.split(/\s/g).map((value: string) => Number(value.replace('%', '')));
-
-			const valueList: string[] = this.getHSLToHEX(h, s, l);
-			const valueContent: string = '#' + valueList.join('');
+			const content: string = this.getCSSColor('--b2', 'hex');
 
 			/** Set */
 
-			this.cookieService.setItem(valueName, valueContent);
+			this.cookieService.setItem(name, content);
 
-			this.meta.updateTag({ name: valueName, content: valueContent }, 'media="(prefers-color-scheme: light)"');
-			this.meta.updateTag({ name: valueName, content: valueContent }, 'media="(prefers-color-scheme: dark)"');
+			this.meta.updateTag({ name, content }, selectorDark);
+			this.meta.updateTag({ name, content }, selectorLight);
 		} else {
-
 			/** Remove */
 
-			this.cookieService.removeItem(valueName);
+			this.cookieService.removeItem(name);
 
-			this.meta.updateTag({ name: valueName, content: '#f2f2f2' }, 'media="(prefers-color-scheme: light)"');
-			this.meta.updateTag({ name: valueName, content: '#191e24' }, 'media="(prefers-color-scheme: dark)"');
+			this.meta.updateTag({ name, content: '#f2f2f2' }, selectorDark);
+			this.meta.updateTag({ name, content: '#191e24' }, selectorLight);
 		}
 	}
 

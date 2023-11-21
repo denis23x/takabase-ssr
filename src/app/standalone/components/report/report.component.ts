@@ -20,6 +20,7 @@ import { HelperService } from '../../../core/services/helper.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { ReportCreateDto } from '../../../core/dto/report/report-create.dto';
 import { ReportService } from '../../../core/services/report.service';
+import { filter } from 'rxjs/operators';
 
 interface ReportForm {
 	name: FormControl<string>;
@@ -77,10 +78,12 @@ export class ReportComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.reportDialogToggle$ = this.reportService.reportDialogToggle$.subscribe({
-			next: (reportDialogToggle: boolean) => this.onToggleReportDialog(reportDialogToggle),
-			error: (error: any) => console.error(error)
-		});
+		this.reportDialogToggle$ = this.reportService.reportDialogToggle$
+			.pipe(filter(() => !!this.reportDialog))
+			.subscribe({
+				next: (reportDialogToggle: boolean) => this.onToggleReportDialog(reportDialogToggle),
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	ngOnDestroy(): void {

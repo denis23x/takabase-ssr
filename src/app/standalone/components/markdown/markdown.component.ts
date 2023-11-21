@@ -181,40 +181,15 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 			/** Prepare theme colors */
 
-			const variablesCSSMap: any[] = [
-				{
-					nameHSL: '--p',
-					nameRGB: '--p-converted-to-rgb',
-					nameWithComma: false
-				},
-				{
-					nameHSL: '--b1',
-					nameRGB: '--b1-converted-to-rgb',
-					nameWithComma: false
-				},
-				{
-					nameHSL: '--bc',
-					nameRGB: '--bc-converted-to-rgb',
-					nameWithComma: false
-				},
-				{
-					nameHSL: '--bc',
-					nameRGB: '--bc-converted-to-rgb-with-comma',
-					nameWithComma: true
-				}
-			];
+			const variablesCSSMap: string[] = ['--p', '--b1', '--bc'];
 
-			variablesCSSMap.forEach((variable: any) => {
-				const value: string = this.appearanceService.getCSSPropertyValue(variable.nameHSL);
+			variablesCSSMap.forEach((variable: string) => {
+				const rgb: string = this.appearanceService.getCSSColor(variable, 'rgb');
 
-				// prettier-ignore
-				const [h, s, l]: number[] = value.split(/\s/g).map((value: string) => Number(value.replace('%', '')));
-				const [r, g, b]: number[] = this.appearanceService.getHSLToRGB(h, s, l);
+				const propertyKey: string = [variable, 'rgb'].join('-');
+				const propertyValue: string = rgb.match(/(\d+\.?\d+%)/gm).join(' ');
 
-				const propertyValue: string = [r, g, b].join(variable.nameWithComma ? ',' : ' ');
-				const property: string = variable.nameRGB;
-
-				this.document.documentElement.style.setProperty(property, propertyValue);
+				this.document.documentElement.style.setProperty(propertyKey, propertyValue);
 			});
 
 			/** Init Emoji Mart */

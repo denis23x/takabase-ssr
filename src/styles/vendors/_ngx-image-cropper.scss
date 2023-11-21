@@ -1,5 +1,5 @@
 .ngx-cropper {
-  --cropper-overlay-color: hsl(var(--b3));
+  --cropper-overlay-color: oklch(var(--b3));
 
   .ngx-ic-source-image {
     @apply inline;
@@ -22,7 +22,7 @@
   .ngx-ic-move {
     @apply rounded-box;
 
-    border-color: hsl(var(--su)) !important;
+    border-color: oklch(var(--su)) !important;
   }
 
   .ngx-ic-resize {
@@ -43,7 +43,7 @@
     &.ngx-ic-left {
       @apply rounded-full;
 
-      background: hsl(var(--su));
+      background: oklch(var(--su));
 
       z-index: 2 !important;
       opacity: 50 !important;
@@ -58,7 +58,7 @@
     @apply pointer-events-none;
 
     .ngx-ic-move {
-      border-color: hsl(var(--b3)) !important;
+      border-color: oklch(var(--b3)) !important;
     }
 
     .ngx-ic-resize {
@@ -70,7 +70,7 @@
       &.ngx-ic-bottom,
       &.ngx-ic-bottomleft,
       &.ngx-ic-left {
-        background: hsl(var(--b3));
+        background: oklch(var(--b3));
       }
     }
   }

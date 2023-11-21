@@ -65,31 +65,19 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 		/** Set QRCodeOptions options */
 
 		if (this.platformService.isBrowser()) {
+			const QRCodeOptionsColor: Record<string, string> = {
+				dark: '--bc',
+				light: '--b1'
+			};
+
 			/** Prepare theme colors */
 
-			const variablesCSSMap: any[] = [
-				{
-					nameHSL: '--bc',
-					nameHEX: 'dark'
-				},
-				{
-					nameHSL: '--b1',
-					nameHEX: 'light'
-				}
-			];
-
 			// prettier-ignore
-			variablesCSSMap.forEach((variable: any) => {
-				const value: string = this.appearanceService.getCSSPropertyValue(variable.nameHSL);
-
-				const [h, s, l]: number[] = value.split(/\s/g).map((value: string) => Number(value.replace('%', '')));
-				const valueList: string[] = this.appearanceService.getHSLToHEX(h, s, l);
-
-				const propertyValue: string = ['#', ...valueList, 'ff'].join('');
-				const property: string = variable.nameHEX;
-
-				this.QRCodeOptions.color[property] = propertyValue;
+			Object.keys(QRCodeOptionsColor).forEach((key: string) => {
+				QRCodeOptionsColor[key] = this.appearanceService.getCSSColor(QRCodeOptionsColor[key], 'hex');
 			});
+
+			this.QRCodeOptions.color = QRCodeOptionsColor;
 		}
 
 		/** Subscribe for regenerate QRCode */
