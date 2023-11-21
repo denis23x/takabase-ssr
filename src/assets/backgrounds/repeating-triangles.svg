@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width='100%' height='100%' viewBox='0 0 800 400' preserveAspectRatio='xMidYMid slice'>
   <pattern id="p" width="160" height="80" patternUnits="userSpaceOnUse">
-    <rect fill='hsl(var(--b2))' width='160' height='80' />
-    <g fill='hsl(var(--b3))' fill-opacity='1'>
+    <rect fill='oklch(var(--b2))' width='160' height='80' />
+    <g fill='oklch(var(--b3))' fill-opacity='1'>
       <polygon points='0 10 0 0 10 0' />
       <polygon points='0 40 0 30 10 30' />
       <polygon points='0 30 0 20 10 20' />

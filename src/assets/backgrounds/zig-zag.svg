@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width='100%' height='100%' viewBox='0 0 1600 800' preserveAspectRatio='xMidYMid slice'>
   <pattern id="p" width="120" height="120" patternUnits="userSpaceOnUse">
-        <rect fill='hsl(var(--b3))' width='120' height='120'/>
+        <rect fill='oklch(var(--b3))' width='120' height='120'/>
         <polygon  fill='#000' fill-opacity='.1' points='120 0 120 60 90 30 60 0 0 0 0 0 60 60 0 120 60 120 90 90 120 60 120 0'/>
   </pattern>
   <rect fill="url(#p)" width="100%" height="100%"/>
