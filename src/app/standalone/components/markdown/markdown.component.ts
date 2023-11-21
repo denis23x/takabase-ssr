@@ -187,7 +187,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				const rgb: string = this.appearanceService.getCSSColor(variable, 'rgb');
 
 				const propertyKey: string = [variable, 'rgb'].join('-');
-				const propertyValue: string = rgb.match(/(\d+\.?\d+%)/gm).join(' ');
+				const propertyValue: string = rgb.match(/(\d*\.?\d*%)/gm).join(' ');
 
 				this.document.documentElement.style.setProperty(propertyKey, propertyValue);
 			});
