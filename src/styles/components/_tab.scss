@@ -1,10 +1,16 @@
 /* Update default DaisyUI styles */
 
-.tab {
-  @apply border border-b border-solid;
-  @apply border-base-content/20 px-0 #{!important};
+.tabs {
+  &.tabs-lifted {
+    @apply justify-start translate-y-px overflow-auto gap-1 w-full;
 
-  &.tab-active {
-    @apply border-b-0 before:invisible after:invisible;
+    .tab {
+      @apply border border-b border-solid bg-base-200 h-10;
+      @apply border-base-content/20 px-0 #{!important};
+
+      &.tab-active {
+        @apply border-b-0 before:invisible after:invisible h-12;
+      }
+    }
   }
 }

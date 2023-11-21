@@ -25,11 +25,12 @@
 		</header>
 		<div class="flex flex-col">
 			<nav class="block px-4">
-				<ul class="tabs w-full translate-y-px flex-nowrap gap-1 overflow-auto rounded-t-lg">
+				<ul class="tabs tabs-lifted tabs-lg" role="tablist">
 					<li
-						class="tab tab-lifted tab-lg h-10"
+						class="tab"
+						role="tab"
 						*ngFor="let term of termsNavigationList"
-						[ngClass]="routerLinkActive.isActive ? 'tab-active !h-12' : 'bg-base-200'"
+						[class.tab-active]="routerLinkActive.isActive"
 					>
 						<a
 							class="flex h-full items-center justify-center whitespace-nowrap px-4"

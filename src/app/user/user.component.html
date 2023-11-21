@@ -99,14 +99,15 @@
 		</header>
 		<div class="flex flex-col">
 			<nav class="block px-4">
-				<ul class="tabs w-full translate-y-px flex-nowrap gap-1 overflow-auto rounded-t-lg">
+				<ul class="tabs tabs-lifted tabs-lg" role="tablist">
 					<li
-						class="tab tab-lifted tab-lg h-10"
+						class="tab"
+						role="tab"
 						appSkeleton
+						[class.tab-active]="!category"
 						[appSkeletonToggle]="categoryListSkeletonToggle && !!category"
 						[appSkeletonClassListParent]="['rounded-t-lg']"
 						[appSkeletonClassList]="['rounded-t-lg', 'rounded-b-none']"
-						[ngClass]="!category ? 'tab-active !h-12' : 'bg-base-200'"
 					>
 						<a
 							class="block whitespace-nowrap px-4"
@@ -118,13 +119,14 @@
 						</a>
 					</li>
 					<li
-						class="tab tab-lifted tab-lg h-10"
+						class="tab"
+						role="tab"
 						appSkeleton
 						*ngFor="let category of categoryList"
+						[class.tab-active]="routerLinkActive.isActive && category"
 						[appSkeletonToggle]="categoryListSkeletonToggle"
 						[appSkeletonClassListParent]="['rounded-t-lg']"
 						[appSkeletonClassList]="['rounded-t-lg', 'rounded-b-none']"
-						[ngClass]="routerLinkActive.isActive && category ? 'tab-active !h-12' : 'bg-base-200'"
 					>
 						<a
 							class="flex h-full items-center justify-center whitespace-nowrap px-4"
