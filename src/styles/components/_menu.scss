@@ -1,22 +1,26 @@
 /* Update default DaisyUI styles */
 
 .menu {
-  li {
-    a,
-    div,
-    button {
-      &:active {
-        @apply bg-base-content/10 text-base-content #{!important};
+  &.menu-vertical {
+    @apply overflow-hidden rounded-box border border-base-content/20 bg-base-100 shadow before:hidden;
+
+    li {
+      a,
+      div,
+      button {
+        &:active {
+          @apply bg-base-content/10 text-base-content #{!important};
+        }
+
+        &.active {
+          @apply bg-success text-success-content #{!important};
+        }
       }
 
-      &.active {
-        @apply bg-success text-success-content #{!important};
+      div[appDropdown],
+      button[appSvgIcon] {
+        @apply rounded-none;
       }
-    }
-
-    div[appDropdown],
-    button[appSvgIcon] {
-      @apply rounded-none;
     }
   }
 }

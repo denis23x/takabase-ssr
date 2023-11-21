@@ -170,7 +170,7 @@
 								[class.input-error]="categoryName.touched && categoryName.invalid"
 							/>
 							<div
-								class="menu menu-vertical menu-md mt-2 overflow-hidden rounded-btn border border-base-content/20 bg-base-100 p-0 shadow"
+								class="menu menu-vertical menu-md mt-2 p-0"
 								slot="content"
 								[class.hidden]="!categoryList.length"
 							>
@@ -214,10 +214,7 @@
 							[appSvgIconIcon]="'three-dots-vertical'"
 							[appSvgIconSquare]="'1.5em'"
 						></button>
-						<ul
-							class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
-							slot="content"
-						>
+						<ul class="menu menu-vertical menu-md ml-0 mt-2" slot="content">
 							<li class="flex w-full snap-start scroll-my-2">
 								<button
 									class="rounded-btn block w-full truncate text-right"
@@ -371,10 +368,7 @@
 									[appSvgIconIcon]="'three-dots-vertical'"
 									[appSvgIconSquare]="'1.5em'"
 								></button>
-								<ul
-									class="menu menu-vertical menu-md ml-0 mt-2 rounded-btn border border-base-content/20 bg-base-100 p-2 shadow before:hidden"
-									slot="content"
-								>
+								<ul class="menu menu-vertical menu-md ml-0 mt-2" slot="content">
 									<li class="flex w-full snap-start scroll-my-2">
 										<label class="label cursor-pointer justify-end gap-4">
 											<span class="label-text">Scroll Sync</span>
