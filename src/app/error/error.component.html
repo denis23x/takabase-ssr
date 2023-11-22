@@ -21,17 +21,9 @@
 					It looks like you've landed on an error page on Draft
 				</p>
 			</div>
-			<p class="alert">
-				<i
-					class="fill-current text-info"
-					appSvgIcon
-					[appSvgIconIcon]="'info-circle'"
-					[appSvgIconSquare]="'1.5em'"
-				></i>
-				<span class="block">
-					If you believe this is a technical glitch or if you need assistance, don't hesitate to
-					<a class="link" aria-label="help" [routerLink]="['/help']">contact us</a>.
-				</span>
+			<!-- prettier-ignore -->
+			<p class="text-base text-base-content">
+				Go <a class="link" aria-label="home" [routerLink]="['/']">home</a> or if you believe this is a technical glitch please <a class="link" aria-label="help" [routerLink]="['/help']">contact us</a>.
 			</p>
 		</div>
 	</div>

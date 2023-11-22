@@ -62,7 +62,7 @@
   }
 
   ul {
-    @apply marker:text-info my-4;
+    @apply my-4;
 
     &.form-control {
       @apply list-none p-0;
@@ -78,6 +78,12 @@
 
     ul {
       @apply mb-0;
+    }
+
+    li {
+      &::marker {
+        @apply text-info;
+      }
     }
   }
 

@@ -7,7 +7,6 @@ import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
-import { AppAuthenticatedDirective } from '../standalone/directives/app-authenticated.directive';
 import { AppSkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { ReportService } from '../core/services/report.service';
 
@@ -18,7 +17,6 @@ import { ReportService } from '../core/services/report.service';
 		RouterModule,
 		AppScrollPresetDirective,
 		SvgIconComponent,
-		AppAuthenticatedDirective,
 		AppSkeletonDirective
 	],
 	selector: 'app-help',

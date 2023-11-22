@@ -106,8 +106,8 @@
 						appSkeleton
 						[class.tab-active]="!category"
 						[appSkeletonToggle]="categoryListSkeletonToggle && !!category"
-						[appSkeletonClassListParent]="['rounded-t-lg']"
-						[appSkeletonClassList]="['rounded-t-lg', 'rounded-b-none']"
+						[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
+						[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
 					>
 						<a
 							class="block whitespace-nowrap px-4"
@@ -125,8 +125,8 @@
 						*ngFor="let category of categoryList"
 						[class.tab-active]="routerLinkActive.isActive && category"
 						[appSkeletonToggle]="categoryListSkeletonToggle"
-						[appSkeletonClassListParent]="['rounded-t-lg']"
-						[appSkeletonClassList]="['rounded-t-lg', 'rounded-b-none']"
+						[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
+						[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
 					>
 						<a
 							class="flex h-full items-center justify-center whitespace-nowrap px-4"

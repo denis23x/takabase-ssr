@@ -1,19 +1,22 @@
 /** @format */
 
-import { Directive, ElementRef, Input, OnInit } from '@angular/core';
+import { Directive, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { PlatformService } from '../../core/services/platform.service';
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Directive({
 	standalone: true,
 	selector: '[appScrollPreset]'
 })
-export class AppScrollPresetDirective implements OnInit {
+export class AppScrollPresetDirective implements OnInit, OnDestroy {
 	@Input()
 	set appScrollActive(scrollActive: boolean) {
-		this.scrollActive = scrollActive;
+		this.scrollActive$.next(scrollActive);
 	}
 
 	scrollActive: boolean = false;
+	scrollActive$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	parentLi: HTMLElement | undefined;
 	parentUl: HTMLElement | undefined;
@@ -24,7 +27,19 @@ export class AppScrollPresetDirective implements OnInit {
 	) {}
 
 	ngOnInit(): void {
-		setTimeout(() => this.setScroll(this.scrollActive));
+		this.scrollActive$
+			.pipe(
+				distinctUntilChanged(),
+				tap((scrollActive: boolean) => (this.scrollActive = scrollActive))
+			)
+			.subscribe({
+				next: () => this.setScroll(this.scrollActive),
+				error: (error: any) => console.error(error)
+			});
+	}
+
+	ngOnDestroy(): void {
+		[this.scrollActive$].forEach(($: BehaviorSubject<boolean>) => $?.complete());
 	}
 
 	setScroll(toggle: boolean): void {

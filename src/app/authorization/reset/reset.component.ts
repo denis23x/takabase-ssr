@@ -16,7 +16,6 @@ import { MetaService } from '../../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
 import { PasswordService } from '../../core/services/password.service';
 import { Subscription } from 'rxjs';
@@ -32,8 +31,7 @@ interface ResetForm {
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
-		AppInputTrimWhitespaceDirective,
-		OauthComponent
+		AppInputTrimWhitespaceDirective
 	],
 	selector: 'app-authorization-reset',
 	templateUrl: './reset.component.html'

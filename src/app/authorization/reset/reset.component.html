@@ -6,7 +6,7 @@
 	>
 		<div class="flex flex-col gap-4">
 			<h1 class="text-2xl font-bold">Authorization</h1>
-			<nav class="border-y border-base-content/20 py-4" appOauth></nav>
+			<hr class="border-t border-base-content/20" />
 		</div>
 		<div class="flex flex-col gap-4">
 			<form class="flex flex-col gap-4" [formGroup]="resetForm" (ngSubmit)="onSubmitResetForm()">
@@ -71,11 +71,11 @@
 					<button
 						class="btn-success btn w-full"
 						type="submit"
-						aria-label="Reset"
+						aria-label="Submit"
 						[disabled]="resetForm.invalid || resetForm.disabled"
 					>
 						<span class="loading loading-spinner" *ngIf="resetForm.disabled"></span>
-						Reset
+						Submit
 					</button>
 				</fieldset>
 			</form>

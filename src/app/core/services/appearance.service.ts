@@ -151,8 +151,8 @@ export class AppearanceService {
 
 			this.cookieService.removeItem(name);
 
-			this.meta.updateTag({ name, content: '#f2f2f2' }, selectorDark);
-			this.meta.updateTag({ name, content: '#191e24' }, selectorLight);
+			this.meta.updateTag({ name, content: '#191e24' }, selectorDark);
+			this.meta.updateTag({ name, content: '#f2f2f2' }, selectorLight);
 		}
 	}
 
