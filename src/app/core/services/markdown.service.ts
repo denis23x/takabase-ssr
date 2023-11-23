@@ -23,9 +23,7 @@ import 'prismjs/plugins/match-braces/prism-match-braces.min.js';
 import { environment } from '../../../environments/environment';
 import { RenderRule } from 'markdown-it/lib/renderer';
 import { DOCUMENT } from '@angular/common';
-
-Prism.manual = true;
-Prism.plugins.autoloader.languages_path = '/assets/grammars/';
+import { PlatformService } from './platform.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -35,13 +33,20 @@ export class MarkdownService {
 
 	constructor(
 		@Inject(DOCUMENT)
-		private document: Document
+		private document: Document,
+		private platformService: PlatformService
 	) {}
 
 	getMarkdownIt(): MarkdownIt {
 		if (this.markdownIt) {
 			return this.markdownIt;
 		}
+
+		/** Set Prism autoloader */
+
+		this.setMarkdownItPrism();
+
+		/** Set markdownIt */
 
 		this.markdownIt = new MarkdownIt({
 			html: false,
@@ -216,6 +221,13 @@ export class MarkdownService {
 		};
 
 		return ruleMap[rule];
+	}
+
+	setMarkdownItPrism(): void {
+		if (this.platformService.isBrowser()) {
+			Prism.manual = true;
+			Prism.plugins.autoloader.languages_path = '/assets/grammars/';
+		}
 	}
 
 	setRender(value: string, element: HTMLElement): void {

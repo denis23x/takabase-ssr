@@ -10,8 +10,9 @@
 /search/categories
 /search/posts
 /search/users
-/help/features
+/help/about
 /help/code-highlight
+/help/markdown
 /help/style-safe-list
 /help/deep-dive
 /help/compatibility

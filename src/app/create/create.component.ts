@@ -86,15 +86,15 @@ export class CreateComponent implements OnInit, OnDestroy {
 	@ViewChild('postFormImageDialog') postFormImageDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	category: Category | undefined;
-	categorySkeletonToggle: boolean = false;
+	categorySkeletonToggle: boolean = true;
 
 	categoryList: Category[] = [];
 	categoryListRequest$: Subscription | undefined;
-	categoryListSkeletonToggle: boolean = false;
+	categoryListSkeletonToggle: boolean = true;
 
 	post: Post | undefined;
 	postRequest$: Subscription | undefined;
-	postSkeletonToggle: boolean = false;
+	postSkeletonToggle: boolean = true;
 
 	postForm: FormGroup | undefined;
 	postFormRequest$: Subscription | undefined;

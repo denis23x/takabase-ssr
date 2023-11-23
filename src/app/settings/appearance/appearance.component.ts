@@ -75,7 +75,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	appearanceThemePrismList: string[] = [];
 	appearanceThemePrismMarkdown: string | undefined;
 	appearanceThemePrismMarkdown$: Subscription | undefined;
-	appearanceThemePrismMarkdownSkeleton: boolean = true;
+	appearanceThemePrismMarkdownSkeletonToggle: boolean = true;
 	appearanceThemePrismPreviewToggle: boolean = false;
 
 	appearanceLanguageList: string[] = ['en-US'];
@@ -224,7 +224,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: (prose: string) => {
 						this.appearanceThemePrismMarkdown = prose;
-						this.appearanceThemePrismMarkdownSkeleton = false;
+						this.appearanceThemePrismMarkdownSkeletonToggle = false;
 					},
 					error: (error: any) => console.error(error)
 				});
