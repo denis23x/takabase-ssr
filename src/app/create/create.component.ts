@@ -278,6 +278,9 @@ export class CreateComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 		} else {
+			this.post = undefined;
+			this.postSkeletonToggle = false;
+
 			this.category = undefined;
 			this.categorySkeletonToggle = false;
 		}

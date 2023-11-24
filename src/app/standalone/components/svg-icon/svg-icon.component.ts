@@ -30,7 +30,7 @@ export class SvgIconComponent {
 
 	@Input()
 	set appSvgIconIcon(icon: string) {
-		this.icon = icon;
+		this.icon = '#' + icon;
 	}
 
 	square: string | undefined;
