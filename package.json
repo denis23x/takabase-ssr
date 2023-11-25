@@ -10,7 +10,7 @@
     "start:deploy": "firebase use draft-ssr && firebase deploy --only functions,hosting",
     "start:lint": "ng lint",
     "build:ssr:prod": "ng run draft-ssr:prerender:production && ng run draft-ssr:server:production",
-    "build:spite": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --stripAttrs class --stripAttrs fill",
+    "build:spite": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --stripAttrs class --stripAttrs fill && node sprite && prettier --write src/index.html --log-level silent",
     "build:sitemap": "node sitemap.js",
     "dist:start": "node dist/draft-ssr/server/main.js",
     "dist:analyze": "webpack-bundle-analyzer dist/draft-ssr/browser/stats.json"
@@ -85,6 +85,7 @@
     "eslint": "^8.44.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0-alpha.2",
+    "jsdom": "^22.1.0",
     "npm-check-updates": "^16.10.15",
     "postcss": "^8.4.18",
     "prettier": "^3.0.0",
