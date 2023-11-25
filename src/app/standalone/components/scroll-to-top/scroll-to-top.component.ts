@@ -35,7 +35,9 @@ export class ScrollToTopComponent implements OnInit, OnDestroy {
 				this.windowScrollToTopToggleValue = window.innerHeight * 2;
 				this.windowScroll$?.unsubscribe();
 
-				if (Number(this.cookieService.getItem('page-scroll-to-top'))) {
+				const pageScrollToTop: boolean = !!Number(this.cookieService.getItem('page-scroll-to-top'));
+
+				if (pageScrollToTop) {
 					this.windowScroll$ = fromEvent(window, 'scroll')
 						.pipe(
 							debounceTime(10),

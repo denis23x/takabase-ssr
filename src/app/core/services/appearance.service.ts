@@ -6,8 +6,6 @@ import { PlatformService } from './platform.service';
 import { HttpClient } from '@angular/common/http';
 import { from, fromEvent, Observable, of, switchMap } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
-import { Route, Router, Routes } from '@angular/router';
-import { routesRedirect } from '../../app.routing.module';
 import { Appearance } from '../models/appearance.model';
 import { HelperService } from './helper.service';
 import { CookieService } from './cookie.service';
@@ -33,7 +31,6 @@ export class AppearanceService {
 		private document: Document,
 		private platformService: PlatformService,
 		private httpClient: HttpClient,
-		private router: Router,
 		private meta: Meta,
 		private helperService: HelperService,
 		private cookieService: CookieService,
@@ -99,8 +96,6 @@ export class AppearanceService {
 				this.cookieService.removeItem(this.helperService.setCamelCaseToDashCase(key));
 			});
 		}
-
-		this.setPageRedirectHome();
 
 		/** Set theme settings */
 
@@ -203,22 +198,6 @@ export class AppearanceService {
 		}
 
 		return of(false);
-	}
-
-	setPageRedirectHome(): void {
-		const previousConfig: Routes = this.router.config;
-		const previousHome: Route = previousConfig.find((route: Route) => {
-			return route.path === '';
-		});
-
-		const nextConfig: Routes = routesRedirect(previousConfig);
-		const nextHome: Route = nextConfig.find((route: Route) => {
-			return route.path === '';
-		});
-
-		if (previousHome.redirectTo !== nextHome.redirectTo) {
-			this.router.resetConfig(nextConfig);
-		}
 	}
 
 	/** Firestore */

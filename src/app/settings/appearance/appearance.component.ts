@@ -26,7 +26,6 @@ import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 import { HttpClient } from '@angular/common/http';
 import { PlatformService } from '../../core/services/platform.service';
-import { CookieService } from '../../core/services/cookie.service';
 import firebase from 'firebase/compat';
 
 interface AppearanceForm {
@@ -88,8 +87,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		private httpClient: HttpClient,
 		private appearanceService: AppearanceService,
 		private authorizationService: AuthorizationService,
-		private platformService: PlatformService,
-		private cookieService: CookieService
+		private platformService: PlatformService
 	) {
 		this.appearanceForm = this.formBuilder.group<AppearanceForm>({
 			theme: this.formBuilder.nonNullable.control('', [Validators.required]),
@@ -132,14 +130,6 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 				// prettier-ignore
 				const appearanceCollectionUpdate$: Observable<void> = from(this.appearanceCollection.ref.update(appearance));
-
-				/** Set cookie for redirect from home */
-
-				if (appearance.pageRedirectHome) {
-					this.cookieService.setItem('page-redirect-home-to-profile', this.currentUser.name);
-				} else {
-					this.cookieService.removeItem('page-redirect-home-to-profile');
-				}
 
 				/** Firestore */
 

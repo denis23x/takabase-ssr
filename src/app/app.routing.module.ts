@@ -1,10 +1,10 @@
 /** @format */
 
 import { NgModule } from '@angular/core';
-import { Route, RouterModule, Routes, TitleStrategy, UrlSegment } from '@angular/router';
-import { CanMatchPublicGuard } from './core/guards/public-guard.service';
-import { CanMatchPrivateGuard } from './core/guards/private-guard.service';
+import { RouterModule, Routes, TitleStrategy, UrlMatchResult, UrlSegment } from '@angular/router';
 import { TitleService } from './core/services/title.service';
+import { redirectCurrentUserGuard } from './core/guards/redirect-current-user-guard.service';
+import { redirectHomeGuard } from './core/guards/redirect-home-guard.service';
 
 export const routes: Routes = [
 	{
@@ -47,7 +47,7 @@ export const routes: Routes = [
 		loadComponent: () => {
 			return import('./authorization/login/login.component').then(m => m.AuthLoginComponent);
 		},
-		canMatch: [CanMatchPublicGuard]
+		canMatch: [redirectCurrentUserGuard(true)]
 	},
 	{
 		path: 'registration',
@@ -56,7 +56,7 @@ export const routes: Routes = [
 			// prettier-ignore
 			return import('./authorization/registration/registration.component').then(m => m.AuthRegistrationComponent);
 		},
-		canMatch: [CanMatchPublicGuard]
+		canMatch: [redirectCurrentUserGuard(true)]
 	},
 	{
 		path: 'reset',
@@ -64,7 +64,7 @@ export const routes: Routes = [
 		loadComponent: () => {
 			return import('./authorization/reset/reset.component').then(m => m.AuthResetComponent);
 		},
-		canMatch: [CanMatchPublicGuard]
+		canMatch: [redirectCurrentUserGuard(true)]
 	},
 	{
 		path: 'terms',
@@ -112,7 +112,7 @@ export const routes: Routes = [
 		loadComponent: () => {
 			return import('./create/create.component').then(m => m.CreateComponent);
 		},
-		canMatch: [CanMatchPrivateGuard]
+		canMatch: [redirectCurrentUserGuard(false)]
 	},
 	{
 		path: 'update/:postId',
@@ -120,7 +120,7 @@ export const routes: Routes = [
 		loadComponent: () => {
 			return import('./create/create.component').then(m => m.CreateComponent);
 		},
-		canMatch: [CanMatchPrivateGuard]
+		canMatch: [redirectCurrentUserGuard(false)]
 	},
 	{
 		path: 'search',
@@ -171,7 +171,7 @@ export const routes: Routes = [
 		loadComponent: () => {
 			return import('./settings/settings.component').then(m => m.SettingsComponent);
 		},
-		canMatch: [CanMatchPrivateGuard],
+		canMatch: [redirectCurrentUserGuard(false)],
 		children: [
 			{
 				path: '',
@@ -205,7 +205,28 @@ export const routes: Routes = [
 		]
 	},
 	{
-		matcher: (urlSegment: UrlSegment[]) => {
+		path: 'error/:status',
+		loadComponent: () => {
+			return import('./error/error.component').then(m => m.ErrorComponent);
+		}
+	},
+	{
+		matcher: (urlSegment: UrlSegment[]): UrlMatchResult | null => {
+			if (urlSegment.length === 0) {
+				return {
+					consumed: urlSegment
+				};
+			}
+
+			return null;
+		},
+		canMatch: [redirectHomeGuard()],
+		loadComponent: () => {
+			return import('./home/home.component').then(m => m.HomeComponent);
+		}
+	},
+	{
+		matcher: (urlSegment: UrlSegment[]): UrlMatchResult | null => {
 			if (urlSegment.length >= 1 && urlSegment[0].path.match(/^@\S+$/gm)) {
 				return {
 					consumed: urlSegment.slice(0, 1),
@@ -293,62 +314,15 @@ export const routes: Routes = [
 		]
 	},
 	{
-		path: 'error/:status',
-		loadComponent: () => {
-			return import('./error/error.component').then(m => m.ErrorComponent);
-		}
-	},
-	{
 		path: '**',
 		pathMatch: 'full',
 		redirectTo: '/error/404'
 	}
 ];
 
-export const routesRedirect = (routes: Routes): Routes => {
-	const getCookie = (cookieName: string): string | undefined => {
-		const result: any = {};
-
-		if (typeof window === 'object') {
-			document.cookie.split(';').forEach((cookie: string) => {
-				const [key, value]: string[] = cookie.split('=');
-
-				result[key.trim()] = value;
-			});
-		}
-
-		return result[cookieName];
-	};
-
-	/** Remove home if it's already exists */
-
-	routes = routes.filter((route: Route) => route.path !== '');
-
-	/** Make new home */
-
-	const routeHome: Route = {
-		path: '',
-		title: 'Home'
-	};
-
-	const pageRedirectHome: number = Number(getCookie('page-redirect-home'));
-	const pageRedirectHomeToProfile: string = String(getCookie('page-redirect-home-to-profile'));
-
-	if (pageRedirectHome) {
-		routeHome.redirectTo = '@' + pageRedirectHomeToProfile;
-		routeHome.pathMatch = 'full';
-	} else {
-		routeHome.loadComponent = () => {
-			return import('./home/home.component').then(m => m.HomeComponent);
-		};
-	}
-
-	return [routeHome, ...routes];
-};
-
 @NgModule({
 	imports: [
-		RouterModule.forRoot(routesRedirect(routes), {
+		RouterModule.forRoot(routes, {
 			anchorScrolling: 'disabled',
 			scrollPositionRestoration: 'disabled',
 			initialNavigation: 'enabledBlocking'
