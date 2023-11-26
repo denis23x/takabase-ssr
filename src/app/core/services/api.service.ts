@@ -18,7 +18,7 @@ export class ApiService {
 	) {}
 
 	setUrl(url: string): string {
-		return environment.API_URL + url;
+		return environment.apiUrl + url;
 	}
 
 	setError(httpError: any): Observable<never> {

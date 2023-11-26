@@ -5,7 +5,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-	API_URL: 'http://localhost:4400/api/v1',
+	appUrl: 'http://localhost:4200',
+	apiUrl: 'http://localhost:4400/api/v1',
 	pwa: false,
 	production: false,
 	firebase: {

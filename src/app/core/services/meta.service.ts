@@ -2,9 +2,9 @@
 
 import { Inject, Injectable } from '@angular/core';
 import { Meta, MetaDefinition } from '@angular/platform-browser';
-import { PlatformService } from './platform.service';
 import { DOCUMENT } from '@angular/common';
 import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,26 +13,21 @@ export class MetaService {
 	constructor(
 		@Inject(DOCUMENT)
 		private document: Document,
-		private meta: Meta,
-		private platformService: PlatformService
+		private meta: Meta
 	) {}
 
 	setCanonicalURL(): void {
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
+		const linkElement: HTMLLinkElement = this.document.querySelector("link[rel='canonical']");
 
-			const linkElement: HTMLLinkElement = this.document.querySelector("link[rel='canonical']");
+		if (linkElement) {
+			linkElement.setAttribute('href', this.document.URL);
+		} else {
+			const linkElement: HTMLLinkElement = this.document.createElement('link');
 
-			if (linkElement) {
-				linkElement.setAttribute('href', window.location.href);
-			} else {
-				const linkElement: HTMLLinkElement = this.document.createElement('link');
+			linkElement.setAttribute('rel', 'canonical');
+			linkElement.setAttribute('href', this.document.URL);
 
-				linkElement.setAttribute('rel', 'canonical');
-				linkElement.setAttribute('href', window.location.href);
-
-				this.document.head.appendChild(linkElement);
-			}
+			this.document.head.appendChild(linkElement);
 		}
 	}
 
@@ -66,26 +61,22 @@ export class MetaService {
 
 		/** Set new meta */
 
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
+		metaOpenGraph = {
+			...metaOpenGraph,
+			['og:url']: environment.appUrl,
+			['og:locale']: 'en_US',
+			['og:site_name']: 'Draft'
+		};
 
-			metaOpenGraph = {
-				...metaOpenGraph,
-				['og:url']: window.location.href,
-				['og:locale']: 'en_US',
-				['og:site_name']: 'Draft'
-			};
+		/** Image absent case */
 
-			/** Image absent case */
+		const metaOpenGraphImage: string[] = ['og:image', 'og:image:alt', 'og:image:type'];
 
-			const metaOpenGraphImage: string[] = ['og:image', 'og:image:alt', 'og:image:type'];
-
-			// prettier-ignore
-			if (metaOpenGraphImage.some((tag: string) => !metaOpenGraph[tag])) {
-				metaOpenGraph['og:image'] = window.location.origin + '/assets/angular.svg';
-				metaOpenGraph['og:image:alt'] = 'Stay up to date with the latest posts and insights from Draft';
-				metaOpenGraph['og:image:type'] = 'image/svg';
-			}
+		// prettier-ignore
+		if (metaOpenGraphImage.some((tag: string) => !metaOpenGraph[tag])) {
+			metaOpenGraph['og:image'] = environment.appUrl + '/assets/meta.jpg';
+			metaOpenGraph['og:image:alt'] = 'Stay up to date with the latest posts and insights from Draft';
+			metaOpenGraph['og:image:type'] = 'image/svg';
 		}
 
 		Object.keys(metaOpenGraph).forEach((key: string) => {
@@ -135,15 +126,23 @@ export class MetaService {
 
 		/** Set new meta */
 
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
+		const url: URL = new URL(environment.appUrl);
 
-			metaTwitter = {
-				...metaTwitter,
-				['twitter:card']: 'summary',
-				['twitter:domain']: window.location.hostname,
-				['twitter:url']: window.location.href
-			};
+		metaTwitter = {
+			...metaTwitter,
+			['twitter:card']: 'summary',
+			['twitter:domain']: url.host,
+			['twitter:url']: environment.appUrl
+		};
+
+		/** Image absent case */
+
+		const metaTwitterImage: string[] = ['twitter:image', 'twitter:image:alt'];
+
+		// prettier-ignore
+		if (metaTwitterImage.some((tag: string) => !metaTwitter[tag])) {
+			metaTwitterImage['twitter:image'] = environment.appUrl + '/assets/meta.jpg';
+			metaTwitterImage['twitter:image:alt'] = 'Stay up to date with the latest posts and insights from Draft';
 		}
 
 		Object.keys(metaTwitter).forEach((key: string) => {

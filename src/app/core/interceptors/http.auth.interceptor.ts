@@ -20,7 +20,7 @@ export class HttpAuthInterceptor implements HttpInterceptor {
 
 	private handleRequest(request: HttpRequest<any>): HttpRequest<any> {
 		const isMethodMatch: boolean = ['POST', 'PUT', 'DELETE'].includes(request.method);
-		const isUrlMatch: boolean = request.url.startsWith(environment.API_URL);
+		const isUrlMatch: boolean = request.url.startsWith(environment.apiUrl);
 
 		if (isMethodMatch && isUrlMatch) {
 			const currentUser: CurrentUser = this.authorizationService.currentUser.getValue();

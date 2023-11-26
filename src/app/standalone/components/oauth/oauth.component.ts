@@ -11,5 +11,5 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 	templateUrl: './oauth.component.html'
 })
 export class OauthComponent {
-	apiUrl: string = environment.API_URL;
+	apiUrl: string = environment.apiUrl;
 }

@@ -1,7 +1,8 @@
 /** @format */
 
 export const environment = {
-	API_URL: 'https://draft-api.web.app/api/v1',
+	appUrl: 'https://draft-ssr.web.app',
+	apiUrl: 'https://draft-api.web.app/api/v1',
 	pwa: true,
 	production: true,
 	firebase: {
