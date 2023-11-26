@@ -9,6 +9,7 @@ import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription, throwError } from 'rxjs';
+import { PlatformService } from '../core/services/platform.service';
 
 @Component({
 	selector: 'app-abstract-post-details',
@@ -28,7 +29,8 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 		public activatedRoute: ActivatedRoute,
 		public router: Router,
 		public postService: PostService,
-		public skeletonService: SkeletonService
+		public skeletonService: SkeletonService,
+		public platformService: PlatformService
 	) {}
 
 	ngOnInit(): void {
@@ -38,15 +40,19 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 	}
 
 	ngOnDestroy(): void {
-		[this.abstractPostRequest$].forEach(($: Subscription) => $.unsubscribe());
+		[this.abstractPostRequest$].forEach(($: Subscription) => $?.unsubscribe());
 
 		this.setAbstractPostProseDialogClose(false);
 	}
 
 	setAbstractSkeleton(): void {
-		this.abstractPost = this.skeletonService.getPost(['category', 'user']);
-		this.abstractPostSkeletonToggle = true;
-		this.abstractPostProseDialog.nativeElement.showModal();
+		/** Avoid SSR issue NotYetImplemented */
+
+		if (this.platformService.isBrowser()) {
+			this.abstractPost = this.skeletonService.getPost(['category', 'user']);
+			this.abstractPostSkeletonToggle = true;
+			this.abstractPostProseDialog.nativeElement.showModal();
+		}
 	}
 
 	getAbstractPost(postId: number, postGetOneDto: PostGetOneDto): void {
@@ -74,19 +80,23 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 	}
 
 	setAbstractPostProseDialogClose(redirect: boolean = true): void {
-		this.abstractPost = undefined;
-		this.abstractPostProseDialog.nativeElement.close();
+		/** Avoid SSR issue NotYetImplemented */
 
-		this.postService.removePostMeta();
-		this.postService.removePostTitle();
+		if (this.platformService.isBrowser()) {
+			this.abstractPost = undefined;
+			this.abstractPostProseDialog.nativeElement.close();
 
-		if (redirect) {
-			this.router
-				.navigate(['..'], {
-					relativeTo: this.activatedRoute,
-					queryParamsHandling: 'preserve'
-				})
-				.then(() => console.debug('Route changed'));
+			this.postService.removePostMeta();
+			this.postService.removePostTitle();
+
+			if (redirect) {
+				this.router
+					.navigate(['..'], {
+						relativeTo: this.activatedRoute,
+						queryParamsHandling: 'preserve'
+					})
+					.then(() => console.debug('Route changed'));
+			}
 		}
 	}
 }

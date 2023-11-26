@@ -1,7 +1,7 @@
 /** @format */
 
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 
 /**
  * Window provider is based on
@@ -21,6 +21,10 @@ export class PlatformService {
 
 	isBrowser(): boolean {
 		return isPlatformBrowser(this.platformId);
+	}
+
+	isServer(): boolean {
+		return isPlatformServer(this.platformId);
 	}
 
 	getWindow(): Window {

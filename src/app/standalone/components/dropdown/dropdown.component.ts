@@ -174,6 +174,9 @@ export class DropdownComponent implements OnInit, OnDestroy {
 			if (emit) {
 				this.appDropdownToggle.emit(this.dropdownState);
 			}
+		} else {
+			this.dropdownContent.style['position'] = 'fixed';
+			this.dropdownContent.style['visibility'] = 'hidden';
 		}
 	}
 }

@@ -36,10 +36,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	ngAfterViewInit(): void {
+		// TODO: update set loader
 		this.appearanceService.setLoader(false);
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$].forEach(($: Subscription) => $.unsubscribe());
+		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 }

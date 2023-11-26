@@ -14,10 +14,10 @@ import { PlatformService } from '../../../core/services/platform.service';
 })
 export class AvatarComponent {
 	@Input()
-	set appAvatarUser(user: User) {
+	set appAvatarUser(user: User | undefined) {
 		this.user = user;
 
-		if (this.user.avatar) {
+		if (this.user?.avatar) {
 			this.setImage();
 		} else {
 			this.setIcon();
