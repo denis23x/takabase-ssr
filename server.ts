@@ -62,6 +62,16 @@ export function app(): express.Express {
 
 	// All regular routes use the Universal engine
 	server.get('*', (req, res) => {
+		// Send file loader if restricted
+
+		const loaderPath = ['/confirmation', '/create', '/update', '/settings'];
+
+		if (loaderPath.find(path => req.originalUrl.includes(path))) {
+			return res.sendFile(join(distFolder, 'loader', 'index.html'));
+		}
+
+		// Send file if full match
+
 		const fullPath = join(distFolder, req.originalUrl);
 
 		if (existsSync(fullPath)) {

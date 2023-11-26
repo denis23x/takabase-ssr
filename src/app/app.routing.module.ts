@@ -211,6 +211,12 @@ export const routes: Routes = [
 		}
 	},
 	{
+		path: 'loader',
+		loadComponent: () => {
+			return import('./loader/loader.component').then(m => m.LoaderComponent);
+		}
+	},
+	{
 		matcher: (urlSegment: UrlSegment[]): UrlMatchResult | null => {
 			if (urlSegment.length === 0) {
 				return {

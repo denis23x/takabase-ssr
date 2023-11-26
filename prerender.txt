@@ -1,12 +1,10 @@
 /
+/loader
 /login
 /registration
 /reset
-/confirmation/email
-/confirmation/password
-/confirmation/recovery
 /error/500
-/error/400
+/error/404
 /search/categories
 /search/posts
 /search/users
