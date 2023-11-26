@@ -8,7 +8,6 @@
       "resources": {
         "files": [
           "/favicon.ico",
-          "/index.html",
           "/manifest.webmanifest",
           "/*.css",
           "/*.js"
@@ -25,7 +24,6 @@
           "/assets/emoji/**",
           "/assets/grammars/**",
           "/assets/icons/favicon/**",
-          "/assets/icons/sprite.svg",
           "/assets/markdown/**"
         ]
       }

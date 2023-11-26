@@ -9,6 +9,10 @@
     &:focus-within {
       @apply outline-success;
     }
+
+    .textarea {
+      @apply caret-success;
+    }
   }
 
   &.textarea-autosize-error {
@@ -16,6 +20,10 @@
 
     &:focus-within {
       @apply outline-error;
+    }
+
+    .textarea {
+      @apply caret-error;
     }
   }
 

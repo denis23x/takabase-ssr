@@ -9,4 +9,14 @@
       @apply hidden;
     }
   }
+
+  /* Caret */
+
+  &.input-success {
+    @apply caret-success;
+  }
+
+  &.input-error {
+    @apply caret-error;
+  }
 }

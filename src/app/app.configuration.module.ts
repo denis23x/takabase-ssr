@@ -23,8 +23,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 		BrowserModule.withServerTransition({ appId: 'serverApp' }),
 		AppRoutingModule,
 		ServiceWorkerModule.register('ngsw-worker.js', {
-			// enabled: environment.pwa,
-			enabled: false,
+			enabled: environment.pwa,
 			registrationStrategy: 'registerWhenStable:30000'
 		}),
 		provideFirebaseApp(() => initializeApp()),
