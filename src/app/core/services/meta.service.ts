@@ -4,7 +4,6 @@ import { Inject, Injectable } from '@angular/core';
 import { Meta, MetaDefinition } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
-import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -55,6 +54,8 @@ export class MetaService {
 	}
 
 	setMetaOpenGraph(metaOpenGraph: MetaOpenGraph): void {
+		const url: URL = new URL(this.document.URL);
+
 		/** Clear all meta before setting */
 
 		this.removeMetaOpenGraph(this.getMetaOpenGraph());
@@ -63,7 +64,7 @@ export class MetaService {
 
 		metaOpenGraph = {
 			...metaOpenGraph,
-			['og:url']: environment.appUrl,
+			['og:url']: this.document.URL,
 			['og:locale']: 'en_US',
 			['og:site_name']: 'Draft'
 		};
@@ -74,7 +75,7 @@ export class MetaService {
 
 		// prettier-ignore
 		if (metaOpenGraphImage.some((tag: string) => !metaOpenGraph[tag])) {
-			metaOpenGraph['og:image'] = environment.appUrl + '/assets/meta.jpg';
+			metaOpenGraph['og:image'] = url.origin + '/assets/meta.jpg';
 			metaOpenGraph['og:image:alt'] = 'Stay up to date with the latest posts and insights from Draft';
 			metaOpenGraph['og:image:type'] = 'image/svg';
 		}
@@ -120,19 +121,19 @@ export class MetaService {
 	}
 
 	setMetaTwitter(metaTwitter: MetaTwitter): void {
+		const url: URL = new URL(this.document.URL);
+
 		/** Clear all meta before setting */
 
 		this.removeMetaTwitter(this.getMetaTwitter());
 
 		/** Set new meta */
 
-		const url: URL = new URL(environment.appUrl);
-
 		metaTwitter = {
 			...metaTwitter,
 			['twitter:card']: 'summary',
 			['twitter:domain']: url.host,
-			['twitter:url']: environment.appUrl
+			['twitter:url']: this.document.URL
 		};
 
 		/** Image absent case */
@@ -141,7 +142,7 @@ export class MetaService {
 
 		// prettier-ignore
 		if (metaTwitterImage.some((tag: string) => !metaTwitter[tag])) {
-			metaTwitterImage['twitter:image'] = environment.appUrl + '/assets/meta.jpg';
+			metaTwitterImage['twitter:image'] = url.origin + '/assets/meta.jpg';
 			metaTwitterImage['twitter:image:alt'] = 'Stay up to date with the latest posts and insights from Draft';
 		}
 

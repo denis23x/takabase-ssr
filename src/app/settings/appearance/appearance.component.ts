@@ -193,13 +193,13 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 			return this.getTransformListValue(theme, 'theme');
 		});
 
-		this.appearanceThemeBackgroundList = environment.backgrounds
-			.sort()
-			.map((themeBackground: string) => {
-				return this.getTransformListValue(themeBackground, 'themeBackground');
-			});
+		// prettier-ignore
+		this.appearanceThemeBackgroundList = environment.backgrounds.sort().map((themeBackground: string) => {
+      return this.getTransformListValue(themeBackground, 'themeBackground');
+    });
 
-		this.appearanceThemePrismList = environment.prism.themes.sort().map((themePrism: string) => {
+		// prettier-ignore
+		this.appearanceThemePrismList = ['auto', ...environment.prism.themes.sort()].map((themePrism: string) => {
 			return this.getTransformListValue(themePrism, 'themePrism');
 		});
 	}

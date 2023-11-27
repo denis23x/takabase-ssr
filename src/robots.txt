@@ -1,7 +1,10 @@
 User-agent: *
-
+Disallow: /loader
 Disallow: /create
 Disallow: /update/*
 Disallow: /settings/*
 
-Sitemap: http://localhost:4200/sitemap.xml
+User-agent: *
+Allow: /
+
+Sitemap: https://draft-ssr.web.app/sitemap.xml
