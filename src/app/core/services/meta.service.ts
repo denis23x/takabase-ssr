@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Meta, MetaDefinition } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -16,17 +17,13 @@ export class MetaService {
 	) {}
 
 	setCanonicalURL(): void {
-		const linkElement: HTMLLinkElement = this.document.querySelector("link[rel='canonical']");
+		const url: URL = new URL(this.document.URL, environment.appUrl);
+		const urlCanonical: HTMLLinkElement = this.document.querySelector("link[rel='canonical']");
 
-		if (linkElement) {
-			linkElement.setAttribute('href', this.document.URL);
+		if (url.pathname.startsWith('/search')) {
+			urlCanonical?.setAttribute('href', url.href.replace(url.pathname, '/search'));
 		} else {
-			const linkElement: HTMLLinkElement = this.document.createElement('link');
-
-			linkElement.setAttribute('rel', 'canonical');
-			linkElement.setAttribute('href', this.document.URL);
-
-			this.document.head.appendChild(linkElement);
+			urlCanonical?.setAttribute('href', url.href);
 		}
 	}
 
@@ -54,7 +51,7 @@ export class MetaService {
 	}
 
 	setMetaOpenGraph(metaOpenGraph: MetaOpenGraph): void {
-		const url: URL = new URL(this.document.URL);
+		const url: URL = new URL(this.document.URL, environment.appUrl);
 
 		/** Clear all meta before setting */
 
@@ -64,7 +61,7 @@ export class MetaService {
 
 		metaOpenGraph = {
 			...metaOpenGraph,
-			['og:url']: this.document.URL,
+			['og:url']: url.href,
 			['og:locale']: 'en_US',
 			['og:site_name']: 'Draft'
 		};
@@ -121,7 +118,7 @@ export class MetaService {
 	}
 
 	setMetaTwitter(metaTwitter: MetaTwitter): void {
-		const url: URL = new URL(this.document.URL);
+		const url: URL = new URL(this.document.URL, environment.appUrl);
 
 		/** Clear all meta before setting */
 
@@ -133,7 +130,7 @@ export class MetaService {
 			...metaTwitter,
 			['twitter:card']: 'summary',
 			['twitter:domain']: url.host,
-			['twitter:url']: this.document.URL
+			['twitter:url']: url.href
 		};
 
 		/** Image absent case */
