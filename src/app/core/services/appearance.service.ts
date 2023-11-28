@@ -124,7 +124,7 @@ export class AppearanceService {
 		this.setThemeColor(theme);
 	}
 
-	setThemeColor(theme: string | null): void {
+	setThemeColor(themeColor: string | null): void {
 		const name: string = 'theme-color';
 
 		const selectorDark: string = 'media="(prefers-color-scheme: dark)"';
@@ -132,7 +132,7 @@ export class AppearanceService {
 
 		/** https://css-tricks.com/meta-theme-color-and-trickery/ */
 
-		if (theme && theme !== 'auto') {
+		if (themeColor && themeColor !== 'auto') {
 			const content: string = this.getCSSColor('--b2', 'hex');
 
 			/** Set */
@@ -173,12 +173,33 @@ export class AppearanceService {
 
 	setThemePrism(themePrism: string | null): void {
 		// prettier-ignore
-		const prismElement: HTMLLinkElement | null = this.document.querySelector('[data-theme-prism]') as HTMLLinkElement;
-		const prismValue: string = themePrism || 'default';
+		const setPrismLink = (theme: string): void => {
+			const linkElement: HTMLLinkElement | null = this.document.querySelector('[data-theme-prism]');
+      const linkElementUpdate: boolean = linkElement.dataset.themePrism !== theme
 
-		if (prismElement.dataset.themePrism !== prismValue) {
-			prismElement.href = 'prism-' + prismValue + '.css';
-			prismElement.dataset.themePrism = prismValue;
+			if (linkElementUpdate) {
+        linkElement.href = 'prism-' + theme + '.css';
+        linkElement.dataset.themePrism = theme;
+			}
+		};
+
+		if (themePrism && themePrism !== 'auto') {
+			setPrismLink(themePrism);
+		} else {
+			if (this.platformService.isBrowser()) {
+				const window: Window = this.platformService.getWindow();
+
+				const schemeDark: MediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
+				const schemeLight: MediaQueryList = window.matchMedia('(prefers-color-scheme: light)');
+
+				if (schemeDark.matches) {
+					setPrismLink('one-dark');
+				}
+
+				if (schemeLight.matches) {
+					setPrismLink('one-light');
+				}
+			}
 		}
 	}
 
@@ -223,7 +244,7 @@ export class AppearanceService {
 							pageScrollToTop: false,
 							theme: 'auto',
 							themeBackground: 'slanted-gradient',
-							themePrism: 'default',
+							themePrism: 'auto',
 							windowButtonPosition: 'left'
 						};
 

@@ -28,7 +28,7 @@
   }
 
   img {
-    @apply m-0;
+    @apply bg-base-300 m-0;
 
     &:not(.mask) {
       @apply rounded-box;
