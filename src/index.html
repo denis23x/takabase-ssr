@@ -73,7 +73,7 @@
 				/** Define appearance */
 
 				function setTheme(theme) {
-					if (theme !== "auto") {
+					if (theme && theme !== "auto") {
 						document.documentElement.setAttribute("data-theme", theme)
 					}
 
@@ -136,7 +136,7 @@
 						}
 					}
 
-					if (themePrism !== "auto") {
+					if (themePrism && themePrism !== "auto") {
 						setPrismLink(themePrism)
 					} else {
 						setPrismLink(getSchemeMatches())
@@ -144,7 +144,9 @@
 
 					schemeList.forEach((isMedia) => {
 						isMedia.addEventListener("change", () => {
-							if (getCookie("theme-prism") === "auto") {
+							const theme = getCookie("theme-prism")
+
+							if (theme === undefined || (theme && theme === "auto")) {
 								setPrismLink(getSchemeMatches())
 							}
 						})
@@ -154,6 +156,7 @@
 				function setThemeBackground(themeBackground) {
 					const backgroundElement = document.querySelector("[data-theme-background]")
 
+					// TODO: update
 					if (backgroundElement.dataset.themeBackground !== themeBackground) {
 						fetch("/assets/backgrounds/" + themeBackground + ".svg", {
 							cache: "force-cache",
