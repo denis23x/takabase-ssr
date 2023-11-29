@@ -3,7 +3,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { filter, skip, tap } from 'rxjs/operators';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilKeyChanged, Subscription } from 'rxjs';
 import { PostService } from '../core/services/post.service';
 import { CookieService } from '../core/services/cookie.service';
 import { AppearanceService } from '../core/services/appearance.service';
@@ -21,10 +21,14 @@ import { SearchService } from '../core/services/search.service';
 export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
+	activatedRouteParams$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
 
-	abstractPage: number = 1;
-	abstractSize: number = 20;
+	abstractPageDefault: number = 1;
+	abstractSizeDefault: number = 20;
+
+	abstractPage: number = null;
+	abstractSize: number = null;
 
 	abstractList: any[] = [];
 	abstractListRequest$: Subscription | undefined;
@@ -49,6 +53,9 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
+		this.abstractPage = this.abstractPageDefault;
+		this.abstractSize = this.abstractSizeDefault;
+
 		/** Apply Data */
 
 		this.setAbstractResolver();
@@ -60,6 +67,7 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[
+			this.activatedRouteParams$,
 			this.activatedRouteQueryParams$,
 			this.abstractListRequest$,
 			this.abstractListPageScrollInfinite$
@@ -69,14 +77,28 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 	}
 
 	setAbstractResolver(): void {
+		// Reset partial of getAllDto when change categoryId
+
+		this.activatedRouteParams$?.unsubscribe();
+		this.activatedRouteParams$ = this.activatedRoute.params
+			.pipe(skip(1), distinctUntilKeyChanged('categoryId'))
+			.subscribe({
+				next: () => {
+					this.abstractPage = this.abstractPageDefault;
+					this.abstractSize = this.abstractSizeDefault;
+				},
+				error: (error: any) => console.error(error)
+			});
+
 		// Get abstractList by search queryParams
 
+		this.activatedRouteQueryParams$?.unsubscribe();
 		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
 			.pipe(
 				skip(1),
 				tap(() => {
-					this.abstractPage = 1;
-					this.abstractSize = 20;
+					this.abstractPage = this.abstractPageDefault;
+					this.abstractSize = this.abstractSizeDefault;
 
 					this.abstractList = [];
 					this.abstractListHasMore = false;
@@ -93,6 +115,7 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 		this.abstractListPageScrollInfinite = !!Number(this.cookieService.getItem('page-scroll-infinite'));
 
 		if (this.abstractListPageScrollInfinite) {
+			this.abstractListPageScrollInfinite$?.unsubscribe();
 			this.abstractListPageScrollInfinite$ = this.appearanceService
 				.setPageScrollInfinite()
 				.pipe(filter(() => this.abstractListHasMore && !this.abstractListIsLoading$.getValue()))
