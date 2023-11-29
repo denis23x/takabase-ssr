@@ -1,9 +1,9 @@
 /** @format */
 
-import { Component, ElementRef, Input } from '@angular/core';
+import { Component, ElementRef, Inject, Input } from '@angular/core';
 import { toSvg } from 'jdenticon';
 import { User } from '../../../core/models/user.model';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { PlatformService } from '../../../core/services/platform.service';
 
 @Component({
@@ -27,12 +27,24 @@ export class AvatarComponent {
 	user: User | undefined;
 
 	constructor(
+		@Inject(DOCUMENT)
+		private document: Document,
 		private elementRef: ElementRef,
 		private platformService: PlatformService
 	) {}
 
 	setImage(): void {
-		this.elementRef.nativeElement.querySelector('svg')?.remove();
+		if (this.platformService.isBrowser()) {
+			const elementRef: HTMLElement = this.elementRef.nativeElement;
+			const elementImage: HTMLImageElement = this.document.createElement('img');
+
+			elementImage.classList.add('bg-base-300');
+			elementImage.loading = 'lazy';
+			elementImage.src = this.user.avatar;
+			elementImage.alt = this.user.name;
+
+			elementRef.innerHTML = elementImage.outerHTML;
+		}
 	}
 
 	setIcon(): void {
@@ -46,7 +58,7 @@ export class AvatarComponent {
 				replaceMode: 'observe'
 			});
 
-			elementRef.insertAdjacentHTML('afterbegin', elementIcon);
+			elementRef.innerHTML = elementIcon;
 		}
 	}
 }

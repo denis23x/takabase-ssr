@@ -70,11 +70,11 @@ export class AppTextareaAutosizeDirective implements AfterViewInit, OnDestroy {
 			}
 
 			if (method === 'update') {
-				window.autosize.update(windowTextarea);
+				setTimeout(() => window.autosize.update(windowTextarea));
 			}
 
 			if (method === 'destroy') {
-				window.autosize.destroy(windowTextarea);
+				setTimeout(() => window.autosize.destroy(windowTextarea));
 			}
 
 			// Save current state of autosize
