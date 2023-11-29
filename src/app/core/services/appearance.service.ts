@@ -132,15 +132,22 @@ export class AppearanceService {
 
 		/** https://css-tricks.com/meta-theme-color-and-trickery/ */
 
-		const content: string = this.getCSSColor('--b2', 'hex');
-
-		this.meta.updateTag({ name, content }, selectorDark);
-		this.meta.updateTag({ name, content }, selectorLight);
-
 		if (themeColor && themeColor !== 'auto') {
+			const content: string = this.getCSSColor('--b2', 'hex');
+
+			/** Set */
+
 			this.cookieService.setItem(name, content);
+
+			this.meta.updateTag({ name, content }, selectorDark);
+			this.meta.updateTag({ name, content }, selectorLight);
 		} else {
+			/** Remove */
+
 			this.cookieService.removeItem(name);
+
+			this.meta.updateTag({ name, content: '#191e24' }, selectorDark);
+			this.meta.updateTag({ name, content: '#f2f2f2' }, selectorLight);
 		}
 	}
 
