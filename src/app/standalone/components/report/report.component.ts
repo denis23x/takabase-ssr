@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { WindowComponent } from '../window/window.component';
 import { Subscription } from 'rxjs';
 import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
-import { AppTextareaResizeDirective } from '../../directives/app-textarea-resize.directive';
+import { AppTextareaAutosizeDirective } from '../../directives/app-textarea-autosize.directive';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import {
 	AbstractControl,
@@ -33,7 +33,7 @@ interface ReportForm {
 		CommonModule,
 		WindowComponent,
 		AppInputTrimWhitespaceDirective,
-		AppTextareaResizeDirective,
+		AppTextareaAutosizeDirective,
 		DropdownComponent,
 		ReactiveFormsModule,
 		SvgIconComponent

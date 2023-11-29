@@ -454,9 +454,9 @@
 									placeholder="Type post markdown"
 									formControlName="markdown"
 									appInputTrimWhitespace
-									appTextareaResize
+									appTextareaAutosize
+									[appAutosizeToggle]="!fullscreenToggle"
 									[rows]="8"
-									[appToggleResize]="!fullscreenToggle"
 									[class.max-h-96]="!fullscreenToggle"
 									[class.whitespace-pre]="fullscreenToggle && !fullscreenTextWrapping"
 									[class.font-mono]="postMarkdownMonospace"

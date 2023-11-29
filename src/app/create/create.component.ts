@@ -33,7 +33,7 @@ import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-pr
 import { CookieService } from '../core/services/cookie.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
-import { AppTextareaResizeDirective } from '../standalone/directives/app-textarea-resize.directive';
+import { AppTextareaAutosizeDirective } from '../standalone/directives/app-textarea-autosize.directive';
 import { CurrentUser } from '../core/models/current-user.model';
 import { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
 import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
@@ -69,7 +69,7 @@ interface PostForm {
 		MarkdownComponent,
 		NgOptimizedImage,
 		AppScrollPresetDirective,
-		AppTextareaResizeDirective,
+		AppTextareaAutosizeDirective,
 		AppSkeletonDirective,
 		PostDeleteComponent,
 		CategoryCreateComponent,

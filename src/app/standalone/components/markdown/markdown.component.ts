@@ -285,8 +285,8 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			});
 	}
 
-	getMarkdownTextarea(textAreaElement: HTMLTextAreaElement): MarkdownTextarea {
-		const { selectionStart, selectionEnd, value } = textAreaElement;
+	getMarkdownTextarea(textareaElement: HTMLTextAreaElement): MarkdownTextarea {
+		const { selectionStart, selectionEnd, value }: Record<string, any> = textareaElement;
 
 		const getWrapperPayload = (value: string): MarkdownWrapperPayload => {
 			return {

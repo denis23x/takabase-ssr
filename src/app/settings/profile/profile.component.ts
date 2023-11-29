@@ -24,7 +24,7 @@ import { UserService } from '../../core/services/user.service';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
-import { AppTextareaResizeDirective } from '../../standalone/directives/app-textarea-resize.directive';
+import { AppTextareaAutosizeDirective } from '../../standalone/directives/app-textarea-autosize.directive';
 import { CurrentUser } from '../../core/models/current-user.model';
 import { User } from '../../core/models/user.model';
 import { QrCodeComponent } from '../../standalone/components/qr-code/qr-code.component';
@@ -47,7 +47,7 @@ interface ProfileForm {
 		DayjsPipe,
 		UserUrlPipe,
 		AppInputTrimWhitespaceDirective,
-		AppTextareaResizeDirective,
+		AppTextareaAutosizeDirective,
 		QrCodeComponent
 	],
 	selector: 'app-settings-profile',

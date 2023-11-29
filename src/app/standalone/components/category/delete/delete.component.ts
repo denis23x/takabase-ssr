@@ -15,7 +15,6 @@ import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { AppInputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
-import { AppTextareaResizeDirective } from '../../../directives/app-textarea-resize.directive';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -50,7 +49,6 @@ interface CategoryDeleteForm {
 		SvgIconComponent,
 		WindowComponent,
 		AppInputTrimWhitespaceDirective,
-		AppTextareaResizeDirective,
 		ReactiveFormsModule,
 		AppScrollPresetDirective
 	],

@@ -14,7 +14,7 @@ import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { AppInputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
-import { AppTextareaResizeDirective } from '../../../directives/app-textarea-resize.directive';
+import { AppTextareaAutosizeDirective } from '../../../directives/app-textarea-autosize.directive';
 import { Category } from '../../../../core/models/category.model';
 import {
 	FormBuilder,
@@ -41,7 +41,7 @@ interface CategoryUpdateForm {
 		SvgIconComponent,
 		WindowComponent,
 		AppInputTrimWhitespaceDirective,
-		AppTextareaResizeDirective,
+		AppTextareaAutosizeDirective,
 		ReactiveFormsModule
 	],
 	selector: 'app-category-update, [appCategoryUpdate]',
