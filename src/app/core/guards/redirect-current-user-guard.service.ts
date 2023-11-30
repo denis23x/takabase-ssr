@@ -18,8 +18,12 @@ export const redirectCurrentUserGuard = (currentUserState: boolean): CanMatchFn 
 		return authorizationService.onPopulate().pipe(
 			map((currentUser: CurrentUser | undefined) => {
 				if (platformService.isBrowser()) {
-					if (!!currentUser === currentUserState) {
-						return router.createUrlTree(['/error', 404]);
+					if (!!currentUser !== currentUserState) {
+						if (currentUser) {
+							return router.createUrlTree(['/error', 404]);
+						} else {
+							return router.createUrlTree(['/login']);
+						}
 					}
 				}
 

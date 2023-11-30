@@ -98,9 +98,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
 	setMetaTags(): void {
 		const title: string = 'Login';
-
-		// prettier-ignore
-		const description: string = 'To access your account, please enter your login credentials below';
+		const description: string = 'Not an Draft user yet? Sign up for free';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

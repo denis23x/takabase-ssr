@@ -66,7 +66,7 @@ export function app(): express.Express {
 
 		const loaderPath = ['/confirmation', '/create', '/update', '/settings'];
 
-		if (loaderPath.find(path => req.originalUrl.includes(path))) {
+		if (loaderPath.find(path => req.originalUrl.startsWith(path))) {
 			return res.sendFile(join(distFolder, 'loader', 'index.html'));
 		}
 

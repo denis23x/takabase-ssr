@@ -47,7 +47,7 @@ export const routes: Routes = [
 		loadComponent: () => {
 			return import('./authorization/login/login.component').then(m => m.AuthLoginComponent);
 		},
-		canMatch: [redirectCurrentUserGuard(true)]
+		canMatch: [redirectCurrentUserGuard(false)]
 	},
 	{
 		path: 'registration',
@@ -56,7 +56,7 @@ export const routes: Routes = [
 			// prettier-ignore
 			return import('./authorization/registration/registration.component').then(m => m.AuthRegistrationComponent);
 		},
-		canMatch: [redirectCurrentUserGuard(true)]
+		canMatch: [redirectCurrentUserGuard(false)]
 	},
 	{
 		path: 'reset',
@@ -64,7 +64,7 @@ export const routes: Routes = [
 		loadComponent: () => {
 			return import('./authorization/reset/reset.component').then(m => m.AuthResetComponent);
 		},
-		canMatch: [redirectCurrentUserGuard(true)]
+		canMatch: [redirectCurrentUserGuard(false)]
 	},
 	{
 		path: 'terms',
@@ -112,7 +112,7 @@ export const routes: Routes = [
 		loadComponent: () => {
 			return import('./create/create.component').then(m => m.CreateComponent);
 		},
-		canMatch: [redirectCurrentUserGuard(false)]
+		canMatch: [redirectCurrentUserGuard(true)]
 	},
 	{
 		path: 'update/:postId',
@@ -120,7 +120,7 @@ export const routes: Routes = [
 		loadComponent: () => {
 			return import('./create/create.component').then(m => m.CreateComponent);
 		},
-		canMatch: [redirectCurrentUserGuard(false)]
+		canMatch: [redirectCurrentUserGuard(true)]
 	},
 	{
 		path: 'search',
@@ -171,7 +171,7 @@ export const routes: Routes = [
 		loadComponent: () => {
 			return import('./settings/settings.component').then(m => m.SettingsComponent);
 		},
-		canMatch: [redirectCurrentUserGuard(false)],
+		canMatch: [redirectCurrentUserGuard(true)],
 		children: [
 			{
 				path: '',
@@ -226,6 +226,7 @@ export const routes: Routes = [
 
 			return null;
 		},
+		title: 'Home',
 		canMatch: [redirectHomeGuard()],
 		loadComponent: () => {
 			return import('./home/home.component').then(m => m.HomeComponent);
@@ -244,6 +245,7 @@ export const routes: Routes = [
 
 			return null;
 		},
+		title: 'Profile',
 		loadComponent: () => {
 			return import('./user/user.component').then(m => m.UserComponent);
 		},
