@@ -32,6 +32,12 @@ export class FileService {
 
 	create(file: File, filePath: string): Observable<string> {
 		return from(this.angularFireStorage.upload(filePath, file)).pipe(
+			switchMap(() => {
+				return this.angularFireStorage.ref(filePath).updateMetadata({
+					cacheControl: 'public, max-age=31536000, immutable',
+					contentType: file.type
+				});
+			}),
 			switchMap(() => this.angularFireStorage.ref(filePath).getDownloadURL()),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
 				return this.apiService.setError(httpErrorResponse);

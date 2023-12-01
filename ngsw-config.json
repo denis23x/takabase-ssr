@@ -43,11 +43,24 @@
     {
       "name": "api",
       "urls": [
-        "http://localhost:3323/**"
+        "https://draft-api.web.app/api/*"
       ],
       "cacheConfig": {
-        "maxSize": 200,
-        "maxAge": "3d",
+        "maxSize": 100,
+        "maxAge": "30d",
+        "timeout": "10s",
+        "strategy": "freshness"
+      }
+    },
+    {
+      "name": "api-freshness",
+      "urls": [
+        "https://firebasestorage.googleapis.com/v0/b/*"
+      ],
+      "cacheConfig": {
+        "maxSize": 100,
+        "maxAge": "180d",
+        "timeout": "10s",
         "strategy": "freshness"
       }
     }
