@@ -308,18 +308,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	onTogglePostFormImage(toggle: boolean): void {
-		this.onSubmitPostFormStatus(toggle);
-
-		if (toggle) {
-			this.postFormImageDialog.nativeElement.showModal();
-		} else {
-			this.postFormImageDialog.nativeElement.close();
-		}
-	}
-
 	onToggleMarkdownDialog(toggle: boolean): void {
-		this.onSubmitPostFormStatus(toggle);
+		this.onTogglePostFormStatus(toggle);
 
 		this.postMarkdownDialogToggle = toggle;
 	}
@@ -402,7 +392,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	/** PostForm */
 
-	onSubmitPostFormStatus(toggle: boolean): void {
+	onTogglePostFormStatus(toggle: boolean): void {
 		if (toggle) {
 			this.postForm.disable({ emitEvent: false });
 		} else {
@@ -443,7 +433,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitPostFormImage(fileUrl?: string): void {
-		this.onTogglePostFormImage(false);
+		this.onTogglePostFormStatus(false);
 
 		this.postForm.get('image').setValue(fileUrl);
 	}

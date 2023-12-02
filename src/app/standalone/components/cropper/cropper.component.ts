@@ -26,10 +26,10 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { HelperService } from '../../../core/services/helper.service';
 import { FileService } from '../../../core/services/file.service';
-import { FileGetOneProxyDto } from '../../../core/dto/file/file-get-one-proxy.dto';
 import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
 import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../../core/services/snackbar.service';
+import { WindowComponent } from '../window/window.component';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -43,13 +43,18 @@ interface ImageForm {
 		ImageCropperModule,
 		SvgIconComponent,
 		AppInputOnlyPasteDirective,
-		AppInputTrimWhitespaceDirective
+		AppInputTrimWhitespaceDirective,
+		WindowComponent
 	],
 	selector: 'app-cropper, [appCropper]',
 	templateUrl: './cropper.component.html'
 })
 export class CropperComponent implements AfterViewInit, OnDestroy {
+	// prettier-ignore
+	@ViewChild('cropperDialogElement') cropperDialogElement: ElementRef<HTMLDialogElement> | undefined;
+
 	@ViewChild('imageFormFile') imageFormFile: ElementRef<HTMLInputElement> | undefined;
+
 	@ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent | undefined;
 
 	@Input()
@@ -58,6 +63,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	@Output() appCropperSubmit: EventEmitter<string> = new EventEmitter<string>();
+	@Output() appCropperToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	imageForm: FormGroup | undefined;
 	imageFormRequest$: Subscription | undefined;
@@ -79,6 +85,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	cropperBlob: Blob = undefined;
 	cropperBackgroundIsDraggable: boolean = false;
 	cropperIsAvailable: boolean = false;
+	cropperDialogToggle: boolean = false;
 
 	cropperPositionInitial: CropperPosition = undefined;
 	cropperPosition: CropperPosition = {
@@ -125,28 +132,28 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			if (this.helperService.getFormValidation(this.imageForm)) {
 				this.imageForm.disable();
 
-				const fileGetOneProxyDto: FileGetOneProxyDto = {
-					...this.imageForm.value
-				};
-
-				this.imageFormRequest$?.unsubscribe();
-				this.imageFormRequest$ = this.fileService.getOneProxy(fileGetOneProxyDto).subscribe({
-					next: (blob: Blob) => {
-						this.cropperPositionInitial = undefined;
-						this.cropperFile = new File([blob], 'blob-image', {
-							type: blob.type
-						});
-
-						this.imageForm.enable();
-					},
-					error: () => {
-						this.imageForm.enable();
-
-						/** Reset only imageForm because cropper not initialized yet */
-
-						this.onResetImageForm('');
-					}
-				});
+				// const fileGetOneProxyDto: FileGetOneProxyDto = {
+				// 	...this.imageForm.value
+				// };
+				//
+				// this.imageFormRequest$?.unsubscribe();
+				// this.imageFormRequest$ = this.fileService.getOneProxy(fileGetOneProxyDto).subscribe({
+				// 	next: (blob: Blob) => {
+				// 		this.cropperPositionInitial = undefined;
+				// 		this.cropperFile = new File([blob], 'blob-image', {
+				// 			type: blob.type
+				// 		});
+				//
+				// 		this.imageForm.enable();
+				// 	},
+				// 	error: () => {
+				// 		this.imageForm.enable();
+				//
+				// 		/** Reset only imageForm because cropper not initialized yet */
+				//
+				// 		this.onResetImageForm('');
+				// 	}
+				// });
 			}
 
 			clearTimeout(validationTimeout);
@@ -267,6 +274,18 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		abstractControl.markAsTouched();
 	}
 
+	onToggleCropper(toggle: boolean): void {
+		this.appCropperToggle.emit(toggle);
+
+		this.cropperDialogToggle = toggle;
+
+		if (toggle) {
+			this.cropperDialogElement.nativeElement.showModal();
+		} else {
+			this.cropperDialogElement.nativeElement.close();
+		}
+	}
+
 	onSubmitCropper(): void {
 		const fileDate: number = Date.now();
 		const fileCropped: File = new File([this.cropperBlob], this.cropperFile.name, {
@@ -281,9 +300,11 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		this.imageFormRequest$?.unsubscribe();
 		this.imageFormRequest$ = this.fileService.create(fileCropped, filePath).subscribe({
 			next: (fileUrl: string) => {
+				this.appCropperSubmit.emit(fileUrl);
+
 				this.imageForm.enable();
 
-				this.appCropperSubmit.emit(fileUrl);
+				this.onToggleCropper(false);
 			},
 			error: () => this.imageForm.enable()
 		});

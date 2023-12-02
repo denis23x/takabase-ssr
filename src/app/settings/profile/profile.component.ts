@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -54,9 +54,6 @@ interface ProfileForm {
 	templateUrl: './profile.component.html'
 })
 export class SettingsProfileComponent implements OnInit, OnDestroy {
-	// prettier-ignore
-	@ViewChild('profileFormAvatarDialog') profileFormAvatarDialog: ElementRef<HTMLDialogElement> | undefined;
-
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 	currentUserRequest$: Subscription | undefined;
@@ -120,18 +117,16 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			});
 	}
 
-	onToggleProfileFormAvatar(toggle: boolean): void {
+	onToggleCropper(toggle: boolean): void {
 		if (toggle) {
 			this.profileForm.disable();
-			this.profileFormAvatarDialog.nativeElement.showModal();
 		} else {
 			this.profileForm.enable();
-			this.profileFormAvatarDialog.nativeElement.close();
 		}
 	}
 
 	onSubmitCropper(fileUrl: string): void {
-		this.onToggleProfileFormAvatar(false);
+		this.onToggleCropper(false);
 
 		const userUpdateDto: UserUpdateDto = {
 			avatar: fileUrl

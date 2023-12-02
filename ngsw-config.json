@@ -55,7 +55,8 @@
     {
       "name": "api-freshness",
       "urls": [
-        "https://firebasestorage.googleapis.com/v0/b/*"
+        "https://firebasestorage.googleapis.com/v0/b/*",
+        "https://fonts.googleapis.com/*"
       ],
       "cacheConfig": {
         "maxSize": 100,

@@ -3,8 +3,6 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
-import { FileGetOneDto } from '../dto/file/file-get-one.dto';
-import { FileGetOneProxyDto } from '../dto/file/file-get-one-proxy.dto';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -45,17 +43,17 @@ export class FileService {
 		);
 	}
 
-	getOne(fileGetOneDto: FileGetOneDto): Observable<Blob> {
-		return this.apiService.get('/files/image', fileGetOneDto, {
-			responseType: 'blob'
-		});
-	}
-
-	getOneProxy(fileGetOneProxyDto: FileGetOneProxyDto): Observable<Blob> {
-		return this.apiService.get('/files/image/proxy', fileGetOneProxyDto, {
-			responseType: 'blob'
-		});
-	}
+	// getOne(fileGetOneDto: FileGetOneDto): Observable<Blob> {
+	// 	return this.apiService.get('/files/image', fileGetOneDto, {
+	// 		responseType: 'blob'
+	// 	});
+	// }
+	//
+	// getOneProxy(fileGetOneProxyDto: FileGetOneProxyDto): Observable<Blob> {
+	// 	return this.apiService.get('/files/image/proxy', fileGetOneProxyDto, {
+	// 		responseType: 'blob'
+	// 	});
+	// }
 
 	delete(filePath: string): Observable<any> {
 		return this.angularFireStorage.refFromURL(filePath).delete();

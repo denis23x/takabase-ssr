@@ -24,7 +24,7 @@
 						*ngIf="!!image.value"
 						[ngClass]="{ invisible: !image.value, 'pointer-events-none opacity-50 saturate-0 transition': postForm.disabled }"
 						[src]="image.value"
-						(click)="onTogglePostFormImage(true)"
+						(click)="appCropperComponent.onToggleCropper(true)"
 					/>
 					<div
 						class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -38,7 +38,7 @@
 							[appSvgIconIcon]="'plus'"
 							[appSvgIconSquare]="'2em'"
 							[disabled]="postForm.disabled"
-							(click)="onTogglePostFormImage(true)"
+							(click)="appCropperComponent.onToggleCropper(true)"
 						></button>
 					</div>
 				</figure>
@@ -504,7 +504,7 @@
 					<!-- prettier-ignore -->
 					<span
             class="loading loading-spinner"
-            *ngIf="postForm.disabled && !postFormImageDialog.open && !appCategoryCreateComponent.categoryCreateDialogToggle && !appPostPreviewComponent.postPreviewDialogToggle && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownDialogToggle"
+            *ngIf="postForm.disabled && !appCropperComponent.cropperDialogToggle && !appCategoryCreateComponent.categoryCreateDialogToggle && !appPostPreviewComponent.postPreviewDialogToggle && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownDialogToggle"
           ></span>
 					Submit
 				</button>
@@ -525,41 +525,24 @@
 			</div>
 		</div>
 	</div>
-	<!-- prettier-ignore-attribute (click) -->
-	<dialog
-		class="modal"
-		#postFormImageDialog
-		(keydown.escape)="$event.preventDefault(); postFormImageDialog.close()"
-		(close)="onTogglePostFormImage(false)"
-		(click)="$event.target === $event.currentTarget ? postFormImageDialog.close() : $event"
-	>
-		<div
-			class="flex items-center justify-center w-full max-w-lg"
-			appWindow
-			[appWindowTitle]="'Image'"
-			[appWindowButtons]="['close']"
-			(appWindowClose)="onTogglePostFormImage(false)"
-		>
-			<div
-				appCropper
-				slot="content"
-				*ngIf="postFormImageDialog.open"
-				[appCropperUploadPath]="'/upload/post-images'"
-				(appCropperSubmit)="onSubmitPostFormImage($event)"
-			></div>
-		</div>
-	</dialog>
+	<div
+		appCropper
+		#appCropperComponent
+		[appCropperUploadPath]="'/upload/post-images'"
+		(appCropperSubmit)="onSubmitPostFormImage($event)"
+		(appCropperToggle)="onTogglePostFormStatus($event)"
+	></div>
 	<div
 		appPostPreview
 		#appPostPreviewComponent
 		[appPostPreviewPost]="postForm.value"
 		[appPostPreviewCategory]="category"
-		(appPostPreviewToggle)="onSubmitPostFormStatus($event)"
+		(appPostPreviewToggle)="onTogglePostFormStatus($event)"
 	></div>
 	<div
 		appCategoryCreate
 		#appCategoryCreateComponent
-		(appCategoryCreateToggle)="onSubmitPostFormStatus($event)"
+		(appCategoryCreateToggle)="onTogglePostFormStatus($event)"
 		(appCategoryCreateSuccess)="onCreateCategory($event)"
 	></div>
 	<div
@@ -573,6 +556,6 @@
 		appPostDelete
 		#appPostDeleteComponent
 		[appPostDeletePost]="post"
-		(appPostDeleteToggle)="onSubmitPostFormStatus($event)"
+		(appPostDeleteToggle)="onTogglePostFormStatus($event)"
 	></div>
 </ng-container>

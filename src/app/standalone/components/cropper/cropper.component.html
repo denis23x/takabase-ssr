@@ -1,273 +1,291 @@
 <!-- @format -->
 
 <ng-container>
-	<div
-		class="flex flex-col p-4"
-		[class.overflow-hidden]="!cropperIsAvailable"
-		[class.gap-4]="cropperIsAvailable"
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#cropperDialogElement
+		(keydown.escape)="$event.preventDefault(); cropperDialogElement.close()"
+		(close)="onToggleCropper(false)"
+		(click)="$event.target === $event.currentTarget ? cropperDialogElement.close() : $event"
 	>
-		<form class="flex flex-col gap-4" autocomplete="off" [formGroup]="imageForm">
-			<p class="alert">
-				<i
-					class="fill-current text-info"
-					appSvgIcon
-					[appSvgIconIcon]="'info-circle'"
-					[appSvgIconSquare]="'1.5em'"
-				></i>
-				<span class="block"> Browse file on your device or paste link from internet </span>
-			</p>
-			<fieldset class="form-control" *ngIf="imageForm.get('url') as url">
-				<label class="label" for="imageFormUrl">
-					<div class="indicator">
-						<span
-							class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-							*ngIf="url.touched && !!url.errors && imageForm.enabled"
-							[ngSwitch]="true"
-						>
-							<ng-container *ngSwitchCase="!!url.errors.required"> Required </ng-container>
-							<ng-container *ngSwitchCase="!!url.errors.pattern">
-								Url does not correct
-							</ng-container>
-						</span>
-						<span class="label-text mr-2">Image</span>
-					</div>
-				</label>
-				<div class="flex items-center justify-between gap-4">
-					<div class="relative w-full">
-						<input
-							class="input input-bordered input-md w-full truncate pr-12"
-							id="imageFormUrl"
-							type="text"
-							aria-label="Url"
-							formControlName="url"
-							placeholder="Paste image URL"
-							appInputOnlyPaste
-							appInputTrimWhitespace
-							[class.input-success]="url.value && url.valid"
-							[class.input-error]="url.touched && url.invalid"
-							(input)="onInputUrl()"
-						/>
-						<button
-							class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
-							type="button"
-							aria-label="Clear"
-							appSvgIcon
-							*ngIf="!!url.value.length"
-							[class.btn-success]="url.valid"
-							[class.btn-error]="url.touched && url.invalid"
-							[class.btn-ghost]="url.untouched && url.invalid"
-							[disabled]="imageForm.disabled"
-							[appSvgIconIcon]="'x'"
-							[appSvgIconSquare]="'2em'"
-							(click)="onResetAll()"
-						></button>
-					</div>
-					<input
-						class="hidden"
-						type="file"
-						aria-label="File"
-						#imageFormFile
-						[accept]="imageFormMime"
-						(change)="onInputFile($event)"
-					/>
-					<button
-						class="btn-success btn-square btn fill-current p-3"
-						type="button"
-						aria-label="Browse"
-						[class.btn-outline]="imageForm.enabled"
-						[disabled]="imageForm.disabled"
-						[ngSwitch]="imageForm.disabled && !cropperFile"
-						(click)="imageFormFile.click()"
-					>
-						<span class="loading loading-spinner" *ngSwitchCase="true"></span>
+		<div
+			class="flex items-center justify-center w-full max-w-lg"
+			appWindow
+			[appWindowTitle]="'Avatar'"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onToggleCropper(false)"
+		>
+			<div
+				class="flex flex-col p-4"
+				slot="content"
+				[class.overflow-hidden]="!cropperIsAvailable"
+				[class.gap-4]="cropperIsAvailable"
+			>
+				<form class="flex flex-col gap-4" autocomplete="off" [formGroup]="imageForm">
+					<p class="alert">
 						<i
-							class="block"
+							class="fill-current text-info"
 							appSvgIcon
-							*ngSwitchDefault
-							[appSvgIconIcon]="'folder'"
-							[appSvgIconSquare]="'1.75em'"
+							[appSvgIconIcon]="'info-circle'"
+							[appSvgIconSquare]="'1.5em'"
+						></i>
+						<span class="block"> Browse file on your device or paste link from internet </span>
+					</p>
+					<fieldset class="form-control" *ngIf="imageForm.get('url') as url">
+						<label class="label" for="imageFormUrl">
+							<div class="indicator">
+								<span
+									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+									*ngIf="url.touched && !!url.errors && imageForm.enabled"
+									[ngSwitch]="true"
+								>
+									<ng-container *ngSwitchCase="!!url.errors.required"> Required </ng-container>
+									<ng-container *ngSwitchCase="!!url.errors.pattern">
+										Url does not correct
+									</ng-container>
+								</span>
+								<span class="label-text mr-2">Image</span>
+							</div>
+						</label>
+						<div class="flex items-center justify-between gap-4">
+							<div class="relative w-full">
+								<input
+									class="input input-bordered input-md w-full truncate pr-12"
+									id="imageFormUrl"
+									type="text"
+									aria-label="Url"
+									formControlName="url"
+									placeholder="Paste image URL"
+									appInputOnlyPaste
+									appInputTrimWhitespace
+									[class.input-success]="url.value && url.valid"
+									[class.input-error]="url.touched && url.invalid"
+									(input)="onInputUrl()"
+								/>
+								<button
+									class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+									type="button"
+									aria-label="Clear"
+									appSvgIcon
+									*ngIf="!!url.value.length"
+									[class.btn-success]="url.valid"
+									[class.btn-error]="url.touched && url.invalid"
+									[class.btn-ghost]="url.untouched && url.invalid"
+									[disabled]="imageForm.disabled"
+									[appSvgIconIcon]="'x'"
+									[appSvgIconSquare]="'2em'"
+									(click)="onResetAll()"
+								></button>
+							</div>
+							<input
+								class="hidden"
+								type="file"
+								aria-label="File"
+								#imageFormFile
+								[accept]="imageFormMime"
+								(change)="onInputFile($event)"
+							/>
+							<button
+								class="btn-success btn-square btn fill-current p-3"
+								type="button"
+								aria-label="Browse"
+								[class.btn-outline]="imageForm.enabled"
+								[disabled]="imageForm.disabled"
+								[ngSwitch]="imageForm.disabled && !cropperFile"
+								(click)="imageFormFile.click()"
+							>
+								<span class="loading loading-spinner" *ngSwitchCase="true"></span>
+								<i
+									class="block"
+									appSvgIcon
+									*ngSwitchDefault
+									[appSvgIconIcon]="'folder'"
+									[appSvgIconSquare]="'1.75em'"
+								>
+								</i>
+							</button>
+						</div>
+						<label class="label" for="imageFormUrl">
+							<span class="label-text-alt">Accept only *.png, *.jpg files</span>
+						</label>
+					</fieldset>
+				</form>
+				<div class="flex flex-col gap-4" [ngClass]="{ 'invisible !m-0 !h-0': !cropperIsAvailable }">
+					<div [ngClass]="{ 'cursor-not-allowed saturate-0': imageForm.disabled }">
+						<image-cropper
+							class="ngx-cropper rounded-box !p-4"
+							[class.ngx-cropper-disabled]="imageForm.disabled"
+							[class.ngx-cropper-rounded]="cropperRound"
+							[imageFile]="cropperFile"
+							[imageAltText]="'Image cropper'"
+							[format]="'png'"
+							[maintainAspectRatio]="true"
+							[containWithinAspectRatio]="false"
+							[resizeToWidth]="256"
+							[resizeToHeight]="256"
+							[cropper]="cropperPosition"
+							[roundCropper]="cropperRound"
+							[alignImage]="'center'"
+							[transform]="imageTransform"
+							[allowMoveImage]="cropperBackgroundIsDraggable"
+							(imageCropped)="onImageCropped($event)"
+							(loadImageFailed)="onImageFailed()"
 						>
-						</i>
+						</image-cropper>
+					</div>
+					<div class="flex items-start justify-between gap-4">
+						<!-- prettier-ignore -->
+						<div
+							class="flex overflow-auto rounded-btn border border-base-content/20"
+							[ngClass]="{ 'border-transparent bg-base-200 cursor-not-allowed': imageForm.disabled }"
+						>
+							<ul class="menu rounded-btn menu-horizontal menu-md flex-nowrap overflow-auto border-none p-0">
+                <li
+                  class="inline-block"
+                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
+                >
+                  <button
+                    class="fill-current p-3"
+                    type="button"
+                    title="Move"
+                    aria-label="Move"
+                    appSvgIcon
+                    [class.cursor-not-allowed]="imageForm.disabled"
+                    [disabled]="imageForm.disabled"
+                    [appSvgIconIcon]="'arrows-move'"
+                    [appSvgIconSquare]="'1.5725em'"
+                    [ngClass]="{ 'active' : cropperBackgroundIsDraggable && imageForm.enabled, 'bg-base-content/10' : cropperBackgroundIsDraggable && imageForm.disabled }"
+                    (click)="cropperBackgroundIsDraggable = !cropperBackgroundIsDraggable"
+                  ></button>
+                </li>
+                <li
+                  class="inline-block"
+                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
+                >
+                  <button
+                    class="-scale-x-1 fill-current p-3"
+                    type="button"
+                    title="Rotate counterclockwise"
+                    aria-label="Rotate counterclockwise"
+                    appSvgIcon
+                    [class.cursor-not-allowed]="imageForm.disabled"
+                    [disabled]="imageForm.disabled"
+                    [appSvgIconIcon]="'arrow-clockwise'"
+                    [appSvgIconSquare]="'1.5725em'"
+                    (click)="onImageRotate(false)"
+                  ></button>
+                </li>
+                <li
+                  class="inline-block"
+                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
+                >
+                  <button
+                    class="fill-current p-3"
+                    type="button"
+                    title="Rotate clockwise"
+                    aria-label="Rotate clockwise"
+                    appSvgIcon
+                    [class.cursor-not-allowed]="imageForm.disabled"
+                    [disabled]="imageForm.disabled"
+                    [appSvgIconIcon]="'arrow-clockwise'"
+                    [appSvgIconSquare]="'1.5725em'"
+                    (click)="onImageRotate(true)"
+                  ></button>
+                </li>
+                <li
+                  class="inline-block"
+                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
+                >
+                  <button
+                    class="rotate-90 fill-current p-3"
+                    type="button"
+                    title="Flip horizontal"
+                    aria-label="Flip horizontal"
+                    appSvgIcon
+                    [class.cursor-not-allowed]="imageForm.disabled"
+                    [disabled]="imageForm.disabled"
+                    [appSvgIconIcon]="'symmetry-vertical'"
+                    [appSvgIconSquare]="'1.5725em'"
+                    (click)="onImageFlip(true)"
+                  ></button>
+                </li>
+                <li
+                  class="inline-block"
+                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
+                >
+                  <button
+                    class="fill-current p-3"
+                    type="button"
+                    title="Flip vertical"
+                    aria-label="Flip vertical"
+                    appSvgIcon
+                    [class.cursor-not-allowed]="imageForm.disabled"
+                    [disabled]="imageForm.disabled"
+                    [appSvgIconIcon]="'symmetry-vertical'"
+                    [appSvgIconSquare]="'1.5725em'"
+                    (click)="onImageFlip(false)"
+                  ></button>
+                </li>
+                <li
+                  class="inline-block"
+                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
+                >
+                  <button
+                    class="fill-current p-3"
+                    type="button"
+                    title="Zoom in"
+                    aria-label="Zoom in"
+                    appSvgIcon
+                    [class.cursor-not-allowed]="imageForm.disabled"
+                    [disabled]="imageForm.disabled"
+                    [appSvgIconIcon]="'zoom-in'"
+                    [appSvgIconSquare]="'1.5725em'"
+                    (click)="onImageZoom(true)"
+                  ></button>
+                </li>
+                <li
+                  class="inline-block"
+                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled || imageTransform.scale <= 1 }"
+                >
+                  <button
+                    class="fill-current p-3"
+                    type="button"
+                    title="Zoom out"
+                    aria-label="Zoom out"
+                    appSvgIcon
+                    [class.cursor-not-allowed]="imageForm.disabled"
+                    [disabled]="imageForm.disabled"
+                    [appSvgIconIcon]="'zoom-out'"
+                    [appSvgIconSquare]="'1.5725em'"
+                    (click)="onImageZoom(false)"
+                  ></button>
+                </li>
+              </ul>
+						</div>
+						<button
+							class="btn btn-error flex-1"
+							type="button"
+							aria-label="Reset"
+							[class.btn-outline]="imageForm.enabled"
+							[disabled]="imageForm.invalid || imageForm.disabled"
+							(click)="onResetTransform()"
+						>
+							Reset
+						</button>
+					</div>
+					<button
+						class="btn btn-success w-full"
+						type="button"
+						aria-label="Submit"
+						[disabled]="imageForm.invalid || imageForm.disabled"
+						(click)="onSubmitCropper()"
+					>
+						<span class="loading loading-spinner" *ngIf="imageForm.disabled"></span>
+						Submit
 					</button>
 				</div>
-				<label class="label" for="imageFormUrl">
-					<span class="label-text-alt">Accept only *.png, *.jpg files</span>
-				</label>
-			</fieldset>
-		</form>
-		<div class="flex flex-col gap-4" [ngClass]="{ 'invisible !m-0 !h-0': !cropperIsAvailable }">
-			<div [ngClass]="{ 'cursor-not-allowed saturate-0': imageForm.disabled }">
-				<image-cropper
-					class="ngx-cropper rounded-box !p-4"
-					[class.ngx-cropper-disabled]="imageForm.disabled"
-					[class.ngx-cropper-rounded]="cropperRound"
-					[imageFile]="cropperFile"
-					[imageAltText]="'Image cropper'"
-					[format]="'png'"
-					[maintainAspectRatio]="true"
-					[containWithinAspectRatio]="false"
-					[resizeToWidth]="256"
-					[resizeToHeight]="256"
-					[cropper]="cropperPosition"
-					[roundCropper]="cropperRound"
-					[alignImage]="'center'"
-					[transform]="imageTransform"
-					[allowMoveImage]="cropperBackgroundIsDraggable"
-					(imageCropped)="onImageCropped($event)"
-					(loadImageFailed)="onImageFailed()"
-				>
-				</image-cropper>
 			</div>
-			<div class="flex items-start justify-between gap-4">
-				<div
-					class="flex overflow-auto rounded-btn border border-base-content/20"
-					[ngClass]="{ 'border-transparent bg-base-200 cursor-not-allowed': imageForm.disabled }"
-				>
-					<!-- prettier-ignore -->
-					<ul class="menu rounded-btn menu-horizontal menu-md flex-nowrap overflow-auto border-none p-0">
-						<li
-              class="inline-block"
-              [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-            >
-							<button
-                class="fill-current p-3"
-                type="button"
-                title="Move"
-                aria-label="Move"
-                appSvgIcon
-                [class.cursor-not-allowed]="imageForm.disabled"
-                [disabled]="imageForm.disabled"
-                [appSvgIconIcon]="'arrows-move'"
-                [appSvgIconSquare]="'1.5725em'"
-                [ngClass]="{ 'active' : cropperBackgroundIsDraggable && imageForm.enabled, 'bg-base-content/10' : cropperBackgroundIsDraggable && imageForm.disabled }"
-                (click)="cropperBackgroundIsDraggable = !cropperBackgroundIsDraggable"
-              ></button>
-						</li>
-						<li
-              class="inline-block"
-              [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-            >
-							<button
-								class="-scale-x-1 fill-current p-3"
-								type="button"
-								title="Rotate counterclockwise"
-								aria-label="Rotate counterclockwise"
-								appSvgIcon
-                [class.cursor-not-allowed]="imageForm.disabled"
-                [disabled]="imageForm.disabled"
-								[appSvgIconIcon]="'arrow-clockwise'"
-                [appSvgIconSquare]="'1.5725em'"
-								(click)="onImageRotate(false)"
-							></button>
-						</li>
-						<li
-              class="inline-block"
-              [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-            >
-							<button
-								class="fill-current p-3"
-								type="button"
-								title="Rotate clockwise"
-								aria-label="Rotate clockwise"
-								appSvgIcon
-                [class.cursor-not-allowed]="imageForm.disabled"
-                [disabled]="imageForm.disabled"
-								[appSvgIconIcon]="'arrow-clockwise'"
-						    [appSvgIconSquare]="'1.5725em'"
-								(click)="onImageRotate(true)"
-							></button>
-						</li>
-						<li
-              class="inline-block"
-              [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-            >
-							<button
-								class="rotate-90 fill-current p-3"
-								type="button"
-								title="Flip horizontal"
-								aria-label="Flip horizontal"
-								appSvgIcon
-                [class.cursor-not-allowed]="imageForm.disabled"
-                [disabled]="imageForm.disabled"
-								[appSvgIconIcon]="'symmetry-vertical'"
-						    [appSvgIconSquare]="'1.5725em'"
-								(click)="onImageFlip(true)"
-							></button>
-						</li>
-						<li
-              class="inline-block"
-              [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-            >
-							<button
-								class="fill-current p-3"
-								type="button"
-								title="Flip vertical"
-								aria-label="Flip vertical"
-								appSvgIcon
-                [class.cursor-not-allowed]="imageForm.disabled"
-                [disabled]="imageForm.disabled"
-								[appSvgIconIcon]="'symmetry-vertical'"
-						    [appSvgIconSquare]="'1.5725em'"
-								(click)="onImageFlip(false)"
-							></button>
-						</li>
-						<li
-              class="inline-block"
-              [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-            >
-							<button
-								class="fill-current p-3"
-								type="button"
-								title="Zoom in"
-								aria-label="Zoom in"
-								appSvgIcon
-                [class.cursor-not-allowed]="imageForm.disabled"
-                [disabled]="imageForm.disabled"
-								[appSvgIconIcon]="'zoom-in'"
-						    [appSvgIconSquare]="'1.5725em'"
-								(click)="onImageZoom(true)"
-							></button>
-						</li>
-						<li
-							class="inline-block"
-              [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled || imageTransform.scale <= 1 }"
-						>
-							<button
-								class="fill-current p-3"
-								type="button"
-								title="Zoom out"
-								aria-label="Zoom out"
-								appSvgIcon
-                [class.cursor-not-allowed]="imageForm.disabled"
-                [disabled]="imageForm.disabled"
-								[appSvgIconIcon]="'zoom-out'"
-                [appSvgIconSquare]="'1.5725em'"
-								(click)="onImageZoom(false)"
-							></button>
-						</li>
-					</ul>
-				</div>
-				<button
-					class="btn btn-error flex-1"
-					type="button"
-					aria-label="Reset"
-					[class.btn-outline]="imageForm.enabled"
-					[disabled]="imageForm.invalid || imageForm.disabled"
-					(click)="onResetTransform()"
-				>
-					Reset
-				</button>
-			</div>
-			<button
-				class="btn btn-success w-full"
-				type="button"
-				aria-label="Submit"
-				[disabled]="imageForm.invalid || imageForm.disabled"
-				(click)="onSubmitCropper()"
-			>
-				<span class="loading loading-spinner" *ngIf="imageForm.disabled"></span>
-				Submit
-			</button>
 		</div>
-	</div>
+	</dialog>
 </ng-container>

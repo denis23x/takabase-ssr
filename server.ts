@@ -64,19 +64,21 @@ export function app(): express.Express {
 	server.get('*', (req, res) => {
 		// Send file loader if restricted
 
-		const loaderPath = ['/confirmation', '/create', '/update', '/settings'];
+		/** Disabled SSG for a while */
 
-		if (loaderPath.find(path => req.originalUrl.startsWith(path))) {
-			return res.sendFile(join(distFolder, 'loader', 'index.html'));
-		}
-
-		// Send file if full match
-
-		const fullPath = join(distFolder, req.originalUrl);
-
-		if (existsSync(fullPath)) {
-			return res.sendFile(join(fullPath, 'index.html'));
-		}
+		// const loaderPath = ['/confirmation', '/create', '/update', '/settings'];
+		//
+		// if (loaderPath.find(path => req.originalUrl.startsWith(path))) {
+		// 	return res.sendFile(join(distFolder, 'loader', 'index.html'));
+		// }
+		//
+		// // Send file if full match
+		//
+		// const fullPath = join(distFolder, req.originalUrl);
+		//
+		// if (existsSync(fullPath)) {
+		// 	return res.sendFile(join(fullPath, 'index.html'));
+		// }
 
 		res.render(indexHtml, {
 			req,

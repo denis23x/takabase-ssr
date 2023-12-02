@@ -57,7 +57,7 @@
 						aria-label="Avatar"
 						[class.btn-outline]="!currentUser.avatar && profileForm.enabled"
 						[disabled]="profileForm.disabled"
-						(click)="onToggleProfileFormAvatar(true)"
+						(click)="appCropperComponent.onToggleCropper(true)"
 					>
 						Avatar
 					</button>
@@ -196,36 +196,19 @@
 				>
 					<span
 						class="loading loading-spinner"
-						*ngIf="profileForm.disabled && !profileFormAvatarDialog.open"
+						*ngIf="profileForm.disabled && !appCropperComponent.cropperDialogToggle"
 					></span>
 					Submit
 				</button>
 			</fieldset>
 		</form>
 	</div>
-	<!-- prettier-ignore-attribute (click) -->
-	<dialog
-		class="modal"
-		#profileFormAvatarDialog
-		(keydown.escape)="$event.preventDefault(); profileFormAvatarDialog.close()"
-		(close)="onToggleProfileFormAvatar(false)"
-		(click)="$event.target === $event.currentTarget ? profileFormAvatarDialog.close() : $event"
-	>
-		<div
-			class="flex items-center justify-center w-full max-w-lg"
-			appWindow
-			[appWindowTitle]="'Avatar'"
-			[appWindowButtons]="['close']"
-			(appWindowClose)="onToggleProfileFormAvatar(false)"
-		>
-			<div
-				appCropper
-				slot="content"
-				*ngIf="profileFormAvatarDialog.open"
-				[appCropperUploadPath]="'/upload/user-avatars'"
-				(appCropperSubmit)="onSubmitCropper($event)"
-			></div>
-		</div>
-	</dialog>
+	<div
+		appCropper
+		#appCropperComponent
+		[appCropperUploadPath]="'/upload/user-avatars'"
+		(appCropperSubmit)="onSubmitCropper($event)"
+		(appCropperToggle)="onToggleCropper($event)"
+	></div>
 	<div appQRCode #appQrCodeComponent [appQRCodeData]="currentUser | userUrl: 1"></div>
 </ng-container>
