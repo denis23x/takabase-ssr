@@ -142,8 +142,8 @@
 						setPrismLink(getSchemeMatches())
 					}
 
-					schemeList.forEach((isMedia) => {
-						isMedia.addEventListener("change", () => {
+					schemeList.forEach((scheme) => {
+						scheme.addEventListener("change", () => {
 							const theme = getCookie("theme-prism")
 
 							if (theme === undefined || (theme && theme === "auto")) {

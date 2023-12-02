@@ -136,6 +136,11 @@ export class UserComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.setSkeleton();
 					this.setResolver();
+
+					// Update child
+
+					this.userPostComponent?.setSkeleton();
+					// this.userPostComponent?.setResolver();
 				},
 				error: (error: any) => console.error(error)
 			});

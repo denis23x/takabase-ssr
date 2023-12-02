@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
 import { HttpClient } from '@angular/common/http';
-import { from, fromEvent, Observable, of, switchMap } from 'rxjs';
+import { EMPTY, from, fromEvent, Observable, of, race, switchMap } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { Appearance } from '../models/appearance.model';
 import { HelperService } from './helper.service';
@@ -38,6 +38,17 @@ export class AppearanceService {
 	) {}
 
 	/** Utility */
+
+	getPrefersColorScheme(): Observable<any> {
+		if (this.platformService.isBrowser()) {
+			return race(
+				fromEvent(window.matchMedia('(prefers-color-scheme: dark)'), 'change'),
+				fromEvent(window.matchMedia('(prefers-color-scheme: light)'), 'change')
+			);
+		}
+
+		return EMPTY;
+	}
 
 	getCSSColor(name: string, format: string): string {
 		if (this.platformService.isBrowser()) {

@@ -116,6 +116,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	controlListList: MarkdownControl[] = MarkdownControlList();
 	controlListUrl: MarkdownControl[] = MarkdownControlUrl();
 	controlListEmojiMart: MarkdownControl = MarkdownControlEmojiMart();
+	controlListEmojiMartColorScheme$: Subscription | undefined;
 	controlListTable: MarkdownControl = MarkdownControlTable();
 	controlListSpoiler: MarkdownControl = MarkdownControlSpoiler();
 	controlListCode: MarkdownControl = MarkdownControlCode();
@@ -171,8 +172,13 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.textareaInput$, this.scrollSync$, this.controlListScroll$, this.urlForm$].forEach(($: Subscription) => $?.unsubscribe());
+		[
+			this.textareaInput$,
+			this.scrollSync$,
+			this.controlListScroll$,
+			this.urlForm$,
+			this.controlListEmojiMartColorScheme$
+		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setEmojiMart(): void {
@@ -181,16 +187,30 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 			/** Prepare theme colors */
 
-			const variablesCSSMap: string[] = ['--p', '--b1', '--bc'];
+			const setThemeColor = (): void => {
+				const variablesCSSMap: string[] = ['--p', '--b1', '--bc'];
 
-			variablesCSSMap.forEach((variable: string) => {
-				const rgb: string = this.appearanceService.getCSSColor(variable, 'rgb');
+				variablesCSSMap.forEach((variable: string) => {
+					const rgb: string = this.appearanceService.getCSSColor(variable, 'rgb');
 
-				const propertyKey: string = [variable, 'rgb'].join('-');
-				const propertyValue: string = rgb.match(/(\d*\.?\d*%)/gm).join(' ');
+					const propertyKey: string = [variable, 'rgb'].join('-');
+					const propertyValue: string = rgb.match(/(\d*\.?\d*%)/gm).join(' ');
 
-				this.document.documentElement.style.setProperty(propertyKey, propertyValue);
-			});
+					this.document.documentElement.style.setProperty(propertyKey, propertyValue);
+				});
+			};
+
+			this.controlListEmojiMartColorScheme$?.unsubscribe();
+			this.controlListEmojiMartColorScheme$ = this.appearanceService
+				.getPrefersColorScheme()
+				.subscribe({
+					next: () => setThemeColor(),
+					error: (error: any) => console.error(error)
+				});
+
+			// Initial call
+
+			setThemeColor();
 
 			/** Init Emoji Mart */
 

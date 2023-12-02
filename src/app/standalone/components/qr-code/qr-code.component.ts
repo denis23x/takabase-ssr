@@ -12,7 +12,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { WindowComponent } from '../window/window.component';
 import { PlatformService } from '../../../core/services/platform.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { AppearanceService } from '../../../core/services/appearance.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { HelperService } from '../../../core/services/helper.service';
@@ -43,6 +43,7 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 	QRCodeOrigin: boolean = true;
 
 	QRCodeValue: string | undefined;
+	QRCodeOptionsColorScheme$: Subscription | undefined;
 	QRCodeOptions: QRCodeRenderersOptions = {
 		margin: 2,
 		scale: 1,
@@ -62,26 +63,6 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 	) {}
 
 	ngAfterViewInit(): void {
-		/** Set QRCodeOptions options */
-
-		if (this.platformService.isBrowser()) {
-			const QRCodeOptionsColor: Record<string, string> = {
-				dark: '--bc',
-				light: '--b1'
-			};
-
-			/** Prepare theme colors */
-
-			// prettier-ignore
-			Object.keys(QRCodeOptionsColor).forEach((key: string) => {
-				QRCodeOptionsColor[key] = this.appearanceService.getCSSColor(QRCodeOptionsColor[key], 'hex');
-			});
-
-			this.QRCodeOptions.color = QRCodeOptionsColor;
-		}
-
-		/** Subscribe for regenerate QRCode */
-
 		this.QRCodeData$.pipe(
 			filter((value: string) => !!value && !!this.QRCodeCanvas?.nativeElement),
 			map((value: string) => {
@@ -112,6 +93,8 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+		[this.QRCodeOptionsColorScheme$].forEach(($: Subscription) => $?.unsubscribe());
+
 		[this.QRCodeData$].forEach(($: BehaviorSubject<string>) => $?.complete());
 	}
 
@@ -136,16 +119,48 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
+	setQRCodeOptions(): void {
+		if (this.platformService.isBrowser()) {
+			const QRCodeOptionsColor: Record<string, string> = {
+				dark: '--bc',
+				light: '--b1'
+			};
+
+			/** Prepare theme colors */
+
+			// prettier-ignore
+			Object.keys(QRCodeOptionsColor).forEach((key: string) => {
+        QRCodeOptionsColor[key] = this.appearanceService.getCSSColor(QRCodeOptionsColor[key], 'hex');
+      });
+
+			this.QRCodeOptions.color = QRCodeOptionsColor;
+		}
+	}
+
 	setQRCodeToCanvas(): void {
 		if (this.platformService.isBrowser()) {
-			// prettier-ignore
-			QRCode.toCanvas(this.QRCodeCanvas.nativeElement, this.QRCodeValue, this.QRCodeOptions, (error: Error): void => {
-				if (error) {
-					this.snackbarService.danger('Error', "Can't draw your QR Code");
-				} else {
-					this.QRCodeCanvas.nativeElement.removeAttribute('style');
-				}
+			const QRCodeToCanvas = (): void => {
+				this.setQRCodeOptions();
+
+				// prettier-ignore
+				QRCode.toCanvas(this.QRCodeCanvas.nativeElement, this.QRCodeValue, this.QRCodeOptions, (error: Error): void => {
+          if (error) {
+            this.snackbarService.danger('Error', "Can't draw your QR Code");
+          } else {
+            this.QRCodeCanvas.nativeElement.removeAttribute('style');
+          }
+        });
+			};
+
+			this.QRCodeOptionsColorScheme$?.unsubscribe();
+			this.QRCodeOptionsColorScheme$ = this.appearanceService.getPrefersColorScheme().subscribe({
+				next: () => QRCodeToCanvas(),
+				error: (error: any) => console.error(error)
 			});
+
+			// Initial call
+
+			QRCodeToCanvas();
 		}
 	}
 }
