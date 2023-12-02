@@ -62,6 +62,11 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		this.cropperUploadPath = cropperUploadPath;
 	}
 
+	@Input()
+	set appCropperRemovePath(cropperRemovePath: string | null) {
+		this.cropperRemovePath = cropperRemovePath;
+	}
+
 	@Output() appCropperSubmit: EventEmitter<string> = new EventEmitter<string>();
 	@Output() appCropperToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -80,6 +85,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	};
 
 	cropperUploadPath: string | undefined;
+	cropperRemovePath: string | undefined | null;
+
 	cropperFile: File = undefined;
 	cropperRound: boolean = false;
 	cropperBlob: Blob = undefined;
@@ -305,6 +312,15 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 				this.imageForm.enable();
 
 				this.onToggleCropper(false);
+
+				// Remove previous image
+
+				if (this.cropperRemovePath) {
+					this.fileService.delete(this.cropperRemovePath).subscribe({
+						next: () => console.debug('File removed'),
+						error: (error: any) => console.error(error)
+					});
+				}
 			},
 			error: () => this.imageForm.enable()
 		});
