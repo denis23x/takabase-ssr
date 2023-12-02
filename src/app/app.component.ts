@@ -33,7 +33,28 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 				next: (currentUser: CurrentUser) => this.appearanceService.getCollection(currentUser.firebase.uid),
 				error: (error: any) => console.error(error)
 			});
-	}
+
+    /** DEBUG: Update seed meta */
+
+    // this.angularFireStorage.storage.ref('/upload/seed').listAll().then((xxx) => {
+    //   xxx.items.forEach((ccc) => {
+    //     // Get meta
+    //     //
+    //     // ccc.getMetadata().then((zzz) => {
+    //     //   console.log(zzz)
+    //     // })
+    //
+    //     // Set meta
+    //     //
+    //     // ccc.getDownloadURL().then((downloadURL) => {
+    //     //   this.angularFireStorage.refFromURL(downloadURL).updateMetadata({
+    //     //     cacheControl: 'public, max-age=31536000, immutable',
+    //     //     contentType: 'image/webp'
+    //     //   })
+    //     // })
+    //   })
+    // })
+  }
 
 	ngAfterViewInit(): void {
 		// TODO: update set loader

@@ -1,6 +1,8 @@
 /* Hide native search icon */
 
 .input {
+  @apply truncate;
+
   &[type="search"] {
     &::-webkit-search-decoration,
     &::-webkit-search-cancel-button,
