@@ -43,6 +43,7 @@ export class MetaService {
 			const metaElement: HTMLMetaElement[] = this.meta.getTags("property^='" + selector + ":'");
 
 			metaElement.forEach((metaElement: HTMLMetaElement) => {
+				// @ts-ignore
 				metaTags[metaElement.getAttribute('property')] = metaElement.content;
 			});
 		});
@@ -71,6 +72,7 @@ export class MetaService {
 		const metaOpenGraphImage: string[] = ['og:image', 'og:image:alt', 'og:image:type'];
 
 		// prettier-ignore
+		// @ts-ignore
 		if (metaOpenGraphImage.some((tag: string) => !metaOpenGraph[tag])) {
 			metaOpenGraph['og:image'] = url.origin + '/assets/meta.jpg';
 			metaOpenGraph['og:image:alt'] = 'Stay up to date with the latest posts and insights from Draft';
@@ -80,6 +82,7 @@ export class MetaService {
 		Object.keys(metaOpenGraph).forEach((key: string) => {
 			const metaDefinition: MetaDefinition = {
 				property: key,
+				// @ts-ignore
 				content: metaOpenGraph[key]
 			};
 
@@ -110,6 +113,7 @@ export class MetaService {
 			const metaElement: HTMLMetaElement[] = this.meta.getTags("name^='" + selector + ":'");
 
 			metaElement.forEach((metaElement: HTMLMetaElement) => {
+				// @ts-ignore
 				metaTags[metaElement.getAttribute('name')] = metaElement.content;
 			});
 		});
@@ -138,14 +142,18 @@ export class MetaService {
 		const metaTwitterImage: string[] = ['twitter:image', 'twitter:image:alt'];
 
 		// prettier-ignore
+		// @ts-ignore
 		if (metaTwitterImage.some((tag: string) => !metaTwitter[tag])) {
-			metaTwitterImage['twitter:image'] = url.origin + '/assets/meta.jpg';
-			metaTwitterImage['twitter:image:alt'] = 'Stay up to date with the latest posts and insights from Draft';
+			// @ts-ignore
+      metaTwitterImage['twitter:image'] = url.origin + '/assets/meta.jpg';
+			// @ts-ignore
+      metaTwitterImage['twitter:image:alt'] = 'Stay up to date with the latest posts and insights from Draft';
 		}
 
 		Object.keys(metaTwitter).forEach((key: string) => {
 			const metaDefinition: MetaDefinition = {
 				name: key,
+				// @ts-ignore
 				content: metaTwitter[key]
 			};
 

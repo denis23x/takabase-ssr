@@ -125,6 +125,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 				};
 
 				this.appearanceTransformList.forEach((key: string) => {
+					// @ts-ignore
 					appearance[key] = this.getTransformListValue(appearance[key], key, true);
 				});
 
@@ -177,7 +178,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 			.subscribe({
 				next: (appearance: Appearance) => {
 					this.appearanceTransformList.forEach((key: string) => {
-						appearance[key] = this.getTransformListValue(appearance[key], key);
+						// @ts-ignore
+            appearance[key] = this.getTransformListValue(appearance[key], key);
 					});
 
 					this.appearanceForm.patchValue(appearance, { emitEvent: false });

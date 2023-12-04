@@ -7,7 +7,6 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "strictNullChecks": false,
-    "suppressImplicitAnyIndexErrors": true,
     "strictPropertyInitialization": false,
     "strict": true,
     "noImplicitReturns": true,

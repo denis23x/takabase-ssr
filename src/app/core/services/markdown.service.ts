@@ -142,6 +142,7 @@ export class MarkdownService {
 
 					imageElement.classList.add(...classList);
 				} else {
+					// @ts-ignore
 					imageElement[key] = value;
 				}
 			});
@@ -187,6 +188,7 @@ export class MarkdownService {
 
 					tableElement.classList.add(...classList);
 				} else {
+					// @ts-ignore
 					tableElement[key] = value;
 				}
 			});

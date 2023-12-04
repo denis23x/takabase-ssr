@@ -106,6 +106,7 @@ export class CategoryUpdateComponent implements OnDestroy {
 				.subscribe({
 					next: (value: any) => {
 						this.categoryUpdateFormIsPristine = Object.keys(value).every((key: string) => {
+							// @ts-ignore
 							return value[key] === this.category[key];
 						});
 					},

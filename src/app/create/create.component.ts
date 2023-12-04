@@ -269,6 +269,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 										return value[key] === this.post.category.name;
 									}
 
+									// @ts-ignore
 									return value[key] === this.post[key];
 								});
 							},
@@ -383,10 +384,13 @@ export class CreateComponent implements OnInit, OnDestroy {
 		// prettier-ignore
 		const viewOpposite: string = view === 'fullscreenMarkdown' ? 'fullscreenRender' : 'fullscreenMarkdown';
 
+		// @ts-ignore
 		if (!this[viewOpposite]) {
+			// @ts-ignore
 			this[viewOpposite] = !this[viewOpposite];
 		}
 
+		// @ts-ignore
 		this[view] = !this[view];
 	}
 

@@ -95,6 +95,7 @@ export class AppearanceService {
 
 		if (appearance) {
 			settingsList.forEach((key: string) => {
+				// @ts-ignore
 				const value: any = appearance[key];
 
 				const cookieKey: string = this.helperService.setCamelCaseToDashCase(key);

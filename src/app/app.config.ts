@@ -5,13 +5,12 @@ import {
 	PreloadAllModules,
 	provideRouter,
 	TitleStrategy,
-	withDebugTracing,
 	withEnabledBlockingInitialNavigation,
 	withPreloading,
 	withRouterConfig
 } from '@angular/router';
 import { APP_ROUTES } from './app.routes';
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withFetch } from '@angular/common/http';
 import { provideServiceWorker } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -24,7 +23,7 @@ import { provideClientHydration } from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
-		provideHttpClient(),
+		provideHttpClient(withFetch()),
 		provideClientHydration(),
 		provideServiceWorker('ngsw-worker.js', {
 			enabled: environment.pwa,
@@ -33,7 +32,6 @@ export const appConfig: ApplicationConfig = {
 		provideRouter(
 			APP_ROUTES,
 			withPreloading(PreloadAllModules),
-			withDebugTracing(),
 			withEnabledBlockingInitialNavigation(),
 			withRouterConfig({
 				onSameUrlNavigation: 'reload'
