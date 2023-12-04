@@ -18,7 +18,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "allowedCommonJsDependencies": [
               "prismjs",
@@ -36,10 +36,12 @@
               "markdown-it-tasks",
               "markdown-it-video"
             ],
-            "outputPath": "dist/draft-ssr/browser",
+            "outputPath": "dist/draft-ssr",
             "index": "src/index.html",
-            "main": "src/main.browser.ts",
-            "polyfills": "src/polyfills.ts",
+            "browser": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -141,8 +143,10 @@
                 "inject": false
               }
             ],
-            "serviceWorker": true,
-            "ngswConfigPath": "ngsw-config.json"
+            "server": "src/main.server.ts",
+            "ssr": {
+              "entry": "server.ts"
+            }
           },
           "configurations": {
             "production": {
@@ -195,57 +199,6 @@
           "options": {
             "browserTarget": "draft-ssr:build"
           }
-        },
-        "server": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/draft-ssr/server",
-            "main": "server.ts",
-            "tsConfig": "tsconfig.server.json",
-            "inlineStyleLanguage": "scss"
-          },
-          "configurations": {
-            "production": {
-              "outputHashing": "media",
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "sourceMap": true,
-              "extractLicenses": true,
-              "namedChunks": false,
-              "buildOptimizer": true
-            },
-            "development": {
-              "optimization": false,
-              "sourceMap": true,
-              "extractLicenses": false,
-              "vendorChunk": true,
-              "buildOptimizer": false
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "prerender": {
-          "builder": "@nguniversal/builders:prerender",
-          "options": {
-            "routesFile": "prerender.txt",
-            "guessRoutes": false
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "draft-ssr:build:production",
-              "serverTarget": "draft-ssr:server:production"
-            },
-            "development": {
-              "browserTarget": "draft-ssr:build:development",
-              "serverTarget": "draft-ssr:server:development"
-            }
-          },
-          "defaultConfiguration": "production"
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",

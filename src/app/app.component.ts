@@ -6,8 +6,21 @@ import { AuthorizationService } from './core/services/authorization.service';
 import { filter, first } from 'rxjs/operators';
 import { CurrentUser } from './core/models/current-user.model';
 import { Subscription } from 'rxjs';
+import { RouterModule } from '@angular/router';
+import { SnackbarComponent } from './standalone/components/snackbar/snackbar.component';
+import { HeaderComponent } from './standalone/components/header/header.component';
+import { ScrollToTopComponent } from './standalone/components/scroll-to-top/scroll-to-top.component';
+import { ReportComponent } from './standalone/components/report/report.component';
 
 @Component({
+	standalone: true,
+	imports: [
+		RouterModule,
+		SnackbarComponent,
+		HeaderComponent,
+		ScrollToTopComponent,
+		ReportComponent
+	],
 	selector: 'app-root',
 	templateUrl: './app.component.html'
 })

@@ -1,8 +1,10 @@
 /** @format */
 
 export const environment = {
-	appUrl: 'https://draft-ssr.web.app',
-	apiUrl: 'https://draft-api.web.app/api/v1',
+	// appUrl: 'https://draft-ssr.web.app',
+	// apiUrl: 'https://draft-api.web.app/api/v1',
+	appUrl: 'http://localhost:4200',
+	apiUrl: 'http://localhost:4400/api/v1',
 	pwa: true,
 	production: true,
 	firebase: {

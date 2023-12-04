@@ -1,12 +1,10 @@
 /** @format */
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes, TitleStrategy, UrlMatchResult, UrlSegment } from '@angular/router';
-import { TitleService } from './core/services/title.service';
+import { Route, UrlMatchResult, UrlSegment } from '@angular/router';
 import { redirectCurrentUserGuard } from './core/guards/redirect-current-user-guard.service';
 import { redirectHomeGuard } from './core/guards/redirect-home-guard.service';
 
-export const routes: Routes = [
+export const APP_ROUTES: Route[] = [
 	{
 		path: 'confirmation',
 		title: 'Confirmation',
@@ -327,21 +325,3 @@ export const routes: Routes = [
 		redirectTo: '/error/404'
 	}
 ];
-
-@NgModule({
-	imports: [
-		RouterModule.forRoot(routes, {
-			anchorScrolling: 'disabled',
-			scrollPositionRestoration: 'disabled',
-			initialNavigation: 'enabledBlocking'
-		})
-	],
-	exports: [RouterModule],
-	providers: [
-		{
-			provide: TitleStrategy,
-			useClass: TitleService
-		}
-	]
-})
-export class AppRoutingModule {}
