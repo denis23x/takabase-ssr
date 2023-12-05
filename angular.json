@@ -146,7 +146,8 @@
             "server": "src/main.server.ts",
             "ssr": {
               "entry": "server.ts"
-            }
+            },
+            "serviceWorker": "ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -211,7 +212,9 @@
           "builder": "@angular/fire:deploy",
           "options": {
             "version": 2,
-            "buildTarget": "draft-ssr:build:production"
+            "browserTarget": "draft-ssr:build:production",
+            "serverTarget": "draft-ssr:server:production",
+            "prerenderTarget": "draft-ssr:prerender:production"
           }
         }
       }
