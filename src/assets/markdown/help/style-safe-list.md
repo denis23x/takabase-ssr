@@ -79,6 +79,7 @@ btn-error
 btn-ghost
 btn-link
 btn-outline
+
 btn-lg
 btn-md
 btn-sm
@@ -98,6 +99,7 @@ badge-error
 badge-ghost
 badge-link
 badge-outline
+
 badge-lg
 badge-md
 badge-sm

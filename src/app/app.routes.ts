@@ -105,6 +105,14 @@ export const APP_ROUTES: Route[] = [
 		]
 	},
 	{
+		path: 'markdown',
+		title: 'Markdown',
+		loadComponent: () => {
+			// prettier-ignore
+			return import('./help/details/markdown/markdown.component').then(m => m.HelpDetailsMarkdownComponent);
+		}
+	},
+	{
 		path: 'create',
 		title: 'Create post',
 		loadComponent: () => {

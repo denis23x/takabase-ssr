@@ -5,109 +5,105 @@
 		<header
 			class="rounded-box flex flex-col items-stretch justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
-			<div class="flex items-stretch justify-between gap-4">
-				<div class="flex flex-col items-start justify-between gap-4 flex-1">
-					<h1 class="text-4xl text-base-content font-semibold">The easiest post platform</h1>
+			<h1 class="text-4xl text-base-content font-semibold">The easiest post platform</h1>
+			<div class="flex items-start justify-start gap-4">
+				<div class="flex flex-col flex-1 items-start justify-start gap-4">
 					<p class="text-base text-base-content/50">
 						Our platform is designed to provide you with an easy-to-use, lightweight app that is
 						highly customizable to your preferences. Whether you’re a blogger, writer, or developer,
 						our website is the perfect tool to bring your ideas to life.
 					</p>
+					<p class="text-base text-base-content/50">
+						We value user feedback and are committed to continuously enhancing the platform's
+						features and usability based on community input.
+					</p>
 				</div>
 				<figure class="hidden md:flex items-start justify-end">
-					<img class="rounded-box w-full" src="https://placehold.co/200x200" alt="Placeholder" />
+					<img class="rounded-box w-full" src="https://placehold.co/136x136" alt="Placeholder" />
 				</figure>
 			</div>
-			<a
-				class="btn btn-outline btn-success btn-md w-full"
-				aria-label="Registration"
-				*appAuthenticated="false"
-				[routerLink]="'/registration'"
-			>
-				Registration
-			</a>
+			<nav class="flex flex-wrap items-center justify-start gap-4">
+				<a
+					class="btn btn-outline btn-success btn-md"
+					aria-label="Registration"
+					*appAuthenticated="false"
+					[routerLink]="'/registration'"
+				>
+					Registration
+				</a>
+				<a class="btn btn-outline btn-info btn-md" aria-label="Search" [routerLink]="'/search'">
+					Search
+				</a>
+				<a
+					class="btn btn-outline btn-primary btn-md"
+					aria-label="Markdown"
+					[routerLink]="'/help/markdown'"
+				>
+					Markdown
+				</a>
+				<button
+					class="btn btn-outline btn-warning btn-md"
+					type="button"
+					aria-label="PWA"
+					*ngIf="appPWAAvailable"
+					(click)="onClickPWAInstall()"
+				>
+					PWA
+				</button>
+				<a
+					class="btn btn-outline btn-error btn-md flex-1"
+					aria-label="About"
+					[routerLink]="'/help/markdown'"
+				>
+					Work In Progress
+				</a>
+			</nav>
 		</header>
-		<div
+		<main
 			class="rounded-box flex flex-col items-stretch justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
-			<div
-				class="flex flex-col items-stretch justify-start gap-4"
-				*ngFor="let appFeature of appFeatureList; let i = index"
-			>
-				<div
-					class="flex sm:flex-row flex-col items-start sm:items-center justify-start gap-4 border-b border-base-content/20 pb-4"
-				>
-					<i
-						class="fill-current"
-						appSvgIcon
-						[appSvgIconIcon]="appFeature.icon"
-						[appSvgIconSquare]="'1.5em'"
-					></i>
-					<h3 class="text-2xl sm:text-4xl font-semibold text-base-content">
-						{{ appFeature.title }}
-					</h3>
-				</div>
-				<p class="text-base">
-					{{ appFeature.description }}
+			<section class="flex flex-col items-stretch justify-start gap-4">
+				<header class="flex items-center justify-between">
+					<div class="flex items-center justify-start gap-4">
+						<i
+							class="fill-current"
+							appSvgIcon
+							[appSvgIconIcon]="appFeatureActive.icon"
+							[appSvgIconSquare]="'1.5em'"
+						></i>
+						<h3 class="text-xl sm:text-2xl font-semibold text-base-content">
+							{{ appFeatureActive.title }}
+						</h3>
+					</div>
+					<nav class="join">
+						<button
+							class="join-item btn btn-sm sm:btn-md"
+							*ngFor="let appFeature of appFeatureList; let i = index"
+							[class.btn-active]="appFeature.id === appFeatureActive.id"
+							(click)="onClickNav(appFeature)"
+						>
+							{{ i + 1 }}
+						</button>
+					</nav>
+				</header>
+				<hr class="border-t border-base-content/20" />
+				<p class="text-base text-base-content">
+					{{ appFeatureActive.description }}
 				</p>
 				<ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
 					<li
 						class="flex flex-col items-start justify-start gap-4 col-span-1"
-						*ngFor="let feature of appFeature.featureList"
+						*ngFor="let description of appFeatureActive.descriptionList"
 					>
 						<span class="text-base sm:text-xl font-semibold text-base-content">
-							{{ feature.title }}
+							{{ description.title }}
 						</span>
 						<p class="text-sm text-base-content/50">
-							{{ feature.description }}
+							{{ description.description }}
 						</p>
 					</li>
 				</ul>
-				<ng-container [ngSwitch]="i">
-					<ng-container *ngSwitchCase="0">
-						<p class="alert">
-							<i
-								class="fill-current text-info"
-								appSvgIcon
-								[appSvgIconIcon]="'info-circle'"
-								[appSvgIconSquare]="'1.75em'"
-							></i>
-							<span class="block">
-								Link multiple authorization methods to a single account for ultimate flexibility.
-								With unified email address whether you prefer advanced methods or social
-								authorization, you can switch seamlessly between them.
-							</span>
-						</p>
-						<a
-							class="btn btn-outline btn-info btn-md w-full"
-							aria-label="Search"
-							[routerLink]="'/search'"
-						>
-							Search
-						</a>
-					</ng-container>
-					<ng-container *ngSwitchCase="1">
-						<button
-							class="btn btn-outline btn-success btn-md w-full"
-							type="button"
-							aria-label="Install PWA"
-							*ngIf="appPWAAvailable"
-							(click)="onClickPWAInstall()"
-						>
-							Install PWA
-						</button>
-					</ng-container>
-					<ng-container *ngSwitchCase="2">
-						<a
-							class="btn btn-outline btn-primary btn-md w-full"
-							aria-label="About"
-							[routerLink]="'/help/markdown'"
-						>
-							About
-						</a>
-					</ng-container>
-				</ng-container>
-			</div>
-		</div>
+			</section>
+		</main>
 	</section>
 </ng-container>

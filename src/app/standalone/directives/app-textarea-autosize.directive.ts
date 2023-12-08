@@ -66,7 +66,7 @@ export class AppTextareaAutosizeDirective implements AfterViewInit, OnDestroy {
 			const windowTextarea: HTMLTextAreaElement = this.elementRef.nativeElement;
 
 			if (method === undefined) {
-				window.autosize(windowTextarea);
+				setTimeout(() => window.autosize(windowTextarea));
 			}
 
 			if (method === 'update') {

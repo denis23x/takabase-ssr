@@ -126,7 +126,7 @@ export const MarkdownControlFormatting = (): MarkdownControl[] => [
 		label: 'Italic',
 		classList: ['italic'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-			return setWrapper('_' + (markdownTextarea.selection || 'Italic text') + '_', markdownTextarea, 'inline');
+			return setWrapper('*' + (markdownTextarea.selection || 'Italic text') + '*', markdownTextarea, 'inline');
 		}
 	},
 	{

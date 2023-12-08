@@ -49,6 +49,10 @@
     }
   }
 
+  blockquote {
+    @apply my-4;
+  }
+
   p {
     @apply my-4;
 
@@ -64,20 +68,28 @@
   ul {
     @apply my-4;
 
-    &.form-control {
+    &.task-list {
       @apply list-none p-0;
 
+      label {
+        @apply justify-start p-0 my-2;
+      }
+
       li {
-        @apply py-1;
+        @apply p-0 my-0;
       }
 
       ul {
-        @apply ml-8;
+        @apply p-0 my-0 ml-8;
       }
     }
 
+    &.steps.steps-vertical {
+      @apply block;
+    }
+
     ul {
-      @apply mb-0;
+      @apply my-2;
     }
 
     li {
@@ -91,7 +103,7 @@
     @apply marker:font-bold my-4;
 
     ol {
-      @apply mb-0;
+      @apply my-2;
     }
   }
 

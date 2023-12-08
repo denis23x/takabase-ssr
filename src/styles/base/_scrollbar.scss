@@ -3,7 +3,7 @@ body {
 
   * {
     @screen mouse {
-      $color-track: oklch(var(--b1));
+      $color-track: transparent;
       $color-thumb: oklch(var(--b3));
 
       scrollbar-color: $color-thumb $color-track;

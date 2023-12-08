@@ -56,26 +56,30 @@ export class MarkdownService {
 			typographer: true,
 			quotes: '“”‘’',
 			highlight: (value: string, language: string): string => {
-				setTimeout(() => Prism.highlightAll());
+				if (this.platformService.isBrowser()) {
+					setTimeout(() => Prism.highlightAll());
 
-				// prettier-ignore
-				const prismTemplate = (value: string, language: string): string => {
-          const getValue = (): string => {
-            if (language === 'markup') {
-              return value.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+					// prettier-ignore
+					const prismTemplate = (value: string, language: string): string => {
+            const getValue = (): string => {
+              if (language === 'markup') {
+                return value.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+              }
+
+              return value;
             }
 
-            return value;
-          }
+            return `<pre class="line-numbers language-${language}"><code class="language-${language} match-braces rainbow-braces">${getValue()}</code></pre>`;
+          };
 
-          return `<pre class="line-numbers language-${language}"><code class="language-${language} match-braces rainbow-braces">${getValue()}</code></pre>`;
-        };
+					if (!!language && environment.prism.grammars.includes(language.toLowerCase())) {
+						return prismTemplate(value, language);
+					}
 
-				if (!!language && environment.prism.grammars.includes(language.toLowerCase())) {
-					return prismTemplate(value, language);
+					return prismTemplate(this.markdownIt.utils.escapeHtml(value), 'plain');
 				}
 
-				return prismTemplate(this.markdownIt.utils.escapeHtml(value), 'plain');
+				return value;
 			}
 		})
 			.use(attrs, {
@@ -109,10 +113,9 @@ export class MarkdownService {
 				enabled: true,
 				label: true,
 				labelAfter: false,
-				containerClass: 'form-control',
-				itemClass: 'label flex-col items-start pointer-events-none m-0 px-0',
-				inputClass: 'checkbox checkbox-success block my-0.5 ml-0.5 mr-4',
-				labelClass: 'flex m-0'
+				itemClass: 'form-control',
+				inputClass: 'checkbox checkbox-success mr-4',
+				labelClass: 'label cursor-pointer'
 			})
 			.use(video);
 
