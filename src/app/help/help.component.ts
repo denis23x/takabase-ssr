@@ -25,14 +25,6 @@ import { ReportService } from '../core/services/report.service';
 export class HelpComponent implements OnInit {
 	helpNavigationList: any[] = [
 		{
-			path: 'about',
-			name: 'About'
-		},
-		{
-			path: 'code-highlight',
-			name: 'Code highlight'
-		},
-		{
 			path: 'markdown',
 			name: 'Markdown'
 		},
@@ -41,12 +33,12 @@ export class HelpComponent implements OnInit {
 			name: 'Style safe list'
 		},
 		{
-			path: 'deep-dive',
-			name: 'Deep dive'
-		},
-		{
 			path: 'compatibility',
 			name: 'Compatibility'
+		},
+		{
+			path: 'code-highlight',
+			name: 'Code highlight'
 		},
 		{
 			path: 'road-map',

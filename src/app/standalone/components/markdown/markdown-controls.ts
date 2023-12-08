@@ -132,7 +132,7 @@ export const MarkdownControlFormatting = (): MarkdownControl[] => [
 	{
 		key: 'formatting-mark',
 		label: 'Mark',
-		classList: ['bg-primary text-primary-content p-1 !rounded'],
+		classList: ['bg-error text-error-content p-1 !rounded'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
 			return setWrapper('==' + (markdownTextarea.selection || 'Marked text') + '==', markdownTextarea, 'inline');
 		}

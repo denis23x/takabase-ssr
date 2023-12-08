@@ -65,6 +65,10 @@
     }
   }
 
+  code {
+    @apply inline bg-base-300 text-base-content font-normal rounded p-1;
+  }
+
   ul {
     @apply my-4;
 
@@ -108,10 +112,10 @@
   }
 
   mark {
-    @apply bg-primary text-primary-content p-1 rounded;
+    @apply bg-error text-error-content p-1 rounded;
 
     * {
-      @apply text-primary-content;
+      @apply text-error-content;
     }
   }
 

@@ -1,40 +1,30 @@
 <!-- @format -->
 
 <ng-container>
-	<section
-		class="rounded-box flex flex-col items-stretch justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-	>
+	<section class="flex flex-col items-stretch justify-start">
 		<header class="flex flex-col items-stretch justify-start gap-4">
-			<div class="flex flex-col items-start justify-start gap-4">
-				<i
-					class="fill-current"
-					appSvgIcon
-					[appSvgIconIcon]="'markdown'"
-					[appSvgIconSquare]="'2em'"
-				></i>
-				<h3 class="text-2xl font-semibold text-base-content">What is Markdown?</h3>
-			</div>
+			<h3 class="text-xl font-semibold text-base-content">What is Markdown?</h3>
 			<p class="text-base text-base-content">
 				Markdown is a lightweight markup language that you can use to add formatting elements to
 				plaintext text documents. Created by John Gruber in 2004, Markdown is now one of the world’s
-				most popular markup languages.
+				most popular markup languages
 			</p>
-			<h4 class="text-2xl font-semibold text-base-content divider divider-start">Overview</h4>
+			<h4 class="text-xl font-semibold text-base-content divider divider-start">Overview</h4>
 			<p class="text-base text-base-content">
 				Nearly all Markdown applications support the basic syntax outlined in the original Markdown
 				design document. There are minor variations and discrepancies between Markdown processors —
-				those are noted inline wherever possible.
+				those are noted inline wherever possible
 			</p>
 			<nav class="prose">
 				<ul class="list-disc">
 					<li>
-						<a class="link" href="https://www.markdownguide.org/cheat-sheet/" target="_blank">
-							Cheat sheet
+						<a class="link" href="https://www.markdownguide.org/extended-syntax/" target="_blank">
+							Extended syntax
 						</a>
 					</li>
 					<li>
-						<a class="link" href="https://www.markdownguide.org/extended-syntax/" target="_blank">
-							Extended syntax
+						<a class="link" href="https://www.markdownguide.org/cheat-sheet/" target="_blank">
+							Cheat sheet
 						</a>
 					</li>
 					<li>
@@ -48,7 +38,7 @@
 				class="flex flex-col items-stretch justify-start gap-4"
 				*ngFor="let basicSyntax of markdownBasicSyntax"
 			>
-				<h4 class="text-2xl font-semibold text-base-content divider divider-start">
+				<h4 class="text-xl font-semibold text-base-content divider divider-start">
 					{{ basicSyntax.title }}
 				</h4>
 				<p
@@ -78,28 +68,22 @@
 			</li>
 		</ul>
 		<footer class="flex flex-col items-stretch justify-start gap-4">
-			<h4 class="text-2xl font-semibold text-base-content divider divider-start">Conclusion</h4>
+			<h4 class="text-xl font-semibold text-base-content divider divider-start">Conclusion</h4>
 			<p class="text-base text-base-content">
 				Our layout is also highly customizable, allowing users to tailor it to their specific needs
 				and preferences. This makes it easy to add and remove elements as needed, change color
-				schemes, and adjust layouts to better suit the content and audience.
+				schemes, and adjust layouts to better suit the content and audience
 			</p>
 			<nav class="prose">
 				<ul class="list-disc">
 					<li>
-						<a class="link" href="" target="_blank"> Style safe list </a>
+						<a class="link" [routerLink]="['../style-safe-list']"> Style safe list </a>
 					</li>
 					<li>
-						<a class="link" href="" target="_blank"> Compatibility </a>
+						<a class="link" [routerLink]="['../compatibility']"> Compatibility </a>
 					</li>
 					<li>
-						<a class="link" href="" target="_blank"> Code highlight </a>
-					</li>
-					<li>
-						<a class="link" href="https://tailwindcss.com" target="_blank"> Tailwind CSS </a>
-					</li>
-					<li>
-						<a class="link" href="https://daisyui.com" target="_blank"> DaisyUI </a>
+						<a class="link" [routerLink]="['../code-highlight']"> Code highlight </a>
 					</li>
 				</ul>
 			</nav>

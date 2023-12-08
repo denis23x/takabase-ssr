@@ -90,27 +90,27 @@ export const APP_ROUTES: Route[] = [
 		redirectTo: 'help/about'
 	},
 	{
-		path: 'help/:markdown',
+		path: 'help',
 		loadComponent: () => {
 			return import('./help/help.component').then(m => m.HelpComponent);
 		},
 		children: [
 			{
-				path: '',
+				path: 'markdown',
+				title: 'Markdown',
+				loadComponent: () => {
+					// prettier-ignore
+					return import('./help/markdown/markdown.component').then(m => m.HelpMarkdownComponent);
+				}
+			},
+			{
+				path: ':details',
 				title: 'Help',
 				loadComponent: () => {
 					return import('./help/details/details.component').then(m => m.HelpDetailsComponent);
 				}
 			}
 		]
-	},
-	{
-		path: 'markdown',
-		title: 'Markdown',
-		loadComponent: () => {
-			// prettier-ignore
-			return import('./help/details/markdown/markdown.component').then(m => m.HelpDetailsMarkdownComponent);
-		}
 	},
 	{
 		path: 'create',

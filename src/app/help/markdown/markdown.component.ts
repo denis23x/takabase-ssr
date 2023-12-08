@@ -1,27 +1,29 @@
 /** @format */
 
 import { Component } from '@angular/core';
-import { MarkdownPipe } from '../../../standalone/pipes/markdown.pipe';
-import { SanitizerPipe } from '../../../standalone/pipes/sanitizer.pipe';
+import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
+import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
-import { AppTextareaAutosizeDirective } from '../../../standalone/directives/app-textarea-autosize.directive';
+import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
+import { AppTextareaAutosizeDirective } from '../../standalone/directives/app-textarea-autosize.directive';
+import { RouterModule } from '@angular/router';
 
 @Component({
 	standalone: true,
 	imports: [
 		CommonModule,
+		RouterModule,
 		MarkdownPipe,
 		SanitizerPipe,
 		FormsModule,
 		SvgIconComponent,
 		AppTextareaAutosizeDirective
 	],
-	selector: 'app-help-details-markdown',
+	selector: 'app-help-markdown',
 	templateUrl: './markdown.component.html'
 })
-export class HelpDetailsMarkdownComponent {
+export class HelpMarkdownComponent {
 	// prettier-ignore
 	markdownBasicSyntax: any = [
     {
@@ -61,7 +63,7 @@ export class HelpDetailsMarkdownComponent {
     },
     {
       title: 'Advanced',
-      description: 'Add classes, identifiers and attributes to your markdown with <code>{.class .class2 attr=value}</code> curly brackets',
+      description: 'Add classes, identifiers and attributes to your markdown with <code>{.class .class2 attr=value}</code> curly brackets. Feel free to show your imagination and use the large set of CSS classes available in the style safe list section',
       markdown: `![Draft](/assets/meta.jpg "Draft Image"){.mask .mask-heart width=100}\n\n[Draft App](https://draft-ssr.web.app){.link .link-info}\n\nBadge Primary{.badge .badge-primary}\n\n[Secondary]{.btn .btn-secondary .btn-outline}\n\n- Register{.step .step-primary}\n- Choose plan{.step .step-primary}\n- Purchase{.step}\n{.steps .steps-vertical .not-prose .p-0}`
     }
   ];

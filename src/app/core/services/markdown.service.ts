@@ -69,7 +69,7 @@ export class MarkdownService {
               return value;
             }
 
-            return `<pre class="line-numbers language-${language}"><code class="language-${language} match-braces rainbow-braces">${getValue()}</code></pre>`;
+            return `<pre class="line-numbers language-${language}" data-language="${language}"><code class="language-${language} match-braces rainbow-braces">${getValue()}</code></pre>`;
           };
 
 					if (!!language && environment.prism.grammars.includes(language.toLowerCase())) {

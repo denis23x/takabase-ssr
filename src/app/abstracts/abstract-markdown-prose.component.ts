@@ -31,7 +31,7 @@ export abstract class AbstractMarkdownProseComponent implements OnInit, OnDestro
 		/** Apply Data */
 
 		this.activatedRouteParams$ = this.activatedRoute.params
-			.pipe(filter((params: Params) => !!params.markdown))
+			.pipe(filter((params: Params) => !!params.details))
 			.subscribe({
 				next: () => {
 					this.setSkeleton();
@@ -52,12 +52,12 @@ export abstract class AbstractMarkdownProseComponent implements OnInit, OnDestro
 	}
 
 	setResolver(): void {
-		const markdown: string = String(this.activatedRoute.snapshot.paramMap.get('markdown') || '');
+		const details: string = String(this.activatedRoute.snapshot.paramMap.get('details') || '');
 
 		if (this.platformService.isBrowser()) {
 			this.abstractProse$?.unsubscribe();
 			this.abstractProse$ = this.httpClient
-				.get(this.getAbstractProseUrl(markdown), {
+				.get(this.getAbstractProseUrl(details), {
 					responseType: 'text'
 				})
 				.pipe(
