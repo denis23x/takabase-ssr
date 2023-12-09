@@ -67,8 +67,8 @@ export class SearchPostComponent extends AbstractSearchListComponent implements 
 		this.abstractListIsLoading$.next(true);
 
 		let postGetAllDto: PostGetAllDto = {
-			page: this.abstractPage,
-			size: this.abstractSize
+			page: this.abstractPage || this.abstractPageDefault,
+			size: this.abstractSize || this.abstractSizeDefault
 		};
 
 		postGetAllDto = {

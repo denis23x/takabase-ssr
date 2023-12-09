@@ -75,8 +75,8 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 		this.abstractListIsLoading$.next(true);
 
 		let categoryGetAllDto: CategoryGetAllDto = {
-			page: this.abstractPage,
-			size: this.abstractSize,
+			page: this.abstractPage || this.abstractPageDefault,
+			size: this.abstractSize || this.abstractSizeDefault,
 			scope: ['user']
 		};
 

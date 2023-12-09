@@ -47,6 +47,22 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
+    /** DEBUG: Watch for stable */
+
+    // const o = window.setTimeout;
+    //
+    // (window as any)['setTimeout'] = function (handler: TimerHandler, timeout?: number, ...args: any[]) {
+    //   console.trace();
+    //   return o(handler, timeout, ...args);
+    // };
+    //
+    // const i = window.setInterval;
+    //
+    // (window as any)['setInterval'] = function (handler: TimerHandler, timeout?: number, ...args: any[]) {
+    //   console.trace();
+    //   return i(handler, timeout, ...args);
+    // };
+
     /** DEBUG: Update seed meta */
 
     // this.angularFireStorage.storage.ref('/upload/seed').listAll().then((xxx) => {

@@ -245,7 +245,7 @@ export class AppearanceService {
 			.pipe(
 				switchMap((querySnapshot: firebase.firestore.QuerySnapshot) => {
 					if (querySnapshot.docs.length) {
-						return of(querySnapshot.docs.shift());
+						return of(querySnapshot.docs[0]);
 					} else {
 						const appearance: Appearance = {
 							dropdownBackdrop: false,

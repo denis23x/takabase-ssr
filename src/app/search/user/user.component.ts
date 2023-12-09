@@ -79,8 +79,8 @@ export class SearchUserComponent extends AbstractSearchListComponent implements 
 		this.abstractListIsLoading$.next(true);
 
 		let userGetAllDto: UserGetAllDto = {
-			page: this.abstractPage,
-			size: this.abstractSize
+			page: this.abstractPage || this.abstractPageDefault,
+			size: this.abstractSize || this.abstractSizeDefault
 		};
 
 		userGetAllDto = {

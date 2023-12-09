@@ -1,18 +1,15 @@
 {
-  "hosting": [
-    {
-      "target": "draft-ssr",
-      "source": ".",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "frameworksBackend": {
-        "region": "us-central1",
-        "maxInstances": 5,
-        "memory": "256MiB"
-      }
+  "hosting": {
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "frameworksBackend": {
+      "region": "us-central1",
+      "maxInstances": 5,
+      "memory": "256MiB"
     }
-  ]
+  }
 }

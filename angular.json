@@ -44,6 +44,7 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "preserveSymlinks": true,
             "assets": [
               "src/favicon.ico",
               "src/manifest.webmanifest",
@@ -212,9 +213,7 @@
           "builder": "@angular/fire:deploy",
           "options": {
             "version": 2,
-            "browserTarget": "draft-ssr:build:production",
-            "serverTarget": "draft-ssr:server:production",
-            "prerenderTarget": "draft-ssr:prerender:production"
+            "buildTarget": "draft-ssr:build:production"
           }
         }
       }
