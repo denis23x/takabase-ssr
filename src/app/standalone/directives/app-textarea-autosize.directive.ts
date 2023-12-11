@@ -61,6 +61,8 @@ export class AppTextareaAutosizeDirective implements AfterViewInit, OnDestroy {
 	}
 
 	setAutosize(method: string | undefined = undefined): void {
+		// Not affecting hydration
+
 		if (this.platformService.isBrowser()) {
 			const window: any = this.platformService.getWindow();
 			const windowTextarea: HTMLTextAreaElement = this.elementRef.nativeElement;

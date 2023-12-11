@@ -135,6 +135,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		abstractControl.updateValueAndValidity();
 
+		// Not affecting hydration
+
 		const validationTimeout = setTimeout(() => {
 			if (this.helperService.getFormValidation(this.imageForm)) {
 				this.imageForm.disable();

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, NgZone } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
 import { HttpClient } from '@angular/common/http';
@@ -34,7 +34,8 @@ export class AppearanceService {
 		private meta: Meta,
 		private helperService: HelperService,
 		private cookieService: CookieService,
-		private angularFirestore: AngularFirestore
+		private angularFirestore: AngularFirestore,
+		private ngZone: NgZone
 	) {}
 
 	/** Utility */
@@ -237,41 +238,43 @@ export class AppearanceService {
 	/** Firestore */
 
 	getCollection(firebaseId: string): Observable<firebase.firestore.DocumentSnapshot<DocumentData>> {
-		return this.angularFirestore
-			.collection(this.collectionOrigin, (collectionReference: CollectionReference) => {
-				return collectionReference.where('firebaseId', '==', firebaseId);
-			})
-			.get()
-			.pipe(
-				switchMap((querySnapshot: firebase.firestore.QuerySnapshot) => {
-					if (querySnapshot.docs.length) {
-						return of(querySnapshot.docs[0]);
-					} else {
-						const appearance: Appearance = {
-							dropdownBackdrop: false,
-							firebaseId,
-							language: 'en-US',
-							markdownMonospace: true,
-							pageRedirectHome: false,
-							pageScrollInfinite: false,
-							pageScrollToTop: false,
-							theme: 'auto',
-							themeBackground: 'slanted-gradient',
-							themePrism: 'auto',
-							windowButtonPosition: 'left'
-						};
+		return this.ngZone.runOutsideAngular(() => {
+			return this.angularFirestore
+				.collection(this.collectionOrigin, (collectionReference: CollectionReference) => {
+					return collectionReference.where('firebaseId', '==', firebaseId);
+				})
+				.get()
+				.pipe(
+					switchMap((querySnapshot: firebase.firestore.QuerySnapshot) => {
+						if (querySnapshot.docs.length) {
+							return of(querySnapshot.docs[0]);
+						} else {
+							const appearance: Appearance = {
+								dropdownBackdrop: false,
+								firebaseId,
+								language: 'en-US',
+								markdownMonospace: true,
+								pageRedirectHome: false,
+								pageScrollInfinite: false,
+								pageScrollToTop: false,
+								theme: 'auto',
+								themeBackground: 'slanted-gradient',
+								themePrism: 'auto',
+								windowButtonPosition: 'left'
+							};
 
-						// prettier-ignore
-						return from(this.angularFirestore.collection(this.collectionOrigin).add(appearance)).pipe(
+							// prettier-ignore
+							return from(this.angularFirestore.collection(this.collectionOrigin).add(appearance)).pipe(
 							switchMap((documentReference: DocumentReference<unknown>) => {
 								return from(documentReference.get());
 							})
 						);
-					}
-				}),
-				tap((queryDocumentSnapshot: firebase.firestore.DocumentSnapshot<DocumentData>) => {
-					this.setSettings(queryDocumentSnapshot.data() as Appearance);
-				})
-			);
+						}
+					}),
+					tap((queryDocumentSnapshot: firebase.firestore.DocumentSnapshot<DocumentData>) => {
+						this.setSettings(queryDocumentSnapshot.data() as Appearance);
+					})
+				);
+		});
 	}
 }

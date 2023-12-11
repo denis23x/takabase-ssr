@@ -57,6 +57,8 @@ export class MarkdownService {
 			quotes: '“”‘’',
 			highlight: (value: string, language: string): string => {
 				if (this.platformService.isBrowser()) {
+					// Not affecting hydration
+
 					setTimeout(() => Prism.highlightAll());
 
 					// prettier-ignore

@@ -110,6 +110,10 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
 		/** Close onScroll && onResize */
 
+		// TODO: Float UI
+
+		// Not affecting hydration
+
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 

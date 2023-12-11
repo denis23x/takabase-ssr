@@ -38,6 +38,8 @@ export class ScrollToTopComponent implements OnInit, OnDestroy {
 				const pageScrollToTop: boolean = !!Number(this.cookieService.getItem('page-scroll-to-top'));
 
 				if (pageScrollToTop) {
+					// Not affecting hydration
+
 					this.windowScroll$ = fromEvent(window, 'scroll')
 						.pipe(
 							debounceTime(10),

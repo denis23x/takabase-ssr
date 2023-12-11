@@ -27,6 +27,8 @@ export class SnackbarService {
 			return 100 - (timestampCurrent / timestampDifference) * 100;
 		};
 
+		// Not affecting hydration
+
 		snack.progress = {
 			value: getProgressValue(),
 			interval: setInterval(() => {
