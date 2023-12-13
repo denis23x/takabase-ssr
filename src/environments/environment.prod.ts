@@ -3,7 +3,7 @@
 export const environment = {
 	appUrl: 'https://draft-ssr.web.app',
 	apiUrl: 'https://draft-api.web.app/api/v1',
-	pwa: true,
+	pwa: false,
 	production: true,
 	firebase: {
 		apiKey: 'AIzaSyDt88ljM_Bq3QvQlATnC-vrC4NdCwWIQzQ',

@@ -8,7 +8,7 @@
 		<meta charset="utf-8" />
 
 		<!-- prettier-ignore -->
-		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=1">
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=5">
 		<meta name="copyright" content="Draft" />
 		<meta name="language" content="en-US" />
 		<meta name="robots" content="index,follow" />
@@ -156,16 +156,16 @@
 					const backgroundElement = document.querySelector("[data-theme-background]")
 
 					// TODO: update
-					if (backgroundElement.dataset.themeBackground !== themeBackground) {
-						fetch("/assets/backgrounds/" + themeBackground + ".svg", {
-							cache: "force-cache",
-						})
-							.then((response) => response.text())
-							.then((svg) => {
-								backgroundElement.innerHTML = svg
-								backgroundElement.dataset.themeBackground = themeBackground
-							})
-					}
+					// if (backgroundElement.dataset.themeBackground !== themeBackground) {
+					// 	fetch("/assets/backgrounds/" + themeBackground + ".svg", {
+					// 		cache: "force-cache",
+					// 	})
+					// 		.then((response) => response.text())
+					// 		.then((svg) => {
+					// 			backgroundElement.innerHTML = svg
+					// 			backgroundElement.dataset.themeBackground = themeBackground
+					// 		})
+					// }
 				}
 
 				/** Set appearance */
