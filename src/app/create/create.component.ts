@@ -16,10 +16,8 @@ import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
-import { WindowComponent } from '../standalone/components/window/window.component';
 import { CropperComponent } from '../standalone/components/cropper/cropper.component';
 import { MarkdownComponent } from '../standalone/components/markdown/markdown.component';
-import { PostProseComponent } from '../standalone/components/post/prose/prose.component';
 import { Category } from '../core/models/category.model';
 import { Post } from '../core/models/post.model';
 import { HelperService } from '../core/services/helper.service';
@@ -63,9 +61,7 @@ interface PostForm {
 		SvgIconComponent,
 		AppInputTrimWhitespaceDirective,
 		DropdownComponent,
-		WindowComponent,
 		CropperComponent,
-		PostProseComponent,
 		MarkdownComponent,
 		NgOptimizedImage,
 		AppScrollPresetDirective,

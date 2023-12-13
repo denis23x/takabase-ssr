@@ -1,0 +1,80 @@
+<!-- @format -->
+
+<ng-container>
+	<form
+		class="flex items-end justify-between gap-4 w-full"
+		autocomplete="off"
+		[formGroup]="searchForm"
+	>
+		<fieldset class="form-control flex-1" *ngIf="searchForm.get('query') as query">
+			<div class="relative">
+				<input
+					class="input-bordered input input-md w-full !pr-12"
+					id="searchFormSearch"
+					type="search"
+					aria-label="Search"
+					formControlName="query"
+					placeholder="Type search query"
+					appInputTrimWhitespace
+					[class.input-success]="query.value && query.valid"
+					[class.input-error]="query.touched && query.invalid"
+				/>
+				<button
+					class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+					type="button"
+					aria-label="Clear query"
+					appSvgIcon
+					*ngIf="!!query.value.length"
+					[class.btn-success]="query.valid"
+					[class.btn-error]="query.touched && query.invalid"
+					[class.btn-ghost]="query.untouched && query.invalid"
+					[disabled]="searchForm.disabled"
+					[appSvgIconIcon]="'x'"
+					[appSvgIconSquare]="'2em'"
+					(click)="query.setValue('')"
+				></button>
+			</div>
+		</fieldset>
+		<fieldset class="form-control" *ngIf="searchForm.get('orderBy') as orderBy">
+			<div class="block" appDropdown [appDropdownPosition]="'bottom-right'">
+				<div class="indicator" slot="target">
+					<span
+						class="indicator-item badge"
+						*ngIf="orderBy.value"
+						[class.badge-ghost]="searchForm.disabled"
+						[class.badge-success]="searchForm.enabled"
+					>
+					</span>
+					<button
+						class="btn-success btn-outline btn-square btn fill-current p-3"
+						type="button"
+						title="Sorting"
+						aria-label="Sorting"
+						appSvgIcon
+						slot="target"
+						[disabled]="searchForm.disabled"
+						[class.btn-outline]="searchForm.enabled"
+						[appSvgIconIcon]="'filter'"
+						[appSvgIconSquare]="'1.75em'"
+					></button>
+				</div>
+				<div class="menu menu-vertical menu-md mt-2 p-0" slot="content">
+					<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
+						<li class="flex w-full" *ngFor="let searchFormOrderBy of searchFormOrderByList">
+							<!-- prettier-ignore -->
+							<button
+                class="rounded-btn block w-full truncate text-right first-letter:uppercase"
+                type="button"
+                [ngClass]="{ 'active': searchFormOrderBy === orderBy.value }"
+                [attr.aria-label]="searchFormOrderBy"
+                (click)="searchFormOrderBy === orderBy.value ? orderBy.reset() : orderBy.setValue(searchFormOrderBy)"
+              >
+                {{ searchFormOrderBy }}
+              </button>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</fieldset>
+	</form>
+</ng-container>

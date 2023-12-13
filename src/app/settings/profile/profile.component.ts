@@ -15,7 +15,6 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { CropperComponent } from '../../standalone/components/cropper/cropper.component';
-import { WindowComponent } from '../../standalone/components/window/window.component';
 import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
@@ -43,7 +42,6 @@ interface ProfileForm {
 		SvgIconComponent,
 		AvatarComponent,
 		CropperComponent,
-		WindowComponent,
 		DayjsPipe,
 		UserUrlPipe,
 		AppInputTrimWhitespaceDirective,
