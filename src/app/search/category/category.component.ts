@@ -48,9 +48,7 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 	}
 
 	setResolver(): void {
-		if (this.platformService.isBrowser()) {
-			this.getAbstractList();
-		}
+		this.getAbstractList();
 	}
 
 	setMetaTags(): void {

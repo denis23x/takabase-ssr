@@ -40,9 +40,7 @@ export class SearchPostComponent extends AbstractSearchListComponent implements 
 	}
 
 	setResolver(): void {
-		if (this.platformService.isBrowser()) {
-			this.getAbstractList();
-		}
+		this.getAbstractList();
 	}
 
 	setMetaTags(): void {
