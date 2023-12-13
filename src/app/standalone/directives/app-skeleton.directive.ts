@@ -1,15 +1,16 @@
 /** @format */
 
-import { Directive, ElementRef, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Inject, Input, OnDestroy } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { HelperService } from '../../core/services/helper.service';
 
 @Directive({
 	standalone: true,
 	selector: '[appSkeleton]'
 })
-export class AppSkeletonDirective implements OnInit, OnDestroy {
+export class AppSkeletonDirective implements AfterViewInit, OnDestroy {
 	@Input()
 	set appSkeletonToggle(loading: boolean) {
 		this.skeletonToggle$.next(loading);
@@ -48,15 +49,13 @@ export class AppSkeletonDirective implements OnInit, OnDestroy {
 	constructor(
 		@Inject(DOCUMENT)
 		private document: Document,
-		private elementRef: ElementRef
+		private elementRef: ElementRef,
+		private helperService: HelperService
 	) {}
 
-	ngOnInit(): void {
+	ngAfterViewInit(): void {
 		this.skeletonToggle$
-			.pipe(
-				distinctUntilChanged(),
-				tap((skeletonToggle: boolean) => (this.skeletonToggle = skeletonToggle))
-			)
+			.pipe(tap((skeletonToggle: boolean) => (this.skeletonToggle = skeletonToggle)))
 			.subscribe({
 				next: () => this.setSkeleton(),
 				error: (error: any) => console.error(error)
@@ -68,38 +67,30 @@ export class AppSkeletonDirective implements OnInit, OnDestroy {
 	}
 
 	getSkeleton(): any {
+		const uuid: string = this.helperService.getUUID();
+
 		const spanElementSkeleton: HTMLSpanElement = this.document.createElement('span');
 
+		spanElementSkeleton.id = ['skeleton', uuid].join('-');
 		spanElementSkeleton.classList.add(...this.skeletonClassList);
-
-		/** Angular Universal issue */
-
-		if (typeof spanElementSkeleton.dataset !== 'undefined') {
-			spanElementSkeleton.dataset.skeleton = '';
-		}
 
 		const spanElementParent: HTMLSpanElement = this.document.createElement('span');
 
+		spanElementParent.id = ['skeleton-parent', uuid].join('-');
 		spanElementParent.classList.add(...this.skeletonClassListParent);
-
-		/** Angular Universal issue */
-
-		if (typeof spanElementParent.dataset !== 'undefined') {
-			spanElementParent.dataset.skeletonParent = '';
-		}
-
 		spanElementParent.appendChild(spanElementSkeleton);
 
 		return spanElementParent;
 	}
 
+	// prettier-ignore
 	setSkeleton(): void {
 		if (this.skeletonToggle) {
 			this.elementRef.nativeElement.classList.add(...this.skeletonClassListElementRef, 'relative');
 			this.elementRef.nativeElement.appendChild(this.getSkeleton());
 		} else {
 			this.elementRef.nativeElement.classList.remove(...this.skeletonClassListElementRef);
-			this.elementRef.nativeElement.querySelector('[data-skeleton-parent]')?.remove();
+			this.elementRef.nativeElement.querySelectorAll('[id^="skeleton"]').forEach((spanElement: HTMLSpanElement) => spanElement.remove());
 		}
 	}
 }

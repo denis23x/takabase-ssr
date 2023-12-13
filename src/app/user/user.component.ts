@@ -136,11 +136,6 @@ export class UserComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.setSkeleton();
 					this.setResolver();
-
-					// Update child
-
-					this.userPostComponent?.setSkeleton();
-					// this.userPostComponent?.setResolver();
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -207,7 +202,7 @@ export class UserComponent implements OnInit, OnDestroy {
 				if (!userList.length) {
 					this.router.navigate(['error', 404]).then(() => console.debug('Route changed'));
 				} else {
-					this.user = userList.shift();
+					this.user = userList[0];
 					this.userSkeletonToggle = false;
 
 					this.categoryList = this.user.categories;
@@ -219,11 +214,7 @@ export class UserComponent implements OnInit, OnDestroy {
 					this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params
 						.pipe(
 							switchMap(() => this.activatedRoute.firstChild.params),
-							distinctUntilKeyChanged('categoryId'),
-							tap(() => {
-								this.userPostComponent.setSkeleton();
-								this.userPostComponent.setResolver();
-							})
+							distinctUntilKeyChanged('categoryId')
 						)
 						.subscribe({
 							next: () => {
