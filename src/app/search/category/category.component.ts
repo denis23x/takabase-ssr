@@ -80,9 +80,10 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 			scope: ['user']
 		};
 
-		// prettier-ignore
+		// Search
+
 		categoryGetAllDto = {
-			...this.searchService.getSearchGetAllDto(categoryGetAllDto, this.activatedRoute.parent.snapshot)
+			...this.getAbstractListSearchGetAllDto(categoryGetAllDto)
 		};
 
 		if (!concat) {

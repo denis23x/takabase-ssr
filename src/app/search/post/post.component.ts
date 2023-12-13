@@ -71,8 +71,10 @@ export class SearchPostComponent extends AbstractSearchListComponent implements 
 			size: this.abstractSize || this.abstractSizeDefault
 		};
 
+		// Search
+
 		postGetAllDto = {
-			...this.searchService.getSearchGetAllDto(postGetAllDto, this.activatedRoute.parent.snapshot)
+			...this.getAbstractListSearchGetAllDto(postGetAllDto)
 		};
 
 		if (!concat) {
