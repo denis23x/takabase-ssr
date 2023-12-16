@@ -40,7 +40,6 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 
 	searchForm: FormGroup | undefined;
 	searchForm$: Subscription | undefined;
-	searchFormIsSubmitted$: Subscription | undefined;
 	searchFormOrderByList: string[] = ['newest', 'oldest'];
 
 	constructor(
@@ -85,8 +84,7 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 							queryParams: {
 								query: value.query || null,
 								orderBy: value.orderBy || null
-							},
-							queryParamsHandling: 'merge'
+							}
 						})
 						.then(() => console.debug('Route changed'));
 				},
@@ -96,6 +94,6 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		// prettier-ignore
-		[this.activatedRouteQueryParams$, this.searchForm$, this.searchFormIsSubmitted$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.activatedRouteQueryParams$, this.searchForm$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 }

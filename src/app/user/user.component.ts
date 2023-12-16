@@ -1,22 +1,13 @@
 /** @format */
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import { distinctUntilKeyChanged, Observable, Subscription, throwError } from 'rxjs';
-import { catchError, debounceTime, filter, skip, switchMap, tap } from 'rxjs/operators';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { distinctUntilKeyChanged, Subscription, throwError } from 'rxjs';
+import { catchError, filter, switchMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
-import { WindowComponent } from '../standalone/components/window/window.component';
-import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { DayjsPipe } from '../standalone/pipes/dayjs.pipe';
 import { User } from '../core/models/user.model';
 import { Category } from '../core/models/category.model';
@@ -41,38 +32,31 @@ import { TitleService } from '../core/services/title.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 import { ReportService } from '../core/services/report.service';
-
-interface PostSearchForm {
-	query: FormControl<string>;
-	orderBy: FormControl<string>;
-}
+import { SearchFormComponent } from '../standalone/components/search-form/search-form.component';
 
 @Component({
 	standalone: true,
 	imports: [
 		CommonModule,
 		RouterModule,
-		ReactiveFormsModule,
 		AvatarComponent,
 		DayjsPipe,
 		AppScrollPresetDirective,
 		SvgIconComponent,
-		WindowComponent,
-		AppInputTrimWhitespaceDirective,
 		MarkdownPipe,
 		SanitizerPipe,
 		DropdownComponent,
 		AppSkeletonDirective,
 		CategoryUpdateComponent,
 		CategoryDeleteComponent,
-		CategoryCreateComponent
+		CategoryCreateComponent,
+		SearchFormComponent
 	],
 	selector: 'app-user',
 	templateUrl: './user.component.html'
 })
 export class UserComponent implements OnInit, OnDestroy {
 	activatedRouteUrl$: Subscription | undefined;
-	activatedRouteQueryParams$: Subscription | undefined;
 	activatedRouteFirstChildParams$: Subscription | undefined;
 
 	user: User | undefined;
@@ -87,11 +71,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	currentUserSkeletonToggle: boolean = true;
 	currentUserSkeletonToggle$: Subscription | undefined;
 
-	postSearchForm: FormGroup | undefined;
-	postSearchForm$: Subscription | undefined;
-	postSearchFormToggle: boolean = false;
-	postSearchFormIsSubmitted$: Subscription | undefined;
-	postSearchFormOrderByList: string[] = ['newest', 'oldest'];
+	searchFormToggle: boolean = false;
 
 	category: Category | undefined;
 	categoryRequest$: Subscription | undefined;
@@ -101,7 +81,6 @@ export class UserComponent implements OnInit, OnDestroy {
 	categoryListSkeletonToggle: boolean = true;
 
 	constructor(
-		private formBuilder: FormBuilder,
 		private activatedRoute: ActivatedRoute,
 		private router: Router,
 		private authorizationService: AuthorizationService,
@@ -113,15 +92,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		private skeletonService: SkeletonService,
 		private snackbarService: SnackbarService,
 		private changeDetectorRef: ChangeDetectorRef
-	) {
-		this.postSearchForm = this.formBuilder.group<PostSearchForm>({
-			query: this.formBuilder.nonNullable.control('', [
-				Validators.minLength(2),
-				Validators.maxLength(24)
-			]),
-			orderBy: this.formBuilder.nonNullable.control('', [])
-		});
-	}
+	) {}
 
 	ngOnInit(): void {
 		/** Apply Data */
@@ -130,7 +101,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.activatedRouteUrl$ = this.activatedRoute.url
 			.pipe(
 				switchMap(() => this.activatedRoute.params),
-				distinctUntilKeyChanged('name')
+				distinctUntilKeyChanged('userName')
 			)
 			.subscribe({
 				next: () => {
@@ -160,15 +131,12 @@ export class UserComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		[
 			this.activatedRouteUrl$,
-			this.activatedRouteQueryParams$,
 			this.activatedRouteFirstChildParams$,
 			this.userRequest$,
 			this.categoryRequest$,
 			this.currentUser$,
 			this.currentUserLogoutRequest$,
-			this.currentUserSkeletonToggle$,
-			this.postSearchForm$,
-			this.postSearchFormIsSubmitted$
+			this.currentUserSkeletonToggle$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -189,10 +157,11 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
-		const name: string = String(this.activatedRoute.snapshot.paramMap.get('name') || '');
+		// prettier-ignore
+		const userName: string = String(this.activatedRoute.snapshot.paramMap.get('userName') || '');
 
 		const userGetAllDto: UserGetAllDto = {
-			name: name.substring(1),
+			name: userName.substring(1),
 			scope: ['categories']
 		};
 
@@ -263,12 +232,10 @@ export class UserComponent implements OnInit, OnDestroy {
 			error: (error: any) => console.error(error)
 		});
 
-		// Init postSearchForm if url have a queryParams
+		/** Toggle SearchForm component */
 
 		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
-			this.postSearchForm.disable();
-
-			this.onTogglePostSearchForm();
+			this.onToggleSearchForm();
 		}
 	}
 
@@ -281,15 +248,15 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		const username: string = this.userService.getUserUrl(this.user, 1);
-		const title: string = this.category?.name || username;
+		const userName: string = this.userService.getUserUrl(this.user, 1);
+		const title: string = this.category?.name || userName;
 		const description: string = this.category?.description || this.user.description;
 
 		const metaOpenGraph: Partial<MetaOpenGraph> = {
 			['og:title']: title,
 			['og:description']: description,
 			['og:image']: this.user.avatar,
-			['og:image:alt']: username,
+			['og:image:alt']: userName,
 			['og:image:type']: 'image/png'
 		};
 
@@ -297,14 +264,14 @@ export class UserComponent implements OnInit, OnDestroy {
 			metaOpenGraph['og:type'] = 'website';
 		} else {
 			metaOpenGraph['og:type'] = 'profile';
-			metaOpenGraph['profile:username'] = username;
+			metaOpenGraph['profile:username'] = userName;
 		}
 
 		const metaTwitter: MetaTwitter = {
 			['twitter:title']: title,
 			['twitter:description']: description,
 			['twitter:image']: this.user.avatar,
-			['twitter:image:alt']: username
+			['twitter:image:alt']: userName
 		};
 
 		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
@@ -312,64 +279,18 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	/** Search */
 
-	onTogglePostSearchForm(): void {
-		if (this.postSearchFormToggle) {
+	onToggleSearchForm(): void {
+		if (this.searchFormToggle) {
+			this.searchFormToggle = false;
+
 			this.router
 				.navigate([], {
 					relativeTo: this.activatedRoute,
-					queryParams: {
-						query: null,
-						orderBy: null
-					},
-					queryParamsHandling: 'merge'
+					queryParams: null
 				})
 				.then(() => console.debug('Route changed'));
-
-			this.postSearchForm.reset();
-			this.postSearchFormToggle = false;
-
-			this.postSearchForm$?.unsubscribe();
-			this.activatedRouteQueryParams$?.unsubscribe();
 		} else {
-			this.postSearchFormToggle = true;
-
-			// Set postSearchForm to queryParams
-
-			this.postSearchForm$?.unsubscribe();
-			this.postSearchForm$ = this.postSearchForm.valueChanges
-				.pipe(
-					debounceTime(1000),
-					filter(() => this.postSearchForm.valid)
-				)
-				.subscribe({
-					next: () => {
-						this.router
-							.navigate([], {
-								relativeTo: this.activatedRoute,
-								queryParams: {
-									query: this.postSearchForm.value.query || null,
-									orderBy: this.postSearchForm.value.orderBy || null
-								},
-								queryParamsHandling: 'merge'
-							})
-							.then(() => console.debug('Route changed'));
-					},
-					error: (error: any) => console.error(error)
-				});
-
-			// Set queryParams to postSearchForm
-
-			this.activatedRouteQueryParams$?.unsubscribe();
-			this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
-				.pipe(filter((params: Params) => params.query || params.orderBy))
-				.subscribe({
-					next: (params: Params) => {
-						this.postSearchForm.patchValue(params, { emitEvent: false });
-						this.postSearchForm.markAllAsTouched();
-						this.postSearchFormToggle = true;
-					},
-					error: (error: any) => console.error(error)
-				});
+			this.searchFormToggle = true;
 		}
 	}
 
@@ -430,21 +351,9 @@ export class UserComponent implements OnInit, OnDestroy {
 	onRouterOutletActivate(userPostComponent: UserPostComponent): void {
 		this.userPostComponent = userPostComponent;
 
-		// ExpressionChangedAfterItHasBeenCheckedError (appCategoryDeleteComponent => userPostComponent.abstractList)
+		// ExpressionChangedAfterItHasBeenCheckedError (userPostComponent)
 
 		this.changeDetectorRef.detectChanges();
-
-		// Control postSearchForm state from children
-
-		const isLoading$: Observable<boolean> = this.userPostComponent.abstractListIsLoading$;
-
-		this.postSearchFormIsSubmitted$?.unsubscribe();
-		this.postSearchFormIsSubmitted$ = isLoading$.pipe(skip(1)).subscribe({
-			next: (isSubmitted: boolean) => {
-				isSubmitted ? this.postSearchForm.disable() : this.postSearchForm.enable();
-			},
-			error: (error: any) => console.error(error)
-		});
 	}
 
 	onLogout(): void {
