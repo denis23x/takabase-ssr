@@ -8,10 +8,10 @@ import { AppearanceService } from '../core/services/appearance.service';
 import { AbstractGetAllDto } from '../core/dto/abstract/abstract-get-all.dto';
 
 @Component({
-	selector: 'app-abstract-search-list',
+	selector: 'app-abstract-search',
 	template: ''
 })
-export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
+export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 	cookieService: CookieService = inject(CookieService);
 	appearanceService: AppearanceService = inject(AppearanceService);
 
@@ -19,39 +19,38 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 
 	@Input({ transform: numberAttribute })
 	set categoryId(categoryId: number | undefined) {
-		this.setAbstractListGetAllDto({
+		this.setAbstractGetAllDto({
 			categoryId
 		});
 	}
 
 	@Input()
 	set userName(userName: string | undefined) {
-		this.setAbstractListGetAllDto({
+		this.setAbstractGetAllDto({
 			userName: userName ? userName.substring(1) : userName
 		});
 	}
 
 	@Input()
 	set query(query: string | undefined) {
-		this.setAbstractListGetAllDto({
+		this.setAbstractGetAllDto({
 			query
 		});
 	}
 
 	@Input()
 	set orderBy(orderBy: string | undefined) {
-		this.setAbstractListGetAllDto({
+		this.setAbstractGetAllDto({
 			orderBy
 		});
 	}
 
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
-	abstractListPageDefault: number = 1;
-	abstractListSizeDefault: number = 20;
-
 	// prettier-ignore
-	abstractListGetAllDto$: BehaviorSubject<AbstractGetAllDto> = new BehaviorSubject<AbstractGetAllDto>({});
+	abstractGetAllDto$: BehaviorSubject<AbstractGetAllDto> = new BehaviorSubject<AbstractGetAllDto>({});
+	abstractGetAllDtoPageDefault: number = 1;
+	abstractGetAllDtoSizeDefault: number = 20;
 
 	abstractListIsLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	abstractListIsHasMore: boolean = false;
@@ -69,7 +68,7 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 		[this.abstractListPageScrollInfinite$].forEach(($: Subscription) => $?.unsubscribe());
 
 		// prettier-ignore
-		[this.abstractListIsLoading$, this.abstractListGetAllDto$].forEach(($: BehaviorSubject<any>) => $?.complete());
+		[this.abstractListIsLoading$, this.abstractGetAllDto$].forEach(($: BehaviorSubject<any>) => $?.complete());
 	}
 
 	setAbstractAppearance(): void {
@@ -88,19 +87,19 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	setAbstractListGetAllDto(getAllDtoParams: Partial<AbstractGetAllDto>): void {
-		const getAllDto: AbstractGetAllDto = this.abstractListGetAllDto$.getValue();
+	setAbstractGetAllDto(getAllDtoParams: Partial<AbstractGetAllDto>): void {
+		const getAllDto: AbstractGetAllDto = this.abstractGetAllDto$.getValue();
 
-		this.abstractListGetAllDto$.next({
+		this.abstractGetAllDto$.next({
 			...getAllDto,
 			...getAllDtoParams,
-			page: this.abstractListPageDefault,
-			size: this.abstractListSizeDefault
+			page: this.abstractGetAllDtoPageDefault,
+			size: this.abstractGetAllDtoSizeDefault
 		});
 	}
 
-	getAbstractListGetAllDto(): AbstractGetAllDto {
-		const getAllDto: any = this.abstractListGetAllDto$.getValue();
+	getAbstractGetAllDto(): AbstractGetAllDto {
+		const getAllDto: any = this.abstractGetAllDto$.getValue();
 		const getAllDtoEntries: any[] = Object.entries(getAllDto);
 		const getAllDtoFiltered: any[] = getAllDtoEntries.filter(([, value]: [string, any]) => !!value);
 

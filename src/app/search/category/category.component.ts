@@ -8,7 +8,7 @@ import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { Category } from '../../core/models/category.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto';
-import { AbstractSearchListComponent } from '../../abstracts/abstract-search-list.component';
+import { AbstractSearchComponent } from '../../abstracts/abstract-search.component';
 import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { CardCategoryComponent } from '../../standalone/components/card/category/category.component';
 import { CategoryService } from '../../core/services/category.service';
@@ -16,7 +16,6 @@ import { MetaService } from '../../core/services/meta.service';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { Subscription } from 'rxjs';
 
-// prettier-ignore
 @Component({
 	standalone: true,
 	imports: [
@@ -30,7 +29,7 @@ import { Subscription } from 'rxjs';
 	selector: 'app-search-category',
 	templateUrl: './category.component.html'
 })
-export class SearchCategoryComponent extends AbstractSearchListComponent implements OnInit, OnDestroy {
+export class SearchCategoryComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
 	categoryService: CategoryService = inject(CategoryService);
 	metaService: MetaService = inject(MetaService);
 	skeletonService: SkeletonService = inject(SkeletonService);
@@ -41,19 +40,19 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 	categoryListRequest$: Subscription | undefined;
 	categoryListSkeletonToggle: boolean = false;
 
-	categoryListGetAllDto: CategoryGetAllDto | undefined;
-	categoryListGetAllDto$: Subscription | undefined;
+	categoryGetAllDto: CategoryGetAllDto | undefined;
+	categoryGetAllDto$: Subscription | undefined;
 
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		this.categoryListGetAllDto$?.unsubscribe();
-		this.categoryListGetAllDto$ = this.abstractListGetAllDto$.subscribe({
+		this.categoryGetAllDto$?.unsubscribe();
+		this.categoryGetAllDto$ = this.abstractGetAllDto$.subscribe({
 			next: () => {
 				/** Get abstract DTO */
 
-				this.categoryListGetAllDto = this.getAbstractListGetAllDto();
-				this.categoryListGetAllDto.scope = ['user'];
+				this.categoryGetAllDto = this.getAbstractGetAllDto();
+				this.categoryGetAllDto.scope = ['user'];
 
 				/** Apply Data */
 
@@ -72,7 +71,7 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 		super.ngOnDestroy();
 
 		// prettier-ignore
-		[this.categoryListRequest$, this.categoryListGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.categoryListRequest$, this.categoryGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
@@ -107,19 +106,19 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 	getAbstractList(): void {
 		this.abstractListIsLoading$.next(true);
 
-		const concat: boolean = this.categoryListGetAllDto.page !== 1;
+		const concat: boolean = this.categoryGetAllDto.page !== 1;
 
 		if (!concat) {
 			this.setSkeleton();
 		}
 
 		this.categoryListRequest$?.unsubscribe();
-		this.categoryListRequest$ = this.categoryService.getAll(this.categoryListGetAllDto).subscribe({
+		this.categoryListRequest$ = this.categoryService.getAll(this.categoryGetAllDto).subscribe({
 			next: (categoryList: Category[]) => {
 				this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
 				this.categoryListSkeletonToggle = false;
 
-				this.abstractListIsHasMore = categoryList.length === this.categoryListGetAllDto.size;
+				this.abstractListIsHasMore = categoryList.length === this.categoryGetAllDto.size;
 				this.abstractListIsLoading$.next(false);
 			},
 			error: (error: any) => console.error(error)
@@ -127,7 +126,7 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 	}
 
 	getAbstractListLoadMore(): void {
-		this.categoryListGetAllDto.page++;
+		this.categoryGetAllDto.page++;
 
 		this.getAbstractList();
 	}

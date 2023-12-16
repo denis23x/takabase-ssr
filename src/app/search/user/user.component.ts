@@ -10,7 +10,7 @@ import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
-import { AbstractSearchListComponent } from '../../abstracts/abstract-search-list.component';
+import { AbstractSearchComponent } from '../../abstracts/abstract-search.component';
 import { CardUserComponent } from '../../standalone/components/card/user/user.component';
 import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { UserService } from '../../core/services/user.service';
@@ -33,7 +33,7 @@ import { Subscription } from 'rxjs';
 	selector: 'app-search-user',
 	templateUrl: './user.component.html'
 })
-export class SearchUserComponent extends AbstractSearchListComponent implements OnInit, OnDestroy {
+export class SearchUserComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
 	userService: UserService = inject(UserService);
 	metaService: MetaService = inject(MetaService);
 	skeletonService: SkeletonService = inject(SkeletonService);
@@ -44,18 +44,18 @@ export class SearchUserComponent extends AbstractSearchListComponent implements 
 	userListRequest$: Subscription | undefined;
 	userListSkeletonToggle: boolean = false;
 
-	userListGetAllDto: UserGetAllDto | undefined;
-	userListGetAllDto$: Subscription | undefined;
+	userGetAllDto: UserGetAllDto | undefined;
+	userGetAllDto$: Subscription | undefined;
 
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		this.userListGetAllDto$?.unsubscribe();
-		this.userListGetAllDto$ = this.abstractListGetAllDto$.subscribe({
+		this.userGetAllDto$?.unsubscribe();
+		this.userGetAllDto$ = this.abstractGetAllDto$.subscribe({
 			next: () => {
 				/** Get abstract DTO */
 
-				this.userListGetAllDto = this.getAbstractListGetAllDto();
+				this.userGetAllDto = this.getAbstractGetAllDto();
 
 				/** Apply Data */
 
@@ -74,7 +74,7 @@ export class SearchUserComponent extends AbstractSearchListComponent implements 
 		super.ngOnDestroy();
 
 		// prettier-ignore
-		[this.userListRequest$, this.userListGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.userListRequest$, this.userGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
@@ -109,19 +109,19 @@ export class SearchUserComponent extends AbstractSearchListComponent implements 
 	getAbstractList(): void {
 		this.abstractListIsLoading$.next(true);
 
-		const concat: boolean = this.userListGetAllDto.page !== 1;
+		const concat: boolean = this.userGetAllDto.page !== 1;
 
 		if (!concat) {
 			this.setSkeleton();
 		}
 
 		this.userListRequest$?.unsubscribe();
-		this.userListRequest$ = this.userService.getAll(this.userListGetAllDto).subscribe({
+		this.userListRequest$ = this.userService.getAll(this.userGetAllDto).subscribe({
 			next: (userList: User[]) => {
 				this.userList = concat ? this.userList.concat(userList) : userList;
 				this.userListSkeletonToggle = false;
 
-				this.abstractListIsHasMore = userList.length === this.userListGetAllDto.size;
+				this.abstractListIsHasMore = userList.length === this.userGetAllDto.size;
 				this.abstractListIsLoading$.next(false);
 			},
 			error: (error: any) => console.error(error)
@@ -129,7 +129,7 @@ export class SearchUserComponent extends AbstractSearchListComponent implements 
 	}
 
 	getAbstractListLoadMore(): void {
-		this.userListGetAllDto.page++;
+		this.userGetAllDto.page++;
 
 		this.getAbstractList();
 	}
