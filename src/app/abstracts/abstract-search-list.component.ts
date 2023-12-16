@@ -1,113 +1,75 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { filter, skip, tap } from 'rxjs/operators';
-import { BehaviorSubject, distinctUntilKeyChanged, Subscription } from 'rxjs';
-import { PostService } from '../core/services/post.service';
+import { Component, inject, Input, numberAttribute, OnDestroy, OnInit } from '@angular/core';
+import { filter } from 'rxjs/operators';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { CookieService } from '../core/services/cookie.service';
 import { AppearanceService } from '../core/services/appearance.service';
-import { MetaService } from '../core/services/meta.service';
-import { CategoryService } from '../core/services/category.service';
-import { UserService } from '../core/services/user.service';
-import { SkeletonService } from '../core/services/skeleton.service';
-import { PlatformService } from '../core/services/platform.service';
-import { SearchService } from '../core/services/search.service';
+import { AbstractGetAllDto } from '../core/dto/abstract/abstract-get-all.dto';
 
 @Component({
 	selector: 'app-abstract-search-list',
 	template: ''
 })
 export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
+	cookieService: CookieService = inject(CookieService);
+	appearanceService: AppearanceService = inject(AppearanceService);
+
+	/* --- */
+
+	@Input({ transform: numberAttribute })
+	set categoryId(categoryId: number | undefined) {
+		this.setAbstractListGetAllDto({
+			categoryId
+		});
+	}
+
+	@Input()
+	set userName(userName: string | undefined) {
+		this.setAbstractListGetAllDto({
+			userName: userName ? userName.substring(1) : userName
+		});
+	}
+
+	@Input()
+	set query(query: string | undefined) {
+		this.setAbstractListGetAllDto({
+			query
+		});
+	}
+
+	@Input()
+	set orderBy(orderBy: string | undefined) {
+		this.setAbstractListGetAllDto({
+			orderBy
+		});
+	}
+
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
-	activatedRouteParams$: Subscription | undefined;
-	activatedRouteQueryParams$: Subscription | undefined;
+	abstractListPageDefault: number = 1;
+	abstractListSizeDefault: number = 20;
 
-	abstractPageDefault: number = 1;
-	abstractSizeDefault: number = 20;
+	// prettier-ignore
+	abstractListGetAllDto$: BehaviorSubject<AbstractGetAllDto> = new BehaviorSubject<AbstractGetAllDto>({});
 
-	abstractPage: number = null;
-	abstractSize: number = null;
-
-	abstractList: any[] = [];
-	abstractListRequest$: Subscription | undefined;
-	abstractListSkeletonToggle: boolean = true;
 	abstractListIsLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-	abstractListHasMore: boolean = false;
+	abstractListIsHasMore: boolean = false;
 
 	abstractListPageScrollInfinite: boolean = false;
 	abstractListPageScrollInfinite$: Subscription | undefined;
 
-	constructor(
-		public activatedRoute: ActivatedRoute,
-		public postService: PostService,
-		public categoryService: CategoryService,
-		public userService: UserService,
-		public metaService: MetaService,
-		public cookieService: CookieService,
-		public appearanceService: AppearanceService,
-		public skeletonService: SkeletonService,
-		public platformService: PlatformService,
-		public searchService: SearchService
-	) {}
-
 	ngOnInit(): void {
-		this.abstractPage = this.abstractPageDefault;
-		this.abstractSize = this.abstractSizeDefault;
-
-		/** Apply Data */
-
-		this.setAbstractResolver();
-
 		/** Apply appearance settings */
 
 		this.setAbstractAppearance();
 	}
 
 	ngOnDestroy(): void {
-		[
-			this.activatedRouteParams$,
-			this.activatedRouteQueryParams$,
-			this.abstractListRequest$,
-			this.abstractListPageScrollInfinite$
-		].forEach(($: Subscription) => $?.unsubscribe());
+		[this.abstractListPageScrollInfinite$].forEach(($: Subscription) => $?.unsubscribe());
 
-		[this.abstractListIsLoading$].forEach(($: BehaviorSubject<boolean>) => $?.complete());
-	}
-
-	setAbstractResolver(): void {
-		// Reset partial of getAllDto when change categoryId
-
-		this.activatedRouteParams$?.unsubscribe();
-		this.activatedRouteParams$ = this.activatedRoute.params
-			.pipe(skip(1), distinctUntilKeyChanged('categoryId'))
-			.subscribe({
-				next: () => {
-					this.abstractPage = this.abstractPageDefault;
-					this.abstractSize = this.abstractSizeDefault;
-				},
-				error: (error: any) => console.error(error)
-			});
-
-		// Get abstractList by search queryParams
-
-		this.activatedRouteQueryParams$?.unsubscribe();
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
-			.pipe(
-				skip(1),
-				tap(() => {
-					this.abstractPage = this.abstractPageDefault;
-					this.abstractSize = this.abstractSizeDefault;
-
-					this.abstractList = [];
-					this.abstractListHasMore = false;
-				})
-			)
-			.subscribe({
-				next: () => this.getAbstractList(false),
-				error: (error: any) => console.error(error)
-			});
+		// prettier-ignore
+		[this.abstractListIsLoading$, this.abstractListGetAllDto$].forEach(($: BehaviorSubject<any>) => $?.complete());
 	}
 
 	setAbstractAppearance(): void {
@@ -118,7 +80,7 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 			this.abstractListPageScrollInfinite$?.unsubscribe();
 			this.abstractListPageScrollInfinite$ = this.appearanceService
 				.setPageScrollInfinite()
-				.pipe(filter(() => this.abstractListHasMore && !this.abstractListIsLoading$.getValue()))
+				.pipe(filter(() => this.abstractListIsHasMore && !this.abstractListIsLoading$.getValue()))
 				.subscribe({
 					next: () => this.getAbstractListLoadMore(),
 					error: (error: any) => console.error(error)
@@ -126,11 +88,26 @@ export abstract class AbstractSearchListComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	abstract getAbstractList(concat: boolean): void;
+	setAbstractListGetAllDto(getAllDtoParams: Partial<AbstractGetAllDto>): void {
+		const getAllDto: AbstractGetAllDto = this.abstractListGetAllDto$.getValue();
 
-	getAbstractListLoadMore(): void {
-		this.abstractPage++;
-
-		this.getAbstractList(true);
+		this.abstractListGetAllDto$.next({
+			...getAllDto,
+			...getAllDtoParams,
+			page: this.abstractListPageDefault,
+			size: this.abstractListSizeDefault
+		});
 	}
+
+	getAbstractListGetAllDto(): AbstractGetAllDto {
+		const getAllDto: any = this.abstractListGetAllDto$.getValue();
+		const getAllDtoEntries: any[] = Object.entries(getAllDto);
+		const getAllDtoFiltered: any[] = getAllDtoEntries.filter(([, value]: [string, any]) => !!value);
+
+		return Object.fromEntries(getAllDtoFiltered);
+	}
+
+	abstract getAbstractList(): void;
+
+	abstract getAbstractListLoadMore(): void;
 }

@@ -1,14 +1,14 @@
 <!-- @format -->
 
 <ng-container>
-	<ng-container *ngIf="!!abstractList.length; else abstractListEmptyTemplate">
+	<ng-container *ngIf="!!userList.length; else userListEmptyTemplate">
 		<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-			<ng-container *ngFor="let user of abstractList; let i = index">
+			<ng-container *ngFor="let user of userList; let i = index">
 				<li
 					class="block"
 					appCardUser
 					[appCardUserUser]="user"
-					[appCardUserSkeletonToggle]="abstractListSkeletonToggle"
+					[appCardUserSkeletonToggle]="userListSkeletonToggle"
 				></li>
 				<!-- TODO: ads
 				<li class="block" *ngIf="i === 10 || i === 20 || i === 30">
@@ -37,7 +37,7 @@
 				class="btn-success btn mt-4 w-full"
 				type="button"
 				aria-label="Load more"
-				*ngIf="abstractListHasMore"
+				*ngIf="abstractListIsHasMore"
 				[disabled]="abstractListIsLoading$ | async"
 				(click)="getAbstractListLoadMore()"
 			>
@@ -46,7 +46,7 @@
 			</button>
 		</ng-container>
 	</ng-container>
-	<ng-template #abstractListEmptyTemplate>
+	<ng-template #userListEmptyTemplate>
 		<div class="flex flex-col items-center gap-4">
 			<i
 				class="fill-current text-base-content"

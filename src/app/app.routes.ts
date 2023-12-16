@@ -244,7 +244,7 @@ export const APP_ROUTES: Route[] = [
 				return {
 					consumed: urlSegment.slice(0, 1),
 					posParams: {
-						name: new UrlSegment(urlSegment[0].path, {})
+						userName: new UrlSegment(urlSegment[0].path, {})
 					}
 				};
 			}

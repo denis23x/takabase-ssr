@@ -5,6 +5,7 @@ import {
 	PreloadAllModules,
 	provideRouter,
 	TitleStrategy,
+	withComponentInputBinding,
 	withEnabledBlockingInitialNavigation,
 	withPreloading,
 	withRouterConfig
@@ -33,8 +34,10 @@ export const appConfig: ApplicationConfig = {
 			APP_ROUTES,
 			withPreloading(PreloadAllModules),
 			withEnabledBlockingInitialNavigation(),
+			withComponentInputBinding(),
 			withRouterConfig({
-				onSameUrlNavigation: 'reload'
+				onSameUrlNavigation: 'reload',
+				paramsInheritanceStrategy: 'always'
 			})
 		),
 		importProvidersFrom(provideFirebaseApp(() => initializeApp())),

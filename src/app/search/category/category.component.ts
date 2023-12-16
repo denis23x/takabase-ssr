@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -11,7 +11,12 @@ import { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto'
 import { AbstractSearchListComponent } from '../../abstracts/abstract-search-list.component';
 import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { CardCategoryComponent } from '../../standalone/components/card/category/category.component';
+import { CategoryService } from '../../core/services/category.service';
+import { MetaService } from '../../core/services/meta.service';
+import { SkeletonService } from '../../core/services/skeleton.service';
+import { Subscription } from 'rxjs';
 
+// prettier-ignore
 @Component({
 	standalone: true,
 	imports: [
@@ -25,26 +30,56 @@ import { CardCategoryComponent } from '../../standalone/components/card/category
 	selector: 'app-search-category',
 	templateUrl: './category.component.html'
 })
-export class SearchCategoryComponent extends AbstractSearchListComponent implements OnInit {
-	abstractList: Category[] = [];
+export class SearchCategoryComponent extends AbstractSearchListComponent implements OnInit, OnDestroy {
+	categoryService: CategoryService = inject(CategoryService);
+	metaService: MetaService = inject(MetaService);
+	skeletonService: SkeletonService = inject(SkeletonService);
+
+	/* --- */
+
+	categoryList: Category[] = [];
+	categoryListRequest$: Subscription | undefined;
+	categoryListSkeletonToggle: boolean = false;
+
+	categoryListGetAllDto: CategoryGetAllDto | undefined;
+	categoryListGetAllDto$: Subscription | undefined;
 
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		/** Apply Data */
+		this.categoryListGetAllDto$?.unsubscribe();
+		this.categoryListGetAllDto$ = this.abstractListGetAllDto$.subscribe({
+			next: () => {
+				/** Get abstract DTO */
 
-		this.setSkeleton();
-		this.setResolver();
+				this.categoryListGetAllDto = this.getAbstractListGetAllDto();
+				this.categoryListGetAllDto.scope = ['user'];
 
-		/** Apply SEO meta tags */
+				/** Apply Data */
 
-		this.setMetaTags();
+				this.setSkeleton();
+				this.setResolver();
+
+				/** Apply SEO meta tags */
+
+				this.setMetaTags();
+			},
+			error: (error: any) => console.error(error)
+		});
+	}
+
+	ngOnDestroy(): void {
+		super.ngOnDestroy();
+
+		// prettier-ignore
+		[this.categoryListRequest$, this.categoryListGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
-		this.abstractList = this.skeletonService.getCategoryList(['user']);
-		this.abstractListSkeletonToggle = true;
-		this.abstractListHasMore = false;
+		this.categoryList = this.skeletonService.getCategoryList(['user']);
+		this.categoryListSkeletonToggle = true;
+
+		this.abstractListIsHasMore = false;
 	}
 
 	setResolver(): void {
@@ -69,34 +104,31 @@ export class SearchCategoryComponent extends AbstractSearchListComponent impleme
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	getAbstractList(concat: boolean = false): void {
+	getAbstractList(): void {
 		this.abstractListIsLoading$.next(true);
 
-		let categoryGetAllDto: CategoryGetAllDto = {
-			page: this.abstractPage || this.abstractPageDefault,
-			size: this.abstractSize || this.abstractSizeDefault,
-			scope: ['user']
-		};
-
-		// Search
-
-		categoryGetAllDto = {
-			...this.getAbstractListSearchGetAllDto(categoryGetAllDto)
-		};
+		const concat: boolean = this.categoryListGetAllDto.page !== 1;
 
 		if (!concat) {
 			this.setSkeleton();
 		}
 
-		this.abstractListRequest$?.unsubscribe();
-		this.abstractListRequest$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
+		this.categoryListRequest$?.unsubscribe();
+		this.categoryListRequest$ = this.categoryService.getAll(this.categoryListGetAllDto).subscribe({
 			next: (categoryList: Category[]) => {
-				this.abstractList = concat ? this.abstractList.concat(categoryList) : categoryList;
-				this.abstractListSkeletonToggle = false;
-				this.abstractListHasMore = categoryList.length === this.abstractSize;
+				this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
+				this.categoryListSkeletonToggle = false;
+
+				this.abstractListIsHasMore = categoryList.length === this.categoryListGetAllDto.size;
 				this.abstractListIsLoading$.next(false);
 			},
 			error: (error: any) => console.error(error)
 		});
+	}
+
+	getAbstractListLoadMore(): void {
+		this.categoryListGetAllDto.page++;
+
+		this.getAbstractList();
 	}
 }

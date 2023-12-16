@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
@@ -13,6 +13,10 @@ import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 import { AbstractSearchListComponent } from '../../abstracts/abstract-search-list.component';
 import { CardUserComponent } from '../../standalone/components/card/user/user.component';
 import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
+import { UserService } from '../../core/services/user.service';
+import { MetaService } from '../../core/services/meta.service';
+import { SkeletonService } from '../../core/services/skeleton.service';
+import { Subscription } from 'rxjs';
 
 @Component({
 	standalone: true,
@@ -29,26 +33,55 @@ import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.d
 	selector: 'app-search-user',
 	templateUrl: './user.component.html'
 })
-export class SearchUserComponent extends AbstractSearchListComponent implements OnInit {
-	abstractList: User[] = [];
+export class SearchUserComponent extends AbstractSearchListComponent implements OnInit, OnDestroy {
+	userService: UserService = inject(UserService);
+	metaService: MetaService = inject(MetaService);
+	skeletonService: SkeletonService = inject(SkeletonService);
+
+	/* --- */
+
+	userList: User[] = [];
+	userListRequest$: Subscription | undefined;
+	userListSkeletonToggle: boolean = false;
+
+	userListGetAllDto: UserGetAllDto | undefined;
+	userListGetAllDto$: Subscription | undefined;
 
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		/** Apply Data */
+		this.userListGetAllDto$?.unsubscribe();
+		this.userListGetAllDto$ = this.abstractListGetAllDto$.subscribe({
+			next: () => {
+				/** Get abstract DTO */
 
-		this.setSkeleton();
-		this.setResolver();
+				this.userListGetAllDto = this.getAbstractListGetAllDto();
 
-		/** Apply SEO meta tags */
+				/** Apply Data */
 
-		this.setMetaTags();
+				this.setSkeleton();
+				this.setResolver();
+
+				/** Apply SEO meta tags */
+
+				this.setMetaTags();
+			},
+			error: (error: any) => console.error(error)
+		});
+	}
+
+	ngOnDestroy(): void {
+		super.ngOnDestroy();
+
+		// prettier-ignore
+		[this.userListRequest$, this.userListGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
-		this.abstractList = this.skeletonService.getUserList();
-		this.abstractListSkeletonToggle = true;
-		this.abstractListHasMore = false;
+		this.userList = this.skeletonService.getUserList();
+		this.userListSkeletonToggle = true;
+
+		this.abstractListIsHasMore = false;
 	}
 
 	setResolver(): void {
@@ -73,33 +106,31 @@ export class SearchUserComponent extends AbstractSearchListComponent implements 
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	getAbstractList(concat: boolean = false): void {
+	getAbstractList(): void {
 		this.abstractListIsLoading$.next(true);
 
-		let userGetAllDto: UserGetAllDto = {
-			page: this.abstractPage || this.abstractPageDefault,
-			size: this.abstractSize || this.abstractSizeDefault
-		};
-
-		userGetAllDto = {
-			...this.getAbstractListSearchGetAllDto(userGetAllDto)
-		};
-
-		// Search
+		const concat: boolean = this.userListGetAllDto.page !== 1;
 
 		if (!concat) {
 			this.setSkeleton();
 		}
 
-		this.abstractListRequest$?.unsubscribe();
-		this.abstractListRequest$ = this.userService.getAll(userGetAllDto).subscribe({
+		this.userListRequest$?.unsubscribe();
+		this.userListRequest$ = this.userService.getAll(this.userListGetAllDto).subscribe({
 			next: (userList: User[]) => {
-				this.abstractList = concat ? this.abstractList.concat(userList) : userList;
-				this.abstractListSkeletonToggle = false;
-				this.abstractListHasMore = userList.length === this.abstractSize;
+				this.userList = concat ? this.userList.concat(userList) : userList;
+				this.userListSkeletonToggle = false;
+
+				this.abstractListIsHasMore = userList.length === this.userListGetAllDto.size;
 				this.abstractListIsLoading$.next(false);
 			},
 			error: (error: any) => console.error(error)
 		});
+	}
+
+	getAbstractListLoadMore(): void {
+		this.userListGetAllDto.page++;
+
+		this.getAbstractList();
 	}
 }

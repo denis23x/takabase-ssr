@@ -1,15 +1,15 @@
 <!-- @format -->
 
 <ng-container>
-	<ng-container *ngIf="!!abstractList.length; else abstractListEmptyTemplate">
+	<ng-container *ngIf="!!postList.length; else postListEmptyTemplate">
 		<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4">
 			<li
 				class="block"
 				appCardPost
-				*ngFor="let post of abstractList"
+				*ngFor="let post of postList"
 				[ngClass]="post.image ? 'row-span-6' : 'row-span-3'"
 				[appCardPostPost]="post"
-				[appCardPostSkeletonToggle]="abstractListSkeletonToggle"
+				[appCardPostSkeletonToggle]="postListSkeletonToggle"
 				[appPostUrl]="'post'"
 			></li>
 		</ul>
@@ -18,7 +18,7 @@
 				class="md btn-success btn mt-4 w-full"
 				type="button"
 				aria-label="Load more"
-				*ngIf="abstractListHasMore"
+				*ngIf="abstractListIsHasMore"
 				[disabled]="abstractListIsLoading$ | async"
 				(click)="getAbstractListLoadMore()"
 			>
@@ -27,7 +27,7 @@
 			</button>
 		</ng-container>
 	</ng-container>
-	<ng-template #abstractListEmptyTemplate>
+	<ng-template #postListEmptyTemplate>
 		<div class="flex flex-col items-center gap-4">
 			<i
 				class="fill-current text-base-content"

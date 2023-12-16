@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -8,6 +8,9 @@ import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { AbstractSearchListComponent } from '../../abstracts/abstract-search-list.component';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
+import { Subscription } from 'rxjs';
+import { PostService } from '../../core/services/post.service';
+import { SkeletonService } from '../../core/services/skeleton.service';
 
 @Component({
 	standalone: true,
@@ -16,76 +19,79 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 	templateUrl: './post.component.html'
 })
 export class UserPostComponent extends AbstractSearchListComponent implements OnInit, OnDestroy {
-	abstractList: Post[] = [];
+	postService: PostService = inject(PostService);
+	skeletonService: SkeletonService = inject(SkeletonService);
+
+	/* --- */
+
+	postList: Post[] = [];
+	postListRequest$: Subscription | undefined;
+	postListSkeletonToggle: boolean = false;
+
+	postListGetAllDto: PostGetAllDto | undefined;
+	postListGetAllDto$: Subscription | undefined;
 
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		/** Apply Data */
+		this.postListGetAllDto$?.unsubscribe();
+		this.postListGetAllDto$ = this.abstractListGetAllDto$.subscribe({
+			next: () => {
+				/** Get abstract DTO */
 
-		this.setSkeleton();
+				this.postListGetAllDto = this.getAbstractListGetAllDto();
+
+				/** Apply Data */
+
+				this.setSkeleton();
+				this.setResolver();
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
+
+		[this.postListRequest$, this.postListGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
-		this.abstractList = this.skeletonService.getPostList();
-		this.abstractListSkeletonToggle = true;
-		this.abstractListHasMore = false;
+		this.postList = this.skeletonService.getPostList();
+		this.postListSkeletonToggle = true;
+
+		this.abstractListIsHasMore = false;
 	}
 
 	setResolver(): void {
-		if (this.platformService.isBrowser()) {
-			this.getAbstractList();
-		}
+		this.getAbstractList();
 	}
 
-	getAbstractList(concat: boolean = false): void {
+	getAbstractList(): void {
 		this.abstractListIsLoading$.next(true);
 
-		let postGetAllDto: PostGetAllDto = {
-			page: this.abstractPage || this.abstractPageDefault,
-			size: this.abstractSize || this.abstractSizeDefault
-		};
-
-		// prettier-ignore
-		const userName: string = String(this.activatedRoute.parent.snapshot.paramMap.get('name') || '');
-
-		if (userName) {
-			postGetAllDto = {
-				...postGetAllDto,
-				userName: userName.substring(1)
-			};
-		}
-
-		const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
-
-		if (categoryId) {
-			postGetAllDto = {
-				...postGetAllDto,
-				categoryId
-			};
-		}
-
-		postGetAllDto = {
-			...this.searchService.getSearchGetAllDto(postGetAllDto, this.activatedRoute.parent.snapshot)
-		};
+		const concat: boolean = this.postListGetAllDto.page !== 1;
 
 		if (!concat) {
 			this.setSkeleton();
 		}
 
-		this.abstractListRequest$?.unsubscribe();
-		this.abstractListRequest$ = this.postService.getAll(postGetAllDto).subscribe({
+		this.postListRequest$?.unsubscribe();
+		this.postListRequest$ = this.postService.getAll(this.postListGetAllDto).subscribe({
 			next: (postList: Post[]) => {
-				this.abstractList = concat ? this.abstractList.concat(postList) : postList;
-				this.abstractListSkeletonToggle = false;
-				this.abstractListHasMore = postList.length === this.abstractSize;
+				this.postList = concat ? this.postList.concat(postList) : postList;
+				this.postListSkeletonToggle = false;
+
+				this.abstractListIsHasMore = postList.length === this.postListGetAllDto.size;
 				this.abstractListIsLoading$.next(false);
 			},
 			error: (error: any) => console.error(error)
 		});
+	}
+
+	getAbstractListLoadMore(): void {
+		this.postListGetAllDto.page++;
+
+		this.getAbstractList();
 	}
 }

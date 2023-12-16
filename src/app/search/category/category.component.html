@@ -1,15 +1,15 @@
 <!-- @format -->
 
 <ng-container>
-	<ng-container *ngIf="!!abstractList.length; else abstractListEmptyTemplate">
+	<ng-container *ngIf="!!categoryList.length; else categoryListEmptyTemplate">
 		<ul class="grid grid-cols-1 grid-rows-none gap-4 sm:grid-cols-2 lg:grid-cols-3">
-			<ng-container *ngFor="let category of abstractList; let i = index">
+			<ng-container *ngFor="let category of categoryList; let i = index">
 				<li
 					class="block"
 					appCardCategory
 					[ngClass]="category.description ? 'row-span-6' : 'row-span-3'"
 					[appCardCategoryCategory]="category"
-					[appCardCategorySkeletonToggle]="abstractListSkeletonToggle"
+					[appCardCategorySkeletonToggle]="categoryListSkeletonToggle"
 				></li>
 				<!-- TODO: ads
 				<li class="block row-span-6" *ngIf="i === 10 || i === 20 || i === 30">
@@ -38,7 +38,7 @@
 				class="btn-success btn mt-4 w-full"
 				type="button"
 				aria-label="Load more"
-				*ngIf="abstractListHasMore"
+				*ngIf="abstractListIsHasMore"
 				[disabled]="abstractListIsLoading$ | async"
 				(click)="getAbstractListLoadMore()"
 			>
@@ -47,7 +47,7 @@
 			</button>
 		</ng-container>
 	</ng-container>
-	<ng-template #abstractListEmptyTemplate>
+	<ng-template #categoryListEmptyTemplate>
 		<div class="flex flex-col items-center gap-4">
 			<i
 				class="fill-current text-base-content"
