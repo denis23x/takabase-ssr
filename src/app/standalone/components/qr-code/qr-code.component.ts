@@ -29,7 +29,7 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 	@ViewChild('QRCodeDialog') QRCodeDialog: ElementRef<HTMLDialogElement> | undefined;
 	@ViewChild('QRCodeCanvas') QRCodeCanvas: ElementRef<HTMLCanvasElement> | undefined;
 
-	@Input()
+	@Input({ required: true })
 	set appQRCodeData(QRCodeData: string) {
 		this.QRCodeData$.next(QRCodeData);
 	}
@@ -111,7 +111,7 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 			// prettier-ignore
 			QRCode.toDataURL(this.QRCodeValue, this.QRCodeOptions, (error: Error, dataURL: string): void => {
 				if (error) {
-					this.snackbarService.danger('Error', "Can't download your QR Code");
+					this.snackbarService.error('Error', "Can't download your QR Code");
 				} else {
 					this.helperService.getDownload(dataURL, this.QRCodeValue.split('/').pop());
 				}
@@ -145,7 +145,7 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 				// prettier-ignore
 				QRCode.toCanvas(this.QRCodeCanvas.nativeElement, this.QRCodeValue, this.QRCodeOptions, (error: Error): void => {
           if (error) {
-            this.snackbarService.danger('Error', "Can't draw your QR Code");
+            this.snackbarService.error('Error', "Can't draw your QR Code");
           } else {
             this.QRCodeCanvas.nativeElement.removeAttribute('style');
           }

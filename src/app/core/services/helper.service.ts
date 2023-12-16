@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { PlatformService } from './platform.service';
 import { DOCUMENT } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -84,11 +85,7 @@ export class HelperService {
 		}
 	}
 
-	getIsUrl(value: string): boolean {
-		try {
-			return !!new URL(value);
-		} catch (e) {
-			return false;
-		}
+	getURL(): URL {
+		return new URL(this.document.URL, environment.appUrl);
 	}
 }

@@ -13,7 +13,7 @@ import { PlatformService } from '../../../core/services/platform.service';
 	templateUrl: './avatar.component.html'
 })
 export class AvatarComponent {
-	@Input()
+	@Input({ required: true })
 	set appAvatarUser(user: User | undefined) {
 		this.user = user;
 

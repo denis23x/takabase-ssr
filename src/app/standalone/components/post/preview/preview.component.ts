@@ -32,12 +32,12 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 
 	@Output() appPostPreviewToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	@Input()
+	@Input({ required: true })
 	set appPostPreviewPost(post: Partial<Post>) {
 		this.post = post as Post;
 	}
 
-	@Input()
+	@Input({ required: true })
 	set appPostPreviewCategory(category: Category) {
 		this.category = category;
 	}

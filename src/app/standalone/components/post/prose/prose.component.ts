@@ -43,7 +43,7 @@ import { ReportService } from '../../../../core/services/report.service';
 	templateUrl: './prose.component.html'
 })
 export class PostProseComponent implements OnInit, OnDestroy {
-	@Input()
+	@Input({ required: true })
 	set appPostProsePost(post: Post) {
 		this.post = post;
 	}
@@ -107,9 +107,10 @@ export class PostProseComponent implements OnInit, OnDestroy {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
-			window.navigator.clipboard.writeText(this.postShareUrl).then(() => {
-				this.snackbarService.success(null, 'Post URL has been copied');
-			});
+			window.navigator.clipboard
+				.writeText(this.postShareUrl)
+				.then(() => this.snackbarService.success(null, 'Post URL has been copied'))
+				.catch(() => this.snackbarService.error(null, 'Failed to copy'));
 		}
 	}
 

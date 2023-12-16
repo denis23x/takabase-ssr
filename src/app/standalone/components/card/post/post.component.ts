@@ -14,7 +14,7 @@ import { AppSkeletonDirective } from '../../../directives/app-skeleton.directive
 	templateUrl: './post.component.html'
 })
 export class CardPostComponent {
-	@Input()
+	@Input({ required: true })
 	set appCardPostPost(post: Post) {
 		this.post = post;
 	}

@@ -53,7 +53,7 @@ export class CategoryUpdateComponent implements OnDestroy {
 
 	@Output() appCategoryUpdateSuccess: EventEmitter<Category> = new EventEmitter<Category>();
 
-	@Input()
+	@Input({ required: true })
 	set appCategoryUpdateCategory(category: Category) {
 		this.category = category;
 	}

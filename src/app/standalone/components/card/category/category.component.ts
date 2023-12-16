@@ -23,7 +23,7 @@ import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 	templateUrl: './category.component.html'
 })
 export class CardCategoryComponent {
-	@Input()
+	@Input({ required: true })
 	set appCardCategoryCategory(category: Category) {
 		this.category = category;
 	}

@@ -28,7 +28,7 @@ export class SvgIconComponent {
 		this.height = height;
 	}
 
-	@Input()
+	@Input({ required: true })
 	set appSvgIconIcon(icon: string) {
 		this.icon = '#' + icon;
 	}

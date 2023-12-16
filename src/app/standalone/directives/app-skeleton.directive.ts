@@ -11,7 +11,7 @@ import { HelperService } from '../../core/services/helper.service';
 	selector: '[appSkeleton]'
 })
 export class AppSkeletonDirective implements AfterViewInit, OnDestroy {
-	@Input()
+	@Input({ required: true })
 	set appSkeletonToggle(loading: boolean) {
 		this.skeletonToggle$.next(loading);
 	}

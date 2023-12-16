@@ -24,7 +24,6 @@ import {
 	Validators
 } from '@angular/forms';
 import { CategoryService } from '../../../../core/services/category.service';
-import { AppScrollPresetDirective } from '../../../directives/app-scroll-preset.directive';
 import { Subscription } from 'rxjs';
 import { Post } from '../../../../core/models/post.model';
 import { CategoryDeleteDto } from '../../../../core/dto/category/category-delete.dto';
@@ -49,8 +48,7 @@ interface CategoryDeleteForm {
 		SvgIconComponent,
 		WindowComponent,
 		AppInputTrimWhitespaceDirective,
-		ReactiveFormsModule,
-		AppScrollPresetDirective
+		ReactiveFormsModule
 	],
 	selector: 'app-category-delete, [appCategoryDelete]',
 	templateUrl: './delete.component.html'
@@ -62,7 +60,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	// prettier-ignore
 	@Output() appCategoryDeleteSuccess: EventEmitter<Category & CategoryDeleteDto> = new EventEmitter<Category & CategoryDeleteDto>();
 
-	@Input()
+	@Input({ required: true })
 	set appCategoryDeleteCategory(category: Category) {
 		this.category = category;
 	}

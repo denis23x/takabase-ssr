@@ -101,12 +101,12 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		this.controlListDisabled = disabled;
 	}
 
-	@Input()
+	@Input({ required: true })
 	set appMarkdownTextareaId(markdownId: string) {
 		this.textareaId = markdownId;
 	}
 
-	@Input()
+	@Input({ required: true })
 	set appMarkdownPreviewId(previewId: string) {
 		this.previewId = previewId;
 	}

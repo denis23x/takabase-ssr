@@ -35,7 +35,7 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 
 	@Output() appPostDeleteToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	@Input()
+	@Input({ required: true })
 	set appPostDeletePost(post: Post) {
 		this.post = post;
 	}

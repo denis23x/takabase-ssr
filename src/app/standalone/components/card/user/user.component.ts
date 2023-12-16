@@ -23,7 +23,7 @@ import { User } from '../../../../core/models/user.model';
 	templateUrl: './user.component.html'
 })
 export class CardUserComponent {
-	@Input()
+	@Input({ required: true })
 	set appCardUserUser(user: User) {
 		this.user = user;
 	}

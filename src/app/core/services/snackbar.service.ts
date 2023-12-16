@@ -97,7 +97,7 @@ export class SnackbarService {
 		});
 	}
 
-	danger(title: string | null, message: string, options?: SnackOptions): void {
+	error(title: string | null, message: string, options?: SnackOptions): void {
 		this.setSnack({
 			title,
 			message,

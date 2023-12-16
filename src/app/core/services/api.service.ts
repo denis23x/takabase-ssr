@@ -65,7 +65,7 @@ export class ApiService {
 			}
 		};
 
-		this.snackbarService.danger('Error', getMessage(), {
+		this.snackbarService.error('Error', getMessage(), {
 			icon: 'bug',
 			duration: 6000
 		});

@@ -116,7 +116,6 @@
 											*ngIf="{ value: categoryId.value === category.id } as isActive"
 											class="rounded-btn block w-full truncate text-left"
 											type="button"
-											appScrollPreset
 											[ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
 											[attr.aria-label]="category.name"
 											(click)="categoryId.patchValue(category.id)"

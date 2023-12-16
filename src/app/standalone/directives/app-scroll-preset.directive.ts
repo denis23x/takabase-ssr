@@ -10,7 +10,7 @@ import { tap } from 'rxjs/operators';
 	selector: '[appScrollPreset]'
 })
 export class AppScrollPresetDirective implements OnInit, OnDestroy {
-	@Input()
+	@Input({ required: true })
 	set appScrollActive(scrollActive: boolean) {
 		this.scrollActive$.next(scrollActive);
 	}

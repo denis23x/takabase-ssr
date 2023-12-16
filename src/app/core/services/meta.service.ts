@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Meta, MetaDefinition } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
-import { environment } from '../../../environments/environment';
+import { HelperService } from './helper.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,11 +13,12 @@ export class MetaService {
 	constructor(
 		@Inject(DOCUMENT)
 		private document: Document,
-		private meta: Meta
+		private meta: Meta,
+		private helperService: HelperService
 	) {}
 
 	setCanonicalURL(): void {
-		const url: URL = new URL(this.document.URL, environment.appUrl);
+		const url: URL = this.helperService.getURL();
 		const urlCanonical: HTMLLinkElement = this.document.querySelector("link[rel='canonical']");
 
 		if (url.pathname.startsWith('/search')) {
@@ -52,7 +53,7 @@ export class MetaService {
 	}
 
 	setMetaOpenGraph(metaOpenGraph: MetaOpenGraph): void {
-		const url: URL = new URL(this.document.URL, environment.appUrl);
+		const url: URL = this.helperService.getURL();
 
 		/** Clear all meta before setting */
 
@@ -122,7 +123,7 @@ export class MetaService {
 	}
 
 	setMetaTwitter(metaTwitter: MetaTwitter): void {
-		const url: URL = new URL(this.document.URL, environment.appUrl);
+		const url: URL = this.helperService.getURL();
 
 		/** Clear all meta before setting */
 

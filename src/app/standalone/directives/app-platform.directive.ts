@@ -8,7 +8,7 @@ import { PlatformService } from '../../core/services/platform.service';
 	selector: '[appPlatform]'
 })
 export class AppPlatformDirective implements OnInit {
-	@Input()
+	@Input({ required: true })
 	set appPlatform(platform: string) {
 		this.platform = platform;
 	}

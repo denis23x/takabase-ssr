@@ -11,7 +11,7 @@ import { CurrentUser } from '../../core/models/current-user.model';
 	selector: '[appAuthenticated]'
 })
 export class AppAuthenticatedDirective implements OnInit, OnDestroy {
-	@Input()
+	@Input({ required: true })
 	set appAuthenticated(authenticated: boolean) {
 		this.authenticated = authenticated;
 	}

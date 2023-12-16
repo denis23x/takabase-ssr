@@ -57,7 +57,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	@ViewChild(ImageCropperComponent) imageCropper: ImageCropperComponent | undefined;
 
-	@Input()
+	@Input({ required: true })
 	set appCropperUploadPath(cropperUploadPath: string) {
 		this.cropperUploadPath = cropperUploadPath;
 	}
@@ -194,12 +194,12 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 			Object.values(fileValidation)
 				.filter((file: any) => !file.valid)
-				.forEach((file: any) => this.snackbarService.danger('Error', file.message));
+				.forEach((file: any) => this.snackbarService.error('Error', file.message));
 		}
 	}
 
 	onImageFailed(): void {
-		this.snackbarService.danger('Error', 'Invalid image type');
+		this.snackbarService.error('Error', 'Invalid image type');
 
 		this.onResetImageForm('');
 		this.onResetCropper();
