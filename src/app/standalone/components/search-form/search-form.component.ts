@@ -13,7 +13,7 @@ import {
 	Validators
 } from '@angular/forms';
 import { merge, Subscription } from 'rxjs';
-import { debounceTime, filter } from 'rxjs/operators';
+import { debounceTime, filter, map } from 'rxjs/operators';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
@@ -58,26 +58,28 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.activatedRouteQueryParams$?.unsubscribe();
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
-			.pipe(filter((params: Params) => params.query || params.orderBy))
-			.subscribe({
-				next: (params: Params) => {
-					this.searchForm.patchValue(params, { emitEvent: false });
-					this.searchForm.markAllAsTouched();
-				},
-				error: (error: any) => console.error(error)
-			});
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe({
+			next: (params: Params) => {
+				const value: any = {
+					query: params.query || '',
+					orderBy: params.orderBy || ''
+				};
+
+				this.searchForm.setValue(value, { emitEvent: false });
+				this.searchForm.markAllAsTouched();
+			},
+			error: (error: any) => console.error(error)
+		});
 
 		this.searchForm$?.unsubscribe();
 		this.searchForm$ = merge(
-			this.searchForm.get('query').valueChanges.pipe(debounceTime(1000)),
-			this.searchForm.get('orderBy').valueChanges
+			// prettier-ignore
+			this.searchForm.get('query').valueChanges.pipe(debounceTime(1000), filter(() => this.searchForm.valid)),
+			this.searchForm.get('orderBy').valueChanges.pipe(debounceTime(100))
 		)
-			.pipe(filter(() => this.searchForm.valid))
+			.pipe(map(() => this.searchForm.value))
 			.subscribe({
-				next: () => {
-					const value: any = this.searchForm.value;
-
+				next: (value: any) => {
 					this.router
 						.navigate([], {
 							relativeTo: this.activatedRoute,
@@ -95,5 +97,17 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		// prettier-ignore
 		[this.activatedRouteQueryParams$, this.searchForm$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	onClearQuery(): void {
+		this.router
+			.navigate([], {
+				relativeTo: this.activatedRoute,
+				queryParams: {
+					query: null
+				},
+				queryParamsHandling: 'merge'
+			})
+			.then(() => console.debug('Route changed'));
 	}
 }
