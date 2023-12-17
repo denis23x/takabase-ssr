@@ -104,14 +104,17 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		/** Apply Data */
-
 		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService
 			.getCurrentUser()
 			.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)))
 			.subscribe({
-				next: () => this.setResolver(),
+				next: () => {
+					/** Apply Data */
+
+					this.setSkeleton();
+					this.setResolver();
+				},
 				error: (error: any) => console.error(error)
 			});
 
@@ -165,26 +168,31 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	// prettier-ignore
+	setSkeleton(): void {
+		this.appearanceFormSkeletonToggle = true;
+	}
+
 	setResolver(): void {
 		this.appearanceCollection$?.unsubscribe();
-    this.appearanceCollection$ = this.appearanceService
+		this.appearanceCollection$ = this.appearanceService
 			.getCollection(this.currentUser.firebase.uid)
-			.pipe(map((documentData: firebase.firestore.QueryDocumentSnapshot<DocumentData>) => {
-        this.appearanceCollection = documentData;
+			.pipe(
+				map((documentData: firebase.firestore.QueryDocumentSnapshot<DocumentData>) => {
+					this.appearanceCollection = documentData;
 
-        return this.appearanceCollection.data() as Appearance;
-      }))
+					return this.appearanceCollection.data() as Appearance;
+				})
+			)
 			.subscribe({
 				next: (appearance: Appearance) => {
 					this.appearanceTransformList.forEach((key: string) => {
 						// @ts-ignore
-            appearance[key] = this.getTransformListValue(appearance[key], key);
+						appearance[key] = this.getTransformListValue(appearance[key], key);
 					});
 
 					this.appearanceForm.patchValue(appearance, { emitEvent: false });
 					this.appearanceForm.markAllAsTouched();
-          this.appearanceFormSkeletonToggle = false;
+					this.appearanceFormSkeletonToggle = false;
 				},
 				error: (error: any) => console.error(error)
 			});

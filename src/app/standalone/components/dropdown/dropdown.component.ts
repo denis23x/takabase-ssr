@@ -140,6 +140,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 
 			if (this.dropdownState) {
 				this.dropdownContent.style['position'] = 'fixed';
+				this.dropdownContent.style['cursor'] = 'default';
 				this.dropdownContent.style['visibility'] = 'visible';
 
 				/** Apply position */

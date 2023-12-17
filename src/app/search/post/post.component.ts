@@ -30,7 +30,7 @@ export class SearchPostComponent extends AbstractSearchComponent implements OnIn
 
 	postList: Post[] = [];
 	postListRequest$: Subscription | undefined;
-	postListSkeletonToggle: boolean = false;
+	postListSkeletonToggle: boolean = true;
 
 	postGetAllDto: PostGetAllDto | undefined;
 	postGetAllDto$: Subscription | undefined;

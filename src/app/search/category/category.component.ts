@@ -38,7 +38,7 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 
 	categoryList: Category[] = [];
 	categoryListRequest$: Subscription | undefined;
-	categoryListSkeletonToggle: boolean = false;
+	categoryListSkeletonToggle: boolean = true;
 
 	categoryGetAllDto: CategoryGetAllDto | undefined;
 	categoryGetAllDto$: Subscription | undefined;

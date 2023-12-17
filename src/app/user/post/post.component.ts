@@ -26,7 +26,7 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 
 	postList: Post[] = [];
 	postListRequest$: Subscription | undefined;
-	postListSkeletonToggle: boolean = false;
+	postListSkeletonToggle: boolean = true;
 
 	postGetAllDto: PostGetAllDto | undefined;
 	postGetAllDto$: Subscription | undefined;

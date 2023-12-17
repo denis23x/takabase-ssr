@@ -95,8 +95,6 @@ export class UserComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
-		/** Apply Data */
-
 		this.activatedRouteUrl$?.unsubscribe();
 		this.activatedRouteUrl$ = this.activatedRoute.url
 			.pipe(
@@ -105,6 +103,8 @@ export class UserComponent implements OnInit, OnDestroy {
 			)
 			.subscribe({
 				next: () => {
+					/** Apply Data */
+
 					this.setSkeleton();
 					this.setResolver();
 				},

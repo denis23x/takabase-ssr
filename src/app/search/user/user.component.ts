@@ -42,7 +42,7 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 
 	userList: User[] = [];
 	userListRequest$: Subscription | undefined;
-	userListSkeletonToggle: boolean = false;
+	userListSkeletonToggle: boolean = true;
 
 	userGetAllDto: UserGetAllDto | undefined;
 	userGetAllDto$: Subscription | undefined;

@@ -152,14 +152,14 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		/** Apply Data */
-
 		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService
 			.getCurrentUser()
 			.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)))
 			.subscribe({
 				next: () => {
+					/** Apply Data */
+
 					this.setSkeleton();
 					this.setResolver();
 				},
