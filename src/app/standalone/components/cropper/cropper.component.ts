@@ -63,7 +63,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	@Input()
-	set appCropperRemovePath(cropperRemovePath: string | null) {
+	set appCropperRemovePath(cropperRemovePath: string | null | undefined) {
 		this.cropperRemovePath = cropperRemovePath;
 	}
 

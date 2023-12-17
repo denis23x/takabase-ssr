@@ -104,19 +104,12 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService
-			.getCurrentUser()
-			.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)))
-			.subscribe({
-				next: () => {
-					/** Apply Data */
+		/** Apply Data */
 
-					this.setSkeleton();
-					this.setResolver();
-				},
-				error: (error: any) => console.error(error)
-			});
+		this.setSkeleton();
+		this.setResolver();
+
+		/** Appearance Form */
 
 		this.appearanceForm$?.unsubscribe();
 		this.appearanceForm$ = this.appearanceForm.valueChanges.subscribe({
@@ -169,33 +162,45 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	}
 
 	setSkeleton(): void {
+		this.appearanceForm.reset();
 		this.appearanceFormSkeletonToggle = true;
 	}
 
 	setResolver(): void {
-		this.appearanceCollection$?.unsubscribe();
-		this.appearanceCollection$ = this.appearanceService
-			.getCollection(this.currentUser.firebase.uid)
-			.pipe(
-				map((documentData: firebase.firestore.QueryDocumentSnapshot<DocumentData>) => {
-					this.appearanceCollection = documentData;
+		if (this.platformService.isBrowser()) {
+			this.currentUser$?.unsubscribe();
+			this.currentUser$ = this.authorizationService
+				.getCurrentUser()
+				.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)))
+				.subscribe({
+					next: () => {
+						this.appearanceCollection$?.unsubscribe();
+						this.appearanceCollection$ = this.appearanceService
+							.getCollection(this.currentUser.firebase.uid)
+							.pipe(
+								map((documentData: firebase.firestore.QueryDocumentSnapshot<DocumentData>) => {
+									this.appearanceCollection = documentData;
 
-					return this.appearanceCollection.data() as Appearance;
-				})
-			)
-			.subscribe({
-				next: (appearance: Appearance) => {
-					this.appearanceTransformList.forEach((key: string) => {
-						// @ts-ignore
-						appearance[key] = this.getTransformListValue(appearance[key], key);
-					});
+									return this.appearanceCollection.data() as Appearance;
+								})
+							)
+							.subscribe({
+								next: (appearance: Appearance) => {
+									this.appearanceTransformList.forEach((key: string) => {
+										// @ts-ignore
+										appearance[key] = this.getTransformListValue(appearance[key], key);
+									});
 
-					this.appearanceForm.patchValue(appearance, { emitEvent: false });
-					this.appearanceForm.markAllAsTouched();
-					this.appearanceFormSkeletonToggle = false;
-				},
-				error: (error: any) => console.error(error)
-			});
+									this.appearanceForm.patchValue(appearance, { emitEvent: false });
+									this.appearanceForm.markAllAsTouched();
+									this.appearanceFormSkeletonToggle = false;
+								},
+								error: (error: any) => console.error(error)
+							});
+					},
+					error: (error: any) => console.error(error)
+				});
+		}
 	}
 
 	setTransformList(): void {

@@ -28,6 +28,9 @@ import { CurrentUser } from '../../core/models/current-user.model';
 import { User } from '../../core/models/user.model';
 import { QrCodeComponent } from '../../standalone/components/qr-code/qr-code.component';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
+import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
+import { PlatformService } from '../../core/services/platform.service';
+import { SkeletonService } from '../../core/services/skeleton.service';
 
 interface ProfileForm {
 	name: FormControl<string>;
@@ -48,13 +51,15 @@ interface ProfileForm {
 		AppInputTrimWhitespaceDirective,
 		AppTextareaAutosizeDirective,
 		QrCodeComponent,
-		DropdownComponent
+		DropdownComponent,
+		AppSkeletonDirective
 	],
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'
 })
 export class SettingsProfileComponent implements OnInit, OnDestroy {
 	currentUser: CurrentUser | undefined;
+	currentUserSkeletonToggle: boolean = true;
 	currentUser$: Subscription | undefined;
 	currentUserRequest$: Subscription | undefined;
 
@@ -67,7 +72,9 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		private helperService: HelperService,
 		private userService: UserService,
 		private authorizationService: AuthorizationService,
-		private snackbarService: SnackbarService
+		private snackbarService: SnackbarService,
+		private skeletonService: SkeletonService,
+		private platformService: PlatformService
 	) {
 		this.profileForm = this.formBuilder.group<ProfileForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -83,6 +90,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		/** Apply Data */
 
+		this.setSkeleton();
 		this.setResolver();
 	}
 
@@ -91,31 +99,43 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		[this.currentUser$, this.currentUserRequest$, this.profileFormIsPristine$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	setResolver(): void {
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService
-			.getCurrentUser()
-			.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)))
-			.subscribe({
-				next: () => {
-					this.profileForm.patchValue(this.currentUser);
-					this.profileForm.markAllAsTouched();
+	setSkeleton(): void {
+		this.currentUser = this.skeletonService.getUser() as CurrentUser;
+		this.currentUserSkeletonToggle = true;
+	}
 
-					this.profileFormIsPristine$?.unsubscribe();
-					this.profileFormIsPristine$ = this.profileForm.valueChanges
-						.pipe(startWith(this.profileForm.value))
-						.subscribe({
-							next: (value: any) => {
-								this.profileFormIsPristine = Object.keys(value).every((key: string) => {
-									// @ts-ignore
-									return value[key] === this.currentUser[key];
-								});
-							},
-							error: (error: any) => console.error(error)
-						});
-				},
-				error: (error: any) => console.error(error)
-			});
+	setResolver(): void {
+		if (this.platformService.isBrowser()) {
+			this.currentUser$?.unsubscribe();
+			this.currentUser$ = this.authorizationService
+				.getCurrentUser()
+				.pipe(
+					tap((currentUser: CurrentUser) => {
+						this.currentUser = currentUser;
+						this.currentUserSkeletonToggle = false;
+					})
+				)
+				.subscribe({
+					next: () => {
+						this.profileForm.patchValue(this.currentUser);
+						this.profileForm.markAllAsTouched();
+
+						this.profileFormIsPristine$?.unsubscribe();
+						this.profileFormIsPristine$ = this.profileForm.valueChanges
+							.pipe(startWith(this.profileForm.value))
+							.subscribe({
+								next: (value: any) => {
+									this.profileFormIsPristine = Object.keys(value).every((key: string) => {
+										// @ts-ignore
+										return value[key] === this.currentUser[key];
+									});
+								},
+								error: (error: any) => console.error(error)
+							});
+					},
+					error: (error: any) => console.error(error)
+				});
+		}
 	}
 
 	onToggleCropper(toggle: boolean): void {
