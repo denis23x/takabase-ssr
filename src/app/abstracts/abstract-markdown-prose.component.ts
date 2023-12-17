@@ -28,12 +28,12 @@ export abstract class AbstractMarkdownProseComponent implements OnInit, OnDestro
 	) {}
 
 	ngOnInit(): void {
-		/** Apply Data */
-
 		this.activatedRouteParams$ = this.activatedRoute.params
 			.pipe(filter((params: Params) => !!params.details))
 			.subscribe({
 				next: () => {
+					/** Apply Data */
+
 					this.setSkeleton();
 					this.setResolver();
 				},

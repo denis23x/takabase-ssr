@@ -1,4 +1,4 @@
-### Code highlight
+## Code highlight
 
 We are offering a good highlight syntax for talented IT developers to write tutorials and guides on a variety of topics, including programming languages, frameworks, and best practices. You can easily highlight syntax for a wide range of programming languages, from HTML and CSS to Python and JavaScript.
 

@@ -66,17 +66,17 @@ export const APP_ROUTES: Route[] = [
 	},
 	{
 		path: 'terms',
-		pathMatch: 'full',
-		redirectTo: 'terms/terms-of-use'
-	},
-	{
-		path: 'terms/:markdown',
 		loadComponent: () => {
 			return import('./terms/terms.component').then(m => m.TermsComponent);
 		},
 		children: [
 			{
 				path: '',
+				pathMatch: 'full',
+				redirectTo: 'terms-of-use'
+			},
+			{
+				path: ':details',
 				title: 'Terms',
 				loadComponent: () => {
 					return import('./terms/details/details.component').then(m => m.TermsDetailsComponent);
@@ -86,15 +86,15 @@ export const APP_ROUTES: Route[] = [
 	},
 	{
 		path: 'help',
-		pathMatch: 'full',
-		redirectTo: 'help/about'
-	},
-	{
-		path: 'help',
 		loadComponent: () => {
 			return import('./help/help.component').then(m => m.HelpComponent);
 		},
 		children: [
+			{
+				path: '',
+				pathMatch: 'full',
+				redirectTo: 'about'
+			},
 			{
 				path: 'markdown',
 				title: 'Markdown',

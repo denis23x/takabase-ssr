@@ -16,7 +16,7 @@ module.exports = {
     "animate-pulse",
     "inset-0",
 
-    /** ALERT  */
+    /** PROGRESS  */
 
     "progress",
     "progress-info",
@@ -38,41 +38,58 @@ module.exports = {
 
     /** MARKDOWN SAFE LIST  */
 
+    // Prose
+
     "prose",
     "not-prose",
 
+    // Background colors
+
     "bg-primary",
-    "bg-primary-focus",
     "bg-primary-content",
-
     "bg-secondary",
-    "bg-secondary-focus",
     "bg-secondary-content",
-
     "bg-accent",
-    "bg-accent-focus",
     "bg-accent-content",
-
     "bg-neutral",
-    "bg-neutral-focus",
     "bg-neutral-content",
-
     "bg-base-100",
     "bg-base-200",
     "bg-base-300",
     "bg-base-content",
-
     "bg-info",
     "bg-info-content",
-
     "bg-success",
     "bg-success-content",
-
     "bg-warning",
     "bg-warning-content",
-
     "bg-error",
     "bg-error-content",
+
+    // Text colors
+
+    "text-primary",
+    "text-primary-content",
+    "text-secondary",
+    "text-secondary-content",
+    "text-accent",
+    "text-accent-content",
+    "text-neutral",
+    "text-neutral-content",
+    "text-base-100",
+    "text-base-200",
+    "text-base-300",
+    "text-base-content",
+    "text-info",
+    "text-info-content",
+    "text-success",
+    "text-success-content",
+    "text-warning",
+    "text-warning-content",
+    "text-error",
+    "text-error-content",
+
+    // Text size
 
     "text-xs",
     "text-sm",
@@ -83,38 +100,16 @@ module.exports = {
     "text-3xl",
     "text-4xl",
 
-    "text-primary",
-    "text-primary-focus",
-    "text-primary-content",
+    // Text decoration
 
-    "text-secondary",
-    "text-secondary-focus",
-    "text-secondary-content",
+    "underline",
+    "overline",
+    "line-through",
+    "no-underline",
+    "italic",
+    "not-italic",
 
-    "text-accent",
-    "text-accent-focus",
-    "text-accent-content",
-
-    "text-neutral",
-    "text-neutral-focus",
-    "text-neutral-content",
-
-    "text-base-100",
-    "text-base-200",
-    "text-base-300",
-    "text-base-content",
-
-    "text-info",
-    "text-info-content",
-
-    "text-success",
-    "text-success-content",
-
-    "text-warning",
-    "text-warning-content",
-
-    "text-error",
-    "text-error-content",
+    // Font weight
 
     "font-thin",
     "font-extralight",
@@ -126,18 +121,15 @@ module.exports = {
     "font-extrabold",
     "font-black",
 
-    "underline",
-    "overline",
-    "line-through",
-    "no-underline",
-    "italic",
-    "not-italic",
+    // Alert
 
     "alert",
     "alert-info",
     "alert-success",
     "alert-warning",
     "alert-error",
+
+    // Link
 
     "link",
     "link-neutral",
@@ -148,6 +140,8 @@ module.exports = {
     "link-success",
     "link-warning",
     "link-error",
+
+    // Button
 
     "btn",
     "btn-neutral",
@@ -166,6 +160,24 @@ module.exports = {
     "btn-sm",
     "btn-xs",
 
+    // Divider
+
+    "divider",
+    "divider-neutral",
+    "divider-primary",
+    "divider-secondary",
+    "divider-accent",
+    "divider-success",
+    "divider-warning",
+    "divider-info",
+    "divider-error",
+    "divider-vertical",
+    "divider-horizontal",
+    "divider-start",
+    "divider-end",
+
+    // Badge
+
     "badge",
     "badge-neutral",
     "badge-primary",
@@ -183,10 +195,14 @@ module.exports = {
     "badge-sm",
     "badge-xs",
 
+    // Spoiler
+
     "collapse",
     "collapse-arrow",
     "collapse-title",
     "collapse-content",
+
+    // Keyboard
 
     "kbd",
     "kbd-lg",
@@ -194,12 +210,22 @@ module.exports = {
     "kbd-sm",
     "kbd-xs",
 
+    // Table
+
     "table",
     "table-zebra",
     "table-xs",
     "table-sm",
     "table-md",
     "table-lg",
+
+    // Table border
+
+    "border-spacing-0",
+    "border-collapse",
+    "border-separate",
+
+    // Image mask
 
     "mask",
     "mask-squircle",
@@ -222,9 +248,13 @@ module.exports = {
     "mask-triangle-3",
     "mask-triangle-4",
 
+    // Step
+
     "steps",
     "steps-vertical",
     "steps-horizontal",
+
+    // Step item
 
     "step",
     "step-primary",
@@ -235,6 +265,8 @@ module.exports = {
     "step-warning",
     "step-error",
 
+    // Menu
+
     "menu",
     "menu-title",
     "menu-normal",
@@ -242,42 +274,7 @@ module.exports = {
     "menu-vertical",
     "menu-horizontal",
 
-    "border-spacing-0",
-    "border-collapse",
-    "border-separate",
-
-    "border-primary",
-    "border-primary-focus",
-    "border-primary-content",
-
-    "border-secondary",
-    "border-secondary-focus",
-    "border-secondary-content",
-
-    "border-accent",
-    "border-accent-focus",
-    "border-accent-content",
-
-    "border-neutral",
-    "border-neutral-focus",
-    "border-neutral-content",
-
-    "border-base-100",
-    "border-base-200",
-    "border-base-300",
-    "border-base-content",
-
-    "border-info",
-    "border-info-content",
-
-    "border-success",
-    "border-success-content",
-
-    "border-warning",
-    "border-warning-content",
-
-    "border-error",
-    "border-error-content",
+    // Border
 
     "border",
     "border-0",
@@ -321,6 +318,31 @@ module.exports = {
     "border-y-4",
     "border-y-8",
 
+    // Border color
+
+    "border-primary",
+    "border-primary-content",
+    "border-secondary",
+    "border-secondary-content",
+    "border-accent",
+    "border-accent-content",
+    "border-neutral",
+    "border-neutral-content",
+    "border-base-100",
+    "border-base-200",
+    "border-base-300",
+    "border-base-content",
+    "border-info",
+    "border-info-content",
+    "border-success",
+    "border-success-content",
+    "border-warning",
+    "border-warning-content",
+    "border-error",
+    "border-error-content",
+
+    // Border style
+
     "border-solid",
     "border-dashed",
     "border-dotted",
@@ -328,12 +350,16 @@ module.exports = {
     "border-hidden",
     "border-none",
 
+    // Border radius
+
     "rounded-none",
     "rounded-sm",
     "rounded",
     "rounded-md",
     "rounded-lg",
     "rounded-xl",
+
+    // Shadow
 
     "shadow-sm",
     "shadow",
@@ -343,6 +369,8 @@ module.exports = {
     "shadow-2xl",
     "shadow-inner",
     "shadow-none",
+
+    // Margin (outer space)
 
     "m-0",
     "m-2",
@@ -400,6 +428,8 @@ module.exports = {
     "my-32",
     "my-auto",
 
+    // Padding (inner space)
+
     "p-0",
     "p-2",
     "p-4",
@@ -449,11 +479,16 @@ module.exports = {
     "py-16",
     "py-32",
 
+    // Width
+
     "w-8",
     "w-16",
     "w-24",
     "w-32",
     "w-64",
+    "w-full",
+    "w-auto",
+
     "w-1/12",
     "w-2/12",
     "w-3/12",
@@ -465,8 +500,8 @@ module.exports = {
     "w-9/12",
     "w-10/12",
     "w-11/12",
-    "w-full",
-    "w-auto",
+
+    // Height
 
     "h-8",
     "h-16",

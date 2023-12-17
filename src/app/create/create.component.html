@@ -304,31 +304,18 @@
 		<div class="z-10 flex flex-col gap-4 bg-base-100 p-4" [ngClass]="fullscreenClassList">
 			<div class="flex h-full flex-col gap-y-4 overflow-y-auto overflow-x-hidden">
 				<div class="flex w-full items-start justify-between gap-4">
-					<div class="flex w-full items-start justify-start gap-4 overflow-hidden">
-						<a
-							class="btn-info w-12 h-12 btn-square btn btn-outline fill-current"
-							type="button"
-							title="Menu"
-							aria-label="Menu"
-							appSvgIcon
-							*ngIf="!fullscreenToggle"
-							[routerLink]="['/help/markdown']"
-							[appSvgIconIcon]="'info-circle'"
-							[appSvgIconSquare]="'1.5em'"
-						></a>
-						<div
-							class="flex overflow-auto"
-							appMarkdown
-							appSkeleton
-							#appMarkdownComponent
-							[appSkeletonToggle]="postSkeletonToggle"
-							[appMarkdownTextareaId]="postFormTextareaId"
-							[appMarkdownPreviewId]="postFormPreviewId"
-							[appMarkdownScrollSync]="fullscreenScrollSync"
-							[appMarkdownDisabled]="postForm.disabled"
-							(appMarkdownDialogToggle)="onToggleMarkdownDialog($event)"
-						></div>
-					</div>
+					<div
+						class="flex overflow-auto"
+						appMarkdown
+						appSkeleton
+						#appMarkdownComponent
+						[appSkeletonToggle]="postSkeletonToggle"
+						[appMarkdownTextareaId]="postFormTextareaId"
+						[appMarkdownPreviewId]="postFormPreviewId"
+						[appMarkdownScrollSync]="fullscreenScrollSync"
+						[appMarkdownDisabled]="postForm.disabled"
+						(appMarkdownDialogToggle)="onToggleMarkdownDialog($event)"
+					></div>
 					<div class="flex items-start justify-end gap-4">
 						<button
 							class="btn-primary btn w-12 h-12 sm:w-auto sm:h-auto"
@@ -439,7 +426,7 @@
 						<fieldset class="form-control h-full" *ngIf="postForm.get('markdown') as markdown">
 							<!-- prettier-ignore -->
 							<div
-								class="textarea-autosize w-full h-full focus-within:outline-0"
+								class="textarea-autosize w-full h-full focus-within:outline-0 relative"
 								appSkeleton
 								[appSkeletonToggle]="postSkeletonToggle"
 								[appSkeletonClassListElementRef]="['!border-0']"
@@ -461,6 +448,16 @@
 									[class.whitespace-pre]="fullscreenToggle && !fullscreenTextWrapping"
 									[class.font-mono]="postMarkdownMonospace"
 								></textarea>
+								<a
+									class="absolute top-11 left-4 text-sm text-base-content/50 link"
+									title="About Markdown"
+									aria-label="About Markdown"
+									*ngIf="!markdown.value && !post"
+									[routerLink]="['/help/markdown']"
+									[class.font-mono]="postMarkdownMonospace"
+								>
+									How to make a greatest layout?
+								</a>
 							</div>
 						</fieldset>
 					</form>

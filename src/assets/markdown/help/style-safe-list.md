@@ -1,4 +1,4 @@
-### Style safe list
+## Style safe list
 
 App bundle comes with a wide range of CSS classes that you can use to style your layout in any way you want. Additionally, we provide a comprehensive safe list of classes that you can use with confidence, ensuring that your layout looks great and functions perfectly.
 
@@ -10,42 +10,85 @@ You can read much more information about classes and advanced layout in [DaisyUI
 prose
 not-prose
 
-// Background color
+// Background colors
 
 bg-primary
-bg-primary-focus
 bg-primary-content
-
 bg-secondary
-bg-secondary-focus
 bg-secondary-content
-
 bg-accent
-bg-accent-focus
 bg-accent-content
-
 bg-neutral
-bg-neutral-focus
 bg-neutral-content
-
 bg-base-100
 bg-base-200
 bg-base-300
 bg-base-content
-
 bg-info
 bg-info-content
-
 bg-success
 bg-success-content
-
 bg-warning
 bg-warning-content
-
 bg-error
 bg-error-content
 
-// Alert 
+// Text colors
+
+text-primary
+text-primary-content
+text-secondary
+text-secondary-content
+text-accent
+text-accent-content
+text-neutral
+text-neutral-content
+text-base-100
+text-base-200
+text-base-300
+text-base-content
+text-info
+text-info-content
+text-success
+text-success-content
+text-warning
+text-warning-content
+text-error
+text-error-content
+
+// Text size
+    
+text-xs
+text-sm
+text-base
+text-lg
+text-xl
+text-2xl
+text-3xl
+text-4xl
+    
+// Text decoration
+    
+underline
+no-underline
+italic
+not-italic
+overline
+line-through
+
+// Font weight
+
+font-thin
+font-extralight
+font-light
+font-normal
+font-medium
+font-semibold
+font-bold
+font-extrabold
+font-black
+
+// Alert
 
 alert
 alert-info
@@ -79,11 +122,26 @@ btn-error
 btn-ghost
 btn-link
 btn-outline
-
 btn-lg
 btn-md
 btn-sm
 btn-xs
+
+// Divider
+
+divider
+divider-neutral
+divider-primary
+divider-secondary
+divider-accent
+divider-success
+divider-warning
+divider-info
+divider-error
+divider-vertical
+divider-horizontal
+divider-start
+divider-end
 
 // Badge
 
@@ -99,7 +157,6 @@ badge-error
 badge-ghost
 badge-link
 badge-outline
-
 badge-lg
 badge-md
 badge-sm
@@ -135,7 +192,7 @@ border-spacing-0
 border-collapse
 border-separate
 
-// Mask
+// Image mask
 
 mask
 mask-squircle
@@ -164,6 +221,8 @@ steps
 steps-vertical
 steps-horizontal
 
+// Step item
+
 step
 step-primary
 step-secondary
@@ -182,7 +241,7 @@ menu-compact
 menu-vertical
 menu-horizontal
 
-// Border width
+// Border
 
 border
 border-0
@@ -229,35 +288,23 @@ border-y-8
 // Border color
 
 border-primary
-border-primary-focus
 border-primary-content
-
 border-secondary
-border-secondary-focus
 border-secondary-content
-
 border-accent
-border-accent-focus
 border-accent-content
-
 border-neutral
-border-neutral-focus
 border-neutral-content
-
 border-base-100
 border-base-200
 border-base-300
 border-base-content
-
 border-info
 border-info-content
-
 border-success
 border-success-content
-
 border-warning
 border-warning-content
-
 border-error
 border-error-content
 
@@ -278,63 +325,19 @@ rounded
 rounded-md
 rounded-lg
 rounded-xl
-    
-// Text color
 
-text-primary
-text-primary-focus
-text-primary-content
+// Shadow
 
-text-secondary
-text-secondary-focus
-text-secondary-content
+shadow-sm
+shadow
+shadow-md
+shadow-lg
+shadow-xl
+shadow-2xl
+shadow-inner
+shadow-none
 
-text-accent
-text-accent-focus
-text-accent-content
-
-text-neutral
-text-neutral-focus
-text-neutral-content
-
-text-base-100
-text-base-200
-text-base-300
-text-base-content
-
-text-info
-text-info-content
-
-text-success
-text-success-content
-
-text-warning
-text-warning-content
-
-text-error
-text-error-content
-
-// Text size
-    
-text-xs
-text-sm
-text-base
-text-lg
-text-xl
-text-2xl
-text-3xl
-text-4xl
-    
-// Text decoration
-    
-underline
-no-underline
-italic
-not-italic
-overline
-line-through
-
-// Margin
+// Margin (outer space)
 
 m-0
 m-2
@@ -392,7 +395,7 @@ my-16
 my-32
 my-auto
 
-// Padding
+// Padding (inner space)
 
 p-0
 p-2
@@ -450,6 +453,9 @@ w-16
 w-24
 w-32
 w-64
+w-full
+w-auto
+
 w-1/12
 w-2/12
 w-3/12
@@ -461,8 +467,6 @@ w-8/12
 w-9/12
 w-10/12
 w-11/12
-w-full
-w-auto
 
 // Height
 
@@ -473,15 +477,4 @@ h-32
 h-64
 h-full
 h-auto
-
-// Shadow
-
-shadow-sm
-shadow
-shadow-md
-shadow-lg
-shadow-xl
-shadow-2xl
-shadow-inner
-shadow-none
 ```

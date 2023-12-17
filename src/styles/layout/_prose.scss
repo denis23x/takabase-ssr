@@ -65,7 +65,7 @@
     }
   }
 
-  code {
+  code:not(pre code) {
     @apply inline bg-base-300 text-base-content font-normal rounded p-1;
   }
 

@@ -25,6 +25,10 @@ import { ReportService } from '../core/services/report.service';
 export class HelpComponent implements OnInit {
 	helpNavigationList: any[] = [
 		{
+			path: 'about',
+			name: 'About'
+		},
+		{
 			path: 'markdown',
 			name: 'Markdown'
 		},
@@ -39,10 +43,6 @@ export class HelpComponent implements OnInit {
 		{
 			path: 'code-highlight',
 			name: 'Code highlight'
-		},
-		{
-			path: 'road-map',
-			name: 'Road map'
 		}
 	];
 
