@@ -9,7 +9,7 @@
 		</div>
 		<ng-container [ngSwitch]="true">
 			<div class="flex flex-col gap-4" *ngSwitchDefault>
-				<p class="alert">
+				<p class="alert" role="alert">
 					<i
 						class="fill-current text-info"
 						appSvgIcon
@@ -40,7 +40,7 @@
 				</ng-container>
 			</div>
 			<div class="flex flex-col gap-4" *ngSwitchCase="!recoveryIsSubmitted && !recoveryIsSucceed">
-				<p class="alert">
+				<p class="alert" role="alert">
 					<i
 						class="fill-current text-info"
 						appSvgIcon

@@ -9,7 +9,7 @@
 			*ngFor="let snack of snackbarList$ | async"
 			(click)="onClose(snack)"
 		>
-			<div class="alert pointer-events-auto" [ngClass]="snack.options.alertClassList">
+			<div class="alert pointer-events-auto" role="alert" [ngClass]="snack.options.alertClassList">
 				<i
 					class="fill-current"
 					appSvgIcon
