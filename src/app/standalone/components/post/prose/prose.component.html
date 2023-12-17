@@ -14,6 +14,7 @@
 						<a
 							class="avatar"
 							*ngSwitchCase="false"
+							[target]="postPreview ? '_blank' : '_self'"
 							[attr.aria-label]="post.user.name"
 							[routerLink]="[post.user | userUrl]"
 						>
@@ -39,16 +40,17 @@
 							appSkeleton
 							[appSkeletonToggle]="postSkeletonToggle"
 						>
-							{{ post.name }}
+							{{ post.name || "Name" }}
 						</h2>
 						<a
 							class="link text-sm leading-4 truncate max-w-full"
 							appSkeleton
+							[target]="postPreview ? '_blank' : '_self'"
 							[appSkeletonToggle]="postSkeletonToggle"
-							[routerLink]="[post.user | userUrl, 'category', post.category.id]"
-							[attr.aria-label]="post.category.name"
+							[routerLink]="[post.user | userUrl, 'category', post.category?.id]"
+							[attr.aria-label]="post.category?.name || 'Category'"
 						>
-							{{ post.category.name }}
+							{{ post.category?.name || "Category" }}
 						</a>
 					</div>
 				</div>
@@ -135,8 +137,8 @@
 					</ul>
 				</div>
 			</div>
-			<p class="alert" role="alert" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-				<span class="w-full">{{ post.description }}</span>
+			<p class="alert" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+				<span class="w-full">{{ post.description || "Description" }}</span>
 			</p>
 			<div class="flex flex-wrap items-center justify-between gap-4 w-full">
 				<time
@@ -163,7 +165,7 @@
 			class="prose h-full w-full max-w-full"
 			appSkeleton
 			[appSkeletonToggle]="postSkeletonToggle"
-			[innerHTML]="post?.markdown || 'No post markdown' | markdown | sanitizer: 'html'"
+			[innerHTML]="post?.markdown || 'Markdown' | markdown | sanitizer: 'html'"
 		></article>
 		<!-- TODO: ads
 		<ng-container *ngIf="!postPreview && !postSkeletonToggle">

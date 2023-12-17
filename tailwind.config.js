@@ -516,11 +516,6 @@ module.exports = {
       sans: ["Ubuntu", "sans-serif"],
       mono: ["Ubuntu Mono", "monospace"],
     },
-    cursor: {
-      ["default"]: "default",
-      ["pointer"]: "pointer",
-      ["not-allowed"]: "not-allowed",
-    },
     extend: {
       borderRadius: {
         btn: "var(--rounded-btn)",

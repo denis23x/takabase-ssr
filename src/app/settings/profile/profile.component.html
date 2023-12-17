@@ -8,18 +8,17 @@
 			[formGroup]="profileForm"
 			(ngSubmit)="onSubmitProfileForm()"
 		>
-			<div
-				class="flex flex-col sm:flex-row w-full sm:items-center items-start sm:justify-between justify-start gap-4"
-			>
+			<div class="flex flex-row w-full items-center justify-between gap-4">
 				<div class="flex items-center justify-start gap-4 overflow-auto w-full">
 					<!-- prettier-ignore -->
 					<div class="avatar">
             <figure
-              class="h-12 w-12 rounded-btn relative overflow-hidden"
+              class="h-12 w-12 rounded-btn relative overflow-hidden cursor-pointer"
               data-pw="app-settings-profile-image-avatar"
               appAvatar
               [ngClass]="{ 'cursor-not-allowed opacity-50 saturate-0 transition': profileForm.disabled }"
               [appAvatarUser]="currentUser"
+              (click)="appCropperComponent.onToggleCropper(true)"
             ></figure>
           </div>
 					<div class="flex flex-col overflow-auto">
@@ -37,30 +36,49 @@
 						</time>
 					</div>
 				</div>
-				<div class="flex items-center justify-end gap-4 w-full sm:w-auto">
+				<div
+					class="flex items-center justify-end"
+					appDropdown
+					[appDropdownPosition]="'bottom-right'"
+					[class.cursor-not-allowed]="profileForm.enabled"
+				>
 					<button
-						class="btn-ghost btn btn-square bg-base-200 fill-current"
-						data-pw="app-settings-profile-button-show-qr-code-modal"
+						class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"
 						type="button"
-						title="QR Code"
-						aria-label="QR Code"
+						title="Menu"
+						aria-label="Menu"
 						appSvgIcon
+						slot="target"
 						[disabled]="profileForm.disabled"
-						[appSvgIconIcon]="'qr-code'"
-						[appSvgIconSquare]="'1.75em'"
-						(click)="appQrCodeComponent.onToggleQRCodeDialog(true)"
+						[appSvgIconIcon]="'three-dots-vertical'"
+						[appSvgIconSquare]="'1.5em'"
 					></button>
-					<button
-						class="btn-success btn flex-1 sm:flex-auto"
-						data-pw="app-settings-profile-button-show-cropper-modal"
-						type="button"
-						aria-label="Avatar"
-						[class.btn-outline]="!currentUser.avatar && profileForm.enabled"
-						[disabled]="profileForm.disabled"
-						(click)="appCropperComponent.onToggleCropper(true)"
-					>
-						Avatar
-					</button>
+					<ul class="menu menu-vertical menu-md ml-0 mt-2" slot="content">
+						<li class="flex w-full snap-start scroll-my-2">
+							<button
+								class="rounded-btn block w-full truncate text-right"
+								data-pw="app-settings-profile-button-show-cropper-modal"
+								type="button"
+								title="Avatar"
+								aria-label="Avatar"
+								(click)="appCropperComponent.onToggleCropper(true)"
+							>
+								Update avatar
+							</button>
+						</li>
+						<li class="flex w-full snap-start scroll-my-2">
+							<button
+								class="rounded-btn block w-full truncate text-right"
+								data-pw="app-settings-profile-button-show-qr-code-modal"
+								type="button"
+								title="QR Code"
+								aria-label="QR Code"
+								(click)="appQrCodeComponent.onToggleQRCodeDialog(true)"
+							>
+								QR Code
+							</button>
+						</li>
+					</ul>
 				</div>
 			</div>
 			<hr class="w-full border-base-content/20" />

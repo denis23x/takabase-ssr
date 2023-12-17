@@ -481,7 +481,7 @@
 					[appSkeletonToggle]="postSkeletonToggle"
 					[appSkeletonClassListElementRef]="['border-0']"
 					[class.btn-outline]="postForm.valid && postForm.enabled"
-					[disabled]="postForm.invalid || postForm.disabled"
+					[disabled]="(!post && postForm.pristine) || postForm.disabled"
 					(click)="appPostPreviewComponent.onTogglePostPreviewDialog(true)"
 				>
 					Preview

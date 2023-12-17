@@ -23,11 +23,11 @@
 				[formGroup]="categoryDeleteForm"
 				(ngSubmit)="onSubmitCategoryDeleteForm()"
 			>
-				<p class="alert" role="alert">
+				<p class="alert alert-error" role="alert">
 					<i
-						class="fill-current text-info"
+						class="fill-current text-error-content"
 						appSvgIcon
-						[appSvgIconIcon]="'info-circle'"
+						[appSvgIconIcon]="'x-circle'"
 						[appSvgIconSquare]="'1.5em'"
 					></i>
 					<span class="block"> This action cannot be undone </span>

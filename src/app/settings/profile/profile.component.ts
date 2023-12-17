@@ -27,6 +27,7 @@ import { AppTextareaAutosizeDirective } from '../../standalone/directives/app-te
 import { CurrentUser } from '../../core/models/current-user.model';
 import { User } from '../../core/models/user.model';
 import { QrCodeComponent } from '../../standalone/components/qr-code/qr-code.component';
+import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 
 interface ProfileForm {
 	name: FormControl<string>;
@@ -46,7 +47,8 @@ interface ProfileForm {
 		UserUrlPipe,
 		AppInputTrimWhitespaceDirective,
 		AppTextareaAutosizeDirective,
-		QrCodeComponent
+		QrCodeComponent,
+		DropdownComponent
 	],
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'
