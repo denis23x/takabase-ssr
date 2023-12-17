@@ -30,6 +30,8 @@ import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-past
 import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { WindowComponent } from '../window/window.component';
+import { AppPlatformDirective } from '../../directives/app-platform.directive';
+import { PlatformService } from '../../../core/services/platform.service';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -44,7 +46,8 @@ interface ImageForm {
 		SvgIconComponent,
 		AppInputOnlyPasteDirective,
 		AppInputTrimWhitespaceDirective,
-		WindowComponent
+		WindowComponent,
+		AppPlatformDirective
 	],
 	selector: 'app-cropper, [appCropper]',
 	templateUrl: './cropper.component.html'
@@ -106,6 +109,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
 		private fileService: FileService,
+		private platformService: PlatformService,
 		private snackbarService: SnackbarService
 	) {
 		this.imageForm = this.formBuilder.group<ImageForm>({
@@ -114,11 +118,13 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngAfterViewInit(): void {
-		this.imageTransform$?.unsubscribe();
-		this.imageTransform$ = this.imageCropper.transformChange.subscribe({
-			next: (imageTransform: ImageTransform) => (this.imageTransform = imageTransform),
-			error: (error: any) => console.error(error)
-		});
+		if (this.platformService.isBrowser()) {
+			this.imageTransform$?.unsubscribe();
+			this.imageTransform$ = this.imageCropper.transformChange.subscribe({
+				next: (imageTransform: ImageTransform) => (this.imageTransform = imageTransform),
+				error: (error: any) => console.error(error)
+			});
+		}
 	}
 
 	ngOnDestroy(): void {

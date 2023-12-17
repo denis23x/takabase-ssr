@@ -115,6 +115,7 @@
 					<div [ngClass]="{ 'cursor-not-allowed saturate-0': imageForm.disabled }">
 						<image-cropper
 							class="ngx-cropper rounded-box !p-4"
+							*appPlatform="'browser'"
 							[class.ngx-cropper-disabled]="imageForm.disabled"
 							[class.ngx-cropper-rounded]="cropperRound"
 							[imageFile]="cropperFile"
