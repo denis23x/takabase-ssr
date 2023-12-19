@@ -31,6 +31,7 @@ import { DropdownComponent } from '../../standalone/components/dropdown/dropdown
 import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { PlatformService } from '../../core/services/platform.service';
 import { SkeletonService } from '../../core/services/skeleton.service';
+import { FileService } from '../../core/services/file.service';
 
 interface ProfileForm {
 	name: FormControl<string>;
@@ -74,7 +75,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		private authorizationService: AuthorizationService,
 		private snackbarService: SnackbarService,
 		private skeletonService: SkeletonService,
-		private platformService: PlatformService
+		private platformService: PlatformService,
+		private fileService: FileService
 	) {
 		this.profileForm = this.formBuilder.group<ProfileForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -136,6 +138,32 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 					error: (error: any) => console.error(error)
 				});
 		}
+	}
+
+	onDeleteAvatar(avatar: string): void {
+		this.profileForm.disable();
+
+		const userUpdateDto: UserUpdateDto = {
+			avatar: null
+		};
+
+		this.currentUserRequest$?.unsubscribe();
+		this.currentUserRequest$ = this.userService
+			.update(this.currentUser.id, userUpdateDto)
+			.pipe(switchMap((user: User) => this.authorizationService.setCurrentUser(user)))
+			.subscribe({
+				next: () => {
+					this.fileService.delete(avatar).subscribe({
+						next: () => console.debug('File removed'),
+						error: (error: any) => console.error(error)
+					});
+
+					this.snackbarService.success('Okay', 'Avatar has been removed');
+
+					this.profileForm.enable();
+				},
+				error: () => this.profileForm.enable()
+			});
 	}
 
 	onToggleCropper(toggle: boolean): void {

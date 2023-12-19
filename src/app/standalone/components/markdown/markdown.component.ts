@@ -126,6 +126,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	scrollSync: boolean = false;
 	scrollSync$: Subscription | undefined;
 
+	textareaPaste$: Subscription | undefined;
 	textareaInput$: Subscription | undefined;
 	textareaId: string | undefined;
 	textarea: HTMLTextAreaElement | undefined;
@@ -162,6 +163,13 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 					next: () => this.markdownService.setRender(this.textarea.value, this.preview),
 					error: (error: any) => console.error(error)
 				});
+
+			this.textareaPaste$?.unsubscribe();
+			this.textareaPaste$ = fromEvent(this.textarea, 'paste').subscribe({
+				// prettier-ignore
+				next: (clipboardEventInit: ClipboardEventInit) => this.markdownService.markdownItClipboard.next(clipboardEventInit),
+				error: (error: any) => console.error(error)
+			});
 		}
 
 		this.setEmojiMart();
@@ -174,6 +182,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	ngOnDestroy(): void {
 		[
 			this.textareaInput$,
+			this.textareaPaste$,
 			this.scrollSync$,
 			this.controlListScroll$,
 			this.urlForm$,
@@ -281,28 +290,33 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	}
 
 	setScrollSyncHandler(): void {
-		const getScrollTop = (a: HTMLElement, b: HTMLElement): number => {
+		if (this.platformService.isBrowser()) {
 			// prettier-ignore
-			return Math.round((b.scrollHeight - b.clientHeight) * ((a.scrollTop / (a.scrollHeight - a.clientHeight))));
-		};
+			const getScrollTop = (a: HTMLElement, b: HTMLElement): number => {
+				return Math.round((b.scrollHeight - b.clientHeight) * ((a.scrollTop / (a.scrollHeight - a.clientHeight))));
+			};
 
-		this.scrollSync$?.unsubscribe();
-		this.scrollSync$ = merge(fromEvent(this.textarea, 'scroll'), fromEvent(this.preview, 'scroll'))
-			.pipe(filter(() => this.scrollSync))
-			.subscribe({
-				next: (event: Event) => {
-					const source: any = event.target;
+			this.scrollSync$?.unsubscribe();
+			this.scrollSync$ = merge(
+				fromEvent(this.textarea, 'scroll'),
+				fromEvent(this.preview, 'scroll')
+			)
+				.pipe(filter(() => this.scrollSync))
+				.subscribe({
+					next: (event: Event) => {
+						const source: any = event.target;
 
-					if (source.id === this.textarea.id) {
-						this.preview.scrollTop = getScrollTop(this.textarea, this.preview);
-					}
+						if (source.id === this.textarea.id) {
+							this.preview.scrollTop = getScrollTop(this.textarea, this.preview);
+						}
 
-					if (source.id === this.preview.id) {
-						this.textarea.scrollTop = getScrollTop(this.preview, this.textarea);
-					}
-				},
-				error: (error: any) => console.error(error)
-			});
+						if (source.id === this.preview.id) {
+							this.textarea.scrollTop = getScrollTop(this.preview, this.textarea);
+						}
+					},
+					error: (error: any) => console.error(error)
+				});
+		}
 	}
 
 	getMarkdownTextarea(textareaElement: HTMLTextAreaElement): MarkdownTextarea {

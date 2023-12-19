@@ -24,12 +24,16 @@ import { environment } from '../../../environments/environment';
 import { RenderRule } from 'markdown-it/lib/renderer';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class MarkdownService {
 	markdownIt: MarkdownIt;
+
+	// prettier-ignore
+	markdownItClipboard: BehaviorSubject<ClipboardEventInit | undefined> = new BehaviorSubject<ClipboardEventInit | undefined>(undefined);
 
 	constructor(
 		@Inject(DOCUMENT)

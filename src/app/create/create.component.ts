@@ -41,6 +41,7 @@ import { PostDeleteComponent } from '../standalone/components/post/delete/delete
 import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
 import { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
+import { PlatformService } from '../core/services/platform.service';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -127,7 +128,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 		private userService: UserService,
 		private cookieService: CookieService,
 		private metaService: MetaService,
-		private skeletonService: SkeletonService
+		private skeletonService: SkeletonService,
+		private platformService: PlatformService
 	) {
 		this.postForm = this.formBuilder.group<PostForm>({
 			name: this.formBuilder.nonNullable.control('', [
@@ -205,81 +207,83 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
-		// Get categoryList
+		if (this.platformService.isBrowser()) {
+			// Get categoryList
 
-		const categoryGetAllDto: CategoryGetAllDto = {
-			page: 1,
-			size: 999,
-			userId: this.currentUser.id
-		};
-
-		this.categoryListRequest$?.unsubscribe();
-		this.categoryListRequest$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
-			next: (categoryList: Category[]) => {
-				this.categoryList = categoryList;
-				this.categoryListSkeletonToggle = false;
-			},
-			error: (error: any) => console.error(error)
-		});
-
-		// Get post && Set category
-
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-
-		if (postId) {
-			const postGetOneDto: PostGetOneDto = {
-				userId: this.currentUser.id,
-				scope: ['category']
+			const categoryGetAllDto: CategoryGetAllDto = {
+				page: 1,
+				size: 999,
+				userId: this.currentUser.id
 			};
 
-			this.postRequest$?.unsubscribe();
-			this.postRequest$ = this.postService.getOne(postId, postGetOneDto).subscribe({
-				next: (post: Post) => {
-					this.post = post;
-					this.postSkeletonToggle = false;
-
-					this.category = this.post.category;
-					this.categorySkeletonToggle = false;
-
-					this.postForm.patchValue({
-						...this.post,
-						categoryId: this.category.id,
-						categoryName: this.category.name
-					});
-
-					this.postForm.markAllAsTouched();
-
-					// Get postFormIsPristine
-
-					this.postFormIsPristine$?.unsubscribe();
-					this.postFormIsPristine$ = this.postForm.valueChanges
-						.pipe(startWith(this.postForm.value))
-						.subscribe({
-							next: (value: any) => {
-								this.postFormIsPristine = Object.keys(value).every((key: string) => {
-									if (key === 'categoryId') {
-										return value[key] === this.post.category.id;
-									}
-
-									if (key === 'categoryName') {
-										return value[key] === this.post.category.name;
-									}
-
-									// @ts-ignore
-									return value[key] === this.post[key];
-								});
-							},
-							error: (error: any) => console.error(error)
-						});
+			this.categoryListRequest$?.unsubscribe();
+			this.categoryListRequest$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
+				next: (categoryList: Category[]) => {
+					this.categoryList = categoryList;
+					this.categoryListSkeletonToggle = false;
 				},
 				error: (error: any) => console.error(error)
 			});
-		} else {
-			this.post = undefined;
-			this.postSkeletonToggle = false;
 
-			this.category = undefined;
-			this.categorySkeletonToggle = false;
+			// Get post && Set category
+
+			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+
+			if (postId) {
+				const postGetOneDto: PostGetOneDto = {
+					userId: this.currentUser.id,
+					scope: ['category']
+				};
+
+				this.postRequest$?.unsubscribe();
+				this.postRequest$ = this.postService.getOne(postId, postGetOneDto).subscribe({
+					next: (post: Post) => {
+						this.post = post;
+						this.postSkeletonToggle = false;
+
+						this.category = this.post.category;
+						this.categorySkeletonToggle = false;
+
+						this.postForm.patchValue({
+							...this.post,
+							categoryId: this.category.id,
+							categoryName: this.category.name
+						});
+
+						this.postForm.markAllAsTouched();
+
+						// Get postFormIsPristine
+
+						this.postFormIsPristine$?.unsubscribe();
+						this.postFormIsPristine$ = this.postForm.valueChanges
+							.pipe(startWith(this.postForm.value))
+							.subscribe({
+								next: (value: any) => {
+									this.postFormIsPristine = Object.keys(value).every((key: string) => {
+										if (key === 'categoryId') {
+											return value[key] === this.post.category.id;
+										}
+
+										if (key === 'categoryName') {
+											return value[key] === this.post.category.name;
+										}
+
+										// @ts-ignore
+										return value[key] === this.post[key];
+									});
+								},
+								error: (error: any) => console.error(error)
+							});
+					},
+					error: (error: any) => console.error(error)
+				});
+			} else {
+				this.post = undefined;
+				this.postSkeletonToggle = false;
+
+				this.category = undefined;
+				this.categorySkeletonToggle = false;
+			}
 		}
 	}
 

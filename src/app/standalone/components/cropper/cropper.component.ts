@@ -32,6 +32,7 @@ import { SnackbarService } from '../../../core/services/snackbar.service';
 import { WindowComponent } from '../window/window.component';
 import { AppPlatformDirective } from '../../directives/app-platform.directive';
 import { PlatformService } from '../../../core/services/platform.service';
+import { MarkdownService } from '../../../core/services/markdown.service';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -75,6 +76,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	imageForm: FormGroup | undefined;
 	imageFormRequest$: Subscription | undefined;
+	imageFormMarkdownItClipboard$: Subscription | undefined;
 	imageFormMime: string[] = ['image/jpeg', 'image/jpg', 'image/png'];
 
 	imageTransform$: Subscription | undefined;
@@ -110,6 +112,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		private helperService: HelperService,
 		private fileService: FileService,
 		private platformService: PlatformService,
+		private markdownService: MarkdownService,
 		private snackbarService: SnackbarService
 	) {
 		this.imageForm = this.formBuilder.group<ImageForm>({
@@ -122,6 +125,27 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			this.imageTransform$?.unsubscribe();
 			this.imageTransform$ = this.imageCropper.transformChange.subscribe({
 				next: (imageTransform: ImageTransform) => (this.imageTransform = imageTransform),
+				error: (error: any) => console.error(error)
+			});
+
+			this.imageFormMarkdownItClipboard$?.unsubscribe();
+			this.imageFormMarkdownItClipboard$ = this.markdownService.markdownItClipboard.subscribe({
+				next: (clipboardEventInit: ClipboardEventInit | undefined) => {
+					const fileList: FileList = clipboardEventInit.clipboardData.files;
+
+					if (fileList.length) {
+						const file: File = fileList.item(0);
+
+						if (file.type.startsWith('image')) {
+							this.cropperPositionInitial = undefined;
+							this.cropperFile = file;
+
+							this.onResetImageForm(file.name);
+
+							this.onToggleCropper(true);
+						}
+					}
+				},
 				error: (error: any) => console.error(error)
 			});
 		}
