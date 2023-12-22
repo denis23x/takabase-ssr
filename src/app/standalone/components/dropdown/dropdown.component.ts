@@ -146,6 +146,23 @@ export class DropdownComponent implements OnInit, OnDestroy {
 				/** Apply position */
 
 				switch (this.dropdownPosition) {
+					case 'top-left': {
+						const contentDOMRect: DOMRect = this.dropdownContent.getBoundingClientRect();
+
+						this.dropdownContent.style['left'] = elementDOMRect.left + 'px';
+						this.dropdownContent.style['top'] = elementDOMRect.top - contentDOMRect.height + 'px';
+
+						break;
+					}
+					case 'top-right': {
+						const contentDOMRect: DOMRect = this.dropdownContent.getBoundingClientRect();
+
+						// prettier-ignore
+						this.dropdownContent.style['left'] = elementDOMRect.left - (contentDOMRect.width - elementDOMRect.width) + 'px';
+						this.dropdownContent.style['top'] = elementDOMRect.top - contentDOMRect.height + 'px';
+
+						break;
+					}
 					case 'bottom-left': {
 						this.dropdownContent.style['left'] = elementDOMRect.left + 'px';
 						this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';

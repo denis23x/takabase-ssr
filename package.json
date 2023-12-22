@@ -51,7 +51,7 @@
     "markdown-it-tasks": "^0.0.5",
     "markdown-it-video": "^0.6.3",
     "morphdom": "^2.7.0",
-    "ngx-image-cropper": "^7.0.0",
+    "ngx-image-cropper": "^7.1.2",
     "prism-themes": "^1.9.0",
     "prismjs": "^1.29.0",
     "qrcode": "^1.5.3",
@@ -95,7 +95,7 @@
     "rxfire": "^6.0.3",
     "sitemap-generator": "^8.5.1",
     "svg2sprite-cli": "^2.0.1",
-    "tailwindcss": "^3.3.1",
+    "tailwindcss": "^3.4.0",
     "typescript": "~5.2.2",
     "webpack-bundle-analyzer": "^4.10.1"
   }

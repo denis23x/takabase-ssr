@@ -1,8 +1,10 @@
 /** @format */
 
+// prettier-ignore
 export const environment = {
 	appUrl: 'https://draft-ssr.web.app',
 	apiUrl: 'https://draft-api.web.app/api/v1',
+  ipaUrl: 'https://us-central1-draft-ssr.cloudfunctions.net/ext-image-processing-api-handler',
 	pwa: false,
 	production: true,
 	firebase: {

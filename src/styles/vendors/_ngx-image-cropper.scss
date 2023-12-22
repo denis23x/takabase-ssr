@@ -1,5 +1,6 @@
 .ngx-cropper {
-  --cropper-overlay-color: oklch(var(--b3));
+  --cropper-overlay-color: oklch(var(--b1));
+  --cropper-outline-color: oklch(var(--b1) /.75);
 
   .ngx-ic-source-image {
     @apply inline;
@@ -16,7 +17,7 @@
   }
 
   .ngx-ic-overlay {
-    @apply rounded-box;
+    @apply rounded-box border border-base-content/80;
   }
 
   .ngx-ic-move {
@@ -41,7 +42,7 @@
     &.ngx-ic-bottom,
     &.ngx-ic-bottomleft,
     &.ngx-ic-left {
-      @apply rounded-full;
+      @apply rounded-btn;
 
       background: oklch(var(--su));
 
@@ -51,6 +52,17 @@
       .ngx-ic-square {
         @apply invisible;
       }
+    }
+  }
+
+  &.ngx-cropper-move-image {
+    .ngx-ic-overlay,
+    .ngx-ic-cropper {
+      @apply pointer-events-none opacity-25;
+    }
+
+    .ngx-ic-cropper {
+      @apply opacity-25;
     }
   }
 
@@ -71,17 +83,6 @@
       &.ngx-ic-bottomleft,
       &.ngx-ic-left {
         background: oklch(var(--b3));
-      }
-    }
-  }
-
-  &.ngx-cropper-rounded {
-    .ngx-ic-resize {
-      &.ngx-ic-topleft,
-      &.ngx-ic-topright,
-      &.ngx-ic-bottomright,
-      &.ngx-ic-bottomleft {
-        opacity: 0 !important;
       }
     }
   }

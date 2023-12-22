@@ -4,9 +4,11 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+// prettier-ignore
 export const environment = {
 	appUrl: 'http://localhost:4200',
 	apiUrl: 'http://localhost:4400/api/v1',
+	ipaUrl: 'https://us-central1-draft-ssr.cloudfunctions.net/ext-image-processing-api-handler',
 	pwa: false,
 	production: false,
 	firebase: {

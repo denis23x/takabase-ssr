@@ -16,10 +16,12 @@ import { HelperService } from '../../../core/services/helper.service';
 })
 export class ShareComponent {
 	@Input({ required: true })
-	set appSharePost(post: Post) {
-		this.post = post;
+	set appSharePost(post: Post | undefined) {
+		if (post) {
+			this.post = post;
 
-		this.setShareList();
+			this.setShareList();
+		}
 	}
 
 	post: Post | undefined;
