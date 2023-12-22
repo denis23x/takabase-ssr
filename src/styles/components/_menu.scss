@@ -2,6 +2,8 @@
 
 .menu {
   &.menu-horizontal {
+    @apply overflow-x-auto overflow-y-hidden;
+
     li {
       div[appDropdown],
       button[appSvgIcon] {
