@@ -5,7 +5,8 @@ import { from, Observable, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { catchError } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,6 +14,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class FileService {
 	constructor(
 		private apiService: ApiService,
+		private httpClient: HttpClient,
 		private angularFireStorage: AngularFireStorage
 	) {}
 
@@ -43,17 +45,11 @@ export class FileService {
 		);
 	}
 
-	// getOne(fileGetOneDto: FileGetOneDto): Observable<Blob> {
-	// 	return this.apiService.get('/files/image', fileGetOneDto, {
-	// 		responseType: 'blob'
-	// 	});
-	// }
-	//
-	// getOneProxy(fileGetOneProxyDto: FileGetOneProxyDto): Observable<Blob> {
-	// 	return this.apiService.get('/files/image/proxy', fileGetOneProxyDto, {
-	// 		responseType: 'blob'
-	// 	});
-	// }
+	getOneIPA(params: string): Observable<Blob> {
+		return this.httpClient.get(environment.ipaUrl + params, {
+			responseType: 'blob'
+		});
+	}
 
 	delete(filePath: string): Observable<any> {
 		return this.angularFireStorage.refFromURL(filePath).delete();

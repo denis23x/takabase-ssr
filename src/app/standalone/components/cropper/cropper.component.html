@@ -12,7 +12,7 @@
 		<div
 			class="flex items-center justify-center w-full max-w-lg"
 			appWindow
-			[appWindowTitle]="'Image'"
+			[appWindowTitle]="'Cropper'"
 			[appWindowButtons]="['close']"
 			(appWindowClose)="onToggleCropper(false)"
 		>
@@ -22,7 +22,13 @@
 				[class.overflow-hidden]="!cropperIsAvailable"
 				[class.gap-4]="cropperIsAvailable"
 			>
-				<form class="flex flex-col gap-4" autocomplete="off" [formGroup]="imageForm">
+				<!-- prettier-ignore -->
+				<form
+					class="flex flex-col gap-4"
+					autocomplete="off"
+					[formGroup]="imageForm"
+					[ngClass]="{ 'hidden': cropperIsAvailable }"
+				>
 					<p class="alert" role="alert">
 						<i
 							class="fill-current text-info"
@@ -37,7 +43,7 @@
 							<div class="indicator">
 								<span
 									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="url.touched && !!url.errors && imageForm.enabled"
+									*ngIf="url.dirty && !!url.errors && imageForm.enabled"
 									[ngSwitch]="true"
 								>
 									<ng-container *ngSwitchCase="!!url.errors.required"> Required </ng-container>
@@ -56,12 +62,13 @@
 									type="text"
 									aria-label="Url"
 									formControlName="url"
-									placeholder="Paste image URL"
+									placeholder="Paste image from clipboard or URL"
 									appInputOnlyPaste
 									appInputTrimWhitespace
 									[class.input-success]="url.value && url.valid"
-									[class.input-error]="url.touched && url.invalid"
-									(input)="onInputUrl()"
+									[class.input-error]="url.dirty && url.invalid"
+                  (input)="onGetFileFromInternet($event)"
+                  (paste)="onGetFileFromDeviceClipboard($event)"
 								/>
 								<button
 									class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
@@ -70,21 +77,20 @@
 									appSvgIcon
 									*ngIf="!!url.value.length"
 									[class.btn-success]="url.valid"
-									[class.btn-error]="url.touched && url.invalid"
-									[class.btn-ghost]="url.untouched && url.invalid"
+									[class.btn-error]="url.dirty && url.invalid"
+									[class.btn-ghost]="url.pristine && url.invalid"
 									[disabled]="imageForm.disabled"
 									[appSvgIconIcon]="'x'"
 									[appSvgIconSquare]="'2em'"
-									(click)="onResetAll()"
+									(click)="url.setValue('')"
 								></button>
 							</div>
 							<input
 								class="hidden"
 								type="file"
-								aria-label="File"
 								#imageFormFile
 								[accept]="imageFormMime"
-								(change)="onInputFile($event)"
+								(change)="onGetFileFromDevice($event)"
 							/>
 							<button
 								class="btn-success btn-square btn fill-current p-3"
@@ -112,23 +118,26 @@
 					</fieldset>
 				</form>
 				<div class="flex flex-col gap-4" [ngClass]="{ 'invisible !m-0 !h-0': !cropperIsAvailable }">
-					<div [ngClass]="{ 'cursor-not-allowed saturate-0': imageForm.disabled }">
+					<div
+            class="block -m-4"
+            [ngClass]="{ 'cursor-not-allowed saturate-0': imageForm.disabled }"
+          >
 						<image-cropper
-							class="ngx-cropper rounded-box !p-4"
+							class="ngx-cropper aspect-square !p-4"
 							*appPlatform="'browser'"
 							[class.ngx-cropper-disabled]="imageForm.disabled"
-							[class.ngx-cropper-rounded]="cropperRound"
+							[class.ngx-cropper-move-image]="cropperBackgroundIsDraggable"
 							[imageFile]="cropperFile"
 							[imageAltText]="'Image cropper'"
 							[format]="'png'"
 							[maintainAspectRatio]="true"
-							[containWithinAspectRatio]="false"
-							[resizeToWidth]="256"
-							[resizeToHeight]="256"
+							[containWithinAspectRatio]="true"
+              [resizeToWidth]="512"
+              [resizeToHeight]="512"
 							[cropper]="cropperPosition"
-							[roundCropper]="cropperRound"
+							[roundCropper]="false"
 							[alignImage]="'center'"
-							[transform]="imageTransform"
+							[(transform)]="imageTransform"
 							[allowMoveImage]="cropperBackgroundIsDraggable"
 							(imageCropped)="onImageCropped($event)"
 							(loadImageFailed)="onImageFailed()"
@@ -141,7 +150,7 @@
 							class="flex overflow-auto rounded-btn border border-base-content/20"
 							[ngClass]="{ 'border-transparent bg-base-200 cursor-not-allowed': imageForm.disabled }"
 						>
-							<ul class="menu rounded-btn menu-horizontal menu-md flex-nowrap overflow-auto border-none p-0">
+							<ul class="menu rounded-btn menu-horizontal menu-md flex-nowrap border-none p-0">
                 <li
                   class="inline-block"
                   [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
@@ -262,24 +271,138 @@
                     (click)="onImageZoom(false)"
                   ></button>
                 </li>
+                <li
+                  class="inline-block"
+                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
+                >
+                  <div
+                    class="flex p-0"
+                    appDropdown
+                    #dropdownAspectRatio
+                    *ngIf="{ value: false } as toggle"
+                    [ngClass]="{ 'bg-base-content/10': toggle.value }"
+                    [appDropdownPosition]="'top-left'"
+                    (appDropdownToggle)="toggle.value = $event"
+                  >
+                    <button
+                      class="fill-current p-3"
+                      type="button"
+                      title="Aspect Ratio"
+                      aria-label="Aspect Ratio"
+                      appSvgIcon
+                      slot="target"
+                      [class.cursor-not-allowed]="imageForm.disabled"
+                      [disabled]="imageForm.disabled"
+                      [appSvgIconIcon]="'aspect-ratio'"
+                      [appSvgIconSquare]="'1.5725em'"
+                    ></button>
+                    <ul class="menu menu-vertical menu-md ml-0 mt-2" slot="content">
+                      <li class="flex w-full" *ngFor="let aspectRatio of ['1:1', '4:3', '16:9', '16:10']">
+                        <button
+                          class="w-full whitespace-nowrap text-base-content"
+                          type="button"
+                          [attr.aria-label]="aspectRatio"
+                          (click)="onImageAspectRatio()"
+                        >
+                          <span class="block">
+                            {{ aspectRatio }}
+                          </span>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li
+                  class="inline-block"
+                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
+                >
+                  <button
+                    class="fill-current p-3"
+                    type="button"
+                    title="Sliders"
+                    aria-label="Sliders"
+                    appSvgIcon
+                    [class.cursor-not-allowed]="imageForm.disabled"
+                    [disabled]="imageForm.disabled"
+                    [appSvgIconIcon]="'sliders'"
+                    [appSvgIconSquare]="'1.5725em'"
+                    (click)="onImageSliders()"
+                  ></button>
+                </li>
               </ul>
 						</div>
-						<button
-							class="btn btn-error flex-1"
-							type="button"
-							aria-label="Reset"
-							[class.btn-outline]="imageForm.enabled"
-							[disabled]="imageForm.invalid || imageForm.disabled"
-							(click)="onResetTransform()"
-						>
-							Reset
-						</button>
+						<div class="flex p-0 relative" appDropdown [appDropdownPosition]="'top-right'">
+							<button
+								class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"
+								type="button"
+								title="Menu"
+								aria-label="Menu"
+								appSvgIcon
+								slot="target"
+								[disabled]="imageForm.disabled"
+								[appSvgIconIcon]="'three-dots-vertical'"
+								[appSvgIconSquare]="'1.5em'"
+							></button>
+							<ul class="menu menu-vertical menu-md ml-0 mb-2" slot="content">
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										type="button"
+										title="Reset cropper"
+										aria-label="Reset cropper"
+										(click)="onResetCropper()"
+									>
+										Reset cropper
+									</button>
+								</li>
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										type="button"
+										title="Reset changes"
+										aria-label="Reset changes"
+										(click)="onResetTransform()"
+									>
+										Reset changes
+									</button>
+								</li>
+							</ul>
+						</div>
 					</div>
+					<form class="flex flex-col bg-base-200 rounded-box p-4" *ngIf="imageFormSlidersToggle">
+						<fieldset class="form-control">
+							<label class="label">
+								<span class="label-text">Brightness</span>
+							</label>
+							<div class="relative flex items-center justify-between w-full gap-4">
+								<input class="range w-full" type="range" value="20" min="0" max="100" />
+								<span class="block badge badge-ghost" aria-label="Brightness"> 75 </span>
+							</div>
+						</fieldset>
+						<fieldset class="form-control">
+							<label class="label">
+								<span class="label-text">Saturation</span>
+							</label>
+							<div class="relative flex items-center justify-between w-full gap-4">
+								<input class="range w-full" type="range" value="20" min="0" max="100" />
+								<span class="block badge badge-ghost" aria-label="Saturation"> 75 </span>
+							</div>
+						</fieldset>
+						<fieldset class="form-control">
+							<label class="label">
+								<span class="label-text">HUE</span>
+							</label>
+							<div class="relative flex items-center justify-between w-full gap-4">
+								<input class="range w-full" type="range" value="40" min="0" max="360" />
+								<span class="block badge badge-ghost" aria-label="HUE"> 255 </span>
+							</div>
+						</fieldset>
+					</form>
 					<button
 						class="btn btn-success w-full"
 						type="button"
 						aria-label="Submit"
-						[disabled]="imageForm.invalid || imageForm.disabled"
+						[disabled]="imageForm.disabled"
 						(click)="onSubmitCropper()"
 					>
 						<span class="loading loading-spinner" *ngIf="imageForm.disabled"></span>
