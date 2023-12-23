@@ -72,7 +72,7 @@ interface UrlForm {
 })
 export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	// prettier-ignore
-	@ViewChild('controlListTableElement') controlListTableElement: ElementRef<HTMLDivElement> | undefined;
+	@ViewChild("controlListTableElement") controlListTableElement: ElementRef<HTMLDivElement> | undefined
 	@ViewChild('controlListElement') controlListElement: ElementRef<HTMLDivElement> | undefined;
 
 	@ViewChild('dropdownHeading') dropdownHeading: DropdownComponent | undefined;
@@ -241,6 +241,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 					this.setTextareaValue(this.getTextareaValue(markdownControl));
 				},
 				maxFrequentRows: 3,
+				perLine: 8,
 				set: 'native',
 				locale: 'en',
 				navPosition: 'top',
@@ -254,7 +255,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 	onTableMouseEnter(mouseEvent: MouseEvent): void {
 		// prettier-ignore
-		const parentElement: DOMRect = (mouseEvent.target as HTMLElement).parentElement.getBoundingClientRect();
+		const parentElement: DOMRect = (mouseEvent.target as HTMLElement).parentElement.getBoundingClientRect()
 		const targetElement: DOMRect = (mouseEvent.target as HTMLElement).getBoundingClientRect();
 
 		const width: string = 'width:' + Math.abs(parentElement.left - targetElement.right) + 'px;';
@@ -293,8 +294,8 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		if (this.platformService.isBrowser()) {
 			// prettier-ignore
 			const getScrollTop = (a: HTMLElement, b: HTMLElement): number => {
-				return Math.round((b.scrollHeight - b.clientHeight) * ((a.scrollTop / (a.scrollHeight - a.clientHeight))));
-			};
+        return Math.round((b.scrollHeight - b.clientHeight) * ((a.scrollTop / (a.scrollHeight - a.clientHeight))))
+      }
 
 			this.scrollSync$?.unsubscribe();
 			this.scrollSync$ = merge(
@@ -367,7 +368,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		this.textarea.dispatchEvent(new Event('input', { bubbles: true }));
 
 		// prettier-ignore
-		this.textarea.selectionStart = selectionStart !== selectionEnd ? selectionEnd : selectionStart;
+		this.textarea.selectionStart = selectionStart !== selectionEnd ? selectionEnd : selectionStart
 		this.textarea.selectionEnd = selectionEnd;
 		this.textarea.focus();
 	}
@@ -378,33 +379,33 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 			// prettier-ignore
 			switch (markdownControl.key) {
-        case 'url-link': {
-          this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', [Validators.required]));
-          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(this.helperService.getRegex('url'))]));
+        case "url-link": {
+          this.urlForm.addControl("title", this.formBuilder.nonNullable.control("", [Validators.required]))
+          this.urlForm.addControl("url", this.formBuilder.nonNullable.control("", [Validators.required, Validators.pattern(this.helperService.getRegex("url"))]))
 
-          const abstractControlTitle: AbstractControl = this.urlForm.get('title');
-          const abstractControlUrl: AbstractControl = this.urlForm.get('url');
+          const abstractControlTitle: AbstractControl = this.urlForm.get("title")
+          const abstractControlUrl: AbstractControl = this.urlForm.get("url")
 
-          this.urlForm$?.unsubscribe();
+          this.urlForm$?.unsubscribe()
           this.urlForm$ = abstractControlUrl.valueChanges
             .pipe(filter(() => abstractControlTitle.untouched))
-            .subscribe((value: string) => abstractControlTitle.setValue(value));
+            .subscribe((value: string) => abstractControlTitle.setValue(value))
 
-          break;
+          break
         }
-        case 'url-image': {
-          this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', []));
-          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(this.helperService.getRegex('url'))]));
+        case "url-image": {
+          this.urlForm.addControl("title", this.formBuilder.nonNullable.control("", []))
+          this.urlForm.addControl("url", this.formBuilder.nonNullable.control("", [Validators.required, Validators.pattern(this.helperService.getRegex("url"))]))
 
-          break;
+          break
         }
-        case 'url-youtube': {
-          this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [Validators.required, Validators.pattern(this.helperService.getRegex('youtube'))]));
+        case "url-youtube": {
+          this.urlForm.addControl("url", this.formBuilder.nonNullable.control("", [Validators.required, Validators.pattern(this.helperService.getRegex("youtube"))]))
 
-          break;
+          break
         }
         default: {
-          break;
+          break
         }
       }
 
@@ -430,7 +431,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.urlFormDialog.nativeElement.showModal();
 		} else {
 			// prettier-ignore
-			Object.keys(this.urlForm.controls).forEach((key: string) => this.urlForm.removeControl(key));
+			Object.keys(this.urlForm.controls).forEach((key: string) => this.urlForm.removeControl(key))
 
 			this.urlForm$?.unsubscribe();
 			this.urlFormControl = undefined;

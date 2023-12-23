@@ -71,11 +71,12 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 	appearanceThemeList: string[] = [];
 	appearanceThemeBackgroundList: string[] = [];
+
 	appearanceThemePrismList: string[] = [];
+	appearanceThemePrismPreviewToggle: boolean = false;
 	appearanceThemePrismMarkdown: string | undefined;
 	appearanceThemePrismMarkdown$: Subscription | undefined;
 	appearanceThemePrismMarkdownSkeletonToggle: boolean = true;
-	appearanceThemePrismPreviewToggle: boolean = false;
 
 	appearanceLanguageList: string[] = ['en-US'];
 	appearanceButtonsList: string[] = ['left', 'right'];
@@ -126,7 +127,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 				});
 
 				// prettier-ignore
-				const appearanceCollectionUpdate$: Observable<void> = from(this.appearanceCollection.ref.update(appearance));
+				const appearanceCollectionUpdate$: Observable<void> = from(this.appearanceCollection.ref.update(appearance))
 
 				/** Firestore */
 
@@ -210,13 +211,13 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 
 		// prettier-ignore
 		this.appearanceThemeBackgroundList = environment.backgrounds.sort().map((themeBackground: string) => {
-      return this.getTransformListValue(themeBackground, 'themeBackground');
-    });
+      return this.getTransformListValue(themeBackground, "themeBackground")
+    })
 
 		// prettier-ignore
-		this.appearanceThemePrismList = ['auto', ...environment.prism.themes.sort()].map((themePrism: string) => {
-			return this.getTransformListValue(themePrism, 'themePrism');
-		});
+		this.appearanceThemePrismList = ["auto", ...environment.prism.themes.sort()].map((themePrism: string) => {
+      return this.getTransformListValue(themePrism, "themePrism")
+    })
 	}
 
 	setPrismMarkdown(): void {

@@ -281,7 +281,7 @@
                     #dropdownAspectRatio
                     *ngIf="{ value: false } as toggle"
                     [ngClass]="{ 'bg-base-content/10': toggle.value }"
-                    [appDropdownPosition]="'top-left'"
+                    [appDropdownPlacement]="'top-start'"
                     (appDropdownToggle)="toggle.value = $event"
                   >
                     <button
@@ -296,7 +296,7 @@
                       [appSvgIconIcon]="'aspect-ratio'"
                       [appSvgIconSquare]="'1.5725em'"
                     ></button>
-                    <ul class="menu menu-vertical menu-md" slot="content">
+                    <ul class="menu menu-vertical menu-md m-0" slot="content">
                       <li class="flex w-full" *ngFor="let aspectRatio of ['1:1', '4:3', '16:9', '16:10']">
                         <button
                           class="w-full whitespace-nowrap text-base-content"
@@ -331,7 +331,7 @@
                 </li>
               </ul>
 						</div>
-						<div class="flex p-0 relative" appDropdown [appDropdownPosition]="'top-right'">
+						<div class="flex p-0 relative" appDropdown [appDropdownPlacement]="'top-end'">
 							<button
 								class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"
 								type="button"

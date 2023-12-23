@@ -38,7 +38,7 @@
 					appDropdown
 					appSkeleton
 					[appSkeletonToggle]="userSkeletonToggle || currentUserSkeletonToggle"
-					[appDropdownPosition]="'bottom-right'"
+          [appDropdownPlacement]="'bottom-end'"
 				>
 					<button
 						class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"
@@ -211,7 +211,7 @@
 								appDropdown
 								appSkeleton
 								[appSkeletonToggle]="categorySkeletonToggle || currentUserSkeletonToggle || userPostComponent?.postListSkeletonToggle"
-								[appDropdownPosition]="'bottom-right'"
+                [appDropdownPlacement]="'bottom-end'"
 							>
 								<button
 									class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"

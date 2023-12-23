@@ -201,7 +201,7 @@
 						appDropdown
 						appSkeleton
 						[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
-						[appDropdownPosition]="'bottom-right'"
+            [appDropdownPlacement]="'bottom-end'"
 					>
 						<button
 							class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"
@@ -318,31 +318,24 @@
 					></div>
 					<div class="flex items-start justify-end gap-4">
 						<button
-							class="btn-primary btn w-12 h-12 sm:w-auto sm:h-auto"
+							class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"
 							type="button"
 							appSkeleton
+							appSvgIcon
 							[title]="fullscreenToggle ? 'Exit Full Screen' : 'Enter Full Screen'"
 							[attr.aria-label]="fullscreenToggle ? 'Exit Full Screen' : 'Enter Full Screen'"
 							[appSkeletonToggle]="postSkeletonToggle"
 							[appSkeletonClassListElementRef]="['border-0']"
-							[class.btn-outline]="postForm.enabled && !fullscreenToggle"
 							[disabled]="postForm.disabled"
+							[appSvgIconIcon]="fullscreenToggle ? 'fullscreen-exit' : 'fullscreen'"
+							[appSvgIconSquare]="'1.5em'"
 							(click)="onFullscreen(!fullscreenToggle)"
-						>
-							<span class="hidden sm:block">Fullscreen</span>
-							<i
-								class="block sm:hidden fill-current"
-								appSvgIcon
-								[appSvgIconIcon]="fullscreenToggle ? 'fullscreen-exit' : 'fullscreen'"
-								[appSvgIconSquare]="'1.5em'"
-							>
-							</i>
-						</button>
+						></button>
 						<ng-container *ngIf="fullscreenToggle">
 							<div
 								class="flex p-0"
 								appDropdown
-								[appDropdownPosition]="'bottom-right'"
+								[appDropdownPlacement]="'bottom-end'"
 								[appDropdownCloseOnClick]="false"
 							>
 								<button
