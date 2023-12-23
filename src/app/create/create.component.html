@@ -320,8 +320,9 @@
 						<button
 							class="btn-primary btn w-12 h-12 sm:w-auto sm:h-auto"
 							type="button"
-							aria-label="Fullscreen"
 							appSkeleton
+							[title]="fullscreenToggle ? 'Exit Full Screen' : 'Enter Full Screen'"
+							[attr.aria-label]="fullscreenToggle ? 'Exit Full Screen' : 'Enter Full Screen'"
 							[appSkeletonToggle]="postSkeletonToggle"
 							[appSkeletonClassListElementRef]="['border-0']"
 							[class.btn-outline]="postForm.enabled && !fullscreenToggle"
@@ -332,7 +333,7 @@
 							<i
 								class="block sm:hidden fill-current"
 								appSvgIcon
-								[appSvgIconIcon]="'fullscreen'"
+								[appSvgIconIcon]="fullscreenToggle ? 'fullscreen-exit' : 'fullscreen'"
 								[appSvgIconSquare]="'1.5em'"
 							>
 							</i>
