@@ -36,6 +36,7 @@ import { debounceTime, filter, tap } from 'rxjs/operators';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { IPAOperation } from '../../../core/dto/ipa/ipa-operation.dto';
 import { IPAService } from '../../../core/services/ipa.service';
+import { FileService } from '../../../core/services/file.service';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -133,6 +134,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	constructor(
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
+		private fileService: FileService,
 		private ipaService: IPAService,
 		private platformService: PlatformService,
 		private markdownService: MarkdownService,
@@ -182,6 +184,13 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 							operation: 'modulate',
 							...this.ipaFormModulate.value
 						},
+						{
+							operation: 'resize',
+							width: 1024,
+							height: 1024,
+							position: 'center',
+							fit: 'inside'
+						},
 						this.ipaOperationParams[this.ipaOperationParams.length - 1]
 					];
 
@@ -227,8 +236,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		if (inputElementFile) {
 			this.onSetFile(inputElementFile);
-		} else {
-			this.snackbarService.error('Error', 'Invalid image type');
 		}
 	}
 
@@ -273,53 +280,57 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		return null;
 	}
 
-	onSetFile(file: File): void {
-		// TODO: validation
-		//
-		// const fileValidation: Record<string, any> = {
-		// 	mime: {
-		// 		valid: this.fileService.getFileValidationMime(file, this.imageFormMime),
-		// 		message: 'Invalid image type'
-		// 	},
-		// 	type: {
-		// 		valid: this.fileService.getFileValidationSize(file, 5),
-		// 		message: 'Invalid image size'
-		// 	}
-		// };
-		//
-		// if (Object.values(fileValidation).every((file: any) => file.valid)) {
-		// 	this.cropperPositionInitial = undefined;
-		// 	this.cropperFile = file;
-		//
-		// 	this.onResetImageForm(file.name);
-		// } else {
-		// 	this.onResetAll();
-		//
-		// 	Object.values(fileValidation)
-		// 		.filter((file: any) => !file.valid)
-		// 		.forEach((file: any) => this.snackbarService.error('Error', file.message));
-		// }
-		// this.snackbarService.error('Error', 'Invalid image type');
+	onGetFileValidation(file: File): boolean {
+		if (this.fileService.getFileValidationMime(file, this.imageFormMime)) {
+			const fileSizeMaxSize: number = 3;
 
-		this.imageForm.disable();
+			if (this.fileService.getFileValidationSize(file, fileSizeMaxSize)) {
+				return true;
+			} else {
+				const fileSize: string = this.fileService.getFileSizeFormat(file.size);
+				const fileSizeMax: string = `(maximum size is ${fileSizeMaxSize} MiB)`;
 
-		const fileDate: number = Date.now();
-		const fileUUID: string = this.helperService.getUUID();
-		const filePath: string = [fileDate, fileUUID, file.name].join('-');
-
-		this.imageFormRequest$?.unsubscribe();
-		this.imageFormRequest$ = this.ipaService.create(file, filePath).subscribe({
-			next: (fileUrl: string) => {
-				this.ipaOperationParams.unshift({
-					operation: 'input',
-					type: 'gcs',
-					source: fileUrl
+				this.snackbarService.error('Error', `Invalid image size ${fileSize} ${fileSizeMax}`, {
+					duration: 8000
 				});
+			}
+		} else {
+			this.snackbarService.error('Error', 'Invalid image type');
+		}
 
-				this.onImageIPA();
-			},
-			error: () => this.imageForm.enable()
-		});
+		return false;
+	}
+
+	onSetFile(file: File): void {
+		if (this.onGetFileValidation(file)) {
+			this.imageForm.disable();
+
+			const fileDate: number = Date.now();
+			const fileUUID: string = this.helperService.getUUID();
+			const filePath: string = [fileDate, fileUUID, file.name].join('-');
+
+			this.imageFormRequest$?.unsubscribe();
+			this.imageFormRequest$ = this.ipaService.create(file, filePath).subscribe({
+				next: (fileUrl: string) => {
+					this.ipaOperationParams.unshift({
+						operation: 'resize',
+						width: 1024,
+						height: 1024,
+						position: 'center',
+						fit: 'inside'
+					});
+
+					this.ipaOperationParams.unshift({
+						operation: 'input',
+						type: 'gcs',
+						source: fileUrl
+					});
+
+					this.onImageIPA();
+				},
+				error: () => this.imageForm.enable()
+			});
+		}
 	}
 
 	/** Image Processing API */
