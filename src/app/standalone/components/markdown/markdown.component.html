@@ -139,7 +139,7 @@
 					#dropdownEmojiMart
 					*ngIf="{ value: false } as toggle"
 					[ngClass]="{ 'bg-base-content/10': toggle.value }"
-					[appDropdownCloseOnClick]="false"
+					[appDropdownClose]="false"
 					(appDropdownToggle)="toggle.value = $event"
 				>
 					<button

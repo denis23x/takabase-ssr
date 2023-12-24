@@ -153,7 +153,7 @@
 							appSkeleton
 							appDropdown
 							[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
-							[appDropdownFitParentWidth]="true"
+              [appDropdownFit]="true"
 							[class.cursor-not-allowed]="postForm.disabled"
 							(appDropdownToggle)="onToggleCategory($event)"
 						>
@@ -336,7 +336,7 @@
 								class="flex p-0"
 								appDropdown
 								[appDropdownPlacement]="'bottom-end'"
-								[appDropdownCloseOnClick]="false"
+								[appDropdownClose]="false"
 							>
 								<button
 									class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"
