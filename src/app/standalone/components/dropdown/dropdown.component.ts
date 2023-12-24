@@ -12,9 +12,18 @@ import {
 } from '@angular/core';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { filter } from 'rxjs/operators';
 import { PlatformService } from '../../../core/services/platform.service';
 import { CookieService } from '../../../core/services/cookie.service';
+import {
+	computePosition,
+	ComputePositionReturn,
+	flip,
+	MiddlewareState,
+	offset,
+	Placement,
+	shift,
+	size
+} from '@floating-ui/dom';
 
 @Component({
 	standalone: true,
@@ -26,33 +35,31 @@ export class DropdownComponent implements OnInit, OnDestroy {
 	@Output() appDropdownToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input()
-	set appDropdownPosition(dropdownPosition: string) {
-		this.dropdownPosition = dropdownPosition;
+	set appDropdownPlacement(dropdownPlacement: Placement) {
+		this.dropdownPlacement = dropdownPlacement;
 	}
 
 	@Input()
-	set appDropdownFitParentWidth(dropdownContentFitParentWidth: boolean) {
-		this.dropdownContentFitParentWidth = dropdownContentFitParentWidth;
+	set appDropdownClose(dropdownClose: boolean) {
+		this.dropdownClose = dropdownClose;
 	}
 
 	@Input()
-	set appDropdownCloseOnClick(dropdownContentCloseOnClick: boolean) {
-		this.dropdownContentCloseOnClick = dropdownContentCloseOnClick;
+	set appDropdownFit(dropdownFit: boolean) {
+		this.dropdownFit = dropdownFit;
 	}
 
+	window$: Subscription | undefined;
 	windowClick$: Subscription | undefined;
-	windowAction$: Subscription | undefined;
 
 	dropdownState: boolean = false;
-	dropdownPosition: string = 'bottom-left';
+	dropdownPlacement: Placement = 'bottom-start';
+	dropdownClose: boolean = true;
 	dropdownBackdrop: boolean = false;
+	dropdownFit: boolean = false;
 
-	dropdownTarget: any;
-	dropdownTargetCheckDisabled: boolean = true;
-
-	dropdownContent: any;
-	dropdownContentCloseOnClick: boolean = true;
-	dropdownContentFitParentWidth: boolean = false;
+	dropdownElementTarget: HTMLElement | undefined;
+	dropdownElementContent: HTMLElement | undefined;
 
 	constructor(
 		@Inject(DOCUMENT)
@@ -63,142 +70,110 @@ export class DropdownComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit(): void {
-		this.dropdownTarget = this.elementRef.nativeElement.querySelector('[slot=target]');
-		this.dropdownContent = this.elementRef.nativeElement.querySelector('[slot=content]');
+		this.dropdownElementTarget = this.elementRef.nativeElement.querySelector('[slot=target]');
+		this.dropdownElementContent = this.elementRef.nativeElement.querySelector('[slot=content]');
 
-		/** Set initial state */
+		this.dropdownElementContent.classList.add('fixed', 'top-0', 'left-0', 'z-20', 'w-max');
+		this.dropdownElementContent.style.display = 'none';
 
-		this.setStateStyle(false, false);
-
-		/** Clicks handler */
+		/** onStateShow when onClick */
 
 		this.windowClick$?.unsubscribe();
 		this.windowClick$ = fromEvent(this.document, 'click').subscribe({
 			next: (event: any) => {
-				const clickTarget: boolean = this.dropdownTarget.contains(event.target);
-				const clickContent: boolean = this.dropdownContent.contains(event.target);
+				const clickTarget: boolean = this.dropdownElementTarget.contains(event.target);
+				const clickContent: boolean = this.dropdownElementContent.contains(event.target);
+				const clickOutside: boolean = !clickTarget && !clickContent;
 
-				/**
-				 * If click on target = show/hide toggle (if target not disabled)
-				 * If opened - close on click content or outside
-				 */
-
-				if (clickTarget) {
-					if (this.dropdownTargetCheckDisabled) {
-						// prettier-ignore
-						const targetEnableChildren: boolean = !Array.from(this.dropdownTarget.querySelectorAll('[disabled]')).length;
-						const targetEnabled: boolean = !this.dropdownTarget.disabled;
-
-						if (!!targetEnabled && !!targetEnableChildren) {
-							this.setStateStyle(!this.dropdownState);
-						}
-					} else {
-						this.setStateStyle(!this.dropdownState);
+				if (this.dropdownState) {
+					if (clickTarget || clickOutside) {
+						this.onStateHide();
 					}
-				} else if (this.dropdownState) {
+
 					if (clickContent) {
-						if (this.dropdownContentCloseOnClick) {
-							this.setStateStyle(false);
+						if (this.dropdownClose) {
+							this.onStateHide();
 						}
-					} else if (!clickTarget && !clickContent) {
-						this.setStateStyle(false);
+					}
+				} else {
+					if (clickTarget) {
+						this.onStateShow();
 					}
 				}
 			},
 			error: (error: any) => console.error(error)
 		});
 
-		/** Close onScroll && onResize */
-
-		// TODO: Float UI
-
-		// Not affecting hydration
+		/** onStateHide when onScroll && onResize */
 
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
-			this.windowAction$?.unsubscribe();
-			this.windowAction$ = merge(fromEvent(window, 'scroll'), fromEvent(window, 'resize'))
-				.pipe(filter(() => this.dropdownState))
-				.subscribe({
-					next: () => this.setStateStyle(false),
-					error: (error: any) => console.error(error)
-				});
+			// Not affecting hydration
+
+			this.window$?.unsubscribe();
+			this.window$ = merge(fromEvent(window, 'scroll'), fromEvent(window, 'resize')).subscribe({
+				next: () => this.onStateHide(),
+				error: (error: any) => console.error(error)
+			});
 		}
 	}
 
 	ngOnDestroy(): void {
-		[this.windowClick$, this.windowAction$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.window$, this.windowClick$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	setStateStyle(state: boolean, emit: boolean = true): void {
-		if (this.platformService.isBrowser()) {
-			const elementDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
+	onStateShow(): void {
+		this.dropdownState = true;
+		this.dropdownElementContent.style.display = 'flex';
+		this.dropdownBackdrop = !!Number(this.cookieService.getItem('dropdown-backdrop'));
 
-			this.dropdownState = state;
-			this.dropdownBackdrop = !!Number(this.cookieService.getItem('dropdown-backdrop'));
+		this.appDropdownToggle.emit(this.dropdownState);
 
-			if (this.dropdownState) {
-				this.dropdownContent.style['position'] = 'fixed';
-				this.dropdownContent.style['cursor'] = 'default';
-				this.dropdownContent.style['visibility'] = 'visible';
+		this.onStateUpdate();
+	}
 
-				/** Apply position */
+	onStateHide(): void {
+		this.dropdownState = false;
+		this.dropdownElementContent.style.display = 'none';
 
-				switch (this.dropdownPosition) {
-					case 'top-left': {
-						const contentDOMRect: DOMRect = this.dropdownContent.getBoundingClientRect();
+		this.appDropdownToggle.emit(this.dropdownState);
+	}
 
-						this.dropdownContent.style['left'] = elementDOMRect.left + 'px';
-						this.dropdownContent.style['top'] = elementDOMRect.top - contentDOMRect.height + 'px';
-
-						break;
+	onStateUpdate(): void {
+		computePosition(this.dropdownElementTarget, this.dropdownElementContent, {
+			strategy: 'fixed',
+			placement: this.dropdownPlacement,
+			middleware: [
+				offset({
+					mainAxis: 12
+				}),
+				flip(),
+				shift(),
+				size({
+					apply(middlewareState: MiddlewareState & any) {
+						Object.assign(middlewareState.elements.floating.style, {
+							maxWidth: middlewareState.availableWidth + 'px',
+							maxHeight: middlewareState.availableHeight + 'px'
+						});
 					}
-					case 'top-right': {
-						const contentDOMRect: DOMRect = this.dropdownContent.getBoundingClientRect();
+				})
+			]
+		})
+			.then((computePositionReturn: ComputePositionReturn) => {
+				Object.assign(this.dropdownElementContent.style, {
+					left: computePositionReturn.x + 'px',
+					top: computePositionReturn.y + 'px'
+				});
 
-						// prettier-ignore
-						this.dropdownContent.style['left'] = elementDOMRect.left - (contentDOMRect.width - elementDOMRect.width) + 'px';
-						this.dropdownContent.style['top'] = elementDOMRect.top - contentDOMRect.height + 'px';
+				if (this.dropdownFit) {
+					const elementDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();
 
-						break;
-					}
-					case 'bottom-left': {
-						this.dropdownContent.style['left'] = elementDOMRect.left + 'px';
-						this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
-
-						break;
-					}
-					case 'bottom-right': {
-						const contentDOMRect: DOMRect = this.dropdownContent.getBoundingClientRect();
-
-						// prettier-ignore
-						this.dropdownContent.style['left'] = elementDOMRect.left - (contentDOMRect.width - elementDOMRect.width) + 'px';
-						this.dropdownContent.style['top'] = elementDOMRect.top + elementDOMRect.height + 'px';
-
-						break;
-					}
-					default: {
-						break;
-					}
+					Object.assign(this.dropdownElementContent.style, {
+						width: elementDOMRect.width + 'px'
+					});
 				}
-
-				this.dropdownContent.style['z-index'] = 30;
-			} else {
-				this.dropdownContent.style['position'] = 'fixed';
-				this.dropdownContent.style['visibility'] = 'hidden';
-			}
-
-			if (this.dropdownContentFitParentWidth) {
-				this.dropdownContent.style['width'] = elementDOMRect.width + 'px';
-			}
-
-			if (emit) {
-				this.appDropdownToggle.emit(this.dropdownState);
-			}
-		} else {
-			this.dropdownContent.style['position'] = 'fixed';
-			this.dropdownContent.style['visibility'] = 'hidden';
-		}
+			})
+			.catch((error: any) => console.error(error));
 	}
 }

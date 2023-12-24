@@ -73,7 +73,7 @@ interface UrlForm {
 export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild("controlListTableElement") controlListTableElement: ElementRef<HTMLDivElement> | undefined
-	@ViewChild('controlListElement') controlListElement: ElementRef<HTMLDivElement> | undefined;
+	@ViewChild('controlListElement') controlListElement: ElementRef<HTMLUListElement> | undefined;
 
 	@ViewChild('dropdownHeading') dropdownHeading: DropdownComponent | undefined;
 	@ViewChild('dropdownFormatting') dropdownFormatting: DropdownComponent | undefined;
@@ -265,29 +265,31 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	}
 
 	setDropdownHandler(): void {
-		const dropdownComponentList: DropdownComponent[] = [
-			this.dropdownHeading,
-			this.dropdownFormatting,
-			this.dropdownList,
-			this.dropdownEmojiMart,
-			this.dropdownTable
-		];
+		if (this.platformService.isBrowser()) {
+			const dropdownComponentList: DropdownComponent[] = [
+				this.dropdownHeading,
+				this.dropdownFormatting,
+				this.dropdownList,
+				this.dropdownEmojiMart,
+				this.dropdownTable
+			];
 
-		const dropdownComponent = (): DropdownComponent | undefined => {
-			return dropdownComponentList.find((dropdownComponent: DropdownComponent) => {
-				return dropdownComponent.dropdownState;
-			});
-		};
+			const getDropdownComponent = (): DropdownComponent | undefined => {
+				return dropdownComponentList.find((dropdownComponent: DropdownComponent) => {
+					return dropdownComponent.dropdownState;
+				});
+			};
 
-		const controlListElement: any = this.controlListElement.nativeElement;
+			const controlListElement: HTMLUListElement = this.controlListElement.nativeElement;
 
-		this.controlListScroll$?.unsubscribe();
-		this.controlListScroll$ = fromEvent(controlListElement, 'scroll')
-			.pipe(filter(() => !!dropdownComponent()))
-			.subscribe({
-				next: () => dropdownComponent().setStateStyle(false),
-				error: (error: any) => console.error(error)
-			});
+			this.controlListScroll$?.unsubscribe();
+			this.controlListScroll$ = fromEvent(controlListElement, 'scroll')
+				.pipe(filter(() => !!getDropdownComponent()))
+				.subscribe({
+					next: () => getDropdownComponent().onStateHide(),
+					error: (error: any) => console.error(error)
+				});
+		}
 	}
 
 	setScrollSyncHandler(): void {

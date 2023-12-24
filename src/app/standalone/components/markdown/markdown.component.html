@@ -3,11 +3,11 @@
 <ng-container>
 	<div
 		class="flex overflow-auto rounded-btn border border-base-content/20"
-		#controlListElement
 		[ngClass]="{ 'cursor-not-allowed border-transparent': controlListDisabled }"
 	>
 		<ul
 			class="menu menu-horizontal menu-md flex-nowrap rounded-btn bg-base-100 p-0"
+			#controlListElement
 			[ngClass]="{ 'pointer-events-none bg-base-300': controlListDisabled }"
 		>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
@@ -153,11 +153,7 @@
 						[appSvgIconIcon]="controlListEmojiMart.icon"
 						[appSvgIconSquare]="'1.5725em'"
 					></button>
-					<div
-						class="menu menu-vertical menu-md m-0 p-0"
-						id="emojiMartPicker"
-						slot="content"
-					></div>
+					<div class="menu menu-vertical menu-md m-0 p-0" id="emojiMartPicker" slot="content"></div>
 				</div>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
