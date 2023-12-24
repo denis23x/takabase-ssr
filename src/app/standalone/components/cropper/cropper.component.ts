@@ -18,13 +18,13 @@ import {
 	FormBuilder,
 	FormControl,
 	FormGroup,
+	FormsModule,
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { HelperService } from '../../../core/services/helper.service';
-import { FileService } from '../../../core/services/file.service';
 import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
 import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../../core/services/snackbar.service';
@@ -32,17 +32,26 @@ import { WindowComponent } from '../window/window.component';
 import { AppPlatformDirective } from '../../directives/app-platform.directive';
 import { PlatformService } from '../../../core/services/platform.service';
 import { MarkdownService } from '../../../core/services/markdown.service';
-import { filter } from 'rxjs/operators';
+import { debounceTime, filter, tap } from 'rxjs/operators';
 import { DropdownComponent } from '../dropdown/dropdown.component';
+import { IPAOperation } from '../../../core/dto/ipa/ipa-operation.dto';
+import { IPAService } from '../../../core/services/ipa.service';
 
 interface ImageForm {
 	url: FormControl<string>;
+}
+
+interface IPAFormModulate {
+	brightness: FormControl<number>;
+	saturation: FormControl<number>;
+	hue: FormControl<number>;
 }
 
 @Component({
 	standalone: true,
 	imports: [
 		CommonModule,
+		FormsModule,
 		ReactiveFormsModule,
 		ImageCropperModule,
 		SvgIconComponent,
@@ -80,7 +89,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	imageFormRequest$: Subscription | undefined;
 	imageFormMarkdownItClipboard$: Subscription | undefined;
 	imageFormMime: string[] = ['image/jpeg', 'image/jpg', 'image/png'];
-	imageFormSlidersToggle: boolean = false;
 
 	imageTransform$: Subscription | undefined;
 	imageTransform: ImageTransform = {
@@ -110,10 +118,22 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		y2: 0
 	};
 
+	ipaFormModulateToggle: boolean = false;
+	ipaFormModulate: FormGroup | undefined;
+	ipaFormModulate$: Subscription | undefined;
+
+	ipaOperationRequest$: Subscription | undefined;
+	ipaOperationParams: IPAOperation[] = [
+		{
+			operation: 'output',
+			format: 'webp'
+		}
+	];
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
-		private fileService: FileService,
+		private ipaService: IPAService,
 		private platformService: PlatformService,
 		private markdownService: MarkdownService,
 		private snackbarService: SnackbarService
@@ -122,6 +142,11 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			url: this.formBuilder.nonNullable.control('', [
 				Validators.pattern(this.helperService.getRegex('url'))
 			])
+		});
+		this.ipaFormModulate = this.formBuilder.group<IPAFormModulate>({
+			brightness: this.formBuilder.nonNullable.control(1, []),
+			saturation: this.formBuilder.nonNullable.control(1, []),
+			hue: this.formBuilder.nonNullable.control(0, [])
 		});
 	}
 
@@ -145,12 +170,36 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 				next: (imageTransform: ImageTransform) => (this.imageTransform = imageTransform),
 				error: (error: any) => console.error(error)
 			});
+
+			/** Listen Image Processing API operations */
+
+			this.ipaFormModulate$?.unsubscribe();
+			this.ipaFormModulate$ = this.ipaFormModulate.valueChanges.pipe(debounceTime(1000)).subscribe({
+				next: () => {
+					this.ipaOperationParams = [
+						this.ipaOperationParams[0],
+						{
+							operation: 'modulate',
+							...this.ipaFormModulate.value
+						},
+						this.ipaOperationParams[this.ipaOperationParams.length - 1]
+					];
+
+					this.onImageIPA();
+				},
+				error: (error: any) => console.error(error)
+			});
 		}
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.imageFormRequest$, this.imageTransform$, this.imageFormMarkdownItClipboard$].forEach(($: Subscription) => $?.unsubscribe())
+		[
+			this.imageFormRequest$,
+			this.imageTransform$,
+			this.imageFormMarkdownItClipboard$,
+			this.ipaOperationRequest$,
+			this.ipaFormModulate$
+		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	/** INPUT */
@@ -190,7 +239,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.imageForm) && inputEventUrl) {
 			this.imageForm.disable();
 
-			const getOneIPADto: any = [
+			const IPAOperationParams: IPAOperation[] = [
 				{
 					operation: 'input',
 					type: 'url',
@@ -202,26 +251,10 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 				}
 			];
 
-			// prettier-ignore
-			const getOneIPADtoParams: string = `?operations=${encodeURIComponent(JSON.stringify(getOneIPADto))}`
-
-			this.imageFormRequest$?.unsubscribe();
-			this.imageFormRequest$ = this.fileService.getOneIPA(getOneIPADtoParams).subscribe({
-				next: (blob: Blob) => {
-					const file: File = new File([blob], 'blob-image', {
-						type: blob.type
-					});
-
-					this.onSetFile(file);
-
-					this.imageForm.enable();
-				},
-				error: () => {
-					// prettier-ignore
-					this.snackbarService.error("Error", "The file returned from url does not seem to be a valid image type")
-
-					this.imageForm.enable();
-				}
+			this.ipaOperationRequest$?.unsubscribe();
+			this.ipaOperationRequest$ = this.ipaService.getOne(IPAOperationParams).subscribe({
+				next: (file: File) => this.onSetFile(file),
+				error: () => this.imageForm.enable()
 			});
 		}
 	}
@@ -268,10 +301,43 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		// }
 		// this.snackbarService.error('Error', 'Invalid image type');
 
-		this.onImageLoad(file);
+		this.imageForm.disable();
+
+		const fileDate: number = Date.now();
+		const fileUUID: string = this.helperService.getUUID();
+		const filePath: string = [fileDate, fileUUID, file.name].join('-');
+
+		this.imageFormRequest$?.unsubscribe();
+		this.imageFormRequest$ = this.ipaService.create(file, filePath).subscribe({
+			next: (fileUrl: string) => {
+				this.ipaOperationParams.unshift({
+					operation: 'input',
+					type: 'gcs',
+					source: fileUrl
+				});
+
+				this.onImageIPA();
+			},
+			error: () => this.imageForm.enable()
+		});
 	}
 
-	/** MANIPULATION */
+	/** Image Processing API */
+
+	onImageIPA(): void {
+		this.imageForm.disable();
+
+		this.ipaOperationRequest$?.unsubscribe();
+		this.ipaOperationRequest$ = this.ipaService
+			.getOne(this.ipaOperationParams)
+			.pipe(tap((file: File) => this.onImageLoad(file)))
+			.subscribe({
+				next: () => this.imageForm.enable(),
+				error: () => this.imageForm.enable()
+			});
+	}
+
+	/** Cropper */
 
 	onImageLoad(file: File): void {
 		this.cropperPositionInitial = undefined;
@@ -295,13 +361,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	onImageRotate(direction: boolean): void {
-		this.imageTransform = {
-			...this.imageTransform,
-			rotate: direction ? this.imageTransform.rotate + 15 : this.imageTransform.rotate - 15
-		};
-	}
-
 	onImageFlip(direction: boolean): void {
 		if (direction) {
 			this.imageTransform = {
@@ -316,20 +375,14 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	onImageZoom(direction: boolean): void {
-		this.imageTransform = {
-			...this.imageTransform,
-			// prettier-ignore
-			scale: direction ? this.imageTransform.scale + 0.25 : this.imageTransform.scale > 1 ? this.imageTransform.scale - 0.25 : 1
-		};
-	}
-
 	onImageAspectRatio(): void {
 		console.log('onImageAspectRatio');
 	}
 
-	onImageSliders(): void {
-		this.imageFormSlidersToggle = !this.imageFormSlidersToggle;
+	onImageTransform(imageTransform: ImageTransform): void {
+		this.imageTransform = {
+			...imageTransform
+		};
 	}
 
 	/** RESET */
@@ -383,36 +436,36 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	onSubmitCropper(): void {
-		const fileDate: number = Date.now();
-		const fileCropped: File = new File([this.cropperBlob], this.cropperFile.name, {
-			type: this.cropperFile.type
-		});
-
-		const fileName: string = fileDate + '-' + fileCropped.name;
-		const filePath: string = this.cropperUploadPath + '/' + fileName;
-
-		this.imageForm.disable();
-
-		this.imageFormRequest$?.unsubscribe();
-		this.imageFormRequest$ = this.fileService.create(fileCropped, filePath).subscribe({
-			next: (fileUrl: string) => {
-				this.appCropperSubmit.emit(fileUrl);
-
-				this.imageForm.enable();
-
-				this.onToggleCropper(false);
-
-				// Remove previous image
-
-				if (this.cropperRemovePath) {
-					this.fileService.delete(this.cropperRemovePath).subscribe({
-						next: () => console.debug('File removed'),
-						error: (error: any) => console.error(error)
-					});
-				}
-			},
-			error: () => this.imageForm.enable()
-		});
+		// const fileDate: number = Date.now();
+		// const fileCropped: File = new File([this.cropperBlob], this.cropperFile.name, {
+		// 	type: this.cropperFile.type
+		// });
+		//
+		// const fileName: string = fileDate + '-' + fileCropped.name;
+		// const filePath: string = this.cropperUploadPath + '/' + fileName;
+		//
+		// this.imageForm.disable();
+		//
+		// this.imageFormRequest$?.unsubscribe();
+		// this.imageFormRequest$ = this.fileService.create(fileCropped, filePath).subscribe({
+		// 	next: (fileUrl: string) => {
+		// 		this.appCropperSubmit.emit(fileUrl);
+		//
+		// 		this.imageForm.enable();
+		//
+		// 		this.onToggleCropper(false);
+		//
+		// 		// Remove previous image
+		//
+		// 		if (this.cropperRemovePath) {
+		// 			this.fileService.delete(this.cropperRemovePath).subscribe({
+		// 				next: () => console.debug('File removed'),
+		// 				error: (error: any) => console.error(error)
+		// 			});
+		// 		}
+		// 	},
+		// 	error: () => this.imageForm.enable()
+		// });
 	}
 }
 
@@ -447,13 +500,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 // { operation: 'linear', a: 4, b: 8 },
 // INTERESTING
 // { operation: 'median', size: 30 },
-// INTERESTING
-// {
-// 	operation: 'modulate',
-// 	brightness: 0.5,
-// 	saturation: 0.5,
-// 	hue: 90
-// },
 // INTERESTING
 // { operation: 'negate' },
 // INTERESTING

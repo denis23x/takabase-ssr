@@ -21,7 +21,7 @@ export class ApiService {
 		return environment.apiUrl + url;
 	}
 
-	setError(httpError: any): Observable<never> {
+	setError(httpError: any, message?: string): Observable<never> {
 		const defaultMessage: string = 'Oops! Something went wrong. Try again later.';
 
 		const getMessage = (): string => {
@@ -65,7 +65,7 @@ export class ApiService {
 			}
 		};
 
-		this.snackbarService.error('Error', getMessage(), {
+		this.snackbarService.error('Error', message || getMessage(), {
 			icon: 'bug',
 			duration: 6000
 		});

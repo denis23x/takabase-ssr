@@ -144,6 +144,127 @@
 						>
 						</image-cropper>
 					</div>
+					<form
+						class="flex flex-col gap-4 bg-base-200 rounded-box p-4"
+						autocomplete="off"
+						[class.hidden]="!ipaFormModulateToggle"
+					>
+						<fieldset class="form-control">
+							<label class="relative flex items-center justify-between w-full gap-4">
+								<input
+									class="range w-full"
+									type="range"
+									[(ngModel)]="imageTransform.scale"
+									[min]="1"
+									[max]="5"
+									[step]="0.1"
+									[ngModelOptions]="{ standalone: true }"
+									(input)="onImageTransform(imageTransform)"
+								/>
+								<input
+									class="input-bordered input input-sm w-16 text-center"
+									type="number"
+									[(ngModel)]="imageTransform.scale"
+									[ngModelOptions]="{ standalone: true }"
+									(input)="onImageTransform(imageTransform)"
+								/>
+							</label>
+						</fieldset>
+						<fieldset class="form-control">
+							<label class="relative flex items-center justify-between w-full gap-4">
+								<input
+									class="range w-full"
+									type="range"
+									[(ngModel)]="imageTransform.rotate"
+									[min]="0"
+									[max]="360"
+									[step]="5"
+									[ngModelOptions]="{ standalone: true }"
+									(input)="onImageTransform(imageTransform)"
+								/>
+								<input
+									class="input-bordered input input-sm w-16 text-center"
+									type="number"
+									[(ngModel)]="imageTransform.rotate"
+									[ngModelOptions]="{ standalone: true }"
+									(input)="onImageTransform(imageTransform)"
+								/>
+							</label>
+						</fieldset>
+					</form>
+					<form
+						class="flex flex-col gap-4 bg-base-200 rounded-box p-4"
+						autocomplete="off"
+						[class.hidden]="!ipaFormModulateToggle"
+						[formGroup]="ipaFormModulate"
+					>
+						<fieldset class="form-control" *ngIf="ipaFormModulate.get('brightness') as brightness">
+							<label class="label">
+								<span class="label-text">Brightness</span>
+							</label>
+							<div class="relative flex items-center justify-between w-full gap-4">
+								<input
+									class="range w-full"
+									type="range"
+									min="0"
+									max="2"
+									step="0.1"
+									formControlName="brightness"
+									[value]="brightness.value"
+								/>
+								<input
+									class="input-bordered input input-sm w-16 text-center"
+									type="number"
+									formControlName="brightness"
+									[value]="brightness.value"
+								/>
+							</div>
+						</fieldset>
+						<fieldset class="form-control" *ngIf="ipaFormModulate.get('saturation') as saturation">
+							<label class="label">
+								<span class="label-text">Saturation</span>
+							</label>
+							<div class="relative flex items-center justify-between w-full gap-4">
+								<input
+									class="range w-full"
+									type="range"
+									min="0"
+									max="2"
+									step="0.1"
+									formControlName="saturation"
+									[value]="saturation.value"
+								/>
+								<input
+									class="input-bordered input input-sm w-16 text-center"
+									type="number"
+									formControlName="saturation"
+									[value]="saturation.value"
+								/>
+							</div>
+						</fieldset>
+						<fieldset class="form-control" *ngIf="ipaFormModulate.get('hue') as hue">
+							<label class="label">
+								<span class="label-text">HUE</span>
+							</label>
+							<div class="relative flex items-center justify-between w-full gap-4">
+								<input
+									class="range w-full"
+									type="range"
+									min="0"
+									max="360"
+									step="5"
+									formControlName="hue"
+									[value]="hue.value"
+								/>
+								<input
+									class="input-bordered input input-sm w-16 text-center"
+									type="number"
+									formControlName="hue"
+									[value]="hue.value"
+								/>
+							</div>
+						</fieldset>
+					</form>
 					<div class="flex items-start justify-between gap-4">
 						<!-- prettier-ignore -->
 						<div
@@ -167,40 +288,6 @@
                     [appSvgIconSquare]="'1.5725em'"
                     [ngClass]="{ 'active' : cropperBackgroundIsDraggable && imageForm.enabled, 'bg-base-content/10' : cropperBackgroundIsDraggable && imageForm.disabled }"
                     (click)="cropperBackgroundIsDraggable = !cropperBackgroundIsDraggable"
-                  ></button>
-                </li>
-                <li
-                  class="inline-block"
-                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-                >
-                  <button
-                    class="-scale-x-1 fill-current p-3"
-                    type="button"
-                    title="Rotate counterclockwise"
-                    aria-label="Rotate counterclockwise"
-                    appSvgIcon
-                    [class.cursor-not-allowed]="imageForm.disabled"
-                    [disabled]="imageForm.disabled"
-                    [appSvgIconIcon]="'arrow-clockwise'"
-                    [appSvgIconSquare]="'1.5725em'"
-                    (click)="onImageRotate(false)"
-                  ></button>
-                </li>
-                <li
-                  class="inline-block"
-                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-                >
-                  <button
-                    class="fill-current p-3"
-                    type="button"
-                    title="Rotate clockwise"
-                    aria-label="Rotate clockwise"
-                    appSvgIcon
-                    [class.cursor-not-allowed]="imageForm.disabled"
-                    [disabled]="imageForm.disabled"
-                    [appSvgIconIcon]="'arrow-clockwise'"
-                    [appSvgIconSquare]="'1.5725em'"
-                    (click)="onImageRotate(true)"
                   ></button>
                 </li>
                 <li
@@ -235,40 +322,6 @@
                     [appSvgIconIcon]="'symmetry-vertical'"
                     [appSvgIconSquare]="'1.5725em'"
                     (click)="onImageFlip(false)"
-                  ></button>
-                </li>
-                <li
-                  class="inline-block"
-                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-                >
-                  <button
-                    class="fill-current p-3"
-                    type="button"
-                    title="Zoom in"
-                    aria-label="Zoom in"
-                    appSvgIcon
-                    [class.cursor-not-allowed]="imageForm.disabled"
-                    [disabled]="imageForm.disabled"
-                    [appSvgIconIcon]="'zoom-in'"
-                    [appSvgIconSquare]="'1.5725em'"
-                    (click)="onImageZoom(true)"
-                  ></button>
-                </li>
-                <li
-                  class="inline-block"
-                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled || imageTransform.scale <= 1 }"
-                >
-                  <button
-                    class="fill-current p-3"
-                    type="button"
-                    title="Zoom out"
-                    aria-label="Zoom out"
-                    appSvgIcon
-                    [class.cursor-not-allowed]="imageForm.disabled"
-                    [disabled]="imageForm.disabled"
-                    [appSvgIconIcon]="'zoom-out'"
-                    [appSvgIconSquare]="'1.5725em'"
-                    (click)="onImageZoom(false)"
                   ></button>
                 </li>
                 <li
@@ -326,7 +379,7 @@
                     [disabled]="imageForm.disabled"
                     [appSvgIconIcon]="'sliders'"
                     [appSvgIconSquare]="'1.5725em'"
-                    (click)="onImageSliders()"
+                    (click)="ipaFormModulateToggle = !ipaFormModulateToggle"
                   ></button>
                 </li>
               </ul>
@@ -369,35 +422,6 @@
 							</ul>
 						</div>
 					</div>
-					<form class="flex flex-col bg-base-200 rounded-box p-4" *ngIf="imageFormSlidersToggle">
-						<fieldset class="form-control">
-							<label class="label">
-								<span class="label-text">Brightness</span>
-							</label>
-							<div class="relative flex items-center justify-between w-full gap-4">
-								<input class="range w-full" type="range" value="20" min="0" max="100" />
-								<span class="block badge badge-ghost" aria-label="Brightness"> 75 </span>
-							</div>
-						</fieldset>
-						<fieldset class="form-control">
-							<label class="label">
-								<span class="label-text">Saturation</span>
-							</label>
-							<div class="relative flex items-center justify-between w-full gap-4">
-								<input class="range w-full" type="range" value="20" min="0" max="100" />
-								<span class="block badge badge-ghost" aria-label="Saturation"> 75 </span>
-							</div>
-						</fieldset>
-						<fieldset class="form-control">
-							<label class="label">
-								<span class="label-text">HUE</span>
-							</label>
-							<div class="relative flex items-center justify-between w-full gap-4">
-								<input class="range w-full" type="range" value="40" min="0" max="360" />
-								<span class="block badge badge-ghost" aria-label="HUE"> 255 </span>
-							</div>
-						</fieldset>
-					</form>
 					<button
 						class="btn btn-success w-full"
 						type="button"
