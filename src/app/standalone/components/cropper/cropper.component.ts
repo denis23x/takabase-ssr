@@ -3,11 +3,13 @@
 import {
 	AfterViewInit,
 	Component,
+	computed,
 	ElementRef,
 	EventEmitter,
 	Input,
 	OnDestroy,
 	Output,
+	Signal,
 	ViewChild
 } from '@angular/core';
 import { ImageCroppedEvent, ImageCropperComponent, ImageCropperModule } from 'ngx-image-cropper';
@@ -89,7 +91,10 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	imageForm: FormGroup | undefined;
 	imageFormRequest$: Subscription | undefined;
 	imageFormMarkdownItClipboard$: Subscription | undefined;
-	imageFormMime: string[] = ['image/jpeg', 'image/jpg', 'image/png'];
+	imageFormMime: string[] = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+	imageFormMimeComputed: Signal<string[]> = computed(() => {
+		return this.imageFormMime.map((mime: string) => mime.replace('image/', '*.'));
+	});
 
 	imageTransform$: Subscription | undefined;
 	imageTransform: ImageTransform = {
@@ -282,17 +287,10 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	onGetFileValidation(file: File): boolean {
 		if (this.fileService.getFileValidationMime(file, this.imageFormMime)) {
-			const fileSizeMaxSize: number = 3;
-
-			if (this.fileService.getFileValidationSize(file, fileSizeMaxSize)) {
+			if (this.fileService.getFileValidationSize(file, 5)) {
 				return true;
 			} else {
-				const fileSize: string = this.fileService.getFileSizeFormat(file.size);
-				const fileSizeMax: string = `(maximum size is ${fileSizeMaxSize} MiB)`;
-
-				this.snackbarService.error('Error', `Invalid image size ${fileSize} ${fileSizeMax}`, {
-					duration: 8000
-				});
+				this.snackbarService.error('Sorry', 'This file is too large to be uploaded');
 			}
 		} else {
 			this.snackbarService.error('Error', 'Invalid image type');

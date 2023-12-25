@@ -26,28 +26,12 @@ export class FileService {
 		});
 	}
 
-	getFileSizeFormat(bytes: number, decimals: number = 2): string {
-		if (!+bytes) {
-			return '0 Bytes';
-		}
-
-		const k: number = 1024;
-		const dm: number = decimals < 0 ? 0 : decimals;
-		const sizeList: string[] = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-
-		const i: number = Math.floor(Math.log(bytes) / Math.log(k));
-
-		const size: string = String(parseFloat((bytes / Math.pow(k, i)).toFixed(dm)));
-
-		return `${size} ${sizeList[i]}`;
-	}
-
 	getFileValidationMime(file: File, mimeTypes: string[]): boolean {
 		return mimeTypes.includes(file.type);
 	}
 
 	getFileValidationSize(file: File, size: number): boolean {
-		return file.size <= 1000000 * size;
+		return file.size <= 1048576 * size;
 	}
 
 	/** REST */

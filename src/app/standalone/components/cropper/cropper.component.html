@@ -36,7 +36,12 @@
 							[appSvgIconIcon]="'info-circle'"
 							[appSvgIconSquare]="'1.5em'"
 						></i>
-						<span class="block"> Browse file on your device or paste link from internet </span>
+						<span class="block">
+              https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg
+              <br />
+              <br />
+              Browse file on your device or paste link from internet
+            </span>
 					</p>
 					<fieldset class="form-control" *ngIf="imageForm.get('url') as url">
 						<label class="label" for="imageFormUrl">
@@ -113,7 +118,7 @@
 							</button>
 						</div>
 						<label class="label" for="imageFormUrl">
-							<span class="label-text-alt">Accept only *.png, *.jpg files</span>
+							<span class="label-text-alt">Accept only {{ imageFormMimeComputed() }} files</span>
 						</label>
 					</fieldset>
 				</form>
