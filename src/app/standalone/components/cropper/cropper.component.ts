@@ -15,7 +15,7 @@ import {
 import { ImageCroppedEvent, ImageCropperComponent, ImageCropperModule } from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
-import { Subscription } from 'rxjs';
+import { from, Subscription, switchMap } from 'rxjs';
 import {
 	FormBuilder,
 	FormControl,
@@ -39,6 +39,7 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
 import { IPAOperation } from '../../../core/dto/ipa/ipa-operation.dto';
 import { IPAService } from '../../../core/services/ipa.service';
 import { FileService } from '../../../core/services/file.service';
+import { AppearanceService } from '../../../core/services/appearance.service';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -92,8 +93,12 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	imageFormRequest$: Subscription | undefined;
 	imageFormMarkdownItClipboard$: Subscription | undefined;
 	imageFormMime: string[] = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-	imageFormMimeComputed: Signal<string[]> = computed(() => {
-		return this.imageFormMime.map((mime: string) => mime.replace('image/', '*.'));
+	imageFormMimeComputed: Signal<string> = computed(() => {
+		const imageFormMime: string[] = this.imageFormMime.map((mime: string) => {
+			return mime.replace('image/', '*.');
+		});
+
+		return imageFormMime.join(', ');
 	});
 
 	imageTransform$: Subscription | undefined;
@@ -143,7 +148,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		private ipaService: IPAService,
 		private platformService: PlatformService,
 		private markdownService: MarkdownService,
-		private snackbarService: SnackbarService
+		private snackbarService: SnackbarService,
+		private appearanceService: AppearanceService
 	) {
 		this.imageForm = this.formBuilder.group<ImageForm>({
 			url: this.formBuilder.nonNullable.control('', [
@@ -182,24 +188,13 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 			this.ipaFormModulate$?.unsubscribe();
 			this.ipaFormModulate$ = this.ipaFormModulate.valueChanges.pipe(debounceTime(1000)).subscribe({
-				next: () => {
-					this.ipaOperationParams = [
-						this.ipaOperationParams[0],
-						{
-							operation: 'modulate',
-							...this.ipaFormModulate.value
-						},
-						{
-							operation: 'resize',
-							width: 1024,
-							height: 1024,
-							position: 'center',
-							fit: 'inside'
-						},
-						this.ipaOperationParams[this.ipaOperationParams.length - 1]
-					];
+				next: (value: any) => {
+					this.setIPAOperationParams({
+						operation: 'modulate',
+						...value
+					});
 
-					this.onImageIPA();
+					this.getIPAUpdate();
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -251,7 +246,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.imageForm) && inputEventUrl) {
 			this.imageForm.disable();
 
-			const IPAOperationParams: IPAOperation[] = [
+			const ipaOperationParams: IPAOperation[] = [
 				{
 					operation: 'input',
 					type: 'url',
@@ -264,7 +259,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			];
 
 			this.ipaOperationRequest$?.unsubscribe();
-			this.ipaOperationRequest$ = this.ipaService.getOne(IPAOperationParams).subscribe({
+			this.ipaOperationRequest$ = this.ipaService.getOne(ipaOperationParams).subscribe({
 				next: (file: File) => this.onSetFile(file),
 				error: () => this.imageForm.enable()
 			});
@@ -299,6 +294,56 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		return false;
 	}
 
+	onSetFileExtendResolution(file: File): Promise<null> {
+		return new Promise((resolve, reject): void => {
+			const fileReader: FileReader = new FileReader();
+
+			fileReader.onerror = (progressEvent: ProgressEvent<FileReader>) => reject(progressEvent);
+			fileReader.onload = (progressEvent: ProgressEvent<FileReader>) => {
+				const imageElement: HTMLImageElement = new Image();
+
+				imageElement.src = String(progressEvent.target.result);
+				imageElement.onerror = (event: string | Event) => reject(event);
+				imageElement.onload = (): void => {
+					const requiredWidth: number = 512;
+					const requiredHeight: number = 512;
+
+					const validWidth: boolean = imageElement.width >= requiredWidth;
+					const validHeight: boolean = imageElement.height >= requiredHeight;
+
+					const ipaOperation: IPAOperation = {
+						operation: 'extend',
+						background: this.appearanceService.getCSSColor('--b1', 'hex')
+					};
+
+					if (!validWidth) {
+						const extend: number = (requiredWidth - imageElement.width) / 2;
+
+						ipaOperation.left = extend;
+						ipaOperation.right = extend;
+					}
+
+					if (!validHeight) {
+						const extend: number = (requiredHeight - imageElement.height) / 2;
+
+						ipaOperation.top = extend;
+						ipaOperation.bottom = extend;
+					}
+
+					/** If width or height less than 512px then extend it tp 512px */
+
+					if (!validWidth || !validHeight) {
+						this.setIPAOperationParams(ipaOperation);
+					}
+
+					resolve(null);
+				};
+			};
+
+			fileReader.readAsDataURL(file);
+		});
+	}
+
 	onSetFile(file: File): void {
 		if (this.onGetFileValidation(file)) {
 			this.imageForm.disable();
@@ -308,32 +353,39 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			const filePath: string = [fileDate, fileUUID, file.name].join('-');
 
 			this.imageFormRequest$?.unsubscribe();
-			this.imageFormRequest$ = this.ipaService.create(file, filePath).subscribe({
-				next: (fileUrl: string) => {
-					this.ipaOperationParams.unshift({
-						operation: 'resize',
-						width: 1024,
-						height: 1024,
-						position: 'center',
-						fit: 'inside'
-					});
+			this.imageFormRequest$ = from(this.onSetFileExtendResolution(file))
+				.pipe(switchMap(() => this.ipaService.create(file, filePath)))
+				.subscribe({
+					next: (fileSourcePath: string) => {
+						this.ipaOperationParams.unshift({
+							operation: 'input',
+							type: 'gcs',
+							source: fileSourcePath
+						});
 
-					this.ipaOperationParams.unshift({
-						operation: 'input',
-						type: 'gcs',
-						source: fileUrl
-					});
-
-					this.onImageIPA();
-				},
-				error: () => this.imageForm.enable()
-			});
+						this.getIPAUpdate();
+					},
+					error: () => this.imageForm.enable()
+				});
 		}
 	}
 
 	/** Image Processing API */
 
-	onImageIPA(): void {
+	setIPAOperationParams(ipaOperation: IPAOperation): void {
+		// prettier-ignore
+		const operationIndex: number = this.ipaOperationParams.findIndex((ipaOperationExisting: IPAOperation) => {
+      return ipaOperationExisting.operation === ipaOperation.operation;
+    });
+
+		if (operationIndex === -1) {
+			this.ipaOperationParams.splice(this.ipaOperationParams.length - 1, 0, ipaOperation);
+		} else {
+			this.ipaOperationParams[operationIndex] = ipaOperation;
+		}
+	}
+
+	getIPAUpdate(): void {
 		this.imageForm.disable();
 
 		this.ipaOperationRequest$?.unsubscribe();
