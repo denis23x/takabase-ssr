@@ -20,8 +20,8 @@ export class FileService {
 
 	/** Utility */
 
-	getFileFromBlob(blob: Blob): File {
-		return new File([blob], this.helperService.getUUID(), {
+	getFileFromBlob(blob: Blob, fileName: string = this.helperService.getUUID()): File {
+		return new File([blob], fileName, {
 			type: blob.type
 		});
 	}

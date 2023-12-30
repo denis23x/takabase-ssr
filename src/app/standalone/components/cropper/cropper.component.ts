@@ -39,7 +39,6 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
 import { IPAOperation } from '../../../core/dto/ipa/ipa-operation.dto';
 import { IPAService } from '../../../core/services/ipa.service';
 import { FileService } from '../../../core/services/file.service';
-import { AppearanceService } from '../../../core/services/appearance.service';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -148,8 +147,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		private ipaService: IPAService,
 		private platformService: PlatformService,
 		private markdownService: MarkdownService,
-		private snackbarService: SnackbarService,
-		private appearanceService: AppearanceService
+		private snackbarService: SnackbarService
 	) {
 		this.imageForm = this.formBuilder.group<ImageForm>({
 			url: this.formBuilder.nonNullable.control('', [
@@ -294,56 +292,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		return false;
 	}
 
-	onSetFileExtendResolution(file: File): Promise<null> {
-		return new Promise((resolve, reject): void => {
-			const fileReader: FileReader = new FileReader();
-
-			fileReader.onerror = (progressEvent: ProgressEvent<FileReader>) => reject(progressEvent);
-			fileReader.onload = (progressEvent: ProgressEvent<FileReader>) => {
-				const imageElement: HTMLImageElement = new Image();
-
-				imageElement.src = String(progressEvent.target.result);
-				imageElement.onerror = (event: string | Event) => reject(event);
-				imageElement.onload = (): void => {
-					const requiredWidth: number = 512;
-					const requiredHeight: number = 512;
-
-					const validWidth: boolean = imageElement.width >= requiredWidth;
-					const validHeight: boolean = imageElement.height >= requiredHeight;
-
-					const ipaOperation: IPAOperation = {
-						operation: 'extend',
-						background: this.appearanceService.getCSSColor('--b1', 'hex')
-					};
-
-					if (!validWidth) {
-						const extend: number = (requiredWidth - imageElement.width) / 2;
-
-						ipaOperation.left = extend;
-						ipaOperation.right = extend;
-					}
-
-					if (!validHeight) {
-						const extend: number = (requiredHeight - imageElement.height) / 2;
-
-						ipaOperation.top = extend;
-						ipaOperation.bottom = extend;
-					}
-
-					/** If width or height less than 512px then extend it tp 512px */
-
-					if (!validWidth || !validHeight) {
-						this.setIPAOperationParams(ipaOperation);
-					}
-
-					resolve(null);
-				};
-			};
-
-			fileReader.readAsDataURL(file);
-		});
-	}
-
 	onSetFile(file: File): void {
 		if (this.onGetFileValidation(file)) {
 			this.imageForm.disable();
@@ -353,15 +301,24 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			const filePath: string = [fileDate, fileUUID, file.name].join('-');
 
 			this.imageFormRequest$?.unsubscribe();
-			this.imageFormRequest$ = from(this.onSetFileExtendResolution(file))
-				.pipe(switchMap(() => this.ipaService.create(file, filePath)))
-				.subscribe({
-					next: (fileSourcePath: string) => {
+			this.imageFormRequest$ = from(this.ipaService.setImageAlphaMime(file))
+				.pipe(
+					switchMap((fileAlphaMime: File) => this.ipaService.create(fileAlphaMime, filePath)),
+					switchMap((fileSourcePath: string) => {
 						this.ipaOperationParams.unshift({
 							operation: 'input',
 							type: 'gcs',
 							source: fileSourcePath
 						});
+
+						return from(this.ipaService.setImageAlphaExtendOperation(file));
+					})
+				)
+				.subscribe({
+					next: (ipaOperation: IPAOperation | null) => {
+						if (ipaOperation) {
+							this.setIPAOperationParams(ipaOperation);
+						}
 
 						this.getIPAUpdate();
 					},

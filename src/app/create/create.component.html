@@ -22,7 +22,7 @@
 						height="256"
 						loading="lazy"
 						*ngIf="!!image.value"
-						[ngClass]="{ invisible: !image.value, 'pointer-events-none opacity-50 saturate-0 transition': postForm.disabled }"
+						[ngClass]="{ invisible: !image.value, 'pointer-events-none opacity-50 grayscale transition': postForm.disabled }"
 						[src]="image.value"
 						(click)="appCropperComponent.onToggleCropper(true)"
 					/>

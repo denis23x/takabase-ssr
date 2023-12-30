@@ -69,6 +69,10 @@
   &.ngx-cropper-disabled {
     @apply pointer-events-none;
 
+    .ngx-ic-source-image {
+      @apply grayscale;
+    }
+
     .ngx-ic-move {
       border-color: oklch(var(--b3)) !important;
     }

@@ -123,10 +123,7 @@
 					</fieldset>
 				</form>
 				<div class="flex flex-col gap-4" [ngClass]="{ 'invisible !m-0 !h-0': !cropperIsAvailable }">
-					<div
-						class="block -m-4"
-						[ngClass]="{ 'cursor-not-allowed saturate-0': imageForm.disabled }"
-					>
+					<div class="block -m-4" [class.cursor-not-allowed]="imageForm.disabled">
 						<image-cropper
 							class="ngx-cropper aspect-square !p-4"
 							*appPlatform="'browser'"
@@ -155,7 +152,8 @@
 						[class.hidden]="!ipaFormModulateToggle"
 					>
 						<fieldset class="form-control">
-							<label class="relative flex items-center justify-between w-full gap-4">
+							<label class="label w-full gap-4 p-0">
+								<span class="label-text">Scale</span>
 								<input
 									class="range w-full"
 									type="range"
@@ -176,7 +174,8 @@
 							</label>
 						</fieldset>
 						<fieldset class="form-control">
-							<label class="relative flex items-center justify-between w-full gap-4">
+							<label class="label w-full gap-4 p-0">
+								<span class="label-text">Rotate</span>
 								<input
 									class="range w-full"
 									type="range"

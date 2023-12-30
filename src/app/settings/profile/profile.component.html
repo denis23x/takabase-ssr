@@ -16,7 +16,7 @@
               class="h-12 w-12 rounded-btn relative overflow-hidden cursor-pointer"
               data-pw="app-settings-profile-image-avatar"
               appAvatar
-              [ngClass]="{ 'cursor-not-allowed opacity-50 saturate-0 transition': profileForm.disabled }"
+              [ngClass]="{ 'cursor-not-allowed opacity-50 grayscale transition': profileForm.disabled }"
               [appAvatarUser]="currentUser"
               (click)="appCropperComponent.onToggleCropper(true)"
             ></figure>
