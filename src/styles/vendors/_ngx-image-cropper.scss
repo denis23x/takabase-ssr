@@ -1,3 +1,24 @@
+/* Remove unnecessary margin from first and last element */
+
+@mixin shared-styles-disabled-bounding-box() {
+  .ngx-ic-move {
+    border-color: oklch(var(--b3)) !important;
+  }
+
+  .ngx-ic-resize {
+    &.ngx-ic-topleft,
+    &.ngx-ic-top,
+    &.ngx-ic-topright,
+    &.ngx-ic-right,
+    &.ngx-ic-bottomright,
+    &.ngx-ic-bottom,
+    &.ngx-ic-bottomleft,
+    &.ngx-ic-left {
+      background: oklch(var(--b3)) !important;
+    }
+  }
+}
+
 .ngx-cropper {
   --cropper-overlay-color: oklch(var(--b1));
   --cropper-outline-color: oklch(var(--b1) /.75);
@@ -58,12 +79,10 @@
   &.ngx-cropper-move-image {
     .ngx-ic-overlay,
     .ngx-ic-cropper {
-      @apply pointer-events-none opacity-25;
+      @apply pointer-events-none;
     }
 
-    .ngx-ic-cropper {
-      @apply opacity-25;
-    }
+    @include shared-styles-disabled-bounding-box();
   }
 
   &.ngx-cropper-disabled {
@@ -73,21 +92,6 @@
       @apply grayscale;
     }
 
-    .ngx-ic-move {
-      border-color: oklch(var(--b3)) !important;
-    }
-
-    .ngx-ic-resize {
-      &.ngx-ic-topleft,
-      &.ngx-ic-top,
-      &.ngx-ic-topright,
-      &.ngx-ic-right,
-      &.ngx-ic-bottomright,
-      &.ngx-ic-bottom,
-      &.ngx-ic-bottomleft,
-      &.ngx-ic-left {
-        background: oklch(var(--b3));
-      }
-    }
+    @include shared-styles-disabled-bounding-box();
   }
 }

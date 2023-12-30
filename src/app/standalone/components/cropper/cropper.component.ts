@@ -100,6 +100,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		return imageFormMime.join(', ');
 	});
 
+	imageTransformToggle: boolean = true;
 	imageTransform$: Subscription | undefined;
 	imageTransform: ImageTransform = {
 		translateUnit: 'px',
@@ -117,9 +118,10 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	cropperFile: File = undefined;
 	cropperBlob: Blob = undefined;
 	cropperBackgroundIsDraggable: boolean = false;
-	cropperIsAvailable: boolean = false;
 	cropperDialogToggle: boolean = false;
+	cropperIsReady: boolean = false;
 
+	cropperPositionPrevious: CropperPosition = undefined;
 	cropperPositionInitial: CropperPosition = undefined;
 	cropperPosition: CropperPosition = {
 		x1: 0,
@@ -132,6 +134,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	ipaFormModulate: FormGroup | undefined;
 	ipaFormModulate$: Subscription | undefined;
 
+	ipaOperationRequestIsBusy: boolean = false;
 	ipaOperationRequest$: Subscription | undefined;
 	ipaOperationParams: IPAOperation[] = [
 		{
@@ -343,43 +346,56 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getIPAUpdate(): void {
-		this.imageForm.disable();
+		this.ipaOperationRequestIsBusy = true;
 
 		this.ipaOperationRequest$?.unsubscribe();
 		this.ipaOperationRequest$ = this.ipaService
 			.getOne(this.ipaOperationParams)
-			.pipe(tap((file: File) => this.onImageLoad(file)))
+			.pipe(tap((file: File) => this.setCropperImageFile(file)))
 			.subscribe({
-				next: () => this.imageForm.enable(),
-				error: () => this.imageForm.enable()
+				next: () => (this.ipaOperationRequestIsBusy = false),
+				error: () => (this.ipaOperationRequestIsBusy = false)
 			});
 	}
 
 	/** Cropper */
 
-	onImageLoad(file: File): void {
-		this.cropperPositionInitial = undefined;
-		this.cropperFile = file;
+	onCropperImageReady(): void {
+		this.cropperIsReady = true;
+
+		// Restore cropperPosition after using IPA
+
+		if (this.cropperPositionPrevious) {
+			this.cropperPosition = {
+				...this.cropperPositionPrevious
+			};
+		}
 	}
 
-	onImageFailed(): void {
+	onCropperImageFailed(): void {
 		this.snackbarService.error('Error', 'Invalid image type');
-
-		// Complete reset
-
-		this.onResetCropper();
 	}
 
-	onImageCropped(imageCroppedEvent: ImageCroppedEvent): void {
-		this.cropperIsAvailable = true;
+	onCropperImageCropped(imageCroppedEvent: ImageCroppedEvent): void {
 		this.cropperBlob = imageCroppedEvent.blob;
+
+		// Always set cropper previous state (when use IPA we got new file so should restore cropperPosition)
+
+		this.cropperPositionPrevious = imageCroppedEvent.cropperPosition;
+
+		// Save the first cropper position
 
 		if (!this.cropperPositionInitial) {
 			this.cropperPositionInitial = imageCroppedEvent.cropperPosition;
 		}
 	}
 
-	onImageFlip(direction: boolean): void {
+	setCropperImageFile(file: File): void {
+		this.cropperPositionInitial = undefined;
+		this.cropperFile = file;
+	}
+
+	setCropperImageFlip(direction: boolean): void {
 		if (direction) {
 			this.imageTransform = {
 				...this.imageTransform,
@@ -393,11 +409,11 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	onImageAspectRatio(): void {
+	setCropperImageAspectRatio(): void {
 		console.log('onImageAspectRatio');
 	}
 
-	onImageTransform(imageTransform: ImageTransform): void {
+	setCropperImageTransform(imageTransform: ImageTransform): void {
 		this.imageTransform = {
 			...imageTransform
 		};
@@ -406,37 +422,37 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	/** RESET */
 
 	onResetCropper(): void {
-		this.cropperFile = undefined;
-		this.cropperBlob = undefined;
-
-		this.cropperIsAvailable = false;
-
-		// Extra reset
-
-		this.onResetImageForm();
-		this.onResetTransform();
+		// this.cropperFile = undefined;
+		// this.cropperBlob = undefined;
+		//
+		// this.cropperIsAvailable = false;
+		//
+		// // Extra reset
+		//
+		// this.onResetImageForm();
+		// this.onResetTransform();
 	}
 
 	onResetImageForm(): void {
-		this.imageForm.reset();
+		// this.imageForm.reset();
 	}
 
 	onResetTransform(): void {
-		this.imageTransform = {
-			translateUnit: 'px',
-			scale: 1,
-			rotate: 0,
-			flipH: false,
-			flipV: false,
-			translateH: 0,
-			translateV: 0
-		};
-
-		this.cropperBackgroundIsDraggable = false;
-
-		this.cropperPosition = {
-			...this.cropperPositionInitial
-		};
+		// this.imageTransform = {
+		// 	translateUnit: 'px',
+		// 	scale: 1,
+		// 	rotate: 0,
+		// 	flipH: false,
+		// 	flipV: false,
+		// 	translateH: 0,
+		// 	translateV: 0
+		// };
+		//
+		// this.cropperBackgroundIsDraggable = false;
+		//
+		// this.cropperPosition = {
+		// 	...this.cropperPositionInitial
+		// };
 	}
 
 	/** EVENTS */

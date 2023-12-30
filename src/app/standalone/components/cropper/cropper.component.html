@@ -19,15 +19,15 @@
 			<div
 				class="flex flex-col p-4"
 				slot="content"
-				[class.overflow-hidden]="!cropperIsAvailable"
-				[class.gap-4]="cropperIsAvailable"
+				[class.overflow-hidden]="!cropperIsReady"
+				[class.gap-4]="cropperIsReady"
 			>
 				<!-- prettier-ignore -->
 				<form
 					class="flex flex-col gap-4"
 					autocomplete="off"
 					[formGroup]="imageForm"
-					[ngClass]="{ 'hidden': cropperIsAvailable }"
+					[ngClass]="{ 'hidden': cropperIsReady }"
 				>
 					<p class="alert" role="alert">
 						<i
@@ -122,13 +122,13 @@
 						</label>
 					</fieldset>
 				</form>
-				<div class="flex flex-col gap-4" [ngClass]="{ 'invisible !m-0 !h-0': !cropperIsAvailable }">
-					<div class="block -m-4" [class.cursor-not-allowed]="imageForm.disabled">
+				<div class="flex flex-col gap-4" [ngClass]="{ 'invisible !m-0 !h-0': !cropperIsReady }">
+					<div class="block -m-4" [class.cursor-not-allowed]="ipaOperationRequestIsBusy">
 						<image-cropper
 							class="ngx-cropper aspect-square !p-4"
 							*appPlatform="'browser'"
 							[(transform)]="imageTransform"
-							[class.ngx-cropper-disabled]="imageForm.disabled"
+							[class.ngx-cropper-disabled]="ipaOperationRequestIsBusy"
 							[class.ngx-cropper-move-image]="cropperBackgroundIsDraggable"
 							[imageFile]="cropperFile"
 							[imageAltText]="'Image cropper'"
@@ -141,15 +141,16 @@
 							[roundCropper]="false"
 							[alignImage]="'center'"
 							[allowMoveImage]="cropperBackgroundIsDraggable"
-							(imageCropped)="onImageCropped($event)"
-							(loadImageFailed)="onImageFailed()"
+							(imageCropped)="onCropperImageCropped($event)"
+							(cropperReady)="onCropperImageReady()"
+							(loadImageFailed)="onCropperImageFailed()"
 						>
 						</image-cropper>
 					</div>
 					<form
 						class="flex flex-col gap-4 bg-base-200 rounded-box p-4"
 						autocomplete="off"
-						[class.hidden]="!ipaFormModulateToggle"
+						[class.hidden]="!imageTransformToggle"
 					>
 						<fieldset class="form-control">
 							<label class="label w-full gap-4 p-0">
@@ -162,14 +163,14 @@
 									[max]="5"
 									[step]="0.1"
 									[ngModelOptions]="{ standalone: true }"
-									(input)="onImageTransform(imageTransform)"
+									(input)="setCropperImageTransform(imageTransform)"
 								/>
 								<input
 									class="input-bordered input input-sm w-16 text-center"
 									type="number"
 									[(ngModel)]="imageTransform.scale"
 									[ngModelOptions]="{ standalone: true }"
-									(input)="onImageTransform(imageTransform)"
+									(input)="setCropperImageTransform(imageTransform)"
 								/>
 							</label>
 						</fieldset>
@@ -184,14 +185,14 @@
 									[max]="360"
 									[step]="5"
 									[ngModelOptions]="{ standalone: true }"
-									(input)="onImageTransform(imageTransform)"
+									(input)="setCropperImageTransform(imageTransform)"
 								/>
 								<input
 									class="input-bordered input input-sm w-16 text-center"
 									type="number"
 									[(ngModel)]="imageTransform.rotate"
 									[ngModelOptions]="{ standalone: true }"
-									(input)="onImageTransform(imageTransform)"
+									(input)="setCropperImageTransform(imageTransform)"
 								/>
 							</label>
 						</fieldset>
@@ -203,10 +204,8 @@
 						[formGroup]="ipaFormModulate"
 					>
 						<fieldset class="form-control" *ngIf="ipaFormModulate.get('brightness') as brightness">
-							<label class="label">
+							<label class="label w-full gap-4 p-0">
 								<span class="label-text">Brightness</span>
-							</label>
-							<div class="relative flex items-center justify-between w-full gap-4">
 								<input
 									class="range w-full"
 									type="range"
@@ -222,13 +221,11 @@
 									formControlName="brightness"
 									[value]="brightness.value"
 								/>
-							</div>
+							</label>
 						</fieldset>
 						<fieldset class="form-control" *ngIf="ipaFormModulate.get('saturation') as saturation">
-							<label class="label">
+							<label class="label w-full gap-4 p-0">
 								<span class="label-text">Saturation</span>
-							</label>
-							<div class="relative flex items-center justify-between w-full gap-4">
 								<input
 									class="range w-full"
 									type="range"
@@ -244,13 +241,11 @@
 									formControlName="saturation"
 									[value]="saturation.value"
 								/>
-							</div>
+							</label>
 						</fieldset>
 						<fieldset class="form-control" *ngIf="ipaFormModulate.get('hue') as hue">
-							<label class="label">
+							<label class="label w-full gap-4 p-0">
 								<span class="label-text">HUE</span>
-							</label>
-							<div class="relative flex items-center justify-between w-full gap-4">
 								<input
 									class="range w-full"
 									type="range"
@@ -266,72 +261,60 @@
 									formControlName="hue"
 									[value]="hue.value"
 								/>
-							</div>
+							</label>
 						</fieldset>
 					</form>
 					<div class="flex items-start justify-between gap-4">
 						<!-- prettier-ignore -->
 						<div
 							class="flex overflow-auto rounded-btn border border-base-content/20"
-							[ngClass]="{ 'border-transparent bg-base-200 cursor-not-allowed': imageForm.disabled }"
+							[ngClass]="{ 'border-transparent bg-base-200 cursor-not-allowed': ipaOperationRequestIsBusy }"
 						>
-							<ul class="menu rounded-btn menu-horizontal menu-md flex-nowrap border-none p-0">
-                <li
-                  class="inline-block"
-                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-                >
+							<ul
+                class="menu rounded-btn menu-horizontal menu-md flex-nowrap border-none p-0"
+                [ngClass]="{ 'pointer-events-none': ipaOperationRequestIsBusy }"
+              >
+                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
                   <button
                     class="fill-current p-3"
                     type="button"
                     title="Move"
                     aria-label="Move"
                     appSvgIcon
-                    [class.cursor-not-allowed]="imageForm.disabled"
-                    [disabled]="imageForm.disabled"
-                    [appSvgIconIcon]="'arrows-move'"
+                    [disabled]="ipaOperationRequestIsBusy"
+                    [appSvgIconIcon]="'bounding-box-circles'"
                     [appSvgIconSquare]="'1.5725em'"
-                    [ngClass]="{ 'active' : cropperBackgroundIsDraggable && imageForm.enabled, 'bg-base-content/10' : cropperBackgroundIsDraggable && imageForm.disabled }"
+                    [ngClass]="{ 'active' : cropperBackgroundIsDraggable && !ipaOperationRequestIsBusy, 'bg-base-content/10' : cropperBackgroundIsDraggable && ipaOperationRequestIsBusy }"
                     (click)="cropperBackgroundIsDraggable = !cropperBackgroundIsDraggable"
                   ></button>
                 </li>
-                <li
-                  class="inline-block"
-                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-                >
+                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
                   <button
                     class="rotate-90 fill-current p-3"
                     type="button"
                     title="Flip horizontal"
                     aria-label="Flip horizontal"
                     appSvgIcon
-                    [class.cursor-not-allowed]="imageForm.disabled"
-                    [disabled]="imageForm.disabled"
+                    [disabled]="ipaOperationRequestIsBusy"
                     [appSvgIconIcon]="'symmetry-vertical'"
                     [appSvgIconSquare]="'1.5725em'"
-                    (click)="onImageFlip(true)"
+                    (click)="setCropperImageFlip(true)"
                   ></button>
                 </li>
-                <li
-                  class="inline-block"
-                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-                >
+                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
                   <button
                     class="fill-current p-3"
                     type="button"
                     title="Flip vertical"
                     aria-label="Flip vertical"
                     appSvgIcon
-                    [class.cursor-not-allowed]="imageForm.disabled"
-                    [disabled]="imageForm.disabled"
+                    [disabled]="ipaOperationRequestIsBusy"
                     [appSvgIconIcon]="'symmetry-vertical'"
                     [appSvgIconSquare]="'1.5725em'"
-                    (click)="onImageFlip(false)"
+                    (click)="setCropperImageFlip(false)"
                   ></button>
                 </li>
-                <li
-                  class="inline-block"
-                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-                >
+                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
                   <div
                     class="flex p-0"
                     appDropdown
@@ -348,8 +331,7 @@
                       aria-label="Aspect Ratio"
                       appSvgIcon
                       slot="target"
-                      [class.cursor-not-allowed]="imageForm.disabled"
-                      [disabled]="imageForm.disabled"
+                      [disabled]="ipaOperationRequestIsBusy"
                       [appSvgIconIcon]="'aspect-ratio'"
                       [appSvgIconSquare]="'1.5725em'"
                     ></button>
@@ -359,7 +341,7 @@
                           class="w-full whitespace-nowrap text-base-content"
                           type="button"
                           [attr.aria-label]="aspectRatio"
-                          (click)="onImageAspectRatio()"
+                          (click)="setCropperImageAspectRatio()"
                         >
                           <span class="block">
                             {{ aspectRatio }}
@@ -369,18 +351,14 @@
                     </ul>
                   </div>
                 </li>
-                <li
-                  class="inline-block"
-                  [ngClass]="{ 'disabled pointer-events-none': imageForm.disabled }"
-                >
+                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
                   <button
                     class="fill-current p-3"
                     type="button"
                     title="Sliders"
                     aria-label="Sliders"
                     appSvgIcon
-                    [class.cursor-not-allowed]="imageForm.disabled"
-                    [disabled]="imageForm.disabled"
+                    [disabled]="ipaOperationRequestIsBusy"
                     [appSvgIconIcon]="'sliders'"
                     [appSvgIconSquare]="'1.5725em'"
                     (click)="ipaFormModulateToggle = !ipaFormModulateToggle"
@@ -396,7 +374,7 @@
 								aria-label="Menu"
 								appSvgIcon
 								slot="target"
-								[disabled]="imageForm.disabled"
+								[disabled]="ipaOperationRequestIsBusy"
 								[appSvgIconIcon]="'three-dots-vertical'"
 								[appSvgIconSquare]="'1.5em'"
 							></button>
@@ -430,10 +408,10 @@
 						class="btn btn-success w-full"
 						type="button"
 						aria-label="Submit"
-						[disabled]="imageForm.disabled"
+						[disabled]="ipaOperationRequestIsBusy"
 						(click)="onSubmitCropper()"
 					>
-						<span class="loading loading-spinner" *ngIf="imageForm.disabled"></span>
+						<!--						<span class="loading loading-spinner" *ngIf="imageForm.disabled"></span>-->
 						Submit
 					</button>
 				</div>

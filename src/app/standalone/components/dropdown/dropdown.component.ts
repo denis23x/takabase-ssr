@@ -97,7 +97,15 @@ export class DropdownComponent implements OnInit, OnDestroy {
 					}
 				} else {
 					if (clickTarget) {
-						this.onStateShow();
+						// @ts-ignore
+						const targetEnabled: boolean = !this.dropdownElementTarget.disabled;
+
+						// prettier-ignore
+						const targetEnableChildren: boolean = !Array.from(this.dropdownElementTarget.querySelectorAll('[disabled]')).length;
+
+						if (!!targetEnabled && !!targetEnableChildren) {
+							this.onStateShow();
+						}
 					}
 				}
 			},
