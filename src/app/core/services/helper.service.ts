@@ -17,11 +17,14 @@ export class HelperService {
 	) {}
 
 	setCamelCaseToDashCase(value: string): string {
+		// eslint-disable-next-line @typescript-eslint/no-shadow
 		return value.replace(/[A-Z]/g, (value: string): string => '-' + value.toLowerCase());
 	}
 
 	getRegex(regex: string, payload?: any): RegExp {
 		switch (regex) {
+			case 'extension':
+				return new RegExp('.[a-z]+$', 'i');
 			case 'no-whitespace':
 				return new RegExp('^\\S*$', 'm');
 			case 'exact':

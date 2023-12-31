@@ -11,6 +11,7 @@ import { IPAOperation } from '../dto/ipa/ipa-operation.dto';
 import { FileService } from './file.service';
 import { PlatformService } from './platform.service';
 import { DOCUMENT } from '@angular/common';
+import { HelperService } from './helper.service';
 import firebase from 'firebase/compat';
 
 @Injectable({
@@ -23,6 +24,7 @@ export class IPAService {
 		private apiService: ApiService,
 		private httpClient: HttpClient,
 		private fileService: FileService,
+		private helperService: HelperService,
 		private platformService: PlatformService,
 		private angularFireStorage: AngularFireStorage
 	) {}
@@ -55,15 +57,17 @@ export class IPAService {
 
 					imageElement.onerror = (event: string | Event) => reject(event);
 					imageElement.onload = (event: any) => {
-						canvasElement.width = event.target.width;
-						canvasElement.height = event.target.height;
+						const width: number = event.target.width;
+						const height: number = event.target.height;
 
-						// prettier-ignore
-						canvasElementContext.drawImage(event.target, 0, 0, event.target.width, event.target.height);
+						canvasElement.width = width;
+						canvasElement.height = height;
+						canvasElementContext.drawImage(event.target, 0, 0, width, height);
 
 						/** Replace File extension */
 
-						const fileName: string = file.name.replace(new RegExp('.[a-z]+$', 'i'), '.png');
+						// prettier-ignore
+						const fileName: string = file.name.replace(this.helperService.getRegex('extension'), '.png');
 
 						// prettier-ignore
 						canvasElement.toBlob((blob: Blob) => resolve(this.fileService.getFileFromBlob(blob, fileName)), 'image/png', 1);
@@ -127,11 +131,16 @@ export class IPAService {
 
 	/** REST */
 
-	create(file: File, filePath: string): Observable<string> {
-		// prettier-ignore
+	// prettier-ignore
+	create(fileAlphaMime: File): Observable<string> {
 		const ipaStorageBucket: firebase.storage.Storage = this.angularFireStorage.storage.app.storage(environment.ipaStorageBucket);
 
-		return from(ipaStorageBucket.ref(filePath).put(file)).pipe(
+		const fileDate: number = Date.now();
+		const fileUUID: string = this.helperService.getUUID();
+    const fileExtension: string = fileAlphaMime.name.match(this.helperService.getRegex('extension')).pop();
+		const filePath: string = [fileDate, fileUUID].join('-') + fileExtension;
+
+		return from(ipaStorageBucket.ref(filePath).put(fileAlphaMime)).pipe(
 			switchMap(() => of(ipaStorageBucket.ref(filePath).fullPath)),
 			catchError((httpError: any) => {
 				return this.apiService.setError(httpError, 'Unable to upload image');
@@ -139,13 +148,51 @@ export class IPAService {
 		);
 	}
 
-	getOne(IPAOperationParams: IPAOperation[]): Observable<File> {
+	getOneViaProxy(url: string): Observable<File> {
+		const ipaOperationParams: IPAOperation[] = [
+			{
+				operation: 'input',
+				type: 'url',
+				url: url.trim()
+			},
+			{
+				operation: 'output',
+				format: 'webp'
+			}
+		];
+
 		return this.httpClient
-			.get(environment.ipaUrl.concat(this.getParams(IPAOperationParams)), {
+			.get(environment.ipaUrl.concat(this.getParams(ipaOperationParams)), {
 				responseType: 'blob'
 			})
 			.pipe(
-				map((blob: Blob) => this.fileService.getFileFromBlob(blob)),
+				map((blob: Blob) => {
+					const fileName: string = url
+						.trim()
+						.split('/')
+						.pop()
+						.replace(this.helperService.getRegex('extension'), '.webp');
+
+					return this.fileService.getFileFromBlob(blob, fileName);
+				}),
+				catchError((httpError: any) => {
+					// prettier-ignore
+					return this.apiService.setError(httpError, 'The file returned from url does not seem to be a valid image type');
+				})
+			);
+	}
+
+	getOneViaGCS(ipaOperationParams: IPAOperation[]): Observable<File> {
+		return this.httpClient
+			.get(environment.ipaUrl.concat(this.getParams(ipaOperationParams)), {
+				responseType: 'blob'
+			})
+			.pipe(
+				map((blob: Blob) => {
+					const fileInput: IPAOperation = ipaOperationParams[0];
+
+					return this.fileService.getFileFromBlob(blob, fileInput.source);
+				}),
 				catchError((httpError: any) => {
 					return this.apiService.setError(httpError, 'Oops! Something went wrong');
 				})

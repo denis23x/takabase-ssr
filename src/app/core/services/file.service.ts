@@ -6,7 +6,6 @@ import { ApiService } from './api.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import { HelperService } from './helper.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -14,13 +13,12 @@ import { HelperService } from './helper.service';
 export class FileService {
 	constructor(
 		private apiService: ApiService,
-		private helperService: HelperService,
 		private angularFireStorage: AngularFireStorage
 	) {}
 
 	/** Utility */
 
-	getFileFromBlob(blob: Blob, fileName: string = this.helperService.getUUID()): File {
+	getFileFromBlob(blob: Blob, fileName: string): File {
 		return new File([blob], fileName, {
 			type: blob.type
 		});
