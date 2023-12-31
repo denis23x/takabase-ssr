@@ -22,7 +22,7 @@ export class ApiService {
 	}
 
 	setError(httpError: any, message?: string): Observable<never> {
-		const defaultMessage: string = 'Oops! Something went wrong. Try again later.';
+		const defaultMessage: string = 'Oops! Something went wrong. Try again later';
 
 		const getMessage = (): string => {
 			switch (true) {

@@ -12,7 +12,12 @@ import {
 	Signal,
 	ViewChild
 } from '@angular/core';
-import { ImageCroppedEvent, ImageCropperComponent, ImageCropperModule } from 'ngx-image-cropper';
+import {
+	Dimensions,
+	ImageCroppedEvent,
+	ImageCropperComponent,
+	ImageCropperModule
+} from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
 import { from, Subscription, switchMap } from 'rxjs';
@@ -44,10 +49,22 @@ interface ImageForm {
 	url: FormControl<string>;
 }
 
+interface ImageFormRotate {
+	rotate: FormControl<number>;
+}
+
+interface ImageFormScale {
+	scale: FormControl<number>;
+}
+
 interface IPAFormModulate {
 	brightness: FormControl<number>;
 	saturation: FormControl<number>;
 	hue: FormControl<number>;
+}
+
+interface IPAFormBlur {
+	sigma: FormControl<number>;
 }
 
 @Component({
@@ -100,9 +117,23 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		return imageFormMime.join(', ');
 	});
 
-	imageTransformToggle: boolean = true;
-	imageTransform$: Subscription | undefined;
-	imageTransform: ImageTransform = {
+	imageFormRotate: FormGroup | undefined;
+	imageFormRotate$: Subscription | undefined;
+
+	imageFormScale: FormGroup | undefined;
+	imageFormScale$: Subscription | undefined;
+
+	cropperImageTransform$: Subscription | undefined;
+	cropperImageTransformInitial: ImageTransform = {
+		translateUnit: 'px',
+		scale: 1,
+		rotate: 0,
+		flipH: false,
+		flipV: false,
+		translateH: 0,
+		translateV: 0
+	};
+	cropperImageTransform: ImageTransform = {
 		translateUnit: 'px',
 		scale: 1,
 		rotate: 0,
@@ -115,9 +146,13 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	cropperUploadPath: string | undefined;
 	cropperRemovePath: string | undefined | null;
 
+	cropperAspectRatio: number = 1;
+	cropperAspectRatioList: string[] = ['1:1', '4:3', '16:9'];
+
+	cropperFormToggle: string | undefined;
 	cropperFile: File = undefined;
 	cropperBlob: Blob = undefined;
-	cropperBackgroundIsDraggable: boolean = false;
+	cropperMoveImage: boolean = false;
 	cropperDialogToggle: boolean = false;
 	cropperIsReady: boolean = false;
 
@@ -130,9 +165,11 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		y2: 0
 	};
 
-	ipaFormModulateToggle: boolean = false;
 	ipaFormModulate: FormGroup | undefined;
 	ipaFormModulate$: Subscription | undefined;
+
+	ipaFormBlur: FormGroup | undefined;
+	ipaFormBlur$: Subscription | undefined;
 
 	ipaOperationRequestIsBusy: boolean = false;
 	ipaOperationRequest$: Subscription | undefined;
@@ -157,10 +194,43 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 				Validators.pattern(this.helperService.getRegex('url'))
 			])
 		});
+		this.imageFormRotate = this.formBuilder.group<ImageFormRotate>({
+			rotate: this.formBuilder.nonNullable.control(0, [
+				Validators.required,
+				Validators.min(0),
+				Validators.max(360)
+			])
+		});
+		this.imageFormScale = this.formBuilder.group<ImageFormScale>({
+			scale: this.formBuilder.nonNullable.control(0, [
+				Validators.required,
+				Validators.min(0),
+				Validators.max(10)
+			])
+		});
 		this.ipaFormModulate = this.formBuilder.group<IPAFormModulate>({
-			brightness: this.formBuilder.nonNullable.control(1, []),
-			saturation: this.formBuilder.nonNullable.control(1, []),
-			hue: this.formBuilder.nonNullable.control(0, [])
+			brightness: this.formBuilder.nonNullable.control(1, [
+				Validators.required,
+				Validators.min(0),
+				Validators.max(5)
+			]),
+			saturation: this.formBuilder.nonNullable.control(1, [
+				Validators.required,
+				Validators.min(0),
+				Validators.max(5)
+			]),
+			hue: this.formBuilder.nonNullable.control(0, [
+				Validators.required,
+				Validators.min(0),
+				Validators.max(360)
+			])
+		});
+		this.ipaFormBlur = this.formBuilder.group<IPAFormBlur>({
+			sigma: this.formBuilder.nonNullable.control(0, [
+				Validators.required,
+				Validators.min(0),
+				Validators.max(10)
+			])
 		});
 	}
 
@@ -177,38 +247,83 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 					error: (error: any) => console.error(error)
 				});
 
-			/** Listen cropper transform changes */
+			/** Listen Cropper transform changes */
 
-			this.imageTransform$?.unsubscribe();
-			this.imageTransform$ = this.imageCropperComponent.transformChange.subscribe({
-				next: (imageTransform: ImageTransform) => (this.imageTransform = imageTransform),
+			this.cropperImageTransform$?.unsubscribe();
+			this.cropperImageTransform$ = this.imageCropperComponent.transformChange.subscribe({
+				next: (cropperImageTransform: ImageTransform) =>
+					(this.cropperImageTransform = cropperImageTransform),
 				error: (error: any) => console.error(error)
 			});
+
+			/** Listen Image Form changes */
+
+			this.imageFormRotate$?.unsubscribe();
+			this.imageFormRotate$ = this.imageFormRotate.valueChanges
+				.pipe(filter(() => this.imageFormRotate.valid))
+				.subscribe({
+					next: (value: any) => this.setCropperImageTransform(value),
+					error: (error: any) => console.error(error)
+				});
+
+			this.imageFormScale$?.unsubscribe();
+			this.imageFormScale$ = this.imageFormScale.valueChanges
+				.pipe(filter(() => this.imageFormScale.valid))
+				.subscribe({
+					next: (value: any) => this.setCropperImageTransform(value),
+					error: (error: any) => console.error(error)
+				});
 
 			/** Listen Image Processing API operations */
 
 			this.ipaFormModulate$?.unsubscribe();
-			this.ipaFormModulate$ = this.ipaFormModulate.valueChanges.pipe(debounceTime(1000)).subscribe({
-				next: (value: any) => {
-					this.setIPAOperationParams({
-						operation: 'modulate',
-						...value
-					});
+			this.ipaFormModulate$ = this.ipaFormModulate.valueChanges
+				.pipe(
+					debounceTime(500),
+					filter(() => this.ipaFormModulate.valid)
+				)
+				.subscribe({
+					next: (value: any) => {
+						this.setIPAOperationsParams({
+							operation: 'modulate',
+							...value
+						});
 
-					this.getIPAUpdate();
-				},
-				error: (error: any) => console.error(error)
-			});
+						this.getIPAUpdate();
+					},
+					error: (error: any) => console.error(error)
+				});
+
+			this.ipaFormBlur$?.unsubscribe();
+			this.ipaFormBlur$ = this.ipaFormBlur.valueChanges
+				.pipe(
+					debounceTime(500),
+					filter(() => this.ipaFormBlur.valid)
+				)
+				.subscribe({
+					next: (value: any) => {
+						this.setIPAOperationsParams({
+							operation: 'blur',
+							sigma: value.sigma === 0 ? 0.3 : value.sigma
+						});
+
+						this.getIPAUpdate();
+					},
+					error: (error: any) => console.error(error)
+				});
 		}
 	}
 
 	ngOnDestroy(): void {
 		[
 			this.imageFormRequest$,
-			this.imageTransform$,
+			this.imageFormRotate$,
+			this.imageFormScale$,
+			this.cropperImageTransform$,
 			this.imageFormMarkdownItClipboard$,
 			this.ipaOperationRequest$,
-			this.ipaFormModulate$
+			this.ipaFormModulate$,
+			this.ipaFormBlur$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -298,6 +413,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	onSetFile(file: File): void {
 		if (this.onGetFileValidation(file)) {
 			this.imageForm.disable();
+			this.ipaOperationRequestIsBusy = true;
 
 			const fileDate: number = Date.now();
 			const fileUUID: string = this.helperService.getUUID();
@@ -320,19 +436,25 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 				.subscribe({
 					next: (ipaOperation: IPAOperation | null) => {
 						if (ipaOperation) {
-							this.setIPAOperationParams(ipaOperation);
+							this.setIPAOperationsParams(ipaOperation);
 						}
+
+						this.imageForm.disable();
+						this.ipaOperationRequestIsBusy = true;
 
 						this.getIPAUpdate();
 					},
-					error: () => this.imageForm.enable()
+					error: () => {
+						this.imageForm.enable();
+						this.ipaOperationRequestIsBusy = false;
+					}
 				});
 		}
 	}
 
 	/** Image Processing API */
 
-	setIPAOperationParams(ipaOperation: IPAOperation): void {
+	setIPAOperationsParams(ipaOperation: IPAOperation): void {
 		// prettier-ignore
 		const operationIndex: number = this.ipaOperationParams.findIndex((ipaOperationExisting: IPAOperation) => {
       return ipaOperationExisting.operation === ipaOperation.operation;
@@ -345,7 +467,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	getIPAUpdate(): void {
+	getIPAUpdate(callback: () => any = () => console.debug('IPA Updated')): void {
+		this.imageForm.disable();
 		this.ipaOperationRequestIsBusy = true;
 
 		this.ipaOperationRequest$?.unsubscribe();
@@ -353,15 +476,36 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			.getOne(this.ipaOperationParams)
 			.pipe(tap((file: File) => this.setCropperImageFile(file)))
 			.subscribe({
-				next: () => (this.ipaOperationRequestIsBusy = false),
-				error: () => (this.ipaOperationRequestIsBusy = false)
+				next: () => {
+					this.imageForm.enable();
+					this.ipaOperationRequestIsBusy = false;
+
+					callback();
+				},
+				error: () => {
+					this.imageForm.enable();
+					this.ipaOperationRequestIsBusy = false;
+
+					callback();
+				}
 			});
 	}
 
 	/** Cropper */
 
-	onCropperImageReady(): void {
+	onCropperReady(dimensions: Dimensions): void {
 		this.cropperIsReady = true;
+
+		// Save the first cropper position
+
+		if (!this.cropperPositionInitial) {
+			this.cropperPositionInitial = {
+				x1: 0,
+				y1: 0,
+				x2: dimensions.width,
+				y2: dimensions.height
+			};
+		}
 
 		// Restore cropperPosition after using IPA
 
@@ -372,23 +516,62 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	onCropperImageFailed(): void {
+	onCropperFailed(): void {
 		this.snackbarService.error('Error', 'Invalid image type');
 	}
 
-	onCropperImageCropped(imageCroppedEvent: ImageCroppedEvent): void {
+	onCropperCropped(imageCroppedEvent: ImageCroppedEvent): void {
 		this.cropperBlob = imageCroppedEvent.blob;
 
 		// Always set cropper previous state (when use IPA we got new file so should restore cropperPosition)
 
 		this.cropperPositionPrevious = imageCroppedEvent.cropperPosition;
+	}
 
-		// Save the first cropper position
-
-		if (!this.cropperPositionInitial) {
-			this.cropperPositionInitial = imageCroppedEvent.cropperPosition;
+	onCropperFormToggle(cropperFormToggle: string): void {
+		if (this.cropperFormToggle === cropperFormToggle) {
+			this.cropperFormToggle = undefined;
+		} else {
+			this.cropperFormToggle = cropperFormToggle;
 		}
 	}
+
+	onCropperReset(): void {
+		const ipaOperationList: string[] = ['input', 'extend', 'output'];
+
+		this.ipaOperationParams = this.ipaOperationParams.filter((ipaOperation: IPAOperation) => {
+			return ipaOperationList.includes(ipaOperation.operation);
+		});
+
+		this.getIPAUpdate(() => {
+			this.cropperImageTransform = {
+				...this.cropperImageTransformInitial
+			};
+
+			this.cropperMoveImage = false;
+
+			this.cropperPosition = {
+				...this.cropperPositionInitial
+			};
+
+			/** Reset Forms */
+
+			[
+				this.imageForm,
+				this.imageFormRotate,
+				this.imageFormScale,
+				this.ipaFormModulate,
+				this.ipaFormBlur
+			].forEach((formGroup: FormGroup) => formGroup.reset({}, { emitEvent: false }));
+		});
+	}
+
+	// onCropperReset(): void {
+	// 	// this.cropperFile = undefined;
+	// 	// this.cropperBlob = undefined;
+	// 	//
+	// 	// this.cropperIsAvailable = false;
+	// }
 
 	setCropperImageFile(file: File): void {
 		this.cropperPositionInitial = undefined;
@@ -397,62 +580,29 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	setCropperImageFlip(direction: boolean): void {
 		if (direction) {
-			this.imageTransform = {
-				...this.imageTransform,
-				flipV: !this.imageTransform.flipV
+			this.cropperImageTransform = {
+				...this.cropperImageTransform,
+				flipV: !this.cropperImageTransform.flipV
 			};
 		} else {
-			this.imageTransform = {
-				...this.imageTransform,
-				flipH: !this.imageTransform.flipH
+			this.cropperImageTransform = {
+				...this.cropperImageTransform,
+				flipH: !this.cropperImageTransform.flipH
 			};
 		}
 	}
 
-	setCropperImageAspectRatio(): void {
-		console.log('onImageAspectRatio');
+	setCropperImageAspectRatio(aspectRatio: string): void {
+		const [width, height]: number[] = aspectRatio.split(':').map((side: string) => Number(side));
+
+		this.cropperAspectRatio = width / height;
 	}
 
-	setCropperImageTransform(imageTransform: ImageTransform): void {
-		this.imageTransform = {
-			...imageTransform
+	setCropperImageTransform(cropperImageTransform: Partial<ImageTransform>): void {
+		this.cropperImageTransform = {
+			...this.cropperImageTransform,
+			...cropperImageTransform
 		};
-	}
-
-	/** RESET */
-
-	onResetCropper(): void {
-		// this.cropperFile = undefined;
-		// this.cropperBlob = undefined;
-		//
-		// this.cropperIsAvailable = false;
-		//
-		// // Extra reset
-		//
-		// this.onResetImageForm();
-		// this.onResetTransform();
-	}
-
-	onResetImageForm(): void {
-		// this.imageForm.reset();
-	}
-
-	onResetTransform(): void {
-		// this.imageTransform = {
-		// 	translateUnit: 'px',
-		// 	scale: 1,
-		// 	rotate: 0,
-		// 	flipH: false,
-		// 	flipV: false,
-		// 	translateH: 0,
-		// 	translateV: 0
-		// };
-		//
-		// this.cropperBackgroundIsDraggable = false;
-		//
-		// this.cropperPosition = {
-		// 	...this.cropperPositionInitial
-		// };
 	}
 
 	/** EVENTS */
@@ -505,46 +655,11 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 // TODO: IPA
 // BW
-// {
-// 	operation: 'grayscale'
-// },
-// UNNECESSARY
-// { operation: 'affine', matrix: [1, 0.3, 0.1, 0.7] }
-// { operation: 'blur', sigma: 50 }, HARD-LONG
-// { operation: 'clahe', width: 3, height: 3 }, HARD-LONG
-// INTERESTING
-// {
-// 	operation: 'convolve',
-// 	width: 3,
-// 	height: 3,
-// 	kernel: [-1, 0, 1, -2, 0, 2, -1, 0, 1]
-// },
-// CAN ADD BORDERS
-// {
-// 	operation: 'extend',
-// 	top: 42,
-// 	bottom: 84,
-// 	left: 16,
-// 	right: 16,
-// 	background: '#FFA03F'
-// },
+// { operation: 'grayscale' },
 // CONTRAST
 // { operation: 'gamma', gamma: 3.0, gammaOut: 2.2 },
 // INTERESTING
-// { operation: 'linear', a: 4, b: 8 },
-// INTERESTING
-// { operation: 'median', size: 30 },
-// INTERESTING
 // { operation: 'negate' },
-// INTERESTING
-// {
-// 	operation: 'recomb',
-// 	matrix: [
-// 		[0.3588, 0.7044, 0.1368],
-// 		[0.299, 0.587, 0.114],
-// 		[0.2392, 0.4696, 0.0912]
-// 	]
-// },
 // IDK
 // { operation: 'sharpen', sigma: 500 },
 // IDK

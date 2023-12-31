@@ -127,12 +127,13 @@
 						<image-cropper
 							class="ngx-cropper aspect-square !p-4"
 							*appPlatform="'browser'"
-							[(transform)]="imageTransform"
+							[(transform)]="cropperImageTransform"
 							[class.ngx-cropper-disabled]="ipaOperationRequestIsBusy"
-							[class.ngx-cropper-move-image]="cropperBackgroundIsDraggable"
+							[class.ngx-cropper-move-image]="cropperMoveImage"
 							[imageFile]="cropperFile"
 							[imageAltText]="'Image cropper'"
 							[format]="'png'"
+							[aspectRatio]="cropperAspectRatio"
 							[maintainAspectRatio]="true"
 							[containWithinAspectRatio]="true"
 							[resizeToWidth]="512"
@@ -140,130 +141,193 @@
 							[cropper]="cropperPosition"
 							[roundCropper]="false"
 							[alignImage]="'center'"
-							[allowMoveImage]="cropperBackgroundIsDraggable"
-							(imageCropped)="onCropperImageCropped($event)"
-							(cropperReady)="onCropperImageReady()"
-							(loadImageFailed)="onCropperImageFailed()"
+							[allowMoveImage]="cropperMoveImage"
+							(imageCropped)="onCropperCropped($event)"
+							(cropperReady)="onCropperReady($event)"
+							(loadImageFailed)="onCropperFailed()"
 						>
 						</image-cropper>
 					</div>
-					<form
-						class="flex flex-col gap-4 bg-base-200 rounded-box p-4"
-						autocomplete="off"
-						[class.hidden]="!imageTransformToggle"
-					>
-						<fieldset class="form-control">
-							<label class="label w-full gap-4 p-0">
-								<span class="label-text">Scale</span>
-								<input
-									class="range w-full"
-									type="range"
-									[(ngModel)]="imageTransform.scale"
-									[min]="1"
-									[max]="5"
-									[step]="0.1"
-									[ngModelOptions]="{ standalone: true }"
-									(input)="setCropperImageTransform(imageTransform)"
-								/>
-								<input
-									class="input-bordered input input-sm w-16 text-center"
-									type="number"
-									[(ngModel)]="imageTransform.scale"
-									[ngModelOptions]="{ standalone: true }"
-									(input)="setCropperImageTransform(imageTransform)"
-								/>
-							</label>
-						</fieldset>
-						<fieldset class="form-control">
-							<label class="label w-full gap-4 p-0">
-								<span class="label-text">Rotate</span>
-								<input
-									class="range w-full"
-									type="range"
-									[(ngModel)]="imageTransform.rotate"
-									[min]="0"
-									[max]="360"
-									[step]="5"
-									[ngModelOptions]="{ standalone: true }"
-									(input)="setCropperImageTransform(imageTransform)"
-								/>
-								<input
-									class="input-bordered input input-sm w-16 text-center"
-									type="number"
-									[(ngModel)]="imageTransform.rotate"
-									[ngModelOptions]="{ standalone: true }"
-									(input)="setCropperImageTransform(imageTransform)"
-								/>
-							</label>
-						</fieldset>
-					</form>
-					<form
-						class="flex flex-col gap-4 bg-base-200 rounded-box p-4"
-						autocomplete="off"
-						[class.hidden]="!ipaFormModulateToggle"
-						[formGroup]="ipaFormModulate"
-					>
-						<fieldset class="form-control" *ngIf="ipaFormModulate.get('brightness') as brightness">
-							<label class="label w-full gap-4 p-0">
-								<span class="label-text">Brightness</span>
-								<input
-									class="range w-full"
-									type="range"
-									min="0"
-									max="2"
-									step="0.1"
-									formControlName="brightness"
-									[value]="brightness.value"
-								/>
-								<input
-									class="input-bordered input input-sm w-16 text-center"
-									type="number"
-									formControlName="brightness"
-									[value]="brightness.value"
-								/>
-							</label>
-						</fieldset>
-						<fieldset class="form-control" *ngIf="ipaFormModulate.get('saturation') as saturation">
-							<label class="label w-full gap-4 p-0">
-								<span class="label-text">Saturation</span>
-								<input
-									class="range w-full"
-									type="range"
-									min="0"
-									max="2"
-									step="0.1"
-									formControlName="saturation"
-									[value]="saturation.value"
-								/>
-								<input
-									class="input-bordered input input-sm w-16 text-center"
-									type="number"
-									formControlName="saturation"
-									[value]="saturation.value"
-								/>
-							</label>
-						</fieldset>
-						<fieldset class="form-control" *ngIf="ipaFormModulate.get('hue') as hue">
-							<label class="label w-full gap-4 p-0">
-								<span class="label-text">HUE</span>
-								<input
-									class="range w-full"
-									type="range"
-									min="0"
-									max="360"
-									step="5"
-									formControlName="hue"
-									[value]="hue.value"
-								/>
-								<input
-									class="input-bordered input input-sm w-16 text-center"
-									type="number"
-									formControlName="hue"
-									[value]="hue.value"
-								/>
-							</label>
-						</fieldset>
-					</form>
+					<ng-container [ngSwitch]="cropperFormToggle">
+						<form
+							class="flex flex-col gap-4 bg-base-200 rounded-box p-4"
+							autocomplete="off"
+							*ngSwitchCase="'scale'"
+							[formGroup]="imageFormScale"
+						>
+							<fieldset class="form-control" *ngIf="imageFormScale.get('scale') as scale">
+								<label class="label w-full gap-4 p-0">
+									<span class="label-text">Scale</span>
+									<input
+										class="range flex-1"
+										type="range"
+										aria-label="Scale"
+										formControlName="scale"
+										[min]="0"
+										[max]="10"
+										[step]="0.5"
+										[value]="scale.value"
+									/>
+									<input
+										class="input-bordered input input-sm w-14 text-center"
+										type="number"
+										aria-label="Scale"
+										formControlName="scale"
+										[class.input-success]="scale.valid"
+										[class.input-error]="scale.invalid"
+										[value]="scale.value"
+									/>
+								</label>
+							</fieldset>
+						</form>
+						<form
+							class="flex flex-col gap-4 bg-base-200 rounded-box p-4"
+							autocomplete="off"
+							*ngSwitchCase="'rotate'"
+							[formGroup]="imageFormRotate"
+						>
+							<fieldset class="form-control" *ngIf="imageFormRotate.get('rotate') as rotate">
+								<label class="label w-full gap-4 p-0">
+									<span class="label-text">Rotate</span>
+									<input
+										class="range flex-1"
+										type="range"
+										aria-label="Rotate"
+										formControlName="rotate"
+										[min]="0"
+										[max]="360"
+										[step]="5"
+										[value]="rotate.value"
+									/>
+									<input
+										class="input-bordered input input-sm w-14 text-center"
+										type="number"
+										aria-label="Rotate"
+										formControlName="rotate"
+										[class.input-success]="rotate.valid"
+										[class.input-error]="rotate.invalid"
+										[value]="rotate.value"
+									/>
+								</label>
+							</fieldset>
+						</form>
+						<form
+							class="flex flex-col gap-4 bg-base-200 rounded-box p-4"
+							autocomplete="off"
+							*ngSwitchCase="'modulate'"
+							[formGroup]="ipaFormModulate"
+						>
+							<fieldset
+								class="form-control"
+								*ngIf="ipaFormModulate.get('brightness') as brightness"
+							>
+								<label class="label w-full gap-4 p-0">
+									<span class="label-text">Brightness</span>
+									<input
+										class="range flex-1"
+										type="range"
+										aria-label="Brightness"
+										formControlName="brightness"
+										[min]="0"
+										[max]="5"
+										[step]="0.1"
+										[value]="brightness.value"
+									/>
+									<input
+										class="input-bordered input input-sm w-14 text-center"
+										type="number"
+										aria-label="Brightness"
+										formControlName="brightness"
+										[class.input-success]="brightness.valid"
+										[class.input-error]="brightness.invalid"
+										[value]="brightness.value"
+									/>
+								</label>
+							</fieldset>
+							<fieldset
+								class="form-control"
+								*ngIf="ipaFormModulate.get('saturation') as saturation"
+							>
+								<label class="label w-full gap-4 p-0">
+									<span class="label-text">Saturation</span>
+									<input
+										class="range flex-1"
+										type="range"
+										aria-label="Saturation"
+										formControlName="saturation"
+										[min]="0"
+										[max]="5"
+										[step]="0.1"
+										[value]="saturation.value"
+									/>
+									<input
+										class="input-bordered input input-sm w-14 text-center"
+										type="number"
+										aria-label="Saturation"
+										formControlName="saturation"
+										[class.input-success]="saturation.valid"
+										[class.input-error]="saturation.invalid"
+										[value]="saturation.value"
+									/>
+								</label>
+							</fieldset>
+							<fieldset class="form-control" *ngIf="ipaFormModulate.get('hue') as hue">
+								<label class="label w-full gap-4 p-0">
+									<span class="label-text">HUE</span>
+									<input
+										class="range flex-1"
+										type="range"
+										aria-label="HUE"
+										formControlName="hue"
+										[min]="0"
+										[max]="360"
+										[step]="5"
+										[value]="hue.value"
+									/>
+									<input
+										class="input-bordered input input-sm w-14 text-center"
+										type="number"
+										aria-label="HUE"
+										formControlName="hue"
+										[class.input-success]="hue.valid"
+										[class.input-error]="hue.invalid"
+										[value]="hue.value"
+									/>
+								</label>
+							</fieldset>
+						</form>
+						<form
+							class="flex flex-col gap-4 bg-base-200 rounded-box p-4"
+							autocomplete="off"
+							*ngSwitchCase="'blur'"
+							[formGroup]="ipaFormBlur"
+						>
+							<fieldset class="form-control" *ngIf="ipaFormBlur.get('sigma') as sigma">
+								<label class="label w-full gap-4 p-0">
+									<span class="label-text">Blur</span>
+									<input
+										class="range flex-1"
+										type="range"
+										aria-label="Blur"
+										formControlName="sigma"
+										[min]="0"
+										[max]="10"
+										[step]="1"
+										[value]="sigma.value"
+									/>
+									<input
+										class="input-bordered input input-sm w-14 text-center"
+										type="number"
+										aria-label="Blur"
+										formControlName="sigma"
+										[class.input-success]="sigma.valid"
+										[class.input-error]="sigma.invalid"
+										[value]="sigma.value"
+									/>
+								</label>
+							</fieldset>
+						</form>
+					</ng-container>
 					<div class="flex items-start justify-between gap-4">
 						<!-- prettier-ignore -->
 						<div
@@ -278,14 +342,56 @@
                   <button
                     class="fill-current p-3"
                     type="button"
-                    title="Move"
-                    aria-label="Move"
+                    title="Rotate"
+                    aria-label="Rotate"
+                    appSvgIcon
+                    [disabled]="ipaOperationRequestIsBusy"
+                    [appSvgIconIcon]="'zoom-in'"
+                    [appSvgIconSquare]="'1.5725em'"
+                    [ngClass]="{ 'active' : cropperFormToggle === 'scale' && !ipaOperationRequestIsBusy }"
+                    (click)="onCropperFormToggle('scale')"
+                  ></button>
+                </li>
+                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
+                  <button
+                    class="fill-current p-3"
+                    type="button"
+                    title="Rotate"
+                    aria-label="Rotate"
+                    appSvgIcon
+                    [disabled]="ipaOperationRequestIsBusy"
+                    [appSvgIconIcon]="'arrow-clockwise'"
+                    [appSvgIconSquare]="'1.5725em'"
+                    [ngClass]="{ 'active' : cropperFormToggle === 'rotate' && !ipaOperationRequestIsBusy }"
+                    (click)="onCropperFormToggle('rotate')"
+                  ></button>
+                </li>
+                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
+                  <button
+                    class="fill-current p-3"
+                    type="button"
+                    title="Move bounding box"
+                    aria-label="Move bounding box"
                     appSvgIcon
                     [disabled]="ipaOperationRequestIsBusy"
                     [appSvgIconIcon]="'bounding-box-circles'"
                     [appSvgIconSquare]="'1.5725em'"
-                    [ngClass]="{ 'active' : cropperBackgroundIsDraggable && !ipaOperationRequestIsBusy, 'bg-base-content/10' : cropperBackgroundIsDraggable && ipaOperationRequestIsBusy }"
-                    (click)="cropperBackgroundIsDraggable = !cropperBackgroundIsDraggable"
+                    [ngClass]="{ 'active' : !cropperMoveImage && !ipaOperationRequestIsBusy }"
+                    (click)="cropperMoveImage = false"
+                  ></button>
+                </li>
+                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
+                  <button
+                    class="fill-current p-3"
+                    type="button"
+                    title="Move image"
+                    aria-label="Move image"
+                    appSvgIcon
+                    [disabled]="ipaOperationRequestIsBusy"
+                    [appSvgIconIcon]="'arrows-move'"
+                    [appSvgIconSquare]="'1.5725em'"
+                    [ngClass]="{ 'active' : cropperMoveImage && !ipaOperationRequestIsBusy }"
+                    (click)="cropperMoveImage = true"
                   ></button>
                 </li>
                 <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
@@ -327,8 +433,8 @@
                     <button
                       class="fill-current p-3"
                       type="button"
-                      title="Aspect Ratio"
-                      aria-label="Aspect Ratio"
+                      title="Aspect ratio"
+                      aria-label="Aspect ratio"
                       appSvgIcon
                       slot="target"
                       [disabled]="ipaOperationRequestIsBusy"
@@ -336,15 +442,15 @@
                       [appSvgIconSquare]="'1.5725em'"
                     ></button>
                     <ul class="menu menu-vertical menu-md m-0" slot="content">
-                      <li class="flex w-full" *ngFor="let aspectRatio of ['1:1', '4:3', '16:9', '16:10']">
+                      <li class="flex w-full" *ngFor="let cropperAspectRatio of cropperAspectRatioList">
                         <button
                           class="w-full whitespace-nowrap text-base-content"
                           type="button"
-                          [attr.aria-label]="aspectRatio"
-                          (click)="setCropperImageAspectRatio()"
+                          [attr.aria-label]="cropperAspectRatio"
+                          (click)="setCropperImageAspectRatio(cropperAspectRatio)"
                         >
                           <span class="block">
-                            {{ aspectRatio }}
+                            {{ cropperAspectRatio }}
                           </span>
                         </button>
                       </li>
@@ -361,48 +467,74 @@
                     [disabled]="ipaOperationRequestIsBusy"
                     [appSvgIconIcon]="'sliders'"
                     [appSvgIconSquare]="'1.5725em'"
-                    (click)="ipaFormModulateToggle = !ipaFormModulateToggle"
+                    [ngClass]="{ 'active' : cropperFormToggle === 'modulate' }"
+                    (click)="onCropperFormToggle('modulate')"
+                  ></button>
+                </li>
+                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
+                  <button
+                    class="fill-current p-3"
+                    type="button"
+                    title="Blur"
+                    aria-label="Blur"
+                    appSvgIcon
+                    [disabled]="ipaOperationRequestIsBusy"
+                    [appSvgIconIcon]="'droplet'"
+                    [appSvgIconSquare]="'1.5725em'"
+                    [ngClass]="{ 'active' : cropperFormToggle === 'blur' }"
+                    (click)="onCropperFormToggle('blur')"
                   ></button>
                 </li>
               </ul>
 						</div>
-						<div class="flex p-0 relative" appDropdown [appDropdownPlacement]="'top-end'">
-							<button
-								class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"
-								type="button"
-								title="Menu"
-								aria-label="Menu"
-								appSvgIcon
-								slot="target"
-								[disabled]="ipaOperationRequestIsBusy"
-								[appSvgIconIcon]="'three-dots-vertical'"
-								[appSvgIconSquare]="'1.5em'"
-							></button>
-							<ul class="menu menu-vertical menu-md" slot="content">
-								<li class="flex w-full snap-start scroll-my-2">
-									<button
-										class="rounded-btn block w-full truncate text-right"
-										type="button"
-										title="Reset cropper"
-										aria-label="Reset cropper"
-										(click)="onResetCropper()"
-									>
-										Reset cropper
-									</button>
-								</li>
-								<li class="flex w-full snap-start scroll-my-2">
-									<button
-										class="rounded-btn block w-full truncate text-right"
-										type="button"
-										title="Reset changes"
-										aria-label="Reset changes"
-										(click)="onResetTransform()"
-									>
-										Reset changes
-									</button>
-								</li>
-							</ul>
-						</div>
+						<button
+							class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"
+							type="button"
+							title="Reset cropper"
+							aria-label="Reset cropper"
+							appSvgIcon
+							[disabled]="ipaOperationRequestIsBusy"
+							[appSvgIconIcon]="'arrow-repeat'"
+							[appSvgIconSquare]="'1.5em'"
+							(click)="onCropperReset()"
+						></button>
+						<!--						<div class="flex p-0 relative" appDropdown [appDropdownPlacement]="'top-end'">-->
+						<!--							<button-->
+						<!--								class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"-->
+						<!--								type="button"-->
+						<!--								title="Menu"-->
+						<!--								aria-label="Menu"-->
+						<!--								appSvgIcon-->
+						<!--								slot="target"-->
+						<!--								[disabled]="ipaOperationRequestIsBusy"-->
+						<!--								[appSvgIconIcon]="'three-dots-vertical'"-->
+						<!--								[appSvgIconSquare]="'1.5em'"-->
+						<!--							></button>-->
+						<!--							<ul class="menu menu-vertical menu-md" slot="content">-->
+						<!--								<li class="flex w-full snap-start scroll-my-2">-->
+						<!--									<button-->
+						<!--										class="rounded-btn block w-full truncate text-right"-->
+						<!--										type="button"-->
+						<!--										title="Reset cropper"-->
+						<!--										aria-label="Reset cropper"-->
+						<!--										(click)="onResetCropper()"-->
+						<!--									>-->
+						<!--										Reset cropper-->
+						<!--									</button>-->
+						<!--								</li>-->
+						<!--								<li class="flex w-full snap-start scroll-my-2">-->
+						<!--									<button-->
+						<!--										class="rounded-btn block w-full truncate text-right"-->
+						<!--										type="button"-->
+						<!--										title="Reset changes"-->
+						<!--										aria-label="Reset changes"-->
+						<!--										(click)="onResetTransform()"-->
+						<!--									>-->
+						<!--										Reset changes-->
+						<!--									</button>-->
+						<!--								</li>-->
+						<!--							</ul>-->
+						<!--						</div>-->
 					</div>
 					<button
 						class="btn btn-success w-full"

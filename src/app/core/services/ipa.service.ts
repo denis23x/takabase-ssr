@@ -100,15 +100,15 @@ export class IPAService {
 					if (!validWidth) {
 						const extend: number = (requiredWidth - imageElement.width) / 2;
 
-						ipaOperation.left = extend;
-						ipaOperation.right = extend;
+						ipaOperation.left = Math.floor(extend);
+						ipaOperation.right = Math.ceil(extend);
 					}
 
 					if (!validHeight) {
 						const extend: number = (requiredHeight - imageElement.height) / 2;
 
-						ipaOperation.top = extend;
-						ipaOperation.bottom = extend;
+						ipaOperation.top = Math.floor(extend);
+						ipaOperation.bottom = Math.ceil(extend);
 					}
 
 					/** If Width or Height less than 512px then extend it to 512px */
@@ -147,8 +147,7 @@ export class IPAService {
 			.pipe(
 				map((blob: Blob) => this.fileService.getFileFromBlob(blob)),
 				catchError((httpError: any) => {
-					// prettier-ignore
-					return this.apiService.setError(httpError, 'The file returned from url does not seem to be a valid image type');
+					return this.apiService.setError(httpError, 'Oops! Something went wrong');
 				})
 			);
 	}
