@@ -174,23 +174,45 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onSubmitCropper(fileUrl: string): void {
-		this.onToggleCropper(false);
+	onSubmitCropper(file: File): void {
+		this.profileForm.disable();
 
-		const userUpdateDto: UserUpdateDto = {
-			avatar: fileUrl
-		};
+		// TODO: update
 
-		this.currentUserRequest$?.unsubscribe();
-		this.currentUserRequest$ = this.userService
-			.update(this.currentUser.id, userUpdateDto)
-			.pipe(switchMap((user: User) => this.authorizationService.setCurrentUser(user)))
-			.subscribe({
-				next: () => {
-					this.snackbarService.success('Success', 'Avatar has been updated');
-				},
-				error: (error: any) => console.error(error)
-			});
+		const currentUserAvatar: string | null = this.currentUser.avatar;
+
+		this.fileService.create(file, '/upload/user-avatars').subscribe({
+			next: (fileUrl: string) => {
+				const userUpdateDto: UserUpdateDto = {
+					avatar: fileUrl
+				};
+
+				this.currentUserRequest$?.unsubscribe();
+				this.currentUserRequest$ = this.userService
+					.update(this.currentUser.id, userUpdateDto)
+					.pipe(switchMap((user: User) => this.authorizationService.setCurrentUser(user)))
+					.subscribe({
+						next: () => {
+							this.snackbarService.success('Success', 'Avatar has been updated');
+
+							/** Silent deleting */
+
+							if (currentUserAvatar) {
+								this.fileService.delete(currentUserAvatar).subscribe({
+									next: () => console.debug('File removed'),
+									error: (error: any) => console.error(error)
+								});
+							}
+
+							/** Enable */
+
+							this.profileForm.enable();
+						},
+						error: () => this.profileForm.enable()
+					});
+			},
+			error: () => this.profileForm.enable()
+		});
 	}
 
 	onSubmitProfileForm(): void {

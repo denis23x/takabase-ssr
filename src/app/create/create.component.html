@@ -517,9 +517,7 @@
 	<div
 		appCropper
 		#appCropperComponent
-		[appCropperUploadPath]="'/upload/post-images'"
-		[appCropperRemovePath]="postForm.get('image').value"
-		(appCropperSubmit)="onSubmitPostFormImage($event)"
+		(appCropperSubmit)="onSubmitCropper($event)"
 		(appCropperToggle)="onTogglePostFormStatus($event)"
 	></div>
 	<div

@@ -6,7 +6,6 @@ import {
 	computed,
 	ElementRef,
 	EventEmitter,
-	Input,
 	OnDestroy,
 	Output,
 	Signal,
@@ -39,7 +38,7 @@ import { WindowComponent } from '../window/window.component';
 import { AppPlatformDirective } from '../../directives/app-platform.directive';
 import { PlatformService } from '../../../core/services/platform.service';
 import { MarkdownService } from '../../../core/services/markdown.service';
-import { debounceTime, filter, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, tap } from 'rxjs/operators';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { IPAOperation } from '../../../core/dto/ipa/ipa-operation.dto';
 import { IPAService } from '../../../core/services/ipa.service';
@@ -92,17 +91,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	@ViewChild(ImageCropperComponent) imageCropperComponent: ImageCropperComponent | undefined;
 
-	@Input({ required: true })
-	set appCropperUploadPath(cropperUploadPath: string) {
-		this.cropperUploadPath = cropperUploadPath;
-	}
-
-	@Input()
-	set appCropperRemovePath(cropperRemovePath: string | null | undefined) {
-		this.cropperRemovePath = cropperRemovePath;
-	}
-
-	@Output() appCropperSubmit: EventEmitter<string> = new EventEmitter<string>();
+	@Output() appCropperSubmit: EventEmitter<File> = new EventEmitter<File>();
 	@Output() appCropperToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	imageForm: FormGroup | undefined;
@@ -142,9 +131,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		translateH: 0,
 		translateV: 0
 	};
-
-	cropperUploadPath: string | undefined;
-	cropperRemovePath: string | undefined | null;
 
 	cropperAspectRatio: number = 1;
 	cropperAspectRatioList: string[] = ['1:1', '4:3', '16:9'];
@@ -534,8 +520,9 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 				...this.cropperImageTransformInitial
 			};
 
+			this.cropperAspectRatio = 1;
+			this.cropperFormToggle = undefined;
 			this.cropperMoveImage = false;
-
 			this.cropperPositionPrevious = undefined;
 
 			/** Reset Forms */
@@ -580,19 +567,26 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	/** EVENTS */
 
 	onResetCropper(): void {
+		/** Transformations && IPA operations reset */
+
 		this.onCropperReset();
 
-		/** Completely reset */
+		/** Cropper component reset */
 
 		this.cropperFile = undefined;
 		this.cropperBlob = undefined;
-
+		this.cropperObjectUrl = undefined;
 		this.cropperIsReady = false;
+
+		this.ipaOperationRequestIsBusy = false;
+		this.ipaOperationRequest$?.unsubscribe();
+
+		/** Close Cropper dialog */
+
+		this.onToggleCropper(false);
 	}
 
 	onToggleCropper(toggle: boolean): void {
-		this.appCropperToggle.emit(toggle);
-
 		this.cropperDialogToggle = toggle;
 
 		if (toggle) {
@@ -600,38 +594,46 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		} else {
 			this.cropperDialogElement.nativeElement.close();
 		}
+
+		this.appCropperToggle.emit(toggle);
 	}
 
 	onSubmitCropper(): void {
+		this.ipaOperationRequestIsBusy = true;
+
 		// prettier-ignore
 		const fileAlpha: File = this.fileService.getFileFromBlob(this.cropperBlob);
 
-		this.ipaOperationRequestIsBusy = true;
+		this.ipaOperationRequest$?.unsubscribe();
+		this.ipaOperationRequest$ = this.ipaService
+			.createTempImage(fileAlpha)
+			.pipe(
+				map((fileUrl: string) => {
+					const ipaOperationParams: IPAOperation[] = [
+						{
+							operation: 'input',
+							type: 'gcs',
+							source: fileUrl
+						},
+						{
+							operation: 'output',
+							format: 'webp'
+						}
+					];
 
-		this.ipaService.createTempImage(fileAlpha).subscribe({
-			next: (fileUrl: string) => {
-				const ipaOperationParams: IPAOperation[] = [
-					{
-						operation: 'input',
-						type: 'gcs',
-						source: fileUrl
-					},
-					{
-						operation: 'output',
-						format: 'webp'
-					}
-				];
+					return ipaOperationParams;
+				}),
+				switchMap((ipaOperationParams: IPAOperation[]) => {
+					return this.ipaService.getOneTempImageViaGCS(ipaOperationParams);
+				})
+			)
+			.subscribe({
+				next: (file: File) => {
+					this.onResetCropper();
 
-				this.ipaService.getOneTempImageViaGCS(ipaOperationParams).subscribe({
-					next: (file: File) => {
-						this.appCropperSubmit.emit(fileUrl);
-
-						this.onToggleCropper(false);
-					},
-					error: (error: any) => console.error(error)
-				});
-			},
-			error: (error: any) => console.error(error)
-		});
+					this.appCropperSubmit.emit(file);
+				},
+				error: () => (this.ipaOperationRequestIsBusy = false)
+			});
 	}
 }

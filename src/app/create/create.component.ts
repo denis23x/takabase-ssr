@@ -42,6 +42,7 @@ import { CategoryCreateComponent } from '../standalone/components/category/creat
 import { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
 import { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
 import { PlatformService } from '../core/services/platform.service';
+import { FileService } from '../core/services/file.service';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -128,6 +129,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 		private userService: UserService,
 		private cookieService: CookieService,
 		private metaService: MetaService,
+		private fileService: FileService,
 		private skeletonService: SkeletonService,
 		private platformService: PlatformService
 	) {
@@ -436,9 +438,31 @@ export class CreateComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onSubmitPostFormImage(fileUrl?: string): void {
-		this.onTogglePostFormStatus(false);
+	onSubmitCropper(file: File): void {
+		this.postForm.disable();
 
-		this.postForm.get('image').setValue(fileUrl);
+		// TODO: update
+
+		const postImage: string | null = this.post?.image;
+
+		this.fileService.create(file, '/upload/post-images').subscribe({
+			next: (fileUrl: string) => {
+				this.postForm.get('image').setValue(fileUrl);
+
+				/** Silent deleting */
+
+				if (postImage) {
+					this.fileService.delete(postImage).subscribe({
+						next: () => console.debug('File removed'),
+						error: (error: any) => console.error(error)
+					});
+				}
+
+				/** Enable */
+
+				this.postForm.enable();
+			},
+			error: () => this.postForm.enable()
+		});
 	}
 }

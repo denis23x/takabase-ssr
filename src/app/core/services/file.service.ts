@@ -6,6 +6,7 @@ import { ApiService } from './api.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+import { HelperService } from './helper.service';
 import mime from 'mime';
 
 @Injectable({
@@ -14,6 +15,7 @@ import mime from 'mime';
 export class FileService {
 	constructor(
 		private apiService: ApiService,
+		private helperService: HelperService,
 		private angularFireStorage: AngularFireStorage
 	) {}
 
@@ -28,6 +30,15 @@ export class FileService {
 		});
 	}
 
+	getFileName(file: File): string {
+		const fileDate: number = Date.now();
+		const fileUUID: string = this.helperService.getUUID();
+		const fileExtension: string = mime.getExtension(file.type);
+		const fileName: string = [fileDate, fileUUID].join('-');
+
+		return fileName + '.' + fileExtension;
+	}
+
 	getFileValidationMime(file: File, mimeTypes: string[]): boolean {
 		return mimeTypes.includes(file.type);
 	}
@@ -38,7 +49,10 @@ export class FileService {
 
 	/** REST */
 
-	create(file: File, filePath: string): Observable<string> {
+	create(file: File, path: string): Observable<string> {
+		const fileName: string = this.getFileName(file);
+		const filePath: string = [path, fileName].join('/');
+
 		return from(this.angularFireStorage.upload(filePath, file)).pipe(
 			switchMap(() => {
 				return this.angularFireStorage.ref(filePath).updateMetadata({

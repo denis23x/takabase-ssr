@@ -11,9 +11,7 @@ import { IPAOperation } from '../dto/ipa/ipa-operation.dto';
 import { FileService } from './file.service';
 import { PlatformService } from './platform.service';
 import { DOCUMENT } from '@angular/common';
-import { HelperService } from './helper.service';
 import firebase from 'firebase/compat';
-import mime from 'mime';
 
 @Injectable({
 	providedIn: 'root'
@@ -25,7 +23,6 @@ export class IPAService {
 		private apiService: ApiService,
 		private httpClient: HttpClient,
 		private fileService: FileService,
-		private helperService: HelperService,
 		private platformService: PlatformService,
 		private angularFireStorage: AngularFireStorage
 	) {}
@@ -134,16 +131,10 @@ export class IPAService {
 	createTempImage(fileAlpha: File): Observable<string> {
 		// prettier-ignore
 		const ipaStorageBucket: firebase.storage.Storage = this.angularFireStorage.storage.app.storage(environment.ipaStorageBucket);
+		const ipaStorageBucketFileName: string = this.fileService.getFileName(fileAlpha);
 
-		/** Unique fileName */
-
-		const fileDate: number = Date.now();
-		const fileUUID: string = this.helperService.getUUID();
-		const fileExtension: string = mime.getExtension(fileAlpha.type);
-		const filePath: string = [[fileDate, fileUUID].join('-'), fileExtension].join('.');
-
-		return from(ipaStorageBucket.ref(filePath).put(fileAlpha)).pipe(
-			switchMap(() => of(ipaStorageBucket.ref(filePath).fullPath)),
+		return from(ipaStorageBucket.ref(ipaStorageBucketFileName).put(fileAlpha)).pipe(
+			switchMap(() => of(ipaStorageBucket.ref(ipaStorageBucketFileName).fullPath)),
 			catchError((httpError: any) => this.apiService.setError(httpError, 'Unable to upload image'))
 		);
 	}
