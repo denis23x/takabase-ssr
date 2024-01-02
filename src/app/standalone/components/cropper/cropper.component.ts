@@ -152,6 +152,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	cropperFormToggle: string | undefined;
 	cropperFile: File = undefined;
 	cropperBlob: Blob = undefined;
+	cropperObjectUrl: string = undefined;
 	cropperMoveImage: boolean = false;
 	cropperDialogToggle: boolean = false;
 	cropperIsReady: boolean = false;
@@ -175,7 +176,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	ipaOperationParams: IPAOperation[] = [
 		{
 			operation: 'output',
-			format: 'webp'
+			format: 'png'
 		}
 	];
 
@@ -362,7 +363,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			this.imageForm.disable();
 
 			this.ipaOperationRequest$?.unsubscribe();
-			this.ipaOperationRequest$ = this.ipaService.getOneViaProxy(inputEventUrl).subscribe({
+			this.ipaOperationRequest$ = this.ipaService.getOneTempImageViaProxy(inputEventUrl).subscribe({
 				next: (file: File) => this.onSetFile(file),
 				error: () => this.imageForm.enable()
 			});
@@ -405,9 +406,9 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			/** Upload Temp */
 
 			this.imageFormRequest$?.unsubscribe();
-			this.imageFormRequest$ = from(this.ipaService.setImageAlphaMime(file))
+			this.imageFormRequest$ = from(this.ipaService.setImagePngMime(file))
 				.pipe(
-					switchMap((fileAlphaMime: File) => this.ipaService.create(fileAlphaMime)),
+					switchMap((fileAlpha: File) => this.ipaService.createTempImage(fileAlpha)),
 					switchMap((fileSourcePath: string) => {
 						this.ipaOperationParams.unshift({
 							operation: 'input',
@@ -415,7 +416,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 							source: fileSourcePath
 						});
 
-						return from(this.ipaService.setImageAlphaExtendOperation(file));
+						return from(this.ipaService.setImagePngExtendOperation(file));
 					})
 				)
 				.subscribe({
@@ -458,7 +459,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		this.ipaOperationRequest$?.unsubscribe();
 		this.ipaOperationRequest$ = this.ipaService
-			.getOneViaGCS(this.ipaOperationParams)
+			.getOneTempImageViaGCS(this.ipaOperationParams)
 			.pipe(tap((file: File) => (this.cropperFile = file)))
 			.subscribe({
 				next: () => {
@@ -507,6 +508,10 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		// Always set cropper previous state (when use IPA we got new file so should restore cropperPosition)
 
 		this.cropperPositionPrevious = imageCroppedEvent.cropperPosition;
+
+		// Debug
+
+		this.cropperObjectUrl = imageCroppedEvent.objectUrl;
 	}
 
 	onCropperFormToggle(cropperFormToggle: string): void {
@@ -599,18 +604,34 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	onSubmitCropper(): void {
 		// prettier-ignore
-		const fileCropped: File = this.fileService.getFileFromBlob(this.cropperBlob, this.cropperFile.name);
+		const fileAlpha: File = this.fileService.getFileFromBlob(this.cropperBlob);
 
-		console.log(fileCropped);
+		this.ipaOperationRequestIsBusy = true;
 
-		// this.appCropperSubmit.emit(fileUrl);
-		// this.onToggleCropper(false);
-		// 		// Remove previous image
-		// 		if (this.cropperRemovePath) {
-		// 			this.fileService.delete(this.cropperRemovePath).subscribe({
-		// 				next: () => console.debug('File removed'),
-		// 				error: (error: any) => console.error(error)
-		// 			});
-		// 		}
+		this.ipaService.createTempImage(fileAlpha).subscribe({
+			next: (fileUrl: string) => {
+				const ipaOperationParams: IPAOperation[] = [
+					{
+						operation: 'input',
+						type: 'gcs',
+						source: fileUrl
+					},
+					{
+						operation: 'output',
+						format: 'webp'
+					}
+				];
+
+				this.ipaService.getOneTempImageViaGCS(ipaOperationParams).subscribe({
+					next: (file: File) => {
+						this.appCropperSubmit.emit(fileUrl);
+
+						this.onToggleCropper(false);
+					},
+					error: (error: any) => console.error(error)
+				});
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 }

@@ -51,6 +51,7 @@
     "markdown-it-smartarrows": "^1.0.1",
     "markdown-it-tasks": "^0.0.5",
     "markdown-it-video": "^0.6.3",
+    "mime": "^4.0.1",
     "morphdom": "^2.7.0",
     "ngx-image-cropper": "^7.1.2",
     "prism-themes": "^1.9.0",

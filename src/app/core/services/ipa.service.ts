@@ -13,6 +13,7 @@ import { PlatformService } from './platform.service';
 import { DOCUMENT } from '@angular/common';
 import { HelperService } from './helper.service';
 import firebase from 'firebase/compat';
+import mime from 'mime';
 
 @Injectable({
 	providedIn: 'root'
@@ -39,7 +40,9 @@ export class IPAService {
 		return encodeURIComponent(JSON.stringify(IPAOperationParams));
 	}
 
-	setImageAlphaMime(file: File): Promise<File> {
+	/** PNG type handler */
+
+	setImagePngMime(file: File): Promise<File> {
 		return new Promise((resolve, reject): void => {
 			if (this.platformService.isBrowser()) {
 				const alphaMime: string[] = ['image/png', 'image/webp'];
@@ -67,10 +70,7 @@ export class IPAService {
 						/** Replace File extension */
 
 						// prettier-ignore
-						const fileName: string = file.name.replace(this.helperService.getRegex('extension'), '.png');
-
-						// prettier-ignore
-						canvasElement.toBlob((blob: Blob) => resolve(this.fileService.getFileFromBlob(blob, fileName)), 'image/png', 1);
+						canvasElement.toBlob((blob: Blob) => resolve(this.fileService.getFileFromBlob(blob)), 'image/png', 1);
 					};
 
 					imageElement.src = imageElementUrl;
@@ -79,7 +79,7 @@ export class IPAService {
 		});
 	}
 
-	setImageAlphaExtendOperation(file: File): Promise<IPAOperation | null> {
+	setImagePngExtendOperation(file: File): Promise<IPAOperation | null> {
 		return new Promise((resolve, reject): void => {
 			const fileReader: FileReader = new FileReader();
 
@@ -129,26 +129,26 @@ export class IPAService {
 		});
 	}
 
-	/** REST */
+	/** IPA function */
 
-	// prettier-ignore
-	create(fileAlphaMime: File): Observable<string> {
+	createTempImage(fileAlpha: File): Observable<string> {
+		// prettier-ignore
 		const ipaStorageBucket: firebase.storage.Storage = this.angularFireStorage.storage.app.storage(environment.ipaStorageBucket);
+
+		/** Unique fileName */
 
 		const fileDate: number = Date.now();
 		const fileUUID: string = this.helperService.getUUID();
-    const fileExtension: string = fileAlphaMime.name.match(this.helperService.getRegex('extension')).pop();
-		const filePath: string = [fileDate, fileUUID].join('-') + fileExtension;
+		const fileExtension: string = mime.getExtension(fileAlpha.type);
+		const filePath: string = [[fileDate, fileUUID].join('-'), fileExtension].join('.');
 
-		return from(ipaStorageBucket.ref(filePath).put(fileAlphaMime)).pipe(
+		return from(ipaStorageBucket.ref(filePath).put(fileAlpha)).pipe(
 			switchMap(() => of(ipaStorageBucket.ref(filePath).fullPath)),
-			catchError((httpError: any) => {
-				return this.apiService.setError(httpError, 'Unable to upload image');
-			})
+			catchError((httpError: any) => this.apiService.setError(httpError, 'Unable to upload image'))
 		);
 	}
 
-	getOneViaProxy(url: string): Observable<File> {
+	getOneTempImageViaProxy(url: string): Observable<File> {
 		const ipaOperationParams: IPAOperation[] = [
 			{
 				operation: 'input',
@@ -157,45 +157,30 @@ export class IPAService {
 			},
 			{
 				operation: 'output',
-				format: 'webp'
+				format: 'png'
 			}
 		];
 
+		// prettier-ignore
 		return this.httpClient
 			.get(environment.ipaUrl.concat(this.getParams(ipaOperationParams)), {
 				responseType: 'blob'
 			})
 			.pipe(
-				map((blob: Blob) => {
-					const fileName: string = url
-						.trim()
-						.split('/')
-						.pop()
-						.replace(this.helperService.getRegex('extension'), '.webp');
-
-					return this.fileService.getFileFromBlob(blob, fileName);
-				}),
-				catchError((httpError: any) => {
-					// prettier-ignore
-					return this.apiService.setError(httpError, 'The file returned from url does not seem to be a valid image type');
-				})
+				map((blob: Blob) => this.fileService.getFileFromBlob(blob)),
+				catchError((httpError: any) => this.apiService.setError(httpError, 'The file returned from url does not seem to be a valid image type'))
 			);
 	}
 
-	getOneViaGCS(ipaOperationParams: IPAOperation[]): Observable<File> {
+	getOneTempImageViaGCS(ipaOperationParams: IPAOperation[]): Observable<File> {
+		// prettier-ignore
 		return this.httpClient
 			.get(environment.ipaUrl.concat(this.getParams(ipaOperationParams)), {
 				responseType: 'blob'
 			})
 			.pipe(
-				map((blob: Blob) => {
-					const fileInput: IPAOperation = ipaOperationParams[0];
-
-					return this.fileService.getFileFromBlob(blob, fileInput.source);
-				}),
-				catchError((httpError: any) => {
-					return this.apiService.setError(httpError, 'Oops! Something went wrong');
-				})
+				map((blob: Blob) => this.fileService.getFileFromBlob(blob)),
+				catchError((httpError: any) => this.apiService.setError(httpError, 'Oops! Something went wrong'))
 			);
 	}
 }

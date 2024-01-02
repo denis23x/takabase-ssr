@@ -6,6 +6,7 @@ import { ApiService } from './api.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+import mime from 'mime';
 
 @Injectable({
 	providedIn: 'root'
@@ -18,8 +19,11 @@ export class FileService {
 
 	/** Utility */
 
-	getFileFromBlob(blob: Blob, fileName: string): File {
-		return new File([blob], fileName, {
+	getFileFromBlob(blob: Blob): File {
+		const fileName: string = 'image';
+		const fileExtension: string = mime.getExtension(blob.type);
+
+		return new File([blob], [fileName, fileExtension].join('.'), {
 			type: blob.type
 		});
 	}
