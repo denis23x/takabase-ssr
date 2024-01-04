@@ -33,6 +33,7 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild('postDeleteDialogElement') postDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
+	@Output() appPostDeleteSubmit: EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() appPostDeleteToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input({ required: true })
@@ -91,7 +92,7 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 			next: (post: Post) => {
 				if (post.image) {
 					this.fileService.delete(post.image).subscribe({
-						next: () => console.debug('Image deleted'),
+						next: () => console.debug('File erased'),
 						error: (error: any) => console.error(error)
 					});
 				}

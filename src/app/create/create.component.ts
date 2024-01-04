@@ -37,13 +37,14 @@ import { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
 import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
 import { AppSkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
-import { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
 import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
 import { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
 import { PlatformService } from '../core/services/platform.service';
 import { FileService } from '../core/services/file.service';
 import { PostUpdateDto } from '../core/dto/post/post-update.dto';
+import { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
+import { PostDeleteImageComponent } from '../standalone/components/post/delete-image/delete-image.component';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -56,7 +57,7 @@ interface PostForm {
 
 @Component({
 	standalone: true,
-	selector: 'app-markdown',
+	selector: 'app-create',
 	imports: [
 		CommonModule,
 		RouterModule,
@@ -71,6 +72,7 @@ interface PostForm {
 		AppTextareaAutosizeDirective,
 		AppSkeletonDirective,
 		PostDeleteComponent,
+		PostDeleteImageComponent,
 		CategoryCreateComponent,
 		CategoryUpdateComponent,
 		PostPreviewComponent
@@ -94,6 +96,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	post: Post | undefined;
 	postRequest$: Subscription | undefined;
 	postSkeletonToggle: boolean = true;
+	postSkeletonImageToggle: boolean = false;
 
 	postForm: FormGroup | undefined;
 	postFormRequest$: Subscription | undefined;
@@ -361,61 +364,53 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	/** Image Cropper */
 
-	onDeleteCropperImage(): void {
-		const abstractControl: AbstractControl = this.postForm.get('image');
-		const abstractControlValue: string | null = abstractControl.value;
-
-		/** Enable skeleton */
-
-		abstractControl.setValue('', { emitEvent: false });
-
-		/** Update post */
-
+	onUpdateCropperImage(image: string | null): void {
 		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 		const postUpdateDto: PostUpdateDto = {
-			image: null
+			image
 		};
 
 		if (postId) {
+			this.postSkeletonImageToggle = true;
+
 			this.postFormRequest$?.unsubscribe();
 			this.postFormRequest$ = this.postService.update(postId, postUpdateDto).subscribe({
-				next: () => this.snackbarService.success('Okay..', 'Image removed'),
-				error: (error: any) => console.error(error)
+				next: () => {
+					this.postSkeletonImageToggle = false;
+
+					this.snackbarService.success(null, 'Post has been updated');
+				},
+				error: () => (this.postSkeletonImageToggle = false)
 			});
+		} else {
+			this.postSkeletonImageToggle = false;
 		}
 
-		/** Delete file */
+		/** Update postForm image */
 
-		if (abstractControlValue) {
-			this.fileService.delete(abstractControlValue).subscribe({
-				next: () => abstractControl.reset(null, { emitEvent: false }),
-				error: () => abstractControl.reset(null, { emitEvent: false })
-			});
-		}
+		this.postForm.get('image').setValue(image, { emitEvent: false });
 	}
 
 	onSubmitCropperImage(file: File): void {
 		const abstractControl: AbstractControl = this.postForm.get('image');
-		const abstractControlValue: string | null = abstractControl.value;
+		const abstractControlPreviousValue: string | null = abstractControl.value;
 
-		/** Enable skeleton */
-
-		abstractControl.setValue('');
+		this.postSkeletonImageToggle = true;
 
 		this.fileService.create(file, '/upload/post-images').subscribe({
 			next: (fileUrl: string) => {
-				abstractControl.setValue(fileUrl);
+				this.onUpdateCropperImage(fileUrl);
 
-				/** Silent deleting previous image */
+				/** Silent deleting image */
 
-				if (abstractControlValue) {
-					this.fileService.delete(abstractControlValue).subscribe({
+				if (abstractControlPreviousValue) {
+					this.fileService.delete(abstractControlPreviousValue).subscribe({
 						next: () => console.debug('File erased'),
 						error: (error: any) => console.error(error)
 					});
 				}
 			},
-			error: () => abstractControl.reset()
+			error: () => (this.postSkeletonImageToggle = false)
 		});
 	}
 

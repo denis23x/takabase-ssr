@@ -11,7 +11,7 @@
 					class="block rounded-btn relative aspect-square border border-base-content/20 group h-20 w-20 sm:h-44 sm:w-44"
 					appSkeleton
 					*ngIf="postForm.get('image') as image"
-					[appSkeletonToggle]="postSkeletonToggle || image.value === ''"
+					[appSkeletonToggle]="postSkeletonToggle || postSkeletonImageToggle"
 					[appSkeletonClassListElementRef]="['border-0']"
 					[ngClass]="{ 'cursor-not-allowed border-transparent bg-base-200': postForm.disabled, 'border-success': postForm.enabled && image.value }"
 				>
@@ -40,7 +40,7 @@
 							[appSvgIconIcon]="'x'"
 							[appSvgIconSquare]="'2em'"
 							[disabled]="postForm.disabled"
-							(click)="onDeleteCropperImage()"
+							(click)="appPostDeleteImageComponent.onTogglePostDeleteImageDialog(true)"
 						></button>
 						<button
 							class="btn btn-md btn-ghost btn-circle fill-current no-animation"
@@ -74,7 +74,7 @@
 				</div>
 			</div>
 			<form
-				class="grid flex-1 grid-cols-12 gap-x-4 gap-y-2.5"
+				class="grid flex-1 grid-cols-12 gap-x-4 gap-y-2"
 				autocomplete="off"
 				[formGroup]="postForm"
 			>
@@ -494,6 +494,7 @@
 				>
 					Preview
 				</button>
+				<!-- prettier-ignore -->
 				<button
 					class="btn btn-success col-span-8 sm:col-span-9"
 					type="button"
@@ -501,13 +502,12 @@
 					appSkeleton
 					[appSkeletonToggle]="postSkeletonToggle"
 					[appSkeletonClassListElementRef]="['border-0']"
-					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine"
+					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine || postSkeletonImageToggle"
 					(click)="onSubmitPostForm()"
 				>
-					<!-- prettier-ignore -->
 					<span
             class="loading loading-spinner"
-            *ngIf="postForm.disabled && !appCropperComponent.cropperDialogToggle && !appCategoryCreateComponent.categoryCreateDialogToggle && !appPostPreviewComponent.postPreviewDialogToggle && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownDialogToggle"
+            *ngIf="postForm.disabled && !appCropperComponent.cropperDialogToggle && !appCategoryCreateComponent.categoryCreateDialogToggle && !appPostPreviewComponent.postPreviewDialogToggle && !appPostDeleteComponent.postDeleteDialogToggle && !appPostDeleteImageComponent.postDeleteImageDialogToggle && !postMarkdownDialogToggle"
           ></span>
 					Submit
 				</button>
@@ -559,5 +559,12 @@
 		#appPostDeleteComponent
 		[appPostDeletePost]="post"
 		(appPostDeleteToggle)="onTogglePostFormStatus($event)"
+	></div>
+	<div
+		appPostDeleteImage
+		#appPostDeleteImageComponent
+		[appPostDeleteImage]="postForm.value.image"
+		(appPostDeleteImageSubmit)="onUpdateCropperImage(null)"
+		(appPostDeleteImageToggle)="onTogglePostFormStatus($event)"
 	></div>
 </ng-container>
