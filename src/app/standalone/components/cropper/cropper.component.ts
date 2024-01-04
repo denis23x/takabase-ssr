@@ -6,6 +6,7 @@ import {
 	computed,
 	ElementRef,
 	EventEmitter,
+	Inject,
 	OnDestroy,
 	Output,
 	Signal,
@@ -19,7 +20,7 @@ import {
 } from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
-import { from, Subscription, switchMap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import {
 	FormBuilder,
 	FormControl,
@@ -28,7 +29,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { HelperService } from '../../../core/services/helper.service';
 import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
@@ -38,32 +39,19 @@ import { WindowComponent } from '../window/window.component';
 import { AppPlatformDirective } from '../../directives/app-platform.directive';
 import { PlatformService } from '../../../core/services/platform.service';
 import { MarkdownService } from '../../../core/services/markdown.service';
-import { debounceTime, filter, map, tap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { DropdownComponent } from '../dropdown/dropdown.component';
-import { IPAOperation } from '../../../core/dto/ipa/ipa-operation.dto';
 import { IPAService } from '../../../core/services/ipa.service';
 import { FileService } from '../../../core/services/file.service';
+import { IPAOperation } from '../../../core/dto/ipa/ipa-operation.dto';
 
 interface ImageForm {
 	url: FormControl<string>;
 }
 
-interface ImageFormRotate {
+interface CropperImageForm {
 	rotate: FormControl<number>;
-}
-
-interface ImageFormScale {
 	scale: FormControl<number>;
-}
-
-interface IPAFormModulate {
-	brightness: FormControl<number>;
-	saturation: FormControl<number>;
-	hue: FormControl<number>;
-}
-
-interface IPAFormBlur {
-	sigma: FormControl<number>;
 }
 
 @Component({
@@ -85,7 +73,7 @@ interface IPAFormBlur {
 })
 export class CropperComponent implements AfterViewInit, OnDestroy {
 	// prettier-ignore
-	@ViewChild("cropperDialogElement") cropperDialogElement: | ElementRef<HTMLDialogElement> | undefined
+	@ViewChild("cropperDialogElement") cropperDialogElement: | ElementRef<HTMLDialogElement> | undefined;
 
 	@ViewChild('imageFormFile') imageFormFile: ElementRef<HTMLInputElement> | undefined;
 
@@ -106,22 +94,11 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		return imageFormMime.join(', ');
 	});
 
-	imageFormRotate: FormGroup | undefined;
-	imageFormRotate$: Subscription | undefined;
-
-	imageFormScale: FormGroup | undefined;
-	imageFormScale$: Subscription | undefined;
+	cropperImageForm: FormGroup | undefined;
+	cropperImageForm$: Subscription | undefined;
+	cropperImageFormToggle: boolean = false;
 
 	cropperImageTransform$: Subscription | undefined;
-	cropperImageTransformInitial: ImageTransform = {
-		translateUnit: 'px',
-		scale: 1,
-		rotate: 0,
-		flipH: false,
-		flipV: false,
-		translateH: 0,
-		translateV: 0
-	};
 	cropperImageTransform: ImageTransform = {
 		translateUnit: 'px',
 		scale: 1,
@@ -135,15 +112,12 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	cropperAspectRatio: number = 1;
 	cropperAspectRatioList: string[] = ['1:1', '4:3', '16:9'];
 
-	cropperFormToggle: string | undefined;
 	cropperFile: File = undefined;
 	cropperBlob: Blob = undefined;
-	cropperObjectUrl: string = undefined;
 	cropperMoveImage: boolean = false;
 	cropperDialogToggle: boolean = false;
 	cropperIsReady: boolean = false;
-
-	cropperPositionPrevious: CropperPosition = undefined;
+	cropperDimensions: Dimensions = undefined;
 	cropperPosition: CropperPosition = {
 		x1: 0,
 		y1: 0,
@@ -151,22 +125,12 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		y2: 0
 	};
 
-	ipaFormModulate: FormGroup | undefined;
-	ipaFormModulate$: Subscription | undefined;
-
-	ipaFormBlur: FormGroup | undefined;
-	ipaFormBlur$: Subscription | undefined;
-
-	ipaOperationRequestIsBusy: boolean = false;
 	ipaOperationRequest$: Subscription | undefined;
-	ipaOperationParams: IPAOperation[] = [
-		{
-			operation: 'output',
-			format: 'png'
-		}
-	];
+	ipaOperationRequestIsBusy: boolean = false;
 
 	constructor(
+		@Inject(DOCUMENT)
+		private document: Document,
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
 		private fileService: FileService,
@@ -180,42 +144,16 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 				Validators.pattern(this.helperService.getRegex('url'))
 			])
 		});
-		this.imageFormRotate = this.formBuilder.group<ImageFormRotate>({
+		this.cropperImageForm = this.formBuilder.group<CropperImageForm>({
 			rotate: this.formBuilder.nonNullable.control(0, [
 				Validators.required,
 				Validators.min(0),
 				Validators.max(360)
-			])
-		});
-		this.imageFormScale = this.formBuilder.group<ImageFormScale>({
+			]),
 			scale: this.formBuilder.nonNullable.control(1, [
 				Validators.required,
 				Validators.min(1),
 				Validators.max(5)
-			])
-		});
-		this.ipaFormModulate = this.formBuilder.group<IPAFormModulate>({
-			brightness: this.formBuilder.nonNullable.control(1, [
-				Validators.required,
-				Validators.min(0),
-				Validators.max(5)
-			]),
-			saturation: this.formBuilder.nonNullable.control(1, [
-				Validators.required,
-				Validators.min(0),
-				Validators.max(5)
-			]),
-			hue: this.formBuilder.nonNullable.control(0, [
-				Validators.required,
-				Validators.min(0),
-				Validators.max(360)
-			])
-		});
-		this.ipaFormBlur = this.formBuilder.group<IPAFormBlur>({
-			sigma: this.formBuilder.nonNullable.control(0, [
-				Validators.required,
-				Validators.min(0),
-				Validators.max(10)
 			])
 		});
 	}
@@ -244,57 +182,11 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 			/** Listen imageForm changes */
 
-			this.imageFormRotate$?.unsubscribe();
-			this.imageFormRotate$ = this.imageFormRotate.valueChanges
-				.pipe(filter(() => this.imageFormRotate.valid))
+			this.cropperImageForm$?.unsubscribe();
+			this.cropperImageForm$ = this.cropperImageForm.valueChanges
+				.pipe(filter(() => this.cropperImageForm.valid))
 				.subscribe({
 					next: (value: any) => this.setCropperImageTransform(value),
-					error: (error: any) => console.error(error)
-				});
-
-			this.imageFormScale$?.unsubscribe();
-			this.imageFormScale$ = this.imageFormScale.valueChanges
-				.pipe(filter(() => this.imageFormScale.valid))
-				.subscribe({
-					next: (value: any) => this.setCropperImageTransform(value),
-					error: (error: any) => console.error(error)
-				});
-
-			/** Listen ipaForm changes */
-
-			this.ipaFormModulate$?.unsubscribe();
-			this.ipaFormModulate$ = this.ipaFormModulate.valueChanges
-				.pipe(
-					debounceTime(500),
-					filter(() => this.ipaFormModulate.valid)
-				)
-				.subscribe({
-					next: (value: any) => {
-						this.setIPAOperationsParams({
-							operation: 'modulate',
-							...value
-						});
-
-						this.getIPAUpdate();
-					},
-					error: (error: any) => console.error(error)
-				});
-
-			this.ipaFormBlur$?.unsubscribe();
-			this.ipaFormBlur$ = this.ipaFormBlur.valueChanges
-				.pipe(
-					debounceTime(500),
-					filter(() => this.ipaFormBlur.valid)
-				)
-				.subscribe({
-					next: (value: any) => {
-						this.setIPAOperationsParams({
-							operation: 'blur',
-							sigma: value.sigma === 0 ? 0.3 : value.sigma
-						});
-
-						this.getIPAUpdate();
-					},
 					error: (error: any) => console.error(error)
 				});
 		}
@@ -303,13 +195,10 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	ngOnDestroy(): void {
 		[
 			this.imageFormRequest$,
-			this.imageFormRotate$,
-			this.imageFormScale$,
+			this.cropperImageForm$,
 			this.cropperImageTransform$,
 			this.imageFormMarkdownItClipboard$,
-			this.ipaOperationRequest$,
-			this.ipaFormModulate$,
-			this.ipaFormBlur$
+			this.ipaOperationRequest$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -318,10 +207,10 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	// prettier-ignore
 	onGetFileFromDeviceClipboard(clipboardEventInit: ClipboardEventInit, toggleCropper: boolean = false): void {
     const clipboardFileList: FileList = clipboardEventInit.clipboardData.files
-    const clipboardFile: File | null = this.onGetFile(clipboardFileList)
+    const clipboardFile: File | null = this.getFile(clipboardFileList)
 
     if (clipboardFile) {
-      this.onSetFile(clipboardFile)
+      this.setFile(clipboardFile)
 
       // Show dialog
 
@@ -334,10 +223,10 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	onGetFileFromDevice(event: Event): void {
 		const inputElement: HTMLInputElement = event.target as HTMLInputElement;
 		const inputElementFileList: FileList = inputElement.files;
-		const inputElementFile: File | null = this.onGetFile(inputElementFileList);
+		const inputElementFile: File | null = this.getFile(inputElementFileList);
 
 		if (inputElementFile) {
-			this.onSetFile(inputElementFile);
+			this.setFile(inputElementFile);
 		}
 	}
 
@@ -348,15 +237,15 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.imageForm) && inputEventUrl) {
 			this.imageForm.disable();
 
-			this.ipaOperationRequest$?.unsubscribe();
-			this.ipaOperationRequest$ = this.ipaService.getOneTempImageViaProxy(inputEventUrl).subscribe({
-				next: (file: File) => this.onSetFile(file),
+			this.imageFormRequest$?.unsubscribe();
+			this.imageFormRequest$ = this.ipaService.getOneViaProxy(inputEventUrl).subscribe({
+				next: (file: File) => this.setFile(file),
 				error: () => this.imageForm.enable()
 			});
 		}
 	}
 
-	onGetFile(fileList: FileList): File | null {
+	getFile(fileList: FileList): File | null {
 		if (fileList.length) {
 			const file: File | null = fileList.item(0);
 
@@ -370,7 +259,49 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		return null;
 	}
 
-	onGetFileValidation(file: File): boolean {
+	getFileAcceptable(file: File): Promise<File> {
+		const requiredSize: number = 512;
+		const requiredType: string = 'image/png';
+
+		return new Promise((resolve, reject): void => {
+			const fileReader: FileReader = new FileReader();
+
+			fileReader.onerror = (progressEvent: ProgressEvent<FileReader>) => reject(progressEvent);
+			fileReader.onload = (progressEvent: ProgressEvent<FileReader>) => {
+				const imageElement: HTMLImageElement = new Image();
+
+				imageElement.onerror = (event: string | Event) => reject(event);
+				imageElement.onload = (event: any): void => {
+					const width: number = event.target.width;
+					const height: number = event.target.height;
+
+					if (width < requiredSize || height < requiredSize) {
+						const canvasElement: HTMLCanvasElement = this.document.createElement('canvas');
+						const canvasElementContext: CanvasRenderingContext2D = canvasElement.getContext('2d');
+
+						canvasElement.width = requiredSize;
+						canvasElement.height = requiredSize;
+
+						const dx: number = Math.floor((canvasElement.width - width) / 2);
+						const dy: number = Math.floor((canvasElement.height - height) / 2);
+
+						canvasElementContext.drawImage(event.target, dx, dy, width, height);
+
+						// prettier-ignore
+						canvasElement.toBlob((blob: Blob) => resolve(this.fileService.getFileFromBlob(blob)), requiredType, 1);
+					} else {
+						resolve(file);
+					}
+				};
+
+				imageElement.src = String(progressEvent.target.result);
+			};
+
+			fileReader.readAsDataURL(file);
+		});
+	}
+
+	getFileValidation(file: File): boolean {
 		if (this.fileService.getFileValidationMime(file, this.imageFormMime)) {
 			if (this.fileService.getFileValidationSize(file, 5)) {
 				return true;
@@ -384,104 +315,22 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		return false;
 	}
 
-	onSetFile(file: File): void {
-		if (this.onGetFileValidation(file)) {
+	setFile(file: File): void {
+		if (this.getFileValidation(file)) {
 			this.imageForm.disable();
-			this.ipaOperationRequestIsBusy = true;
 
-			/** Upload Temp */
-
-			this.imageFormRequest$?.unsubscribe();
-			this.imageFormRequest$ = from(this.ipaService.setImagePngMime(file))
-				.pipe(
-					switchMap((fileAlpha: File) => this.ipaService.createTempImage(fileAlpha)),
-					switchMap((fileSourcePath: string) => {
-						this.ipaOperationParams.unshift({
-							operation: 'input',
-							type: 'gcs',
-							source: fileSourcePath
-						});
-
-						return from(this.ipaService.setImagePngExtendOperation(file));
-					})
-				)
-				.subscribe({
-					next: (ipaOperation: IPAOperation | null) => {
-						if (ipaOperation) {
-							this.setIPAOperationsParams(ipaOperation);
-						}
-
-						this.imageForm.disable();
-						this.ipaOperationRequestIsBusy = true;
-
-						this.getIPAUpdate();
-					},
-					error: () => {
-						this.imageForm.enable();
-						this.ipaOperationRequestIsBusy = false;
-					}
-				});
+			this.getFileAcceptable(file)
+				.then((fileAcceptable: File) => (this.cropperFile = fileAcceptable))
+				.then(() => this.imageForm.enable())
+				.catch(() => this.imageForm.enable());
 		}
-	}
-
-	/** Image Processing API */
-
-	setIPAOperationsParams(ipaOperation: IPAOperation): void {
-		// prettier-ignore
-		const operationIndex: number = this.ipaOperationParams.findIndex((ipaOperationExisting: IPAOperation) => {
-      return ipaOperationExisting.operation === ipaOperation.operation;
-    });
-
-		if (operationIndex === -1) {
-			this.ipaOperationParams.splice(this.ipaOperationParams.length - 1, 0, ipaOperation);
-		} else {
-			this.ipaOperationParams[operationIndex] = ipaOperation;
-		}
-	}
-
-	getIPAUpdate(callback: () => any = () => console.debug('IPA Updated')): void {
-		this.imageForm.disable();
-		this.ipaOperationRequestIsBusy = true;
-
-		this.ipaOperationRequest$?.unsubscribe();
-		this.ipaOperationRequest$ = this.ipaService
-			.getOneTempImageViaGCS(this.ipaOperationParams)
-			.pipe(tap((file: File) => (this.cropperFile = file)))
-			.subscribe({
-				next: () => {
-					this.imageForm.enable();
-					this.ipaOperationRequestIsBusy = false;
-
-					callback();
-				},
-				error: () => {
-					this.imageForm.enable();
-					this.ipaOperationRequestIsBusy = false;
-
-					callback();
-				}
-			});
 	}
 
 	/** Cropper */
 
 	onCropperReady(dimensions: Dimensions): void {
 		this.cropperIsReady = true;
-
-		// Handle cropperPosition
-
-		if (this.cropperPositionPrevious) {
-			this.cropperPosition = {
-				...this.cropperPositionPrevious
-			};
-		} else {
-			this.cropperPosition = {
-				x1: 0,
-				y1: 0,
-				x2: dimensions.width,
-				y2: dimensions.height
-			};
-		}
+		this.cropperDimensions = dimensions;
 	}
 
 	onCropperFailed(): void {
@@ -490,50 +339,34 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	onCropperCropped(imageCroppedEvent: ImageCroppedEvent): void {
 		this.cropperBlob = imageCroppedEvent.blob;
-
-		// Always set cropper previous state (when use IPA we got new file so should restore cropperPosition)
-
-		this.cropperPositionPrevious = imageCroppedEvent.cropperPosition;
-
-		// Debug
-
-		this.cropperObjectUrl = imageCroppedEvent.objectUrl;
-	}
-
-	onCropperFormToggle(cropperFormToggle: string): void {
-		if (this.cropperFormToggle === cropperFormToggle) {
-			this.cropperFormToggle = undefined;
-		} else {
-			this.cropperFormToggle = cropperFormToggle;
-		}
 	}
 
 	onCropperReset(): void {
-		const ipaOperationList: string[] = ['input', 'extend', 'output'];
+		this.cropperImageTransform = {
+			translateUnit: 'px',
+			scale: 1,
+			rotate: 0,
+			flipH: false,
+			flipV: false,
+			translateH: 0,
+			translateV: 0
+		};
 
-		this.ipaOperationParams = this.ipaOperationParams.filter((ipaOperation: IPAOperation) => {
-			return ipaOperationList.includes(ipaOperation.operation);
-		});
+		this.cropperPosition = {
+			x1: 0,
+			y1: 0,
+			x2: this.cropperDimensions.width,
+			y2: this.cropperDimensions.height
+		};
 
-		this.getIPAUpdate(() => {
-			this.cropperImageTransform = {
-				...this.cropperImageTransformInitial
-			};
+		this.cropperAspectRatio = 1;
+		this.cropperMoveImage = false;
+		this.cropperImageFormToggle = undefined;
 
-			this.cropperAspectRatio = 1;
-			this.cropperFormToggle = undefined;
-			this.cropperMoveImage = false;
-			this.cropperPositionPrevious = undefined;
+		/** Reset Forms */
 
-			/** Reset Forms */
-
-			[
-				this.imageForm,
-				this.imageFormRotate,
-				this.imageFormScale,
-				this.ipaFormModulate,
-				this.ipaFormBlur
-			].forEach((formGroup: FormGroup) => formGroup.reset({}, { emitEvent: false }));
+		[this.imageForm, this.cropperImageForm].forEach((formGroup: FormGroup) => {
+			formGroup.reset({}, { emitEvent: false });
 		});
 	}
 
@@ -567,7 +400,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	/** EVENTS */
 
 	onResetCropper(): void {
-		/** Transformations && IPA operations reset */
+		/** Transformations reset */
 
 		this.onCropperReset();
 
@@ -575,7 +408,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		this.cropperFile = undefined;
 		this.cropperBlob = undefined;
-		this.cropperObjectUrl = undefined;
 		this.cropperIsReady = false;
 
 		this.ipaOperationRequestIsBusy = false;
@@ -601,12 +433,11 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	onSubmitCropper(): void {
 		this.ipaOperationRequestIsBusy = true;
 
-		// prettier-ignore
-		const fileAlpha: File = this.fileService.getFileFromBlob(this.cropperBlob);
+		const file: File = this.fileService.getFileFromBlob(this.cropperBlob);
 
 		this.ipaOperationRequest$?.unsubscribe();
 		this.ipaOperationRequest$ = this.ipaService
-			.createTempImage(fileAlpha)
+			.create(file)
 			.pipe(
 				map((fileUrl: string) => {
 					const ipaOperationParams: IPAOperation[] = [
@@ -624,7 +455,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 					return ipaOperationParams;
 				}),
 				switchMap((ipaOperationParams: IPAOperation[]) => {
-					return this.ipaService.getOneTempImageViaGCS(ipaOperationParams);
+					return this.ipaService.getOneViaGCS(ipaOperationParams);
 				})
 			)
 			.subscribe({
