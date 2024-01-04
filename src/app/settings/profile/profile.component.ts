@@ -61,6 +61,7 @@ interface ProfileForm {
 export class SettingsProfileComponent implements OnInit, OnDestroy {
 	currentUser: CurrentUser | undefined;
 	currentUserSkeletonToggle: boolean = true;
+	currentUserSkeletonAvatarToggle: boolean = false;
 	currentUser$: Subscription | undefined;
 	currentUserRequest$: Subscription | undefined;
 
@@ -140,8 +141,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onDeleteAvatar(avatar: string): void {
-		this.profileForm.disable();
+	/** Avatar Cropper */
+
+	onDeleteCropperAvatar(avatar: string): void {
+		this.currentUserSkeletonAvatarToggle = true;
 
 		const userUpdateDto: UserUpdateDto = {
 			avatar: null
@@ -153,20 +156,22 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			.pipe(switchMap((user: User) => this.authorizationService.setCurrentUser(user)))
 			.subscribe({
 				next: () => {
+					this.snackbarService.success('Alright', 'Avatar has been removed');
+
+					/** Silent deleting avatar */
+
 					this.fileService.delete(avatar).subscribe({
 						next: () => console.debug('File erased'),
 						error: (error: any) => console.error(error)
 					});
 
-					this.snackbarService.success('Okay', 'Avatar has been removed');
-
-					this.profileForm.enable();
+					this.currentUserSkeletonAvatarToggle = false;
 				},
-				error: () => this.profileForm.enable()
+				error: () => (this.currentUserSkeletonAvatarToggle = false)
 			});
 	}
 
-	onToggleCropper(toggle: boolean): void {
+	onToggleCropperAvatar(toggle: boolean): void {
 		if (toggle) {
 			this.profileForm.disable();
 		} else {
@@ -174,12 +179,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	onSubmitCropper(file: File): void {
-		this.profileForm.disable();
+	onSubmitCropperAvatar(file: File): void {
+		const currentUserAvatarPrevious: string | null = this.currentUser.avatar;
 
-		// TODO: update
-
-		const currentUserAvatar: string | null = this.currentUser.avatar;
+		this.currentUserSkeletonAvatarToggle = true;
 
 		this.fileService.create(file, '/upload/user-avatars').subscribe({
 			next: (fileUrl: string) => {
@@ -195,25 +198,25 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 						next: () => {
 							this.snackbarService.success('Success', 'Avatar has been updated');
 
-							/** Silent deleting */
+							/** Silent deleting avatar */
 
-							if (currentUserAvatar) {
-								this.fileService.delete(currentUserAvatar).subscribe({
+							if (currentUserAvatarPrevious) {
+								this.fileService.delete(currentUserAvatarPrevious).subscribe({
 									next: () => console.debug('File erased'),
 									error: (error: any) => console.error(error)
 								});
 							}
 
-							/** Enable */
-
-							this.profileForm.enable();
+							this.currentUserSkeletonAvatarToggle = false;
 						},
-						error: () => this.profileForm.enable()
+						error: () => (this.currentUserSkeletonAvatarToggle = false)
 					});
 			},
-			error: () => this.profileForm.enable()
+			error: () => (this.currentUserSkeletonAvatarToggle = false)
 		});
 	}
+
+	/** profileForm */
 
 	onSubmitProfileForm(): void {
 		if (this.helperService.getFormValidation(this.profileForm)) {

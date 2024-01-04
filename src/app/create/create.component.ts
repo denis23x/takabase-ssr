@@ -378,7 +378,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.postSkeletonImageToggle = false;
 
-					this.snackbarService.success(null, 'Post has been updated');
+					this.snackbarService.success('Alright', 'Post has been updated');
 				},
 				error: () => (this.postSkeletonImageToggle = false)
 			});
@@ -452,7 +452,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 		this[view] = !this[view];
 	}
 
-	/** PostForm */
+	/** postForm */
 
 	onTogglePostFormStatus(toggle: boolean): void {
 		if (toggle) {

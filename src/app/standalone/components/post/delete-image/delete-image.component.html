@@ -13,7 +13,6 @@
 			class="flex items-center justify-center w-full max-w-xs"
 			appWindow
 			[appWindowTitle]="'Delete'"
-			[appWindowButtons]="['close']"
 			(appWindowClose)="onTogglePostDeleteImageDialog(false)"
 		>
 			<div class="flex flex-col gap-4 p-4" slot="content">
@@ -24,18 +23,31 @@
 						[appSvgIconIcon]="'info-circle'"
 						[appSvgIconSquare]="'1.5em'"
 					></i>
-					<span class="block"> Are you sure you want to delete post image? </span>
+					<span class="block">
+						Are you sure you want to <span class="inline font-bold"> delete post image? </span>
+					</span>
 				</p>
-				<button
-					class="btn-success btn"
-					type="button"
-					aria-label="Submit"
-					[disabled]="postDeleteImageIsSubmitted"
-					(click)="onSubmitPostDeleteImage()"
-				>
-					<span class="loading loading-spinner" *ngIf="postDeleteImageIsSubmitted"></span>
-					Submit
-				</button>
+				<div class="grid grid-cols-2 items-center justify-between gap-4">
+					<button
+						class="col-span-1 btn-error btn uppercase"
+						type="button"
+						aria-label="Yes"
+						[disabled]="postDeleteImageIsSubmitted"
+						(click)="onSubmitPostDeleteImage()"
+					>
+						<span class="loading loading-spinner" *ngIf="postDeleteImageIsSubmitted"></span>
+						Yes
+					</button>
+					<button
+						class="col-span-1 btn-success btn uppercase"
+						type="button"
+						aria-label="No"
+						[disabled]="postDeleteImageIsSubmitted"
+						(click)="onTogglePostDeleteImageDialog(false)"
+					>
+						No
+					</button>
+				</div>
 			</div>
 		</div>
 	</dialog>

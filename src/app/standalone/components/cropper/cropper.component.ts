@@ -175,11 +175,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			this.markdownItClipboard$ = this.markdownService.markdownItClipboard
 				.pipe(filter((clipboardEventInit: ClipboardEventInit | undefined) => !!clipboardEventInit))
 				.subscribe({
-					next: (clipboardEventInit: ClipboardEventInit) => {
-						this.markdownItClipboardToggle = true;
-
-						this.onGetFileFromDeviceClipboard(clipboardEventInit, true);
-					},
+					// prettier-ignore
+					next: (clipboardEventInit: ClipboardEventInit) => this.onGetFileFromClipboard(clipboardEventInit, true),
 					error: (error: any) => console.error(error)
 				});
 
@@ -187,8 +184,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 			this.cropperImageTransform$?.unsubscribe();
 			this.cropperImageTransform$ = this.imageCropperComponent.transformChange.subscribe({
-				next: (cropperImageTransform: ImageTransform) =>
-					(this.cropperImageTransform = cropperImageTransform),
+				// prettier-ignore
+				next: (cropperImageTransform: ImageTransform) => (this.cropperImageTransform = cropperImageTransform),
 				error: (error: any) => console.error(error)
 			});
 
@@ -215,21 +212,22 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	/** INPUT */
 
-	// prettier-ignore
-	onGetFileFromDeviceClipboard(clipboardEventInit: ClipboardEventInit, toggleCropper: boolean = false): void {
-    const clipboardFileList: FileList = clipboardEventInit.clipboardData.files
-    const clipboardFile: File | null = this.getFile(clipboardFileList)
+	onGetFileFromClipboard(clipboardEventInit: ClipboardEventInit, toggleCropper: boolean): void {
+		const clipboardFileList: FileList = clipboardEventInit.clipboardData.files;
+		const clipboardFile: File | null = this.getFile(clipboardFileList);
 
-    if (clipboardFile) {
-      this.setFile(clipboardFile)
+		if (clipboardFile) {
+			this.setFile(clipboardFile);
 
-      // Show dialog
+			// Show dialog (markdown-it clipboard)
 
-      if (toggleCropper) {
-        this.onToggleCropper(true)
-      }
-    }
-  }
+			if (toggleCropper) {
+				this.markdownItClipboardToggle = true;
+
+				this.onToggleCropper(true);
+			}
+		}
+	}
 
 	onGetFileFromDevice(event: Event): void {
 		const inputElement: HTMLInputElement = event.target as HTMLInputElement;
@@ -419,6 +417,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		this.cropperImageForm.reset();
 		this.cropperImageForm.enable();
+		this.cropperImageFormToggle = false;
 	}
 
 	onToggleCropper(toggle: boolean): void {

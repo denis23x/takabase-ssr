@@ -11,7 +11,7 @@
 			<div class="flex flex-row w-full items-center justify-between gap-4">
 				<div class="flex items-center justify-start gap-4 overflow-auto w-full">
 					<!-- prettier-ignore -->
-					<div class="avatar" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
+					<div class="avatar" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle || currentUserSkeletonAvatarToggle">
             <figure
               class="h-12 w-12 rounded-btn relative overflow-hidden cursor-pointer"
               data-pw="app-settings-profile-image-avatar"
@@ -66,7 +66,7 @@
 								type="button"
 								title="Delete avatar"
 								aria-label="Delete avatar"
-								(click)="onDeleteAvatar(currentUser.avatar)"
+								(click)="onDeleteCropperAvatar(currentUser.avatar)"
 							>
 								Delete avatar
 							</button>
@@ -263,8 +263,8 @@
 	<div
 		appCropper
 		#appCropperComponent
-		(appCropperSubmit)="onSubmitCropper($event)"
-		(appCropperToggle)="onToggleCropper($event)"
+		(appCropperSubmit)="onSubmitCropperAvatar($event)"
+		(appCropperToggle)="onToggleCropperAvatar($event)"
 	></div>
 	<div appQRCode #appQrCodeComponent [appQRCodeData]="currentUser | userUrl: 1"></div>
 </ng-container>
