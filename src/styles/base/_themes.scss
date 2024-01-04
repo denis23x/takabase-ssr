@@ -7,14 +7,14 @@ html[data-theme="dark"],
 html[data-theme="forest"],
 html[data-theme="halloween"] {
   img {
-    @apply opacity-80;
+    @apply opacity-75;
   }
 }
 
 html:not([data-theme]) {
   @media (prefers-color-scheme: dark) {
     img {
-      @apply opacity-80;
+      @apply opacity-75;
     }
   }
 }

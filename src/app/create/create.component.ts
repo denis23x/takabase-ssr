@@ -43,10 +43,11 @@ import { CategoryUpdateComponent } from '../standalone/components/category/updat
 import { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
 import { PlatformService } from '../core/services/platform.service';
 import { FileService } from '../core/services/file.service';
+import { PostUpdateDto } from '../core/dto/post/post-update.dto';
 
 interface PostForm {
 	name: FormControl<string>;
-	image: FormControl<string>;
+	image: FormControl<string | null>;
 	description: FormControl<string>;
 	categoryId: FormControl<number>;
 	categoryName: FormControl<string>;
@@ -139,7 +140,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 				Validators.minLength(4),
 				Validators.maxLength(36)
 			]),
-			image: this.formBuilder.nonNullable.control('', []),
+			image: this.formBuilder.control(null, []),
 			description: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
@@ -358,6 +359,66 @@ export class CreateComponent implements OnInit, OnDestroy {
 		this.postForm.get('categoryName').markAsTouched();
 	}
 
+	/** Image Cropper */
+
+	onDeleteCropperImage(): void {
+		const abstractControl: AbstractControl = this.postForm.get('image');
+		const abstractControlValue: string | null = abstractControl.value;
+
+		/** Enable skeleton */
+
+		abstractControl.setValue('', { emitEvent: false });
+
+		/** Update post */
+
+		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+		const postUpdateDto: PostUpdateDto = {
+			image: null
+		};
+
+		if (postId) {
+			this.postFormRequest$?.unsubscribe();
+			this.postFormRequest$ = this.postService.update(postId, postUpdateDto).subscribe({
+				next: () => this.snackbarService.success('Okay..', 'Image removed'),
+				error: (error: any) => console.error(error)
+			});
+		}
+
+		/** Delete file */
+
+		if (abstractControlValue) {
+			this.fileService.delete(abstractControlValue).subscribe({
+				next: () => abstractControl.reset(null, { emitEvent: false }),
+				error: () => abstractControl.reset(null, { emitEvent: false })
+			});
+		}
+	}
+
+	onSubmitCropperImage(file: File): void {
+		const abstractControl: AbstractControl = this.postForm.get('image');
+		const abstractControlValue: string | null = abstractControl.value;
+
+		/** Enable skeleton */
+
+		abstractControl.setValue('');
+
+		this.fileService.create(file, '/upload/post-images').subscribe({
+			next: (fileUrl: string) => {
+				abstractControl.setValue(fileUrl);
+
+				/** Silent deleting previous image */
+
+				if (abstractControlValue) {
+					this.fileService.delete(abstractControlValue).subscribe({
+						next: () => console.debug('File erased'),
+						error: (error: any) => console.error(error)
+					});
+				}
+			},
+			error: () => abstractControl.reset()
+		});
+	}
+
 	/** Fullscreen */
 
 	onFullscreen(toggle: boolean): void {
@@ -436,33 +497,5 @@ export class CreateComponent implements OnInit, OnDestroy {
 				});
 			}
 		}
-	}
-
-	onSubmitCropper(file: File): void {
-		this.postForm.disable();
-
-		// TODO: update
-
-		const postImage: string | null = this.post?.image;
-
-		this.fileService.create(file, '/upload/post-images').subscribe({
-			next: (fileUrl: string) => {
-				this.postForm.get('image').setValue(fileUrl);
-
-				/** Silent deleting */
-
-				if (postImage) {
-					this.fileService.delete(postImage).subscribe({
-						next: () => console.debug('File removed'),
-						error: (error: any) => console.error(error)
-					});
-				}
-
-				/** Enable */
-
-				this.postForm.enable();
-			},
-			error: () => this.postForm.enable()
-		});
 	}
 }

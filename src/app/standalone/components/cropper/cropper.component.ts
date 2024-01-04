@@ -464,10 +464,10 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 						return this.ipaService.getOneViaGCS(ipaOperationParams);
 					}),
-					tap((file: File) => this.appCropperSubmit.emit(file))
+					tap(() => this.onToggleCropper(false))
 				)
 				.subscribe({
-					next: () => this.onToggleCropper(false),
+					next: (file: File) => this.appCropperSubmit.emit(file),
 					error: () => this.cropperImageForm.enable()
 				});
 		}

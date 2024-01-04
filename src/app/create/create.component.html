@@ -8,33 +8,47 @@
 			<div class="flex items-center gap-4">
 				<!-- prettier-ignore -->
 				<figure
-					class="block rounded-btn relative aspect-square border border-base-content/20 h-20 w-20 sm:h-44 sm:w-44"
+					class="block rounded-btn relative aspect-square border border-base-content/20 group h-20 w-20 sm:h-44 sm:w-44"
 					appSkeleton
 					*ngIf="postForm.get('image') as image"
-					[appSkeletonToggle]="postSkeletonToggle"
+					[appSkeletonToggle]="postSkeletonToggle || image.value === ''"
 					[appSkeletonClassListElementRef]="['border-0']"
-					[ngClass]="{ 'cursor-not-allowed border-transparent bg-base-200': postForm.disabled, 'cursor-pointer': postForm.enabled, 'border-success': postForm.enabled && image.value }"
+					[ngClass]="{ 'cursor-not-allowed border-transparent bg-base-200': postForm.disabled, 'border-success': postForm.enabled && image.value }"
 				>
+          <!-- prettier-ignore -->
 					<img
-						class="rounded-btn aspect-square object-cover"
-						alt="Image"
+						class="rounded-btn aspect-square object-cover group-hover:grayscale"
 						width="256"
 						height="256"
 						loading="lazy"
-						*ngIf="!!image.value"
-						[ngClass]="{ invisible: !image.value, 'pointer-events-none opacity-50 grayscale transition': postForm.disabled }"
+						*ngIf="image.value"
+						[alt]="postForm.value.title || 'Image'"
+						[ngClass]="{ 'invisible': !image.value, 'opacity-50 grayscale transition': postForm.disabled }"
 						[src]="image.value"
-						(click)="appCropperComponent.onToggleCropper(true)"
 					/>
 					<div
-						class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-						*ngIf="!image.value"
+						class="flex items-center justify-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+						[ngSwitch]="true"
 					>
 						<button
-							class="btn btn-ghost btn-circle fill-current transition-none"
-							title="Image"
-							aria-label="Image"
+							class="btn btn-md btn-success btn-circle fill-current no-animation opacity-0 group-hover:opacity-100"
+							type="button"
+							title="Delete image"
+							aria-label="Delete image"
 							appSvgIcon
+							*ngSwitchCase="image.value !== null"
+							[appSvgIconIcon]="'x'"
+							[appSvgIconSquare]="'2em'"
+							[disabled]="postForm.disabled"
+							(click)="onDeleteCropperImage()"
+						></button>
+						<button
+							class="btn btn-md btn-ghost btn-circle fill-current no-animation"
+							type="button"
+							title="Set image"
+							aria-label="Set image"
+							appSvgIcon
+							*ngSwitchCase="image.value === null"
 							[appSvgIconIcon]="'plus'"
 							[appSvgIconSquare]="'2em'"
 							[disabled]="postForm.disabled"
@@ -517,7 +531,7 @@
 	<div
 		appCropper
 		#appCropperComponent
-		(appCropperSubmit)="onSubmitCropper($event)"
+		(appCropperSubmit)="onSubmitCropperImage($event)"
 		(appCropperToggle)="onTogglePostFormStatus($event)"
 	></div>
 	<div

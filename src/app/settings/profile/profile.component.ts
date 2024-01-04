@@ -154,7 +154,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			.subscribe({
 				next: () => {
 					this.fileService.delete(avatar).subscribe({
-						next: () => console.debug('File removed'),
+						next: () => console.debug('File erased'),
 						error: (error: any) => console.error(error)
 					});
 
@@ -199,7 +199,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 							if (currentUserAvatar) {
 								this.fileService.delete(currentUserAvatar).subscribe({
-									next: () => console.debug('File removed'),
+									next: () => console.debug('File erased'),
 									error: (error: any) => console.error(error)
 								});
 							}
