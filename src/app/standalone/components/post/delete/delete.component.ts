@@ -70,8 +70,6 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	onTogglePostDeleteDialog(toggle: boolean): void {
-		this.appPostDeleteToggle.emit(toggle);
-
 		this.postDeleteDialogToggle = toggle;
 
 		if (toggle) {
@@ -79,6 +77,8 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 		} else {
 			this.postDeleteDialogElement.nativeElement.close();
 		}
+
+		this.appPostDeleteToggle.emit(toggle);
 	}
 
 	onSubmitPostDelete(): void {

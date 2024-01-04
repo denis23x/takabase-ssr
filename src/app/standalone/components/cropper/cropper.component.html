@@ -121,13 +121,16 @@
 						</label>
 					</fieldset>
 				</form>
-				<div class="flex flex-col gap-4" [ngClass]="{ 'invisible !m-0 !h-0': !cropperIsReady }">
-					<div class="block -m-4" [class.cursor-not-allowed]="ipaOperationRequestIsBusy">
+				<div
+					class="flex flex-col gap-4"
+					[ngClass]="{ 'invisible opacity-0 !m-0 !h-0': !cropperIsReady }"
+				>
+					<div class="block -m-4" [class.cursor-not-allowed]="cropperImageForm.disabled">
 						<image-cropper
 							class="ngx-cropper aspect-square !p-4"
 							*appPlatform="'browser'"
 							[(transform)]="cropperImageTransform"
-							[class.ngx-cropper-disabled]="ipaOperationRequestIsBusy"
+							[class.ngx-cropper-disabled]="cropperImageForm.disabled"
 							[class.ngx-cropper-move-image]="cropperMoveImage"
 							[imageFile]="cropperFile"
 							[imageAltText]="'Image cropper'"
@@ -138,6 +141,8 @@
 							[containWithinAspectRatio]="true"
 							[resizeToWidth]="256"
 							[resizeToHeight]="256"
+							[cropperMinWidth]="cropperMinWidth"
+							[cropperMinHeight]="cropperMinHeight"
 							[cropper]="cropperPosition"
 							[roundCropper]="false"
 							[alignImage]="'center'"
@@ -207,126 +212,131 @@
 						<!-- prettier-ignore -->
 						<div
 							class="flex overflow-auto rounded-btn border border-base-content/20"
-							[ngClass]="{ 'border-transparent bg-base-200 cursor-not-allowed': ipaOperationRequestIsBusy }"
+							[ngClass]="{ 'border-transparent bg-base-200 cursor-not-allowed': cropperImageForm.disabled }"
 						>
 							<ul
-                class="menu rounded-btn menu-horizontal menu-md flex-nowrap border-none p-0"
-                [ngClass]="{ 'pointer-events-none': ipaOperationRequestIsBusy }"
-              >
-                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
-                  <button
-                    class="fill-current p-3"
-                    type="button"
-                    title="Move bounding box"
-                    aria-label="Move bounding box"
-                    appSvgIcon
-                    [disabled]="ipaOperationRequestIsBusy"
-                    [appSvgIconIcon]="'bounding-box-circles'"
-                    [appSvgIconSquare]="'1.5725em'"
-                    [ngClass]="{ 'active' : !cropperMoveImage && !ipaOperationRequestIsBusy }"
-                    (click)="cropperMoveImage = false"
-                  ></button>
-                </li>
-                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
-                  <button
-                    class="fill-current p-3"
-                    type="button"
-                    title="Move image"
-                    aria-label="Move image"
-                    appSvgIcon
-                    [disabled]="ipaOperationRequestIsBusy"
-                    [appSvgIconIcon]="'arrows-move'"
-                    [appSvgIconSquare]="'1.5725em'"
-                    [ngClass]="{ 'active' : cropperMoveImage && !ipaOperationRequestIsBusy }"
-                    (click)="cropperMoveImage = true"
-                  ></button>
-                </li>
-                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
-                  <button
-                    class="rotate-90 fill-current p-3"
-                    type="button"
-                    title="Flip horizontal"
-                    aria-label="Flip horizontal"
-                    appSvgIcon
-                    [disabled]="ipaOperationRequestIsBusy"
-                    [appSvgIconIcon]="'symmetry-vertical'"
-                    [appSvgIconSquare]="'1.5725em'"
-                    (click)="setCropperImageFlip(true)"
-                  ></button>
-                </li>
-                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
-                  <button
-                    class="fill-current p-3"
-                    type="button"
-                    title="Flip vertical"
-                    aria-label="Flip vertical"
-                    appSvgIcon
-                    [disabled]="ipaOperationRequestIsBusy"
-                    [appSvgIconIcon]="'symmetry-vertical'"
-                    [appSvgIconSquare]="'1.5725em'"
-                    (click)="setCropperImageFlip(false)"
-                  ></button>
-                </li>
-                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
-                  <div
-                    class="flex p-0"
-                    appDropdown
-                    #dropdownAspectRatio
-                    *ngIf="{ value: false } as toggle"
-                    [ngClass]="{ 'bg-base-content/10': toggle.value }"
-                    [appDropdownPlacement]="'top-start'"
-                    (appDropdownToggle)="toggle.value = $event"
-                  >
-                    <button
-                      class="fill-current p-3"
-                      type="button"
-                      title="Aspect ratio"
-                      aria-label="Aspect ratio"
-                      appSvgIcon
-                      slot="target"
-                      [disabled]="ipaOperationRequestIsBusy"
-                      [appSvgIconIcon]="'aspect-ratio'"
-                      [appSvgIconSquare]="'1.5725em'"
-                    ></button>
-                    <ul class="menu menu-vertical menu-md m-0" slot="content">
-                      <li class="flex w-full" *ngFor="let cropperAspectRatio of cropperAspectRatioList">
-                        <button
-                          class="w-full whitespace-nowrap text-base-content"
-                          type="button"
-                          [attr.aria-label]="cropperAspectRatio"
-                          (click)="setCropperImageAspectRatio(cropperAspectRatio)"
+								class="menu rounded-btn menu-horizontal menu-md flex-nowrap border-none p-0"
+								[ngClass]="{ 'pointer-events-none': cropperImageForm.disabled }"
+							>
+								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
+									<button
+										class="fill-current p-3"
+										type="button"
+										title="Move bounding box"
+										aria-label="Move bounding box"
+										appSvgIcon
+										[disabled]="cropperImageForm.disabled"
+										[appSvgIconIcon]="'bounding-box-circles'"
+										[appSvgIconSquare]="'1.5725em'"
+										[ngClass]="{ 'active': !cropperMoveImage && !cropperImageForm.disabled }"
+										(click)="cropperMoveImage = false"
+									></button>
+								</li>
+								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
+									<button
+										class="fill-current p-3"
+										type="button"
+										title="Move image"
+										aria-label="Move image"
+										appSvgIcon
+										[disabled]="cropperImageForm.disabled"
+										[appSvgIconIcon]="'arrows-move'"
+										[appSvgIconSquare]="'1.5725em'"
+										[ngClass]="{ 'active': cropperMoveImage && !cropperImageForm.disabled }"
+										(click)="cropperMoveImage = true"
+									></button>
+								</li>
+								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
+									<button
+										class="rotate-90 fill-current p-3"
+										type="button"
+										title="Mirror horizontal"
+										aria-label="Mirror horizontal"
+										appSvgIcon
+										*ngIf="cropperImageForm.get('flipV') as flipV"
+										[disabled]="cropperImageForm.disabled"
+										[appSvgIconIcon]="'symmetry-vertical'"
+										[appSvgIconSquare]="'1.5725em'"
+										(click)="flipV.setValue(!flipV.value)"
+									></button>
+								</li>
+								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
+									<button
+										class="fill-current p-3"
+										type="button"
+										title="Mirror vertical"
+										aria-label="Mirror vertical"
+										appSvgIcon
+                    *ngIf="cropperImageForm.get('flipH') as flipH"
+										[disabled]="cropperImageForm.disabled"
+										[appSvgIconIcon]="'symmetry-vertical'"
+										[appSvgIconSquare]="'1.5725em'"
+                    (click)="flipH.setValue(!flipH.value)"
+									></button>
+								</li>
+                <ng-container *ngIf="markdownItClipboardToggle">
+                  <li class="inline-block" [class.disabled]="cropperImageForm.disabled">
+                    <div
+                      class="flex p-0"
+                      appDropdown
+                      #dropdownAspectRatio
+                      *ngIf="{ value: false } as toggle"
+                      [ngClass]="{ 'bg-base-content/10': toggle.value }"
+                      [appDropdownPlacement]="'top-start'"
+                      (appDropdownToggle)="toggle.value = $event"
+                    >
+                      <button
+                        class="fill-current p-3"
+                        type="button"
+                        title="Aspect ratio"
+                        aria-label="Aspect ratio"
+                        appSvgIcon
+                        slot="target"
+                        [disabled]="cropperImageForm.disabled"
+                        [appSvgIconIcon]="'aspect-ratio'"
+                        [appSvgIconSquare]="'1.5725em'"
+                      ></button>
+                      <ul class="menu menu-vertical menu-md m-0" slot="content">
+                        <li
+                          class="flex w-full"
+                          *ngFor="let cropperAspectRatio of cropperAspectRatioList"
                         >
-                          <span class="block">
+                          <button
+                            class="w-full whitespace-nowrap text-base-content"
+                            type="button"
+                            [attr.aria-label]="cropperAspectRatio"
+                            (click)="setCropperImageAspectRatio(cropperAspectRatio)"
+                          >
                             {{ cropperAspectRatio }}
-                          </span>
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-                <li class="inline-block" [class.disabled]="ipaOperationRequestIsBusy">
-                  <button
-                    class="fill-current p-3"
-                    type="button"
-                    title="Sliders"
-                    aria-label="Sliders"
-                    appSvgIcon
-                    [disabled]="ipaOperationRequestIsBusy"
-                    [appSvgIconIcon]="'sliders'"
-                    [appSvgIconSquare]="'1.5725em'"
-                    [ngClass]="{ 'active' : cropperImageFormToggle }"
-                    (click)="cropperImageFormToggle = !cropperImageFormToggle"
-                  ></button>
-                </li>
-              </ul>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                </ng-container>
+								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
+									<button
+										class="fill-current p-3"
+										type="button"
+										title="Transform image"
+										aria-label="Transform image"
+										appSvgIcon
+										[disabled]="cropperImageForm.disabled"
+										[appSvgIconIcon]="'sliders'"
+										[appSvgIconSquare]="'1.5725em'"
+                    [ngClass]="{ 'active': cropperImageFormToggle && !cropperImageForm.disabled }"
+										(click)="cropperImageFormToggle = !cropperImageFormToggle"
+									></button>
+								</li>
+							</ul>
 						</div>
 						<button
 							class="btn-ghost w-12 h-12 btn-square btn bg-base-200 fill-current"
 							type="button"
-							title="Reset cropper"
-							aria-label="Reset cropper"
+							title="Reset transform"
+							aria-label="Reset transform"
 							appSvgIcon
-							[disabled]="ipaOperationRequestIsBusy"
+							[disabled]="cropperImageForm.disabled"
 							[appSvgIconIcon]="'arrow-repeat'"
 							[appSvgIconSquare]="'1.5em'"
 							(click)="onCropperReset()"
@@ -336,10 +346,10 @@
 						class="btn btn-success w-full"
 						type="button"
 						aria-label="Submit"
-						[disabled]="ipaOperationRequestIsBusy"
+						[disabled]="cropperImageForm.disabled"
 						(click)="onSubmitCropper()"
 					>
-						<span class="loading loading-spinner" *ngIf="ipaOperationRequestIsBusy"></span>
+						<span class="loading loading-spinner" *ngIf="cropperImageForm.disabled"></span>
 						Submit
 					</button>
 				</div>

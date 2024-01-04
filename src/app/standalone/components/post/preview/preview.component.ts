@@ -66,8 +66,6 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 	}
 
 	onTogglePostPreviewDialog(toggle: boolean): void {
-		this.appPostPreviewToggle.emit(toggle);
-
 		this.postPreviewDialogToggle = toggle;
 
 		if (toggle) {
@@ -81,5 +79,7 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 			this.postPreviewDialogElement.nativeElement.close();
 			this.postPreview = undefined;
 		}
+
+		this.appPostPreviewToggle.emit(toggle);
 	}
 }

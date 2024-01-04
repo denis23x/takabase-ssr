@@ -70,8 +70,6 @@ export class CategoryCreateComponent implements OnDestroy {
 	}
 
 	onToggleCategoryCreateDialog(toggle: boolean): void {
-		this.appCategoryCreateToggle.emit(toggle);
-
 		this.categoryCreateDialogToggle = toggle;
 
 		if (toggle) {
@@ -80,7 +78,11 @@ export class CategoryCreateComponent implements OnDestroy {
 			this.categoryCreateDialogElement.nativeElement.close();
 		}
 
+		/** categoryForm reset */
+
 		this.categoryForm.reset();
+
+		this.appCategoryCreateToggle.emit(toggle);
 	}
 
 	onSubmitCategoryForm(): void {
