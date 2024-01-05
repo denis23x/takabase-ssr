@@ -35,6 +35,9 @@ export class MarkdownService {
 	// prettier-ignore
 	markdownItClipboard: BehaviorSubject<ClipboardEventInit | undefined> = new BehaviorSubject<ClipboardEventInit | undefined>(undefined);
 
+	// prettier-ignore
+	markdownItClipboardFileImage: BehaviorSubject<File | undefined> = new BehaviorSubject<File | undefined>(undefined);
+
 	constructor(
 		@Inject(DOCUMENT)
 		private document: Document,

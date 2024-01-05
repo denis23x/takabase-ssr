@@ -129,12 +129,13 @@
 							[(transform)]="cropperImageTransform"
 							[class.ngx-cropper-disabled]="cropperImageForm.disabled"
 							[class.ngx-cropper-move-image]="cropperMoveImage"
+							[class.ngx-cropper-maintain-aspect-ratio]="!!cropperAspectRatioActive"
 							[imageFile]="cropperFile"
 							[imageAltText]="'Image cropper'"
 							[output]="'blob'"
 							[format]="'png'"
-							[aspectRatio]="cropperAspectRatio"
-							[maintainAspectRatio]="true"
+							[aspectRatio]="cropperAspectRatioActive || 1"
+							[maintainAspectRatio]="!!cropperAspectRatioActive"
 							[containWithinAspectRatio]="true"
 							[resizeToWidth]="256"
 							[resizeToHeight]="256"
@@ -301,10 +302,11 @@
                           <button
                             class="w-full whitespace-nowrap text-base-content"
                             type="button"
-                            [attr.aria-label]="cropperAspectRatio"
-                            (click)="setCropperImageAspectRatio(cropperAspectRatio)"
+                            [class.active]="cropperAspectRatioActive === cropperAspectRatio.value"
+                            [attr.aria-label]="cropperAspectRatio.label"
+                            (click)="cropperAspectRatioActive = cropperAspectRatio.value"
                           >
-                            {{ cropperAspectRatio }}
+                            {{ cropperAspectRatio.label }}
                           </button>
                         </li>
                       </ul>

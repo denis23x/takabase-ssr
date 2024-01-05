@@ -321,6 +321,16 @@ export class CreateComponent implements OnInit, OnDestroy {
 		this.postMarkdownDialogToggle = toggle;
 	}
 
+	onToggleMarkdownUpload(toggle: boolean): void {
+		const abstractControl: AbstractControl = this.postForm.get('markdown');
+
+		if (toggle) {
+			abstractControl.disable();
+		} else {
+			abstractControl.enable();
+		}
+	}
+
 	/** Category */
 
 	onToggleCategory(toggle: boolean): void {

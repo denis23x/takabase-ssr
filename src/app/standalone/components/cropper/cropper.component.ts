@@ -113,8 +113,33 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		translateV: 0
 	};
 
-	cropperAspectRatio: number = 1;
-	cropperAspectRatioList: string[] = ['1:1', '4:3', '16:9'];
+	cropperAspectRatioActive: number = 1;
+	cropperAspectRatioList: any[] = [
+		{
+			value: 1,
+			label: '1:1 (square)'
+		},
+		{
+			value: 3 / 2,
+			label: '3:2 (photography)'
+		},
+		{
+			value: 4 / 3,
+			label: '4:3 (standard screen)'
+		},
+		{
+			value: 16 / 9,
+			label: '16:9 (widescreen)'
+		},
+		{
+			value: 9 / 16,
+			label: '9:16 (mobile)'
+		},
+		{
+			value: null,
+			label: 'No aspect ratio'
+		}
+	];
 
 	cropperMinWidth: number = 0;
 	cropperMinHeight: number = 0;
@@ -222,6 +247,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			// Show dialog (markdown-it clipboard)
 
 			if (toggleCropper) {
+				this.cropperAspectRatioActive = null;
+
 				this.markdownItClipboardToggle = true;
 
 				this.onToggleCropper(true);
@@ -374,19 +401,14 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			y2: this.cropperDimensions.height
 		};
 
-		this.cropperAspectRatio = 1;
 		this.cropperMoveImage = false;
+
+		this.cropperAspectRatioActive = this.markdownItClipboardToggle ? null : 1;
 
 		/** Reset Forms */
 
 		// prettier-ignore
 		[this.imageForm, this.cropperImageForm].forEach((formGroup: FormGroup) => formGroup.reset({}, { emitEvent: false }));
-	}
-
-	setCropperImageAspectRatio(aspectRatio: string): void {
-		const [width, height]: number[] = aspectRatio.split(':').map((side: string) => Number(side));
-
-		this.cropperAspectRatio = width / height;
 	}
 
 	setCropperImageTransform(cropperImageTransform: Partial<ImageTransform>): void {
@@ -427,13 +449,13 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			this.cropperDialogElement.nativeElement.showModal();
 		} else {
 			this.cropperDialogElement.nativeElement.close();
+
+			/** Full reset */
+
+			this.onResetCropper();
 		}
 
 		this.appCropperToggle.emit(toggle);
-
-		/** Full reset */
-
-		this.onResetCropper();
 	}
 
 	onSubmitCropper(): void {
@@ -441,34 +463,38 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		this.cropperImageForm.disable();
 
-		if (this.markdownItClipboardToggle) {
-			// TODO: Update
-		} else {
-			this.imageFormRequest$?.unsubscribe();
-			this.imageFormRequest$ = this.ipaService
-				.create(file)
-				.pipe(
-					switchMap((fileUrl: string) => {
-						const ipaOperationParams: IPAOperation[] = [
-							{
-								operation: 'input',
-								type: 'gcs',
-								source: fileUrl
-							},
-							{
-								operation: 'output',
-								format: 'webp'
-							}
-						];
+		this.imageFormRequest$?.unsubscribe();
+		this.imageFormRequest$ = this.ipaService
+			.create(file)
+			.pipe(
+				switchMap((fileUrl: string) => {
+					const ipaOperationParams: IPAOperation[] = [
+						{
+							operation: 'input',
+							type: 'gcs',
+							source: fileUrl
+						},
+						{
+							operation: 'output',
+							format: 'webp'
+						}
+					];
 
-						return this.ipaService.getOneViaGCS(ipaOperationParams);
-					}),
-					tap(() => this.onToggleCropper(false))
-				)
-				.subscribe({
-					next: (file: File) => this.appCropperSubmit.emit(file),
-					error: () => this.cropperImageForm.enable()
-				});
-		}
+					return this.ipaService.getOneViaGCS(ipaOperationParams);
+				}),
+				tap(() => this.onToggleCropper(false))
+			)
+			.subscribe({
+				next: (file: File) => {
+					if (this.markdownItClipboardToggle) {
+						this.markdownService.markdownItClipboardFileImage.next(file);
+
+						this.markdownItClipboardToggle = false;
+					} else {
+						this.appCropperSubmit.emit(file);
+					}
+				},
+				error: () => this.cropperImageForm.enable()
+			});
 	}
 }

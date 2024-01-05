@@ -47,6 +47,7 @@ import { MarkdownService } from '../../../core/services/markdown.service';
 import { PlatformService } from '../../../core/services/platform.service';
 import { HelperService } from '../../../core/services/helper.service';
 import { AppearanceService } from '../../../core/services/appearance.service';
+import { FileService } from '../../../core/services/file.service';
 
 interface UrlForm {
 	title?: FormControl<string>;
@@ -84,6 +85,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	@ViewChild('urlFormDialog') urlFormDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() appMarkdownDialogToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() appMarkdownUploadToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input()
 	set appMarkdownScrollSync(scrollSync: boolean) {
@@ -127,6 +129,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	scrollSync$: Subscription | undefined;
 
 	textareaPaste$: Subscription | undefined;
+	textareaPasteFileImage$: Subscription | undefined;
 	textareaInput$: Subscription | undefined;
 	textareaId: string | undefined;
 	textarea: HTMLTextAreaElement | undefined;
@@ -145,6 +148,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		private platformService: PlatformService,
 		private formBuilder: FormBuilder,
 		private helperService: HelperService,
+		private fileService: FileService,
 		private appearanceService: AppearanceService
 	) {
 		this.urlForm = this.formBuilder.group<UrlForm>({});
@@ -170,19 +174,51 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				next: (clipboardEventInit: ClipboardEventInit) => this.markdownService.markdownItClipboard.next(clipboardEventInit),
 				error: (error: any) => console.error(error)
 			});
+
+			this.textareaPasteFileImage$?.unsubscribe();
+			this.textareaPasteFileImage$ = this.markdownService.markdownItClipboardFileImage
+				.pipe(filter((file: File | undefined) => !!file))
+				.subscribe({
+					next: (file: File) => {
+						this.appMarkdownUploadToggle.emit(true);
+
+						// prettier-ignore
+						this.fileService.create(file, '/upload/post-images-markdown').subscribe({
+							next: (fileUrl: string) => {
+								const markdownControlUrlCropper: MarkdownControl = this.controlListUrl.find((markdownControl: MarkdownControl) => {
+                  return markdownControl.key === 'url-cropper';
+                });
+
+                const params: any = {
+                  title: Date.now(),
+                  url: fileUrl
+                };
+
+                this.appMarkdownUploadToggle.emit(false);
+
+                /** Apply result */
+
+                this.setTextareaValue(this.getTextareaValue(markdownControlUrlCropper, params));
+							},
+							error: (error: any) => console.error(error)
+						});
+					},
+					error: (error: any) => console.error(error)
+				});
 		}
 
-		this.setEmojiMart();
+		this.setHandlerEmojiMart();
 
-		this.setDropdownHandler();
+		this.setHandlerDropdown();
 
-		this.setScrollSyncHandler();
+		this.setHandlerScrollSync();
 	}
 
 	ngOnDestroy(): void {
 		[
 			this.textareaInput$,
 			this.textareaPaste$,
+			this.textareaPasteFileImage$,
 			this.scrollSync$,
 			this.controlListScroll$,
 			this.urlForm$,
@@ -190,7 +226,20 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	setEmojiMart(): void {
+	onTableMouseEnter(mouseEvent: MouseEvent): void {
+		// prettier-ignore
+		const parentElement: DOMRect = (mouseEvent.target as HTMLElement).parentElement.getBoundingClientRect()
+		const targetElement: DOMRect = (mouseEvent.target as HTMLElement).getBoundingClientRect();
+
+		const width: string = 'width:' + Math.abs(parentElement.left - targetElement.right) + 'px;';
+		const height: string = 'height:' + Math.abs(parentElement.top - targetElement.bottom) + 'px;';
+
+		this.controlListTableElement.nativeElement.setAttribute('style', width + height);
+	}
+
+	/** Extra handlers */
+
+	setHandlerEmojiMart(): void {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
@@ -253,18 +302,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	onTableMouseEnter(mouseEvent: MouseEvent): void {
-		// prettier-ignore
-		const parentElement: DOMRect = (mouseEvent.target as HTMLElement).parentElement.getBoundingClientRect()
-		const targetElement: DOMRect = (mouseEvent.target as HTMLElement).getBoundingClientRect();
-
-		const width: string = 'width:' + Math.abs(parentElement.left - targetElement.right) + 'px;';
-		const height: string = 'height:' + Math.abs(parentElement.top - targetElement.bottom) + 'px;';
-
-		this.controlListTableElement.nativeElement.setAttribute('style', width + height);
-	}
-
-	setDropdownHandler(): void {
+	setHandlerDropdown(): void {
 		if (this.platformService.isBrowser()) {
 			const dropdownComponentList: DropdownComponent[] = [
 				this.dropdownHeading,
@@ -292,7 +330,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	setScrollSyncHandler(): void {
+	setHandlerScrollSync(): void {
 		if (this.platformService.isBrowser()) {
 			// prettier-ignore
 			const getScrollTop = (a: HTMLElement, b: HTMLElement): number => {
@@ -322,7 +360,9 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	getMarkdownTextarea(textareaElement: HTMLTextAreaElement): MarkdownTextarea {
+	/** Textarea */
+
+	getTextareaMarkdown(textareaElement: HTMLTextAreaElement): MarkdownTextarea {
 		const { selectionStart, selectionEnd, value }: Record<string, any> = textareaElement;
 
 		const getWrapperPayload = (value: string): MarkdownWrapperPayload => {
@@ -348,7 +388,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getTextareaValue(markdownControl: MarkdownControl, params?: any): string {
-		const markdownTextarea: MarkdownTextarea = this.getMarkdownTextarea(this.textarea);
+		const markdownTextarea: MarkdownTextarea = this.getTextareaMarkdown(this.textarea);
 
 		const selectionStart: number = markdownTextarea.selectionStart;
 		const selectionEnd: number = markdownTextarea.selectionEnd;
@@ -374,6 +414,8 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		this.textarea.selectionEnd = selectionEnd;
 		this.textarea.focus();
 	}
+
+	/** urlForm */
 
 	onToggleUrlForm(toggle: boolean, markdownControl?: MarkdownControl): void {
 		if (toggle) {
@@ -401,6 +443,10 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
           break
         }
+        case "url-cropper":
+          alert('show me cropper!');
+
+          break;
         case "url-youtube": {
           this.urlForm.addControl("url", this.formBuilder.nonNullable.control("", [Validators.required, Validators.pattern(this.helperService.getRegex("youtube"))]))
 
@@ -413,7 +459,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 			/** Apply selection */
 
-			const markdownTextarea: MarkdownTextarea = this.getMarkdownTextarea(this.textarea);
+			const markdownTextarea: MarkdownTextarea = this.getTextareaMarkdown(this.textarea);
 
 			if (markdownTextarea.selection) {
 				Object.keys(this.urlForm.controls).forEach((key: string) => {
@@ -432,8 +478,9 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.urlFormControl = markdownControl;
 			this.urlFormDialog.nativeElement.showModal();
 		} else {
-			// prettier-ignore
-			Object.keys(this.urlForm.controls).forEach((key: string) => this.urlForm.removeControl(key))
+			Object.keys(this.urlForm.controls).forEach((key: string) => {
+				this.urlForm.removeControl(key);
+			});
 
 			this.urlForm$?.unsubscribe();
 			this.urlFormControl = undefined;

@@ -94,4 +94,16 @@
 
     @include shared-styles-disabled-bounding-box();
   }
+
+  &.ngx-cropper-maintain-aspect-ratio {
+    .ngx-ic-resize-bar,
+    .ngx-ic-resize {
+      &.ngx-ic-top,
+      &.ngx-ic-right,
+      &.ngx-ic-bottom,
+      &.ngx-ic-left {
+        display: none !important;
+      }
+    }
+  }
 }

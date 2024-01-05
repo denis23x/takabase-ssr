@@ -177,25 +177,23 @@
 						[appSvgIconSquare]="'1.5725em'"
 					></button>
 					<div class="menu menu-vertical menu-md m-0" slot="content">
-						<div class="relative h-40 w-40 overflow-hidden rounded-btn">
+						<div class="relative h-40 w-40 overflow-hidden rounded-box">
 							<div
 								class="pointer-events-none absolute left-0 top-0 bg-base-content/10"
 								#controlListTableElement
 							></div>
 							<ul class="m-0 grid h-full w-full grid-cols-5 grid-rows-5 p-0">
-								<!-- prettier-ignore -->
 								<li
-                  class="col-span-1 row-span-1 h-full w-full bg-transparent p-0 border-4 border-base-100 outline outline-base-content/20 outline-1 -outline-offset-4 m-0"
-                  *ngFor="let cell of [].constructor(25); let i = index"
-                  (mouseenter)="onTableMouseEnter($event)"
-                  (mouseleave)="controlListTableElement.removeAttribute('style')"
-                  (click)="setTextareaValue(getTextareaValue(controlListTable, i))"
-                  [class.rounded-tl-btn]="i === 0"
-                  [class.rounded-tr-btn]="i === 4"
-                  [class.rounded-bl-btn]="i === 20"
-                  [class.rounded-br-btn]="i === 24"
-                >
-                </li>
+									class="col-span-1 row-span-1 h-full w-full bg-transparent p-0 border-4 border-base-100 outline outline-base-content/20 outline-1 -outline-offset-4 m-0"
+									*ngFor="let cell of [].constructor(25); let i = index"
+									[class.rounded-tl-box]="i === 0"
+									[class.rounded-tr-box]="i === 4"
+									[class.rounded-bl-box]="i === 20"
+									[class.rounded-br-box]="i === 24"
+									(mouseenter)="onTableMouseEnter($event)"
+									(mouseleave)="controlListTableElement.removeAttribute('style')"
+									(click)="setTextareaValue(getTextareaValue(controlListTable, i))"
+								></li>
 							</ul>
 						</div>
 					</div>
