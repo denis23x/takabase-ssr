@@ -72,16 +72,6 @@ interface UrlForm {
 	templateUrl: './markdown.component.html'
 })
 export class MarkdownComponent implements AfterViewInit, OnDestroy {
-	// prettier-ignore
-	@ViewChild("controlListTableElement") controlListTableElement: ElementRef<HTMLDivElement> | undefined
-	@ViewChild('controlListElement') controlListElement: ElementRef<HTMLUListElement> | undefined;
-
-	@ViewChild('dropdownHeading') dropdownHeading: DropdownComponent | undefined;
-	@ViewChild('dropdownFormatting') dropdownFormatting: DropdownComponent | undefined;
-	@ViewChild('dropdownList') dropdownList: DropdownComponent | undefined;
-	@ViewChild('dropdownEmojiMart') dropdownEmojiMart: DropdownComponent | undefined;
-	@ViewChild('dropdownTable') dropdownTable: DropdownComponent | undefined;
-
 	@ViewChild('urlFormDialog') urlFormDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() appMarkdownDialogToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -122,7 +112,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	controlListTable: MarkdownControl = MarkdownControlTable();
 	controlListSpoiler: MarkdownControl = MarkdownControlSpoiler();
 	controlListCode: MarkdownControl = MarkdownControlCode();
-	controlListScroll$: Subscription | undefined;
 	controlListDisabled: boolean = false;
 
 	scrollSync: boolean = false;
@@ -209,8 +198,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 		this.setHandlerEmojiMart();
 
-		this.setHandlerDropdown();
-
 		this.setHandlerScrollSync();
 	}
 
@@ -220,21 +207,32 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.textareaPaste$,
 			this.textareaPasteFileImage$,
 			this.scrollSync$,
-			this.controlListScroll$,
 			this.urlForm$,
 			this.controlListEmojiMartColorScheme$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	onTableMouseEnter(mouseEvent: MouseEvent): void {
-		// prettier-ignore
-		const parentElement: DOMRect = (mouseEvent.target as HTMLElement).parentElement.getBoundingClientRect()
-		const targetElement: DOMRect = (mouseEvent.target as HTMLElement).getBoundingClientRect();
+	onControlListTableMouseEnter(mouseEvent: MouseEvent, event: string): void {
+		const divElement: HTMLDivElement | null = this.document.querySelector('[data-control-table]');
 
-		const width: string = 'width:' + Math.abs(parentElement.left - targetElement.right) + 'px;';
-		const height: string = 'height:' + Math.abs(parentElement.top - targetElement.bottom) + 'px;';
+		if (divElement) {
+			// prettier-ignore
+			if (event === 'enter') {
+        const parentElement: DOMRect = (mouseEvent.target as HTMLElement).parentElement.getBoundingClientRect();
+        const targetElement: DOMRect = (mouseEvent.target as HTMLElement).getBoundingClientRect();
 
-		this.controlListTableElement.nativeElement.setAttribute('style', width + height);
+        const width: string = 'width:' + Math.abs(parentElement.left - targetElement.right) + 'px;';
+        const height: string = 'height:' + Math.abs(parentElement.top - targetElement.bottom) + 'px;';
+
+        /** Apply styles */
+
+        divElement.setAttribute('style', width + height);
+			}
+
+			if (event === 'leave') {
+				divElement.removeAttribute('style');
+			}
+		}
 	}
 
 	/** Extra handlers */
@@ -299,34 +297,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			});
 
 			this.document.getElementById('emojiMartPicker').appendChild(emojiMartPicker);
-		}
-	}
-
-	setHandlerDropdown(): void {
-		if (this.platformService.isBrowser()) {
-			const dropdownComponentList: DropdownComponent[] = [
-				this.dropdownHeading,
-				this.dropdownFormatting,
-				this.dropdownList,
-				this.dropdownEmojiMart,
-				this.dropdownTable
-			];
-
-			const getDropdownComponent = (): DropdownComponent | undefined => {
-				return dropdownComponentList.find((dropdownComponent: DropdownComponent) => {
-					return dropdownComponent.dropdownState;
-				});
-			};
-
-			const controlListElement: HTMLUListElement = this.controlListElement.nativeElement;
-
-			this.controlListScroll$?.unsubscribe();
-			this.controlListScroll$ = fromEvent(controlListElement, 'scroll')
-				.pipe(filter(() => !!getDropdownComponent()))
-				.subscribe({
-					next: () => getDropdownComponent().onStateHide(),
-					error: (error: any) => console.error(error)
-				});
 		}
 	}
 

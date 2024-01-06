@@ -100,7 +100,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	cropperImageForm: FormGroup | undefined;
 	cropperImageForm$: Subscription | undefined;
-	cropperImageFormToggle: boolean = false;
 
 	cropperImageTransform$: Subscription | undefined;
 	cropperImageTransform: ImageTransform = {
@@ -439,7 +438,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		this.cropperImageForm.reset();
 		this.cropperImageForm.enable();
-		this.cropperImageFormToggle = false;
 	}
 
 	onToggleCropper(toggle: boolean): void {

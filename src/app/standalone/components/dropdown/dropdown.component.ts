@@ -1,23 +1,24 @@
 /** @format */
 
 import {
+	AfterViewInit,
 	Component,
 	ElementRef,
 	EventEmitter,
 	Inject,
 	Input,
 	OnDestroy,
-	OnInit,
 	Output
 } from '@angular/core';
-import { fromEvent, merge, Subscription } from 'rxjs';
+import { fromEvent, Subscription } from 'rxjs';
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { PlatformService } from '../../../core/services/platform.service';
 import { CookieService } from '../../../core/services/cookie.service';
 import {
+	autoUpdate,
 	computePosition,
 	ComputePositionReturn,
 	flip,
+	hide,
 	MiddlewareState,
 	offset,
 	Placement,
@@ -31,7 +32,7 @@ import {
 	selector: 'app-dropdown, [appDropdown]',
 	templateUrl: './dropdown.component.html'
 })
-export class DropdownComponent implements OnInit, OnDestroy {
+export class DropdownComponent implements AfterViewInit, OnDestroy {
 	@Output() appDropdownToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input()
@@ -57,6 +58,7 @@ export class DropdownComponent implements OnInit, OnDestroy {
 	dropdownClose: boolean = true;
 	dropdownBackdrop: boolean = false;
 	dropdownFit: boolean = false;
+	dropdownAutoUpdate: () => void;
 
 	dropdownElementTarget: HTMLElement | undefined;
 	dropdownElementContent: HTMLElement | undefined;
@@ -65,15 +67,14 @@ export class DropdownComponent implements OnInit, OnDestroy {
 		@Inject(DOCUMENT)
 		private document: Document,
 		private elementRef: ElementRef,
-		private cookieService: CookieService,
-		private platformService: PlatformService
+		private cookieService: CookieService
 	) {}
 
-	ngOnInit(): void {
+	ngAfterViewInit(): void {
 		this.dropdownElementTarget = this.elementRef.nativeElement.querySelector('[slot=target]');
 		this.dropdownElementContent = this.elementRef.nativeElement.querySelector('[slot=content]');
 
-		this.dropdownElementContent.classList.add('fixed', 'top-0', 'left-0', 'z-20', 'w-max');
+		this.dropdownElementContent.classList.add('fixed', 'top-0', 'left-0', 'z-20');
 		this.dropdownElementContent.style.display = 'none';
 
 		/** onStateShow when onClick */
@@ -111,20 +112,6 @@ export class DropdownComponent implements OnInit, OnDestroy {
 			},
 			error: (error: any) => console.error(error)
 		});
-
-		/** onStateHide when onScroll && onResize */
-
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			// Not affecting hydration
-
-			this.window$?.unsubscribe();
-			this.window$ = merge(fromEvent(window, 'scroll'), fromEvent(window, 'resize')).subscribe({
-				next: () => this.onStateHide(),
-				error: (error: any) => console.error(error)
-			});
-		}
 	}
 
 	ngOnDestroy(): void {
@@ -139,6 +126,12 @@ export class DropdownComponent implements OnInit, OnDestroy {
 		this.appDropdownToggle.emit(this.dropdownState);
 
 		this.onStateUpdate();
+
+		this.dropdownAutoUpdate = autoUpdate(
+			this.dropdownElementTarget,
+			this.dropdownElementContent,
+			this.onStateUpdate.bind(this)
+		);
 	}
 
 	onStateHide(): void {
@@ -146,6 +139,8 @@ export class DropdownComponent implements OnInit, OnDestroy {
 		this.dropdownElementContent.style.display = 'none';
 
 		this.appDropdownToggle.emit(this.dropdownState);
+
+		this.dropdownAutoUpdate();
 	}
 
 	onStateUpdate(): void {
@@ -165,7 +160,8 @@ export class DropdownComponent implements OnInit, OnDestroy {
 							maxHeight: middlewareState.availableHeight + 'px'
 						});
 					}
-				})
+				}),
+				hide()
 			]
 		})
 			.then((computePositionReturn: ComputePositionReturn) => {
@@ -173,6 +169,12 @@ export class DropdownComponent implements OnInit, OnDestroy {
 					left: computePositionReturn.x + 'px',
 					top: computePositionReturn.y + 'px'
 				});
+
+				if (computePositionReturn.middlewareData.hide) {
+					if (computePositionReturn.middlewareData.hide.referenceHidden) {
+						this.onStateHide();
+					}
+				}
 
 				if (this.dropdownFit) {
 					const elementDOMRect: DOMRect = this.elementRef.nativeElement.getBoundingClientRect();

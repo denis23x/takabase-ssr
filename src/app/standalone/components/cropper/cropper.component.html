@@ -151,61 +151,6 @@
 						>
 						</image-cropper>
 					</div>
-					<form
-						class="flex flex-col gap-4 bg-base-200 rounded-box p-4"
-						autocomplete="off"
-						*ngIf="cropperImageFormToggle"
-						[formGroup]="cropperImageForm"
-					>
-						<fieldset class="form-control" *ngIf="cropperImageForm.get('scale') as scale">
-							<label class="label w-full gap-4 p-0">
-								<span class="label-text">Scale</span>
-								<input
-									class="range flex-1"
-									type="range"
-									aria-label="Scale"
-									formControlName="scale"
-									[min]="1"
-									[max]="5"
-									[step]="0.1"
-									[value]="scale.value"
-								/>
-								<input
-									class="input-bordered input input-sm w-14 text-center"
-									type="number"
-									aria-label="Scale"
-									formControlName="scale"
-									[class.input-success]="scale.valid"
-									[class.input-error]="scale.invalid"
-									[value]="scale.value"
-								/>
-							</label>
-						</fieldset>
-						<fieldset class="form-control" *ngIf="cropperImageForm.get('rotate') as rotate">
-							<label class="label w-full gap-4 p-0">
-								<span class="label-text">Rotate</span>
-								<input
-									class="range flex-1"
-									type="range"
-									aria-label="Rotate"
-									formControlName="rotate"
-									[min]="0"
-									[max]="360"
-									[step]="5"
-									[value]="rotate.value"
-								/>
-								<input
-									class="input-bordered input input-sm w-14 text-center"
-									type="number"
-									aria-label="Rotate"
-									formControlName="rotate"
-									[class.input-success]="rotate.valid"
-									[class.input-error]="rotate.invalid"
-									[value]="rotate.value"
-								/>
-							</label>
-						</fieldset>
-					</form>
 					<div class="flex items-start justify-between gap-4">
 						<!-- prettier-ignore -->
 						<div
@@ -277,7 +222,6 @@
                     <div
                       class="flex p-0"
                       appDropdown
-                      #dropdownAspectRatio
                       *ngIf="{ value: false } as toggle"
                       [ngClass]="{ 'bg-base-content/10': toggle.value }"
                       [appDropdownPlacement]="'top-start'"
@@ -313,20 +257,122 @@
                     </div>
                   </li>
                 </ng-container>
-								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
-									<button
-										class="fill-current p-3"
-										type="button"
-										title="Transform image"
-										aria-label="Transform image"
-										appSvgIcon
-										[disabled]="cropperImageForm.disabled"
-										[appSvgIconIcon]="'sliders'"
-										[appSvgIconSquare]="'1.5725em'"
-                    [ngClass]="{ 'active': cropperImageFormToggle && !cropperImageForm.disabled }"
-										(click)="cropperImageFormToggle = !cropperImageFormToggle"
-									></button>
-								</li>
+                <li class="inline-block" [class.disabled]="cropperImageForm.disabled">
+                  <div
+                    class="flex p-0"
+                    appDropdown
+                    *ngIf="{ value: false } as toggle"
+                    [ngClass]="{ 'bg-base-content/10': toggle.value }"
+                    [appDropdownPlacement]="'top'"
+                    [appDropdownClose]="false"
+                    (appDropdownToggle)="toggle.value = $event"
+                  >
+                    <button
+                      class="fill-current p-3"
+                      type="button"
+                      title="Rotate"
+                      aria-label="Rotate"
+                      appSvgIcon
+                      slot="target"
+                      [disabled]="cropperImageForm.disabled"
+                      [appSvgIconIcon]="'arrow-clockwise'"
+                      [appSvgIconSquare]="'1.5725em'"
+                    ></button>
+                    <div
+                      class="min-w-80 sm:min-w-96 px-4"
+                      slot="content"
+                    >
+                      <form
+                        class="flex rounded-box cursor-default border border-base-content/20 bg-base-100 shadow w-full p-4"
+                        autocomplete="off"
+                        [formGroup]="cropperImageForm"
+                      >
+                        <fieldset class="form-control w-full" *ngIf="cropperImageForm.get('rotate') as rotate">
+                          <label class="label w-full gap-4 p-0">
+                            <span class="label-text">Rotate</span>
+                            <input
+                              class="range range-success flex-1"
+                              type="range"
+                              aria-label="Rotate"
+                              formControlName="rotate"
+                              [min]="0"
+                              [max]="360"
+                              [step]="5"
+                              [value]="rotate.value"
+                            />
+                            <input
+                              class="input-bordered input input-sm w-14 text-center"
+                              type="number"
+                              aria-label="Rotate"
+                              formControlName="rotate"
+                              [class.input-success]="rotate.valid"
+                              [class.input-error]="rotate.invalid"
+                              [value]="rotate.value"
+                            />
+                          </label>
+                        </fieldset>
+                      </form>
+                    </div>
+                  </div>
+                </li>
+                <li class="inline-block" [class.disabled]="cropperImageForm.disabled">
+                  <div
+                    class="flex p-0"
+                    appDropdown
+                    *ngIf="{ value: false } as toggle"
+                    [ngClass]="{ 'bg-base-content/10': toggle.value }"
+                    [appDropdownPlacement]="'top'"
+                    [appDropdownClose]="false"
+                    (appDropdownToggle)="toggle.value = $event"
+                  >
+                    <button
+                      class="fill-current p-3"
+                      type="button"
+                      title="Zoom"
+                      aria-label="Zoom"
+                      appSvgIcon
+                      slot="target"
+                      [disabled]="cropperImageForm.disabled"
+                      [appSvgIconIcon]="'zoom-in'"
+                      [appSvgIconSquare]="'1.5725em'"
+                    ></button>
+                    <div
+                      class="min-w-80 sm:min-w-96 px-4"
+                      slot="content"
+                    >
+                      <form
+                        class="flex rounded-box cursor-default border border-base-content/20 bg-base-100 shadow w-full p-4"
+                        autocomplete="off"
+                        [formGroup]="cropperImageForm"
+                      >
+                        <fieldset class="form-control w-full" *ngIf="cropperImageForm.get('scale') as scale">
+                          <label class="label w-full gap-4 p-0">
+                            <span class="label-text">Scale</span>
+                            <input
+                              class="range range-success flex-1"
+                              type="range"
+                              aria-label="Scale"
+                              formControlName="scale"
+                              [min]="1"
+                              [max]="5"
+                              [step]="0.1"
+                              [value]="scale.value"
+                            />
+                            <input
+                              class="input-bordered input input-sm w-14 text-center"
+                              type="number"
+                              aria-label="Scale"
+                              formControlName="scale"
+                              [class.input-success]="scale.valid"
+                              [class.input-error]="scale.invalid"
+                              [value]="scale.value"
+                            />
+                          </label>
+                        </fieldset>
+                      </form>
+                    </div>
+                  </div>
+                </li>
 							</ul>
 						</div>
 						<button

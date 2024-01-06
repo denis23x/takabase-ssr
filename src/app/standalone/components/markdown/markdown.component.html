@@ -7,14 +7,12 @@
 	>
 		<ul
 			class="menu menu-horizontal menu-md flex-nowrap rounded-btn bg-base-100 p-0"
-			#controlListElement
 			[ngClass]="{ 'pointer-events-none bg-base-300': controlListDisabled }"
 		>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
 					class="flex p-0"
 					appDropdown
-					#dropdownHeading
 					*ngIf="{ value: false } as toggle"
 					[ngClass]="{ 'bg-base-content/10': toggle.value }"
 					(appDropdownToggle)="toggle.value = $event"
@@ -50,7 +48,6 @@
 				<div
 					class="flex p-0"
 					appDropdown
-					#dropdownFormatting
 					*ngIf="{ value: false } as toggle"
 					[ngClass]="{ 'bg-base-content/10': toggle.value }"
 					(appDropdownToggle)="toggle.value = $event"
@@ -86,7 +83,6 @@
 				<div
 					class="flex p-0"
 					appDropdown
-					#dropdownList
 					*ngIf="{ value: false } as toggle"
 					[ngClass]="{ 'bg-base-content/10': toggle.value }"
 					(appDropdownToggle)="toggle.value = $event"
@@ -136,7 +132,6 @@
 				<div
 					class="flex p-0"
 					appDropdown
-					#dropdownEmojiMart
 					*ngIf="{ value: false } as toggle"
 					[ngClass]="{ 'bg-base-content/10': toggle.value }"
 					[appDropdownClose]="false"
@@ -160,7 +155,6 @@
 				<div
 					class="flex p-0"
 					appDropdown
-					#dropdownTable
 					*ngIf="{ value: false } as toggle"
 					[ngClass]="{ 'bg-base-content/10': toggle.value }"
 					(appDropdownToggle)="toggle.value = $event"
@@ -180,7 +174,7 @@
 						<div class="relative h-40 w-40 overflow-hidden rounded-box">
 							<div
 								class="pointer-events-none absolute left-0 top-0 bg-base-content/10"
-								#controlListTableElement
+								data-control-table
 							></div>
 							<ul class="m-0 grid h-full w-full grid-cols-5 grid-rows-5 p-0">
 								<li
@@ -190,8 +184,8 @@
 									[class.rounded-tr-box]="i === 4"
 									[class.rounded-bl-box]="i === 20"
 									[class.rounded-br-box]="i === 24"
-									(mouseenter)="onTableMouseEnter($event)"
-									(mouseleave)="controlListTableElement.removeAttribute('style')"
+									(mouseenter)="onControlListTableMouseEnter($event, 'enter')"
+									(mouseleave)="onControlListTableMouseEnter($event, 'leave')"
 									(click)="setTextareaValue(getTextareaValue(controlListTable, i))"
 								></li>
 							</ul>
