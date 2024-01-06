@@ -44,6 +44,7 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
 import { IPAService } from '../../../core/services/ipa.service';
 import { FileService } from '../../../core/services/file.service';
 import { IPAOperation } from '../../../core/dto/ipa/ipa-operation.dto';
+import { AppSkeletonDirective } from '../../directives/app-skeleton.directive';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -68,7 +69,8 @@ interface CropperImageForm {
 		AppInputTrimWhitespaceDirective,
 		WindowComponent,
 		AppPlatformDirective,
-		DropdownComponent
+		DropdownComponent,
+		AppSkeletonDirective
 	],
 	selector: 'app-cropper, [appCropper]',
 	templateUrl: './cropper.component.html'

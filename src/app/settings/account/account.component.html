@@ -73,7 +73,7 @@
 			</p>
 			<fieldset class="form-control">
 				<button
-					class="btn btn-success w-full"
+					class="btn btn-success btn-md w-full"
 					type="submit"
 					aria-label="Continue"
 					[disabled]="passwordValidateForm.invalid || passwordValidateForm.disabled"
@@ -140,7 +140,7 @@
 				</fieldset>
 				<fieldset class="form-control" [ngSwitch]="currentUser.firebase.emailVerified">
 					<button
-						class="btn-success btn w-full"
+						class="btn-success btn-md btn w-full"
 						type="submit"
 						aria-label="Submit"
 						*ngSwitchCase="true"
@@ -165,7 +165,7 @@
 							</span>
 						</p>
 						<button
-							class="btn-success btn w-full"
+							class="btn-success btn-md btn w-full"
 							type="button"
 							aria-label="Confirm"
 							[disabled]="emailFormConfirmationIsSubmitted"
@@ -248,7 +248,7 @@
 				</p>
 				<fieldset class="form-control">
 					<button
-						class="btn btn-success w-full"
+						class="btn btn-md btn-success w-full"
 						type="submit"
 						aria-label="Submit"
 						[disabled]="passwordForm.invalid || passwordForm.disabled"
