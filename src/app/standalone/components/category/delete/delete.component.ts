@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
-import { AppInputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
+import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -47,7 +47,7 @@ interface CategoryDeleteForm {
 		CommonModule,
 		SvgIconComponent,
 		WindowComponent,
-		AppInputTrimWhitespaceDirective,
+		InputTrimWhitespaceDirective,
 		ReactiveFormsModule
 	],
 	selector: 'app-category-delete, [appCategoryDelete]',

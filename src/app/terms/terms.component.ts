@@ -5,12 +5,12 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
-import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
+import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, AppScrollPresetDirective, SvgIconComponent],
+	imports: [CommonModule, RouterModule, ScrollPresetDirective, SvgIconComponent],
 	selector: 'app-terms',
 	templateUrl: './terms.component.html'
 })

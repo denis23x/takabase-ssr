@@ -14,7 +14,7 @@ import { PlatformService } from '../../core/services/platform.service';
 	standalone: true,
 	selector: '[appTextareaAutosize]'
 })
-export class AppTextareaAutosizeDirective implements AfterViewInit, OnDestroy {
+export class TextareaAutosizeDirective implements AfterViewInit, OnDestroy {
 	@HostListener('ngModelChange', ['$event']) ngModelChange() {
 		/** Update autosize */
 

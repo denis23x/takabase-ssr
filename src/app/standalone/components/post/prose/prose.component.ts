@@ -12,7 +12,7 @@ import { Post } from '../../../../core/models/post.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { SanitizerPipe } from '../../../pipes/sanitizer.pipe';
 import { CurrentUser } from '../../../../core/models/current-user.model';
-import { AppSkeletonDirective } from '../../../directives/app-skeleton.directive';
+import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../../dropdown/dropdown.component';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { filter } from 'rxjs/operators';
@@ -33,7 +33,7 @@ import { ReportService } from '../../../../core/services/report.service';
 		DayjsPipe,
 		NgOptimizedImage,
 		SanitizerPipe,
-		AppSkeletonDirective,
+		SkeletonDirective,
 		DropdownComponent,
 		SvgIconComponent,
 		PostDeleteComponent,

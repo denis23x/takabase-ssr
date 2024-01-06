@@ -6,12 +6,12 @@ import { Subscription } from 'rxjs';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { CommonModule } from '@angular/common';
-import { AppAuthenticatedDirective } from '../../directives/app-authenticated.directive';
+import { AuthenticatedDirective } from '../../directives/app-authenticated.directive';
 import { UserUrlPipe } from '../../pipes/user-url.pipe';
 import { AuthorizationService } from '../../../core/services/authorization.service';
 import { filter } from 'rxjs/operators';
 import { CurrentUser } from '../../../core/models/current-user.model';
-import { AppSkeletonDirective } from '../../directives/app-skeleton.directive';
+import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 
 @Component({
@@ -22,9 +22,9 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
 		RouterModule,
 		SvgIconComponent,
 		AvatarComponent,
-		AppAuthenticatedDirective,
+		AuthenticatedDirective,
 		UserUrlPipe,
-		AppSkeletonDirective,
+		SkeletonDirective,
 		DropdownComponent
 	],
 	templateUrl: './header.component.html'

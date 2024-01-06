@@ -6,7 +6,7 @@ import { distinctUntilKeyChanged, Subscription, throwError } from 'rxjs';
 import { catchError, filter, switchMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
-import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
+import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { DayjsPipe } from '../standalone/pipes/dayjs.pipe';
 import { User } from '../core/models/user.model';
@@ -20,7 +20,7 @@ import { CurrentUser } from '../core/models/current-user.model';
 import { UserPostComponent } from './post/post.component';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
-import { AppSkeletonDirective } from '../standalone/directives/app-skeleton.directive';
+import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
 import { CategoryDeleteComponent } from '../standalone/components/category/delete/delete.component';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -41,12 +41,12 @@ import { SearchFormComponent } from '../standalone/components/search-form/search
 		RouterModule,
 		AvatarComponent,
 		DayjsPipe,
-		AppScrollPresetDirective,
+		ScrollPresetDirective,
 		SvgIconComponent,
 		MarkdownPipe,
 		SanitizerPipe,
 		DropdownComponent,
-		AppSkeletonDirective,
+		SkeletonDirective,
 		CategoryUpdateComponent,
 		CategoryDeleteComponent,
 		CategoryCreateComponent,

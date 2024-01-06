@@ -5,11 +5,11 @@ import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 import { AbstractMarkdownProseComponent } from '../../abstracts/abstract-markdown-prose.component';
 import { CommonModule } from '@angular/common';
-import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
+import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, MarkdownPipe, SanitizerPipe, AppSkeletonDirective],
+	imports: [CommonModule, MarkdownPipe, SanitizerPipe, SkeletonDirective],
 	selector: 'app-terms-details',
 	templateUrl: './details.component.html'
 })

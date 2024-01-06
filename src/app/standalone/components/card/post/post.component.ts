@@ -5,11 +5,11 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { Post } from '../../../../core/models/post.model';
-import { AppSkeletonDirective } from '../../../directives/app-skeleton.directive';
+import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, DayjsPipe, NgOptimizedImage, AppSkeletonDirective],
+	imports: [CommonModule, RouterModule, DayjsPipe, NgOptimizedImage, SkeletonDirective],
 	selector: 'app-card-post, [appCardPost]',
 	templateUrl: './post.component.html'
 })

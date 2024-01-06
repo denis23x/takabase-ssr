@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { CropperComponent } from '../../standalone/components/cropper/cropper.component';
-import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
+import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { HelperService } from '../../core/services/helper.service';
@@ -23,12 +23,12 @@ import { UserService } from '../../core/services/user.service';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
-import { AppTextareaAutosizeDirective } from '../../standalone/directives/app-textarea-autosize.directive';
+import { TextareaAutosizeDirective } from '../../standalone/directives/app-textarea-autosize.directive';
 import { CurrentUser } from '../../core/models/current-user.model';
 import { User } from '../../core/models/user.model';
 import { QrCodeComponent } from '../../standalone/components/qr-code/qr-code.component';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
-import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
+import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { PlatformService } from '../../core/services/platform.service';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { FileService } from '../../core/services/file.service';
@@ -49,11 +49,11 @@ interface ProfileForm {
 		CropperComponent,
 		DayjsPipe,
 		UserUrlPipe,
-		AppInputTrimWhitespaceDirective,
-		AppTextareaAutosizeDirective,
+		InputTrimWhitespaceDirective,
+		TextareaAutosizeDirective,
 		QrCodeComponent,
 		DropdownComponent,
-		AppSkeletonDirective
+		SkeletonDirective
 	],
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'

@@ -14,7 +14,7 @@ import {
 } from '@angular/forms';
 import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
-import { AppInputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
+import { InputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
 import { CropperComponent } from '../standalone/components/cropper/cropper.component';
 import { MarkdownComponent } from '../standalone/components/markdown/markdown.component';
@@ -27,15 +27,15 @@ import { AuthorizationService } from '../core/services/authorization.service';
 import { CategoryService } from '../core/services/category.service';
 import { UserService } from '../core/services/user.service';
 import { PostCreateDto } from '../core/dto/post/post-create.dto';
-import { AppScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
+import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { CookieService } from '../core/services/cookie.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
-import { AppTextareaAutosizeDirective } from '../standalone/directives/app-textarea-autosize.directive';
+import { TextareaAutosizeDirective } from '../standalone/directives/app-textarea-autosize.directive';
 import { CurrentUser } from '../core/models/current-user.model';
 import { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
 import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
-import { AppSkeletonDirective } from '../standalone/directives/app-skeleton.directive';
+import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
@@ -63,14 +63,14 @@ interface PostForm {
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
-		AppInputTrimWhitespaceDirective,
+		InputTrimWhitespaceDirective,
 		DropdownComponent,
 		CropperComponent,
 		MarkdownComponent,
 		NgOptimizedImage,
-		AppScrollPresetDirective,
-		AppTextareaAutosizeDirective,
-		AppSkeletonDirective,
+		ScrollPresetDirective,
+		TextareaAutosizeDirective,
+		SkeletonDirective,
 		PostDeleteComponent,
 		PostDeleteImageComponent,
 		CategoryCreateComponent,

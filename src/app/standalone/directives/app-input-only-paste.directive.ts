@@ -6,7 +6,7 @@ import { Directive, HostListener } from '@angular/core';
 	standalone: true,
 	selector: '[appInputOnlyPaste]'
 })
-export class AppInputOnlyPasteDirective {
+export class InputOnlyPasteDirective {
 	@HostListener('keydown', ['$event']) onKeydown(keyboardEvent: KeyboardEvent) {
 		const ctrlKey: boolean = keyboardEvent.ctrlKey;
 		const metaKey: boolean = keyboardEvent.metaKey;

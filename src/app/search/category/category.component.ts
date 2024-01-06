@@ -9,7 +9,7 @@ import { Category } from '../../core/models/category.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto';
 import { AbstractSearchComponent } from '../../abstracts/abstract-search.component';
-import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
+import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { CardCategoryComponent } from '../../standalone/components/card/category/category.component';
 import { CategoryService } from '../../core/services/category.service';
 import { MetaService } from '../../core/services/meta.service';
@@ -23,7 +23,7 @@ import { Subscription } from 'rxjs';
 		RouterModule,
 		UserUrlPipe,
 		SvgIconComponent,
-		AppSkeletonDirective,
+		SkeletonDirective,
 		CardCategoryComponent
 	],
 	selector: 'app-search-category',

@@ -9,7 +9,7 @@ import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
+import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { PostService } from '../../core/services/post.service';
 import { MetaService } from '../../core/services/meta.service';
 import { SkeletonService } from '../../core/services/skeleton.service';
@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, SvgIconComponent, CardPostComponent, AppSkeletonDirective],
+	imports: [CommonModule, RouterModule, SvgIconComponent, CardPostComponent, SkeletonDirective],
 	selector: 'app-search-post',
 	templateUrl: './post.component.html'
 })

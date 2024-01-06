@@ -14,13 +14,13 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { environment } from '../../../environments/environment';
-import { AppScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
+import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { Appearance } from '../../core/models/appearance.model';
 import { AppearanceService } from '../../core/services/appearance.service';
 import { CurrentUser } from '../../core/models/current-user.model';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { DocumentData } from '@angular/fire/compat/firestore';
-import { AppSkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
+import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
@@ -48,8 +48,8 @@ interface AppearanceForm {
 		RouterModule,
 		ReactiveFormsModule,
 		DropdownComponent,
-		AppScrollPresetDirective,
-		AppSkeletonDirective,
+		ScrollPresetDirective,
+		SkeletonDirective,
 		SvgIconComponent,
 		MarkdownPipe,
 		SanitizerPipe

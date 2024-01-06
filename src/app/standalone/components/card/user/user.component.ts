@@ -2,7 +2,7 @@
 
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppSkeletonDirective } from '../../../directives/app-skeleton.directive';
+import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { UserUrlPipe } from '../../../pipes/user-url.pipe';
 import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../../avatar/avatar.component';
@@ -11,14 +11,7 @@ import { User } from '../../../../core/models/user.model';
 
 @Component({
 	standalone: true,
-	imports: [
-		CommonModule,
-		RouterModule,
-		AppSkeletonDirective,
-		UserUrlPipe,
-		AvatarComponent,
-		DayjsPipe
-	],
+	imports: [CommonModule, RouterModule, SkeletonDirective, UserUrlPipe, AvatarComponent, DayjsPipe],
 	selector: 'app-card-user, [appCardUser]',
 	templateUrl: './user.component.html'
 })

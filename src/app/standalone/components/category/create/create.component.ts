@@ -5,8 +5,8 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
-import { AppInputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
-import { AppTextareaAutosizeDirective } from '../../../directives/app-textarea-autosize.directive';
+import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
+import { TextareaAutosizeDirective } from '../../../directives/app-textarea-autosize.directive';
 import { CategoryCreateDto } from '../../../../core/dto/category/category-create.dto';
 import { Category } from '../../../../core/models/category.model';
 import {
@@ -31,8 +31,8 @@ interface CategoryForm {
 		CommonModule,
 		SvgIconComponent,
 		WindowComponent,
-		AppInputTrimWhitespaceDirective,
-		AppTextareaAutosizeDirective,
+		InputTrimWhitespaceDirective,
+		TextareaAutosizeDirective,
 		ReactiveFormsModule
 	],
 	selector: 'app-category-create, [appCategoryCreate]',

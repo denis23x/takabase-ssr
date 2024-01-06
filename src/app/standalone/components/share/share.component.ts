@@ -7,10 +7,11 @@ import { PlatformService } from '../../../core/services/platform.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { Post } from '../../../core/models/post.model';
 import { HelperService } from '../../../core/services/helper.service';
+import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 
 @Component({
 	standalone: true,
-	imports: [SvgIconComponent],
+	imports: [SvgIconComponent, SkeletonDirective],
 	selector: 'app-share, [appShare]',
 	templateUrl: './share.component.html'
 })
@@ -24,7 +25,13 @@ export class ShareComponent {
 		}
 	}
 
+	@Input()
+	set appSharePostSkeletonToggle(postSkeletonToggle: boolean) {
+		this.postSkeletonToggle = postSkeletonToggle;
+	}
+
 	post: Post | undefined;
+	postSkeletonToggle: boolean = true;
 
 	shareList: Record<string, string> = {};
 	shareListDefault: Record<string, string> = {
@@ -106,7 +113,7 @@ export class ShareComponent {
 	}
 
 	setShareList(): void {
-		this.shareList = this.shareListDefault;
+		this.shareList = { ...this.shareListDefault };
 
 		Object.keys(this.shareList).forEach((shareKey: string) => {
 			const params: Params | null = this.getShareListParams(shareKey);

@@ -9,7 +9,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 	standalone: true,
 	selector: '[appInputTrimWhitespace]'
 })
-export class AppInputTrimWhitespaceDirective {
+export class InputTrimWhitespaceDirective {
 	constructor(private ngControl: NgControl) {
 		this.trimValue(this.ngControl.valueAccessor);
 	}

@@ -2,7 +2,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
+import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import {
 	FormBuilder,
@@ -29,7 +29,7 @@ interface SearchForm {
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
-		AppInputTrimWhitespaceDirective,
+		InputTrimWhitespaceDirective,
 		DropdownComponent,
 		SvgIconComponent
 	],

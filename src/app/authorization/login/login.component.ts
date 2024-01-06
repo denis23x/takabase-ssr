@@ -18,7 +18,7 @@ import { LoginDto } from '../../core/dto/auth/login.dto';
 import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
-import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
+import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { Subscription } from 'rxjs';
 
@@ -34,7 +34,7 @@ interface LoginForm {
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
-		AppInputTrimWhitespaceDirective,
+		InputTrimWhitespaceDirective,
 		OauthComponent
 	],
 	selector: 'app-authorization-login',

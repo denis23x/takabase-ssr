@@ -35,8 +35,8 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { WindowComponent } from '../window/window.component';
-import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
-import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
+import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
+import { InputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
 import {
 	MarkdownControl,
 	MarkdownTextarea,
@@ -65,8 +65,8 @@ interface UrlForm {
 		SvgIconComponent,
 		DropdownComponent,
 		WindowComponent,
-		AppInputTrimWhitespaceDirective,
-		AppInputOnlyPasteDirective
+		InputTrimWhitespaceDirective,
+		InputOnlyPasteDirective
 	],
 	selector: 'app-markdown, [appMarkdown]',
 	templateUrl: './markdown.component.html'

@@ -17,7 +17,7 @@ import { HelperService } from '../../core/services/helper.service';
 import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
-import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
+import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { RegistrationDto } from '../../core/dto/auth/registration.dto';
@@ -37,7 +37,7 @@ interface RegistrationForm {
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
-		AppInputTrimWhitespaceDirective,
+		InputTrimWhitespaceDirective,
 		OauthComponent
 	],
 	selector: 'app-authorization-registration',

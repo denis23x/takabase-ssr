@@ -32,11 +32,11 @@ import {
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { HelperService } from '../../../core/services/helper.service';
-import { AppInputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
-import { AppInputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
+import { InputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
+import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { WindowComponent } from '../window/window.component';
-import { AppPlatformDirective } from '../../directives/app-platform.directive';
+import { PlatformDirective } from '../../directives/app-platform.directive';
 import { PlatformService } from '../../../core/services/platform.service';
 import { MarkdownService } from '../../../core/services/markdown.service';
 import { filter, switchMap, tap } from 'rxjs/operators';
@@ -44,7 +44,7 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
 import { IPAService } from '../../../core/services/ipa.service';
 import { FileService } from '../../../core/services/file.service';
 import { IPAOperation } from '../../../core/dto/ipa/ipa-operation.dto';
-import { AppSkeletonDirective } from '../../directives/app-skeleton.directive';
+import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -65,12 +65,12 @@ interface CropperImageForm {
 		ReactiveFormsModule,
 		ImageCropperModule,
 		SvgIconComponent,
-		AppInputOnlyPasteDirective,
-		AppInputTrimWhitespaceDirective,
+		InputOnlyPasteDirective,
+		InputTrimWhitespaceDirective,
 		WindowComponent,
-		AppPlatformDirective,
+		PlatformDirective,
 		DropdownComponent,
-		AppSkeletonDirective
+		SkeletonDirective
 	],
 	selector: 'app-cropper, [appCropper]',
 	templateUrl: './cropper.component.html'

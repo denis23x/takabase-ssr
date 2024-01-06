@@ -14,7 +14,7 @@ import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.
 import { HelperService } from '../../core/services/helper.service';
 import { MetaService } from '../../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
-import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
+import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
 import { PasswordService } from '../../core/services/password.service';
@@ -31,7 +31,7 @@ interface ResetForm {
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
-		AppInputTrimWhitespaceDirective
+		InputTrimWhitespaceDirective
 	],
 	selector: 'app-authorization-reset',
 	templateUrl: './reset.component.html'

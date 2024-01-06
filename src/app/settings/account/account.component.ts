@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../core/services/helper.service';
-import { AppInputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
+import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { PasswordValidateGetDto } from '../../core/dto/password/password-validate-get.dto';
 import { CookieService } from '../../core/services/cookie.service';
@@ -43,7 +43,7 @@ interface PasswordForm {
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
-		AppInputTrimWhitespaceDirective
+		InputTrimWhitespaceDirective
 	],
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'
