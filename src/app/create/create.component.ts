@@ -316,9 +316,9 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleMarkdownDialog(toggle: boolean): void {
-		this.onTogglePostFormStatus(toggle);
-
 		this.postMarkdownDialogToggle = toggle;
+
+		this.onTogglePostFormStatus(toggle);
 	}
 
 	onToggleMarkdownUpload(toggle: boolean): void {

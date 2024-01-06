@@ -5,9 +5,8 @@
 	<dialog
 		class="modal"
 		#QRCodeDialog
-		(keydown.escape)="$event.preventDefault(); QRCodeDialog.close()"
-		(close)="onToggleQRCodeDialog(false)"
-		(click)="$event.target === $event.currentTarget ? QRCodeDialog.close() : $event"
+		(keydown.escape)="$event.preventDefault(); onToggleQRCodeDialog(false)"
+		(click)="$event.target === $event.currentTarget ? onToggleQRCodeDialog(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-xs"

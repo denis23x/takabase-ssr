@@ -5,9 +5,8 @@
 	<dialog
 		class="modal"
 		#postDeleteDialogElement
-		(keydown.escape)="$event.preventDefault(); postDeleteDialogElement.close()"
-		(close)="onTogglePostDeleteDialog(false)"
-		(click)="$event.target === $event.currentTarget ? postDeleteDialogElement.close() : $event"
+		(keydown.escape)="$event.preventDefault(); onTogglePostDeleteDialog(false)"
+		(click)="$event.target === $event.currentTarget ? onTogglePostDeleteDialog(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-xs"

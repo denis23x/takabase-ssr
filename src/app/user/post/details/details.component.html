@@ -5,9 +5,8 @@
 	<dialog
 		class="modal"
 		#abstractPostProseDialog
-		(keydown.escape)="$event.preventDefault(); abstractPostProseDialog.close()"
-		(close)="setAbstractPostProseDialogClose()"
-		(click)="$event.target === $event.currentTarget ? abstractPostProseDialog.close() : $event"
+		(keydown.escape)="$event.preventDefault(); setAbstractPostProseDialogClose()"
+		(click)="$event.target === $event.currentTarget ? setAbstractPostProseDialogClose() : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-2xl"

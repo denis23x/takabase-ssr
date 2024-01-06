@@ -5,9 +5,8 @@
 	<dialog
 		class="modal"
 		#categoryDeleteDialogElement
-		(keydown.escape)="$event.preventDefault(); categoryDeleteDialogElement.close()"
-		(close)="onToggleCategoryDeleteDialog(false)"
-		(click)="$event.target === $event.currentTarget ? categoryDeleteDialogElement.close() : $event"
+		(keydown.escape)="$event.preventDefault(); onToggleCategoryDeleteDialog(false)"
+		(click)="$event.target === $event.currentTarget ? onToggleCategoryDeleteDialog(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-lg"

@@ -92,13 +92,14 @@ export class ReportComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleReportDialog(toggle: boolean): void {
+		this.reportDialogToggle = toggle;
+
 		if (toggle) {
 			this.reportDialog.nativeElement.showModal();
 		} else {
 			this.reportDialog.nativeElement.close();
 		}
 
-		this.reportDialogToggle = toggle;
 		this.reportForm.reset();
 	}
 
