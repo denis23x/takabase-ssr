@@ -172,7 +172,9 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 
 				if (computePositionReturn.middlewareData.hide) {
 					if (computePositionReturn.middlewareData.hide.referenceHidden) {
-						this.onStateHide();
+						if (!this.dropdownElementContent.contains(this.document.activeElement)) {
+							this.onStateHide();
+						}
 					}
 				}
 
