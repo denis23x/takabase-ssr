@@ -182,14 +182,6 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 			return setWrapper(`![${formGroupValue.title}](${formGroupValue.url})`, markdownTextarea, 'block');
 		}
 	},
-  {
-    key: 'url-cropper',
-    label: 'Cropper',
-    icon: 'crop',
-    handler: (markdownTextarea: MarkdownTextarea, formGroupValue: any): string => {
-      return setWrapper(`![${formGroupValue.title}](${formGroupValue.url})`, markdownTextarea, 'block');
-    }
-  },
 	{
 		key: 'url-youtube',
 		label: 'YouTube',
@@ -199,6 +191,16 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 		}
 	}
 ];
+
+// prettier-ignore
+export const MarkdownControlCropper = (): MarkdownControl => ({
+	key: 'cropper',
+	label: 'Cropper',
+	icon: 'crop',
+	handler: (markdownTextarea: MarkdownTextarea, formGroupValue: any): string => {
+		return setWrapper(`![${formGroupValue.title}](${formGroupValue.url})`, markdownTextarea, 'block');
+	}
+});
 
 export const MarkdownControlEmojiMart = (): MarkdownControl => ({
 	key: 'emoji-mart',

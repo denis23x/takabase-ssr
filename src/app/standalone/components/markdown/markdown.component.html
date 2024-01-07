@@ -129,6 +129,17 @@
 				></button>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
+				<button
+					class="fill-current p-3"
+					appSvgIcon
+					[attr.aria-label]="controlListCropper.label"
+					[attr.title]="controlListCropper.label"
+					[appSvgIconIcon]="controlListCropper.icon"
+					[appSvgIconSquare]="'1.5725em'"
+					(click)="onControlListCropperClick(controlListCropper)"
+				></button>
+			</li>
+			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<div
 					class="flex p-0"
 					appDropdown

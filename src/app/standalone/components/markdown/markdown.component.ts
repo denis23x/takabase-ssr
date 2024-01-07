@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import {
 	MarkdownControlCode,
+	MarkdownControlCropper,
 	MarkdownControlEmojiMart,
 	MarkdownControlFormatting,
 	MarkdownControlHeading,
@@ -107,6 +108,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	controlListFormatting: MarkdownControl[] = MarkdownControlFormatting();
 	controlListList: MarkdownControl[] = MarkdownControlList();
 	controlListUrl: MarkdownControl[] = MarkdownControlUrl();
+	controlListCropper: MarkdownControl = MarkdownControlCropper();
 	controlListEmojiMart: MarkdownControl = MarkdownControlEmojiMart();
 	controlListEmojiMartColorScheme$: Subscription | undefined;
 	controlListTable: MarkdownControl = MarkdownControlTable();
@@ -174,10 +176,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 						// prettier-ignore
 						this.fileService.create(file, '/upload/post-images-markdown').subscribe({
 							next: (fileUrl: string) => {
-								const markdownControlUrlCropper: MarkdownControl = this.controlListUrl.find((markdownControl: MarkdownControl) => {
-                  return markdownControl.key === 'url-cropper';
-                });
-
                 const params: any = {
                   title: Date.now(),
                   url: fileUrl
@@ -187,7 +185,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
                 /** Apply result */
 
-                this.setTextareaValue(this.getTextareaValue(markdownControlUrlCropper, params));
+                this.setTextareaValue(this.getTextareaValue(this.controlListCropper, params));
 							},
 							error: (error: any) => console.error(error)
 						});
@@ -233,6 +231,10 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				divElement.removeAttribute('style');
 			}
 		}
+	}
+
+	onControlListCropperClick(markdownControl: MarkdownControl): void {
+		console.log(markdownControl);
 	}
 
 	/** Extra handlers */
@@ -413,10 +415,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
           break
         }
-        case "url-cropper":
-          alert('show me cropper!');
-
-          break;
         case "url-youtube": {
           this.urlForm.addControl("url", this.formBuilder.nonNullable.control("", [Validators.required, Validators.pattern(this.helperService.getRegex("youtube"))]))
 

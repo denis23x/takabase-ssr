@@ -459,9 +459,11 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	onSubmitCropper(): void {
-		const file: File = this.fileService.getFileFromBlob(this.cropperBlob);
-
 		this.cropperImageForm.disable();
+
+		/** Get ready file */
+
+		const file: File = this.fileService.getFileFromBlob(this.cropperBlob);
 
 		this.imageFormRequest$?.unsubscribe();
 		this.imageFormRequest$ = this.ipaService
@@ -493,6 +495,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 					} else {
 						this.appCropperSubmit.emit(file);
 					}
+
+					this.cropperImageForm.enable();
 				},
 				error: () => this.cropperImageForm.enable()
 			});
