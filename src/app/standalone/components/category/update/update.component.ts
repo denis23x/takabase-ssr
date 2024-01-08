@@ -51,6 +51,7 @@ export class CategoryUpdateComponent implements OnDestroy {
 	// prettier-ignore
 	@ViewChild('categoryUpdateDialogElement') categoryUpdateDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
+	@Output() appCategoryUpdateToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() appCategoryUpdateSuccess: EventEmitter<Category> = new EventEmitter<Category>();
 
 	@Input({ required: true })
@@ -120,6 +121,8 @@ export class CategoryUpdateComponent implements OnDestroy {
 			this.categoryUpdateFormIsPristine = true;
 			this.categoryUpdateFormIsPristine$?.unsubscribe();
 		}
+
+		this.appCategoryUpdateToggle.emit(toggle);
 	}
 
 	onSubmitCategoryUpdateForm(): void {

@@ -3,76 +3,105 @@
 <ng-container>
 	<div class="flex flex-col gap-4 md:gap-8">
 		<div
-			class="rounded-box flex w-full flex-col items-stretch gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl sm:flex-row"
+			class="rounded-box flex w-full flex-col items-stretch gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
-			<div class="flex items-center gap-4">
-				<!-- prettier-ignore -->
-				<figure
-					class="block rounded-btn relative aspect-square border border-base-content/20 group h-12 w-12 sm:h-44 sm:w-44"
-					appSkeleton
-					*ngIf="postForm.get('image') as image"
-					[appSkeletonToggle]="postSkeletonToggle || postSkeletonImageToggle"
-					[appSkeletonClassListElementRef]="['border-0']"
-					[ngClass]="{ 'cursor-not-allowed border-transparent bg-base-200': postForm.disabled, 'border-success': postForm.enabled && image.value }"
-				>
-          <!-- prettier-ignore -->
-					<img
-						class="rounded-btn aspect-square object-cover group-hover:grayscale"
-						width="256"
-						height="256"
-						loading="lazy"
-						*ngIf="image.value"
-						[alt]="postForm.value.title || 'Image'"
-						[ngClass]="{ 'invisible': !image.value, 'opacity-50 grayscale transition': postForm.disabled }"
-						[src]="image.value"
-					/>
+			<div class="flex flex-row w-full items-center justify-between gap-4">
+				<div class="flex items-center justify-start gap-4 overflow-auto w-full">
 					<div
-						class="flex items-center justify-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-						[ngSwitch]="true"
+						class="flex"
+						appSkeleton
+						[appSkeletonToggle]="postSkeletonToggle || postFormImageSkeletonToggle"
 					>
-						<button
-							class="btn btn-md btn-success btn-circle fill-current no-animation opacity-0 group-hover:opacity-100"
-							type="button"
-							title="Delete image"
-							aria-label="Delete image"
-							appSvgIcon
-							*ngSwitchCase="image.value !== null"
-							[appSvgIconIcon]="'x'"
-							[appSvgIconSquare]="'2em'"
-							[disabled]="postForm.disabled"
-							(click)="appPostDeleteImageComponent.onTogglePostDeleteImageDialog(true)"
-						></button>
-						<button
-							class="btn btn-md btn-ghost btn-circle fill-current no-animation"
-							type="button"
-							title="Set image"
-							aria-label="Set image"
-							appSvgIcon
-							*ngSwitchCase="image.value === null"
-							[appSvgIconIcon]="'plus'"
-							[appSvgIconSquare]="'2em'"
-							[disabled]="postForm.disabled"
-							(click)="appCropperComponent.onToggleCropper(true)"
-						></button>
+						<!-- prettier-ignore -->
+						<figure
+							class="block rounded-btn relative border border-base-content/20 h-12 w-12 overflow-hidden transition"
+							*ngIf="postForm.get('image') as image"
+              [ngSwitch]="!!image.value"
+              [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-200': postForm.disabled, 'cursor-pointer': postForm.enabled, 'border-success': image.value }"
+              (click)="appCropperComponent.onToggleCropper(true)"
+						>
+							<img
+								class="block object-cover"
+								width="48"
+								height="48"
+								loading="lazy"
+                *ngSwitchCase="true"
+								[alt]="'Image'"
+								[src]="image.value"
+							/>
+              <i
+                class="fill-current absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                appSvgIcon
+                *ngSwitchCase="false"
+                [appSvgIconIcon]="'plus'"
+                [appSvgIconSquare]="'2em'"
+              ></i>
+						</figure>
 					</div>
-				</figure>
-				<div class="flex flex-col items-start gap-2 sm:hidden">
-					<span
-						class="text-lg leading-6 font-bold text-base-content max-w-full"
-						appSkeleton
-						[appSkeletonToggle]="postSkeletonToggle"
-					>
-						Image
-					</span>
-					<p
-						class="text-sm text-base-content/50 leading-4 truncate max-w-full"
-						appSkeleton
-						[appSkeletonToggle]="postSkeletonToggle"
-					>
-						Upload post image
-					</p>
+					<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
+						<span
+							class="truncate text-xl leading-6 font-bold text-base-content max-w-full"
+							appSkeleton
+							[appSkeletonToggle]="postSkeletonToggle"
+						>
+							Image
+						</span>
+						<p
+							class="truncate text-sm leading-4 text-base-content/50 max-w-full"
+							appSkeleton
+							[appSkeletonToggle]="postSkeletonToggle"
+						>
+							Upload post image
+						</p>
+					</div>
+				</div>
+				<div
+					class="flex items-center justify-end"
+					appDropdown
+					appSkeleton
+					[appSkeletonToggle]="postSkeletonToggle"
+					[appDropdownPlacement]="'bottom-end'"
+				>
+					<button
+						class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
+						type="button"
+						title="Menu"
+						aria-label="Menu"
+						appSvgIcon
+						slot="target"
+						[disabled]="postForm.disabled"
+						[appSvgIconIcon]="'three-dots-vertical'"
+						[appSvgIconSquare]="'1.5em'"
+					></button>
+					<ul class="menu menu-vertical menu-md" slot="content">
+						<ng-container *ngIf="postForm.get('image') as image">
+							<li class="flex w-full snap-start scroll-my-2">
+								<button
+									class="rounded-btn block w-full truncate text-right"
+									type="button"
+									title="Update image"
+									aria-label="Update image"
+									(click)="appCropperComponent.onToggleCropper(true)"
+								>
+									{{ image.value ? "Update" : "Set" }} image
+								</button>
+							</li>
+							<li class="flex w-full snap-start scroll-my-2" *ngIf="image.value">
+								<button
+									class="rounded-btn block w-full truncate text-right"
+									type="button"
+									title="Delete image"
+									aria-label="Delete image"
+									(click)="onUpdateCropperImage(null, image.value)"
+								>
+									Delete image
+								</button>
+							</li>
+						</ng-container>
+					</ul>
 				</div>
 			</div>
+			<hr class="w-full border-base-content/20" />
 			<form
 				class="grid flex-1 grid-cols-12 gap-x-4 gap-y-2"
 				autocomplete="off"
@@ -504,12 +533,12 @@
 					appSkeleton
 					[appSkeletonToggle]="postSkeletonToggle"
 					[appSkeletonClassListElementRef]="['border-0']"
-					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine || postSkeletonImageToggle"
+					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine || postFormImageSkeletonToggle"
 					(click)="onSubmitPostForm()"
 				>
 					<span
             class="loading loading-spinner"
-            *ngIf="postForm.disabled && !appCropperComponent.cropperDialogToggle && !appCategoryCreateComponent.categoryCreateDialogToggle && !appPostPreviewComponent.postPreviewDialogToggle && !appPostDeleteComponent.postDeleteDialogToggle && !appPostDeleteImageComponent.postDeleteImageDialogToggle && !postMarkdownDialogToggle"
+            *ngIf="postForm.disabled && !appCropperComponent.cropperDialogToggle && !appCategoryCreateComponent.categoryCreateDialogToggle && !appPostPreviewComponent.postPreviewDialogToggle && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownDialogToggle"
           ></span>
 					Submit
 				</button>
@@ -554,6 +583,7 @@
 		#appCategoryUpdateComponent
 		[appCategoryUpdateCategory]="category"
 		[appCategoryUpdateCategoryList]="categoryList"
+		(appCategoryUpdateToggle)="onTogglePostFormStatus($event)"
 		(appCategoryUpdateSuccess)="onUpdateCategory($event)"
 	></div>
 	<div
@@ -561,12 +591,5 @@
 		#appPostDeleteComponent
 		[appPostDeletePost]="post"
 		(appPostDeleteToggle)="onTogglePostFormStatus($event)"
-	></div>
-	<div
-		appPostDeleteImage
-		#appPostDeleteImageComponent
-		[appPostDeleteImage]="postForm.value.image"
-		(appPostDeleteImageSubmit)="onUpdateCropperImage(null)"
-		(appPostDeleteImageToggle)="onTogglePostFormStatus($event)"
 	></div>
 </ng-container>

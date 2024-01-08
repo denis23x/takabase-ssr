@@ -14,7 +14,7 @@ import { PlatformService } from '../../../core/services/platform.service';
 })
 export class AvatarComponent {
 	@Input({ required: true })
-	set appAvatarUser(user: User | undefined) {
+	set appAvatarUser(user: Partial<User> | undefined) {
 		this.user = user;
 
 		if (this.user?.avatar) {
@@ -24,7 +24,7 @@ export class AvatarComponent {
 		}
 	}
 
-	user: User | undefined;
+	user: Partial<User> | undefined;
 
 	constructor(
 		@Inject(DOCUMENT)

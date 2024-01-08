@@ -44,7 +44,6 @@ import { PlatformService } from '../core/services/platform.service';
 import { FileService } from '../core/services/file.service';
 import { PostUpdateDto } from '../core/dto/post/post-update.dto';
 import { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
-import { PostDeleteImageComponent } from '../standalone/components/post/delete-image/delete-image.component';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -72,7 +71,6 @@ interface PostForm {
 		TextareaAutosizeDirective,
 		SkeletonDirective,
 		PostDeleteComponent,
-		PostDeleteImageComponent,
 		CategoryCreateComponent,
 		CategoryUpdateComponent,
 		PostPreviewComponent
@@ -96,12 +94,14 @@ export class CreateComponent implements OnInit, OnDestroy {
 	post: Post | undefined;
 	postRequest$: Subscription | undefined;
 	postSkeletonToggle: boolean = true;
-	postSkeletonImageToggle: boolean = false;
 
 	postForm: FormGroup | undefined;
 	postFormRequest$: Subscription | undefined;
 	postFormIsPristine: boolean = false;
 	postFormIsPristine$: Subscription | undefined;
+
+	postFormImageSkeletonToggle: boolean = false;
+	postFormImageRequest$: Subscription | undefined;
 
 	postFormTextareaId: string = 'postFormTextarea';
 	postFormPreviewId: string = 'postFormPreview';
@@ -189,6 +189,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			this.categoryListRequest$,
 			this.postRequest$,
 			this.postFormRequest$,
+			this.postFormImageRequest$,
 			this.postFormIsPristine$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
@@ -374,53 +375,56 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	/** Image Cropper */
 
-	onUpdateCropperImage(image: string | null): void {
+	onUpdateCropperImage(nextImage: string | null, previousImage: string | null): void {
 		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 		const postUpdateDto: PostUpdateDto = {
-			image
+			image: nextImage
 		};
 
 		if (postId) {
-			this.postSkeletonImageToggle = true;
+			this.postFormImageSkeletonToggle = true;
 
 			this.postFormRequest$?.unsubscribe();
 			this.postFormRequest$ = this.postService.update(postId, postUpdateDto).subscribe({
 				next: () => {
-					this.postSkeletonImageToggle = false;
-
 					this.snackbarService.success('Alright', 'Post has been updated');
+
+					this.postFormImageSkeletonToggle = false;
 				},
-				error: () => (this.postSkeletonImageToggle = false)
+				error: () => (this.postFormImageSkeletonToggle = false)
 			});
 		} else {
-			this.postSkeletonImageToggle = false;
+			this.postFormImageSkeletonToggle = false;
+		}
+
+		/** Silent deleting image */
+
+		if (previousImage) {
+			this.postFormImageRequest$?.unsubscribe();
+			this.postFormImageRequest$ = this.fileService.delete(previousImage).subscribe({
+				next: () => console.debug('File erased'),
+				error: () => (this.postFormImageSkeletonToggle = false)
+			});
 		}
 
 		/** Update postForm image */
 
-		this.postForm.get('image').setValue(image, { emitEvent: false });
+		this.postForm.get('image').setValue(nextImage, { emitEvent: false });
 	}
 
 	onSubmitCropperImage(file: File): void {
 		const abstractControl: AbstractControl = this.postForm.get('image');
 		const abstractControlPreviousValue: string | null = abstractControl.value;
 
-		this.postSkeletonImageToggle = true;
+		/** Update postForm image */
 
-		this.fileService.create(file, '/upload/post-images').subscribe({
-			next: (fileUrl: string) => {
-				this.onUpdateCropperImage(fileUrl);
+		this.postForm.get('image').setValue(null, { emitEvent: false });
+		this.postFormImageSkeletonToggle = true;
 
-				/** Silent deleting image */
-
-				if (abstractControlPreviousValue) {
-					this.fileService.delete(abstractControlPreviousValue).subscribe({
-						next: () => console.debug('File erased'),
-						error: (error: any) => console.error(error)
-					});
-				}
-			},
-			error: () => (this.postSkeletonImageToggle = false)
+		this.postFormImageRequest$?.unsubscribe();
+		this.postFormImageRequest$ = this.fileService.create(file, '/upload/post-images').subscribe({
+			next: (fileUrl: string) => this.onUpdateCropperImage(fileUrl, abstractControlPreviousValue),
+			error: () => (this.postFormImageSkeletonToggle = false)
 		});
 	}
 

@@ -2,6 +2,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
+	AbstractControl,
 	FormBuilder,
 	FormControl,
 	FormGroup,
@@ -34,6 +35,7 @@ import { SkeletonService } from '../../core/services/skeleton.service';
 import { FileService } from '../../core/services/file.service';
 
 interface ProfileForm {
+	avatar: FormControl<string | null>;
 	name: FormControl<string>;
 	description: FormControl<string | null>;
 }
@@ -61,13 +63,15 @@ interface ProfileForm {
 export class SettingsProfileComponent implements OnInit, OnDestroy {
 	currentUser: CurrentUser | undefined;
 	currentUserSkeletonToggle: boolean = true;
-	currentUserSkeletonAvatarToggle: boolean = false;
 	currentUser$: Subscription | undefined;
 	currentUserRequest$: Subscription | undefined;
 
 	profileForm: FormGroup | undefined;
 	profileFormIsPristine: boolean = false;
 	profileFormIsPristine$: Subscription | undefined;
+
+	profileFormAvatarSkeletonToggle: boolean = false;
+	profileFormAvatarRequest$: Subscription | undefined;
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -80,6 +84,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		private fileService: FileService
 	) {
 		this.profileForm = this.formBuilder.group<ProfileForm>({
+			avatar: this.formBuilder.control(null, []),
 			name: this.formBuilder.nonNullable.control('', [
 				Validators.required,
 				Validators.minLength(4),
@@ -143,11 +148,11 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	/** Avatar Cropper */
 
-	onDeleteCropperAvatar(avatar: string): void {
-		this.currentUserSkeletonAvatarToggle = true;
+	onUpdateCropperAvatar(nextAvatar: string | null, previousAvatar: string | null): void {
+		this.profileFormAvatarSkeletonToggle = true;
 
 		const userUpdateDto: UserUpdateDto = {
-			avatar: null
+			avatar: nextAvatar
 		};
 
 		this.currentUserRequest$?.unsubscribe();
@@ -156,67 +161,56 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			.pipe(switchMap((user: User) => this.authorizationService.setCurrentUser(user)))
 			.subscribe({
 				next: () => {
-					this.snackbarService.success('Alright', 'Avatar has been removed');
+					this.snackbarService.success('Success', 'Avatar has been updated');
 
-					/** Silent deleting avatar */
-
-					this.fileService.delete(avatar).subscribe({
-						next: () => console.debug('File erased'),
-						error: (error: any) => console.error(error)
-					});
-
-					this.currentUserSkeletonAvatarToggle = false;
+					this.profileFormAvatarSkeletonToggle = false;
 				},
-				error: () => (this.currentUserSkeletonAvatarToggle = false)
+				error: () => (this.profileFormAvatarSkeletonToggle = false)
+			});
+
+		/** Silent deleting image */
+
+		if (previousAvatar) {
+			this.profileFormAvatarRequest$?.unsubscribe();
+			this.profileFormAvatarRequest$ = this.fileService.delete(previousAvatar).subscribe({
+				next: () => console.debug('File erased'),
+				error: () => (this.profileFormAvatarSkeletonToggle = false)
+			});
+		}
+
+		/** Update profileForm avatar */
+
+		this.profileForm.get('avatar').setValue(nextAvatar);
+	}
+
+	onSubmitCropperAvatar(file: File): void {
+		const abstractControl: AbstractControl = this.profileForm.get('avatar');
+		const abstractControlPreviousValue: string | null = abstractControl.value;
+
+		/** Update profileForm avatar */
+
+		this.profileForm.get('avatar').setValue(null);
+		this.profileFormAvatarSkeletonToggle = true;
+
+		this.profileFormAvatarRequest$?.unsubscribe();
+		this.profileFormAvatarRequest$ = this.fileService
+			.create(file, '/upload/user-avatars')
+			.subscribe({
+				// prettier-ignore
+				next: (fileUrl: string) => this.onUpdateCropperAvatar(fileUrl, abstractControlPreviousValue),
+				error: () => (this.profileFormAvatarSkeletonToggle = false)
 			});
 	}
 
-	onToggleCropperAvatar(toggle: boolean): void {
+	/** profileForm */
+
+	onToggleProfileFormStatus(toggle: boolean): void {
 		if (toggle) {
 			this.profileForm.disable();
 		} else {
 			this.profileForm.enable();
 		}
 	}
-
-	onSubmitCropperAvatar(file: File): void {
-		const currentUserAvatarPrevious: string | null = this.currentUser.avatar;
-
-		this.currentUserSkeletonAvatarToggle = true;
-
-		this.fileService.create(file, '/upload/user-avatars').subscribe({
-			next: (fileUrl: string) => {
-				const userUpdateDto: UserUpdateDto = {
-					avatar: fileUrl
-				};
-
-				this.currentUserRequest$?.unsubscribe();
-				this.currentUserRequest$ = this.userService
-					.update(this.currentUser.id, userUpdateDto)
-					.pipe(switchMap((user: User) => this.authorizationService.setCurrentUser(user)))
-					.subscribe({
-						next: () => {
-							this.snackbarService.success('Success', 'Avatar has been updated');
-
-							/** Silent deleting avatar */
-
-							if (currentUserAvatarPrevious) {
-								this.fileService.delete(currentUserAvatarPrevious).subscribe({
-									next: () => console.debug('File erased'),
-									error: (error: any) => console.error(error)
-								});
-							}
-
-							this.currentUserSkeletonAvatarToggle = false;
-						},
-						error: () => (this.currentUserSkeletonAvatarToggle = false)
-					});
-			},
-			error: () => (this.currentUserSkeletonAvatarToggle = false)
-		});
-	}
-
-	/** profileForm */
 
 	onSubmitProfileForm(): void {
 		if (this.helperService.getFormValidation(this.profileForm)) {

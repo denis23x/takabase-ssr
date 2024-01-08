@@ -10,17 +10,22 @@
 		>
 			<div class="flex flex-row w-full items-center justify-between gap-4">
 				<div class="flex items-center justify-start gap-4 overflow-auto w-full">
-					<!-- prettier-ignore -->
-					<div class="avatar" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle || currentUserSkeletonAvatarToggle">
-            <figure
-              class="h-12 w-12 rounded-btn relative overflow-hidden cursor-pointer"
-              data-pw="app-settings-profile-image-avatar"
-              appAvatar
-              [ngClass]="{ 'cursor-not-allowed opacity-50 grayscale transition': profileForm.disabled }"
-              [appAvatarUser]="currentUser"
-              (click)="appCropperComponent.onToggleCropper(true)"
-            ></figure>
-          </div>
+					<div
+						class="avatar"
+						appSkeleton
+						[appSkeletonToggle]="currentUserSkeletonToggle || profileFormAvatarSkeletonToggle"
+					>
+						<!-- prettier-ignore -->
+						<figure
+							class="block rounded-btn relative border border-base-content/20 h-12 w-12 overflow-hidden transition"
+							data-pw="app-settings-profile-image-avatar"
+							appAvatar
+              *ngIf="profileForm.get('avatar') as avatar"
+							[ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-200': profileForm.disabled, 'cursor-pointer': profileForm.enabled, 'border-success': avatar.value }"
+							[appAvatarUser]="currentUser"
+							(click)="appCropperComponent.onToggleCropper(true)"
+						></figure>
+					</div>
 					<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
 						<h1
 							class="truncate text-xl leading-6 font-bold text-base-content max-w-full"
@@ -59,29 +64,31 @@
 						[appSvgIconSquare]="'1.5em'"
 					></button>
 					<ul class="menu menu-vertical menu-md" slot="content">
-						<li class="flex w-full snap-start scroll-my-2" *ngIf="currentUser.avatar">
-							<button
-								class="rounded-btn block w-full truncate text-right"
-								type="button"
-								title="Delete avatar"
-								aria-label="Delete avatar"
-								(click)="onDeleteCropperAvatar(currentUser.avatar)"
-							>
-								Delete avatar
-							</button>
-						</li>
-						<li class="flex w-full snap-start scroll-my-2">
-							<button
-								class="rounded-btn block w-full truncate text-right"
-								data-pw="app-settings-profile-button-show-cropper-modal"
-								type="button"
-								title="Update avatar"
-								aria-label="Update avatar"
-								(click)="appCropperComponent.onToggleCropper(true)"
-							>
-								{{ currentUser.avatar ? "Update" : "Set" }} avatar
-							</button>
-						</li>
+						<ng-container *ngIf="profileForm.get('avatar') as avatar">
+							<li class="flex w-full snap-start scroll-my-2">
+								<button
+									class="rounded-btn block w-full truncate text-right"
+									data-pw="app-settings-profile-button-show-cropper-modal"
+									type="button"
+									title="Update avatar"
+									aria-label="Update avatar"
+									(click)="appCropperComponent.onToggleCropper(true)"
+								>
+									{{ avatar.value ? "Update" : "Set" }} avatar
+								</button>
+							</li>
+							<li class="flex w-full snap-start scroll-my-2" *ngIf="avatar.value">
+								<button
+									class="rounded-btn block w-full truncate text-right"
+									type="button"
+									title="Delete avatar"
+									aria-label="Delete avatar"
+									(click)="onUpdateCropperAvatar(null, avatar.value)"
+								>
+									Delete avatar
+								</button>
+							</li>
+						</ng-container>
 						<li class="flex w-full snap-start scroll-my-2 menu-title">
 							<hr class="my-0 border-base-content/20" />
 						</li>
@@ -243,12 +250,13 @@
         </div>
 			</fieldset>
 			<fieldset class="form-control">
+				<!-- prettier-ignore -->
 				<button
 					class="btn btn-md btn-success w-full"
 					data-pw="app-settings-profile-form-submit"
 					type="submit"
 					aria-label="Submit"
-					[disabled]="profileForm.invalid || profileForm.disabled || profileFormIsPristine"
+					[disabled]="profileForm.invalid || profileForm.disabled || profileFormIsPristine || profileFormAvatarSkeletonToggle"
 				>
 					<span
 						class="loading loading-spinner"
@@ -263,7 +271,7 @@
 		appCropper
 		#appCropperComponent
 		(appCropperSubmit)="onSubmitCropperAvatar($event)"
-		(appCropperToggle)="onToggleCropperAvatar($event)"
+		(appCropperToggle)="onToggleProfileFormStatus($event)"
 	></div>
 	<div appQRCode #appQrCodeComponent [appQRCodeData]="currentUser | userUrl: 1"></div>
 </ng-container>
