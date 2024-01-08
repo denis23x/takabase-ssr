@@ -352,12 +352,11 @@
 						appMarkdown
 						appSkeleton
 						#appMarkdownComponent
-						*ngIf="postForm.get('markdown') as markdown"
 						[appSkeletonToggle]="postSkeletonToggle"
 						[appMarkdownTextareaId]="postFormTextareaId"
 						[appMarkdownPreviewId]="postFormPreviewId"
 						[appMarkdownScrollSync]="fullscreenScrollSync"
-						[appMarkdownDisabled]="postForm.disabled || markdown.disabled"
+						[appMarkdownDisabled]="postForm.disabled"
 						(appMarkdownDialogToggle)="onToggleMarkdownDialog($event)"
 						(appMarkdownUploadToggle)="onToggleMarkdownUpload($event)"
 					></div>
@@ -467,9 +466,9 @@
 							<div
 								class="textarea-autosize w-full h-full focus-within:outline-0 relative"
 								appSkeleton
-								[appSkeletonToggle]="postSkeletonToggle"
+								[appSkeletonToggle]="postSkeletonToggle || postFormTextareaSkeletonToggle"
 								[appSkeletonClassListElementRef]="['!border-0']"
-								[ngClass]="{ 'border-base-content/20': postForm.enabled && markdown.enabled, 'border-transparent': postForm.disabled || markdown.disabled }"
+								[ngClass]="{ 'border-base-content/20': postForm.enabled, 'border-transparent': postForm.disabled }"
 								[class.textarea-autosize-success]="markdown.value && markdown.valid"
 								[class.textarea-autosize-error]="markdown.touched && markdown.invalid"
 							>

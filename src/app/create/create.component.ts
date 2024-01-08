@@ -103,6 +103,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	postFormImageSkeletonToggle: boolean = false;
 	postFormImageRequest$: Subscription | undefined;
 
+	postFormTextareaSkeletonToggle: boolean = false;
 	postFormTextareaId: string = 'postFormTextarea';
 	postFormPreviewId: string = 'postFormPreview';
 
@@ -323,13 +324,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleMarkdownUpload(toggle: boolean): void {
-		const abstractControl: AbstractControl = this.postForm.get('markdown');
-
-		if (toggle) {
-			abstractControl.disable();
-		} else {
-			abstractControl.enable();
-		}
+		this.postFormTextareaSkeletonToggle = toggle;
 	}
 
 	/** Category */

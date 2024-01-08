@@ -145,6 +145,9 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	cropperMinWidth: number = 0;
 	cropperMinHeight: number = 0;
 
+	cropperResizeToWidth: number = 256;
+	cropperResizeToHeight: number = 256;
+
 	cropperFile: File = undefined;
 	cropperBlob: Blob = undefined;
 	cropperMoveImage: boolean = false;
@@ -224,7 +227,12 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			this.cropperImageForm$ = this.cropperImageForm.valueChanges
 				.pipe(filter(() => this.cropperImageForm.valid))
 				.subscribe({
-					next: (value: any) => this.setCropperImageTransform(value),
+					next: (value: any) => {
+						this.cropperImageTransform = {
+							...this.cropperImageTransform,
+							...value
+						};
+					},
 					error: (error: any) => console.error(error)
 				});
 		}
@@ -308,8 +316,20 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 					const cropperMinWidth: number = width * 0.25;
 					const cropperMinHeight: number = height * 0.25;
 
+					/** Update Cropper settings */
+
 					this.cropperMinWidth = cropperMinWidth >= 128 ? cropperMinWidth : 128;
 					this.cropperMinHeight = cropperMinHeight >= 128 ? cropperMinHeight : 128;
+
+					if (this.markdownItToggle) {
+						this.cropperResizeToWidth = 0;
+						this.cropperResizeToHeight = 0;
+					} else {
+						this.cropperResizeToWidth = 256;
+						this.cropperResizeToHeight = 256;
+					}
+
+					/** Return acceptable file */
 
 					if (width < requiredSize || height < requiredSize) {
 						const canvasElement: HTMLCanvasElement = this.document.createElement('canvas');
@@ -377,7 +397,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		this.cropperBlob = imageCroppedEvent.blob;
 	}
 
-	onCropperReset(): void {
+	onCropperTransformReset(): void {
 		this.cropperImageTransform = {
 			translateUnit: 'px',
 			scale: 1,
@@ -405,19 +425,12 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		[this.imageForm, this.cropperImageForm].forEach((formGroup: FormGroup) => formGroup.reset({}, { emitEvent: false }));
 	}
 
-	setCropperImageTransform(cropperImageTransform: Partial<ImageTransform>): void {
-		this.cropperImageTransform = {
-			...this.cropperImageTransform,
-			...cropperImageTransform
-		};
-	}
-
 	/** EVENTS */
 
 	onResetCropper(): void {
 		/** Transformations reset */
 
-		this.onCropperReset();
+		this.onCropperTransformReset();
 
 		/** ngx-image-cropper reset */
 
