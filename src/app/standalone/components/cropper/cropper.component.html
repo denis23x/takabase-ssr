@@ -61,6 +61,7 @@
 									class="input input-bordered input-md w-full !pr-12"
 									id="imageFormUrl"
 									type="text"
+                  inputmode="none"
 									aria-label="Url"
 									formControlName="url"
 									placeholder="Paste image from clipboard or URL"
@@ -303,6 +304,7 @@
                             <input
                               class="input-bordered input input-sm w-14 text-center"
                               type="number"
+                              inputmode="numeric"
                               aria-label="Rotate"
                               formControlName="rotate"
                               [class.input-success]="rotate.valid"
@@ -361,6 +363,7 @@
                             <input
                               class="input-bordered input input-sm w-14 text-center"
                               type="number"
+                              inputmode="numeric"
                               aria-label="Scale"
                               formControlName="scale"
                               [class.input-success]="scale.valid"

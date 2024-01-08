@@ -463,11 +463,11 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		/** Get ready file */
 
-		const file: File = this.fileService.getFileFromBlob(this.cropperBlob);
+		const fileCropped: File = this.fileService.getFileFromBlob(this.cropperBlob);
 
 		this.imageFormRequest$?.unsubscribe();
 		this.imageFormRequest$ = this.ipaService
-			.create(file)
+			.create(fileCropped)
 			.pipe(
 				switchMap((fileUrl: string) => {
 					const ipaOperationParams: IPAOperation[] = [
