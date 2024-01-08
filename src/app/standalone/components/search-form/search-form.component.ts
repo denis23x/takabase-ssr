@@ -86,7 +86,8 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 							queryParams: {
 								query: value.query || null,
 								orderBy: value.orderBy || null
-							}
+							},
+							replaceUrl: true
 						})
 						.then(() => console.debug('Route changed'));
 				},
@@ -106,7 +107,8 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 				queryParams: {
 					query: null
 				},
-				queryParamsHandling: 'merge'
+				queryParamsHandling: 'merge',
+				replaceUrl: true
 			})
 			.then(() => console.debug('Route changed'));
 	}

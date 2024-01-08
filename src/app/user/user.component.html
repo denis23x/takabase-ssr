@@ -160,7 +160,7 @@
 						[appSkeletonClassListElementRef]="['border-0']"
 						[appSvgIconIcon]="searchFormToggle ? 'x-lg' : 'search'"
 						[appSvgIconSquare]="'1.5em'"
-						(click)="onToggleSearchForm()"
+						(click)="onToggleSearchForm(!searchFormToggle)"
 					></button>
 					<ng-container [ngSwitch]="searchFormToggle">
 						<div

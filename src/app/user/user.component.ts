@@ -235,7 +235,9 @@ export class UserComponent implements OnInit, OnDestroy {
 		/** Toggle SearchForm component */
 
 		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
-			this.onToggleSearchForm();
+			this.onToggleSearchForm(true);
+		} else {
+			this.onToggleSearchForm(false);
 		}
 	}
 
@@ -279,18 +281,19 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	/** Search */
 
-	onToggleSearchForm(): void {
-		if (this.searchFormToggle) {
+	onToggleSearchForm(toggle: boolean): void {
+		if (toggle) {
+			this.searchFormToggle = true;
+		} else {
 			this.searchFormToggle = false;
 
 			this.router
 				.navigate([], {
 					relativeTo: this.activatedRoute,
-					queryParams: null
+					queryParams: null,
+					replaceUrl: true
 				})
 				.then(() => console.debug('Route changed'));
-		} else {
-			this.searchFormToggle = true;
 		}
 	}
 
