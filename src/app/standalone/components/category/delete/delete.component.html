@@ -22,11 +22,11 @@
 				[formGroup]="categoryDeleteForm"
 				(ngSubmit)="onSubmitCategoryDeleteForm()"
 			>
-				<p class="alert alert-error" role="alert">
+				<p class="alert" role="alert">
 					<i
-						class="fill-current text-error-content"
+						class="fill-current text-info"
 						appSvgIcon
-						[appSvgIconIcon]="'x-circle'"
+						[appSvgIconIcon]="'info-circle'"
 						[appSvgIconSquare]="'1.5em'"
 					></i>
 					<span class="block"> This action cannot be undone </span>
@@ -129,13 +129,15 @@
 				</ng-container>
 				<fieldset class="form-control">
 					<button
-						class="btn btn-md btn-success"
+						class="btn btn-md btn-error"
 						type="submit"
-						aria-label="Submit"
+						title="Delete"
+						aria-label="Delete"
+						[class.btn-outline]="categoryDeleteForm.valid && categoryDeleteForm.enabled"
 						[disabled]="categoryDeleteForm.invalid || categoryDeleteForm.disabled"
 					>
 						<span class="loading loading-spinner" *ngIf="categoryDeleteForm.disabled"></span>
-						Submit
+						Delete
 					</button>
 				</fieldset>
 			</form>

@@ -113,6 +113,17 @@
 					</ul>
 				</div>
 			</li>
+			<li class="inline-block" [class.disabled]="controlListDisabled">
+				<button
+					class="fill-current p-3"
+					appSvgIcon
+					[attr.aria-label]="controlListQuote.label"
+					[attr.title]="controlListQuote.label"
+					[appSvgIconIcon]="controlListQuote.icon"
+					[appSvgIconSquare]="'1.5725em'"
+					(click)="setTextareaValue(getTextareaValue(controlListQuote))"
+				></button>
+			</li>
 			<li
 				class="inline-block"
 				*ngFor="let control of controlListUrl"

@@ -140,6 +140,16 @@ export const MarkdownControlFormatting = (): MarkdownControl[] => [
 ];
 
 // prettier-ignore
+export const MarkdownControlQuote = (): MarkdownControl => ({
+  key: 'quote',
+  label: 'Quote',
+  icon: 'quote',
+  handler: (markdownTextarea: MarkdownTextarea): string => {
+    return setWrapper('> ' + (markdownTextarea.selection || 'Quote'), markdownTextarea, 'block');
+  }
+});
+
+// prettier-ignore
 export const MarkdownControlList = (): MarkdownControl[] => [
 	{
 		key: 'list-unordered',

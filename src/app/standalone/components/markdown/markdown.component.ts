@@ -18,6 +18,7 @@ import {
 	MarkdownControlFormatting,
 	MarkdownControlHeading,
 	MarkdownControlList,
+	MarkdownControlQuote,
 	MarkdownControlSpoiler,
 	MarkdownControlTable,
 	MarkdownControlUrl
@@ -107,6 +108,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	controlListHeading: MarkdownControl[] = MarkdownControlHeading();
 	controlListFormatting: MarkdownControl[] = MarkdownControlFormatting();
 	controlListList: MarkdownControl[] = MarkdownControlList();
+	controlListQuote: MarkdownControl = MarkdownControlQuote();
 	controlListUrl: MarkdownControl[] = MarkdownControlUrl();
 	controlListCropper: MarkdownControl = MarkdownControlCropper();
 	controlListEmojiMart: MarkdownControl = MarkdownControlEmojiMart();
