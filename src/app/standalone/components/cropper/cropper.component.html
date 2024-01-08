@@ -70,7 +70,7 @@
 									[class.input-success]="url.value && url.valid"
 									[class.input-error]="url.dirty && url.invalid"
                   (input)="onGetFileFromInternet($event)"
-                  (paste)="onGetFileFromClipboard($event, false)"
+                  (paste)="onGetFileFromClipboard($event)"
 								/>
 								<button
 									class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
@@ -218,7 +218,7 @@
                     (click)="flipH.setValue(!flipH.value)"
 									></button>
 								</li>
-                <ng-container *ngIf="markdownItClipboardToggle">
+                <ng-container *ngIf="markdownItToggle">
                   <li class="inline-block" [class.disabled]="cropperImageForm.disabled">
                     <div
                       class="flex p-0"

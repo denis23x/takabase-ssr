@@ -20,7 +20,7 @@ import {
 } from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
-import { Subscription } from 'rxjs';
+import { Subscription, merge } from 'rxjs';
 import {
 	FormBuilder,
 	FormControl,
@@ -97,8 +97,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		return imageFormMime.join(', ');
 	});
 
-	markdownItClipboard$: Subscription | undefined;
-	markdownItClipboardToggle: boolean = false;
+	markdownItToggle: boolean = false;
+	markdownItToggle$: Subscription | undefined;
 
 	cropperImageForm: FormGroup | undefined;
 	cropperImageForm$: Subscription | undefined;
@@ -195,16 +195,19 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	ngAfterViewInit(): void {
 		if (this.platformService.isBrowser()) {
-			/** Listen clipboard from markdown-it textarea */
+			/** Listen markdown-it */
 
-			this.markdownItClipboard$?.unsubscribe();
-			this.markdownItClipboard$ = this.markdownService.markdownItClipboard
-				.pipe(filter((clipboardEventInit: ClipboardEventInit | undefined) => !!clipboardEventInit))
-				.subscribe({
-					// prettier-ignore
-					next: (clipboardEventInit: ClipboardEventInit) => this.onGetFileFromClipboard(clipboardEventInit, true),
-					error: (error: any) => console.error(error)
-				});
+			this.markdownItToggle$?.unsubscribe();
+			this.markdownItToggle$ = merge(
+				this.markdownService.markdownItCropper.pipe(filter((toggle: boolean) => toggle)),
+				this.markdownService.markdownItCropperClipboard.pipe(
+					filter((clipboardEvent: ClipboardEventInit | undefined) => !!clipboardEvent),
+					tap((clipboardEvent: ClipboardEventInit) => this.onGetFileFromClipboard(clipboardEvent))
+				)
+			).subscribe({
+				next: () => this.onToggleCropper(true, true),
+				error: (error: any) => console.error(error)
+			});
 
 			/** Listen Cropper image transform changes */
 
@@ -232,28 +235,18 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			this.imageFormRequest$,
 			this.cropperImageForm$,
 			this.cropperImageTransform$,
-			this.markdownItClipboard$
+			this.markdownItToggle$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	/** INPUT */
 
-	onGetFileFromClipboard(clipboardEventInit: ClipboardEventInit, toggleCropper: boolean): void {
+	onGetFileFromClipboard(clipboardEventInit: ClipboardEventInit): void {
 		const clipboardFileList: FileList = clipboardEventInit.clipboardData.files;
 		const clipboardFile: File | null = this.getFile(clipboardFileList);
 
 		if (clipboardFile) {
 			this.setFile(clipboardFile);
-
-			// Show dialog (markdown-it clipboard)
-
-			if (toggleCropper) {
-				this.cropperAspectRatioActive = null;
-
-				this.markdownItClipboardToggle = true;
-
-				this.onToggleCropper(true);
-			}
 		}
 	}
 
@@ -404,7 +397,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		this.cropperMoveImage = false;
 
-		this.cropperAspectRatioActive = this.markdownItClipboardToggle ? null : 1;
+		this.cropperAspectRatioActive = this.markdownItToggle ? null : 1;
 
 		/** Reset Forms */
 
@@ -440,9 +433,17 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		this.cropperImageForm.reset();
 		this.cropperImageForm.enable();
+
+		/** markdown-it reset */
+
+		this.markdownService.markdownItCropperClipboard.next(undefined);
+		this.markdownService.markdownItCropperImage.next(null);
+		this.markdownService.markdownItCropper.next(false);
 	}
 
-	onToggleCropper(toggle: boolean): void {
+	onToggleCropper(toggle: boolean, markdownItToggle: boolean = false): void {
+		this.markdownItToggle = markdownItToggle;
+
 		this.cropperDialogToggle = toggle;
 
 		if (toggle) {
@@ -484,20 +485,16 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 					return this.ipaService.getOneViaGCS(ipaOperationParams);
 				}),
-				tap(() => this.onToggleCropper(false))
-			)
-			.subscribe({
-				next: (file: File) => {
-					if (this.markdownItClipboardToggle) {
-						this.markdownService.markdownItClipboardFileImage.next(file);
-
-						this.markdownItClipboardToggle = false;
+				tap((file: File) => {
+					if (this.markdownItToggle) {
+						this.markdownService.markdownItCropperImage.next(file);
 					} else {
 						this.appCropperSubmit.emit(file);
 					}
-
-					this.cropperImageForm.enable();
-				},
+				})
+			)
+			.subscribe({
+				next: () => this.onToggleCropper(false),
 				error: () => this.cropperImageForm.enable()
 			});
 	}

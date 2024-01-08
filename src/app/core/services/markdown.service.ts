@@ -33,10 +33,9 @@ export class MarkdownService {
 	markdownIt: MarkdownIt;
 
 	// prettier-ignore
-	markdownItClipboard: BehaviorSubject<ClipboardEventInit | undefined> = new BehaviorSubject<ClipboardEventInit | undefined>(undefined);
-
-	// prettier-ignore
-	markdownItClipboardFileImage: BehaviorSubject<File | undefined> = new BehaviorSubject<File | undefined>(undefined);
+	markdownItCropperClipboard: BehaviorSubject<ClipboardEventInit | undefined> = new BehaviorSubject<ClipboardEventInit | undefined>(undefined);
+	markdownItCropperImage: BehaviorSubject<File | null> = new BehaviorSubject<File | null>(null);
+	markdownItCropper: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	constructor(
 		@Inject(DOCUMENT)

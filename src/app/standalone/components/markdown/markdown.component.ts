@@ -22,7 +22,7 @@ import {
 	MarkdownControlSpoiler,
 	MarkdownControlTable,
 	MarkdownControlUrl
-} from './markdown-controls';
+} from './markdown';
 import { EMPTY, fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, filter, startWith } from 'rxjs/operators';
 import {
@@ -164,13 +164,13 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.textareaPaste$?.unsubscribe();
 			this.textareaPaste$ = fromEvent(this.textarea, 'paste').subscribe({
 				// prettier-ignore
-				next: (clipboardEventInit: ClipboardEventInit) => this.markdownService.markdownItClipboard.next(clipboardEventInit),
+				next: (clipboardEventInit: ClipboardEventInit) => this.markdownService.markdownItCropperClipboard.next(clipboardEventInit),
 				error: (error: any) => console.error(error)
 			});
 
 			this.textareaPasteFileImage$?.unsubscribe();
-			this.textareaPasteFileImage$ = this.markdownService.markdownItClipboardFileImage
-				.pipe(filter((file: File | undefined) => !!file))
+			this.textareaPasteFileImage$ = this.markdownService.markdownItCropperImage
+				.pipe(filter((file: File | null) => !!file))
 				.subscribe({
 					next: (file: File) => {
 						this.appMarkdownUploadToggle.emit(true);
@@ -235,8 +235,8 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	onControlListCropperClick(markdownControl: MarkdownControl): void {
-		console.log(markdownControl);
+	onControlListCropperClick(): void {
+		this.markdownService.markdownItCropper.next(true);
 	}
 
 	/** Extra handlers */
