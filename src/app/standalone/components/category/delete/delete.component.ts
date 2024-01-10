@@ -4,6 +4,7 @@ import {
 	Component,
 	ElementRef,
 	EventEmitter,
+	inject,
 	Input,
 	OnDestroy,
 	OnInit,
@@ -54,6 +55,14 @@ interface CategoryDeleteForm {
 	templateUrl: './delete.component.html'
 })
 export class CategoryDeleteComponent implements OnInit, OnDestroy {
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly categoryService: CategoryService = inject(CategoryService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly postService: PostService = inject(PostService);
+	private readonly fileService: FileService = inject(FileService);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+
 	// prettier-ignore
 	@ViewChild('categoryDeleteDialogElement') categoryDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
@@ -84,23 +93,11 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	postList: Post[] = [];
 	postListRequest$: Subscription | undefined;
 
-	categoryDeleteForm: FormGroup | undefined;
+	categoryDeleteForm: FormGroup = this.formBuilder.group<CategoryDeleteForm>({
+		name: this.formBuilder.nonNullable.control('', []),
+		categoryId: this.formBuilder.control(null, [])
+	});
 	categoryDeleteFormRequest$: Subscription | undefined;
-
-	constructor(
-		private formBuilder: FormBuilder,
-		private categoryService: CategoryService,
-		private snackbarService: SnackbarService,
-		private helperService: HelperService,
-		private postService: PostService,
-		private fileService: FileService,
-		private authorizationService: AuthorizationService
-	) {
-		this.categoryDeleteForm = this.formBuilder.group<CategoryDeleteForm>({
-			name: this.formBuilder.nonNullable.control('', []),
-			categoryId: this.formBuilder.control(null, [])
-		});
-	}
 
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();

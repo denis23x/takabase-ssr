@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MetaService } from '../core/services/meta.service';
@@ -17,6 +17,9 @@ import { ReportService } from '../core/services/report.service';
 	templateUrl: './help.component.html'
 })
 export class HelpComponent implements OnInit {
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly reportService: ReportService = inject(ReportService);
+
 	helpNavigationList: any[] = [
 		{
 			path: 'about',
@@ -39,11 +42,6 @@ export class HelpComponent implements OnInit {
 			name: 'Code highlight'
 		}
 	];
-
-	constructor(
-		private metaService: MetaService,
-		private reportService: ReportService
-	) {}
 
 	ngOnInit(): void {
 		/** Apply Data */

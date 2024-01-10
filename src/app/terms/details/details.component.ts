@@ -3,7 +3,7 @@
 import { Component } from '@angular/core';
 import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
-import { AbstractMarkdownProseComponent } from '../../abstracts/abstract-markdown-prose.component';
+import { AbstractMarkdownComponent } from '../../abstracts/abstract-markdown.component';
 import { CommonModule } from '@angular/common';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 
@@ -13,7 +13,7 @@ import { SkeletonDirective } from '../../standalone/directives/app-skeleton.dire
 	selector: 'app-terms-details',
 	templateUrl: './details.component.html'
 })
-export class TermsDetailsComponent extends AbstractMarkdownProseComponent {
+export class TermsDetailsComponent extends AbstractMarkdownComponent {
 	getAbstractProseUrl(markdown: string): string {
 		return '/assets/markdown/terms/' + markdown + '.md';
 	}

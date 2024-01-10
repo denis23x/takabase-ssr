@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
@@ -78,6 +78,22 @@ interface PostForm {
 	templateUrl: './create.component.html'
 })
 export class CreateComponent implements OnInit, OnDestroy {
+	private readonly document: Document = inject(DOCUMENT);
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly router: Router = inject(Router);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly postService: PostService = inject(PostService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly categoryService: CategoryService = inject(CategoryService);
+	private readonly userService: UserService = inject(UserService);
+	private readonly cookieService: CookieService = inject(CookieService);
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly fileService: FileService = inject(FileService);
+	private readonly skeletonService: SkeletonService = inject(SkeletonService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+
 	// prettier-ignore
 	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
 	@ViewChild('appMarkdownComponent') appMarkdownComponent: MarkdownComponent | undefined;
@@ -95,7 +111,26 @@ export class CreateComponent implements OnInit, OnDestroy {
 	postRequest$: Subscription | undefined;
 	postSkeletonToggle: boolean = true;
 
-	postForm: FormGroup | undefined;
+	postForm: FormGroup = this.formBuilder.group<PostForm>({
+		name: this.formBuilder.nonNullable.control('', [
+			Validators.required,
+			Validators.minLength(4),
+			Validators.maxLength(36)
+		]),
+		image: this.formBuilder.control(null, []),
+		description: this.formBuilder.nonNullable.control('', [
+			Validators.required,
+			Validators.minLength(4),
+			Validators.maxLength(255)
+		]),
+		categoryId: this.formBuilder.control(null, [Validators.required]),
+		categoryName: this.formBuilder.nonNullable.control('', []),
+		markdown: this.formBuilder.nonNullable.control('', [
+			Validators.required,
+			Validators.minLength(24),
+			Validators.maxLength(7200)
+		])
+	});
 	postFormRequest$: Subscription | undefined;
 	postFormIsPristine: boolean = false;
 	postFormIsPristine$: Subscription | undefined;
@@ -119,46 +154,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 	fullscreenTextWrapping: boolean = false;
 	fullscreenMarkdown: boolean = false;
 	fullscreenRender: boolean = false;
-
-	constructor(
-		@Inject(DOCUMENT)
-		private document: Document,
-		private formBuilder: FormBuilder,
-		private activatedRoute: ActivatedRoute,
-		private router: Router,
-		private helperService: HelperService,
-		private postService: PostService,
-		private snackbarService: SnackbarService,
-		private authorizationService: AuthorizationService,
-		private categoryService: CategoryService,
-		private userService: UserService,
-		private cookieService: CookieService,
-		private metaService: MetaService,
-		private fileService: FileService,
-		private skeletonService: SkeletonService,
-		private platformService: PlatformService
-	) {
-		this.postForm = this.formBuilder.group<PostForm>({
-			name: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.minLength(4),
-				Validators.maxLength(36)
-			]),
-			image: this.formBuilder.control(null, []),
-			description: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.minLength(4),
-				Validators.maxLength(255)
-			]),
-			categoryId: this.formBuilder.control(null, [Validators.required]),
-			categoryName: this.formBuilder.nonNullable.control('', []),
-			markdown: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.minLength(24),
-				Validators.maxLength(7200)
-			])
-		});
-	}
 
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();

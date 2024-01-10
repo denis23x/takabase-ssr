@@ -1,6 +1,6 @@
 /** @format */
 
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import MarkdownIt from 'markdown-it';
 import Token from 'markdown-it/lib/token';
 import attrs from 'markdown-it-attrs';
@@ -30,18 +30,15 @@ import { BehaviorSubject } from 'rxjs';
 	providedIn: 'root'
 })
 export class MarkdownService {
+	private readonly document: Document = inject(DOCUMENT);
+	private readonly platformService: PlatformService = inject(PlatformService);
+
 	markdownIt: MarkdownIt;
 
 	// prettier-ignore
 	markdownItCropperClipboard: BehaviorSubject<ClipboardEventInit | undefined> = new BehaviorSubject<ClipboardEventInit | undefined>(undefined);
 	markdownItCropperImage: BehaviorSubject<File | null> = new BehaviorSubject<File | null>(null);
 	markdownItCropper: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
-	constructor(
-		@Inject(DOCUMENT)
-		private document: Document,
-		private platformService: PlatformService
-	) {}
 
 	getMarkdownIt(): MarkdownIt {
 		if (this.markdownIt) {

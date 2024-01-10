@@ -1,6 +1,6 @@
 /** @format */
 
-import { Directive, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, inject, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { PlatformService } from '../../core/services/platform.service';
 
 @Directive({
@@ -8,18 +8,16 @@ import { PlatformService } from '../../core/services/platform.service';
 	selector: '[appPlatform]'
 })
 export class PlatformDirective implements OnInit {
+	private readonly templateRef: TemplateRef<any> = inject(TemplateRef);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+
 	@Input({ required: true })
 	set appPlatform(platform: string) {
 		this.platform = platform;
 	}
 
 	platform: string | undefined;
-
-	constructor(
-		private templateRef: TemplateRef<any>,
-		private platformService: PlatformService,
-		private viewContainerRef: ViewContainerRef
-	) {}
 
 	ngOnInit(): void {
 		if (this.getPlatform()) {

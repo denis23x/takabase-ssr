@@ -1,6 +1,6 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { from, Observable, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
 import { PasswordValidateGetDto } from '../dto/password/password-validate-get.dto';
@@ -17,10 +17,8 @@ import firebase from 'firebase/compat';
 	providedIn: 'root'
 })
 export class PasswordService {
-	constructor(
-		private apiService: ApiService,
-		private angularFireAuth: AngularFireAuth
-	) {}
+	private readonly apiService: ApiService = inject(ApiService);
+	private readonly angularFireAuth: AngularFireAuth = inject(AngularFireAuth);
 
 	onUpdate(passwordUpdateDto: PasswordUpdateDto): Observable<void> {
 		return from(this.angularFireAuth.currentUser).pipe(

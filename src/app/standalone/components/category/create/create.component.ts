@@ -1,6 +1,14 @@
 /** @format */
 
-import { Component, ElementRef, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
+import {
+	Component,
+	ElementRef,
+	EventEmitter,
+	inject,
+	OnDestroy,
+	Output,
+	ViewChild
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
@@ -39,31 +47,27 @@ interface CategoryForm {
 	templateUrl: './create.component.html'
 })
 export class CategoryCreateComponent implements OnDestroy {
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly categoryService: CategoryService = inject(CategoryService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+
 	// prettier-ignore
 	@ViewChild('categoryCreateDialogElement') categoryCreateDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() appCategoryCreateToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() appCategoryCreateSuccess: EventEmitter<Category> = new EventEmitter<Category>();
 
-	categoryForm: FormGroup | undefined;
+	categoryForm: FormGroup = this.formBuilder.group<CategoryForm>({
+		name: this.formBuilder.nonNullable.control('', [
+			Validators.required,
+			Validators.minLength(4),
+			Validators.maxLength(36)
+		]),
+		description: this.formBuilder.control(null, [Validators.maxLength(255)])
+	});
 	categoryFormRequest$: Subscription | undefined;
 	categoryCreateDialogToggle: boolean = false;
-
-	constructor(
-		private formBuilder: FormBuilder,
-		private helperService: HelperService,
-		private categoryService: CategoryService,
-		private snackbarService: SnackbarService
-	) {
-		this.categoryForm = this.formBuilder.group<CategoryForm>({
-			name: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.minLength(4),
-				Validators.maxLength(36)
-			]),
-			description: this.formBuilder.control(null, [Validators.maxLength(255)])
-		});
-	}
 
 	ngOnDestroy(): void {
 		[this.categoryFormRequest$].forEach(($: Subscription) => $?.unsubscribe());

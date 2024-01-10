@@ -1,6 +1,6 @@
 /** @format */
 
-import { AfterViewInit, Directive, ElementRef, Inject, Input, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, inject, Input, OnDestroy } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -11,6 +11,10 @@ import { HelperService } from '../../core/services/helper.service';
 	selector: '[appSkeleton]'
 })
 export class SkeletonDirective implements AfterViewInit, OnDestroy {
+	private readonly document: Document = inject(DOCUMENT);
+	private readonly elementRef: ElementRef = inject(ElementRef);
+	private readonly helperService: HelperService = inject(HelperService);
+
 	@Input({ required: true })
 	set appSkeletonToggle(loading: boolean) {
 		this.skeletonToggle$.next(loading);
@@ -45,13 +49,6 @@ export class SkeletonDirective implements AfterViewInit, OnDestroy {
 		'animate-pulse',
 		'rounded-btn'
 	];
-
-	constructor(
-		@Inject(DOCUMENT)
-		private document: Document,
-		private elementRef: ElementRef,
-		private helperService: HelperService
-	) {}
 
 	ngAfterViewInit(): void {
 		this.skeletonToggle$

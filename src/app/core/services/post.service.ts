@@ -1,6 +1,6 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { UserService } from './user.service';
@@ -17,17 +17,15 @@ import { TitleService } from './title.service';
 	providedIn: 'root'
 })
 export class PostService {
+	private readonly apiService: ApiService = inject(ApiService);
+	private readonly userService: UserService = inject(UserService);
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly titleService: TitleService = inject(TitleService);
+
 	backupPostMetaOpenGraph: MetaOpenGraph;
 	backupPostMetaTwitter: MetaTwitter;
 
 	backupPostTitle: string;
-
-	constructor(
-		private apiService: ApiService,
-		private userService: UserService,
-		private metaService: MetaService,
-		private titleService: TitleService
-	) {}
 
 	/** SEO Meta tags */
 

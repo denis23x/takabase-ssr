@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -61,39 +61,35 @@ interface ProfileForm {
 	templateUrl: './profile.component.html'
 })
 export class SettingsProfileComponent implements OnInit, OnDestroy {
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly userService: UserService = inject(UserService);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly skeletonService: SkeletonService = inject(SkeletonService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly fileService: FileService = inject(FileService);
+
 	currentUser: CurrentUser | undefined;
 	currentUserSkeletonToggle: boolean = true;
 	currentUser$: Subscription | undefined;
 	currentUserRequest$: Subscription | undefined;
 
-	profileForm: FormGroup | undefined;
+	profileForm: FormGroup = this.formBuilder.group<ProfileForm>({
+		avatar: this.formBuilder.control(null, []),
+		name: this.formBuilder.nonNullable.control('', [
+			Validators.required,
+			Validators.minLength(4),
+			Validators.maxLength(24),
+			Validators.pattern(this.helperService.getRegex('no-whitespace'))
+		]),
+		description: this.formBuilder.control(null, [Validators.maxLength(255)])
+	});
 	profileFormIsPristine: boolean = false;
 	profileFormIsPristine$: Subscription | undefined;
 
 	profileFormAvatarSkeletonToggle: boolean = false;
 	profileFormAvatarRequest$: Subscription | undefined;
-
-	constructor(
-		private formBuilder: FormBuilder,
-		private helperService: HelperService,
-		private userService: UserService,
-		private authorizationService: AuthorizationService,
-		private snackbarService: SnackbarService,
-		private skeletonService: SkeletonService,
-		private platformService: PlatformService,
-		private fileService: FileService
-	) {
-		this.profileForm = this.formBuilder.group<ProfileForm>({
-			avatar: this.formBuilder.control(null, []),
-			name: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.minLength(4),
-				Validators.maxLength(24),
-				Validators.pattern(this.helperService.getRegex('no-whitespace'))
-			]),
-			description: this.formBuilder.control(null, [Validators.maxLength(255)])
-		});
-	}
 
 	ngOnInit(): void {
 		/** Apply Data */

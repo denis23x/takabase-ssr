@@ -1,6 +1,6 @@
 /** @format */
 
-import { Inject, Injectable, NgZone } from '@angular/core';
+import { inject, Injectable, NgZone } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
 import { HttpClient } from '@angular/common/http';
@@ -24,19 +24,16 @@ import Color from 'colorjs.io';
 	providedIn: 'root'
 })
 export class AppearanceService {
-	collectionOrigin: string = '/appearance';
+	private readonly document: Document = inject(DOCUMENT);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly httpClient: HttpClient = inject(HttpClient);
+	private readonly meta: Meta = inject(Meta);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly cookieService: CookieService = inject(CookieService);
+	private readonly angularFirestore: AngularFirestore = inject(AngularFirestore);
+	private readonly ngZone: NgZone = inject(NgZone);
 
-	constructor(
-		@Inject(DOCUMENT)
-		private document: Document,
-		private platformService: PlatformService,
-		private httpClient: HttpClient,
-		private meta: Meta,
-		private helperService: HelperService,
-		private cookieService: CookieService,
-		private angularFirestore: AngularFirestore,
-		private ngZone: NgZone
-	) {}
+	collectionOrigin: string = '/appearance';
 
 	/** Utility */
 

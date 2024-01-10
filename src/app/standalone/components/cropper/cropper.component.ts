@@ -6,7 +6,7 @@ import {
 	computed,
 	ElementRef,
 	EventEmitter,
-	Inject,
+	inject,
 	OnDestroy,
 	Output,
 	Signal,
@@ -76,6 +76,15 @@ interface CropperImageForm {
 	templateUrl: './cropper.component.html'
 })
 export class CropperComponent implements AfterViewInit, OnDestroy {
+	private readonly document: Document = inject(DOCUMENT);
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly fileService: FileService = inject(FileService);
+	private readonly ipaService: IPAService = inject(IPAService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly markdownService: MarkdownService = inject(MarkdownService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+
 	// prettier-ignore
 	@ViewChild("cropperDialogElement") cropperDialogElement: | ElementRef<HTMLDialogElement> | undefined;
 
@@ -86,7 +95,11 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	@Output() appCropperSubmit: EventEmitter<File> = new EventEmitter<File>();
 	@Output() appCropperToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	imageForm: FormGroup | undefined;
+	imageForm: FormGroup = this.formBuilder.group<ImageForm>({
+		url: this.formBuilder.nonNullable.control('', [
+			Validators.pattern(this.helperService.getRegex('url'))
+		])
+	});
 	imageFormRequest$: Subscription | undefined;
 	imageFormMime: string[] = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 	imageFormMimeComputed: Signal<string> = computed(() => {
@@ -100,7 +113,20 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	markdownItToggle: boolean = false;
 	markdownItToggle$: Subscription | undefined;
 
-	cropperImageForm: FormGroup | undefined;
+	cropperImageForm: FormGroup = this.formBuilder.group<CropperImageForm>({
+		scale: this.formBuilder.nonNullable.control(1, [
+			Validators.required,
+			Validators.min(1),
+			Validators.max(5)
+		]),
+		rotate: this.formBuilder.nonNullable.control(0, [
+			Validators.required,
+			Validators.min(0),
+			Validators.max(360)
+		]),
+		flipV: this.formBuilder.nonNullable.control(false, [Validators.required]),
+		flipH: this.formBuilder.nonNullable.control(false, [Validators.required])
+	});
 	cropperImageForm$: Subscription | undefined;
 
 	cropperImageTransform$: Subscription | undefined;
@@ -163,38 +189,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		x2: 0,
 		y2: 0
 	};
-
-	constructor(
-		@Inject(DOCUMENT)
-		private document: Document,
-		private formBuilder: FormBuilder,
-		private helperService: HelperService,
-		private fileService: FileService,
-		private ipaService: IPAService,
-		private platformService: PlatformService,
-		private markdownService: MarkdownService,
-		private snackbarService: SnackbarService
-	) {
-		this.imageForm = this.formBuilder.group<ImageForm>({
-			url: this.formBuilder.nonNullable.control('', [
-				Validators.pattern(this.helperService.getRegex('url'))
-			])
-		});
-		this.cropperImageForm = this.formBuilder.group<CropperImageForm>({
-			scale: this.formBuilder.nonNullable.control(1, [
-				Validators.required,
-				Validators.min(1),
-				Validators.max(5)
-			]),
-			rotate: this.formBuilder.nonNullable.control(0, [
-				Validators.required,
-				Validators.min(0),
-				Validators.max(360)
-			]),
-			flipV: this.formBuilder.nonNullable.control(false, [Validators.required]),
-			flipH: this.formBuilder.nonNullable.control(false, [Validators.required])
-		});
-	}
 
 	ngAfterViewInit(): void {
 		if (this.platformService.isBrowser()) {

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Directive, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Directive, ElementRef, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { PlatformService } from '../../core/services/platform.service';
 import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -10,6 +10,9 @@ import { tap } from 'rxjs/operators';
 	selector: '[appScrollPreset]'
 })
 export class ScrollPresetDirective implements OnInit, OnDestroy {
+	private readonly elementRef: ElementRef = inject(ElementRef);
+	private readonly platformService: PlatformService = inject(PlatformService);
+
 	@Input({ required: true })
 	set appScrollActive(scrollActive: boolean) {
 		this.scrollActive$.next(scrollActive);
@@ -20,11 +23,6 @@ export class ScrollPresetDirective implements OnInit, OnDestroy {
 
 	parentLi: HTMLElement | undefined;
 	parentUl: HTMLElement | undefined;
-
-	constructor(
-		private elementRef: ElementRef,
-		private platformService: PlatformService
-	) {}
 
 	ngOnInit(): void {
 		this.scrollActive$

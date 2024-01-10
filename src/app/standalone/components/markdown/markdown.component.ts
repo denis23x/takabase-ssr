@@ -5,7 +5,7 @@ import {
 	Component,
 	ElementRef,
 	EventEmitter,
-	Inject,
+	inject,
 	Input,
 	OnDestroy,
 	Output,
@@ -74,6 +74,14 @@ interface UrlForm {
 	templateUrl: './markdown.component.html'
 })
 export class MarkdownComponent implements AfterViewInit, OnDestroy {
+	private readonly document: Document = inject(DOCUMENT);
+	private readonly markdownService: MarkdownService = inject(MarkdownService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly fileService: FileService = inject(FileService);
+	private readonly appearanceService: AppearanceService = inject(AppearanceService);
+
 	@ViewChild('urlFormDialog') urlFormDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() appMarkdownDialogToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -130,22 +138,9 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	previewId: string | undefined;
 	preview: HTMLElement | undefined;
 
-	urlForm: FormGroup | undefined;
+	urlForm: FormGroup = this.formBuilder.group<UrlForm>({});
 	urlForm$: Subscription | undefined;
 	urlFormControl: MarkdownControl | undefined;
-
-	constructor(
-		@Inject(DOCUMENT)
-		private document: Document,
-		private markdownService: MarkdownService,
-		private platformService: PlatformService,
-		private formBuilder: FormBuilder,
-		private helperService: HelperService,
-		private fileService: FileService,
-		private appearanceService: AppearanceService
-	) {
-		this.urlForm = this.formBuilder.group<UrlForm>({});
-	}
 
 	ngAfterViewInit(): void {
 		if (this.platformService.isBrowser()) {

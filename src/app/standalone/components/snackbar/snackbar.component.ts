@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Snack } from '../../../core/models/snack.model';
 import { SnackbarService } from '../../../core/services/snackbar.service';
@@ -14,9 +14,9 @@ import { Observable } from 'rxjs';
 	templateUrl: './snackbar.component.html'
 })
 export class SnackbarComponent implements OnInit {
-	snackbarList$: Observable<Snack[]>;
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
-	constructor(private snackbarService: SnackbarService) {}
+	snackbarList$: Observable<Snack[]>;
 
 	ngOnInit(): void {
 		this.snackbarList$ = this.snackbarService.snackbarList$;

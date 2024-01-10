@@ -1,6 +1,6 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { CategoryCreateDto } from '../dto/category/category-create.dto';
@@ -14,7 +14,7 @@ import { CategoryGetOneDto } from '../dto/category/category-get-one.dto';
 	providedIn: 'root'
 })
 export class CategoryService {
-	constructor(private apiService: ApiService) {}
+	private readonly apiService: ApiService = inject(ApiService);
 
 	/** REST */
 

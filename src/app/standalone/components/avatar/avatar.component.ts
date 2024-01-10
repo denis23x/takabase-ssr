@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ElementRef, Inject, Input } from '@angular/core';
+import { Component, ElementRef, inject, Input } from '@angular/core';
 import { toSvg } from 'jdenticon';
 import { User } from '../../../core/models/user.model';
 import { CommonModule, DOCUMENT } from '@angular/common';
@@ -13,6 +13,10 @@ import { PlatformService } from '../../../core/services/platform.service';
 	templateUrl: './avatar.component.html'
 })
 export class AvatarComponent {
+	private readonly document: Document = inject(DOCUMENT);
+	private readonly elementRef: ElementRef = inject(ElementRef);
+	private readonly platformService: PlatformService = inject(PlatformService);
+
 	@Input({ required: true })
 	set appAvatarUser(user: Partial<User> | undefined) {
 		this.user = user;
@@ -25,13 +29,6 @@ export class AvatarComponent {
 	}
 
 	user: Partial<User> | undefined;
-
-	constructor(
-		@Inject(DOCUMENT)
-		private document: Document,
-		private elementRef: ElementRef,
-		private platformService: PlatformService
-	) {}
 
 	setImage(): void {
 		if (this.platformService.isBrowser()) {

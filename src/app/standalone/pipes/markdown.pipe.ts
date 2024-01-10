@@ -1,6 +1,6 @@
 /** @format */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { MarkdownService } from '../../core/services/markdown.service';
 import MarkdownIt from 'markdown-it';
 
@@ -9,9 +9,9 @@ import MarkdownIt from 'markdown-it';
 	name: 'markdown'
 })
 export class MarkdownPipe implements PipeTransform {
-	markdownIt: MarkdownIt;
+	private readonly markdownService: MarkdownService = inject(MarkdownService);
 
-	constructor(private markdownService: MarkdownService) {}
+	markdownIt: MarkdownIt;
 
 	transform(value: string, type?: string): string {
 		this.markdownIt = this.markdownService.getMarkdownIt();

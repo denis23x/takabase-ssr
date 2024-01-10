@@ -1,6 +1,6 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Snack, SnackOptions } from '../models/snack.model';
 import { HelperService } from './helper.service';
@@ -9,9 +9,9 @@ import { HelperService } from './helper.service';
 	providedIn: 'root'
 })
 export class SnackbarService {
-	snackbarList$: BehaviorSubject<Snack[]> = new BehaviorSubject<Snack[]>([]);
+	private readonly helperService: HelperService = inject(HelperService);
 
-	constructor(private helperService: HelperService) {}
+	snackbarList$: BehaviorSubject<Snack[]> = new BehaviorSubject<Snack[]>([]);
 
 	setSnack(snack: Partial<Snack>): void {
 		snack.uuid = this.helperService.getUUID();

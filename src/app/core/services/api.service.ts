@@ -1,6 +1,6 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -12,10 +12,8 @@ import { FirebaseError } from '@angular/fire/app';
 	providedIn: 'root'
 })
 export class ApiService {
-	constructor(
-		private httpClient: HttpClient,
-		private snackbarService: SnackbarService
-	) {}
+	private readonly httpClient: HttpClient = inject(HttpClient);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
 	setUrl(url: string): string {
 		return environment.apiUrl + url;

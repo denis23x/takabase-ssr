@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -32,26 +32,22 @@ interface PasswordForm {
 	templateUrl: './password.component.html'
 })
 export class AuthConfirmationPasswordComponent implements OnInit, OnDestroy {
-	passwordRequest$: Subscription | undefined;
-	passwordForm: FormGroup | undefined;
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly router: Router = inject(Router);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly passwordService: PasswordService = inject(PasswordService);
 
-	constructor(
-		private formBuilder: FormBuilder,
-		private metaService: MetaService,
-		private helperService: HelperService,
-		private activatedRoute: ActivatedRoute,
-		private router: Router,
-		private snackbarService: SnackbarService,
-		private passwordService: PasswordService
-	) {
-		this.passwordForm = this.formBuilder.group<PasswordForm>({
-			code: this.formBuilder.nonNullable.control('', [Validators.required]),
-			password: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.pattern(this.helperService.getRegex('password'))
-			])
-		});
-	}
+	passwordRequest$: Subscription | undefined;
+	passwordForm: FormGroup = this.formBuilder.group<PasswordForm>({
+		code: this.formBuilder.nonNullable.control('', [Validators.required]),
+		password: this.formBuilder.nonNullable.control('', [
+			Validators.required,
+			Validators.pattern(this.helperService.getRegex('password'))
+		])
+	});
 
 	ngOnInit(): void {
 		/** Apply Data */

@@ -4,6 +4,7 @@ import {
 	Component,
 	ElementRef,
 	EventEmitter,
+	inject,
 	Input,
 	OnDestroy,
 	Output,
@@ -48,6 +49,11 @@ interface CategoryUpdateForm {
 	templateUrl: './update.component.html'
 })
 export class CategoryUpdateComponent implements OnDestroy {
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly categoryService: CategoryService = inject(CategoryService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+
 	// prettier-ignore
 	@ViewChild('categoryUpdateDialogElement') categoryUpdateDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
@@ -67,27 +73,18 @@ export class CategoryUpdateComponent implements OnDestroy {
 	category: Category | undefined;
 	categoryList: Category[] = [];
 
-	categoryUpdateForm: FormGroup | undefined;
+	categoryUpdateForm: FormGroup = this.formBuilder.group<CategoryUpdateForm>({
+		name: this.formBuilder.nonNullable.control('', [
+			Validators.required,
+			Validators.minLength(4),
+			Validators.maxLength(36)
+		]),
+		description: this.formBuilder.control(null, [Validators.maxLength(255)])
+	});
 	categoryUpdateFormRequest$: Subscription | undefined;
 
 	categoryUpdateFormIsPristine$: Subscription | undefined;
 	categoryUpdateFormIsPristine: boolean = false;
-
-	constructor(
-		private formBuilder: FormBuilder,
-		private helperService: HelperService,
-		private categoryService: CategoryService,
-		private snackbarService: SnackbarService
-	) {
-		this.categoryUpdateForm = this.formBuilder.group<CategoryUpdateForm>({
-			name: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.minLength(4),
-				Validators.maxLength(36)
-			]),
-			description: this.formBuilder.control(null, [Validators.maxLength(255)])
-		});
-	}
 
 	ngOnDestroy(): void {
 		// prettier-ignore

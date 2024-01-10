@@ -1,6 +1,6 @@
 /** @format */
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, Subscription, throwError } from 'rxjs';
 import { catchError, filter, switchMap } from 'rxjs/operators';
@@ -56,6 +56,18 @@ import { SearchFormComponent } from '../standalone/components/search-form/search
 	templateUrl: './user.component.html'
 })
 export class UserComponent implements OnInit, OnDestroy {
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly router: Router = inject(Router);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly userService: UserService = inject(UserService);
+	private readonly titleService: TitleService = inject(TitleService);
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly reportService: ReportService = inject(ReportService);
+	private readonly categoryService: CategoryService = inject(CategoryService);
+	private readonly skeletonService: SkeletonService = inject(SkeletonService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+
 	activatedRouteUrl$: Subscription | undefined;
 	activatedRouteFirstChildParams$: Subscription | undefined;
 
@@ -79,20 +91,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	categoryList: Category[] = [];
 	categoryListSkeletonToggle: boolean = true;
-
-	constructor(
-		private activatedRoute: ActivatedRoute,
-		private router: Router,
-		private authorizationService: AuthorizationService,
-		private userService: UserService,
-		private titleService: TitleService,
-		private metaService: MetaService,
-		private reportService: ReportService,
-		private categoryService: CategoryService,
-		private skeletonService: SkeletonService,
-		private snackbarService: SnackbarService,
-		private changeDetectorRef: ChangeDetectorRef
-	) {}
 
 	ngOnInit(): void {
 		this.activatedRouteUrl$?.unsubscribe();

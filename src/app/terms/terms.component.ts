@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MetaService } from '../core/services/meta.service';
@@ -15,6 +15,8 @@ import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.com
 	templateUrl: './terms.component.html'
 })
 export class TermsComponent implements OnInit {
+	private readonly metaService: MetaService = inject(MetaService);
+
 	termsNavigationList: any[] = [
 		{
 			path: 'terms-of-use',
@@ -25,8 +27,6 @@ export class TermsComponent implements OnInit {
 			name: 'Cookie policy'
 		}
 	];
-
-	constructor(private metaService: MetaService) {}
 
 	ngOnInit(): void {
 		/** Apply Data */

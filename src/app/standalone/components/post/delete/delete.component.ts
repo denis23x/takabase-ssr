@@ -4,6 +4,7 @@ import {
 	Component,
 	ElementRef,
 	EventEmitter,
+	inject,
 	Input,
 	OnDestroy,
 	OnInit,
@@ -30,6 +31,13 @@ import { AuthorizationService } from '../../../../core/services/authorization.se
 	templateUrl: './delete.component.html'
 })
 export class PostDeleteComponent implements OnInit, OnDestroy {
+	private readonly router: Router = inject(Router);
+	private readonly userService: UserService = inject(UserService);
+	private readonly postService: PostService = inject(PostService);
+	private readonly fileService: FileService = inject(FileService);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+
 	// prettier-ignore
 	@ViewChild('postDeleteDialogElement') postDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
@@ -48,15 +56,6 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	postDeleteRequest$: Subscription | undefined;
 	postDeleteDialogToggle: boolean = false;
 	postDeleteIsSubmitted: boolean = false;
-
-	constructor(
-		private router: Router,
-		private userService: UserService,
-		private postService: PostService,
-		private fileService: FileService,
-		private authorizationService: AuthorizationService,
-		private snackbarService: SnackbarService
-	) {}
 
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();

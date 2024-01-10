@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -58,10 +58,27 @@ interface AppearanceForm {
 	templateUrl: './appearance.component.html'
 })
 export class SettingsAppearanceComponent implements OnInit, OnDestroy {
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly httpClient: HttpClient = inject(HttpClient);
+	private readonly appearanceService: AppearanceService = inject(AppearanceService);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
-	appearanceForm: FormGroup | undefined;
+	appearanceForm: FormGroup = this.formBuilder.group<AppearanceForm>({
+		theme: this.formBuilder.nonNullable.control('', [Validators.required]),
+		themeBackground: this.formBuilder.nonNullable.control('', [Validators.required]),
+		themePrism: this.formBuilder.nonNullable.control('', [Validators.required]),
+		language: this.formBuilder.nonNullable.control('', [Validators.required]),
+		pageScrollToTop: this.formBuilder.control(null, [Validators.required]),
+		pageScrollInfinite: this.formBuilder.control(null, [Validators.required]),
+		pageRedirectHome: this.formBuilder.control(null, [Validators.required]),
+		markdownMonospace: this.formBuilder.control(null, [Validators.required]),
+		dropdownBackdrop: this.formBuilder.control(null, [Validators.required]),
+		windowButtonPosition: this.formBuilder.nonNullable.control('', [Validators.required])
+	});
 	appearanceForm$: Subscription | undefined;
 	appearanceFormSkeletonToggle: boolean = true;
 
@@ -82,27 +99,6 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	appearanceButtonsList: string[] = ['left', 'right'];
 
 	appearanceTransformList: string[] = ['theme', 'themeBackground', 'themePrism'];
-
-	constructor(
-		private formBuilder: FormBuilder,
-		private httpClient: HttpClient,
-		private appearanceService: AppearanceService,
-		private authorizationService: AuthorizationService,
-		private platformService: PlatformService
-	) {
-		this.appearanceForm = this.formBuilder.group<AppearanceForm>({
-			theme: this.formBuilder.nonNullable.control('', [Validators.required]),
-			themeBackground: this.formBuilder.nonNullable.control('', [Validators.required]),
-			themePrism: this.formBuilder.nonNullable.control('', [Validators.required]),
-			language: this.formBuilder.nonNullable.control('', [Validators.required]),
-			pageScrollToTop: this.formBuilder.control(null, [Validators.required]),
-			pageScrollInfinite: this.formBuilder.control(null, [Validators.required]),
-			pageRedirectHome: this.formBuilder.control(null, [Validators.required]),
-			markdownMonospace: this.formBuilder.control(null, [Validators.required]),
-			dropdownBackdrop: this.formBuilder.control(null, [Validators.required]),
-			windowButtonPosition: this.formBuilder.nonNullable.control('', [Validators.required])
-		});
-	}
 
 	ngOnInit(): void {
 		/** Apply Data */

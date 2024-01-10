@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../dropdown/dropdown.component';
@@ -36,25 +36,21 @@ interface SearchForm {
 	templateUrl: './search-form.component.html'
 })
 export class SearchFormComponent implements OnInit, OnDestroy {
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly router: Router = inject(Router);
+
 	activatedRouteQueryParams$: Subscription | undefined;
 
-	searchForm: FormGroup | undefined;
+	searchForm: FormGroup = this.formBuilder.group<SearchForm>({
+		query: this.formBuilder.nonNullable.control('', [
+			Validators.minLength(2),
+			Validators.maxLength(24)
+		]),
+		orderBy: this.formBuilder.nonNullable.control('', [])
+	});
 	searchForm$: Subscription | undefined;
 	searchFormOrderByList: string[] = ['newest', 'oldest'];
-
-	constructor(
-		private activatedRoute: ActivatedRoute,
-		private router: Router,
-		private formBuilder: FormBuilder
-	) {
-		this.searchForm = this.formBuilder.group<SearchForm>({
-			query: this.formBuilder.nonNullable.control('', [
-				Validators.minLength(2),
-				Validators.maxLength(24)
-			]),
-			orderBy: this.formBuilder.nonNullable.control('', [])
-		});
-	}
 
 	ngOnInit(): void {
 		this.activatedRouteQueryParams$?.unsubscribe();

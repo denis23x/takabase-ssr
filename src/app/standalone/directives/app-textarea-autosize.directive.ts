@@ -5,6 +5,7 @@ import {
 	Directive,
 	ElementRef,
 	HostListener,
+	inject,
 	Input,
 	OnDestroy
 } from '@angular/core';
@@ -15,6 +16,9 @@ import { PlatformService } from '../../core/services/platform.service';
 	selector: '[appTextareaAutosize]'
 })
 export class TextareaAutosizeDirective implements AfterViewInit, OnDestroy {
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly elementRef: ElementRef = inject(ElementRef);
+
 	@HostListener('ngModelChange', ['$event']) ngModelChange() {
 		/** Update autosize */
 
@@ -46,11 +50,6 @@ export class TextareaAutosizeDirective implements AfterViewInit, OnDestroy {
 	}
 
 	autosizeState: string | undefined;
-
-	constructor(
-		private platformService: PlatformService,
-		private elementRef: ElementRef
-	) {}
 
 	ngAfterViewInit(): void {
 		this.setAutosize();

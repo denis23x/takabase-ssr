@@ -1,6 +1,6 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { Report } from '../models/report.model';
@@ -10,9 +10,9 @@ import { ReportCreateDto } from '../dto/report/report-create.dto';
 	providedIn: 'root'
 })
 export class ReportService {
-	reportDialogToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	private readonly apiService: ApiService = inject(ApiService);
 
-	constructor(private apiService: ApiService) {}
+	reportDialogToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	/** REST */
 

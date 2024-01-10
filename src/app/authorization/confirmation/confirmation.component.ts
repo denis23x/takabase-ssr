@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
@@ -11,11 +11,9 @@ import { MetaService } from '../../core/services/meta.service';
 	templateUrl: 'confirmation.component.html'
 })
 export class AuthConfirmationComponent implements OnInit {
-	constructor(
-		private activatedRoute: ActivatedRoute,
-		private router: Router,
-		private metaService: MetaService
-	) {}
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly router: Router = inject(Router);
+	private readonly metaService: MetaService = inject(MetaService);
 
 	ngOnInit(): void {
 		/** Apply Data */

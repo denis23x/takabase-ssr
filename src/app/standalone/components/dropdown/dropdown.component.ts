@@ -5,7 +5,7 @@ import {
 	Component,
 	ElementRef,
 	EventEmitter,
-	Inject,
+	inject,
 	Input,
 	OnDestroy,
 	Output
@@ -33,6 +33,10 @@ import {
 	templateUrl: './dropdown.component.html'
 })
 export class DropdownComponent implements AfterViewInit, OnDestroy {
+	private readonly document: Document = inject(DOCUMENT);
+	private readonly elementRef: ElementRef = inject(ElementRef);
+	private readonly cookieService: CookieService = inject(CookieService);
+
 	@Output() appDropdownToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input()
@@ -62,13 +66,6 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 
 	dropdownElementTarget: HTMLElement | undefined;
 	dropdownElementContent: HTMLElement | undefined;
-
-	constructor(
-		@Inject(DOCUMENT)
-		private document: Document,
-		private elementRef: ElementRef,
-		private cookieService: CookieService
-	) {}
 
 	ngAfterViewInit(): void {
 		this.dropdownElementTarget = this.elementRef.nativeElement.querySelector('[slot=target]');

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 import { MetaService } from '../../../core/services/meta.service';
@@ -18,16 +18,14 @@ import { Subscription } from 'rxjs';
 	templateUrl: './email.component.html'
 })
 export class AuthConfirmationEmailComponent implements OnInit, OnDestroy {
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly emailService: EmailService = inject(EmailService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+
 	confirmationRequest$: Subscription | undefined;
 	confirmationIsSucceed: boolean = false;
 	confirmationIsSubmitted: boolean = true;
-
-	constructor(
-		private activatedRoute: ActivatedRoute,
-		private metaService: MetaService,
-		private emailService: EmailService,
-		private snackbarService: SnackbarService
-	) {}
 
 	ngOnInit(): void {
 		/** Apply Data */

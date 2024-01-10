@@ -5,6 +5,7 @@ import {
 	ChangeDetectorRef,
 	Component,
 	ElementRef,
+	inject,
 	Input,
 	OnDestroy,
 	ViewChild
@@ -26,6 +27,12 @@ import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 	templateUrl: './qr-code.component.html'
 })
 export class QrCodeComponent implements AfterViewInit, OnDestroy {
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly appearanceService: AppearanceService = inject(AppearanceService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+
 	@ViewChild('QRCodeDialog') QRCodeDialog: ElementRef<HTMLDialogElement> | undefined;
 	@ViewChild('QRCodeCanvas') QRCodeCanvas: ElementRef<HTMLCanvasElement> | undefined;
 
@@ -53,14 +60,6 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 			light: '#ffffffff'
 		}
 	};
-
-	constructor(
-		private platformService: PlatformService,
-		private appearanceService: AppearanceService,
-		private snackbarService: SnackbarService,
-		private helperService: HelperService,
-		private changeDetectorRef: ChangeDetectorRef
-	) {}
 
 	ngAfterViewInit(): void {
 		this.QRCodeData$.pipe(

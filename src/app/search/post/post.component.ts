@@ -22,11 +22,9 @@ import { Subscription } from 'rxjs';
 	templateUrl: './post.component.html'
 })
 export class SearchPostComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
-	postService: PostService = inject(PostService);
-	metaService: MetaService = inject(MetaService);
-	skeletonService: SkeletonService = inject(SkeletonService);
-
-	/* --- */
+	private readonly postService: PostService = inject(PostService);
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 
 	postList: Post[] = [];
 	postListRequest$: Subscription | undefined;

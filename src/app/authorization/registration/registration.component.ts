@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -44,35 +44,31 @@ interface RegistrationForm {
 	templateUrl: './registration.component.html'
 })
 export class AuthRegistrationComponent implements OnInit, OnDestroy {
-	registrationRequest$: Subscription | undefined;
-	registrationForm: FormGroup | undefined;
+	private readonly router: Router = inject(Router);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly userService: UserService = inject(UserService);
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
-	constructor(
-		private router: Router,
-		private authorizationService: AuthorizationService,
-		private userService: UserService,
-		private formBuilder: FormBuilder,
-		private helperService: HelperService,
-		private metaService: MetaService,
-		private snackbarService: SnackbarService
-	) {
-		this.registrationForm = this.formBuilder.group<RegistrationForm>({
-			name: this.formBuilder.nonNullable.control('denis', [
-				Validators.required,
-				Validators.minLength(4),
-				Validators.maxLength(24)
-			]),
-			email: this.formBuilder.nonNullable.control('denis@mail.ru', [
-				Validators.required,
-				Validators.email
-			]),
-			password: this.formBuilder.nonNullable.control('denis@mail.ru', [
-				Validators.required,
-				Validators.pattern(this.helperService.getRegex('password'))
-			]),
-			terms: this.formBuilder.nonNullable.control(true, [Validators.requiredTrue])
-		});
-	}
+	registrationRequest$: Subscription | undefined;
+	registrationForm: FormGroup = this.formBuilder.group<RegistrationForm>({
+		name: this.formBuilder.nonNullable.control('denis', [
+			Validators.required,
+			Validators.minLength(4),
+			Validators.maxLength(24)
+		]),
+		email: this.formBuilder.nonNullable.control('denis@mail.ru', [
+			Validators.required,
+			Validators.email
+		]),
+		password: this.formBuilder.nonNullable.control('denis@mail.ru', [
+			Validators.required,
+			Validators.pattern(this.helperService.getRegex('password'))
+		]),
+		terms: this.formBuilder.nonNullable.control(true, [Validators.requiredTrue])
+	});
 
 	ngOnInit(): void {
 		/** Apply Data */

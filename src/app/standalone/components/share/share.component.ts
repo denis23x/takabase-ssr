@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Params } from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { PlatformService } from '../../../core/services/platform.service';
@@ -16,6 +16,10 @@ import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 	templateUrl: './share.component.html'
 })
 export class ShareComponent {
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly helperService: HelperService = inject(HelperService);
+
 	@Input({ required: true })
 	set appSharePost(post: Post | undefined) {
 		if (post) {
@@ -42,12 +46,6 @@ export class ShareComponent {
 		telegram: 'https://t.me/share/url',
 		twitter: 'https://twitter.com/intent/tweet'
 	};
-
-	constructor(
-		private platformService: PlatformService,
-		private snackbarService: SnackbarService,
-		private helperService: HelperService
-	) {}
 
 	getEncodedURI(params: Params): string {
 		return Object.keys(params)

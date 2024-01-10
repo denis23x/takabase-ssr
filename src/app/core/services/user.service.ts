@@ -1,6 +1,6 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { User } from '../models/user.model';
@@ -13,7 +13,7 @@ import { UserUpdateDto } from '../dto/user/user-update.dto';
 	providedIn: 'root'
 })
 export class UserService {
-	constructor(private apiService: ApiService) {}
+	private readonly apiService: ApiService = inject(ApiService);
 
 	/** Utility */
 

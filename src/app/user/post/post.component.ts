@@ -19,10 +19,8 @@ import { SkeletonService } from '../../core/services/skeleton.service';
 	templateUrl: './post.component.html'
 })
 export class UserPostComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
-	postService: PostService = inject(PostService);
-	skeletonService: SkeletonService = inject(SkeletonService);
-
-	/* --- */
+	private readonly postService: PostService = inject(PostService);
+	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 
 	postList: Post[] = [];
 	postListRequest$: Subscription | undefined;

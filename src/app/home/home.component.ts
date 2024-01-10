@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
@@ -19,6 +19,9 @@ import { AppFeature } from '../core/models/app-feature.model';
 	templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit, OnDestroy {
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+
 	appFeatureActive: AppFeature | undefined;
 
 	// prettier-ignore
@@ -100,11 +103,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 	appPWAAvailable: boolean = false;
 	appPWAInstallPromt: any = null;
 	appPWAInstallPromt$: Subscription | undefined;
-
-	constructor(
-		private metaService: MetaService,
-		private platformService: PlatformService
-	) {}
 
 	ngOnInit(): void {
 		/** Apply Data */

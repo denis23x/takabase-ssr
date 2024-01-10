@@ -1,6 +1,6 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { from, Observable, of, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
@@ -15,14 +15,10 @@ import firebase from 'firebase/compat';
 	providedIn: 'root'
 })
 export class IPAService {
-	constructor(
-		private apiService: ApiService,
-		private httpClient: HttpClient,
-		private fileService: FileService,
-		private angularFireStorage: AngularFireStorage
-	) {}
-
-	/** Utility */
+	private readonly apiService: ApiService = inject(ApiService);
+	private readonly httpClient: HttpClient = inject(HttpClient);
+	private readonly fileService: FileService = inject(FileService);
+	private readonly angularFireStorage: AngularFireStorage = inject(AngularFireStorage);
 
 	getParams(IPAOperationParams: IPAOperation[]): string {
 		return '?operations=' + this.getParamsEncode(IPAOperationParams);

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
@@ -13,6 +13,11 @@ import { TitleService } from '../core/services/title.service';
 	templateUrl: './error.component.html'
 })
 export class ErrorComponent implements OnInit {
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly router: Router = inject(Router);
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly titleService: TitleService = inject(TitleService);
+
 	statusCode: number | undefined;
 	statusCodeMap: number[][] = [
 		[100, 199],
@@ -30,13 +35,6 @@ export class ErrorComponent implements OnInit {
 		'Client error',
 		'Server error'
 	];
-
-	constructor(
-		private activatedRoute: ActivatedRoute,
-		private router: Router,
-		private metaService: MetaService,
-		private titleService: TitleService
-	) {}
 
 	ngOnInit(): void {
 		/** Apply Data */

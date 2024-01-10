@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -43,6 +43,11 @@ import { ReportService } from '../../../../core/services/report.service';
 	templateUrl: './prose.component.html'
 })
 export class PostProseComponent implements OnInit, OnDestroy {
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly reportService: ReportService = inject(ReportService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+
 	@Input({ required: true })
 	set appPostProsePost(post: Post) {
 		this.post = post;
@@ -68,13 +73,6 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	postPreview: boolean = false;
 	postShareUrl: string | undefined;
 	postSkeletonToggle: boolean = true;
-
-	constructor(
-		private authorizationService: AuthorizationService,
-		private platformService: PlatformService,
-		private reportService: ReportService,
-		private snackbarService: SnackbarService
-	) {}
 
 	ngOnInit(): void {
 		if (this.platformService.isBrowser()) {

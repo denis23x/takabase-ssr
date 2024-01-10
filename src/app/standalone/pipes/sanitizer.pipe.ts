@@ -1,6 +1,6 @@
 /** @format */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeValue } from '@angular/platform-browser';
 import DOMPurify, { Config } from 'dompurify';
 import { PlatformService } from '../../core/services/platform.service';
@@ -10,10 +10,8 @@ import { PlatformService } from '../../core/services/platform.service';
 	name: 'sanitizer'
 })
 export class SanitizerPipe implements PipeTransform {
-	constructor(
-		private domSanitizer: DomSanitizer,
-		private platformService: PlatformService
-	) {}
+	private readonly domSanitizer: DomSanitizer = inject(DomSanitizer);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
 	transform(value: string, context: string): SafeValue | null {
 		if (this.platformService.isBrowser()) {

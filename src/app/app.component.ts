@@ -1,6 +1,6 @@
 /** @format */
 
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { AppearanceService } from './core/services/appearance.service';
 import { AuthorizationService } from './core/services/authorization.service';
 import { filter, first } from 'rxjs/operators';
@@ -25,13 +25,11 @@ import { ReportComponent } from './standalone/components/report/report.component
 	templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
+	private readonly appearanceService: AppearanceService = inject(AppearanceService);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
-
-	constructor(
-		private appearanceService: AppearanceService,
-		private authorizationService: AuthorizationService
-	) {}
 
 	// prettier-ignore
 	ngOnInit(): void {

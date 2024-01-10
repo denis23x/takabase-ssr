@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, filter } from 'rxjs/operators';
@@ -8,10 +8,15 @@ import { Subscription, throwError } from 'rxjs';
 import { PlatformService } from '../core/services/platform.service';
 
 @Component({
-	selector: 'app-abstract-markdown-prose',
+	selector: 'app-abstract-markdown',
 	template: ''
 })
-export abstract class AbstractMarkdownProseComponent implements OnInit, OnDestroy {
+export abstract class AbstractMarkdownComponent implements OnInit, OnDestroy {
+	public readonly httpClient: HttpClient = inject(HttpClient);
+	public readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	public readonly router: Router = inject(Router);
+	public readonly platformService: PlatformService = inject(PlatformService);
+
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
 	activatedRouteParams$: Subscription | undefined;
@@ -19,13 +24,6 @@ export abstract class AbstractMarkdownProseComponent implements OnInit, OnDestro
 	abstractProse: string | undefined;
 	abstractProse$: Subscription | undefined;
 	abstractProseSkeleton: boolean = false;
-
-	constructor(
-		public httpClient: HttpClient,
-		public activatedRoute: ActivatedRoute,
-		public router: Router,
-		public platformService: PlatformService
-	) {}
 
 	ngOnInit(): void {
 		this.activatedRouteParams$ = this.activatedRoute.params

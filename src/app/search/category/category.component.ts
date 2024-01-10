@@ -30,11 +30,9 @@ import { Subscription } from 'rxjs';
 	templateUrl: './category.component.html'
 })
 export class SearchCategoryComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
-	categoryService: CategoryService = inject(CategoryService);
-	metaService: MetaService = inject(MetaService);
-	skeletonService: SkeletonService = inject(SkeletonService);
-
-	/* --- */
+	private readonly categoryService: CategoryService = inject(CategoryService);
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 
 	categoryList: Category[] = [];
 	categoryListRequest$: Subscription | undefined;

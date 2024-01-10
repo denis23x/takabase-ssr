@@ -12,10 +12,8 @@ import { AbstractGetAllDto } from '../core/dto/abstract/abstract-get-all.dto';
 	template: ''
 })
 export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
-	cookieService: CookieService = inject(CookieService);
-	appearanceService: AppearanceService = inject(AppearanceService);
-
-	/* --- */
+	public readonly cookieService: CookieService = inject(CookieService);
+	public readonly appearanceService: AppearanceService = inject(AppearanceService);
 
 	@Input({ transform: numberAttribute })
 	set categoryId(categoryId: number | undefined) {

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { PlatformService } from './platform.service';
 import { DOCUMENT } from '@angular/common';
@@ -10,11 +10,8 @@ import { environment } from '../../../environments/environment';
 	providedIn: 'root'
 })
 export class HelperService {
-	constructor(
-		@Inject(DOCUMENT)
-		private document: Document,
-		private platformService: PlatformService
-	) {}
+	private readonly document: Document = inject(DOCUMENT);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
 	setCamelCaseToDashCase(value: string): string {
 		// eslint-disable-next-line @typescript-eslint/no-shadow

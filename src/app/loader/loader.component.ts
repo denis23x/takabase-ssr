@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 
@@ -9,7 +9,7 @@ import { MetaService } from '../core/services/meta.service';
 	templateUrl: './loader.component.html'
 })
 export class LoaderComponent implements OnInit {
-	constructor(private metaService: MetaService) {}
+	private readonly metaService: MetaService = inject(MetaService);
 
 	ngOnInit(): void {
 		/** Apply Data */

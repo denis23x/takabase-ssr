@@ -1,6 +1,6 @@
 /** @format */
 
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
 import { environment } from '../../../environments/environment';
@@ -9,11 +9,8 @@ import { environment } from '../../../environments/environment';
 	providedIn: 'root'
 })
 export class CookieService {
-	constructor(
-		@Inject(DOCUMENT)
-		private document: Document,
-		private platformService: PlatformService
-	) {}
+	private readonly document: Document = inject(DOCUMENT);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
 	getItem(key: string): string | undefined {
 		if (this.platformService.isBrowser()) {

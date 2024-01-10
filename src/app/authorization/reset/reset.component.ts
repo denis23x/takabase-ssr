@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -37,20 +37,16 @@ interface ResetForm {
 	templateUrl: './reset.component.html'
 })
 export class AuthResetComponent implements OnInit, OnDestroy {
-	resetRequest$: Subscription | undefined;
-	resetForm: FormGroup | undefined;
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly passwordService: PasswordService = inject(PasswordService);
 
-	constructor(
-		private formBuilder: FormBuilder,
-		private helperService: HelperService,
-		private metaService: MetaService,
-		private snackbarService: SnackbarService,
-		private passwordService: PasswordService
-	) {
-		this.resetForm = this.formBuilder.group<ResetForm>({
-			email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email])
-		});
-	}
+	resetRequest$: Subscription | undefined;
+	resetForm: FormGroup = this.formBuilder.group<ResetForm>({
+		email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email])
+	});
 
 	ngOnInit(): void {
 		/** Apply Data */

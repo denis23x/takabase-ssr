@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from '../core/models/post.model';
 import { PostService } from '../core/services/post.service';
@@ -16,6 +16,12 @@ import { PlatformService } from '../core/services/platform.service';
 	template: ''
 })
 export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy {
+	public readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	public readonly router: Router = inject(Router);
+	public readonly postService: PostService = inject(PostService);
+	public readonly skeletonService: SkeletonService = inject(SkeletonService);
+	public readonly platformService: PlatformService = inject(PlatformService);
+
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
 	// prettier-ignore
@@ -24,14 +30,6 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 	abstractPost: Post | undefined;
 	abstractPostRequest$: Subscription | undefined;
 	abstractPostSkeletonToggle: boolean = true;
-
-	constructor(
-		public activatedRoute: ActivatedRoute,
-		public router: Router,
-		public postService: PostService,
-		public skeletonService: SkeletonService,
-		public platformService: PlatformService
-	) {}
 
 	ngOnInit(): void {
 		/** Apply Data */

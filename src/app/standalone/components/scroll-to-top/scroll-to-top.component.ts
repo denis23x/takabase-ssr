@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule, ViewportScroller, Location } from '@angular/common';
 import { distinctUntilChanged, fromEvent, of, Subscription, switchMap } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
@@ -15,17 +15,15 @@ import { CookieService } from '../../../core/services/cookie.service';
 	templateUrl: './scroll-to-top.component.html'
 })
 export class ScrollToTopComponent implements OnInit, OnDestroy {
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly viewportScroller: ViewportScroller = inject(ViewportScroller);
+	private readonly cookieService: CookieService = inject(CookieService);
+	private readonly location: Location = inject(Location);
+
 	windowScroll$: Subscription | undefined;
 
 	windowScrollToTopToggleValue: number = 100;
 	windowScrollToTopToggle: boolean = false;
-
-	constructor(
-		private platformService: PlatformService,
-		private viewportScroller: ViewportScroller,
-		private cookieService: CookieService,
-		private location: Location
-	) {}
 
 	ngOnInit(): void {
 		if (this.platformService.isBrowser()) {

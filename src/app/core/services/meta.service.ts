@@ -1,6 +1,6 @@
 /** @format */
 
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Meta, MetaDefinition } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
@@ -10,12 +10,9 @@ import { HelperService } from './helper.service';
 	providedIn: 'root'
 })
 export class MetaService {
-	constructor(
-		@Inject(DOCUMENT)
-		private document: Document,
-		private meta: Meta,
-		private helperService: HelperService
-	) {}
+	private readonly document: Document = inject(DOCUMENT);
+	private readonly meta: Meta = inject(Meta);
+	private readonly helperService: HelperService = inject(HelperService);
 
 	setCanonicalURL(): void {
 		const url: URL = this.helperService.getURL();

@@ -4,6 +4,7 @@ import {
 	Component,
 	ElementRef,
 	EventEmitter,
+	inject,
 	Input,
 	OnDestroy,
 	OnInit,
@@ -27,6 +28,8 @@ import { Category } from '../../../../core/models/category.model';
 	templateUrl: './preview.component.html'
 })
 export class PostPreviewComponent implements OnInit, OnDestroy {
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+
 	// prettier-ignore
 	@ViewChild('postPreviewDialogElement') postPreviewDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
@@ -50,8 +53,6 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 	post: Post | undefined;
 	postPreview: Post | undefined;
 	postPreviewDialogToggle: boolean = false;
-
-	constructor(private authorizationService: AuthorizationService) {}
 
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { from, Observable, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
@@ -13,11 +13,9 @@ import mime from 'mime';
 	providedIn: 'root'
 })
 export class FileService {
-	constructor(
-		private apiService: ApiService,
-		private helperService: HelperService,
-		private angularFireStorage: AngularFireStorage
-	) {}
+	private readonly apiService: ApiService = inject(ApiService);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly angularFireStorage: AngularFireStorage = inject(AngularFireStorage);
 
 	/** Utility */
 

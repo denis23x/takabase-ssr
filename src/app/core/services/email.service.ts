@@ -1,6 +1,6 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { from, Observable, of, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
 import { EmailConfirmationUpdateDto } from '../dto/email/email-confirmation-update.dto';
@@ -15,10 +15,8 @@ import firebase from 'firebase/compat';
 	providedIn: 'root'
 })
 export class EmailService {
-	constructor(
-		private apiService: ApiService,
-		private angularFireAuth: AngularFireAuth
-	) {}
+	private readonly apiService: ApiService = inject(ApiService);
+	private readonly angularFireAuth: AngularFireAuth = inject(AngularFireAuth);
 
 	onUpdate(emailUpdateDto: EmailUpdateDto): Observable<void> {
 		return from(this.angularFireAuth.currentUser).pipe(

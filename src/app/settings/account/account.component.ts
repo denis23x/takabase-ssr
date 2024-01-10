@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -49,45 +49,39 @@ interface PasswordForm {
 	templateUrl: './account.component.html'
 })
 export class SettingsAccountComponent implements OnInit, OnDestroy {
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly cookieService: CookieService = inject(CookieService);
+	private readonly emailService: EmailService = inject(EmailService);
+	private readonly passwordService: PasswordService = inject(PasswordService);
+
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
-	passwordValidateForm: FormGroup | undefined;
+	passwordValidateForm: FormGroup = this.formBuilder.group<PasswordValidateForm>({
+		password: this.formBuilder.nonNullable.control('', [
+			Validators.required,
+			Validators.pattern(this.helperService.getRegex('password'))
+		])
+	});
 	passwordValidateFormRequest$: Subscription | undefined;
 	passwordValidateIsValid: boolean = false;
 
-	emailForm: FormGroup | undefined;
+	emailForm: FormGroup = this.formBuilder.group<EmailForm>({
+		email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email])
+	});
 	emailFormRequest$: Subscription | undefined;
 	emailFormConfirmationIsSubmitted: boolean = false;
 
-	passwordForm: FormGroup | undefined;
+	passwordForm: FormGroup = this.formBuilder.group<PasswordForm>({
+		password: this.formBuilder.nonNullable.control('', [
+			Validators.required,
+			Validators.pattern(this.helperService.getRegex('password'))
+		])
+	});
 	passwordFormRequest$: Subscription | undefined;
-
-	constructor(
-		private formBuilder: FormBuilder,
-		private helperService: HelperService,
-		private authorizationService: AuthorizationService,
-		private snackbarService: SnackbarService,
-		private cookieService: CookieService,
-		private emailService: EmailService,
-		private passwordService: PasswordService
-	) {
-		this.passwordValidateForm = this.formBuilder.group<PasswordValidateForm>({
-			password: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.pattern(this.helperService.getRegex('password'))
-			])
-		});
-		this.emailForm = this.formBuilder.group<EmailForm>({
-			email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email])
-		});
-		this.passwordForm = this.formBuilder.group<PasswordForm>({
-			password: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.pattern(this.helperService.getRegex('password'))
-			])
-		});
-	}
 
 	ngOnInit(): void {
 		/** Apply Data */

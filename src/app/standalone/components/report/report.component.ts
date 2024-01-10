@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WindowComponent } from '../window/window.component';
 import { Subscription } from 'rxjs';
@@ -42,12 +42,28 @@ interface ReportForm {
 	templateUrl: './report.component.html'
 })
 export class ReportComponent implements OnInit, OnDestroy {
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly reportService: ReportService = inject(ReportService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+
 	@ViewChild('reportDialog') reportDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	reportDialogToggle: boolean = false;
 	reportDialogToggle$: Subscription | undefined;
 
-	reportForm: FormGroup | undefined;
+	reportForm: FormGroup = this.formBuilder.group<ReportForm>({
+		name: this.formBuilder.nonNullable.control('', [
+			Validators.required,
+			Validators.minLength(4),
+			Validators.maxLength(36)
+		]),
+		description: this.formBuilder.nonNullable.control('', [
+			Validators.required,
+			Validators.minLength(4),
+			Validators.maxLength(255)
+		])
+	});
 	reportFormRequest$: Subscription | undefined;
 	reportFormNameList: string[] = [
 		'Terms and conditions',
@@ -56,26 +72,6 @@ export class ReportComponent implements OnInit, OnDestroy {
 		'Time spent waiting',
 		'Technical glitch'
 	];
-
-	constructor(
-		private formBuilder: FormBuilder,
-		private helperService: HelperService,
-		private reportService: ReportService,
-		private snackbarService: SnackbarService
-	) {
-		this.reportForm = this.formBuilder.group<ReportForm>({
-			name: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.minLength(4),
-				Validators.maxLength(36)
-			]),
-			description: this.formBuilder.nonNullable.control('', [
-				Validators.required,
-				Validators.minLength(4),
-				Validators.maxLength(255)
-			])
-		});
-	}
 
 	ngOnInit(): void {
 		this.reportDialogToggle$ = this.reportService.reportDialogToggle$

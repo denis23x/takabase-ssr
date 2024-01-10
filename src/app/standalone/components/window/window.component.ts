@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { CommonModule } from '@angular/common';
 import { CookieService } from '../../../core/services/cookie.service';
@@ -13,6 +13,8 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
 	templateUrl: 'window.component.html'
 })
 export class WindowComponent implements OnInit {
+	private readonly cookieService: CookieService = inject(CookieService);
+
 	@Output() appWindowClose: EventEmitter<void> = new EventEmitter<void>();
 
 	@Input()
@@ -42,8 +44,6 @@ export class WindowComponent implements OnInit {
 		'shadow-xl',
 		'rounded-box'
 	];
-
-	constructor(private cookieService: CookieService) {}
 
 	ngOnInit(): void {
 		/** Apply appearance settings */

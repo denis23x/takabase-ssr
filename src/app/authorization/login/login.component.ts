@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -41,29 +41,25 @@ interface LoginForm {
 	templateUrl: './login.component.html'
 })
 export class AuthLoginComponent implements OnInit, OnDestroy {
-	loginRequest$: Subscription | undefined;
-	loginForm: FormGroup | undefined;
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly router: Router = inject(Router);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly formBuilder: FormBuilder = inject(FormBuilder);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly userService: UserService = inject(UserService);
+	private readonly metaService: MetaService = inject(MetaService);
 
-	constructor(
-		private activatedRoute: ActivatedRoute,
-		private router: Router,
-		private authorizationService: AuthorizationService,
-		private formBuilder: FormBuilder,
-		private helperService: HelperService,
-		private userService: UserService,
-		private metaService: MetaService
-	) {
-		this.loginForm = this.formBuilder.group<LoginForm>({
-			email: this.formBuilder.nonNullable.control('denis@mail.ru', [
-				Validators.required,
-				Validators.email
-			]),
-			password: this.formBuilder.nonNullable.control('denis@mail.ru', [
-				Validators.required,
-				Validators.pattern(this.helperService.getRegex('password'))
-			])
-		});
-	}
+	loginRequest$: Subscription | undefined;
+	loginForm: FormGroup = this.formBuilder.group<LoginForm>({
+		email: this.formBuilder.nonNullable.control('denis@mail.ru', [
+			Validators.required,
+			Validators.email
+		]),
+		password: this.formBuilder.nonNullable.control('denis@mail.ru', [
+			Validators.required,
+			Validators.pattern(this.helperService.getRegex('password'))
+		])
+	});
 
 	ngOnInit(): void {
 		/** Apply Data */

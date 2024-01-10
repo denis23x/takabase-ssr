@@ -1,6 +1,6 @@
 /** @format */
 
-import { Directive } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 /** https://netbasal.com/how-to-trim-the-value-of-angulars-form-control-87660941e6cb */
@@ -10,11 +10,13 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 	selector: '[appInputTrimWhitespace]'
 })
 export class InputTrimWhitespaceDirective {
-	constructor(private ngControl: NgControl) {
-		this.trimValue(this.ngControl.valueAccessor);
+	private readonly ngControl: NgControl = inject(NgControl);
+
+	constructor() {
+		this.trimWhitespace(this.ngControl.valueAccessor);
 	}
 
-	trimValue(controlValueAccessor: ControlValueAccessor) {
+	trimWhitespace(controlValueAccessor: ControlValueAccessor) {
 		const originalControlValueAccessor: any = controlValueAccessor.registerOnChange;
 
 		controlValueAccessor.registerOnChange = (fn: (_: unknown) => void) => {

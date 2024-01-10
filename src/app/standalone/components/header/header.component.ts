@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -30,13 +30,13 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
 	templateUrl: './header.component.html'
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
 	currentUserSkeletonToggle: boolean = true;
 	currentUserSkeletonToggle$: Subscription | undefined;
-
-	constructor(private authorizationService: AuthorizationService) {}
 
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();

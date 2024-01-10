@@ -1,6 +1,6 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
@@ -19,16 +19,14 @@ import firebase from 'firebase/compat';
 	providedIn: 'root'
 })
 export class AuthorizationService {
+	private readonly apiService: ApiService = inject(ApiService);
+	private readonly angularFireAuth: AngularFireAuth = inject(AngularFireAuth);
+	private readonly userService: UserService = inject(UserService);
+	private readonly appearanceService: AppearanceService = inject(AppearanceService);
+
 	// prettier-ignore
 	currentUser: BehaviorSubject<CurrentUser | undefined> = new BehaviorSubject<CurrentUser | undefined>(undefined);
 	currentUserIsPopulated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
-	constructor(
-		private apiService: ApiService,
-		private angularFireAuth: AngularFireAuth,
-		private userService: UserService,
-		private appearanceService: AppearanceService
-	) {}
 
 	onPopulate(): Observable<CurrentUser | undefined> {
 		return this.getCurrentUser().pipe(
