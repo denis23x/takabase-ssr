@@ -42,23 +42,21 @@
 						/>
 						<div class="menu menu-vertical menu-md p-0" slot="content">
 							<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
-								<li
-									class="flex w-full snap-start scroll-my-2"
-									*ngFor="let themeValue of appearanceThemeList"
-								>
-									<!-- prettier-ignore -->
-									<button
-                    class="rounded-btn block w-full truncate text-left"
-                    type="button"
-                    appScrollPreset
-                    [appScrollActive]="theme.value === themeValue"
-                    [ngClass]="{ 'active': theme.value === themeValue }"
-                    [attr.aria-label]="themeValue"
-                    (click)="theme.setValue(themeValue)"
-                  >
-                    {{ themeValue }}
-                  </button>
-								</li>
+								@for (appearanceTheme of appearanceThemeList; track $index) {
+									<li class="flex w-full snap-start scroll-my-2">
+										<button
+											class="rounded-btn block w-full truncate text-left"
+											type="button"
+											appScrollPreset
+											[appScrollActive]="theme.value === appearanceTheme"
+											[ngClass]="{ active: theme.value === appearanceTheme }"
+											[attr.aria-label]="appearanceTheme"
+											(click)="theme.setValue(appearanceTheme)"
+										>
+											{{ appearanceTheme }}
+										</button>
+									</li>
+								}
 							</ul>
 						</div>
 					</div>
@@ -101,23 +99,21 @@
             />
 						<div class="menu menu-vertical menu-md p-0" slot="content">
 							<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
-								<!-- prettier-ignore -->
-								<li
-                  class="flex w-full snap-start scroll-my-2"
-                  *ngFor="let themeBackgroundValue of appearanceThemeBackgroundList"
-                >
-                  <button
-                    class="rounded-btn block w-full truncate text-left"
-                    type="button"
-                    appScrollPreset
-                    [appScrollActive]="themeBackground.value === themeBackgroundValue"
-                    [ngClass]="{ 'active': themeBackground.value === themeBackgroundValue }"
-                    [attr.aria-label]="themeBackgroundValue"
-                    (click)="themeBackground.setValue(themeBackgroundValue)"
-                  >
-                    {{ themeBackgroundValue }}
-                  </button>
-                </li>
+								@for (appearanceThemeBackground of appearanceThemeBackgroundList; track $index) {
+									<li class="flex w-full snap-start scroll-my-2">
+										<button
+											class="rounded-btn block w-full truncate text-left"
+											type="button"
+											appScrollPreset
+											[appScrollActive]="themeBackground.value === appearanceThemeBackground"
+											[ngClass]="{ active: themeBackground.value === appearanceThemeBackground }"
+											[attr.aria-label]="appearanceThemeBackground"
+											(click)="themeBackground.setValue(appearanceThemeBackground)"
+										>
+											{{ appearanceThemeBackground }}
+										</button>
+									</li>
+								}
 							</ul>
 						</div>
 					</div>
@@ -150,23 +146,21 @@
 						/>
 						<div class="menu menu-vertical menu-md p-0" slot="content">
 							<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
-								<li
-									class="flex w-full snap-start scroll-my-2"
-									*ngFor="let languageValue of appearanceLanguageList"
-								>
-									<!-- prettier-ignore -->
-									<button
-										class="rounded-btn block w-full truncate text-left"
-										type="button"
-										appScrollPreset
-										[appScrollActive]="language.value === languageValue"
-										[ngClass]="{ 'active': language.value === languageValue }"
-										[attr.aria-label]="languageValue"
-										(click)="language.setValue(languageValue)"
-									>
-										{{ languageValue }}
-									</button>
-								</li>
+								@for (appearanceLanguage of appearanceLanguageList; track $index) {
+									<li class="flex w-full snap-start scroll-my-2">
+										<button
+											class="rounded-btn block w-full truncate text-left"
+											type="button"
+											appScrollPreset
+											[appScrollActive]="language.value === appearanceLanguage"
+											[ngClass]="{ active: language.value === appearanceLanguage }"
+											[attr.aria-label]="appearanceLanguage"
+											(click)="language.setValue(appearanceLanguage)"
+										>
+											{{ appearanceLanguage }}
+										</button>
+									</li>
+								}
 							</ul>
 						</div>
 					</div>
@@ -209,23 +203,21 @@
 							/>
 							<div class="menu menu-vertical menu-md p-0" slot="content">
 								<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
-									<li
-										class="flex w-full snap-start scroll-my-2"
-										*ngFor="let themePrismValue of appearanceThemePrismList"
-									>
-										<!-- prettier-ignore -->
-										<button
-											class="rounded-btn block w-full truncate text-left"
-											type="button"
-											appScrollPreset
-											[appScrollActive]="themePrism.value === themePrismValue"
-											[ngClass]="{ 'active': themePrism.value === themePrismValue }"
-											[attr.aria-label]="themePrismValue"
-											(click)="themePrism.setValue(themePrismValue)"
-										>
-											{{ themePrismValue }}
-										</button>
-									</li>
+									@for (appearanceThemePrism of appearanceThemePrismList; track $index) {
+										<li class="flex w-full snap-start scroll-my-2">
+											<button
+												class="rounded-btn block w-full truncate text-left"
+												type="button"
+												appScrollPreset
+												[appScrollActive]="themePrism.value === appearanceThemePrism"
+												[ngClass]="{ active: themePrism.value === appearanceThemePrism }"
+												[attr.aria-label]="appearanceThemePrism"
+												(click)="themePrism.setValue(appearanceThemePrism)"
+											>
+												{{ appearanceThemePrism }}
+											</button>
+										</li>
+									}
 								</ul>
 							</div>
 						</div>
@@ -379,7 +371,6 @@
 					</label>
 				</fieldset>
 				<hr class="my-2 w-full border-base-content/20" />
-				<!-- prettier-ignore -->
 				<fieldset
 					class="form-control flex-row items-center gap-4 justify-between"
 					*ngIf="appearanceForm.get('windowButtonPosition') as windowButtonPosition"
@@ -389,27 +380,30 @@
 							Position of caption buttons (close, minimize, maximize)
 						</span>
 					</div>
-          <div class="flex" appSkeleton [appSkeletonToggle]="appearanceFormSkeletonToggle">
-            <ul class="join join-horizontal">
-              <li class="block" *ngFor="let buttonsValue of appearanceButtonsList">
-                <label
-                  class="btn btn-success btn-sm join-item"
-                  [class.btn-outline]="windowButtonPosition.value !== buttonsValue && appearanceForm.enabled"
-                  [class.btn-inline]="windowButtonPosition.value === buttonsValue && appearanceForm.disabled"
-                  [class.btn-disabled]="appearanceForm.disabled"
-                >
-                  <input
-                    class="hidden"
-                    type="radio"
-                    aria-label="Window button position"
-                    formControlName="windowButtonPosition"
-                    [value]="buttonsValue"
-                  />
-                  <span class="block uppercase">{{ buttonsValue }}</span>
-                </label>
-              </li>
-            </ul>
-          </div>
+					<div class="flex" appSkeleton [appSkeletonToggle]="appearanceFormSkeletonToggle">
+						<ul class="join join-horizontal">
+							@for (appearanceButtons of appearanceButtonsList; track $index) {
+								<li class="block">
+									<!-- prettier-ignore -->
+									<label
+										class="btn btn-success btn-sm join-item"
+										[class.btn-outline]="windowButtonPosition.value !== appearanceButtons && appearanceForm.enabled"
+										[class.btn-inline]="windowButtonPosition.value === appearanceButtons && appearanceForm.disabled"
+										[class.btn-disabled]="appearanceForm.disabled"
+									>
+										<input
+											class="hidden"
+											type="radio"
+											aria-label="Window button position"
+											formControlName="windowButtonPosition"
+											[value]="appearanceButtons"
+										/>
+										<span class="block uppercase">{{ appearanceButtons }}</span>
+									</label>
+								</li>
+							}
+						</ul>
+					</div>
 				</fieldset>
 			</div>
 		</form>

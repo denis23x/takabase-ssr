@@ -25,7 +25,7 @@ import { RouterModule } from '@angular/router';
 })
 export class HelpMarkdownComponent {
 	// prettier-ignore
-	markdownBasicSyntax: any = [
+	markdownBasicSyntax: any[] = [
     {
       title: 'Headings',
       description: 'To create a heading, add number signs <code>#</code> in front of a word or phrase. The number of number signs you use should correspond to the heading level. For example, to create a heading level three <code>&lt;h3&gt;</code>, use three number signs <code>e.g., ### My Header</code>',

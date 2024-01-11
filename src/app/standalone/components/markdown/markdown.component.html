@@ -29,18 +29,20 @@
 						[appSvgIconIcon]="'type-h1'"
 					></button>
 					<ul class="menu menu-vertical menu-md m-0" slot="content">
-						<li class="flex w-full" *ngFor="let control of controlListHeading">
-							<button
-								class="w-full whitespace-nowrap text-base-content"
-								type="button"
-								[attr.aria-label]="control.label"
-								(click)="setTextareaValue(getTextareaValue(control))"
-							>
-								<span class="block" [ngClass]="control.classList">
-									{{ control.label }}
-								</span>
-							</button>
-						</li>
+						@for (control of controlListHeading; track control.key) {
+							<li class="flex w-full">
+								<button
+									class="w-full whitespace-nowrap text-base-content"
+									type="button"
+									[attr.aria-label]="control.label"
+									(click)="setTextareaValue(getTextareaValue(control))"
+								>
+									<span class="block" [ngClass]="control.classList">
+										{{ control.label }}
+									</span>
+								</button>
+							</li>
+						}
 					</ul>
 				</div>
 			</li>
@@ -64,18 +66,20 @@
 						[appSvgIconIcon]="'type-bold'"
 					></button>
 					<ul class="menu menu-vertical menu-md m-0" slot="content">
-						<li class="flex w-full" *ngFor="let control of controlListFormatting">
-							<button
-								class="w-full whitespace-nowrap text-base-content"
-								type="button"
-								[attr.aria-label]="control.label"
-								(click)="setTextareaValue(getTextareaValue(control))"
-							>
-								<span class="block" [ngClass]="control.classList">
-									{{ control.label }}
-								</span>
-							</button>
-						</li>
+						@for (control of controlListFormatting; track control.key) {
+							<li class="flex w-full">
+								<button
+									class="w-full whitespace-nowrap text-base-content"
+									type="button"
+									[attr.aria-label]="control.label"
+									(click)="setTextareaValue(getTextareaValue(control))"
+								>
+									<span class="block" [ngClass]="control.classList">
+										{{ control.label }}
+									</span>
+								</button>
+							</li>
+						}
 					</ul>
 				</div>
 			</li>
@@ -99,17 +103,19 @@
 						[appSvgIconIcon]="'list-ul'"
 					></button>
 					<ul class="menu menu-vertical menu-md m-0" slot="content">
-						<li class="flex w-full" *ngFor="let control of controlListList">
-							<button
-								class="w-full whitespace-nowrap text-base-content"
-								type="button"
-								[attr.aria-label]="control.label"
-								[attr.title]="control.label"
-								(click)="setTextareaValue(getTextareaValue(control))"
-							>
-								{{ control.label }}
-							</button>
-						</li>
+						@for (control of controlListList; track control.key) {
+							<li class="flex w-full">
+								<button
+									class="w-full whitespace-nowrap text-base-content"
+									type="button"
+									[attr.aria-label]="control.label"
+									[attr.title]="control.label"
+									(click)="setTextareaValue(getTextareaValue(control))"
+								>
+									{{ control.label }}
+								</button>
+							</li>
+						}
 					</ul>
 				</div>
 			</li>
@@ -124,21 +130,19 @@
 					(click)="setTextareaValue(getTextareaValue(controlListQuote))"
 				></button>
 			</li>
-			<li
-				class="inline-block"
-				*ngFor="let control of controlListUrl"
-				[class.disabled]="controlListDisabled"
-			>
-				<button
-					class="fill-current p-3"
-					appSvgIcon
-					[attr.aria-label]="control.label"
-					[attr.title]="control.label"
-					[appSvgIconIcon]="control.icon"
-					[appSvgIconSquare]="'1.5725em'"
-					(click)="onToggleUrlForm(true, control)"
-				></button>
-			</li>
+			@for (control of controlListUrl; track control.key) {
+				<li class="inline-block" [class.disabled]="controlListDisabled">
+					<button
+						class="fill-current p-3"
+						appSvgIcon
+						[attr.aria-label]="control.label"
+						[attr.title]="control.label"
+						[appSvgIconIcon]="control.icon"
+						[appSvgIconSquare]="'1.5725em'"
+						(click)="onToggleUrlForm(true, control)"
+					></button>
+				</li>
+			}
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<button
 					class="fill-current p-3"
@@ -199,17 +203,18 @@
 								data-control-table
 							></div>
 							<ul class="m-0 grid h-full w-full grid-cols-5 grid-rows-5 p-0">
-								<li
-									class="col-span-1 row-span-1 h-full w-full bg-transparent p-0 border-4 border-base-100 outline outline-base-content/20 outline-1 -outline-offset-4 m-0"
-									*ngFor="let cell of [].constructor(25); let i = index"
-									[class.rounded-tl-box]="i === 0"
-									[class.rounded-tr-box]="i === 4"
-									[class.rounded-bl-box]="i === 20"
-									[class.rounded-br-box]="i === 24"
-									(mouseenter)="onControlListTableMouseEnter($event, 'enter')"
-									(mouseleave)="onControlListTableMouseEnter($event, 'leave')"
-									(click)="setTextareaValue(getTextareaValue(controlListTable, i))"
-								></li>
+								@for (cell of controlListTableCells; track $index) {
+									<li
+										class="col-span-1 row-span-1 h-full w-full bg-transparent p-0 border-4 border-base-100 outline outline-base-content/20 outline-1 -outline-offset-4 m-0"
+										[class.rounded-tl-box]="cell === 0"
+										[class.rounded-tr-box]="cell === 4"
+										[class.rounded-bl-box]="cell === 20"
+										[class.rounded-br-box]="cell === 24"
+										(mouseenter)="onControlListTableMouseEnter($event, 'enter')"
+										(mouseleave)="onControlListTableMouseEnter($event, 'leave')"
+										(click)="setTextareaValue(getTextareaValue(controlListTable, cell))"
+									></li>
+								}
 							</ul>
 						</div>
 					</div>

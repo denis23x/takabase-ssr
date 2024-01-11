@@ -104,7 +104,7 @@
 								*ngIf="category as categoryActive"
 								[class.cursor-not-allowed]="categoryDeleteForm.disabled"
 							>
-								<ng-container *ngFor="let category of categoryList">
+								@for (category of categoryList; track category.id) {
 									<li
 										class="flex w-full snap-start scroll-my-2"
 										*ngIf="category.id !== categoryActive.id"
@@ -122,7 +122,7 @@
 											{{ category.name }}
 										</button>
 									</li>
-								</ng-container>
+								}
 							</ul>
 						</div>
 					</fieldset>

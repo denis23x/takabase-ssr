@@ -143,26 +143,32 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	cropperAspectRatioActive: number = 1;
 	cropperAspectRatioList: any[] = [
 		{
+			id: 1,
 			value: 1,
 			label: '1:1 (square)'
 		},
 		{
+			id: 2,
 			value: 3 / 2,
 			label: '3:2 (photography)'
 		},
 		{
+			id: 3,
 			value: 4 / 3,
 			label: '4:3 (standard screen)'
 		},
 		{
+			id: 4,
 			value: 16 / 9,
 			label: '16:9 (widescreen)'
 		},
 		{
+			id: 5,
 			value: 9 / 16,
 			label: '9:16 (mobile)'
 		},
 		{
+			id: 6,
 			value: null,
 			label: 'No aspect ratio'
 		}

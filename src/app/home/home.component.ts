@@ -10,7 +10,6 @@ import { AuthenticatedDirective } from '../standalone/directives/app-authenticat
 import { PlatformService } from '../core/services/platform.service';
 import { fromEvent, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { AppFeature } from '../core/models/app-feature.model';
 
 @Component({
 	standalone: true,
@@ -22,16 +21,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 
-	appFeatureActive: AppFeature | undefined;
-
 	// prettier-ignore
-	appFeatureList: AppFeature[] = [
+	appFeatureList: any[] = [
 		{
 			id: 1,
 			icon: 'gem',
 			title: 'Clarity',
 			description: 'By eliminating direct messaging and likes, we create an environment where users can focus on sharing knowledge and experiences without the noise of constant notifications.',
-      descriptionList: [
+      list: [
 				{
 					title: 'Topic Diversity',
 					description: 'Explore a wide range of topics and interests, with dedicated spaces for enthusiasts, hobbyists, and experts to share their passions.'
@@ -55,7 +52,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 			icon: 'robot',
 			title: 'PWA',
 			description: "Access the website even when you're offline or facing unreliable network connectivity. Our Progressive Web App technology ensures that you can continue browsing and interacting with content without interruption.",
-      descriptionList: [
+      list: [
 				{
 					title: 'Responsive Layout',
 					description: "Experience consistent and intuitive browsing across a range of mobile devices. Our website's responsive design ensures that content adapts seamlessly to various screen sizes and orientations."
@@ -79,7 +76,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 			icon: 'markdown',
 			title: 'Markdown',
 			description: 'Unlock the potential of your writing with an intuitive Markdown editor equipped with an array of powerful built-in tools. Experience the joy of effortless content creation today.',
-      descriptionList: [
+      list: [
 				{
 					title: 'Real-time Preview',
 					description: 'Witness the magic of your Markdown content transforming into a live preview as you type. See exactly how your text will appear before you even publish it.'
@@ -99,6 +96,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 			]
 		}
 	];
+	appFeatureActive: any;
 
 	appPWAAvailable: boolean = false;
 	appPWAInstallPromt: any = null;
@@ -157,7 +155,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	onClickNav(appFeature: AppFeature): void {
+	onClickNav(appFeature: any): void {
 		this.appFeatureActive = appFeature;
 	}
 

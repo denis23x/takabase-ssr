@@ -97,21 +97,20 @@
 								[appSvgIconSquare]="'1.75em'"
 							></button>
 							<ul class="menu menu-vertical menu-md" slot="content">
-								<li
-									class="flex w-full snap-start scroll-my-2"
-									*ngFor="let reportFormName of reportFormNameList"
-								>
-									<button
-										class="rounded-btn block w-full truncate text-right"
-										type="button"
-										[title]="reportFormName"
-										[attr.aria-label]="reportFormName"
-										[ngClass]="{ active: name.value === reportFormName }"
-										(click)="onSelectReportFormName(reportFormName)"
-									>
-										{{ reportFormName }}
-									</button>
-								</li>
+								@for (reportFormName of reportFormNameList; track $index) {
+									<li class="flex w-full snap-start scroll-my-2">
+										<button
+											class="rounded-btn block w-full truncate text-right"
+											type="button"
+											[title]="reportFormName"
+											[attr.aria-label]="reportFormName"
+											[ngClass]="{ active: name.value === reportFormName }"
+											(click)="onSelectReportFormName(reportFormName)"
+										>
+											{{ reportFormName }}
+										</button>
+									</li>
+								}
 							</ul>
 						</div>
 					</div>

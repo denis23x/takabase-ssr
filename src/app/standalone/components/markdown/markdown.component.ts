@@ -122,6 +122,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	controlListEmojiMart: MarkdownControl = MarkdownControlEmojiMart();
 	controlListEmojiMartColorScheme$: Subscription | undefined;
 	controlListTable: MarkdownControl = MarkdownControlTable();
+	controlListTableCells: number[] = [...Array(25).keys()];
 	controlListSpoiler: MarkdownControl = MarkdownControlSpoiler();
 	controlListCode: MarkdownControl = MarkdownControlCode();
 	controlListDisabled: boolean = false;

@@ -82,20 +82,21 @@
 					</ul>
 				</div>
 			</div>
-			<div
-				class="w-full"
-				appSkeleton
-				*ngIf="!!user.description"
-				[appSkeletonToggle]="userSkeletonToggle"
-				[appSkeletonClassListParent]="['!rounded-box']"
-				[appSkeletonClassList]="['!rounded-box']"
-			>
-				<article
-					class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
-					data-pw="app-user-heading-user-description"
-					[innerHTML]="user.description | markdown | sanitizer: 'html'"
-				></article>
-			</div>
+			@if (user.description) {
+				<div
+					class="w-full"
+					appSkeleton
+					[appSkeletonToggle]="userSkeletonToggle"
+					[appSkeletonClassListParent]="['!rounded-box']"
+					[appSkeletonClassList]="['!rounded-box']"
+				>
+					<article
+						class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
+						data-pw="app-user-heading-user-description"
+						[innerHTML]="user.description | markdown | sanitizer: 'html'"
+					></article>
+				</div>
+			}
 		</header>
 		<div class="flex flex-col">
 			<nav class="block px-4">
@@ -118,29 +119,30 @@
 							All
 						</a>
 					</li>
-					<li
-						class="tab"
-						role="tab"
-						appSkeleton
-						*ngFor="let category of categoryList"
-						[class.tab-active]="routerLinkActive.isActive && category"
-						[appSkeletonToggle]="categoryListSkeletonToggle"
-						[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
-						[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
-					>
-						<a
-							class="flex h-full items-center justify-center whitespace-nowrap px-4"
-							appScrollPreset
-							#routerLinkActive="routerLinkActive"
-							[appScrollActive]="routerLinkActive.isActive"
-							[routerLink]="['./category', category.id]"
-							[queryParamsHandling]="'merge'"
-							[routerLinkActive]="''"
-							[attr.aria-label]="category.name"
+					@for (category of categoryList; track category.id) {
+						<li
+							class="tab"
+							role="tab"
+							appSkeleton
+							[class.tab-active]="routerLinkActive.isActive && category"
+							[appSkeletonToggle]="categoryListSkeletonToggle"
+							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
+							[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
 						>
-							<span class="block truncate max-w-[192px]">{{ category.name }}</span>
-						</a>
-					</li>
+							<a
+								class="flex h-full items-center justify-center whitespace-nowrap px-4"
+								appScrollPreset
+								#routerLinkActive="routerLinkActive"
+								[appScrollActive]="routerLinkActive.isActive"
+								[routerLink]="['./category', category.id]"
+								[queryParamsHandling]="'merge'"
+								[routerLinkActive]="''"
+								[attr.aria-label]="category.name"
+							>
+								<span class="block truncate max-w-[192px]">{{ category.name }}</span>
+							</a>
+						</li>
+					}
 				</ul>
 			</nav>
 			<div
@@ -237,7 +239,7 @@
 													Create
 												</button>
 											</li>
-											<ng-container *ngIf="!!category">
+                      @if (category) {
 												<li class="flex w-full snap-start scroll-my-2">
 													<button
 														class="rounded-btn block w-full truncate text-right"
@@ -260,7 +262,7 @@
 														Delete
 													</button>
 												</li>
-											</ng-container>
+                      }
 										</ng-container>
 										<ng-container *ngSwitchCase="false">
 											<li class="flex w-full snap-start scroll-my-2">
@@ -286,19 +288,20 @@
 						></div>
 					</ng-container>
 				</div>
-				<div
-					class="block"
-					appSkeleton
-					*ngIf="!!category && !!category.description"
-					[appSkeletonToggle]="categorySkeletonToggle"
-					[appSkeletonClassListParent]="['!rounded-box']"
-					[appSkeletonClassList]="['!rounded-box']"
-				>
-					<article
-						class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
-						[innerHTML]="category.description | markdown | sanitizer: 'html'"
-					></article>
-				</div>
+				@if (category && category.description) {
+					<div
+						class="block"
+						appSkeleton
+						[appSkeletonToggle]="categorySkeletonToggle"
+						[appSkeletonClassListParent]="['!rounded-box']"
+						[appSkeletonClassList]="['!rounded-box']"
+					>
+						<article
+							class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
+							[innerHTML]="category.description | markdown | sanitizer: 'html'"
+						></article>
+					</div>
+				}
 				<div class="block">
 					<router-outlet
 						(activate)="onRouterOutletActivate($event)"

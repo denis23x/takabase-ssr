@@ -12,31 +12,32 @@
 						appSkeleton
 						[appSkeletonToggle]="postSkeletonToggle || postFormImageSkeletonToggle"
 					>
-						<!-- prettier-ignore -->
-						<figure
-							class="block rounded-btn relative border border-base-content/20 h-12 w-12 overflow-hidden transition"
-							*ngIf="postForm.get('image') as image"
-              [ngSwitch]="!!image.value"
-              [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-200': postForm.disabled, 'cursor-pointer': postForm.enabled, 'border-success': image.value }"
-              (click)="appCropperComponent.onToggleCropper(true)"
-						>
-							<img
-								class="block object-cover"
-								width="48"
-								height="48"
-								loading="lazy"
-                *ngSwitchCase="true"
-								[alt]="'Image'"
-								[src]="image.value"
-							/>
-              <i
-                class="fill-current absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                appSvgIcon
-                *ngSwitchCase="false"
-                [appSvgIconIcon]="'plus'"
-                [appSvgIconSquare]="'2em'"
-              ></i>
-						</figure>
+						@if (postForm.get("image"); as image) {
+							<!-- prettier-ignore -->
+							<figure
+                class="block rounded-btn relative border border-base-content/20 h-12 w-12 overflow-hidden transition"
+                [ngSwitch]="!!image.value"
+                [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-200': postForm.disabled, 'cursor-pointer': postForm.enabled, 'border-success': image.value }"
+                (click)="appCropperComponent.onToggleCropper(true)"
+              >
+                <img
+                  class="block object-cover"
+                  width="48"
+                  height="48"
+                  loading="lazy"
+                  *ngSwitchCase="true"
+                  [alt]="'Image'"
+                  [src]="image.value"
+                />
+                <i
+                  class="fill-current absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  appSvgIcon
+                  *ngSwitchCase="false"
+                  [appSvgIconIcon]="'plus'"
+                  [appSvgIconSquare]="'2em'"
+                ></i>
+              </figure>
+						}
 					</div>
 					<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
 						<span
@@ -74,30 +75,32 @@
 						[appSvgIconSquare]="'1.5em'"
 					></button>
 					<ul class="menu menu-vertical menu-md" slot="content">
-						<ng-container *ngIf="postForm.get('image') as image">
+						@if (postForm.get("image"); as image) {
 							<li class="flex w-full snap-start scroll-my-2">
 								<button
 									class="rounded-btn block w-full truncate text-right"
 									type="button"
-									title="Update image"
-									aria-label="Update image"
+									title="Update"
+									aria-label="Update"
 									(click)="appCropperComponent.onToggleCropper(true)"
 								>
-									{{ image.value ? "Update" : "Set" }} image
+									{{ image.value ? "Update" : "Set image" }}
 								</button>
 							</li>
-							<li class="flex w-full snap-start scroll-my-2" *ngIf="image.value">
-								<button
-									class="rounded-btn block w-full truncate text-right"
-									type="button"
-									title="Delete image"
-									aria-label="Delete image"
-									(click)="onUpdateCropperImage(null, image.value)"
-								>
-									Delete image
-								</button>
-							</li>
-						</ng-container>
+							@if (image.value) {
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										type="button"
+										title="Delete"
+										aria-label="Delete"
+										(click)="onUpdateCropperImage(null, image.value)"
+									>
+										Delete
+									</button>
+								</li>
+							}
+						}
 					</ul>
 				</div>
 			</div>
@@ -107,137 +110,135 @@
 				autocomplete="off"
 				[formGroup]="postForm"
 			>
-				<fieldset
-					class="form-control items-start col-span-12 sm:col-span-6"
-					*ngIf="postForm.get('name') as name"
-				>
-					<label class="label" for="postFormTitle">
-						<div
-							class="indicator"
-							appSkeleton
-							[appSkeletonToggle]="postSkeletonToggle"
-							[appSkeletonClassListElementRef]="['!-mx-1']"
-						>
-							<!-- prettier-ignore -->
-							<span
-                class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                *ngIf="name.touched && !!name.errors && postForm.enabled"
-                [ngSwitch]="true"
-              >
-                <ng-container *ngSwitchCase="!!name.errors.required">
-                  Required
-                </ng-container>
-                <ng-container *ngSwitchCase="!!name.errors.minlength">
-                  Min length {{ name.errors.minlength["requiredLength"] }} characters
-                </ng-container>
-                <ng-container *ngSwitchCase="!!name.errors.maxlength">
-                  Max length {{ name.errors.maxlength["requiredLength"] }} characters
-                </ng-container>
-              </span>
-							<span class="label-text mr-2">Name</span>
-						</div>
-					</label>
-					<div class="relative w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-						<input
-							class="input-bordered input input-md w-full !pr-12"
-							id="postFormTitle"
-							type="text"
-							aria-label="Name"
-							placeholder="Type post name"
-							formControlName="name"
-							appInputTrimWhitespace
-							[class.input-success]="name.value && name.valid"
-							[class.input-error]="name.touched && name.invalid"
-						/>
-						<button
-							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-							type="button"
-							aria-label="Clear"
-							appSvgIcon
-							*ngIf="!!name.value.length"
-							[class.btn-success]="name.valid"
-							[class.btn-error]="name.touched && name.invalid"
-							[class.btn-ghost]="name.untouched && name.invalid"
-							[disabled]="postForm.disabled"
-							[appSvgIconIcon]="'x'"
-							[appSvgIconSquare]="'2em'"
-							(click)="name.setValue('')"
-						></button>
-					</div>
-				</fieldset>
-				<div class="col-span-12 flex items-end justify-end gap-4 sm:col-span-6">
-					<fieldset
-						class="form-control items-start w-full"
-						*ngIf="postForm.get('categoryName') as categoryName"
-					>
-						<label class="label" for="postFormCategoryName">
-							<!-- prettier-ignore -->
+				@if (postForm.get("name"); as name) {
+					<fieldset class="form-control items-start col-span-12 sm:col-span-6">
+						<label class="label" for="postFormTitle">
 							<div
 								class="indicator"
 								appSkeleton
-								[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
+								[appSkeletonToggle]="postSkeletonToggle"
 								[appSkeletonClassListElementRef]="['!-mx-1']"
 							>
+								<!-- prettier-ignore -->
 								<span
                   class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                  *ngIf="categoryName.touched && !!categoryName.errors && postForm.enabled"
+                  *ngIf="name.touched && !!name.errors && postForm.enabled"
                   [ngSwitch]="true"
                 >
-                  <ng-container *ngSwitchCase="!!categoryName.errors.required">
+                  <ng-container *ngSwitchCase="!!name.errors.required">
                     Required
                   </ng-container>
+                  <ng-container *ngSwitchCase="!!name.errors.minlength">
+                    Min length {{ name.errors.minlength["requiredLength"] }} characters
+                  </ng-container>
+                  <ng-container *ngSwitchCase="!!name.errors.maxlength">
+                    Max length {{ name.errors.maxlength["requiredLength"] }} characters
+                  </ng-container>
                 </span>
-								<span class="label-text mr-2">Category</span>
+								<span class="label-text mr-2">Name</span>
 							</div>
 						</label>
-						<!-- prettier-ignore -->
-						<div
-							class="block w-full relative"
-							appSkeleton
-							appDropdown
-							[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
-              [appDropdownFit]="true"
-							[class.cursor-not-allowed]="postForm.disabled"
-							(appDropdownToggle)="onToggleCategory($event)"
-						>
+						<div class="relative w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 							<input
-								class="input input-bordered input-md w-full cursor-pointer truncate"
-								id="postFormCategoryName"
+								class="input-bordered input input-md w-full !pr-12"
+								id="postFormTitle"
 								type="text"
-								aria-label="Category"
-								placeholder="Select post category"
-								formControlName="categoryName"
-								slot="target"
-								readonly
-								[class.input-success]="categoryName.touched && categoryName.value"
-								[class.input-error]="categoryName.touched && categoryName.invalid"
+								aria-label="Name"
+								placeholder="Type post name"
+								formControlName="name"
+								appInputTrimWhitespace
+								[class.input-success]="name.value && name.valid"
+								[class.input-error]="name.touched && name.invalid"
 							/>
-							<div
-								class="menu menu-vertical menu-md p-0"
-								slot="content"
-								[class.hidden]="!categoryList.length"
-							>
-								<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
-									<li
-										class="flex w-full snap-start scroll-my-2"
-										*ngFor="let category of categoryList"
-									>
-										<button
-											class="rounded-btn block w-full truncate text-left"
-											type="button"
-											appScrollPreset
-											[appScrollActive]="categoryName.value === category.name"
-											[ngClass]="{ active: categoryName.value === category.name }"
-											[attr.aria-label]="category.name"
-											(click)="onSelectCategory(category)"
-										>
-											{{ category.name }}
-										</button>
-									</li>
-								</ul>
-							</div>
+							@if (name.value) {
+								<button
+									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+									type="button"
+									aria-label="Clear"
+									appSvgIcon
+									[class.btn-success]="name.valid"
+									[class.btn-error]="name.touched && name.invalid"
+									[class.btn-ghost]="name.untouched && name.invalid"
+									[disabled]="postForm.disabled"
+									[appSvgIconIcon]="'x'"
+									[appSvgIconSquare]="'2em'"
+									(click)="name.setValue('')"
+								></button>
+							}
 						</div>
 					</fieldset>
+				}
+				<div class="col-span-12 flex items-end justify-end gap-4 sm:col-span-6">
+					@if (postForm.get("categoryName"); as categoryName) {
+						<fieldset class="form-control items-start w-full">
+							<label class="label" for="postFormCategoryName">
+								<!-- prettier-ignore -->
+								<div
+                  class="indicator"
+                  appSkeleton
+                  [appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
+                  [appSkeletonClassListElementRef]="['!-mx-1']"
+                >
+                  <span
+                    class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                    *ngIf="categoryName.touched && !!categoryName.errors && postForm.enabled"
+                    [ngSwitch]="true"
+                  >
+                    <ng-container *ngSwitchCase="!!categoryName.errors.required">
+                      Required
+                    </ng-container>
+                  </span>
+                  <span class="label-text mr-2">Category</span>
+                </div>
+							</label>
+							<!-- prettier-ignore -->
+							<div
+                class="block w-full relative"
+                appSkeleton
+                appDropdown
+                [appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
+                [appDropdownFit]="true"
+                [class.cursor-not-allowed]="postForm.disabled"
+                (appDropdownToggle)="onToggleCategory($event)"
+              >
+                <input
+                  class="input input-bordered input-md w-full cursor-pointer truncate"
+                  id="postFormCategoryName"
+                  type="text"
+                  aria-label="Category"
+                  placeholder="Select post category"
+                  formControlName="categoryName"
+                  slot="target"
+                  readonly
+                  [class.input-success]="categoryName.touched && categoryName.value"
+                  [class.input-error]="categoryName.touched && categoryName.invalid"
+                />
+                <div
+                  class="menu menu-vertical menu-md p-0"
+                  slot="content"
+                  [class.hidden]="!categoryList.length"
+                >
+                  <ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
+                    @for (category of categoryList; track category.id) {
+                      <li class="flex w-full snap-start scroll-my-2">
+                        <button
+                          class="rounded-btn block w-full truncate text-left"
+                          type="button"
+                          appScrollPreset
+                          [appScrollActive]="categoryName.value === category.name"
+                          [ngClass]="{ active: categoryName.value === category.name }"
+                          [attr.aria-label]="category.name"
+                          (click)="onSelectCategory(category)"
+                        >
+                          {{ category.name }}
+                        </button>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              </div>
+						</fieldset>
+					}
 					<!-- prettier-ignore -->
 					<div
 						class="flex p-0 relative"
@@ -269,7 +270,7 @@
 									Create
 								</button>
 							</li>
-							<ng-container *ngIf="!!category">
+              @if (category) {
 								<li class="flex w-full snap-start scroll-my-2">
 									<button
 										class="rounded-btn block w-full truncate text-right"
@@ -281,67 +282,67 @@
 										Update
 									</button>
 								</li>
-							</ng-container>
+              }
 						</ul>
 					</div>
 				</div>
-				<fieldset
-					class="form-control items-start col-span-12 sm:col-span-12"
-					*ngIf="postForm.get('description') as description"
-				>
-					<label class="label" for="postFormDescription">
-						<div
-							class="indicator"
-							appSkeleton
-							[appSkeletonToggle]="postSkeletonToggle"
-							[appSkeletonClassListElementRef]="['!-mx-1']"
-						>
-							<span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="description.touched && !!description.errors && postForm.enabled"
-								[ngSwitch]="true"
+				@if (postForm.get("description"); as description) {
+					<fieldset class="form-control items-start col-span-12 sm:col-span-12">
+						<label class="label" for="postFormDescription">
+							<div
+								class="indicator"
+								appSkeleton
+								[appSkeletonToggle]="postSkeletonToggle"
+								[appSkeletonClassListElementRef]="['!-mx-1']"
 							>
-								<ng-container *ngSwitchCase="!!description.errors.required">
-									Required
-								</ng-container>
-								<ng-container *ngSwitchCase="!!description.errors.minlength">
-									Min length {{ description.errors.minlength["requiredLength"] }} characters
-								</ng-container>
-								<ng-container *ngSwitchCase="!!description.errors.maxlength">
-									Max length {{ description.errors.maxlength["requiredLength"] }} characters
-								</ng-container>
-							</span>
-							<span class="label-text mr-2">Description</span>
+								<span
+									class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+									*ngIf="description.touched && !!description.errors && postForm.enabled"
+									[ngSwitch]="true"
+								>
+									<ng-container *ngSwitchCase="!!description.errors.required">
+										Required
+									</ng-container>
+									<ng-container *ngSwitchCase="!!description.errors.minlength">
+										Min length {{ description.errors.minlength["requiredLength"] }} characters
+									</ng-container>
+									<ng-container *ngSwitchCase="!!description.errors.maxlength">
+										Max length {{ description.errors.maxlength["requiredLength"] }} characters
+									</ng-container>
+								</span>
+								<span class="label-text mr-2">Description</span>
+							</div>
+						</label>
+						<div class="relative w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+							<input
+								class="input-bordered input input-md w-full !pr-12"
+								id="postFormDescription"
+								type="text"
+								aria-label="Description"
+								placeholder="Type post description"
+								formControlName="description"
+								appInputTrimWhitespace
+								[class.input-success]="description.value && description.valid"
+								[class.input-error]="description.touched && description.invalid"
+							/>
+							@if (description.value) {
+								<button
+									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+									type="button"
+									aria-label="Clear"
+									appSvgIcon
+									[class.btn-success]="description.valid"
+									[class.btn-error]="description.touched && description.invalid"
+									[class.btn-ghost]="description.untouched && description.invalid"
+									[disabled]="postForm.disabled"
+									[appSvgIconIcon]="'x'"
+									[appSvgIconSquare]="'2em'"
+									(click)="description.setValue('')"
+								></button>
+							}
 						</div>
-					</label>
-					<div class="relative w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-						<input
-							class="input-bordered input input-md w-full !pr-12"
-							id="postFormDescription"
-							type="text"
-							aria-label="Description"
-							placeholder="Type post description"
-							formControlName="description"
-							appInputTrimWhitespace
-							[class.input-success]="description.value && description.valid"
-							[class.input-error]="description.touched && description.invalid"
-						/>
-						<button
-							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-							type="button"
-							aria-label="Clear"
-							appSvgIcon
-							*ngIf="!!description.value.length"
-							[class.btn-success]="description.valid"
-							[class.btn-error]="description.touched && description.invalid"
-							[class.btn-ghost]="description.untouched && description.invalid"
-							[disabled]="postForm.disabled"
-							[appSvgIconIcon]="'x'"
-							[appSvgIconSquare]="'2em'"
-							(click)="description.setValue('')"
-						></button>
-					</div>
-				</fieldset>
+					</fieldset>
+				}
 			</form>
 		</div>
 		<div class="z-10 flex flex-col gap-4 bg-base-100 p-4" [ngClass]="fullscreenClassList">
@@ -375,7 +376,7 @@
 							[appSvgIconSquare]="'1.5em'"
 							(click)="onFullscreen(!fullscreenToggle)"
 						></button>
-						<ng-container *ngIf="fullscreenToggle">
+						@if (fullscreenToggle) {
 							<div
 								class="flex p-0"
 								appDropdown
@@ -451,7 +452,7 @@
 									</li>
 								</ul>
 							</div>
-						</ng-container>
+						}
 					</div>
 				</div>
 				<div class="flex h-full flex-col gap-4 overflow-auto sm:flex-row">
@@ -461,43 +462,46 @@
 						[formGroup]="postForm"
 						[class.hidden]="fullscreenToggle && !fullscreenMarkdown"
 					>
-						<fieldset class="form-control h-full" *ngIf="postForm.get('markdown') as markdown">
-							<!-- prettier-ignore -->
-							<div
-								class="textarea-autosize w-full h-full focus-within:outline-0 relative"
-								appSkeleton
-								[appSkeletonToggle]="postSkeletonToggle || postFormTextareaSkeletonToggle"
-								[appSkeletonClassListElementRef]="['!border-0']"
-								[ngClass]="{ 'border-base-content/20': postForm.enabled, 'border-transparent': postForm.disabled }"
-								[class.textarea-autosize-success]="markdown.value && markdown.valid"
-								[class.textarea-autosize-error]="markdown.touched && markdown.invalid"
-							>
-								<textarea
-									class="textarea textarea-md w-full h-full"
-									id="postFormTextarea"
-									aria-label="Markdown"
-									placeholder="Type post markdown"
-									formControlName="markdown"
-									appInputTrimWhitespace
-									appTextareaAutosize
-									[appAutosizeToggle]="!fullscreenToggle"
-									[rows]="8"
-									[class.max-h-96]="!fullscreenToggle"
-									[class.whitespace-pre]="fullscreenToggle && !fullscreenTextWrapping"
-									[class.font-mono]="postMarkdownMonospace"
-								></textarea>
-								<a
-									class="absolute top-11 left-4 text-sm text-base-content/50 link"
-									title="About Markdown"
-									aria-label="About Markdown"
-									*ngIf="!markdown.value && !post"
-									[routerLink]="['/help/markdown']"
-									[class.font-mono]="postMarkdownMonospace"
-								>
-									How to make a greatest layout?
-								</a>
-							</div>
-						</fieldset>
+						@if (postForm.get("markdown"); as markdown) {
+							<fieldset class="form-control h-full">
+								<!-- prettier-ignore -->
+								<div
+                  class="textarea-autosize w-full h-full focus-within:outline-0 relative"
+                  appSkeleton
+                  [appSkeletonToggle]="postSkeletonToggle || postFormTextareaSkeletonToggle"
+                  [appSkeletonClassListElementRef]="['!border-0']"
+                  [ngClass]="{ 'border-base-content/20': postForm.enabled, 'border-transparent': postForm.disabled }"
+                  [class.textarea-autosize-success]="markdown.value && markdown.valid"
+                  [class.textarea-autosize-error]="markdown.touched && markdown.invalid"
+                >
+                  <textarea
+                    class="textarea textarea-md w-full h-full"
+                    id="postFormTextarea"
+                    aria-label="Markdown"
+                    placeholder="Type post markdown"
+                    formControlName="markdown"
+                    appInputTrimWhitespace
+                    appTextareaAutosize
+                    [appAutosizeToggle]="!fullscreenToggle"
+                    [rows]="8"
+                    [class.max-h-96]="!fullscreenToggle"
+                    [class.whitespace-pre]="fullscreenToggle && !fullscreenTextWrapping"
+                    [class.font-mono]="postMarkdownMonospace"
+                  ></textarea>
+                  @if (!markdown.value && !post) {
+                    <a
+                      class="absolute top-11 left-4 text-sm text-base-content/50 link"
+                      title="About Markdown"
+                      aria-label="About Markdown"
+                      [routerLink]="['/help/markdown']"
+                      [class.font-mono]="postMarkdownMonospace"
+                    >
+                      How to make a greatest layout?
+                    </a>
+                  }
+                </div>
+							</fieldset>
+						}
 					</form>
 					<div
 						class="flex h-full w-full flex-col overflow-auto rounded-btn border border-base-content/20"
@@ -535,26 +539,26 @@
 					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine || postFormImageSkeletonToggle"
 					(click)="onSubmitPostForm()"
 				>
-					<span
-            class="loading loading-spinner"
-            *ngIf="postForm.disabled && !appCropperComponent.cropperDialogToggle && !appCategoryCreateComponent.categoryCreateDialogToggle && !appPostPreviewComponent.postPreviewDialogToggle && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownDialogToggle"
-          ></span>
+          @if (postForm.disabled && !appCropperComponent.cropperDialogToggle && !appCategoryCreateComponent.categoryCreateDialogToggle && !appPostPreviewComponent.postPreviewDialogToggle && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownDialogToggle) {
+            <span class="loading loading-spinner"></span>
+          }
 					Submit
 				</button>
-				<button
-					class="btn btn-md btn-error col-span-12"
-					type="button"
-					aria-label="Delete"
-					appSkeleton
-					*ngIf="!!post"
-					[appSkeletonToggle]="postSkeletonToggle"
-					[appSkeletonClassListElementRef]="['border-0']"
-					[class.btn-outline]="postForm.enabled"
-					[disabled]="postForm.disabled"
-					(click)="appPostDeleteComponent.onTogglePostDeleteDialog(true)"
-				>
-					Delete
-				</button>
+				@if (post) {
+					<button
+						class="btn btn-md btn-error col-span-12"
+						type="button"
+						aria-label="Delete"
+						appSkeleton
+						[appSkeletonToggle]="postSkeletonToggle"
+						[appSkeletonClassListElementRef]="['border-0']"
+						[class.btn-outline]="postForm.enabled"
+						[disabled]="postForm.disabled"
+						(click)="appPostDeleteComponent.onTogglePostDeleteDialog(true)"
+					>
+						Delete
+					</button>
+				}
 			</div>
 		</div>
 	</div>

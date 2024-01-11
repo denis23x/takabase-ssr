@@ -16,10 +16,9 @@
 		<ng-template #windowCaption>
 			<div class="grid grid-cols-3 gap-2 bg-base-200 p-2">
 				<div class="col-span-1 flex flex-row items-center justify-start gap-2">
-					<ng-container
-						*ngIf="captionButtonsPosition === 'left'"
-						[ngTemplateOutlet]="windowCaptionButtons"
-					></ng-container>
+					@if (captionButtonsPosition === "left") {
+						<ng-container [ngTemplateOutlet]="windowCaptionButtons"></ng-container>
+					}
 				</div>
 				<div class="col-span-1 flex items-center justify-center">
 					<span class="text-xl font-bold text-base-content">
@@ -27,49 +26,51 @@
 					</span>
 				</div>
 				<div class="col-span-1 flex flex-row-reverse items-center justify-start gap-2">
-					<ng-container
-						*ngIf="captionButtonsPosition === 'right'"
-						[ngTemplateOutlet]="windowCaptionButtons"
-					></ng-container>
+					@if (captionButtonsPosition === "right") {
+						<ng-container [ngTemplateOutlet]="windowCaptionButtons"></ng-container>
+					}
 				</div>
 			</div>
 		</ng-template>
 		<ng-template #windowCaptionButtons>
-			<button
-				class="btn-error btn-sm btn-circle btn fill-current"
-				data-pw="app-window-button-close"
-				type="button"
-				title="Close"
-				aria-label="Close"
-				appSvgIcon
-				*ngIf="captionButtonsList.includes('close')"
-				[appSvgIconIcon]="'x-lg'"
-				[appSvgIconSquare]="'1em'"
-				(click)="onClose()"
-			></button>
-			<button
-				class="btn-warning btn-sm btn-circle btn fill-current"
-				data-pw="app-window-button-fullscreen"
-				type="button"
-				title="Fullscreen"
-				aria-label="Fullscreen"
-				appSvgIcon
-				*ngIf="captionButtonsList.includes('fullscreen')"
-				[appSvgIconIcon]="'square'"
-				[appSvgIconSquare]="'1em'"
-				(click)="onFullscreen(!fullscreenToggle)"
-			></button>
-			<button
-				class="btn-success btn-sm btn-circle btn fill-current"
-				data-pw="app-window-button-minimize"
-				type="button"
-				title="Minimize"
-				aria-label="Minimize"
-				appSvgIcon
-				*ngIf="captionButtonsList.includes('minimize')"
-				[appSvgIconIcon]="'dash-lg'"
-				[appSvgIconSquare]="'1em'"
-			></button>
+			@if (captionButtonsList.includes("close")) {
+				<button
+					class="btn-error btn-sm btn-circle btn fill-current"
+					data-pw="app-window-button-close"
+					type="button"
+					title="Close"
+					aria-label="Close"
+					appSvgIcon
+					[appSvgIconIcon]="'x-lg'"
+					[appSvgIconSquare]="'1em'"
+					(click)="onClose()"
+				></button>
+			}
+			@if (captionButtonsList.includes("fullscreen")) {
+				<button
+					class="btn-warning btn-sm btn-circle btn fill-current"
+					data-pw="app-window-button-fullscreen"
+					type="button"
+					title="Fullscreen"
+					aria-label="Fullscreen"
+					appSvgIcon
+					[appSvgIconIcon]="'square'"
+					[appSvgIconSquare]="'1em'"
+					(click)="onFullscreen(!fullscreenToggle)"
+				></button>
+			}
+			@if (captionButtonsList.includes("minimize")) {
+				<button
+					class="btn-success btn-sm btn-circle btn fill-current"
+					data-pw="app-window-button-minimize"
+					type="button"
+					title="Minimize"
+					aria-label="Minimize"
+					appSvgIcon
+					[appSvgIconIcon]="'dash-lg'"
+					[appSvgIconSquare]="'1em'"
+				></button>
+			}
 		</ng-template>
 	</section>
 </ng-container>

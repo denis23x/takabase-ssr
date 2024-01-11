@@ -1,56 +1,75 @@
 <!-- @format -->
 
 <ng-container>
-	<ng-container *ngIf="!!postList.length; else postListEmptyTemplate">
-		<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4">
+	<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4">
+		@for (post of postList; track post.id) {
 			<li
 				class="block"
 				appCardPost
-				*ngFor="let post of postList"
 				[ngClass]="post.image ? 'row-span-6' : 'row-span-3'"
 				[appCardPostPost]="post"
 				[appCardPostSkeletonToggle]="postListSkeletonToggle"
 				[appPostUrl]="'post'"
 			></li>
-		</ul>
-		<ng-container *ngIf="!abstractListPageScrollInfinite">
-			<button
-				class="btn-md btn-success btn mt-4 w-full"
-				type="button"
-				aria-label="Load more"
-				*ngIf="abstractListIsHasMore"
-				[disabled]="abstractListIsLoading$ | async"
-				(click)="getAbstractListLoadMore()"
-			>
-				<span class="loading loading-spinner" *ngIf="abstractListIsLoading$ | async"></span>
-				Load more
-			</button>
-		</ng-container>
-	</ng-container>
-	<ng-template #postListEmptyTemplate>
-		<div class="flex flex-col items-center gap-4">
-			<i
-				class="fill-current text-base-content"
-				appSvgIcon
-				[appSvgIconIcon]="'exclamation-circle'"
-				[appSvgIconSquare]="'3em'"
-			></i>
-			<div class="text-center">
-				<p class="text-xl font-bold text-base-content">
-					Posts <span class="text-error">not found</span>
-				</p>
-				<a
-					class="link text-sm"
-					title="Create post"
-					aria-label="Create post"
-					[routerLink]="['/create']"
-				>
-					Create post
-				</a>
-			</div>
-		</div>
-	</ng-template>
+		} @empty {
+			<li class="col-span-2 sm:col-span-3 md:col-span-4 flex flex-col items-center gap-4">
+				<i
+					class="fill-current text-base-content"
+					appSvgIcon
+					[appSvgIconIcon]="'exclamation-circle'"
+					[appSvgIconSquare]="'3em'"
+				></i>
+				<div class="text-center">
+					<p class="text-xl font-bold text-base-content">
+						Posts <span class="text-error">not found</span>
+					</p>
+					<a
+						class="link text-sm"
+						title="Create post"
+						aria-label="Create post"
+						[routerLink]="['/create']"
+					>
+						Create post
+					</a>
+				</div>
+			</li>
+		}
+	</ul>
+	@if (abstractListPageScrollInfinite === false && abstractListIsHasMore) {
+		<button
+			class="btn-md btn-success btn mt-4 w-full"
+			type="button"
+			aria-label="Load more"
+			[disabled]="abstractListIsLoading$ | async"
+			(click)="getAbstractListLoadMore()"
+		>
+			@if (abstractListIsLoading$ | async) {
+				<span class="loading loading-spinner"></span>
+			}
+			Load more
+		</button>
+	}
 	<div class="block">
 		<router-outlet></router-outlet>
 	</div>
 </ng-container>
+<!-- TODO: ads
+<li class="block row-span-6" *ngIf="i === 10 || i === 20 || i === 30">
+  <a
+    class="block w-full h-full"
+    title="Placeholder"
+    aria-label="Placeholder"
+    appSkeleton
+    [routerLink]="['.']"
+    [appSkeletonToggle]="false"
+  >
+    <figure class="rounded-btn relative overflow-hidden w-full h-full">
+      <img
+        class="object-cover w-full h-full bg-base-300"
+        src="https://placehold.co/220x360/?text=Placeholder"
+        alt="Advertise"
+        loading="lazy"
+      />
+    </figure>
+  </a>
+</li> -->

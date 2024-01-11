@@ -21,12 +21,11 @@
 				[class.overflow-hidden]="!cropperIsReady"
 				[class.gap-4]="cropperIsReady"
 			>
-				<!-- prettier-ignore -->
 				<form
 					class="flex flex-col gap-4"
 					autocomplete="off"
 					[formGroup]="imageForm"
-					[ngClass]="{ 'hidden': cropperIsReady }"
+					[ngClass]="{ hidden: cropperIsReady }"
 				>
 					<p class="alert" role="alert">
 						<i
@@ -35,89 +34,92 @@
 							[appSvgIconIcon]="'info-circle'"
 							[appSvgIconSquare]="'1.5em'"
 						></i>
-						<span class="block">
-              Browse file or paste it from clipboard or URL
-            </span>
+						<span class="block"> Browse file or paste it from clipboard or URL </span>
 					</p>
-					<fieldset class="form-control" *ngIf="imageForm.get('url') as url">
-						<label class="label" for="imageFormUrl">
-							<div class="indicator">
-								<span
-									class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="url.dirty && !!url.errors && imageForm.enabled"
-									[ngSwitch]="true"
-								>
-									<ng-container *ngSwitchCase="!!url.errors.required"> Required </ng-container>
-									<ng-container *ngSwitchCase="!!url.errors.pattern">
-										Url does not correct
-									</ng-container>
-								</span>
-								<span class="label-text mr-2">Image</span>
-							</div>
-						</label>
-						<div class="flex items-center justify-between gap-4">
-							<div class="relative w-full">
+					@if (imageForm.get("url"); as url) {
+						<fieldset class="form-control">
+							<label class="label" for="imageFormUrl">
+								<!-- prettier-ignore -->
+								<div class="indicator">
+                  <span
+                    class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
+                    *ngIf="url.dirty && !!url.errors && imageForm.enabled"
+                    [ngSwitch]="true"
+                  >
+                    <ng-container *ngSwitchCase="!!url.errors.required"> Required </ng-container>
+                    <ng-container *ngSwitchCase="!!url.errors.pattern">
+                      Url does not correct
+                    </ng-container>
+                  </span>
+                  <span class="label-text mr-2">Image</span>
+                </div>
+							</label>
+							<div class="flex items-center justify-between gap-4">
+								<div class="relative w-full">
+									<input
+										class="input input-bordered input-md w-full !pr-12"
+										id="imageFormUrl"
+										type="text"
+										aria-label="Url"
+										inputmode="none"
+										formControlName="url"
+										placeholder="Paste image from clipboard or URL"
+										appInputOnlyPaste
+										appInputTrimWhitespace
+										[class.input-success]="url.value && url.valid"
+										[class.input-error]="url.dirty && url.invalid"
+										(input)="onGetFileFromInternet($event)"
+										(paste)="onGetFileFromClipboard($event)"
+									/>
+									@if (url.value) {
+										<button
+											class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+											type="button"
+											aria-label="Clear"
+											appSvgIcon
+											[class.btn-success]="url.valid"
+											[class.btn-error]="url.dirty && url.invalid"
+											[class.btn-ghost]="url.pristine && url.invalid"
+											[disabled]="imageForm.disabled"
+											[appSvgIconIcon]="'x'"
+											[appSvgIconSquare]="'2em'"
+											(click)="url.setValue('')"
+										></button>
+									}
+								</div>
 								<input
-									class="input input-bordered input-md w-full !pr-12"
-									id="imageFormUrl"
-									type="text"
-                  inputmode="none"
-									aria-label="Url"
-									formControlName="url"
-									placeholder="Paste image from clipboard or URL"
-									appInputOnlyPaste
-									appInputTrimWhitespace
-									[class.input-success]="url.value && url.valid"
-									[class.input-error]="url.dirty && url.invalid"
-                  (input)="onGetFileFromInternet($event)"
-                  (paste)="onGetFileFromClipboard($event)"
+									class="hidden"
+									type="file"
+									#imageFormFile
+									[accept]="imageFormMime"
+									(change)="onGetFileFromDevice($event)"
 								/>
 								<button
-									class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
+									class="btn-success btn-md btn-square btn fill-current p-3"
 									type="button"
-									aria-label="Clear"
-									appSvgIcon
-									*ngIf="!!url.value.length"
-									[class.btn-success]="url.valid"
-									[class.btn-error]="url.dirty && url.invalid"
-									[class.btn-ghost]="url.pristine && url.invalid"
+									aria-label="Browse"
+									[class.btn-outline]="imageForm.enabled"
 									[disabled]="imageForm.disabled"
-									[appSvgIconIcon]="'x'"
-									[appSvgIconSquare]="'2em'"
-									(click)="url.setValue('')"
-								></button>
-							</div>
-							<input
-								class="hidden"
-								type="file"
-								#imageFormFile
-								[accept]="imageFormMime"
-								(change)="onGetFileFromDevice($event)"
-							/>
-							<button
-								class="btn-success btn-md btn-square btn fill-current p-3"
-								type="button"
-								aria-label="Browse"
-								[class.btn-outline]="imageForm.enabled"
-								[disabled]="imageForm.disabled"
-								[ngSwitch]="imageForm.disabled && !cropperFile"
-								(click)="imageFormFile.click()"
-							>
-								<span class="loading loading-spinner" *ngSwitchCase="true"></span>
-								<i
-									class="block"
-									appSvgIcon
-									*ngSwitchDefault
-									[appSvgIconIcon]="'folder'"
-									[appSvgIconSquare]="'1.75em'"
+									[ngSwitch]="imageForm.disabled && !cropperFile"
+									(click)="imageFormFile.click()"
 								>
-								</i>
-							</button>
-						</div>
-						<label class="label" for="imageFormUrl">
-							<span class="label-text-alt">Accept only <span class="inline font-bold">{{ imageFormMimeComputed() }}</span> files</span>
-						</label>
-					</fieldset>
+									<span class="loading loading-spinner" *ngSwitchCase="true"></span>
+									<i
+										class="block"
+										appSvgIcon
+										*ngSwitchDefault
+										[appSvgIconIcon]="'folder'"
+										[appSvgIconSquare]="'1.75em'"
+									>
+									</i>
+								</button>
+							</div>
+							<!-- prettier-ignore -->
+							<label class="label" for="imageFormUrl">
+								<span class="label-text-alt"> Accept only <span class="inline font-bold">{{ imageFormMimeComputed() }}</span> files</span>
+							</label>
+						</fieldset>
+					}
 				</form>
 				<div
 					class="flex flex-col gap-4"
@@ -191,34 +193,36 @@
 									></button>
 								</li>
 								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
-									<button
-										class="rotate-90 fill-current p-3"
-										type="button"
-										title="Mirror horizontal"
-										aria-label="Mirror horizontal"
-										appSvgIcon
-										*ngIf="cropperImageForm.get('flipV') as flipV"
-										[disabled]="cropperImageForm.disabled"
-										[appSvgIconIcon]="'symmetry-vertical'"
-										[appSvgIconSquare]="'1.5725em'"
-										(click)="flipV.setValue(!flipV.value)"
-									></button>
+                  @if (cropperImageForm.get("flipV"); as flipV) {
+                    <button
+                      class="rotate-90 fill-current p-3"
+                      type="button"
+                      title="Mirror horizontal"
+                      aria-label="Mirror horizontal"
+                      appSvgIcon
+                      [disabled]="cropperImageForm.disabled"
+                      [appSvgIconIcon]="'symmetry-vertical'"
+                      [appSvgIconSquare]="'1.5725em'"
+                      (click)="flipV.setValue(!flipV.value)"
+                    ></button>
+                  }
 								</li>
 								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
-									<button
-										class="fill-current p-3"
-										type="button"
-										title="Mirror vertical"
-										aria-label="Mirror vertical"
-										appSvgIcon
-                    *ngIf="cropperImageForm.get('flipH') as flipH"
-										[disabled]="cropperImageForm.disabled"
-										[appSvgIconIcon]="'symmetry-vertical'"
-										[appSvgIconSquare]="'1.5725em'"
-                    (click)="flipH.setValue(!flipH.value)"
-									></button>
+                  @if (cropperImageForm.get("flipH"); as flipH) {
+                    <button
+                      class="fill-current p-3"
+                      type="button"
+                      title="Mirror vertical"
+                      aria-label="Mirror vertical"
+                      appSvgIcon
+                      [disabled]="cropperImageForm.disabled"
+                      [appSvgIconIcon]="'symmetry-vertical'"
+                      [appSvgIconSquare]="'1.5725em'"
+                      (click)="flipH.setValue(!flipH.value)"
+                    ></button>
+                  }
 								</li>
-                <ng-container *ngIf="markdownItToggle">
+                @if (markdownItToggle) {
                   <li class="inline-block" [class.disabled]="cropperImageForm.disabled">
                     <div
                       class="flex p-0"
@@ -240,24 +244,23 @@
                         [appSvgIconSquare]="'1.5725em'"
                       ></button>
                       <ul class="menu menu-vertical menu-md m-0" slot="content">
-                        <li
-                          class="flex w-full"
-                          *ngFor="let cropperAspectRatio of cropperAspectRatioList"
-                        >
-                          <button
-                            class="w-full whitespace-nowrap text-base-content"
-                            type="button"
-                            [class.active]="cropperAspectRatioActive === cropperAspectRatio.value"
-                            [attr.aria-label]="cropperAspectRatio.label"
-                            (click)="cropperAspectRatioActive = cropperAspectRatio.value"
-                          >
-                            {{ cropperAspectRatio.label }}
-                          </button>
-                        </li>
+                        @for (cropperAspectRatio of cropperAspectRatioList; track cropperAspectRatio.id) {
+                          <li class="flex w-full">
+                            <button
+                              class="w-full whitespace-nowrap text-base-content"
+                              type="button"
+                              [class.active]="cropperAspectRatioActive === cropperAspectRatio.value"
+                              [attr.aria-label]="cropperAspectRatio.label"
+                              (click)="cropperAspectRatioActive = cropperAspectRatio.value"
+                            >
+                              {{ cropperAspectRatio.label }}
+                            </button>
+                          </li>
+                        }
                       </ul>
                     </div>
                   </li>
-                </ng-container>
+                }
                 <li class="inline-block" [class.disabled]="cropperImageForm.disabled">
                   <div
                     class="flex p-0"
@@ -288,31 +291,33 @@
                         autocomplete="off"
                         [formGroup]="cropperImageForm"
                       >
-                        <fieldset class="form-control w-full" *ngIf="cropperImageForm.get('rotate') as rotate">
-                          <label class="label w-full gap-4 p-0">
-                            <span class="label-text">Rotate</span>
-                            <input
-                              class="range range-success flex-1"
-                              type="range"
-                              aria-label="Rotate"
-                              formControlName="rotate"
-                              [min]="0"
-                              [max]="360"
-                              [step]="5"
-                              [value]="rotate.value"
-                            />
-                            <input
-                              class="input-bordered input input-sm w-14 text-center"
-                              type="number"
-                              inputmode="numeric"
-                              aria-label="Rotate"
-                              formControlName="rotate"
-                              [class.input-success]="rotate.valid"
-                              [class.input-error]="rotate.invalid"
-                              [value]="rotate.value"
-                            />
-                          </label>
-                        </fieldset>
+                        @if (cropperImageForm.get("rotate"); as rotate) {
+                          <fieldset class="form-control w-full">
+                            <label class="label w-full gap-4 p-0">
+                              <span class="label-text">Rotate</span>
+                              <input
+                                class="range range-success flex-1"
+                                type="range"
+                                aria-label="Rotate"
+                                formControlName="rotate"
+                                [min]="0"
+                                [max]="360"
+                                [step]="5"
+                                [value]="rotate.value"
+                              />
+                              <input
+                                class="input-bordered input input-sm w-14 text-center"
+                                type="number"
+                                inputmode="numeric"
+                                aria-label="Rotate"
+                                formControlName="rotate"
+                                [class.input-success]="rotate.valid"
+                                [class.input-error]="rotate.invalid"
+                                [value]="rotate.value"
+                              />
+                            </label>
+                          </fieldset>
+                        }
                       </form>
                     </div>
                   </div>
@@ -347,31 +352,33 @@
                         autocomplete="off"
                         [formGroup]="cropperImageForm"
                       >
-                        <fieldset class="form-control w-full" *ngIf="cropperImageForm.get('scale') as scale">
-                          <label class="label w-full gap-4 p-0">
-                            <span class="label-text">Scale</span>
-                            <input
-                              class="range range-success flex-1"
-                              type="range"
-                              aria-label="Scale"
-                              formControlName="scale"
-                              [min]="1"
-                              [max]="5"
-                              [step]="0.1"
-                              [value]="scale.value"
-                            />
-                            <input
-                              class="input-bordered input input-sm w-14 text-center"
-                              type="number"
-                              inputmode="numeric"
-                              aria-label="Scale"
-                              formControlName="scale"
-                              [class.input-success]="scale.valid"
-                              [class.input-error]="scale.invalid"
-                              [value]="scale.value"
-                            />
-                          </label>
-                        </fieldset>
+                        @if (cropperImageForm.get("scale"); as scale) {
+                          <fieldset class="form-control w-full">
+                            <label class="label w-full gap-4 p-0">
+                              <span class="label-text">Scale</span>
+                              <input
+                                class="range range-success flex-1"
+                                type="range"
+                                aria-label="Scale"
+                                formControlName="scale"
+                                [min]="1"
+                                [max]="5"
+                                [step]="0.1"
+                                [value]="scale.value"
+                              />
+                              <input
+                                class="input-bordered input input-sm w-14 text-center"
+                                type="number"
+                                inputmode="numeric"
+                                aria-label="Scale"
+                                formControlName="scale"
+                                [class.input-success]="scale.valid"
+                                [class.input-error]="scale.invalid"
+                                [value]="scale.value"
+                              />
+                            </label>
+                          </fieldset>
+                        }
                       </form>
                     </div>
                   </div>
@@ -398,7 +405,9 @@
 							[disabled]="cropperImageForm.disabled"
 							(click)="onSubmitCropper()"
 						>
-							<span class="loading loading-spinner" *ngIf="cropperImageForm.disabled"></span>
+							@if (cropperImageForm.disabled) {
+								<span class="loading loading-spinner"></span>
+							}
 							Submit
 						</button>
 						<button

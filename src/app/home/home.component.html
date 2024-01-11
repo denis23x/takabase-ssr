@@ -70,14 +70,15 @@
 						</h2>
 					</div>
 					<nav class="join">
-						<button
-							class="join-item btn btn-sm sm:btn-md"
-							*ngFor="let appFeature of appFeatureList; let i = index"
-							[class.btn-active]="appFeature.id === appFeatureActive.id"
-							(click)="onClickNav(appFeature)"
-						>
-							{{ i + 1 }}
-						</button>
+						@for (appFeature of appFeatureList; track appFeature.id) {
+							<button
+								class="join-item btn btn-sm sm:btn-md"
+								[class.btn-active]="appFeature.id === appFeatureActive.id"
+								(click)="onClickNav(appFeature)"
+							>
+								{{ appFeature.id }}
+							</button>
+						}
 					</nav>
 				</header>
 				<hr class="border-t border-base-content/20" />
@@ -85,17 +86,16 @@
 					{{ appFeatureActive.description }}
 				</p>
 				<ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-					<li
-						class="flex flex-col items-start justify-start gap-4 col-span-1"
-						*ngFor="let description of appFeatureActive.descriptionList"
-					>
-						<span class="text-base sm:text-xl font-semibold text-base-content">
-							{{ description.title }}
-						</span>
-						<p class="text-sm text-base-content/50">
-							{{ description.description }}
-						</p>
-					</li>
+					@for (appFeatureActive of appFeatureActive.list; track $index) {
+						<li class="flex flex-col items-start justify-start gap-4 col-span-1">
+							<span class="text-base sm:text-xl font-semibold text-base-content">
+								{{ appFeatureActive.title }}
+							</span>
+							<p class="text-sm text-base-content/50">
+								{{ appFeatureActive.description }}
+							</p>
+						</li>
+					}
 				</ul>
 			</section>
 		</main>
