@@ -54,6 +54,11 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 		this.dropdownFit = dropdownFit;
 	}
 
+	@Input()
+	set appDropdownActiveClassList(dropdownActiveClassList: string[]) {
+		this.dropdownActiveClassList = dropdownActiveClassList;
+	}
+
 	window$: Subscription | undefined;
 	windowClick$: Subscription | undefined;
 
@@ -62,6 +67,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 	dropdownClose: boolean = true;
 	dropdownBackdrop: boolean = false;
 	dropdownFit: boolean = false;
+	dropdownActiveClassList: string[] = [];
 	dropdownAutoUpdate: () => void;
 
 	dropdownElementTarget: HTMLElement | undefined;
@@ -120,6 +126,8 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 		this.dropdownElementContent.style.display = 'flex';
 		this.dropdownBackdrop = !!Number(this.cookieService.getItem('dropdown-backdrop'));
 
+		this.elementRef.nativeElement.classList.add(...this.dropdownActiveClassList);
+
 		this.appDropdownToggle.emit(this.dropdownState);
 
 		this.onStateUpdate();
@@ -134,6 +142,8 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 	onStateHide(): void {
 		this.dropdownState = false;
 		this.dropdownElementContent.style.display = 'none';
+
+		this.elementRef.nativeElement.classList.remove(...this.dropdownActiveClassList);
 
 		this.appDropdownToggle.emit(this.dropdownState);
 

@@ -27,6 +27,7 @@ import {
 import { HelperService } from '../../../../core/services/helper.service';
 import { CategoryService } from '../../../../core/services/category.service';
 import { Subscription } from 'rxjs';
+import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 
 interface CategoryForm {
 	name: FormControl<string>;
@@ -41,7 +42,8 @@ interface CategoryForm {
 		WindowComponent,
 		InputTrimWhitespaceDirective,
 		TextareaAutosizeDirective,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		BadgeErrorComponent
 	],
 	selector: 'app-category-create, [appCategoryCreate]',
 	templateUrl: './create.component.html'

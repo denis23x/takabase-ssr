@@ -119,22 +119,9 @@
 								[appSkeletonToggle]="postSkeletonToggle"
 								[appSkeletonClassListElementRef]="['!-mx-1']"
 							>
-								<!-- prettier-ignore -->
-								<span
-                  class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                  *ngIf="name.touched && !!name.errors && postForm.enabled"
-                  [ngSwitch]="true"
-                >
-                  <ng-container *ngSwitchCase="!!name.errors.required">
-                    Required
-                  </ng-container>
-                  <ng-container *ngSwitchCase="!!name.errors.minlength">
-                    Min length {{ name.errors.minlength["requiredLength"] }} characters
-                  </ng-container>
-                  <ng-container *ngSwitchCase="!!name.errors.maxlength">
-                    Max length {{ name.errors.maxlength["requiredLength"] }} characters
-                  </ng-container>
-                </span>
+								@if (name.touched && !!name.errors && postForm.enabled) {
+									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
+								}
 								<span class="label-text mr-2">Name</span>
 							</div>
 						</label>
@@ -179,15 +166,9 @@
                   [appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
                   [appSkeletonClassListElementRef]="['!-mx-1']"
                 >
-                  <span
-                    class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                    *ngIf="categoryName.touched && !!categoryName.errors && postForm.enabled"
-                    [ngSwitch]="true"
-                  >
-                    <ng-container *ngSwitchCase="!!categoryName.errors.required">
-                      Required
-                    </ng-container>
-                  </span>
+                  @if (categoryName.touched && !!categoryName.errors && postForm.enabled) {
+                    <div class="block" appBadgeError [appBadgeErrorAbstractControl]="categoryName"></div>
+                  }
                   <span class="label-text mr-2">Category</span>
                 </div>
 							</label>
@@ -295,21 +276,10 @@
 								[appSkeletonToggle]="postSkeletonToggle"
 								[appSkeletonClassListElementRef]="['!-mx-1']"
 							>
-								<span
-									class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="description.touched && !!description.errors && postForm.enabled"
-									[ngSwitch]="true"
-								>
-									<ng-container *ngSwitchCase="!!description.errors.required">
-										Required
-									</ng-container>
-									<ng-container *ngSwitchCase="!!description.errors.minlength">
-										Min length {{ description.errors.minlength["requiredLength"] }} characters
-									</ng-container>
-									<ng-container *ngSwitchCase="!!description.errors.maxlength">
-										Max length {{ description.errors.maxlength["requiredLength"] }} characters
-									</ng-container>
-								</span>
+								@if (description.touched && !!description.errors && postForm.enabled) {
+									<!-- prettier-ignore -->
+									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
+								}
 								<span class="label-text mr-2">Description</span>
 							</div>
 						</label>

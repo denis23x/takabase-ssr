@@ -39,20 +39,12 @@
 					@if (imageForm.get("url"); as url) {
 						<fieldset class="form-control">
 							<label class="label" for="imageFormUrl">
-								<!-- prettier-ignore -->
 								<div class="indicator">
-                  <span
-                    class="badge indicator-item badge-error w-max translate-x-full translate-y-0 text-xs"
-                    *ngIf="url.dirty && !!url.errors && imageForm.enabled"
-                    [ngSwitch]="true"
-                  >
-                    <ng-container *ngSwitchCase="!!url.errors.required"> Required </ng-container>
-                    <ng-container *ngSwitchCase="!!url.errors.pattern">
-                      Url does not correct
-                    </ng-container>
-                  </span>
-                  <span class="label-text mr-2">Image</span>
-                </div>
+									@if (url.dirty && !!url.errors && imageForm.enabled) {
+										<div class="block" appBadgeError [appBadgeErrorAbstractControl]="url"></div>
+									}
+									<span class="label-text mr-2">Image</span>
+								</div>
 							</label>
 							<div class="flex items-center justify-between gap-4">
 								<div class="relative w-full">
@@ -227,10 +219,8 @@
                     <div
                       class="flex p-0"
                       appDropdown
-                      *ngIf="{ value: false } as toggle"
-                      [ngClass]="{ 'bg-base-content/10': toggle.value }"
                       [appDropdownPlacement]="'top-start'"
-                      (appDropdownToggle)="toggle.value = $event"
+                      [appDropdownActiveClassList]="['bg-base-content/10']"
                     >
                       <button
                         class="fill-current p-3"
@@ -265,11 +255,9 @@
                   <div
                     class="flex p-0"
                     appDropdown
-                    *ngIf="{ value: false } as toggle"
-                    [ngClass]="{ 'bg-base-content/10': toggle.value }"
                     [appDropdownPlacement]="'top'"
                     [appDropdownClose]="false"
-                    (appDropdownToggle)="toggle.value = $event"
+                    [appDropdownActiveClassList]="['bg-base-content/10']"
                   >
                     <button
                       class="fill-current p-3"
@@ -326,11 +314,9 @@
                   <div
                     class="flex p-0"
                     appDropdown
-                    *ngIf="{ value: false } as toggle"
-                    [ngClass]="{ 'bg-base-content/10': toggle.value }"
                     [appDropdownPlacement]="'top'"
                     [appDropdownClose]="false"
-                    (appDropdownToggle)="toggle.value = $event"
+                    [appDropdownActiveClassList]="['bg-base-content/10']"
                   >
                     <button
                       class="fill-current p-3"

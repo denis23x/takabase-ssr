@@ -19,6 +19,7 @@ import { PasswordService } from '../../../core/services/password.service';
 import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 import { MetaService } from '../../../core/services/meta.service';
 import { Subscription } from 'rxjs';
+import { BadgeErrorComponent } from '../../../standalone/components/badge-error/badge-error.component';
 
 interface PasswordForm {
 	code: FormControl<string>;
@@ -27,7 +28,13 @@ interface PasswordForm {
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, ReactiveFormsModule, SvgIconComponent, InputTrimWhitespaceDirective],
+	imports: [
+		CommonModule,
+		ReactiveFormsModule,
+		SvgIconComponent,
+		InputTrimWhitespaceDirective,
+		BadgeErrorComponent
+	],
 	selector: 'app-authorization-confirmation-password',
 	templateUrl: './password.component.html'
 })

@@ -19,6 +19,7 @@ import { SnackbarService } from '../../core/services/snackbar.service';
 import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
 import { PasswordService } from '../../core/services/password.service';
 import { Subscription } from 'rxjs';
+import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 
 interface ResetForm {
 	email: FormControl<string>;
@@ -31,7 +32,8 @@ interface ResetForm {
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
-		InputTrimWhitespaceDirective
+		InputTrimWhitespaceDirective,
+		BadgeErrorComponent
 	],
 	selector: 'app-authorization-reset',
 	templateUrl: './reset.component.html'

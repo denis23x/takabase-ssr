@@ -34,14 +34,9 @@
 				<fieldset class="form-control" *ngIf="categoryDeleteForm.get('name') as name">
 					<label class="label" for="categoryDeleteFormName">
 						<div class="indicator">
-							<span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="name.touched && !!name.errors && categoryDeleteForm.enabled"
-								[ngSwitch]="true"
-							>
-								<ng-container *ngSwitchCase="!!name.errors.required"> Required </ng-container>
-								<ng-container *ngSwitchCase="!!name.errors.pattern"> Wrong name </ng-container>
-							</span>
+							@if (name.touched && !!name.errors && categoryDeleteForm.enabled) {
+								<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
+							}
 							<!-- prettier-ignore -->
 							<span class="label-text mr-2">
 								Please type <span class="font-bold">{{ category?.name }}</span> to confirm

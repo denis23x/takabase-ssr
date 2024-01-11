@@ -1,0 +1,26 @@
+<!-- @format -->
+
+<ng-container>
+	<span class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs">
+		@switch (true) {
+			@case (!!abstractControl.errors.required) {
+				Required
+			}
+			@case (!!abstractControl.errors.email) {
+				Email must be a real email address
+			}
+			@case (!!abstractControl.errors.pattern) {
+				Does not match pattern
+			}
+			@case (!!abstractControl.errors.minlength) {
+				Min length {{ abstractControl.errors.minlength["requiredLength"] }} characters
+			}
+			@case (!!abstractControl.errors.maxlength) {
+				Max length {{ abstractControl.errors.maxlength["requiredLength"] }} characters
+			}
+			@default {
+				Unknown error
+			}
+		}
+	</span>
+</ng-container>

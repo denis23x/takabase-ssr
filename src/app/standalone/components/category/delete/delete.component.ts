@@ -36,6 +36,7 @@ import { FileService } from '../../../../core/services/file.service';
 import { HelperService } from '../../../../core/services/helper.service';
 import { CurrentUser } from '../../../../core/models/current-user.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
+import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 
 interface CategoryDeleteForm {
 	name: FormControl<string>;
@@ -49,7 +50,8 @@ interface CategoryDeleteForm {
 		SvgIconComponent,
 		WindowComponent,
 		InputTrimWhitespaceDirective,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		BadgeErrorComponent
 	],
 	selector: 'app-category-delete, [appCategoryDelete]',
 	templateUrl: './delete.component.html'

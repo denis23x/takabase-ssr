@@ -44,6 +44,7 @@ import { PlatformService } from '../core/services/platform.service';
 import { FileService } from '../core/services/file.service';
 import { PostUpdateDto } from '../core/dto/post/post-update.dto';
 import { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
+import { BadgeErrorComponent } from '../standalone/components/badge-error/badge-error.component';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -73,7 +74,8 @@ interface PostForm {
 		PostDeleteComponent,
 		CategoryCreateComponent,
 		CategoryUpdateComponent,
-		PostPreviewComponent
+		PostPreviewComponent,
+		BadgeErrorComponent
 	],
 	templateUrl: './create.component.html'
 })

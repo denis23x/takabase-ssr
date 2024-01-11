@@ -33,6 +33,7 @@ import { SkeletonDirective } from '../../standalone/directives/app-skeleton.dire
 import { PlatformService } from '../../core/services/platform.service';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { FileService } from '../../core/services/file.service';
+import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 
 interface ProfileForm {
 	avatar: FormControl<string | null>;
@@ -55,7 +56,8 @@ interface ProfileForm {
 		TextareaAutosizeDirective,
 		QrCodeComponent,
 		DropdownComponent,
-		SkeletonDirective
+		SkeletonDirective,
+		BadgeErrorComponent
 	],
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'

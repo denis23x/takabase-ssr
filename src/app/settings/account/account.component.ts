@@ -23,6 +23,7 @@ import { PasswordUpdateDto } from '../../core/dto/password/password-update.dto';
 import { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
 import { CurrentUser } from '../../core/models/current-user.model';
 import { AuthorizationService } from '../../core/services/authorization.service';
+import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 
 interface PasswordValidateForm {
 	password: FormControl<string>;
@@ -43,7 +44,8 @@ interface PasswordForm {
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
-		InputTrimWhitespaceDirective
+		InputTrimWhitespaceDirective,
+		BadgeErrorComponent
 	],
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'

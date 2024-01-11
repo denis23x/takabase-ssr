@@ -10,13 +10,7 @@
 			[ngClass]="{ 'pointer-events-none bg-base-300': controlListDisabled }"
 		>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
-				<div
-					class="flex p-0"
-					appDropdown
-					*ngIf="{ value: false } as toggle"
-					[ngClass]="{ 'bg-base-content/10': toggle.value }"
-					(appDropdownToggle)="toggle.value = $event"
-				>
+				<div class="flex p-0" appDropdown [appDropdownActiveClassList]="['bg-base-content/10']">
 					<button
 						class="fill-current p-3"
 						type="button"
@@ -47,13 +41,7 @@
 				</div>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
-				<div
-					class="flex p-0"
-					appDropdown
-					*ngIf="{ value: false } as toggle"
-					[ngClass]="{ 'bg-base-content/10': toggle.value }"
-					(appDropdownToggle)="toggle.value = $event"
-				>
+				<div class="flex p-0" appDropdown [appDropdownActiveClassList]="['bg-base-content/10']">
 					<button
 						class="fill-current p-3"
 						type="button"
@@ -84,13 +72,7 @@
 				</div>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
-				<div
-					class="flex p-0"
-					appDropdown
-					*ngIf="{ value: false } as toggle"
-					[ngClass]="{ 'bg-base-content/10': toggle.value }"
-					(appDropdownToggle)="toggle.value = $event"
-				>
+				<div class="flex p-0" appDropdown [appDropdownActiveClassList]="['bg-base-content/10']">
 					<button
 						class="fill-current p-3"
 						type="button"
@@ -158,10 +140,8 @@
 				<div
 					class="flex p-0"
 					appDropdown
-					*ngIf="{ value: false } as toggle"
-					[ngClass]="{ 'bg-base-content/10': toggle.value }"
 					[appDropdownClose]="false"
-					(appDropdownToggle)="toggle.value = $event"
+					[appDropdownActiveClassList]="['bg-base-content/10']"
 				>
 					<button
 						class="fill-current p-3"
@@ -178,13 +158,7 @@
 				</div>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
-				<div
-					class="flex p-0"
-					appDropdown
-					*ngIf="{ value: false } as toggle"
-					[ngClass]="{ 'bg-base-content/10': toggle.value }"
-					(appDropdownToggle)="toggle.value = $event"
-				>
+				<div class="flex p-0" appDropdown [appDropdownActiveClassList]="['bg-base-content/10']">
 					<button
 						class="fill-current p-3"
 						type="button"
@@ -286,108 +260,100 @@
 				</p>
 				<!-- prettier-ignore -->
 				<ng-container *ngIf="{ value: urlFormControl?.key === 'url-link' ? 'Text' : 'Title' } as label">
-					<fieldset class="form-control" *ngIf="urlForm.get('title') as title">
-						<label class="label" for="urlFormTitle">
-							<div class="indicator" [ngSwitch]="true">
-                <span
-                  class="badge badge-error indicator-item w-max translate-x-full translate-y-0 text-xs"
-                  *ngSwitchCase="urlFormControl?.key === 'url-link' && title.touched && !!title.errors && urlForm.enabled"
-                  [ngSwitch]="true"
-                >
-                  <ng-container *ngSwitchCase="!!title.errors.required">
-                    Required
+          @if (urlForm.get('title'); as title) {
+            <fieldset class="form-control">
+              <label class="label" for="urlFormTitle">
+                <div class="indicator" [ngSwitch]="true">
+                  <ng-container
+                    *ngSwitchCase="urlFormControl?.key === 'url-link' && title.touched && !!title.errors && urlForm.enabled"
+                  >
+                    <div class="block" appBadgeError [appBadgeErrorAbstractControl]="title"></div>
                   </ng-container>
-                </span>
-                <span
-                  class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                  *ngSwitchCase="urlFormControl?.key === 'url-image'"
-                  [class.badge-ghost]="!title.value"
-                  [class.badge-success]="!!title.value && urlForm.enabled"
-                  [class.opacity-25]="urlForm.disabled"
-                >
-                  Optional
-                </span>
-                <span class="label-text mr-2">{{ label.value }}</span>
+                  <span
+                    class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                    *ngSwitchCase="urlFormControl?.key === 'url-image'"
+                    [class.badge-ghost]="!title.value"
+                    [class.badge-success]="!!title.value && urlForm.enabled"
+                    [class.opacity-25]="urlForm.disabled"
+                  >
+                    Optional
+                  </span>
+                  <span class="label-text mr-2">{{ label.value }}</span>
+                </div>
+              </label>
+              <div class="relative">
+                <input
+                  class="input-bordered input input-md w-full !pr-12"
+                  id="urlFormTitle"
+                  type="text"
+                  appInputTrimWhitespace
+                  [attr.aria-label]="label.value"
+                  [placeholder]="['Type', label.value.toLowerCase()].join(' ')"
+                  [formControl]="$any(title)"
+                  [class.input-success]="title.value && title.valid"
+                  [class.input-error]="title.touched && title.invalid"
+                />
+                @if (title.value) {
+                  <button
+                    class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+                    type="button"
+                    aria-label="Clear"
+                    appSvgIcon
+                    [class.btn-success]="title.valid"
+                    [class.btn-error]="title.touched && title.invalid"
+                    [class.btn-ghost]="title.untouched && title.invalid"
+                    [disabled]="urlForm.disabled"
+                    [appSvgIconIcon]="'x'"
+                    [appSvgIconSquare]="'2em'"
+                    (click)="title.setValue('')"
+                  ></button>
+                }
               </div>
+            </fieldset>
+          }
+				</ng-container>
+				@if (urlForm.get("url"); as url) {
+					<fieldset class="form-control">
+						<label class="label" for="urlFormUrl">
+							<div class="indicator">
+								@if (url.touched && !!url.errors && urlForm.enabled) {
+									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="url"></div>
+								}
+								<span class="label-text mr-2">URL</span>
+							</div>
 						</label>
 						<div class="relative">
-              <input
-                class="input-bordered input input-md w-full !pr-12"
-                id="urlFormTitle"
-                type="text"
-                appInputTrimWhitespace
-                [attr.aria-label]="label.value"
-                [placeholder]="['Type', label.value.toLowerCase()].join(' ')"
-                [formControl]="$any(title)"
-                [class.input-success]="title.value && title.valid"
-                [class.input-error]="title.touched && title.invalid"
-              />
-              <button
-                class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-                type="button"
-                aria-label="Clear"
-                appSvgIcon
-                *ngIf="!!title.value.length"
-                [class.btn-success]="title.valid"
-                [class.btn-error]="title.touched && title.invalid"
-                [class.btn-ghost]="title.untouched && title.invalid"
-                [disabled]="urlForm.disabled"
-                [appSvgIconIcon]="'x'"
-                [appSvgIconSquare]="'2em'"
-                (click)="title.setValue('')"
-              ></button>
-            </div>
-					</fieldset>
-				</ng-container>
-				<fieldset class="form-control" *ngIf="urlForm.get('url') as url">
-					<label class="label" for="urlFormUrl">
-						<div class="indicator">
-							<!-- prettier-ignore -->
-							<span
-                class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                *ngIf="url.touched && !!url.errors && urlForm.enabled"
-                [ngSwitch]="true"
-              >
-                <ng-container *ngSwitchCase="!!url.errors.required">
-                  Required
-                </ng-container>
-                <ng-container *ngSwitchCase="!!url.errors.pattern">
-                  Url does not correct
-                </ng-container>
-              </span>
-							<span class="label-text mr-2">URL</span>
+							<input
+								class="input input-bordered input-md w-full !pr-12"
+								id="urlFormUrl"
+								type="text"
+								aria-label="URL"
+								inputmode="none"
+								appInputOnlyPaste
+								appInputTrimWhitespace
+								placeholder="Paste URL"
+								[formControl]="$any(url)"
+								[class.input-success]="url.value && url.valid"
+								[class.input-error]="url.touched && url.invalid"
+							/>
+							@if (url.value) {
+								<button
+									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+									type="button"
+									aria-label="Clear"
+									appSvgIcon
+									[class.btn-success]="url.valid"
+									[class.btn-error]="url.touched && url.invalid"
+									[class.btn-ghost]="url.untouched && url.invalid"
+									[disabled]="urlForm.disabled"
+									[appSvgIconIcon]="'x'"
+									[appSvgIconSquare]="'2em'"
+									(click)="url.setValue('')"
+								></button>
+							}
 						</div>
-					</label>
-					<div class="relative">
-						<input
-							class="input input-bordered input-md w-full !pr-12"
-							id="urlFormUrl"
-							type="text"
-							aria-label="URL"
-							inputmode="none"
-							appInputOnlyPaste
-							appInputTrimWhitespace
-							placeholder="Paste URL"
-							[formControl]="$any(url)"
-							[class.input-success]="url.value && url.valid"
-							[class.input-error]="url.touched && url.invalid"
-						/>
-						<button
-							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-							type="button"
-							aria-label="Clear"
-							appSvgIcon
-							*ngIf="!!url.value.length"
-							[class.btn-success]="url.valid"
-							[class.btn-error]="url.touched && url.invalid"
-							[class.btn-ghost]="url.untouched && url.invalid"
-							[disabled]="urlForm.disabled"
-							[appSvgIconIcon]="'x'"
-							[appSvgIconSquare]="'2em'"
-							(click)="url.setValue('')"
-						></button>
-					</div>
-				</fieldset>
+					</fieldset>
+				}
 				<fieldset class="form-control">
 					<button
 						class="btn-success btn w-full"
@@ -395,7 +361,9 @@
 						aria-label="Submit"
 						[disabled]="urlForm.invalid || urlForm.disabled"
 					>
-						<span class="loading loading-spinner" *ngIf="urlForm.disabled"></span>
+						@if (urlForm.disabled) {
+							<span class="loading loading-spinner"></span>
+						}
 						Submit
 					</button>
 				</fieldset>

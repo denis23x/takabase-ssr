@@ -15,16 +15,17 @@
 						appSkeleton
 						[appSkeletonToggle]="currentUserSkeletonToggle || profileFormAvatarSkeletonToggle"
 					>
-						<!-- prettier-ignore -->
-						<figure
-							class="block rounded-btn relative border border-base-content/20 h-12 w-12 overflow-hidden transition"
-							data-pw="app-settings-profile-image-avatar"
-							appAvatar
-              *ngIf="profileForm.get('avatar') as avatar"
-							[ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-200': profileForm.disabled, 'cursor-pointer': profileForm.enabled, 'border-success': avatar.value }"
-							[appAvatarUser]="currentUser"
-							(click)="appCropperComponent.onToggleCropper(true)"
-						></figure>
+						@if (profileForm.get("avatar"); as avatar) {
+							<!-- prettier-ignore -->
+							<figure
+                class="block rounded-btn relative border border-base-content/20 h-12 w-12 overflow-hidden transition"
+                data-pw="app-settings-profile-image-avatar"
+                appAvatar
+                [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-200': profileForm.disabled, 'cursor-pointer': profileForm.enabled, 'border-success': avatar.value }"
+                [appAvatarUser]="currentUser"
+                (click)="appCropperComponent.onToggleCropper(true)"
+              ></figure>
+						}
 					</div>
 					<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
 						<h1
@@ -64,7 +65,7 @@
 						[appSvgIconSquare]="'1.5em'"
 					></button>
 					<ul class="menu menu-vertical menu-md" slot="content">
-						<ng-container *ngIf="profileForm.get('avatar') as avatar">
+						@if (profileForm.get("avatar"); as avatar) {
 							<li class="flex w-full snap-start scroll-my-2">
 								<button
 									class="rounded-btn block w-full truncate text-right"
@@ -77,18 +78,20 @@
 									{{ avatar.value ? "Update" : "Set" }} avatar
 								</button>
 							</li>
-							<li class="flex w-full snap-start scroll-my-2" *ngIf="avatar.value">
-								<button
-									class="rounded-btn block w-full truncate text-right"
-									type="button"
-									title="Delete avatar"
-									aria-label="Delete avatar"
-									(click)="onUpdateCropperAvatar(null, avatar.value)"
-								>
-									Delete avatar
-								</button>
-							</li>
-						</ng-container>
+							@if (avatar.value) {
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										type="button"
+										title="Delete avatar"
+										aria-label="Delete avatar"
+										(click)="onUpdateCropperAvatar(null, avatar.value)"
+									>
+										Delete avatar
+									</button>
+								</li>
+							}
+						}
 						<li class="flex w-full snap-start scroll-my-2 menu-title">
 							<hr class="my-0 border-base-content/20" />
 						</li>
@@ -108,67 +111,53 @@
 				</div>
 			</div>
 			<hr class="w-full border-base-content/20" />
-			<fieldset class="form-control" *ngIf="profileForm.get('name') as name">
-				<label class="label" for="profileFormName">
-					<div
-						class="indicator"
-						appSkeleton
-						[appSkeletonToggle]="currentUserSkeletonToggle"
-						[appSkeletonClassListElementRef]="['!-mx-1']"
-					>
-						<!-- prettier-ignore -->
-						<span
-							class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-							data-pw="app-settings-profile-form-name-error"
-							*ngIf="name.touched && !!name.errors && profileForm.enabled"
-							[ngSwitch]="true"
+			@if (profileForm.get("name"); as name) {
+				<fieldset class="form-control">
+					<label class="label" for="profileFormName">
+						<div
+							class="indicator"
+							appSkeleton
+							[appSkeletonToggle]="currentUserSkeletonToggle"
+							[appSkeletonClassListElementRef]="['!-mx-1']"
 						>
-							<ng-container *ngSwitchCase="!!name.errors.required">
-                Required
-              </ng-container>
-							<ng-container *ngSwitchCase="!!name.errors.pattern">
-                Unacceptable name
-              </ng-container>
-							<ng-container *ngSwitchCase="!!name.errors.minlength">
-								Min length {{ name.errors.minlength["requiredLength"] }} characters
-							</ng-container>
-							<ng-container *ngSwitchCase="!!name.errors.maxlength">
-								Max length {{ name.errors.maxlength["requiredLength"] }} characters
-							</ng-container>
-						</span>
-						<span class="label-text mr-2">Name</span>
+							@if (name.touched && !!name.errors && profileForm.enabled) {
+								<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
+							}
+							<span class="label-text mr-2">Name</span>
+						</div>
+					</label>
+					<div class="relative" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
+						<input
+							class="input-bordered input input-md w-full !pr-12"
+							id="profileFormName"
+							data-pw="app-settings-profile-form-name"
+							type="text"
+							aria-label="Name"
+							formControlName="name"
+							placeholder="Type your name"
+							appInputTrimWhitespace
+							[class.input-success]="name.touched && name.valid"
+							[class.input-error]="name.touched && name.invalid"
+						/>
+						@if (name.value) {
+							<button
+								class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+								data-pw="app-settings-profile-form-name-clear"
+								type="button"
+								aria-label="Clear"
+								appSvgIcon
+								[class.btn-success]="name.touched && name.valid"
+								[class.btn-error]="name.touched && name.invalid"
+								[class.btn-ghost]="name.untouched"
+								[disabled]="profileForm.disabled"
+								[appSvgIconIcon]="'x'"
+								[appSvgIconSquare]="'2em'"
+								(click)="name.setValue('')"
+							></button>
+						}
 					</div>
-				</label>
-				<div class="relative" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
-					<input
-						class="input-bordered input input-md w-full !pr-12"
-						id="profileFormName"
-						data-pw="app-settings-profile-form-name"
-						type="text"
-						aria-label="Name"
-						formControlName="name"
-						placeholder="Type your name"
-						appInputTrimWhitespace
-						[class.input-success]="name.touched && name.valid"
-						[class.input-error]="name.touched && name.invalid"
-					/>
-					<button
-						class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-						data-pw="app-settings-profile-form-name-clear"
-						type="button"
-						aria-label="Clear"
-						appSvgIcon
-						*ngIf="!!name.value.length"
-						[class.btn-success]="name.touched && name.valid"
-						[class.btn-error]="name.touched && name.invalid"
-						[class.btn-ghost]="name.untouched"
-						[disabled]="profileForm.disabled"
-						[appSvgIconIcon]="'x'"
-						[appSvgIconSquare]="'2em'"
-						(click)="name.setValue('')"
-					></button>
-				</div>
-			</fieldset>
+				</fieldset>
+			}
 			<p
 				class="alert"
 				data-pw="app-settings-profile-alert-change-name"
@@ -185,70 +174,66 @@
 				<!-- prettier-ignore -->
 				<span class="block">Change the name will set the <span class="inline font-bold">{{ currentUser | userUrl: 1 }}</span> user profile not more available by direct link or QR code</span>
 			</p>
-			<fieldset class="form-control" *ngIf="profileForm.get('description') as description">
-				<label class="label" for="profileFormDescription">
+			@if (profileForm.get("description"); as description) {
+				<fieldset class="form-control">
+					<label class="label" for="profileFormDescription">
+						<div
+							class="indicator"
+							appSkeleton
+							[appSkeletonToggle]="currentUserSkeletonToggle"
+							[appSkeletonClassListElementRef]="['!-mx-1']"
+						>
+							<!-- prettier-ignore -->
+							@if (!currentUserSkeletonToggle && !!description.value && !!description.errors && profileForm.enabled) {
+                <div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
+              }
+							@if (!currentUserSkeletonToggle && !description.errors) {
+								<span
+									class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+									[class.badge-ghost]="!description.value"
+									[class.badge-success]="!!description.value && profileForm.enabled"
+									[class.opacity-25]="profileForm.disabled"
+								>
+									Optional
+								</span>
+							}
+							<span class="label-text mr-2">Description</span>
+						</div>
+						<span
+							class="label-text-alt"
+							appSkeleton
+							[appSkeletonToggle]="currentUserSkeletonToggle"
+							[class.text-base-content]="profileForm.disabled"
+							[class.text-success]="profileForm.enabled && !!description.value && description.valid"
+							[class.text-error]="profileForm.enabled && !!description.value && description.invalid"
+						>
+							{{ description.value?.length || 0 }}/255
+						</span>
+					</label>
 					<!-- prettier-ignore -->
 					<div
-						class="indicator"
-						appSkeleton
-						[appSkeletonToggle]="currentUserSkeletonToggle"
-						[appSkeletonClassListElementRef]="['!-mx-1']"
-					>
-						<span
-							class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-							data-pw="app-settings-profile-form-description-error"
-							*ngIf="!currentUserSkeletonToggle && !!description.value && !!description.errors && profileForm.enabled"
-							[ngSwitch]="true"
-						>
-							<ng-container *ngSwitchCase="!!description.errors.maxlength">
-								Max length {{ description.errors.maxlength["requiredLength"] }} characters
-							</ng-container>
-						</span>
-						<span
-							class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-							*ngIf="!currentUserSkeletonToggle && !description.errors"
-							[class.badge-ghost]="!description.value"
-							[class.badge-success]="!!description.value && profileForm.enabled"
-							[class.opacity-25]="profileForm.disabled"
-						>
-							Optional
-						</span>
-						<span class="label-text mr-2">Description</span>
-					</div>
-					<span
-						class="label-text-alt"
-						appSkeleton
-						[appSkeletonToggle]="currentUserSkeletonToggle"
-						[class.text-base-content]="profileForm.disabled"
-						[class.text-success]="profileForm.enabled && !!description.value && description.valid"
-						[class.text-error]="profileForm.enabled && !!description.value && description.invalid"
-					>
-						{{ description.value?.length || 0 }}/255
-					</span>
-				</label>
-				<!-- prettier-ignore -->
-				<div
-          class="textarea-autosize w-full"
-          appSkeleton
-          [appSkeletonToggle]="currentUserSkeletonToggle"
-          [appSkeletonClassListElementRef]="['!border-0']"
-          [ngClass]="{ 'border-base-content/20': profileForm.enabled, 'border-transparent': profileForm.disabled }"
-          [class.textarea-autosize-success]="description.value && description.valid"
-          [class.textarea-autosize-error]="description.value && description.invalid"
-        >
-          <textarea
-            class="textarea textarea-md w-full max-h-64"
-            id="profileFormDescription"
-            data-pw="app-settings-profile-form-description"
-            aria-label="Description"
-            placeholder="Type your description"
-            formControlName="description"
-            appInputTrimWhitespace
-						appTextareaAutosize
-            [rows]="4"
-          ></textarea>
-        </div>
-			</fieldset>
+            class="textarea-autosize w-full"
+            appSkeleton
+            [appSkeletonToggle]="currentUserSkeletonToggle"
+            [appSkeletonClassListElementRef]="['!border-0']"
+            [ngClass]="{ 'border-base-content/20': profileForm.enabled, 'border-transparent': profileForm.disabled }"
+            [class.textarea-autosize-success]="description.value && description.valid"
+            [class.textarea-autosize-error]="description.value && description.invalid"
+          >
+            <textarea
+              class="textarea textarea-md w-full max-h-64"
+              id="profileFormDescription"
+              data-pw="app-settings-profile-form-description"
+              aria-label="Description"
+              placeholder="Type your description"
+              formControlName="description"
+              appInputTrimWhitespace
+              appTextareaAutosize
+              [rows]="4"
+            ></textarea>
+          </div>
+				</fieldset>
+			}
 			<fieldset class="form-control">
 				<!-- prettier-ignore -->
 				<button
@@ -258,10 +243,9 @@
 					aria-label="Submit"
 					[disabled]="profileForm.invalid || profileForm.disabled || profileFormIsPristine || profileFormAvatarSkeletonToggle"
 				>
-					<span
-						class="loading loading-spinner"
-						*ngIf="profileForm.disabled && !appCropperComponent.cropperDialogToggle"
-					></span>
+          @if (profileForm.disabled && !appCropperComponent.cropperDialogToggle) {
+					  <span class="loading loading-spinner"></span>
+          }
 					Submit
 				</button>
 			</fieldset>

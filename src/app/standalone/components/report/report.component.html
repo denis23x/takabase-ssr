@@ -34,136 +34,116 @@
 						for you
 					</span>
 				</p>
-				<fieldset class="form-control" *ngIf="reportForm.get('name') as name">
-					<label class="label" for="reportFormName">
-						<div class="indicator">
-							<!-- prettier-ignore -->
-							<span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="name.touched && !!name.errors && reportForm.enabled"
-								[ngSwitch]="true"
-							>
-								<ng-container *ngSwitchCase="!!name.errors.required">
-									Required
-								</ng-container>
-								<ng-container *ngSwitchCase="!!name.errors.minlength">
-									Min length {{ name.errors.minlength["requiredLength"] }} characters
-								</ng-container>
-								<ng-container *ngSwitchCase="!!name.errors.maxlength">
-									Max length {{ name.errors.maxlength["requiredLength"] }} characters
-								</ng-container>
-							</span>
-							<span class="label-text mr-2">Name</span>
-						</div>
-					</label>
-					<div class="flex items-center justify-between gap-4">
-						<div class="relative w-full">
-							<input
-								class="input-bordered input input-md w-full !pr-12"
-								id="reportFormName"
-								type="text"
-								aria-label="Name"
-								formControlName="name"
-								placeholder="Type name"
-								appInputTrimWhitespace
-								[class.input-success]="name.value && name.valid"
-								[class.input-error]="name.touched && name.invalid"
-							/>
-							<button
-								class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-								type="button"
-								aria-label="Clear"
-								appSvgIcon
-								*ngIf="!!name.value.length"
-								[class.btn-success]="name.valid"
-								[class.btn-error]="name.touched && name.invalid"
-								[class.btn-ghost]="name.untouched && name.invalid"
-								[disabled]="reportForm.disabled"
-								[appSvgIconIcon]="'x'"
-								[appSvgIconSquare]="'2em'"
-								(click)="name.setValue('')"
-							></button>
-						</div>
-						<div class="flex p-0" appDropdown [appDropdownPlacement]="'bottom-end'">
-							<button
-								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
-								type="button"
-								title="List"
-								aria-label="List"
-								appSvgIcon
-								slot="target"
-								[disabled]="reportForm.disabled"
-								[appSvgIconIcon]="'list'"
-								[appSvgIconSquare]="'1.75em'"
-							></button>
-							<ul class="menu menu-vertical menu-md" slot="content">
-								@for (reportFormName of reportFormNameList; track $index) {
-									<li class="flex w-full snap-start scroll-my-2">
-										<button
-											class="rounded-btn block w-full truncate text-right"
-											type="button"
-											[title]="reportFormName"
-											[attr.aria-label]="reportFormName"
-											[ngClass]="{ active: name.value === reportFormName }"
-											(click)="onSelectReportFormName(reportFormName)"
-										>
-											{{ reportFormName }}
-										</button>
-									</li>
+				@if (reportForm.get("name"); as name) {
+					<fieldset class="form-control">
+						<label class="label" for="reportFormName">
+							<div class="indicator">
+								@if (name.touched && !!name.errors && reportForm.enabled) {
+									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
 								}
-							</ul>
+								<span class="label-text mr-2">Name</span>
+							</div>
+						</label>
+						<div class="flex items-center justify-between gap-4">
+							<div class="relative w-full">
+								<input
+									class="input-bordered input input-md w-full !pr-12"
+									id="reportFormName"
+									type="text"
+									aria-label="Name"
+									formControlName="name"
+									placeholder="Type name"
+									appInputTrimWhitespace
+									[class.input-success]="name.value && name.valid"
+									[class.input-error]="name.touched && name.invalid"
+								/>
+								@if (name.value) {
+									<button
+										class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+										type="button"
+										aria-label="Clear"
+										appSvgIcon
+										[class.btn-success]="name.valid"
+										[class.btn-error]="name.touched && name.invalid"
+										[class.btn-ghost]="name.untouched && name.invalid"
+										[disabled]="reportForm.disabled"
+										[appSvgIconIcon]="'x'"
+										[appSvgIconSquare]="'2em'"
+										(click)="name.setValue('')"
+									></button>
+								}
+							</div>
+							<div class="flex p-0" appDropdown [appDropdownPlacement]="'bottom-end'">
+								<button
+									class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
+									type="button"
+									title="List"
+									aria-label="List"
+									appSvgIcon
+									slot="target"
+									[disabled]="reportForm.disabled"
+									[appSvgIconIcon]="'list'"
+									[appSvgIconSquare]="'1.75em'"
+								></button>
+								<ul class="menu menu-vertical menu-md" slot="content">
+									@for (reportFormName of reportFormNameList; track $index) {
+										<li class="flex w-full snap-start scroll-my-2">
+											<button
+												class="rounded-btn block w-full truncate text-right"
+												type="button"
+												[title]="reportFormName"
+												[attr.aria-label]="reportFormName"
+												[ngClass]="{ active: name.value === reportFormName }"
+												(click)="onSelectReportFormName(reportFormName)"
+											>
+												{{ reportFormName }}
+											</button>
+										</li>
+									}
+								</ul>
+							</div>
 						</div>
-					</div>
-				</fieldset>
-				<fieldset class="form-control" *ngIf="reportForm.get('description') as description">
-					<label class="label" for="reportFormDescription">
+					</fieldset>
+				}
+				@if (reportForm.get("description"); as description) {
+					<fieldset class="form-control">
 						<!-- prettier-ignore -->
-						<div class="indicator">
-              <span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="description.touched && !!description.errors && reportForm.enabled"
-								[ngSwitch]="true"
+						<label class="label" for="reportFormDescription">
+							<div class="indicator">
+                @if (description.touched && !!description.errors && reportForm.enabled) {
+                  <div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
+                }
+                <span class="label-text mr-2">Description</span>
+              </div>
+							<span
+								class="label-text-alt"
+								[class.text-base-content]="reportForm.disabled"
+								[class.text-success]="reportForm.enabled && description.value && description.valid"
+								[class.text-error]="reportForm.enabled && description.touched && description.invalid"
 							>
-                <ng-container *ngSwitchCase="!!description.errors.required">
-                  Required
-                </ng-container>
-                <ng-container *ngSwitchCase="!!description.errors.minlength">
-                  Min length {{ description.errors.minlength["requiredLength"] }} characters
-                </ng-container>
-                <ng-container *ngSwitchCase="!!description.errors.maxlength">
-                  Max length {{ description.errors.maxlength["requiredLength"] }} characters
-                </ng-container>
-              </span>
-							<span class="label-text mr-2">Description</span>
-						</div>
-						<span
-							class="label-text-alt"
-							[class.text-base-content]="reportForm.disabled"
-							[class.text-success]="reportForm.enabled && description.value && description.valid"
-							[class.text-error]="reportForm.enabled && description.touched && description.invalid"
-						>
-							{{ description.value?.length || 0 }}/255
-						</span>
-					</label>
-					<!-- prettier-ignore -->
-					<div
-						class="textarea-autosize w-full"
-						[ngClass]="{ 'border-base-content/20': reportForm.enabled, 'border-transparent': reportForm.disabled }"
-						[class.textarea-autosize-success]="description.value && description.valid"
-						[class.textarea-autosize-error]="description.touched && description.invalid"
-					>
-            <textarea
-							class="textarea textarea-md w-full max-h-64"
-							id="reportFormDescription"
-							aria-label="Description"
-							placeholder="Type description"
-							formControlName="description"
-							appInputTrimWhitespace
-							appTextareaAutosize
-							[rows]="4"
-						></textarea>
-					</div>
-				</fieldset>
+								{{ description.value?.length || 0 }}/255
+							</span>
+						</label>
+						<!-- prettier-ignore -->
+						<div
+              class="textarea-autosize w-full"
+              [ngClass]="{ 'border-base-content/20': reportForm.enabled, 'border-transparent': reportForm.disabled }"
+              [class.textarea-autosize-success]="description.value && description.valid"
+              [class.textarea-autosize-error]="description.touched && description.invalid"
+            >
+              <textarea
+                class="textarea textarea-md w-full max-h-64"
+                id="reportFormDescription"
+                aria-label="Description"
+                placeholder="Type description"
+                formControlName="description"
+                appInputTrimWhitespace
+                appTextareaAutosize
+                [rows]="4"
+              ></textarea>
+            </div>
+					</fieldset>
+				}
 				<fieldset class="form-control">
 					<button
 						class="btn-success btn-md btn w-full"
@@ -171,7 +151,9 @@
 						aria-label="Submit"
 						[disabled]="reportForm.invalid || reportForm.disabled"
 					>
-						<span class="loading loading-spinner" *ngIf="reportForm.disabled"></span>
+						@if (reportForm.disabled) {
+							<span class="loading loading-spinner"></span>
+						}
 						Submit
 					</button>
 				</fieldset>

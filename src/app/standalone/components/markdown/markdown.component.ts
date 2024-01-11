@@ -50,6 +50,7 @@ import { PlatformService } from '../../../core/services/platform.service';
 import { HelperService } from '../../../core/services/helper.service';
 import { AppearanceService } from '../../../core/services/appearance.service';
 import { FileService } from '../../../core/services/file.service';
+import { BadgeErrorComponent } from '../badge-error/badge-error.component';
 
 interface UrlForm {
 	title?: FormControl<string>;
@@ -68,7 +69,8 @@ interface UrlForm {
 		DropdownComponent,
 		WindowComponent,
 		InputTrimWhitespaceDirective,
-		InputOnlyPasteDirective
+		InputOnlyPasteDirective,
+		BadgeErrorComponent
 	],
 	selector: 'app-markdown, [appMarkdown]',
 	templateUrl: './markdown.component.html'

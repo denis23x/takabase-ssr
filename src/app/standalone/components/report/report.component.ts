@@ -21,6 +21,7 @@ import { SnackbarService } from '../../../core/services/snackbar.service';
 import { ReportCreateDto } from '../../../core/dto/report/report-create.dto';
 import { ReportService } from '../../../core/services/report.service';
 import { filter } from 'rxjs/operators';
+import { BadgeErrorComponent } from '../badge-error/badge-error.component';
 
 interface ReportForm {
 	name: FormControl<string>;
@@ -36,7 +37,8 @@ interface ReportForm {
 		TextareaAutosizeDirective,
 		DropdownComponent,
 		ReactiveFormsModule,
-		SvgIconComponent
+		SvgIconComponent,
+		BadgeErrorComponent
 	],
 	selector: 'app-report, [appReport]',
 	templateUrl: './report.component.html'

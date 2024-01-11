@@ -21,6 +21,7 @@ import { MetaService } from '../../core/services/meta.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { Subscription } from 'rxjs';
+import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -35,7 +36,8 @@ interface LoginForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
-		OauthComponent
+		OauthComponent,
+		BadgeErrorComponent
 	],
 	selector: 'app-authorization-login',
 	templateUrl: './login.component.html'

@@ -34,7 +34,9 @@
 					[disabled]="postDeleteIsSubmitted"
 					(click)="onSubmitPostDelete()"
 				>
-					<span class="loading loading-spinner" *ngIf="postDeleteIsSubmitted"></span>
+					@if (postDeleteIsSubmitted) {
+						<span class="loading loading-spinner"></span>
+					}
 					Delete
 				</button>
 			</div>

@@ -25,19 +25,9 @@
 				<fieldset class="form-control" *ngIf="categoryUpdateForm.get('name') as name">
 					<label class="label" for="categoryUpdateFormName">
 						<div class="indicator">
-							<span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="name.touched && !!name.errors && categoryUpdateForm.enabled"
-								[ngSwitch]="true"
-							>
-								<ng-container *ngSwitchCase="!!name.errors.required"> Required </ng-container>
-								<ng-container *ngSwitchCase="!!name.errors.minlength">
-									Min length {{ name.errors.minlength["requiredLength"] }} characters
-								</ng-container>
-								<ng-container *ngSwitchCase="!!name.errors.maxlength">
-									Max length {{ name.errors.maxlength["requiredLength"] }} characters
-								</ng-container>
-							</span>
+							@if (name.touched && !!name.errors && categoryUpdateForm.enabled) {
+								<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
+							}
 							<span class="label-text mr-2">Name</span>
 						</div>
 					</label>
@@ -72,15 +62,9 @@
 				<fieldset class="form-control" *ngIf="categoryUpdateForm.get('description') as description">
 					<label class="label" for="categoryUpdateFormDescription">
 						<div class="indicator">
-							<span
-								class="badge-error badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="!!description.value && !!description.errors && categoryUpdateForm.enabled"
-								[ngSwitch]="true"
-							>
-								<ng-container *ngSwitchCase="!!description.errors.maxlength">
-									Max length {{ description.errors.maxlength["requiredLength"] }} characters
-								</ng-container>
-							</span>
+							@if (!!description.value && !!description.errors && categoryUpdateForm.enabled) {
+								<div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
+							}
 							<span
 								class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 								*ngIf="!description.errors"

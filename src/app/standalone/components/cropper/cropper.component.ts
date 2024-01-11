@@ -45,6 +45,7 @@ import { IPAService } from '../../../core/services/ipa.service';
 import { FileService } from '../../../core/services/file.service';
 import { IPAOperation } from '../../../core/dto/ipa/ipa-operation.dto';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
+import { BadgeErrorComponent } from '../badge-error/badge-error.component';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -70,7 +71,8 @@ interface CropperImageForm {
 		WindowComponent,
 		PlatformDirective,
 		DropdownComponent,
-		SkeletonDirective
+		SkeletonDirective,
+		BadgeErrorComponent
 	],
 	selector: 'app-cropper, [appCropper]',
 	templateUrl: './cropper.component.html'

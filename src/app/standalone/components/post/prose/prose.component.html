@@ -1,189 +1,193 @@
 <!-- @format -->
 
-<ng-container *ngIf="!!post">
-	<section class="flex flex-col items-start justify-start gap-4 p-4">
-		<header class="flex w-full flex-col items-start justify-start gap-4">
-			<div class="flex items-center justify-between w-full gap-4">
-				<div class="flex items-center justify-start gap-4 overflow-hidden">
-					<div
-						class="flex rounded-btn relative overflow-hidden"
+<ng-container>
+	@if (post) {
+		<section class="flex flex-col items-start justify-start gap-4 p-4">
+			<header class="flex w-full flex-col items-start justify-start gap-4">
+				<div class="flex items-center justify-between w-full gap-4">
+					<div class="flex items-center justify-start gap-4 overflow-hidden">
+						<div
+							class="flex rounded-btn relative overflow-hidden"
+							appSkeleton
+							[appSkeletonToggle]="postSkeletonToggle"
+							[ngSwitch]="!!post.image"
+						>
+							<a
+								class="avatar"
+								*ngSwitchCase="false"
+								[target]="postPreview ? '_blank' : '_self'"
+								[attr.aria-label]="post.user.name"
+								[routerLink]="[post.user | userUrl]"
+							>
+								<figure
+									class="h-12 w-12 rounded-btn relative overflow-hidden"
+									appAvatar
+									[appAvatarUser]="post.user"
+								></figure>
+							</a>
+							<figure class="h-12 w-12 rounded-btn relative overflow-hidden" *ngSwitchCase="true">
+								<img
+									class="object-cover object-center bg-base-300"
+									loading="lazy"
+									[fill]="true"
+									[ngSrc]="post.image"
+									[alt]="post.name"
+								/>
+							</figure>
+						</div>
+						<div class="flex flex-1 flex-col gap-2 items-start overflow-hidden">
+							<h2
+								class="truncate text-xl leading-6 font-bold text-base-content max-w-full"
+								appSkeleton
+								[appSkeletonToggle]="postSkeletonToggle"
+							>
+								{{ post.name || "Name" }}
+							</h2>
+							<a
+								class="link text-sm leading-4 truncate max-w-full"
+								appSkeleton
+								[target]="postPreview ? '_blank' : '_self'"
+								[appSkeletonToggle]="postSkeletonToggle"
+								[routerLink]="[post.user | userUrl, 'category', post.category?.id]"
+								[attr.aria-label]="post.category?.name || 'Category'"
+							>
+								{{ post.category?.name || "Category" }}
+							</a>
+						</div>
+					</div>
+					@if (postPreview === false) {
+						<div
+							class="flex p-0"
+							appDropdown
+							appSkeleton
+							[appSkeletonToggle]="postSkeletonToggle || currentUserSkeletonToggle"
+							[appDropdownPlacement]="'bottom-end'"
+						>
+							<button
+								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
+								type="button"
+								title="Menu"
+								aria-label="Menu"
+								appSvgIcon
+								slot="target"
+								[appSvgIconIcon]="'three-dots-vertical'"
+								[appSvgIconSquare]="'1.5em'"
+							></button>
+							<ul class="menu menu-vertical menu-md" slot="content">
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										title="Copy link"
+										aria-label="Copy link"
+										(click)="onCopyUrl()"
+									>
+										Copy link
+									</button>
+								</li>
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										title="QR Code"
+										aria-label="QR Code"
+										(click)="appQrCodeComponent.onToggleQRCodeDialog(true)"
+									>
+										QR Code
+									</button>
+								</li>
+								<li class="flex w-full snap-start scroll-my-2 menu-title">
+									<hr class="my-0 border-base-content/20" />
+								</li>
+								<ng-container [ngSwitch]="currentUser?.id === post.user.id">
+									<ng-container *ngSwitchCase="true">
+										<li class="flex w-full snap-start scroll-my-2">
+											<a
+												class="rounded-btn block w-full truncate text-right"
+												title="Update"
+												aria-label="Update"
+												[routerLink]="['/update', post.id]"
+											>
+												Update
+											</a>
+										</li>
+										<li class="flex w-full snap-start scroll-my-2">
+											<button
+												class="rounded-btn block w-full truncate text-right"
+												type="button"
+												title="Delete"
+												aria-label="Delete"
+												(click)="appPostDeleteComponent.onTogglePostDeleteDialog(true)"
+											>
+												Delete
+											</button>
+										</li>
+									</ng-container>
+									<ng-container *ngSwitchCase="false">
+										<li class="flex w-full snap-start scroll-my-2">
+											<button
+												class="rounded-btn block w-full truncate text-right"
+												type="button"
+												title="Report post"
+												aria-label="Report post"
+												(click)="onToggleReportDialog(true)"
+											>
+												Report post
+											</button>
+										</li>
+									</ng-container>
+								</ng-container>
+							</ul>
+						</div>
+					}
+				</div>
+				<p class="alert" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+					<span class="w-full">{{ post.description || "Description" }}</span>
+				</p>
+				<div class="flex flex-wrap items-center justify-between gap-4 w-full">
+					<time
+						class="block text-sm text-base-content/50"
 						appSkeleton
 						[appSkeletonToggle]="postSkeletonToggle"
-						[ngSwitch]="!!post.image"
+						[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 					>
-						<a
-							class="avatar"
-							*ngSwitchCase="false"
-							[target]="postPreview ? '_blank' : '_self'"
-							[attr.aria-label]="post.user.name"
-							[routerLink]="[post.user | userUrl]"
-						>
-							<figure
-								class="h-12 w-12 rounded-btn relative overflow-hidden"
-								appAvatar
-								[appAvatarUser]="post.user"
-							></figure>
-						</a>
-						<figure class="h-12 w-12 rounded-btn relative overflow-hidden" *ngSwitchCase="true">
-							<img
-								class="object-cover object-center bg-base-300"
-								loading="lazy"
-								[fill]="true"
-								[ngSrc]="post.image"
-								[alt]="post.name"
-							/>
-						</figure>
-					</div>
-					<div class="flex flex-1 flex-col gap-2 items-start overflow-hidden">
-						<h2
-							class="truncate text-xl leading-6 font-bold text-base-content max-w-full"
-							appSkeleton
-							[appSkeletonToggle]="postSkeletonToggle"
-						>
-							{{ post.name || "Name" }}
-						</h2>
-						<a
-							class="link text-sm leading-4 truncate max-w-full"
-							appSkeleton
-							[target]="postPreview ? '_blank' : '_self'"
-							[appSkeletonToggle]="postSkeletonToggle"
-							[routerLink]="[post.user | userUrl, 'category', post.category?.id]"
-							[attr.aria-label]="post.category?.name || 'Category'"
-						>
-							{{ post.category?.name || "Category" }}
-						</a>
-					</div>
+						Published {{ post.createdAt | dayjs: "fromX" }}
+					</time>
+					@if (post?.markdown) {
+						<span class="block text-sm" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+							Time to read: {{ post?.markdown | markdown: "time-to-read" }} min.
+						</span>
+					}
 				</div>
-				<div
-					class="flex p-0"
-					appDropdown
-					appSkeleton
-					*ngIf="!postPreview"
-					[appSkeletonToggle]="postSkeletonToggle || currentUserSkeletonToggle"
-					[appDropdownPlacement]="'bottom-end'"
-				>
-					<button
-						class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
-						type="button"
-						title="Menu"
-						aria-label="Menu"
-						appSvgIcon
-						slot="target"
-						[appSvgIconIcon]="'three-dots-vertical'"
-						[appSvgIconSquare]="'1.5em'"
-					></button>
-					<ul class="menu menu-vertical menu-md" slot="content">
-						<li class="flex w-full snap-start scroll-my-2">
-							<button
-								class="rounded-btn block w-full truncate text-right"
-								title="Copy link"
-								aria-label="Copy link"
-								(click)="onCopyUrl()"
-							>
-								Copy link
-							</button>
-						</li>
-						<li class="flex w-full snap-start scroll-my-2">
-							<button
-								class="rounded-btn block w-full truncate text-right"
-								title="QR Code"
-								aria-label="QR Code"
-								(click)="appQrCodeComponent.onToggleQRCodeDialog(true)"
-							>
-								QR Code
-							</button>
-						</li>
-						<li class="flex w-full snap-start scroll-my-2 menu-title">
-							<hr class="my-0 border-base-content/20" />
-						</li>
-						<ng-container [ngSwitch]="currentUser?.id === post.user.id">
-							<ng-container *ngSwitchCase="true">
-								<li class="flex w-full snap-start scroll-my-2">
-									<a
-										class="rounded-btn block w-full truncate text-right"
-										title="Update"
-										aria-label="Update"
-										[routerLink]="['/update', post.id]"
-									>
-										Update
-									</a>
-								</li>
-								<li class="flex w-full snap-start scroll-my-2">
-									<button
-										class="rounded-btn block w-full truncate text-right"
-										type="button"
-										title="Delete"
-										aria-label="Delete"
-										(click)="appPostDeleteComponent.onTogglePostDeleteDialog(true)"
-									>
-										Delete
-									</button>
-								</li>
-							</ng-container>
-							<ng-container *ngSwitchCase="false">
-								<li class="flex w-full snap-start scroll-my-2">
-									<button
-										class="rounded-btn block w-full truncate text-right"
-										type="button"
-										title="Report post"
-										aria-label="Report post"
-										(click)="onToggleReportDialog(true)"
-									>
-										Report post
-									</button>
-								</li>
-							</ng-container>
-						</ng-container>
-					</ul>
-				</div>
-			</div>
-			<p class="alert" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-				<span class="w-full">{{ post.description || "Description" }}</span>
-			</p>
-			<div class="flex flex-wrap items-center justify-between gap-4 w-full">
-				<time
-					class="block text-sm text-base-content/50"
-					appSkeleton
-					[appSkeletonToggle]="postSkeletonToggle"
-					[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
-				>
-					Published {{ post.createdAt | dayjs: "fromX" }}
-				</time>
-				<!-- prettier-ignore -->
-				<span
-					class="block text-sm"
-					appSkeleton
-					*ngIf="post?.markdown"
-					[appSkeletonToggle]="postSkeletonToggle"
-				>
-					Time to read: {{ post?.markdown | markdown: "time-to-read" }} min.
-				</span>
-			</div>
-		</header>
-		<hr class="my-0 w-full border-base-content/20" />
-		<article
-			class="prose h-full w-full max-w-full"
-			appSkeleton
-			[appSkeletonToggle]="postSkeletonToggle"
-			[innerHTML]="post?.markdown || 'Markdown' | markdown | sanitizer: 'html'"
-		></article>
-		<!-- TODO: ads
-		<ng-container *ngIf="!postPreview && !postSkeletonToggle">
+			</header>
 			<hr class="my-0 w-full border-base-content/20" />
-			<footer class="flex w-full flex-col items-start justify-start gap-4">
-				<a class="block w-full" title="Placeholder" aria-label="Placeholder" [routerLink]="['.']">
-					<figure class="rounded-btn relative overflow-hidden">
-						<img
-							class="w-full"
-							src="https://placehold.co/600x64?text=Placeholder"
-							alt="Advertise"
-							loading="lazy"
-						/>
-					</figure>
-				</a>
-			</footer>
-		</ng-container>	-->
-	</section>
-	<div appPostDelete #appPostDeleteComponent [appPostDeletePost]="post"></div>
-	<div appQRCode #appQrCodeComponent [appQRCodeData]="postShareUrl" [appQRCodeOrigin]="false"></div>
+			<article
+				class="prose h-full w-full max-w-full"
+				appSkeleton
+				[appSkeletonToggle]="postSkeletonToggle"
+				[innerHTML]="post?.markdown || 'Markdown' | markdown | sanitizer: 'html'"
+			></article>
+			<!-- TODO: ads
+      <ng-container *ngIf="!postPreview && !postSkeletonToggle">
+        <hr class="my-0 w-full border-base-content/20" />
+        <footer class="flex w-full flex-col items-start justify-start gap-4">
+          <a class="block w-full" title="Placeholder" aria-label="Placeholder" [routerLink]="['.']">
+            <figure class="rounded-btn relative overflow-hidden">
+              <img
+                class="w-full"
+                src="https://placehold.co/600x64?text=Placeholder"
+                alt="Advertise"
+                loading="lazy"
+              />
+            </figure>
+          </a>
+        </footer>
+      </ng-container>	-->
+		</section>
+		<div appPostDelete #appPostDeleteComponent [appPostDeletePost]="post"></div>
+		<div
+			appQRCode
+			#appQrCodeComponent
+			[appQRCodeData]="postShareUrl"
+			[appQRCodeOrigin]="false"
+		></div>
+	}
 </ng-container>

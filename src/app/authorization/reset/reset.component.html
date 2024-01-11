@@ -19,55 +19,48 @@
 					></i>
 					<span class="block"> We will send you an email with further instructions. </span>
 				</p>
-				<fieldset class="form-control" *ngIf="resetForm.get('email') as email">
-					<label class="label" for="resetFormEmail">
-						<div class="indicator">
-							<!-- prettier-ignore -->
-							<span
-                class="badge badge-error indicator-item w-max translate-x-full translate-y-0 text-xs"
-                *ngIf="email.touched && !!email.errors && resetForm.enabled"
-                [ngSwitch]="true"
-              >
-                <ng-container *ngSwitchCase="!!email.errors.required">
-                  Required
-                </ng-container>
-                <ng-container *ngSwitchCase="!!email.errors.email">
-                  Email must be a real email address
-                </ng-container>
-              </span>
-							<span class="label-text mr-2">Email</span>
+				@if (resetForm.get("email"); as email) {
+					<fieldset class="form-control">
+						<label class="label" for="resetFormEmail">
+							<div class="indicator">
+								@if (email.touched && !!email.errors && resetForm.enabled) {
+									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="email"></div>
+								}
+								<span class="label-text mr-2">Email</span>
+							</div>
+						</label>
+						<div class="relative">
+							<input
+								class="input-bordered input input-md w-full !pr-12"
+								id="resetFormEmail"
+								type="email"
+								aria-label="Email"
+								inputmode="email"
+								autocomplete="username"
+								formControlName="email"
+								placeholder="Type your email"
+								appInputTrimWhitespace
+								[class.input-success]="email.value && email.valid"
+								[class.input-error]="email.touched && email.invalid"
+							/>
+							@if (email.value) {
+								<button
+									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+									type="button"
+									aria-label="Clear"
+									appSvgIcon
+									[class.btn-success]="email.valid"
+									[class.btn-error]="email.touched && email.invalid"
+									[class.btn-ghost]="email.untouched && email.invalid"
+									[disabled]="resetForm.disabled"
+									[appSvgIconIcon]="'x'"
+									[appSvgIconSquare]="'2em'"
+									(click)="email.setValue('')"
+								></button>
+							}
 						</div>
-					</label>
-					<div class="relative">
-						<input
-							class="input-bordered input input-md w-full !pr-12"
-							id="resetFormEmail"
-							type="email"
-							aria-label="Email"
-							inputmode="email"
-							autocomplete="username"
-							formControlName="email"
-							placeholder="Type your email"
-							appInputTrimWhitespace
-							[class.input-success]="email.value && email.valid"
-							[class.input-error]="email.touched && email.invalid"
-						/>
-						<button
-							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-							type="button"
-							aria-label="Clear"
-							appSvgIcon
-							*ngIf="!!email.value.length"
-							[class.btn-success]="email.valid"
-							[class.btn-error]="email.touched && email.invalid"
-							[class.btn-ghost]="email.untouched && email.invalid"
-							[disabled]="resetForm.disabled"
-							[appSvgIconIcon]="'x'"
-							[appSvgIconSquare]="'2em'"
-							(click)="email.setValue('')"
-						></button>
-					</div>
-				</fieldset>
+					</fieldset>
+				}
 				<fieldset class="form-control">
 					<button
 						class="btn-success btn btn-md w-full"
@@ -75,7 +68,9 @@
 						aria-label="Submit"
 						[disabled]="resetForm.invalid || resetForm.disabled"
 					>
-						<span class="loading loading-spinner" *ngIf="resetForm.disabled"></span>
+						@if (resetForm.disabled) {
+							<span class="loading loading-spinner"></span>
+						}
 						Submit
 					</button>
 				</fieldset>

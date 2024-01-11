@@ -29,6 +29,7 @@ import { CategoryService } from '../../../../core/services/category.service';
 import { CategoryUpdateDto } from '../../../../core/dto/category/category-update.dto';
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
+import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 
 interface CategoryUpdateForm {
 	name: FormControl<string>;
@@ -43,7 +44,8 @@ interface CategoryUpdateForm {
 		WindowComponent,
 		InputTrimWhitespaceDirective,
 		TextareaAutosizeDirective,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		BadgeErrorComponent
 	],
 	selector: 'app-category-update, [appCategoryUpdate]',
 	templateUrl: './update.component.html'

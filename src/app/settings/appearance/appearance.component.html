@@ -8,181 +8,21 @@
 			[formGroup]="appearanceForm"
 		>
 			<div class="flex w-full flex-col items-start gap-4 sm:flex-row sm:justify-between">
-				<fieldset class="form-control w-full" *ngIf="appearanceForm.get('theme') as theme">
-					<label class="label" for="appearanceFormTheme">
-						<span class="label-text">Theme</span>
-						<a
-							class="label-text-alt link"
-							href="https://daisyui.com/docs/themes/"
-							rel="noopener noreferrer"
-							target="_blank"
-						>
-							daisyui.com
-						</a>
-					</label>
-					<div
-						class="block"
-						appDropdown
-						appSkeleton
-						[appSkeletonToggle]="appearanceFormSkeletonToggle"
-						[appDropdownFit]="true"
-						[class.cursor-not-allowed]="appearanceForm.disabled"
-					>
-						<input
-							class="input-bordered input input-md w-full cursor-pointer truncate"
-							id="appearanceFormTheme"
-							type="text"
-							aria-label="Theme"
-							placeholder="Select theme"
-							formControlName="theme"
-							slot="target"
-							readonly
-							[class.input-success]="theme.touched && theme.value"
-							[class.input-error]="theme.touched && theme.invalid"
-						/>
-						<div class="menu menu-vertical menu-md p-0" slot="content">
-							<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
-								@for (appearanceTheme of appearanceThemeList; track $index) {
-									<li class="flex w-full snap-start scroll-my-2">
-										<button
-											class="rounded-btn block w-full truncate text-left"
-											type="button"
-											appScrollPreset
-											[appScrollActive]="theme.value === appearanceTheme"
-											[ngClass]="{ active: theme.value === appearanceTheme }"
-											[attr.aria-label]="appearanceTheme"
-											(click)="theme.setValue(appearanceTheme)"
-										>
-											{{ appearanceTheme }}
-										</button>
-									</li>
-								}
-							</ul>
-						</div>
-					</div>
-				</fieldset>
-				<fieldset
-					class="form-control w-full"
-					*ngIf="appearanceForm.get('themeBackground') as themeBackground"
-				>
-					<label class="label" for="appearanceFormBackground">
-						<span class="label-text">Background</span>
-						<a
-							class="label-text-alt link"
-							href="https://www.svgbackgrounds.com/set/free-svg-backgrounds-and-patterns/"
-							rel="noopener noreferrer"
-							target="_blank"
-						>
-							svgbackgrounds.com
-						</a>
-					</label>
-					<div
-						class="block"
-						appDropdown
-						appSkeleton
-						[appSkeletonToggle]="appearanceFormSkeletonToggle"
-						[appDropdownFit]="true"
-						[class.cursor-not-allowed]="appearanceForm.disabled"
-					>
-						<!-- prettier-ignore -->
-						<input
-              class="input input-bordered input-md w-full cursor-pointer truncate"
-              id="appearanceFormBackground"
-              type="text"
-              aria-label="Background"
-              placeholder="Select Background"
-              formControlName="themeBackground"
-              slot="target"
-              readonly
-              [class.input-success]="themeBackground.touched && themeBackground.value"
-              [class.input-error]="themeBackground.touched && themeBackground.invalid"
-            />
-						<div class="menu menu-vertical menu-md p-0" slot="content">
-							<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
-								@for (appearanceThemeBackground of appearanceThemeBackgroundList; track $index) {
-									<li class="flex w-full snap-start scroll-my-2">
-										<button
-											class="rounded-btn block w-full truncate text-left"
-											type="button"
-											appScrollPreset
-											[appScrollActive]="themeBackground.value === appearanceThemeBackground"
-											[ngClass]="{ active: themeBackground.value === appearanceThemeBackground }"
-											[attr.aria-label]="appearanceThemeBackground"
-											(click)="themeBackground.setValue(appearanceThemeBackground)"
-										>
-											{{ appearanceThemeBackground }}
-										</button>
-									</li>
-								}
-							</ul>
-						</div>
-					</div>
-				</fieldset>
-			</div>
-			<div class="flex w-full flex-col items-start gap-4 sm:flex-row sm:justify-between">
-				<fieldset class="form-control w-full" *ngIf="appearanceForm.get('language') as language">
-					<label class="label" for="appearanceFormLanguage">
-						<span class="label-text">Language</span>
-					</label>
-					<div
-						class="block"
-						appDropdown
-						appSkeleton
-						[appSkeletonToggle]="appearanceFormSkeletonToggle"
-						[appDropdownFit]="true"
-						[class.cursor-not-allowed]="appearanceForm.disabled"
-					>
-						<input
-							class="input-bordered input input-md w-full cursor-pointer truncate"
-							id="appearanceFormLanguage"
-							type="text"
-							aria-label="Language"
-							placeholder="Select language"
-							formControlName="language"
-							slot="target"
-							readonly
-							[class.input-success]="language.touched && language.value"
-							[class.input-error]="language.touched && language.invalid"
-						/>
-						<div class="menu menu-vertical menu-md p-0" slot="content">
-							<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
-								@for (appearanceLanguage of appearanceLanguageList; track $index) {
-									<li class="flex w-full snap-start scroll-my-2">
-										<button
-											class="rounded-btn block w-full truncate text-left"
-											type="button"
-											appScrollPreset
-											[appScrollActive]="language.value === appearanceLanguage"
-											[ngClass]="{ active: language.value === appearanceLanguage }"
-											[attr.aria-label]="appearanceLanguage"
-											(click)="language.setValue(appearanceLanguage)"
-										>
-											{{ appearanceLanguage }}
-										</button>
-									</li>
-								}
-							</ul>
-						</div>
-					</div>
-				</fieldset>
-				<fieldset
-					class="form-control w-full"
-					*ngIf="appearanceForm.get('themePrism') as themePrism"
-				>
-					<label class="label" for="appearanceFormPrism">
-						<span class="label-text">Prism</span>
-						<a
-							class="label-text-alt link"
-							href="https://prismjs.com/"
-							rel="noopener noreferrer"
-							target="_blank"
-						>
-							prismjs.com
-						</a>
-					</label>
-					<div class="flex items-center justify-between gap-4">
+				@if (appearanceForm.get("theme"); as theme) {
+					<fieldset class="form-control w-full">
+						<label class="label" for="appearanceFormTheme">
+							<span class="label-text">Theme</span>
+							<a
+								class="label-text-alt link"
+								href="https://daisyui.com/docs/themes/"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								daisyui.com
+							</a>
+						</label>
 						<div
-							class="relative w-full"
+							class="block"
 							appDropdown
 							appSkeleton
 							[appSkeletonToggle]="appearanceFormSkeletonToggle"
@@ -191,220 +31,374 @@
 						>
 							<input
 								class="input-bordered input input-md w-full cursor-pointer truncate"
-								id="appearanceFormPrism"
+								id="appearanceFormTheme"
 								type="text"
-								aria-label="Prism"
-								placeholder="Select prism"
-								formControlName="themePrism"
+								aria-label="Theme"
+								placeholder="Select theme"
+								formControlName="theme"
 								slot="target"
 								readonly
-								[class.input-success]="themePrism.touched && themePrism.value"
-								[class.input-error]="themePrism.touched && themePrism.invalid"
+								[class.input-success]="theme.touched && theme.value"
+								[class.input-error]="theme.touched && theme.invalid"
 							/>
 							<div class="menu menu-vertical menu-md p-0" slot="content">
 								<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
-									@for (appearanceThemePrism of appearanceThemePrismList; track $index) {
+									@for (appearanceTheme of appearanceThemeList; track $index) {
 										<li class="flex w-full snap-start scroll-my-2">
 											<button
 												class="rounded-btn block w-full truncate text-left"
 												type="button"
 												appScrollPreset
-												[appScrollActive]="themePrism.value === appearanceThemePrism"
-												[ngClass]="{ active: themePrism.value === appearanceThemePrism }"
-												[attr.aria-label]="appearanceThemePrism"
-												(click)="themePrism.setValue(appearanceThemePrism)"
+												[appScrollActive]="theme.value === appearanceTheme"
+												[ngClass]="{ active: theme.value === appearanceTheme }"
+												[attr.aria-label]="appearanceTheme"
+												(click)="theme.setValue(appearanceTheme)"
 											>
-												{{ appearanceThemePrism }}
+												{{ appearanceTheme }}
 											</button>
 										</li>
 									}
 								</ul>
 							</div>
 						</div>
-						<!-- prettier-ignore -->
-						<button
-							class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
-							type="button"
-							title="Preview"
-							aria-label="Preview"
-							appSvgIcon
+					</fieldset>
+				}
+				@if (appearanceForm.get("themeBackground"); as themeBackground) {
+					<fieldset class="form-control w-full">
+						<label class="label" for="appearanceFormBackground">
+							<span class="label-text">Background</span>
+							<a
+								class="label-text-alt link"
+								href="https://www.svgbackgrounds.com/set/free-svg-backgrounds-and-patterns/"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								svgbackgrounds.com
+							</a>
+						</label>
+						<div
+							class="block"
+							appDropdown
 							appSkeleton
-							[appSkeletonToggle]="appearanceFormSkeletonToggle || appearanceThemePrismMarkdownSkeletonToggle"
-							[appSkeletonClassListElementRef]="['border-0']"
-							[disabled]="appearanceForm.disabled"
-							[appSvgIconIcon]="'code-slash'"
-							[appSvgIconSquare]="'1.75em'"
-							(click)="appearanceThemePrismPreviewToggle = !appearanceThemePrismPreviewToggle"
-						></button>
-					</div>
-				</fieldset>
+							[appSkeletonToggle]="appearanceFormSkeletonToggle"
+							[appDropdownFit]="true"
+							[class.cursor-not-allowed]="appearanceForm.disabled"
+						>
+							<input
+								class="input input-bordered input-md w-full cursor-pointer truncate"
+								id="appearanceFormBackground"
+								type="text"
+								aria-label="Background"
+								placeholder="Select Background"
+								formControlName="themeBackground"
+								slot="target"
+								readonly
+								[class.input-success]="themeBackground.touched && themeBackground.value"
+								[class.input-error]="themeBackground.touched && themeBackground.invalid"
+							/>
+							<div class="menu menu-vertical menu-md p-0" slot="content">
+								<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
+									@for (appearanceThemeBackground of appearanceThemeBackgroundList; track $index) {
+										<li class="flex w-full snap-start scroll-my-2">
+											<button
+												class="rounded-btn block w-full truncate text-left"
+												type="button"
+												appScrollPreset
+												[appScrollActive]="themeBackground.value === appearanceThemeBackground"
+												[ngClass]="{ active: themeBackground.value === appearanceThemeBackground }"
+												[attr.aria-label]="appearanceThemeBackground"
+												(click)="themeBackground.setValue(appearanceThemeBackground)"
+											>
+												{{ appearanceThemeBackground }}
+											</button>
+										</li>
+									}
+								</ul>
+							</div>
+						</div>
+					</fieldset>
+				}
 			</div>
-			<div class="flex w-full flex-col items-start gap-4" *ngIf="appearanceThemePrismPreviewToggle">
-				<article
-					class="prose max-w-none overflow-auto w-full"
-					[innerHTML]="appearanceThemePrismMarkdown | markdown | sanitizer: 'html'"
-				></article>
-			</div>
-			<div class="flex w-full flex-col">
-				<fieldset
-					class="form-control"
-					*ngIf="appearanceForm.get('pageScrollToTop') as pageScrollToTop"
-				>
-					<label class="label gap-4" for="appearanceFormPageScrollToTop">
-						<span class="label-text"> Enable scroll to top </span>
+			<div class="flex w-full flex-col items-start gap-4 sm:flex-row sm:justify-between">
+				@if (appearanceForm.get("language"); as language) {
+					<fieldset class="form-control w-full">
+						<label class="label" for="appearanceFormLanguage">
+							<span class="label-text">Language</span>
+						</label>
 						<div
-							class="flex"
+							class="block"
+							appDropdown
 							appSkeleton
 							[appSkeletonToggle]="appearanceFormSkeletonToggle"
-							[appSkeletonClassList]="['rounded-full']"
+							[appDropdownFit]="true"
+							[class.cursor-not-allowed]="appearanceForm.disabled"
 						>
-							<!-- prettier-ignore -->
 							<input
-                class="toggle toggle-md"
-                id="appearanceFormPageScrollToTop"
-                type="checkbox"
-                aria-label="Enable Scroll to top"
-                formControlName="pageScrollToTop"
-                [class.toggle-success]="pageScrollToTop.touched && pageScrollToTop.value"
-              />
+								class="input-bordered input input-md w-full cursor-pointer truncate"
+								id="appearanceFormLanguage"
+								type="text"
+								aria-label="Language"
+								placeholder="Select language"
+								formControlName="language"
+								slot="target"
+								readonly
+								[class.input-success]="language.touched && language.value"
+								[class.input-error]="language.touched && language.invalid"
+							/>
+							<div class="menu menu-vertical menu-md p-0" slot="content">
+								<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
+									@for (appearanceLanguage of appearanceLanguageList; track $index) {
+										<li class="flex w-full snap-start scroll-my-2">
+											<button
+												class="rounded-btn block w-full truncate text-left"
+												type="button"
+												appScrollPreset
+												[appScrollActive]="language.value === appearanceLanguage"
+												[ngClass]="{ active: language.value === appearanceLanguage }"
+												[attr.aria-label]="appearanceLanguage"
+												(click)="language.setValue(appearanceLanguage)"
+											>
+												{{ appearanceLanguage }}
+											</button>
+										</li>
+									}
+								</ul>
+							</div>
 						</div>
-					</label>
-				</fieldset>
-				<hr class="my-2 w-full border-base-content/20" />
-				<fieldset
-					class="form-control"
-					*ngIf="appearanceForm.get('pageScrollInfinite') as pageScrollInfinite"
-				>
-					<label class="label gap-4" for="appearanceFormPageScrollInfinite">
-						<span class="label-text"> Enable infinite scroll </span>
-						<div
-							class="flex"
-							appSkeleton
-							[appSkeletonToggle]="appearanceFormSkeletonToggle"
-							[appSkeletonClassList]="['rounded-full']"
-						>
-							<!-- prettier-ignore -->
-							<input
-                class="toggle toggle-md"
-                id="appearanceFormPageScrollInfinite"
-                type="checkbox"
-                aria-label="Enable Infinite scroll"
-                formControlName="pageScrollInfinite"
-                [class.toggle-success]="pageScrollInfinite.touched && pageScrollInfinite.value"
-              />
-						</div>
-					</label>
-				</fieldset>
-				<hr class="my-2 w-full border-base-content/20" />
-				<fieldset
-					class="form-control"
-					*ngIf="appearanceForm.get('pageRedirectHome') as pageRedirectHome"
-				>
-					<label class="label gap-4" for="appearanceFormPageRedirectHome">
-						<span class="label-text"> Enable redirect from home page </span>
-						<div
-							class="flex"
-							appSkeleton
-							[appSkeletonToggle]="appearanceFormSkeletonToggle"
-							[appSkeletonClassList]="['rounded-full']"
-						>
-							<!-- prettier-ignore -->
-							<input
-                class="toggle toggle-md"
-                id="appearanceFormPageRedirectHome"
-                type="checkbox"
-                aria-label="Enable Redirect home page"
-                formControlName="pageRedirectHome"
-                [class.toggle-success]="pageRedirectHome.touched && pageRedirectHome.value"
-              />
-						</div>
-					</label>
-				</fieldset>
-				<hr class="my-2 w-full border-base-content/20" />
-				<fieldset
-					class="form-control"
-					*ngIf="appearanceForm.get('markdownMonospace') as markdownMonospace"
-				>
-					<label class="label gap-4" for="appearanceFormMarkdownMonospace">
-						<span class="label-text"> Enable a monospace font when editing markdown </span>
-						<div
-							class="flex"
-							appSkeleton
-							[appSkeletonToggle]="appearanceFormSkeletonToggle"
-							[appSkeletonClassList]="['rounded-full']"
-						>
-							<!-- prettier-ignore -->
-							<input
-                class="toggle toggle-md"
-                id="appearanceFormMarkdownMonospace"
-                type="checkbox"
-                aria-label="Enable Markdown monospace"
-                formControlName="markdownMonospace"
-                [class.toggle-success]="markdownMonospace.touched && markdownMonospace.value"
-              />
-						</div>
-					</label>
-				</fieldset>
-				<hr class="my-2 w-full border-base-content/20" />
-				<fieldset
-					class="form-control"
-					*ngIf="appearanceForm.get('dropdownBackdrop') as dropdownBackdrop"
-				>
-					<label class="label gap-4" for="appearanceFormDropdownBackdrop">
-						<span class="label-text"> Enable a dropdown backdrop </span>
-						<div
-							class="flex"
-							appSkeleton
-							[appSkeletonToggle]="appearanceFormSkeletonToggle"
-							[appSkeletonClassList]="['rounded-full']"
-						>
-							<!-- prettier-ignore -->
-							<input
-                class="toggle toggle-md"
-                id="appearanceFormDropdownBackdrop"
-                type="checkbox"
-                aria-label="Enable a dropdown backdrop"
-                formControlName="dropdownBackdrop"
-                [class.toggle-success]="dropdownBackdrop.touched && dropdownBackdrop.value"
-              />
-						</div>
-					</label>
-				</fieldset>
-				<hr class="my-2 w-full border-base-content/20" />
-				<fieldset
-					class="form-control flex-row items-center gap-4 justify-between"
-					*ngIf="appearanceForm.get('windowButtonPosition') as windowButtonPosition"
-				>
-					<div class="label">
-						<span class="label-text">
-							Position of caption buttons (close, minimize, maximize)
-						</span>
-					</div>
-					<div class="flex" appSkeleton [appSkeletonToggle]="appearanceFormSkeletonToggle">
-						<ul class="join join-horizontal">
-							@for (appearanceButtons of appearanceButtonsList; track $index) {
-								<li class="block">
-									<!-- prettier-ignore -->
-									<label
-										class="btn btn-success btn-sm join-item"
-										[class.btn-outline]="windowButtonPosition.value !== appearanceButtons && appearanceForm.enabled"
-										[class.btn-inline]="windowButtonPosition.value === appearanceButtons && appearanceForm.disabled"
-										[class.btn-disabled]="appearanceForm.disabled"
+					</fieldset>
+				}
+				@if (appearanceForm.get("themePrism"); as themePrism) {
+					<fieldset class="form-control w-full">
+						<label class="label" for="appearanceFormPrism">
+							<span class="label-text">Prism</span>
+							<a
+								class="label-text-alt link"
+								href="https://prismjs.com/"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								prismjs.com
+							</a>
+						</label>
+						<div class="flex items-center justify-between gap-4">
+							<div
+								class="relative w-full"
+								appDropdown
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appDropdownFit]="true"
+								[class.cursor-not-allowed]="appearanceForm.disabled"
+							>
+								<input
+									class="input-bordered input input-md w-full cursor-pointer truncate"
+									id="appearanceFormPrism"
+									type="text"
+									aria-label="Prism"
+									placeholder="Select prism"
+									formControlName="themePrism"
+									slot="target"
+									readonly
+									[class.input-success]="themePrism.touched && themePrism.value"
+									[class.input-error]="themePrism.touched && themePrism.invalid"
+								/>
+								<div class="menu menu-vertical menu-md p-0" slot="content">
+									<ul
+										class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2"
 									>
-										<input
-											class="hidden"
-											type="radio"
-											aria-label="Window button position"
-											formControlName="windowButtonPosition"
-											[value]="appearanceButtons"
-										/>
-										<span class="block uppercase">{{ appearanceButtons }}</span>
-									</label>
-								</li>
-							}
-						</ul>
-					</div>
-				</fieldset>
+										@for (appearanceThemePrism of appearanceThemePrismList; track $index) {
+											<li class="flex w-full snap-start scroll-my-2">
+												<button
+													class="rounded-btn block w-full truncate text-left"
+													type="button"
+													appScrollPreset
+													[appScrollActive]="themePrism.value === appearanceThemePrism"
+													[ngClass]="{ active: themePrism.value === appearanceThemePrism }"
+													[attr.aria-label]="appearanceThemePrism"
+													(click)="themePrism.setValue(appearanceThemePrism)"
+												>
+													{{ appearanceThemePrism }}
+												</button>
+											</li>
+										}
+									</ul>
+								</div>
+							</div>
+							<!-- prettier-ignore -->
+							<button
+                class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
+                type="button"
+                title="Preview"
+                aria-label="Preview"
+                appSvgIcon
+                appSkeleton
+                [appSkeletonToggle]="appearanceFormSkeletonToggle || appearanceThemePrismMarkdownSkeletonToggle"
+                [appSkeletonClassListElementRef]="['border-0']"
+                [disabled]="appearanceForm.disabled"
+                [appSvgIconIcon]="'code-slash'"
+                [appSvgIconSquare]="'1.75em'"
+                (click)="appearanceThemePrismPreviewToggle = !appearanceThemePrismPreviewToggle"
+              ></button>
+						</div>
+					</fieldset>
+				}
+			</div>
+			@if (appearanceThemePrismPreviewToggle) {
+				<div class="flex w-full flex-col items-start gap-4">
+					<article
+						class="prose max-w-none overflow-auto w-full"
+						[innerHTML]="appearanceThemePrismMarkdown | markdown | sanitizer: 'html'"
+					></article>
+				</div>
+			}
+			<div class="flex w-full flex-col">
+				@if (appearanceForm.get("pageScrollToTop"); as pageScrollToTop) {
+					<fieldset class="form-control">
+						<label class="label gap-4" for="appearanceFormPageScrollToTop">
+							<span class="label-text"> Enable scroll to top </span>
+							<div
+								class="flex"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassList]="['rounded-full']"
+							>
+								<input
+									class="toggle toggle-md"
+									id="appearanceFormPageScrollToTop"
+									type="checkbox"
+									aria-label="Enable Scroll to top"
+									formControlName="pageScrollToTop"
+									[class.toggle-success]="pageScrollToTop.touched && pageScrollToTop.value"
+								/>
+							</div>
+						</label>
+					</fieldset>
+				}
+				<hr class="my-2 w-full border-base-content/20" />
+				@if (appearanceForm.get("pageScrollInfinite"); as pageScrollInfinite) {
+					<fieldset class="form-control">
+						<label class="label gap-4" for="appearanceFormPageScrollInfinite">
+							<span class="label-text"> Enable infinite scroll </span>
+							<div
+								class="flex"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassList]="['rounded-full']"
+							>
+								<input
+									class="toggle toggle-md"
+									id="appearanceFormPageScrollInfinite"
+									type="checkbox"
+									aria-label="Enable Infinite scroll"
+									formControlName="pageScrollInfinite"
+									[class.toggle-success]="pageScrollInfinite.touched && pageScrollInfinite.value"
+								/>
+							</div>
+						</label>
+					</fieldset>
+				}
+				<hr class="my-2 w-full border-base-content/20" />
+				@if (appearanceForm.get("pageRedirectHome"); as pageRedirectHome) {
+					<fieldset class="form-control">
+						<label class="label gap-4" for="appearanceFormPageRedirectHome">
+							<span class="label-text"> Enable redirect from home page </span>
+							<div
+								class="flex"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassList]="['rounded-full']"
+							>
+								<input
+									class="toggle toggle-md"
+									id="appearanceFormPageRedirectHome"
+									type="checkbox"
+									aria-label="Enable Redirect home page"
+									formControlName="pageRedirectHome"
+									[class.toggle-success]="pageRedirectHome.touched && pageRedirectHome.value"
+								/>
+							</div>
+						</label>
+					</fieldset>
+				}
+				<hr class="my-2 w-full border-base-content/20" />
+				@if (appearanceForm.get("markdownMonospace"); as markdownMonospace) {
+					<fieldset class="form-control">
+						<label class="label gap-4" for="appearanceFormMarkdownMonospace">
+							<span class="label-text"> Enable a monospace font when editing markdown </span>
+							<div
+								class="flex"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassList]="['rounded-full']"
+							>
+								<input
+									class="toggle toggle-md"
+									id="appearanceFormMarkdownMonospace"
+									type="checkbox"
+									aria-label="Enable Markdown monospace"
+									formControlName="markdownMonospace"
+									[class.toggle-success]="markdownMonospace.touched && markdownMonospace.value"
+								/>
+							</div>
+						</label>
+					</fieldset>
+				}
+				<hr class="my-2 w-full border-base-content/20" />
+				@if (appearanceForm.get("dropdownBackdrop"); as dropdownBackdrop) {
+					<fieldset class="form-control">
+						<label class="label gap-4" for="appearanceFormDropdownBackdrop">
+							<span class="label-text"> Enable a dropdown backdrop </span>
+							<div
+								class="flex"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassList]="['rounded-full']"
+							>
+								<input
+									class="toggle toggle-md"
+									id="appearanceFormDropdownBackdrop"
+									type="checkbox"
+									aria-label="Enable a dropdown backdrop"
+									formControlName="dropdownBackdrop"
+									[class.toggle-success]="dropdownBackdrop.touched && dropdownBackdrop.value"
+								/>
+							</div>
+						</label>
+					</fieldset>
+				}
+				<hr class="my-2 w-full border-base-content/20" />
+				@if (appearanceForm.get("windowButtonPosition"); as windowButtonPosition) {
+					<fieldset class="form-control flex-row items-center gap-4 justify-between">
+						<div class="label">
+							<span class="label-text">
+								Position of caption buttons (close, minimize, maximize)
+							</span>
+						</div>
+						<div class="flex" appSkeleton [appSkeletonToggle]="appearanceFormSkeletonToggle">
+							<ul class="join join-horizontal">
+								@for (appearanceButtons of appearanceButtonsList; track $index) {
+									<li class="block">
+										<!-- prettier-ignore -->
+										<label
+                      class="btn btn-success btn-sm join-item"
+                      [class.btn-outline]="windowButtonPosition.value !== appearanceButtons && appearanceForm.enabled"
+                      [class.btn-inline]="windowButtonPosition.value === appearanceButtons && appearanceForm.disabled"
+                      [class.btn-disabled]="appearanceForm.disabled"
+                    >
+                      <input
+                        class="hidden"
+                        type="radio"
+                        aria-label="Window button position"
+                        formControlName="windowButtonPosition"
+                        [value]="appearanceButtons"
+                      />
+                      <span class="block uppercase">{{ appearanceButtons }}</span>
+                    </label>
+									</li>
+								}
+							</ul>
+						</div>
+					</fieldset>
+				}
 			</div>
 		</form>
 	</div>

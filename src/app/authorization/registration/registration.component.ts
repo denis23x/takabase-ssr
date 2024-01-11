@@ -22,6 +22,7 @@ import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { RegistrationDto } from '../../core/dto/auth/registration.dto';
 import { Subscription } from 'rxjs';
+import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -38,7 +39,8 @@ interface RegistrationForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
-		OauthComponent
+		OauthComponent,
+		BadgeErrorComponent
 	],
 	selector: 'app-authorization-registration',
 	templateUrl: './registration.component.html'
