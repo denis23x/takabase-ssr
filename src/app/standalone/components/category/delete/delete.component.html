@@ -31,97 +31,102 @@
 					></i>
 					<span class="block"> This action cannot be undone </span>
 				</p>
-				<fieldset class="form-control" *ngIf="categoryDeleteForm.get('name') as name">
-					<label class="label" for="categoryDeleteFormName">
-						<div class="indicator">
-							@if (name.touched && !!name.errors && categoryDeleteForm.enabled) {
-								<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
-							}
-							<!-- prettier-ignore -->
-							<span class="label-text mr-2">
-								Please type <span class="font-bold">{{ category?.name }}</span> to confirm
-							</span>
-						</div>
-					</label>
-					<div class="relative">
-						<input
-							class="input-bordered input input-md w-full !pr-12"
-							id="categoryDeleteFormName"
-							type="text"
-							aria-label="Name"
-							formControlName="name"
-							placeholder="Type category name"
-							appInputTrimWhitespace
-							[class.input-success]="name.dirty && name.valid"
-							[class.input-error]="name.touched && name.invalid"
-						/>
-						<button
-							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-							type="button"
-							aria-label="Clear"
-							appSvgIcon
-							*ngIf="!!name.value.length"
-							[class.btn-success]="name.dirty && name.value"
-							[class.btn-error]="name.touched && name.invalid"
-							[class.btn-ghost]="name.untouched && name.dirty && name.invalid"
-							[disabled]="categoryDeleteForm.disabled"
-							[appSvgIconIcon]="'x'"
-							[appSvgIconSquare]="'2em'"
-							(click)="name.setValue('')"
-						></button>
-					</div>
-				</fieldset>
-				<ng-container *ngIf="postList.length && categoryList.length > 1">
-					<fieldset
-						class="form-control grid"
-						*ngIf="categoryDeleteForm.get('categoryId') as categoryId"
-					>
-						<label class="label">
+				@if (categoryDeleteForm.get("name"); as name) {
+					<fieldset class="form-control">
+						<label class="label" for="categoryDeleteFormName">
 							<div class="indicator">
-								<span class="label-text mr-2"> Move posts to category </span>
-								<span
-									class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-									*ngIf="!categoryId.errors"
-									[class.badge-ghost]="!categoryId.value"
-									[class.badge-success]="!!categoryId.value && categoryDeleteForm.enabled"
-									[class.opacity-25]="categoryDeleteForm.disabled"
-								>
-									Optional
-								</span>
+								@if (name.touched && !!name.errors && categoryDeleteForm.enabled) {
+									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
+								}
+								<!-- prettier-ignore -->
+								<span class="label-text mr-2">
+                  Please type <span class="font-bold">{{ category?.name }}</span> to confirm
+                </span>
 							</div>
 						</label>
-						<div
-							class="menu menu-vertical !rounded-btn !shadow-none menu-md mt-2 p-0"
-							[class.!border-success]="categoryId.value && categoryDeleteForm.enabled"
-						>
-							<ul
-								class="flex max-h-58 flex-col flex-nowrap overflow-y-auto w-full snap-mandatory snap-y p-2"
-								*ngIf="category as categoryActive"
-								[class.cursor-not-allowed]="categoryDeleteForm.disabled"
-							>
-								@for (category of categoryList; track category.id) {
-									<li
-										class="flex w-full snap-start scroll-my-2"
-										*ngIf="category.id !== categoryActive.id"
-										[ngClass]="{ 'disabled pointer-events-none': categoryDeleteForm.disabled }"
-									>
-										<!-- prettier-ignore -->
-										<button
-											*ngIf="{ value: categoryId.value === category.id } as isActive"
-											class="rounded-btn block w-full truncate text-left"
-											type="button"
-											[ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
-											[attr.aria-label]="category.name"
-											(click)="categoryId.patchValue(category.id)"
-										>
-											{{ category.name }}
-										</button>
-									</li>
-								}
-							</ul>
+						<div class="relative">
+							<input
+								class="input-bordered input input-md w-full !pr-12"
+								id="categoryDeleteFormName"
+								type="text"
+								aria-label="Name"
+								formControlName="name"
+								placeholder="Type category name"
+								appInputTrimWhitespace
+								[class.input-success]="name.dirty && name.valid"
+								[class.input-error]="name.touched && name.invalid"
+							/>
+							@if (name.value) {
+								<button
+									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+									type="button"
+									aria-label="Clear"
+									appSvgIcon
+									[class.btn-success]="name.dirty && name.value"
+									[class.btn-error]="name.touched && name.invalid"
+									[class.btn-ghost]="name.untouched && name.dirty && name.invalid"
+									[disabled]="categoryDeleteForm.disabled"
+									[appSvgIconIcon]="'x'"
+									[appSvgIconSquare]="'2em'"
+									(click)="name.setValue('')"
+								></button>
+							}
 						</div>
 					</fieldset>
-				</ng-container>
+				}
+				@if (postList.length && categoryList.length > 1) {
+					@if (categoryDeleteForm.get("categoryId"); as categoryId) {
+						<fieldset class="form-control grid">
+							<label class="label">
+								<div class="indicator">
+									<span class="label-text mr-2"> Move posts to category </span>
+									@if (!categoryId.errors) {
+										<span
+											class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+											[class.badge-ghost]="!categoryId.value"
+											[class.badge-success]="!!categoryId.value && categoryDeleteForm.enabled"
+											[class.opacity-25]="categoryDeleteForm.disabled"
+										>
+											Optional
+										</span>
+									}
+								</div>
+							</label>
+							<div
+								class="menu menu-vertical !rounded-btn !shadow-none menu-md mt-2 p-0"
+								[class.!border-success]="categoryId.value && categoryDeleteForm.enabled"
+							>
+								@if (category; as categoryActive) {
+									<ul
+										class="flex max-h-58 flex-col flex-nowrap overflow-y-auto w-full snap-mandatory snap-y p-2"
+										[class.cursor-not-allowed]="categoryDeleteForm.disabled"
+									>
+										@for (category of categoryList; track category.id) {
+											@if (category.id !== categoryActive.id) {
+												<!-- prettier-ignore -->
+												<li
+                          class="flex w-full snap-start scroll-my-2"
+                          [ngClass]="{ 'disabled pointer-events-none': categoryDeleteForm.disabled }"
+                        >
+                          <button
+                            *ngIf="{ value: categoryId.value === category.id } as isActive"
+                            class="rounded-btn block w-full truncate text-left"
+                            type="button"
+                            [ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
+                            [attr.aria-label]="category.name"
+                            (click)="categoryId.patchValue(category.id)"
+                          >
+                            {{ category.name }}
+                          </button>
+                        </li>
+											}
+										}
+									</ul>
+								}
+							</div>
+						</fieldset>
+					}
+				}
 				<fieldset class="form-control">
 					<button
 						class="btn btn-md btn-error"
@@ -131,7 +136,9 @@
 						[class.btn-outline]="categoryDeleteForm.valid && categoryDeleteForm.enabled"
 						[disabled]="categoryDeleteForm.invalid || categoryDeleteForm.disabled"
 					>
-						<span class="loading loading-spinner" *ngIf="categoryDeleteForm.disabled"></span>
+						@if (categoryDeleteForm.disabled) {
+							<span class="loading loading-spinner"></span>
+						}
 						Delete
 					</button>
 				</fieldset>

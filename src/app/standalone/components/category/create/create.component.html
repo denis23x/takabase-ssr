@@ -31,88 +31,99 @@
 					></i>
 					<span class="block">You can change category information later</span>
 				</p>
-				<fieldset class="form-control" *ngIf="categoryForm.get('name') as name">
-					<label class="label" for="categoryFormName">
-						<div class="indicator">
-							@if (name.touched && !!name.errors && categoryForm.enabled) {
-								<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
+				@if (categoryForm.get("name"); as name) {
+					<fieldset class="form-control">
+						<label class="label" for="categoryFormName">
+							<div class="indicator">
+								@if (name.touched && !!name.errors && categoryForm.enabled) {
+									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
+								}
+								<span class="label-text mr-2">Name</span>
+							</div>
+						</label>
+						<div class="relative">
+							<input
+								class="input-bordered input input-md w-full !pr-12"
+								id="categoryFormName"
+								type="text"
+								aria-label="Name"
+								formControlName="name"
+								placeholder="Type category name"
+								appInputTrimWhitespace
+								[class.input-success]="name.value && name.valid"
+								[class.input-error]="name.touched && name.invalid"
+							/>
+							@if (name.value) {
+								<button
+									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+									type="button"
+									aria-label="Clear"
+									appSvgIcon
+									[class.btn-success]="name.valid"
+									[class.btn-error]="name.touched && name.invalid"
+									[class.btn-ghost]="name.untouched && name.invalid"
+									[disabled]="categoryForm.disabled"
+									[appSvgIconIcon]="'x'"
+									[appSvgIconSquare]="'2em'"
+									(click)="name.setValue('')"
+								></button>
 							}
-							<span class="label-text mr-2">Name</span>
 						</div>
-					</label>
-					<div class="relative">
-						<input
-							class="input-bordered input input-md w-full !pr-12"
-							id="categoryFormName"
-							type="text"
-							aria-label="Name"
-							formControlName="name"
-							placeholder="Type category name"
-							appInputTrimWhitespace
-							[class.input-success]="name.value && name.valid"
-							[class.input-error]="name.touched && name.invalid"
-						/>
-						<button
-							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-							type="button"
-							aria-label="Clear"
-							appSvgIcon
-							*ngIf="!!name.value.length"
-							[class.btn-success]="name.valid"
-							[class.btn-error]="name.touched && name.invalid"
-							[class.btn-ghost]="name.untouched && name.invalid"
-							[disabled]="categoryForm.disabled"
-							[appSvgIconIcon]="'x'"
-							[appSvgIconSquare]="'2em'"
-							(click)="name.setValue('')"
-						></button>
-					</div>
-				</fieldset>
-				<fieldset class="form-control" *ngIf="categoryForm.get('description') as description">
-					<label class="label" for="categoryFormDescription">
-						<div class="indicator">
-							@if (!!description.value && !!description.errors && categoryForm.enabled) {
-								<div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
-							}
+					</fieldset>
+				}
+				@if (categoryForm.get("description"); as description) {
+					<fieldset class="form-control">
+						<label class="label" for="categoryFormDescription">
+							<div class="indicator">
+								@if (!!description.value && !!description.errors && categoryForm.enabled) {
+									<div
+										class="block"
+										appBadgeError
+										[appBadgeErrorAbstractControl]="description"
+									></div>
+								}
+								@if (!description.errors) {
+									<span
+										class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+										[class.badge-ghost]="!description.value"
+										[class.badge-success]="!!description.value && categoryForm.enabled"
+										[class.opacity-25]="categoryForm.disabled"
+									>
+										Optional
+									</span>
+								}
+								<span class="label-text mr-2">Description</span>
+							</div>
+							<!-- prettier-ignore -->
 							<span
-								class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-								*ngIf="!description.errors"
-								[class.badge-ghost]="!description.value"
-								[class.badge-success]="!!description.value && categoryForm.enabled"
-								[class.opacity-25]="categoryForm.disabled"
+								class="label-text-alt"
+								[class.text-base-content]="categoryForm.disabled"
+								[class.text-success]="categoryForm.enabled && description.value && description.valid"
+								[class.text-error]="categoryForm.enabled && description.value && description.invalid"
 							>
-								Optional
+								{{ description.value?.length || 0 }}/255
 							</span>
-							<span class="label-text mr-2">Description</span>
-						</div>
-						<span
-							class="label-text-alt"
-							[class.text-base-content]="categoryForm.disabled"
-							[class.text-success]="categoryForm.enabled && description.value && description.valid"
-							[class.text-error]="categoryForm.enabled && description.value && description.invalid"
-						>
-							{{ description.value?.length || 0 }}/255
-						</span>
-					</label>
-					<!-- prettier-ignore -->
-					<div
-            class="textarea-autosize w-full"
-            [ngClass]="{ 'border-base-content/20': categoryForm.enabled, 'border-transparent': categoryForm.disabled }"
-            [class.textarea-autosize-success]="description.value && description.valid"
-            [class.textarea-autosize-error]="description.value && description.invalid"
-          >
-            <textarea
-              class="textarea textarea-md w-full h-full max-h-64"
-              id="categoryFormDescription"
-              aria-label="Description"
-              placeholder="Type category description"
-              formControlName="description"
-              appInputTrimWhitespace
-							appTextareaAutosize
-              [rows]="4"
-            ></textarea>
-          </div>
-				</fieldset>
+						</label>
+						<!-- prettier-ignore -->
+						<div
+              class="textarea-autosize w-full"
+              [ngClass]="{ 'border-base-content/20': categoryForm.enabled, 'border-transparent': categoryForm.disabled }"
+              [class.textarea-autosize-success]="description.value && description.valid"
+              [class.textarea-autosize-error]="description.value && description.invalid"
+            >
+              <textarea
+                class="textarea textarea-md w-full h-full max-h-64"
+                id="categoryFormDescription"
+                aria-label="Description"
+                placeholder="Type category description"
+                formControlName="description"
+                appInputTrimWhitespace
+                appTextareaAutosize
+                [rows]="4"
+              ></textarea>
+            </div>
+					</fieldset>
+				}
 				<fieldset class="form-control">
 					<button
 						class="btn-success btn-md btn w-full"
@@ -120,7 +131,9 @@
 						aria-label="Submit"
 						[disabled]="categoryForm.invalid || categoryForm.disabled"
 					>
-						<span class="loading loading-spinner" *ngIf="categoryForm.disabled"></span>
+						@if (categoryForm.disabled) {
+							<span class="loading loading-spinner"></span>
+						}
 						Submit
 					</button>
 				</fieldset>

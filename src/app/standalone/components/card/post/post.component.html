@@ -4,25 +4,27 @@
 	<article
 		class="rounded-box flex h-full w-full flex-col overflow-hidden border border-base-content/20 bg-base-100 shadow-xl"
 	>
-		<figure class="block" *ngIf="!!post.image">
-			<a
-				class="relative block aspect-square"
-				appSkeleton
-				[appSkeletonToggle]="postSkeletonToggle"
-				[appSkeletonClassList]="['!rounded-none']"
-				[routerLink]="[postUrl, post.id]"
-				[queryParamsHandling]="'preserve'"
-				[attr.aria-label]="post.name"
-			>
-				<img
-					class="object-cover object-center bg-base-300"
-					loading="lazy"
-					[fill]="true"
-					[ngSrc]="post.image"
-					[alt]="post.name"
-				/>
-			</a>
-		</figure>
+		@if (post.image) {
+			<figure class="block">
+				<a
+					class="relative block aspect-square"
+					appSkeleton
+					[appSkeletonToggle]="postSkeletonToggle"
+					[appSkeletonClassList]="['!rounded-none']"
+					[routerLink]="[postUrl, post.id]"
+					[queryParamsHandling]="'preserve'"
+					[attr.aria-label]="post.name"
+				>
+					<img
+						class="object-cover object-center bg-base-300"
+						loading="lazy"
+						[fill]="true"
+						[ngSrc]="post.image"
+						[alt]="post.name"
+					/>
+				</a>
+			</figure>
+		}
 		<div class="flex h-full w-full flex-col items-start gap-2 p-4">
 			<a
 				class="link font-bold line-clamp-1 lg:line-clamp-2"

@@ -2,8 +2,8 @@
 
 <ng-container>
 	<ng-content select="[slot=target]"></ng-content>
-	<ng-container *ngIf="dropdownBackdrop && dropdownState">
+	@if (dropdownBackdrop && dropdownState) {
 		<div class="fixed inset-0 w-full h-full z-20 backdrop-blur-sm cursor-default bg-black/30"></div>
-	</ng-container>
+	}
 	<ng-content select="[slot=content]"></ng-content>
 </ng-container>

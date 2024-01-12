@@ -12,90 +12,102 @@
 		</div>
 		<div class="flex flex-col gap-4">
 			<form class="flex flex-col gap-4" [formGroup]="loginForm" (ngSubmit)="onSubmitLoginForm()">
-				<fieldset class="form-control" *ngIf="loginForm.get('email') as email">
-					<label class="label" for="loginFormEmail">
-						<div class="indicator">
-							@if (email.touched && !!email.errors && loginForm.enabled) {
-								<div class="block" appBadgeError [appBadgeErrorAbstractControl]="email"></div>
+				@if (loginForm.get("email"); as email) {
+					<fieldset class="form-control">
+						<label class="label" for="loginFormEmail">
+							<div class="indicator">
+								@if (email.touched && !!email.errors && loginForm.enabled) {
+									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="email"></div>
+								}
+								<span class="label-text mr-2">Email</span>
+							</div>
+						</label>
+						<div class="relative">
+							<input
+								class="input-bordered input input-md w-full !pr-12"
+								id="loginFormEmail"
+								type="email"
+								aria-label="Email"
+								inputmode="email"
+								autocomplete="username"
+								formControlName="email"
+								placeholder="Type your email"
+								appInputTrimWhitespace
+								[class.input-success]="email.value && email.valid"
+								[class.input-error]="email.touched && email.invalid"
+							/>
+							@if (email.value) {
+								<button
+									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+									type="button"
+									aria-label="Clear"
+									appSvgIcon
+									[class.btn-success]="email.valid"
+									[class.btn-error]="email.touched && email.invalid"
+									[class.btn-ghost]="email.untouched && email.invalid"
+									[disabled]="loginForm.disabled"
+									[appSvgIconIcon]="'x'"
+									[appSvgIconSquare]="'2em'"
+									(click)="email.setValue('')"
+								></button>
 							}
-							<span class="label-text mr-2">Email</span>
 						</div>
-					</label>
-					<div class="relative">
-						<input
-							class="input-bordered input input-md w-full !pr-12"
-							id="loginFormEmail"
-							type="email"
-							aria-label="Email"
-							inputmode="email"
-							autocomplete="username"
-							formControlName="email"
-							placeholder="Type your email"
-							appInputTrimWhitespace
-							[class.input-success]="email.value && email.valid"
-							[class.input-error]="email.touched && email.invalid"
-						/>
-						<button
-							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-							type="button"
-							aria-label="Clear"
-							appSvgIcon
-							*ngIf="!!email.value.length"
-							[class.btn-success]="email.valid"
-							[class.btn-error]="email.touched && email.invalid"
-							[class.btn-ghost]="email.untouched && email.invalid"
-							[disabled]="loginForm.disabled"
-							[appSvgIconIcon]="'x'"
-							[appSvgIconSquare]="'2em'"
-							(click)="email.setValue('')"
-						></button>
-					</div>
-				</fieldset>
-				<fieldset class="form-control" *ngIf="loginForm.get('password') as password">
-					<label class="label" for="loginFormPassword">
-						<div class="indicator">
-							@if (password.touched && !!password.errors && loginForm.enabled) {
-								<div class="block" appBadgeError [appBadgeErrorAbstractControl]="password"></div>
+					</fieldset>
+				}
+				@if (loginForm.get("password"); as password) {
+					<fieldset class="form-control">
+						<label class="label" for="loginFormPassword">
+							<div class="indicator">
+								@if (password.touched && !!password.errors && loginForm.enabled) {
+									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="password"></div>
+								}
+								<span class="label-text mr-2">Password</span>
+							</div>
+						</label>
+						<div class="relative">
+							<input
+								class="input-bordered input input-md w-full !pr-12"
+								id="loginFormPassword"
+								aria-label="Password"
+								autocomplete="current-password"
+								formControlName="password"
+								placeholder="Type your password"
+								appInputTrimWhitespace
+								#loginFormPasswordElement
+								[type]="'password'"
+								[class.input-success]="password.value && password.valid"
+								[class.input-error]="password.touched && password.invalid"
+							/>
+							@if (password.value) {
+								<button
+									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+									type="button"
+									aria-label="Password"
+									appSvgIcon
+									[class.btn-success]="password.valid"
+									[class.btn-error]="password.touched && password.invalid"
+									[class.btn-ghost]="password.untouched && password.invalid"
+									[disabled]="loginForm.disabled"
+									[appSvgIconIcon]="'incognito'"
+									[appSvgIconSquare]="'1.5em'"
+									(touchstart)="loginFormPasswordElement.type = 'text'"
+									(touchend)="loginFormPasswordElement.type = 'password'"
+									(mouseenter)="loginFormPasswordElement.type = 'text'"
+									(mouseleave)="loginFormPasswordElement.type = 'password'"
+								></button>
 							}
-							<span class="label-text mr-2">Password</span>
 						</div>
-					</label>
-					<div class="relative" *ngIf="{ value: false } as isVisible">
-						<input
-							class="input-bordered input input-md w-full !pr-12"
-							id="loginFormPassword"
-							aria-label="Password"
-							autocomplete="current-password"
-							formControlName="password"
-							placeholder="Type your password"
-							appInputTrimWhitespace
-							[type]="isVisible.value ? 'text' : 'password'"
-							[class.input-success]="password.value && password.valid"
-							[class.input-error]="password.touched && password.invalid"
-						/>
-						<button
-							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-							type="button"
-							aria-label="Password"
-							appSvgIcon
-							*ngIf="!!password.value.length"
-							[class.btn-success]="password.valid"
-							[class.btn-error]="password.touched && password.invalid"
-							[class.btn-ghost]="password.untouched && password.invalid"
-							[disabled]="loginForm.disabled"
-							[appSvgIconIcon]="'incognito'"
-							[appSvgIconSquare]="'1.5em'"
-							(touchstart)="isVisible.value = !isVisible.value"
-							(mouseenter)="isVisible.value = true"
-							(mouseleave)="isVisible.value = false"
-						></button>
-					</div>
-					<label class="label" for="loginFormPassword">
-						<a class="label-text-alt link" aria-label="Forgot password" [routerLink]="['../reset']">
-							Forgot password?
-						</a>
-					</label>
-				</fieldset>
+						<label class="label" for="loginFormPassword">
+							<a
+								class="label-text-alt link"
+								aria-label="Forgot password"
+								[routerLink]="['../reset']"
+							>
+								Forgot password?
+							</a>
+						</label>
+					</fieldset>
+				}
 				<fieldset class="form-control">
 					<button
 						class="btn-success btn w-full"
@@ -103,7 +115,9 @@
 						aria-label="Login"
 						[disabled]="loginForm.invalid || loginForm.disabled"
 					>
-						<span class="loading loading-spinner" *ngIf="loginForm.disabled"></span>
+						@if (loginForm.disabled) {
+							<span class="loading loading-spinner"></span>
+						}
 						Login
 					</button>
 				</fieldset>

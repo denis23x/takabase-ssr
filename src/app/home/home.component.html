@@ -35,15 +35,16 @@
 				>
 					Markdown
 				</a>
-				<button
-					class="btn btn-outline btn-warning btn-md"
-					type="button"
-					aria-label="PWA"
-					*ngIf="appPWAAvailable"
-					(click)="onClickPWAInstall()"
-				>
-					PWA
-				</button>
+				@if (appPWAAvailable) {
+					<button
+						class="btn btn-outline btn-warning btn-md"
+						type="button"
+						aria-label="PWA"
+						(click)="onClickPWAInstall()"
+					>
+						PWA
+					</button>
+				}
 				<a
 					class="btn btn-outline btn-error btn-md flex-1"
 					aria-label="WIP"

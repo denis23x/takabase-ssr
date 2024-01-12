@@ -38,14 +38,15 @@
 				</span>
 			</div>
 		</div>
-		<p
-			class="text-base-content line-clamp-2 lg:line-clamp-3"
-			appSkeleton
-			*ngIf="!!category.description"
-			[appSkeletonToggle]="categorySkeletonToggle"
-		>
-			<span class="line-clamp-2">{{ category.description }}</span>
-		</p>
+		@if (category.description) {
+			<p
+				class="text-base-content line-clamp-2 lg:line-clamp-3"
+				appSkeleton
+				[appSkeletonToggle]="categorySkeletonToggle"
+			>
+				<span class="line-clamp-2">{{ category.description }}</span>
+			</p>
+		}
 		<time
 			class="!mt-auto text-sm text-base-content/50"
 			appSkeleton
