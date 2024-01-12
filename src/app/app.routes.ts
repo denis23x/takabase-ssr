@@ -251,7 +251,6 @@ export const APP_ROUTES: Route[] = [
 
 			return null;
 		},
-		title: 'Profile',
 		loadComponent: () => {
 			return import('./user/user.component').then(m => m.UserComponent);
 		},

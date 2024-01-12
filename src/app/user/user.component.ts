@@ -241,7 +241,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.titleService.setTitle(this.user.name);
 
 		if (this.category) {
-			this.titleService.appendTitle(this.category.name);
+			this.titleService.setTitle(this.category.name);
 		}
 	}
 

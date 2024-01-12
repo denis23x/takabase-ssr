@@ -23,8 +23,8 @@ import {
 	MarkdownControlTable,
 	MarkdownControlUrl
 } from './markdown';
-import { EMPTY, fromEvent, merge, Subscription } from 'rxjs';
-import { debounceTime, filter, startWith } from 'rxjs/operators';
+import { fromEvent, merge, Subscription } from 'rxjs';
+import { debounceTime, filter } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -153,7 +153,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 			this.textareaInput$?.unsubscribe();
 			this.textareaInput$ = fromEvent(this.textarea, 'input')
-				.pipe(startWith(EMPTY), debounceTime(200))
+				.pipe(debounceTime(200))
 				.subscribe({
 					next: () => this.markdownService.setRender(this.textarea.value, this.preview),
 					error: (error: any) => console.error(error)

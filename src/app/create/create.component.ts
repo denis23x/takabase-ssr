@@ -254,8 +254,11 @@ export class CreateComponent implements OnInit, OnDestroy {
 							categoryId: this.category.id,
 							categoryName: this.category.name
 						});
-
 						this.postForm.markAllAsTouched();
+
+						// Force dispatch input event for re-render markdown in preview element
+
+						this.document.getElementById(this.postFormTextareaId).dispatchEvent(new Event('input'));
 
 						// Get postFormIsPristine
 
@@ -431,10 +434,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 			this.fullscreenMarkdown = true;
 			this.fullscreenRender = true;
 			this.fullscreenClassList = ['fixed', 'top-0', 'left-0', '!m-0', 'w-full', 'h-full'];
-
-			// Force dispatch input event for re-render markdown in preview element
-
-			this.document.getElementById(this.postFormTextareaId).dispatchEvent(new Event('input'));
 		} else {
 			this.fullscreenScrollSync = false;
 			this.fullscreenTextWrapping = false;

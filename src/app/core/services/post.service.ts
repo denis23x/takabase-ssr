@@ -67,7 +67,7 @@ export class PostService {
 	setPostTitle(title: string): void {
 		this.backupPostTitle = this.titleService.getTitle();
 
-		this.titleService.appendTitle(title);
+		this.titleService.setTitle(title);
 	}
 
 	removePostTitle(): void {

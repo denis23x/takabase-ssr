@@ -257,6 +257,12 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		if (clipboardFile) {
 			this.setFile(clipboardFile);
+		} else {
+			const clipboardUrl: string = clipboardEventInit.clipboardData.getData('text/plain');
+
+			if (clipboardUrl) {
+				this.onGetFileFromInternet(clipboardUrl);
+			}
 		}
 	}
 
@@ -270,15 +276,12 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	onGetFileFromInternet(event: Event): void {
-		const inputEvent: InputEvent = event as InputEvent;
-		const inputEventUrl: string = inputEvent.data;
-
-		if (this.helperService.getFormValidation(this.imageForm) && inputEventUrl) {
+	onGetFileFromInternet(url: string): void {
+		if (this.helperService.getFormValidation(this.imageForm)) {
 			this.imageForm.disable();
 
 			this.imageFormRequest$?.unsubscribe();
-			this.imageFormRequest$ = this.ipaService.getOneViaProxy(inputEventUrl).subscribe({
+			this.imageFormRequest$ = this.ipaService.getOneViaProxy(url).subscribe({
 				next: (file: File) => this.setFile(file),
 				error: () => this.imageForm.enable()
 			});

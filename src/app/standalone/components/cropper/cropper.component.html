@@ -60,7 +60,6 @@
 										appInputTrimWhitespace
 										[class.input-success]="url.value && url.valid"
 										[class.input-error]="url.dirty && url.invalid"
-										(input)="onGetFileFromInternet($event)"
 										(paste)="onGetFileFromClipboard($event)"
 									/>
 									@if (url.value) {

@@ -10,10 +10,8 @@ import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
 export class TitleService extends TitleStrategy {
 	private readonly title: Title = inject(Title);
 
-	titleDelimiter: string = ' | ';
-
 	titlePostfix: string = 'Draft';
-	titlePostfixDelimiter: string = ' - ';
+	titlePostfixDelimiter: string = ' | ';
 
 	constructor() {
 		super();
@@ -32,18 +30,10 @@ export class TitleService extends TitleStrategy {
 	}
 
 	getTitle(): string {
-		return this.title.getTitle().split(this.titlePostfixDelimiter).shift();
+		return this.title.getTitle().split(this.titlePostfixDelimiter).shift().trim();
 	}
 
-	getTitleFormatted(title: string, append: boolean = false): string {
-		if (append) {
-			return [this.getTitle(), title].reverse().join(this.titleDelimiter);
-		} else {
-			return [title, this.titlePostfix].join(this.titlePostfixDelimiter);
-		}
-	}
-
-	appendTitle(title: string): void {
-		this.setTitle(this.getTitleFormatted(title, true));
+	getTitleFormatted(title: string): string {
+		return [title, this.titlePostfix].join(this.titlePostfixDelimiter);
 	}
 }

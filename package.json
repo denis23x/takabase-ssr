@@ -13,8 +13,7 @@
     "build:ssr:prod": "ng run draft-ssr:build:production",
     "build:spite": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --inline --stripAttrs class --stripAttrs fill && node sprite && prettier --write src/index.html --log-level silent",
     "build:sitemap": "node sitemap.js",
-    "dist:start": "node dist/draft-ssr/server/server.mjs",
-    "dist:analyze": "webpack-bundle-analyzer dist/draft-ssr/stats.json"
+    "dist:start": "node dist/draft-ssr/server/server.mjs"
   },
   "dependencies": {
     "@angular/animations": "^17.0.5",
@@ -98,7 +97,6 @@
     "sitemap-generator": "^8.5.1",
     "svg2sprite-cli": "^2.0.1",
     "tailwindcss": "^3.4.0",
-    "typescript": "~5.2.2",
-    "webpack-bundle-analyzer": "^4.10.1"
+    "typescript": "~5.2.2"
   }
 }
