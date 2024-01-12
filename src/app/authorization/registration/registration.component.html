@@ -109,7 +109,7 @@
 								<span class="label-text mr-2">Password</span>
 							</div>
 						</label>
-						<div class="relative" *ngIf="{ value: false } as isVisible">
+						<div class="relative">
 							<input
 								class="input-bordered input input-md w-full !pr-12"
 								id="registrationFormPassword"
@@ -118,7 +118,8 @@
 								formControlName="password"
 								placeholder="Type your password"
 								appInputTrimWhitespace
-								[type]="isVisible.value ? 'text' : 'password'"
+								#registrationFormPasswordElement
+								[type]="'password'"
 								[class.input-success]="password.value && password.valid"
 								[class.input-error]="password.touched && password.invalid"
 							/>
@@ -134,9 +135,10 @@
 									[disabled]="registrationForm.disabled"
 									[appSvgIconIcon]="'incognito'"
 									[appSvgIconSquare]="'1.5em'"
-									(touchstart)="isVisible.value = !isVisible.value"
-									(mouseenter)="isVisible.value = true"
-									(mouseleave)="isVisible.value = false"
+									(touchstart)="registrationFormPasswordElement.type = 'text'"
+									(touchend)="registrationFormPasswordElement.type = 'password'"
+									(mouseenter)="registrationFormPasswordElement.type = 'text'"
+									(mouseleave)="registrationFormPasswordElement.type = 'password'"
 								></button>
 							}
 						</div>

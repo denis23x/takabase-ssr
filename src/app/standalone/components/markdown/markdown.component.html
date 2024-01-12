@@ -246,16 +246,18 @@
 						[appSvgIconIcon]="'info-circle'"
 						[appSvgIconSquare]="'1.5em'"
 					></i>
-					<span class="block" [ngSwitch]="urlFormControl?.key">
-						<ng-container *ngSwitchCase="'url-link'">
-							Enter the URL and link text to seamlessly connect your readers to valuable resources
-						</ng-container>
-						<ng-container *ngSwitchCase="'url-image'">
-							Add a link to an image and provide a dynamic visual experience of your posts
-						</ng-container>
-						<ng-container *ngSwitchCase="'url-youtube'">
-							Embed engaging videos directly into your content
-						</ng-container>
+					<span class="block">
+						@switch (urlFormControl?.key) {
+							@case ("url-link") {
+								Enter the URL and link text to seamlessly connect your readers to valuable resources
+							}
+							@case ("url-image") {
+								Add a link to an image and provide a dynamic visual experience of your posts
+							}
+							@case ("url-youtube") {
+								Embed engaging videos directly into your content
+							}
+						}
 					</span>
 				</p>
 				<!-- prettier-ignore -->
@@ -263,21 +265,22 @@
           @if (urlForm.get('title'); as title) {
             <fieldset class="form-control">
               <label class="label" for="urlFormTitle">
-                <div class="indicator" [ngSwitch]="true">
-                  <ng-container
-                    *ngSwitchCase="urlFormControl?.key === 'url-link' && title.touched && !!title.errors && urlForm.enabled"
-                  >
-                    <div class="block" appBadgeError [appBadgeErrorAbstractControl]="title"></div>
-                  </ng-container>
-                  <span
-                    class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                    *ngSwitchCase="urlFormControl?.key === 'url-image'"
-                    [class.badge-ghost]="!title.value"
-                    [class.badge-success]="!!title.value && urlForm.enabled"
-                    [class.opacity-25]="urlForm.disabled"
-                  >
-                    Optional
-                  </span>
+                <div class="indicator">
+                  @switch (true) {
+                    @case (urlFormControl?.key === 'url-link' && title.touched && !!title.errors && urlForm.enabled) {
+                      <div class="block" appBadgeError [appBadgeErrorAbstractControl]="title"></div>
+                    }
+                    @case (urlFormControl?.key === 'url-image') {
+                      <span
+                        class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+                        [class.badge-ghost]="!title.value"
+                        [class.badge-success]="!!title.value && urlForm.enabled"
+                        [class.opacity-25]="urlForm.disabled"
+                      >
+                        Optional
+                      </span>
+                    }
+                  }
                   <span class="label-text mr-2">{{ label.value }}</span>
                 </div>
               </label>

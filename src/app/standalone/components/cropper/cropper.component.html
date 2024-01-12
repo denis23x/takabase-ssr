@@ -92,18 +92,22 @@
 									aria-label="Browse"
 									[class.btn-outline]="imageForm.enabled"
 									[disabled]="imageForm.disabled"
-									[ngSwitch]="imageForm.disabled && !cropperFile"
 									(click)="imageFormFile.click()"
 								>
-									<span class="loading loading-spinner" *ngSwitchCase="true"></span>
-									<i
-										class="block"
-										appSvgIcon
-										*ngSwitchDefault
-										[appSvgIconIcon]="'folder'"
-										[appSvgIconSquare]="'1.75em'"
-									>
-									</i>
+									@switch (imageForm.disabled && !cropperFile) {
+										@case (true) {
+											<span class="loading loading-spinner"></span>
+										}
+										@default {
+											<i
+												class="block"
+												appSvgIcon
+												[appSvgIconIcon]="'folder'"
+												[appSvgIconSquare]="'1.75em'"
+											>
+											</i>
+										}
+									}
 								</button>
 							</div>
 							<!-- prettier-ignore -->

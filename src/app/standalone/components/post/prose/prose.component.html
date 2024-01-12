@@ -10,30 +10,34 @@
 							class="flex rounded-btn relative overflow-hidden"
 							appSkeleton
 							[appSkeletonToggle]="postSkeletonToggle"
-							[ngSwitch]="!!post.image"
 						>
-							<a
-								class="avatar"
-								*ngSwitchCase="false"
-								[target]="postPreview ? '_blank' : '_self'"
-								[attr.aria-label]="post.user.name"
-								[routerLink]="[post.user | userUrl]"
-							>
-								<figure
-									class="h-12 w-12 rounded-btn relative overflow-hidden"
-									appAvatar
-									[appAvatarUser]="post.user"
-								></figure>
-							</a>
-							<figure class="h-12 w-12 rounded-btn relative overflow-hidden" *ngSwitchCase="true">
-								<img
-									class="object-cover object-center bg-base-300"
-									loading="lazy"
-									[fill]="true"
-									[ngSrc]="post.image"
-									[alt]="post.name"
-								/>
-							</figure>
+							@switch (true) {
+								@case (!!post.image === false) {
+									<a
+										class="avatar"
+										[target]="postPreview ? '_blank' : '_self'"
+										[attr.aria-label]="post.user.name"
+										[routerLink]="[post.user | userUrl]"
+									>
+										<figure
+											class="h-12 w-12 rounded-btn relative overflow-hidden"
+											appAvatar
+											[appAvatarUser]="post.user"
+										></figure>
+									</a>
+								}
+								@case (!!post.image === true) {
+									<figure class="h-12 w-12 rounded-btn relative overflow-hidden">
+										<img
+											class="object-cover object-center bg-base-300"
+											loading="lazy"
+											[fill]="true"
+											[ngSrc]="post.image"
+											[alt]="post.name"
+										/>
+									</figure>
+								}
+							}
 						</div>
 						<div class="flex flex-1 flex-col gap-2 items-start overflow-hidden">
 							<h2
@@ -97,8 +101,8 @@
 								<li class="flex w-full snap-start scroll-my-2 menu-title">
 									<hr class="my-0 border-base-content/20" />
 								</li>
-								<ng-container [ngSwitch]="currentUser?.id === post.user.id">
-									<ng-container *ngSwitchCase="true">
+								@switch (true) {
+									@case (currentUser?.id === post.user.id) {
 										<li class="flex w-full snap-start scroll-my-2">
 											<a
 												class="rounded-btn block w-full truncate text-right"
@@ -120,8 +124,8 @@
 												Delete
 											</button>
 										</li>
-									</ng-container>
-									<ng-container *ngSwitchCase="false">
+									}
+									@case (currentUser?.id !== post.user.id) {
 										<li class="flex w-full snap-start scroll-my-2">
 											<button
 												class="rounded-btn block w-full truncate text-right"
@@ -133,8 +137,8 @@
 												Report post
 											</button>
 										</li>
-									</ng-container>
-								</ng-container>
+									}
+								}
 							</ul>
 						</div>
 					}

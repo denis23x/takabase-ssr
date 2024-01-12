@@ -16,26 +16,29 @@
 							<!-- prettier-ignore -->
 							<figure
                 class="block rounded-btn relative border border-base-content/20 h-12 w-12 overflow-hidden transition"
-                [ngSwitch]="!!image.value"
                 [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-200': postForm.disabled, 'cursor-pointer': postForm.enabled, 'border-success': image.value }"
                 (click)="appCropperComponent.onToggleCropper(true)"
               >
-                <img
-                  class="block object-cover"
-                  width="48"
-                  height="48"
-                  loading="lazy"
-                  *ngSwitchCase="true"
-                  [alt]="'Image'"
-                  [src]="image.value"
-                />
-                <i
-                  class="fill-current absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                  appSvgIcon
-                  *ngSwitchCase="false"
-                  [appSvgIconIcon]="'plus'"
-                  [appSvgIconSquare]="'2em'"
-                ></i>
+                @switch (true) {
+                  @case (!!image.value === true) {
+                    <img
+                      class="block object-cover"
+                      width="48"
+                      height="48"
+                      loading="lazy"
+                      [alt]="'Image'"
+                      [src]="image.value"
+                    />
+                  }
+                  @case (!!image.value === false) {
+                    <i
+                      class="fill-current absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                      appSvgIcon
+                      [appSvgIconIcon]="'plus'"
+                      [appSvgIconSquare]="'2em'"
+                    ></i>
+                  }
+                }
               </figure>
 						}
 					</div>

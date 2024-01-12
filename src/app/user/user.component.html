@@ -51,8 +51,8 @@
 						[appSvgIconSquare]="'1.5em'"
 					></button>
 					<ul class="menu menu-vertical menu-md" slot="content">
-						<ng-container [ngSwitch]="currentUser?.id === user.id">
-							<ng-container *ngSwitchCase="true">
+						@switch (true) {
+							@case (currentUser?.id === user.id) {
 								<li class="flex w-full snap-start scroll-my-2">
 									<button
 										class="rounded-btn block w-full truncate text-right"
@@ -64,8 +64,8 @@
 										Logout
 									</button>
 								</li>
-							</ng-container>
-							<ng-container *ngSwitchCase="false">
+							}
+							@case (currentUser?.id !== user.id) {
 								<li class="flex w-full snap-start scroll-my-2">
 									<button
 										class="rounded-btn block w-full truncate text-right"
@@ -77,8 +77,8 @@
 										Report user
 									</button>
 								</li>
-							</ng-container>
-						</ng-container>
+							}
+						}
 					</ul>
 				</div>
 			</div>
@@ -164,129 +164,125 @@
 						[appSvgIconSquare]="'1.5em'"
 						(click)="onToggleSearchForm(!searchFormToggle)"
 					></button>
-					<ng-container [ngSwitch]="searchFormToggle">
-						<div
-							class="flex items-center justify-start gap-4 overflow-hidden w-full"
-							*ngSwitchCase="false"
-						>
-							<div
-								class="flex flex-col gap-2 items-start overflow-hidden w-full"
-								[ngSwitch]="!!category"
-							>
-								<ng-container *ngSwitchCase="true">
-									<h2
-										class="block truncate text-xl leading-6 font-bold text-base-content max-w-full"
-										appSkeleton
-										[appSkeletonToggle]="categorySkeletonToggle"
-									>
-										{{ category.name }}
-									</h2>
-									<time
-										class="text-sm text-base-content/50 leading-4 truncate max-w-full"
-										appSkeleton
-										[appSkeletonToggle]="categorySkeletonToggle"
-										[attr.datetime]="category.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
-									>
-										Updated {{ category.updatedAt | dayjs: "fromX" }}
-									</time>
-								</ng-container>
-								<ng-container *ngSwitchCase="false">
-									<h2
-										class="block truncate text-xl leading-6 font-bold text-base-content max-w-full"
-										appSkeleton
-										[appSkeletonToggle]="userPostComponent?.postListSkeletonToggle"
-									>
-										All posts
-									</h2>
-									<span
-										class="text-sm text-base-content/50 leading-4 truncate max-w-full"
-										appSkeleton
-										[appSkeletonToggle]="userPostComponent?.postListSkeletonToggle"
-									>
-										Everything written by {{ user.name }}
-									</span>
-								</ng-container>
-							</div>
-							<!-- prettier-ignore -->
-							<div
-								class="flex p-0"
-								appDropdown
-								appSkeleton
-								[appSkeletonToggle]="categorySkeletonToggle || currentUserSkeletonToggle || userPostComponent?.postListSkeletonToggle"
-                [appDropdownPlacement]="'bottom-end'"
-							>
-								<button
-									class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
-									type="button"
-									title="Menu"
-									aria-label="Menu"
-									appSvgIcon
-									slot="target"
-									[appSvgIconIcon]="'three-dots-vertical'"
-									[appSvgIconSquare]="'1.5em'"
-								></button>
-								<ul class="menu menu-vertical menu-md" slot="content">
-									<ng-container [ngSwitch]="currentUser?.id === user.id">
-										<ng-container *ngSwitchCase="true">
-											<li class="flex w-full snap-start scroll-my-2">
-												<button
-													class="rounded-btn block w-full truncate text-right"
-													type="button"
-													title="Create"
-													aria-label="Create"
-													(click)="appCategoryCreateComponent.onToggleCategoryCreateDialog(true)"
-												>
-													Create
-												</button>
-											</li>
-                      @if (category) {
-												<li class="flex w-full snap-start scroll-my-2">
-													<button
-														class="rounded-btn block w-full truncate text-right"
-														type="button"
-														title="Update"
-														aria-label="Update"
-														(click)="appCategoryUpdateComponent.onToggleCategoryUpdateDialog(true)"
-													>
-														Update
-													</button>
-												</li>
-												<li class="flex w-full snap-start scroll-my-2">
-													<button
-														class="rounded-btn block w-full truncate text-right"
-														type="button"
-														title="Delete"
-														aria-label="Delete"
-														(click)="appCategoryDeleteComponent.onToggleCategoryDeleteDialog(true)"
-													>
-														Delete
-													</button>
-												</li>
+					@switch (searchFormToggle) {
+						@case (true) {
+							<div class="relative flex items-end justify-between gap-4 w-full" appSearchForm></div>
+						}
+						@case (false) {
+							<div class="flex items-center justify-start gap-4 overflow-hidden w-full">
+								<div class="flex flex-col gap-2 items-start overflow-hidden w-full">
+									@switch (true) {
+										@case (!!category === true) {
+											<h2
+												class="block truncate text-xl leading-6 font-bold text-base-content max-w-full"
+												appSkeleton
+												[appSkeletonToggle]="categorySkeletonToggle"
+											>
+												{{ category.name }}
+											</h2>
+											<time
+												class="text-sm text-base-content/50 leading-4 truncate max-w-full"
+												appSkeleton
+												[appSkeletonToggle]="categorySkeletonToggle"
+												[attr.datetime]="category.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
+											>
+												Updated {{ category.updatedAt | dayjs: "fromX" }}
+											</time>
+										}
+										@case (!!category === false) {
+											<h2
+												class="block truncate text-xl leading-6 font-bold text-base-content max-w-full"
+												appSkeleton
+												[appSkeletonToggle]="userPostComponent?.postListSkeletonToggle"
+											>
+												All posts
+											</h2>
+											<span
+												class="text-sm text-base-content/50 leading-4 truncate max-w-full"
+												appSkeleton
+												[appSkeletonToggle]="userPostComponent?.postListSkeletonToggle"
+											>
+												Everything written by {{ user.name }}
+											</span>
+										}
+									}
+								</div>
+								<!-- prettier-ignore -->
+								<div
+                  class="flex p-0"
+                  appDropdown
+                  appSkeleton
+                  [appSkeletonToggle]="categorySkeletonToggle || currentUserSkeletonToggle || userPostComponent?.postListSkeletonToggle"
+                  [appDropdownPlacement]="'bottom-end'"
+                >
+                  <button
+                    class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
+                    type="button"
+                    title="Menu"
+                    aria-label="Menu"
+                    appSvgIcon
+                    slot="target"
+                    [appSvgIconIcon]="'three-dots-vertical'"
+                    [appSvgIconSquare]="'1.5em'"
+                  ></button>
+                  <ul class="menu menu-vertical menu-md" slot="content">
+                    @switch (true) {
+                      @case (currentUser?.id === user.id) {
+                        <li class="flex w-full snap-start scroll-my-2">
+                          <button
+                            class="rounded-btn block w-full truncate text-right"
+                            type="button"
+                            title="Create"
+                            aria-label="Create"
+                            (click)="appCategoryCreateComponent.onToggleCategoryCreateDialog(true)"
+                          >
+                            Create
+                          </button>
+                        </li>
+                        @if (category) {
+                          <li class="flex w-full snap-start scroll-my-2">
+                            <button
+                              class="rounded-btn block w-full truncate text-right"
+                              type="button"
+                              title="Update"
+                              aria-label="Update"
+                              (click)="appCategoryUpdateComponent.onToggleCategoryUpdateDialog(true)"
+                            >
+                              Update
+                            </button>
+                          </li>
+                          <li class="flex w-full snap-start scroll-my-2">
+                            <button
+                              class="rounded-btn block w-full truncate text-right"
+                              type="button"
+                              title="Delete"
+                              aria-label="Delete"
+                              (click)="appCategoryDeleteComponent.onToggleCategoryDeleteDialog(true)"
+                            >
+                              Delete
+                            </button>
+                          </li>
+                        }
                       }
-										</ng-container>
-										<ng-container *ngSwitchCase="false">
-											<li class="flex w-full snap-start scroll-my-2">
-												<button
-													class="rounded-btn block w-full truncate text-right"
-													type="button"
-													title="Report"
-													aria-label="Report"
-													(click)="onToggleReportDialog(true)"
-												>
-													Report
-												</button>
-											</li>
-										</ng-container>
-									</ng-container>
-								</ul>
+                      @case (currentUser?.id !== user.id) {
+                        <li class="flex w-full snap-start scroll-my-2">
+                          <button
+                            class="rounded-btn block w-full truncate text-right"
+                            type="button"
+                            title="Report"
+                            aria-label="Report"
+                            (click)="onToggleReportDialog(true)"
+                          >
+                            Report
+                          </button>
+                        </li>
+                      }
+                    }
+                  </ul>
+                </div>
 							</div>
-						</div>
-						<div
-							class="relative flex items-end justify-between gap-4 w-full"
-							appSearchForm
-							*ngSwitchCase="true"
-						></div>
-					</ng-container>
+						}
+					}
 				</div>
 				@if (category && category.description) {
 					<div
