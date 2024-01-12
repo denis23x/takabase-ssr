@@ -3,13 +3,12 @@
 import { Component, ElementRef, inject, Input } from '@angular/core';
 import { toSvg } from 'jdenticon';
 import { User } from '../../../core/models/user.model';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { PlatformService } from '../../../core/services/platform.service';
 
 @Component({
 	standalone: true,
 	selector: 'app-avatar, [appAvatar]',
-	imports: [CommonModule],
 	templateUrl: './avatar.component.html'
 })
 export class AvatarComponent {

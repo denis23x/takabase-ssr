@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
-import { CommonModule } from '@angular/common';
 import { AuthenticatedDirective } from '../standalone/directives/app-authenticated.directive';
 import { PlatformService } from '../core/services/platform.service';
 import { fromEvent, Subscription } from 'rxjs';
@@ -13,7 +12,7 @@ import { tap } from 'rxjs/operators';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, SvgIconComponent, CommonModule, AuthenticatedDirective],
+	imports: [RouterModule, SvgIconComponent, AuthenticatedDirective],
 	selector: 'app-home',
 	templateUrl: './home.component.html'
 })

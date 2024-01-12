@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule, ViewportScroller, Location } from '@angular/common';
+import { ViewportScroller, Location } from '@angular/common';
 import { distinctUntilChanged, fromEvent, of, Subscription, switchMap } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { PlatformService } from '../../../core/services/platform.service';
@@ -11,7 +11,7 @@ import { CookieService } from '../../../core/services/cookie.service';
 @Component({
 	standalone: true,
 	selector: 'app-scroll-to-top, [appScrollToTop]',
-	imports: [CommonModule, SvgIconComponent],
+	imports: [SvgIconComponent],
 	templateUrl: './scroll-to-top.component.html'
 })
 export class ScrollToTopComponent implements OnInit, OnDestroy {

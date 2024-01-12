@@ -10,7 +10,6 @@ import {
 	OnDestroy,
 	ViewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { WindowComponent } from '../window/window.component';
 import { PlatformService } from '../../../core/services/platform.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -22,7 +21,7 @@ import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, WindowComponent],
+	imports: [WindowComponent],
 	selector: 'app-qr-code, [appQRCode]',
 	templateUrl: './qr-code.component.html'
 })

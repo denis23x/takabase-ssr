@@ -2,14 +2,13 @@
 
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, ScrollPresetDirective],
+	imports: [RouterModule, ScrollPresetDirective],
 	selector: 'app-settings',
 	templateUrl: './settings.component.html'
 })

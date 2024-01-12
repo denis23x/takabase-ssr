@@ -2,7 +2,6 @@
 
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
@@ -12,7 +11,7 @@ import { ReportService } from '../core/services/report.service';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, ScrollPresetDirective, SvgIconComponent, SkeletonDirective],
+	imports: [RouterModule, ScrollPresetDirective, SvgIconComponent, SkeletonDirective],
 	selector: 'app-help',
 	templateUrl: './help.component.html'
 })

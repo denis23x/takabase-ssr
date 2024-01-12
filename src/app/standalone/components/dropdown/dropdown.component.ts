@@ -11,7 +11,7 @@ import {
 	Output
 } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { CookieService } from '../../../core/services/cookie.service';
 import {
 	autoUpdate,
@@ -28,7 +28,6 @@ import {
 
 @Component({
 	standalone: true,
-	imports: [CommonModule],
 	selector: 'app-dropdown, [appDropdown]',
 	templateUrl: './dropdown.component.html'
 })

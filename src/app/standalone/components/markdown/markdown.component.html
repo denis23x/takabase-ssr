@@ -261,7 +261,7 @@
 					</span>
 				</p>
 				<!-- prettier-ignore -->
-				<ng-container *ngIf="{ value: urlFormControl?.key === 'url-link' ? 'Text' : 'Title' } as label">
+				@if ({ value: urlFormControl?.key === 'url-link' ? 'Text' : 'Title' }; as label) {
           @if (urlForm.get('title'); as title) {
             <fieldset class="form-control">
               <label class="label" for="urlFormTitle">
@@ -314,7 +314,7 @@
               </div>
             </fieldset>
           }
-				</ng-container>
+        }
 				@if (urlForm.get("url"); as url) {
 					<fieldset class="form-control">
 						<label class="label" for="urlFormUrl">

@@ -11,7 +11,6 @@ import {
 	Output,
 	ViewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { Post } from '../../../../core/models/post.model';
@@ -26,7 +25,7 @@ import { AuthorizationService } from '../../../../core/services/authorization.se
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, SvgIconComponent, WindowComponent],
+	imports: [SvgIconComponent, WindowComponent],
 	selector: 'app-post-delete, [appPostDelete]',
 	templateUrl: './delete.component.html'
 })

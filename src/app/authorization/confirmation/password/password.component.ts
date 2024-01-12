@@ -8,7 +8,6 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../../core/services/helper.service';
@@ -29,7 +28,6 @@ interface PasswordForm {
 @Component({
 	standalone: true,
 	imports: [
-		CommonModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,

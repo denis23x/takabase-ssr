@@ -3,7 +3,6 @@
 import { Component } from '@angular/core';
 import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { TextareaAutosizeDirective } from '../../standalone/directives/app-textarea-autosize.directive';
@@ -12,7 +11,6 @@ import { RouterModule } from '@angular/router';
 @Component({
 	standalone: true,
 	imports: [
-		CommonModule,
 		RouterModule,
 		MarkdownPipe,
 		SanitizerPipe,

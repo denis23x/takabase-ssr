@@ -9,7 +9,6 @@ import {
 	Validators
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { UserService } from '../../core/services/user.service';
@@ -34,7 +33,6 @@ interface RegistrationForm {
 @Component({
 	standalone: true,
 	imports: [
-		CommonModule,
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,

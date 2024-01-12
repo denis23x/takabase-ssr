@@ -2,7 +2,6 @@
 
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
@@ -10,7 +9,7 @@ import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.com
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, ScrollPresetDirective, SvgIconComponent],
+	imports: [RouterModule, ScrollPresetDirective, SvgIconComponent],
 	selector: 'app-terms',
 	templateUrl: './terms.component.html'
 })

@@ -1,7 +1,6 @@
 /** @format */
 
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { Category } from '../../../../core/models/category.model';
 import { UserUrlPipe } from '../../../pipes/user-url.pipe';
@@ -11,7 +10,7 @@ import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, SkeletonDirective, UserUrlPipe, AvatarComponent, DayjsPipe],
+	imports: [RouterModule, SkeletonDirective, UserUrlPipe, AvatarComponent, DayjsPipe],
 	selector: 'app-card-category, [appCardCategory]',
 	templateUrl: './category.component.html'
 })

@@ -4,7 +4,6 @@ import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angula
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, Subscription, throwError } from 'rxjs';
 import { catchError, filter, switchMap } from 'rxjs/operators';
-import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
@@ -37,7 +36,6 @@ import { SearchFormComponent } from '../standalone/components/search-form/search
 @Component({
 	standalone: true,
 	imports: [
-		CommonModule,
 		RouterModule,
 		AvatarComponent,
 		DayjsPipe,

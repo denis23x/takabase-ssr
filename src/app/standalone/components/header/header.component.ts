@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { AvatarComponent } from '../avatar/avatar.component';
-import { CommonModule } from '@angular/common';
 import { AuthenticatedDirective } from '../../directives/app-authenticated.directive';
 import { UserUrlPipe } from '../../pipes/user-url.pipe';
 import { AuthorizationService } from '../../../core/services/authorization.service';
@@ -18,7 +17,6 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
 	standalone: true,
 	selector: 'app-header, [appHeader]',
 	imports: [
-		CommonModule,
 		RouterModule,
 		SvgIconComponent,
 		AvatarComponent,

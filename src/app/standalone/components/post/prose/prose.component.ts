@@ -2,7 +2,7 @@
 
 import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../../avatar/avatar.component';
 import { MarkdownPipe } from '../../../pipes/markdown.pipe';
@@ -25,7 +25,6 @@ import { ReportService } from '../../../../core/services/report.service';
 @Component({
 	standalone: true,
 	imports: [
-		CommonModule,
 		RouterModule,
 		AvatarComponent,
 		MarkdownPipe,

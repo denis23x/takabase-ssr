@@ -8,7 +8,6 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../core/services/helper.service';
@@ -28,7 +27,6 @@ interface ResetForm {
 @Component({
 	standalone: true,
 	imports: [
-		CommonModule,
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
