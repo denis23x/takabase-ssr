@@ -2,13 +2,16 @@
 
 <ng-container>
 	<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-		@for (user of userList; track user.id) {
+		@for (user of userList; track user.id; let i = $index) {
 			<li
 				class="block"
 				appCardUser
 				[appCardUserUser]="user"
 				[appCardUserSkeletonToggle]="userListSkeletonToggle"
 			></li>
+			@if (i === 10 || i === 20 || i === 30) {
+				<li class="block" appAd></li>
+			}
 		} @empty {
 			<li
 				class="col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-5 flex flex-col items-center gap-4"
@@ -54,23 +57,3 @@
 		<router-outlet></router-outlet>
 	</div>
 </ng-container>
-<!-- TODO: ads
-<li class="block" *ngIf="i === 10 || i === 20 || i === 30">
-  <a
-    class="block w-full h-full"
-    title="Placeholder"
-    aria-label="Placeholder"
-    appSkeleton
-    [routerLink]="['.']"
-    [appSkeletonToggle]="false"
-  >
-    <figure class="rounded-btn relative overflow-hidden w-full h-full">
-      <img
-        class="object-cover w-full h-full bg-base-300"
-        src="https://placehold.co/172x236/?text=Placeholder"
-        alt="Advertise"
-        loading="lazy"
-      />
-    </figure>
-  </a>
-</li>	-->

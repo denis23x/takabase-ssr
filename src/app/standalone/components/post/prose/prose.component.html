@@ -169,22 +169,10 @@
 				[appSkeletonToggle]="postSkeletonToggle"
 				[innerHTML]="post?.markdown || 'Markdown' | markdown | sanitizer: 'html'"
 			></article>
-			<!-- TODO: ads
-      <ng-container *ngIf="!postPreview && !postSkeletonToggle">
-        <hr class="my-0 w-full border-base-content/20" />
-        <footer class="flex w-full flex-col items-start justify-start gap-4">
-          <a class="block w-full" title="Placeholder" aria-label="Placeholder" [routerLink]="['.']">
-            <figure class="rounded-btn relative overflow-hidden">
-              <img
-                class="w-full"
-                src="https://placehold.co/600x64?text=Placeholder"
-                alt="Advertise"
-                loading="lazy"
-              />
-            </figure>
-          </a>
-        </footer>
-      </ng-container>	-->
+			@if (!postPreview && !postSkeletonToggle) {
+				<hr class="my-0 w-full border-base-content/20" />
+				<footer class="block w-full h-32 gap-4" appAd></footer>
+			}
 		</section>
 		<div appPostDelete #appPostDeleteComponent [appPostDeletePost]="post"></div>
 		<div

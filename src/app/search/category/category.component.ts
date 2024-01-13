@@ -15,6 +15,7 @@ import { CategoryService } from '../../core/services/category.service';
 import { MetaService } from '../../core/services/meta.service';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { Subscription } from 'rxjs';
+import { AdComponent } from '../../standalone/components/ad/ad.component';
 
 @Component({
 	standalone: true,
@@ -24,7 +25,8 @@ import { Subscription } from 'rxjs';
 		UserUrlPipe,
 		SvgIconComponent,
 		SkeletonDirective,
-		CardCategoryComponent
+		CardCategoryComponent,
+		AdComponent
 	],
 	selector: 'app-search-category',
 	templateUrl: './category.component.html'

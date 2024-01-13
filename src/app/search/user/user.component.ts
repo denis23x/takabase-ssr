@@ -17,6 +17,7 @@ import { UserService } from '../../core/services/user.service';
 import { MetaService } from '../../core/services/meta.service';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { Subscription } from 'rxjs';
+import { AdComponent } from '../../standalone/components/ad/ad.component';
 
 @Component({
 	standalone: true,
@@ -28,7 +29,8 @@ import { Subscription } from 'rxjs';
 		UserUrlPipe,
 		DayjsPipe,
 		CardUserComponent,
-		SkeletonDirective
+		SkeletonDirective,
+		AdComponent
 	],
 	selector: 'app-search-user',
 	templateUrl: './user.component.html'

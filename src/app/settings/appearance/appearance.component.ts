@@ -39,6 +39,8 @@ interface AppearanceForm {
 	markdownMonospace: FormControl<boolean>;
 	dropdownBackdrop: FormControl<boolean>;
 	windowButtonPosition: FormControl<string>;
+	advertisement: FormControl<boolean>;
+	themePublic: FormControl<boolean>;
 }
 
 @Component({
@@ -77,7 +79,9 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		pageRedirectHome: this.formBuilder.control(null, [Validators.required]),
 		markdownMonospace: this.formBuilder.control(null, [Validators.required]),
 		dropdownBackdrop: this.formBuilder.control(null, [Validators.required]),
-		windowButtonPosition: this.formBuilder.nonNullable.control('', [Validators.required])
+		windowButtonPosition: this.formBuilder.nonNullable.control('', [Validators.required]),
+		advertisement: this.formBuilder.control(null, [Validators.required]),
+		themePublic: this.formBuilder.control(null, [Validators.required])
 	});
 	appearanceForm$: Subscription | undefined;
 	appearanceFormSkeletonToggle: boolean = true;

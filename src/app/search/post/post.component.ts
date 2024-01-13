@@ -14,10 +14,18 @@ import { PostService } from '../../core/services/post.service';
 import { MetaService } from '../../core/services/meta.service';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { Subscription } from 'rxjs';
+import { AdComponent } from '../../standalone/components/ad/ad.component';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, SvgIconComponent, CardPostComponent, SkeletonDirective],
+	imports: [
+		CommonModule,
+		RouterModule,
+		SvgIconComponent,
+		CardPostComponent,
+		SkeletonDirective,
+		AdComponent
+	],
 	selector: 'app-search-post',
 	templateUrl: './post.component.html'
 })

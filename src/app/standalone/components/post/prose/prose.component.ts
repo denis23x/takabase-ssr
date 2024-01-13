@@ -21,6 +21,7 @@ import { PlatformService } from '../../../../core/services/platform.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { QrCodeComponent } from '../../qr-code/qr-code.component';
 import { ReportService } from '../../../../core/services/report.service';
+import { AdComponent } from '../../ad/ad.component';
 
 @Component({
 	standalone: true,
@@ -36,7 +37,8 @@ import { ReportService } from '../../../../core/services/report.service';
 		DropdownComponent,
 		SvgIconComponent,
 		PostDeleteComponent,
-		QrCodeComponent
+		QrCodeComponent,
+		AdComponent
 	],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'

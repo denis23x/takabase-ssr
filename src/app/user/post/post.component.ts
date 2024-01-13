@@ -11,10 +11,11 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 import { Subscription } from 'rxjs';
 import { PostService } from '../../core/services/post.service';
 import { SkeletonService } from '../../core/services/skeleton.service';
+import { AdComponent } from '../../standalone/components/ad/ad.component';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, CardPostComponent, SvgIconComponent],
+	imports: [CommonModule, RouterModule, CardPostComponent, SvgIconComponent, AdComponent],
 	selector: 'app-user-post',
 	templateUrl: './post.component.html'
 })
