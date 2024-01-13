@@ -71,11 +71,11 @@
 									class="rounded-btn block w-full truncate text-right"
 									data-pw="app-settings-profile-button-show-cropper-modal"
 									type="button"
-									title="Update avatar"
-									aria-label="Update avatar"
+									title="Update"
+									aria-label="Update"
 									(click)="appCropperComponent.onToggleCropper(true)"
 								>
-									{{ avatar.value ? "Update" : "Set" }} avatar
+									{{ avatar.value ? "Update" : "Set avatar" }}
 								</button>
 							</li>
 							@if (avatar.value) {
@@ -83,11 +83,11 @@
 									<button
 										class="rounded-btn block w-full truncate text-right"
 										type="button"
-										title="Delete avatar"
-										aria-label="Delete avatar"
+										title="Delete"
+										aria-label="Delete"
 										(click)="onUpdateCropperAvatar(null, avatar.value)"
 									>
-										Delete avatar
+										Delete
 									</button>
 								</li>
 							}

@@ -33,12 +33,13 @@ export class MarkdownService {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly platformService: PlatformService = inject(PlatformService);
 
-	markdownIt: MarkdownIt;
-
 	// prettier-ignore
-	markdownItCropperClipboard: BehaviorSubject<ClipboardEventInit | undefined> = new BehaviorSubject<ClipboardEventInit | undefined>(undefined);
+	markdownItClipboard: BehaviorSubject<ClipboardEventInit | undefined> = new BehaviorSubject<ClipboardEventInit | undefined>(undefined);
+
 	markdownItCropperImage: BehaviorSubject<File | null> = new BehaviorSubject<File | null>(null);
-	markdownItCropper: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	markdownItCropperToggle: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+	markdownIt: MarkdownIt;
 
 	getMarkdownIt(): MarkdownIt {
 		if (this.markdownIt) {

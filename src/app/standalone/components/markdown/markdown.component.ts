@@ -162,7 +162,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.textareaPaste$?.unsubscribe();
 			this.textareaPaste$ = fromEvent(this.textarea, 'paste').subscribe({
 				// prettier-ignore
-				next: (clipboardEventInit: ClipboardEventInit) => this.markdownService.markdownItCropperClipboard.next(clipboardEventInit),
+				next: (clipboardEventInit: ClipboardEventInit) => this.markdownService.markdownItClipboard.next(clipboardEventInit),
 				error: (error: any) => console.error(error)
 			});
 
@@ -234,7 +234,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	}
 
 	onControlListCropperClick(): void {
-		this.markdownService.markdownItCropper.next(true);
+		this.markdownService.markdownItCropperToggle.next(true);
 	}
 
 	/** Extra handlers */

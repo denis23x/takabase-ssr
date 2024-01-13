@@ -47,6 +47,8 @@ export class ApiService {
 							return 'Email address is already in use by an existing user';
 						case 'auth/user-not-found':
 							return 'We could not find user account associated with the email address';
+						case 'auth/invalid-credential':
+							return 'Invalid email or password credentials';
 						case 'auth/invalid-email':
 							return 'The email address is not a valid email address!';
 						case 'auth/cannot-delete-own-user-account':

@@ -9,10 +9,17 @@ import { EmailConfirmationUpdateDto } from '../../../core/dto/email/email-confir
 import { EmailService } from '../../../core/services/email.service';
 import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
 import { Subscription } from 'rxjs';
+import { PlatformService } from '../../../core/services/platform.service';
+import { CurrentUser } from '../../../core/models/current-user.model';
+import { AuthorizationService } from '../../../core/services/authorization.service';
+import { UserUrlPipe } from '../../../standalone/pipes/user-url.pipe';
+import { AuthenticatedDirective } from '../../../standalone/directives/app-authenticated.directive';
+import { filter } from 'rxjs/operators';
+import { SkeletonDirective } from '../../../standalone/directives/app-skeleton.directive';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, SvgIconComponent],
+	imports: [RouterModule, SvgIconComponent, UserUrlPipe, AuthenticatedDirective, SkeletonDirective],
 	selector: 'app-authorization-confirmation-email',
 	templateUrl: './email.component.html'
 })
@@ -21,12 +28,34 @@ export class AuthConfirmationEmailComponent implements OnInit, OnDestroy {
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly emailService: EmailService = inject(EmailService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+
+	currentUser: CurrentUser | undefined;
+	currentUser$: Subscription | undefined;
+
+	currentUserSkeletonToggle: boolean = true;
+	currentUserSkeletonToggle$: Subscription | undefined;
 
 	confirmationRequest$: Subscription | undefined;
-	confirmationIsSucceed: boolean = false;
-	confirmationIsSubmitted: boolean = true;
+	confirmationRequestToggle: boolean = true;
+	confirmationRequestIsSucceed: boolean = false;
 
 	ngOnInit(): void {
+		this.currentUser$?.unsubscribe();
+		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
+			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
+			error: (error: any) => console.error(error)
+		});
+
+		this.currentUserSkeletonToggle$?.unsubscribe();
+		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
+			.pipe(filter((currentUserIsPopulated: boolean) => currentUserIsPopulated))
+			.subscribe({
+				next: () => (this.currentUserSkeletonToggle = false),
+				error: (error: any) => console.error(error)
+			});
+
 		/** Apply Data */
 
 		this.setResolver();
@@ -37,28 +66,34 @@ export class AuthConfirmationEmailComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.confirmationRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.currentUser$, this.currentUserSkeletonToggle$, this.confirmationRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setResolver(): void {
-		const oobCode: string = String(this.activatedRoute.snapshot.queryParamMap.get('oobCode') || '');
+		if (this.platformService.isBrowser()) {
+			this.confirmationRequestToggle = true;
 
-		const emailConfirmationUpdateDto: EmailConfirmationUpdateDto = {
-			code: oobCode
-		};
+			// prettier-ignore
+			const oobCode: string = String(this.activatedRoute.snapshot.queryParamMap.get('oobCode') || '');
 
-		this.confirmationRequest$?.unsubscribe();
-		this.confirmationRequest$ = this.emailService
-			.onConfirmationUpdate(emailConfirmationUpdateDto)
-			.subscribe({
-				next: () => {
-					this.confirmationIsSucceed = true;
-					this.confirmationIsSubmitted = false;
+			const emailConfirmationUpdateDto: EmailConfirmationUpdateDto = {
+				code: oobCode
+			};
 
-					this.snackbarService.success('Great', 'Email successfully confirmed');
-				},
-				error: () => (this.confirmationIsSubmitted = false)
-			});
+			this.confirmationRequest$?.unsubscribe();
+			this.confirmationRequest$ = this.emailService
+				.onConfirmationUpdate(emailConfirmationUpdateDto)
+				.subscribe({
+					next: () => {
+						this.confirmationRequestIsSucceed = true;
+						this.confirmationRequestToggle = false;
+
+						this.snackbarService.success('Great', 'Email successfully confirmed');
+					},
+					error: () => (this.confirmationRequestToggle = false)
+				});
+		}
 	}
 
 	setMetaTags(): void {

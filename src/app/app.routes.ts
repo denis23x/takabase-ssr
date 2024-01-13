@@ -23,7 +23,7 @@ export const APP_ROUTES: Route[] = [
 			},
 			{
 				path: 'password',
-				title: 'Set password',
+				title: 'Set new password',
 				loadComponent: () => {
 					// prettier-ignore
 					return import('./authorization/confirmation/password/password.component').then(m => m.AuthConfirmationPasswordComponent);

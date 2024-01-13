@@ -7,63 +7,72 @@
 		<div class="flex flex-col border-b border-base-content/20 pb-4">
 			<h1 class="text-2xl font-bold">Email confirmation</h1>
 		</div>
-		@switch (true) {
-			@case (!confirmationIsSubmitted && !confirmationIsSucceed) {
-				<div class="flex flex-col gap-4">
-					<p class="alert" role="alert">
-						<i
-							class="fill-current text-info"
-							appSvgIcon
-							[appSvgIconIcon]="'info-circle'"
-							[appSvgIconSquare]="'1.5em'"
-						></i>
-						<span class="block">
-							Our system encountered an issue while attempting to verify your email address. We
-							apologize for any inconvenience this may cause. To resolve this matter, please ensure
-							that you have entered the correct email address and try the confirmation process
-							again.
-						</span>
-					</p>
-				</div>
-			}
-			@default {
-				<div class="flex flex-col gap-4">
-					<p class="alert" role="alert">
-						<i
-							class="fill-current text-info"
-							appSvgIcon
-							[appSvgIconIcon]="'info-circle'"
-							[appSvgIconSquare]="'1.5em'"
-						></i>
-						<span class="block">
-							Thank you for verifying your email address. You are now officially a member of our
-							community. Get ready to enjoy exclusive updates and exciting content delivered
-							straight to you.
-						</span>
-					</p>
-					@switch (confirmationIsSucceed) {
+		<div class="flex flex-col gap-4">
+			<p class="alert" role="alert">
+				<i
+					class="fill-current text-info"
+					appSvgIcon
+					[appSvgIconIcon]="'info-circle'"
+					[appSvgIconSquare]="'1.5em'"
+				></i>
+				@if (confirmationRequestToggle) {
+					<span class="block">
+						Sit tight! We're in the final steps of confirming your email. This process usually takes
+						just a moment. Meanwhile, feel free to check out the amazing features awaiting you on
+						our platform. Once confirmed, you'll have full access. Thank you for your patience!
+					</span>
+				} @else {
+					@switch (confirmationRequestIsSucceed) {
 						@case (true) {
-							<a
-								class="btn-success btn-outline btn w-full"
-								aria-label="Create post"
-								[routerLink]="'/'"
-							>
-								Success
-							</a>
+							<span class="block">
+								Thank you for verifying your email address. You are now officially a member of our
+								community. Get ready to enjoy exclusive updates and exciting content delivered
+								straight to you.
+							</span>
 						}
-						@default {
-							<button
-								class="btn-success btn btn-md w-full"
-								aria-label="Confirmation"
-								[disabled]="true"
-							>
-								<span class="loading loading-spinner"></span>
-								Confirmation
-							</button>
+						@case (false) {
+							<span class="block">
+								Our system encountered an issue while attempting to verify your email address. We
+								apologize for any inconvenience this may cause. To resolve this matter, please
+								ensure that you have entered the correct email address and try the confirmation
+								process again.
+							</span>
 						}
 					}
-				</div>
+				}
+			</p>
+			@if (confirmationRequestToggle) {
+				<button
+					class="btn-success btn btn-md w-full no-animation"
+					aria-label="Confirmation"
+					[disabled]="true"
+				>
+					<span class="loading loading-spinner"></span>
+					Confirmation
+				</button>
+			} @else {
+				@if (confirmationRequestIsSucceed) {
+					<div appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
+						<a
+							class="btn-success btn-outline btn w-full no-animation"
+							aria-label="Login"
+							*appAuthenticated="false"
+							[routerLink]="'/login'"
+						>
+							Login
+						</a>
+						<a
+							class="btn-success btn-outline btn w-full no-animation"
+							*appAuthenticated="true"
+							[title]="currentUser.name"
+							[attr.aria-label]="currentUser.name"
+							[routerLink]="[currentUser | userUrl]"
+						>
+							My profile
+						</a>
+					</div>
+				}
 			}
-		}
+		</div>
 	</div>
 </ng-container>

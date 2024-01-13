@@ -9,6 +9,7 @@ import { EmailService } from '../../../core/services/email.service';
 import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
 import { EmailRecoveryDto } from '../../../core/dto/email/email-recovery.dto';
 import { Subscription } from 'rxjs';
+import { PlatformService } from '../../../core/services/platform.service';
 
 @Component({
 	standalone: true,
@@ -21,6 +22,7 @@ export class AuthConfirmationRecoveryComponent implements OnInit, OnDestroy {
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly emailService: EmailService = inject(EmailService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
 	recoveryRequest$: Subscription | undefined;
 	recoveryIsSucceed: boolean = false;
@@ -41,22 +43,25 @@ export class AuthConfirmationRecoveryComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
-		const oobCode: string = String(this.activatedRoute.snapshot.queryParamMap.get('oobCode') || '');
+		if (this.platformService.isBrowser()) {
+			// prettier-ignore
+			const oobCode: string = String(this.activatedRoute.snapshot.queryParamMap.get('oobCode') || '');
 
-		const emailRecoveryDto: EmailRecoveryDto = {
-			code: oobCode
-		};
+			const emailRecoveryDto: EmailRecoveryDto = {
+				code: oobCode
+			};
 
-		this.recoveryRequest$?.unsubscribe();
-		this.recoveryRequest$ = this.emailService.onRecovery(emailRecoveryDto).subscribe({
-			next: () => {
-				this.recoveryIsSucceed = true;
-				this.recoveryIsSubmitted = false;
+			this.recoveryRequest$?.unsubscribe();
+			this.recoveryRequest$ = this.emailService.onRecovery(emailRecoveryDto).subscribe({
+				next: () => {
+					this.recoveryIsSucceed = true;
+					this.recoveryIsSubmitted = false;
 
-				this.snackbarService.success('Hooray, it worked', 'Email successfully restored');
-			},
-			error: () => (this.recoveryIsSubmitted = false)
-		});
+					this.snackbarService.success('Hooray, it worked', 'Email successfully restored');
+				},
+				error: () => (this.recoveryIsSubmitted = false)
+			});
+		}
 	}
 
 	setMetaTags(): void {
