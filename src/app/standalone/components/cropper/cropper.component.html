@@ -25,7 +25,7 @@
 					class="flex flex-col gap-4"
 					autocomplete="off"
 					[formGroup]="imageForm"
-					[ngClass]="{ hidden: cropperIsReady }"
+					[class.hidden]="cropperIsReady"
 				>
 					<p class="alert" role="alert">
 						<i
@@ -157,7 +157,7 @@
 						>
 							<ul
 								class="menu rounded-btn menu-horizontal menu-md flex-nowrap border-none p-0"
-								[ngClass]="{ 'pointer-events-none': cropperImageForm.disabled }"
+                [class.pointer-events-none]="cropperImageForm.disabled"
 							>
 								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
 									<button
@@ -169,8 +169,8 @@
 										[disabled]="cropperImageForm.disabled"
 										[appSvgIconIcon]="'bounding-box-circles'"
 										[appSvgIconSquare]="'1.5725em'"
-										[ngClass]="{ 'active': !cropperMoveImage && !cropperImageForm.disabled }"
-										(click)="cropperMoveImage = false"
+                    [class.active]="!cropperMoveImage && !cropperImageForm.disabled"
+                    (click)="cropperMoveImage = false"
 									></button>
 								</li>
 								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
@@ -183,7 +183,7 @@
 										[disabled]="cropperImageForm.disabled"
 										[appSvgIconIcon]="'arrows-move'"
 										[appSvgIconSquare]="'1.5725em'"
-										[ngClass]="{ 'active': cropperMoveImage && !cropperImageForm.disabled }"
+                    [class.active]="cropperMoveImage && !cropperImageForm.disabled"
 										(click)="cropperMoveImage = true"
 									></button>
 								</li>

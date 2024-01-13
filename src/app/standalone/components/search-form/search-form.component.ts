@@ -1,7 +1,6 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import {
@@ -26,7 +25,6 @@ interface SearchForm {
 	standalone: true,
 	selector: 'app-search-form, [appSearchForm]',
 	imports: [
-		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
 		InputTrimWhitespaceDirective,

@@ -50,7 +50,7 @@
 												type="button"
 												appScrollPreset
 												[appScrollActive]="theme.value === appearanceTheme"
-												[ngClass]="{ active: theme.value === appearanceTheme }"
+												[class.active]="theme.value === appearanceTheme"
 												[attr.aria-label]="appearanceTheme"
 												(click)="theme.setValue(appearanceTheme)"
 											>
@@ -105,7 +105,7 @@
 												type="button"
 												appScrollPreset
 												[appScrollActive]="themeBackground.value === appearanceThemeBackground"
-												[ngClass]="{ active: themeBackground.value === appearanceThemeBackground }"
+												[class.active]="themeBackground.value === appearanceThemeBackground"
 												[attr.aria-label]="appearanceThemeBackground"
 												(click)="themeBackground.setValue(appearanceThemeBackground)"
 											>
@@ -154,7 +154,7 @@
 												type="button"
 												appScrollPreset
 												[appScrollActive]="language.value === appearanceLanguage"
-												[ngClass]="{ active: language.value === appearanceLanguage }"
+												[class.active]="language.value === appearanceLanguage"
 												[attr.aria-label]="appearanceLanguage"
 												(click)="language.setValue(appearanceLanguage)"
 											>
@@ -212,7 +212,7 @@
 													type="button"
 													appScrollPreset
 													[appScrollActive]="themePrism.value === appearanceThemePrism"
-													[ngClass]="{ active: themePrism.value === appearanceThemePrism }"
+													[class.active]="themePrism.value === appearanceThemePrism"
 													[attr.aria-label]="appearanceThemePrism"
 													(click)="themePrism.setValue(appearanceThemePrism)"
 												>

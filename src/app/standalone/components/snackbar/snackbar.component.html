@@ -3,7 +3,10 @@
 <ng-container>
 	<ul class="toast toast-top toast-center">
 		@for (snack of snackbarList$ | async; track snack.uuid) {
-			<li class="flex relative overflow-hidden rounded-box shadow-xl" (click)="onClose(snack)">
+			<li
+				class="flex relative overflow-hidden rounded-box shadow-xl animate-none"
+				(click)="onClose(snack)"
+			>
 				<div
 					class="alert pointer-events-auto"
 					role="alert"

@@ -13,6 +13,7 @@
     "build:ssr:prod": "ng run draft-ssr:build:production",
     "build:spite": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --inline --stripAttrs class --stripAttrs fill && node sprite && prettier --write src/index.html --log-level silent",
     "build:sitemap": "node sitemap.js",
+    "dist:analyze": "esbuild-visualizer --metadata ./dist/draft-ssr/stats.json --filename ./dist/draft-ssr/stats.html --open",
     "dist:start": "node dist/draft-ssr/server/server.mjs"
   },
   "dependencies": {
@@ -84,6 +85,7 @@
     "@typescript-eslint/eslint-plugin": "^6.12.0",
     "@typescript-eslint/parser": "^6.12.0",
     "autoprefixer": "^10.4.12",
+    "esbuild-visualizer": "^0.6.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.1",

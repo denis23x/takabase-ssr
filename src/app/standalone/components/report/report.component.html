@@ -93,7 +93,7 @@
 												type="button"
 												[title]="reportFormName"
 												[attr.aria-label]="reportFormName"
-												[ngClass]="{ active: name.value === reportFormName }"
+												[class.active]="name.value === reportFormName"
 												(click)="onSelectReportFormName(reportFormName)"
 											>
 												{{ reportFormName }}

@@ -11,7 +11,6 @@ import {
 import { from, Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { environment } from '../../../environments/environment';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
@@ -46,7 +45,6 @@ interface AppearanceForm {
 @Component({
 	standalone: true,
 	imports: [
-		CommonModule,
 		RouterModule,
 		ReactiveFormsModule,
 		DropdownComponent,

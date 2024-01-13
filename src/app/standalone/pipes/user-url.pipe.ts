@@ -11,7 +11,11 @@ import { User } from '../../core/models/user.model';
 export class UserUrlPipe implements PipeTransform {
 	private readonly userService: UserService = inject(UserService);
 
-	transform(user: User, substring: number = 0): string {
-		return this.userService.getUserUrl(user, substring);
+	transform(user: User | undefined, substring: number = 0): string {
+		if (user) {
+			return this.userService.getUserUrl(user, substring);
+		} else {
+			return '/';
+		}
 	}
 }

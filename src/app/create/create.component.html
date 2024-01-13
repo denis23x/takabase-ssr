@@ -210,7 +210,7 @@
                           type="button"
                           appScrollPreset
                           [appScrollActive]="categoryName.value === category.name"
-                          [ngClass]="{ active: categoryName.value === category.name }"
+                          [class.active]="categoryName.value === category.name"
                           [attr.aria-label]="category.name"
                           (click)="onSelectCategory(category)"
                         >

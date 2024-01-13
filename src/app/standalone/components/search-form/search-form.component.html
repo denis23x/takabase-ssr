@@ -72,7 +72,7 @@
 									<button
                     class="rounded-btn block w-full truncate text-right first-letter:uppercase"
                     type="button"
-                    [ngClass]="{ 'active': searchFormOrderBy === orderBy.value }"
+                    [class.active]="searchFormOrderBy === orderBy.value"
                     [attr.aria-label]="searchFormOrderBy"
                     (click)="searchFormOrderBy === orderBy.value ? orderBy.reset() : orderBy.setValue(searchFormOrderBy)"
                   >
