@@ -46,7 +46,7 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 	}
 
 	QRCodeData$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-	QRCodeOrigin: boolean = true;
+	QRCodeOrigin: boolean = false;
 
 	QRCodeValue: string | undefined;
 	QRCodeOptionsColorScheme$: Subscription | undefined;

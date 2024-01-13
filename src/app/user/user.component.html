@@ -51,33 +51,40 @@
 						[appSvgIconSquare]="'1.5em'"
 					></button>
 					<ul class="menu menu-vertical menu-md" slot="content">
-						@switch (true) {
-							@case (currentUser?.id === user.id) {
-								<li class="flex w-full snap-start scroll-my-2">
-									<button
-										class="rounded-btn block w-full truncate text-right"
-										type="button"
-										title="Logout"
-										aria-label="Logout"
-										(click)="onLogout()"
-									>
-										Logout
-									</button>
-								</li>
-							}
-							@case (currentUser?.id !== user.id) {
-								<li class="flex w-full snap-start scroll-my-2">
-									<button
-										class="rounded-btn block w-full truncate text-right"
-										type="button"
-										title="Report user"
-										aria-label="Report user"
-										(click)="onToggleReportDialog(true)"
-									>
-										Report user
-									</button>
-								</li>
-							}
+						<li class="flex w-full snap-start scroll-my-2">
+							<button
+								class="rounded-btn block w-full truncate text-right"
+								type="button"
+								title="Copy link"
+								aria-label="Copy link"
+								appCopyUrl
+							>
+								Copy link
+							</button>
+						</li>
+						<li class="flex w-full snap-start scroll-my-2">
+							<button
+								class="rounded-btn block w-full truncate text-right"
+								type="button"
+								title="QR Code"
+								aria-label="QR Code"
+								(click)="appQrCodeComponent.onToggleQRCodeDialog(true)"
+							>
+								QR Code
+							</button>
+						</li>
+						@if (currentUser?.id !== user.id) {
+							<li class="flex w-full snap-start scroll-my-2">
+								<button
+									class="rounded-btn block w-full truncate text-right"
+									type="button"
+									title="Report user"
+									aria-label="Report user"
+									(click)="onToggleReportDialog(true)"
+								>
+									Report user
+								</button>
+							</li>
 						}
 					</ul>
 				</div>
@@ -326,5 +333,11 @@
 		[appCategoryDeleteCategoryList]="categoryList"
 		[appCategoryDeletePostList]="userPostComponent?.postList"
 		(appCategoryDeleteSuccess)="onDeleteCategory($event)"
+	></div>
+	<div
+		appQRCode
+		#appQrCodeComponent
+		[appQRCodeData]="currentUser | userUrl: 1"
+		[appQRCodeOrigin]="true"
 	></div>
 </ng-container>

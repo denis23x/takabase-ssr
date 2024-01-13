@@ -1,17 +1,19 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Router, RouterModule } from '@angular/router';
+import { Subscription, throwError } from 'rxjs';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { AuthenticatedDirective } from '../../directives/app-authenticated.directive';
 import { UserUrlPipe } from '../../pipes/user-url.pipe';
 import { AuthorizationService } from '../../../core/services/authorization.service';
-import { filter } from 'rxjs/operators';
+import { catchError, filter } from 'rxjs/operators';
 import { CurrentUser } from '../../../core/models/current-user.model';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../dropdown/dropdown.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { SnackbarService } from '../../../core/services/snackbar.service';
 
 @Component({
 	standalone: true,
@@ -29,9 +31,12 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly router: Router = inject(Router);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
+	currentUserLogoutRequest$: Subscription | undefined;
 
 	currentUserSkeletonToggle: boolean = true;
 	currentUserSkeletonToggle$: Subscription | undefined;
@@ -54,6 +59,33 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		// prettier-ignore
-		[this.currentUser$, this.currentUserSkeletonToggle$].forEach(($: Subscription) => $?.unsubscribe());
+		[
+      this.currentUser$,
+      this.currentUserSkeletonToggle$,
+      this.currentUserLogoutRequest$
+    ].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	onLogout(): void {
+		this.currentUserLogoutRequest$?.unsubscribe();
+		this.currentUserLogoutRequest$ = this.authorizationService
+			.onLogout()
+			.pipe(
+				catchError((httpErrorResponse: HttpErrorResponse) => {
+					this.router
+						.navigate(['/error', httpErrorResponse.status])
+						.then(() => console.debug('Route changed'));
+
+					return throwError(() => httpErrorResponse);
+				})
+			)
+			.subscribe({
+				next: () => {
+					this.router.navigateByUrl('/').then(() => {
+						this.snackbarService.success(null, 'Bye bye');
+					});
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 }

@@ -92,21 +92,6 @@
 								</li>
 							}
 						}
-						<li class="flex w-full snap-start scroll-my-2 menu-title">
-							<hr class="my-0 border-base-content/20" />
-						</li>
-						<li class="flex w-full snap-start scroll-my-2">
-							<button
-								class="rounded-btn block w-full truncate text-right"
-								data-pw="app-settings-profile-button-show-qr-code-modal"
-								type="button"
-								title="QR Code"
-								aria-label="QR Code"
-								(click)="appQrCodeComponent.onToggleQRCodeDialog(true)"
-							>
-								QR Code
-							</button>
-						</li>
 					</ul>
 				</div>
 			</div>
@@ -241,11 +226,14 @@
 					data-pw="app-settings-profile-form-submit"
 					type="submit"
 					aria-label="Submit"
+					appSkeleton
+					[appSkeletonToggle]="currentUserSkeletonToggle"
+					[appSkeletonClassListElementRef]="['border-0']"
 					[disabled]="profileForm.invalid || profileForm.disabled || profileFormIsPristine || profileFormAvatarSkeletonToggle"
 				>
-          @if (profileForm.disabled && !appCropperComponent.cropperDialogToggle) {
-					  <span class="loading loading-spinner"></span>
-          }
+					@if (profileForm.disabled && !appCropperComponent.cropperDialogToggle) {
+						<span class="loading loading-spinner"></span>
+					}
 					Submit
 				</button>
 			</fieldset>
@@ -257,5 +245,4 @@
 		(appCropperSubmit)="onSubmitCropperAvatar($event)"
 		(appCropperToggle)="onToggleProfileFormStatus($event)"
 	></div>
-	<div appQRCode #appQrCodeComponent [appQRCodeData]="currentUser | userUrl: 1"></div>
 </ng-container>

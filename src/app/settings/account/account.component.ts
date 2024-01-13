@@ -23,6 +23,8 @@ import { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
 import { CurrentUser } from '../../core/models/current-user.model';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
+import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
+import { PlatformService } from '../../core/services/platform.service';
 
 interface PasswordValidateForm {
 	password: FormControl<string>;
@@ -43,7 +45,8 @@ interface PasswordForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
-		BadgeErrorComponent
+		BadgeErrorComponent,
+		SkeletonDirective
 	],
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'
@@ -56,9 +59,11 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	private readonly cookieService: CookieService = inject(CookieService);
 	private readonly emailService: EmailService = inject(EmailService);
 	private readonly passwordService: PasswordService = inject(PasswordService);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
+	currentUserSkeletonToggle: boolean = true;
 
 	passwordValidateForm: FormGroup = this.formBuilder.group<PasswordValidateForm>({
 		password: this.formBuilder.nonNullable.control('', [
@@ -86,6 +91,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		/** Apply Data */
 
+		this.setSkeleton();
 		this.setResolver();
 	}
 
@@ -98,21 +104,28 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
+	setSkeleton(): void {
+		this.currentUserSkeletonToggle = true;
+	}
+
 	setResolver(): void {
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser) => {
-				this.currentUser = currentUser;
+		if (this.platformService.isBrowser()) {
+			this.currentUser$?.unsubscribe();
+			this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
+				next: (currentUser: CurrentUser) => {
+					this.currentUser = currentUser;
+					this.currentUserSkeletonToggle = false;
 
-				if (!this.currentUser.firebase.emailVerified) {
-					this.emailForm.get('email').setValue(this.currentUser.firebase.email);
-					this.emailForm.disable();
-				}
+					if (!this.currentUser.firebase.emailVerified) {
+						this.emailForm.get('email').setValue(this.currentUser.firebase.email);
+						this.emailForm.disable();
+					}
 
-				this.passwordValidateIsValid = !!Number(this.cookieService.getItem('password-valid'));
-			},
-			error: (error: any) => console.error(error)
-		});
+					this.passwordValidateIsValid = !!Number(this.cookieService.getItem('password-valid'));
+				},
+				error: (error: any) => console.error(error)
+			});
+		}
 	}
 
 	onSubmitPasswordValidateForm(): void {

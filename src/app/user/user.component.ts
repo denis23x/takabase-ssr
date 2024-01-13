@@ -2,8 +2,8 @@
 
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { distinctUntilKeyChanged, Subscription, throwError } from 'rxjs';
-import { catchError, filter, switchMap } from 'rxjs/operators';
+import { distinctUntilKeyChanged, Subscription } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
@@ -22,8 +22,6 @@ import { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
 import { CategoryDeleteComponent } from '../standalone/components/category/delete/delete.component';
-import { HttpErrorResponse } from '@angular/common/http';
-import { SnackbarService } from '../core/services/snackbar.service';
 import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import { CategoryService } from '../core/services/category.service';
 import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
@@ -32,6 +30,9 @@ import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 import { ReportService } from '../core/services/report.service';
 import { SearchFormComponent } from '../standalone/components/search-form/search-form.component';
+import { QrCodeComponent } from '../standalone/components/qr-code/qr-code.component';
+import { UserUrlPipe } from '../standalone/pipes/user-url.pipe';
+import { CopyUrlDirective } from '../standalone/directives/app-copy-url.directive';
 
 @Component({
 	standalone: true,
@@ -48,7 +49,10 @@ import { SearchFormComponent } from '../standalone/components/search-form/search
 		CategoryUpdateComponent,
 		CategoryDeleteComponent,
 		CategoryCreateComponent,
-		SearchFormComponent
+		SearchFormComponent,
+		QrCodeComponent,
+		UserUrlPipe,
+		CopyUrlDirective
 	],
 	selector: 'app-user',
 	templateUrl: './user.component.html'
@@ -63,7 +67,6 @@ export class UserComponent implements OnInit, OnDestroy {
 	private readonly reportService: ReportService = inject(ReportService);
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
-	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
 	activatedRouteUrl$: Subscription | undefined;
@@ -76,7 +79,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
-	currentUserLogoutRequest$: Subscription | undefined;
 
 	currentUserSkeletonToggle: boolean = true;
 	currentUserSkeletonToggle$: Subscription | undefined;
@@ -131,7 +133,6 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.userRequest$,
 			this.categoryRequest$,
 			this.currentUser$,
-			this.currentUserLogoutRequest$,
 			this.currentUserSkeletonToggle$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
@@ -353,28 +354,5 @@ export class UserComponent implements OnInit, OnDestroy {
 		// ExpressionChangedAfterItHasBeenCheckedError (userPostComponent)
 
 		this.changeDetectorRef.detectChanges();
-	}
-
-	onLogout(): void {
-		this.currentUserLogoutRequest$?.unsubscribe();
-		this.currentUserLogoutRequest$ = this.authorizationService
-			.onLogout()
-			.pipe(
-				catchError((httpErrorResponse: HttpErrorResponse) => {
-					this.router
-						.navigate(['/error', httpErrorResponse.status])
-						.then(() => console.debug('Route changed'));
-
-					return throwError(() => httpErrorResponse);
-				})
-			)
-			.subscribe({
-				next: () => {
-					this.router.navigateByUrl('/').then(() => {
-						this.snackbarService.success(null, 'Bye bye');
-					});
-				},
-				error: (error: any) => console.error(error)
-			});
 	}
 }

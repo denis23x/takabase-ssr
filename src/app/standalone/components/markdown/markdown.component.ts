@@ -160,11 +160,13 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				});
 
 			this.textareaPaste$?.unsubscribe();
-			this.textareaPaste$ = fromEvent(this.textarea, 'paste').subscribe({
-				// prettier-ignore
-				next: (clipboardEventInit: ClipboardEventInit) => this.markdownService.markdownItClipboard.next(clipboardEventInit),
-				error: (error: any) => console.error(error)
-			});
+			// prettier-ignore
+			this.textareaPaste$ = fromEvent(this.textarea, 'paste')
+				.pipe(filter((clipboardEventInit: ClipboardEventInit) => !!clipboardEventInit.clipboardData.files.length))
+				.subscribe({
+					next: (clipboardEventInit: ClipboardEventInit) => this.markdownService.markdownItClipboard.next(clipboardEventInit),
+					error: (error: any) => console.error(error)
+				});
 
 			this.textareaPasteFileImage$?.unsubscribe();
 			this.textareaPasteFileImage$ = this.markdownService.markdownItCropperImage

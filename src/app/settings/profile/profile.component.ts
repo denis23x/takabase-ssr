@@ -27,7 +27,6 @@ import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { TextareaAutosizeDirective } from '../../standalone/directives/app-textarea-autosize.directive';
 import { CurrentUser } from '../../core/models/current-user.model';
 import { User } from '../../core/models/user.model';
-import { QrCodeComponent } from '../../standalone/components/qr-code/qr-code.component';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { PlatformService } from '../../core/services/platform.service';
@@ -54,7 +53,6 @@ interface ProfileForm {
 		UserUrlPipe,
 		InputTrimWhitespaceDirective,
 		TextareaAutosizeDirective,
-		QrCodeComponent,
 		DropdownComponent,
 		SkeletonDirective,
 		BadgeErrorComponent
@@ -73,8 +71,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	private readonly fileService: FileService = inject(FileService);
 
 	currentUser: CurrentUser | undefined;
-	currentUserSkeletonToggle: boolean = true;
 	currentUser$: Subscription | undefined;
+	currentUserSkeletonToggle: boolean = true;
 	currentUserRequest$: Subscription | undefined;
 
 	profileForm: FormGroup = this.formBuilder.group<ProfileForm>({

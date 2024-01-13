@@ -3,21 +3,18 @@
 import { Component, inject, Input } from '@angular/core';
 import { Params } from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { PlatformService } from '../../../core/services/platform.service';
-import { SnackbarService } from '../../../core/services/snackbar.service';
 import { Post } from '../../../core/models/post.model';
 import { HelperService } from '../../../core/services/helper.service';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
+import { CopyUrlDirective } from '../../directives/app-copy-url.directive';
 
 @Component({
 	standalone: true,
-	imports: [SvgIconComponent, SkeletonDirective],
+	imports: [SvgIconComponent, SkeletonDirective, CopyUrlDirective],
 	selector: 'app-share, [appShare]',
 	templateUrl: './share.component.html'
 })
 export class ShareComponent {
-	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly helperService: HelperService = inject(HelperService);
 
 	@Input({ required: true })
@@ -119,16 +116,5 @@ export class ShareComponent {
 
 			this.shareList[shareKey] = [this.shareList[shareKey], encodedURI].join('?');
 		});
-	}
-
-	onCopyUrl(): void {
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			window.navigator.clipboard
-				.writeText(window.location.href)
-				.then(() => this.snackbarService.success(null, 'Post URL has been copied'))
-				.catch(() => this.snackbarService.error(null, 'Failed to copy'));
-		}
 	}
 }

@@ -18,10 +18,10 @@ import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { filter } from 'rxjs/operators';
 import { PostDeleteComponent } from '../delete/delete.component';
 import { PlatformService } from '../../../../core/services/platform.service';
-import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { QrCodeComponent } from '../../qr-code/qr-code.component';
 import { ReportService } from '../../../../core/services/report.service';
 import { AdComponent } from '../../ad/ad.component';
+import { CopyUrlDirective } from '../../../directives/app-copy-url.directive';
 
 @Component({
 	standalone: true,
@@ -38,7 +38,8 @@ import { AdComponent } from '../../ad/ad.component';
 		SvgIconComponent,
 		PostDeleteComponent,
 		QrCodeComponent,
-		AdComponent
+		AdComponent,
+		CopyUrlDirective
 	],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
@@ -47,7 +48,6 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly reportService: ReportService = inject(ReportService);
-	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
 	@Input({ required: true })
 	set appPostProsePost(post: Post) {
@@ -100,17 +100,6 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		// prettier-ignore
 		[this.currentUser$, this.currentUserSkeletonToggle$].forEach(($: Subscription) => $?.unsubscribe());
-	}
-
-	onCopyUrl(): void {
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			window.navigator.clipboard
-				.writeText(this.postShareUrl)
-				.then(() => this.snackbarService.success(null, 'Post URL has been copied'))
-				.catch(() => this.snackbarService.error(null, 'Failed to copy'));
-		}
 	}
 
 	onToggleReportDialog(toggle: boolean): void {

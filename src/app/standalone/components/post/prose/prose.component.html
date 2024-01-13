@@ -81,9 +81,10 @@
 								<li class="flex w-full snap-start scroll-my-2">
 									<button
 										class="rounded-btn block w-full truncate text-right"
+										type="button"
 										title="Copy link"
 										aria-label="Copy link"
-										(click)="onCopyUrl()"
+										appCopyUrl
 									>
 										Copy link
 									</button>
@@ -91,6 +92,7 @@
 								<li class="flex w-full snap-start scroll-my-2">
 									<button
 										class="rounded-btn block w-full truncate text-right"
+										type="button"
 										title="QR Code"
 										aria-label="QR Code"
 										(click)="appQrCodeComponent.onToggleQRCodeDialog(true)"

@@ -193,7 +193,12 @@
 					@if (passwordValidateForm.get("password"); as password) {
 						<fieldset class="form-control">
 							<label class="label" for="passwordValidateFormPassword">
-								<div class="indicator">
+								<div
+									class="indicator"
+									appSkeleton
+									[appSkeletonToggle]="currentUserSkeletonToggle"
+									[appSkeletonClassListElementRef]="['!-mx-1']"
+								>
 									@if (password.touched && !!password.errors && passwordValidateForm.enabled) {
 										<div
 											class="block"
@@ -204,7 +209,7 @@
 									<span class="label-text mr-2">Current password</span>
 								</div>
 							</label>
-							<div class="relative">
+							<div class="relative" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
 								<input
 									class="input-bordered input input-md w-full !pr-12"
 									id="passwordValidateFormPassword"
@@ -239,7 +244,7 @@
 							</div>
 						</fieldset>
 					}
-					<p class="alert" role="alert">
+					<p class="alert" role="alert" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
 						<i
 							class="fill-current text-info"
 							appSvgIcon
@@ -256,6 +261,9 @@
 							class="btn btn-success btn-md w-full"
 							type="submit"
 							aria-label="Continue"
+							appSkeleton
+							[appSkeletonToggle]="currentUserSkeletonToggle"
+							[appSkeletonClassListElementRef]="['border-0']"
 							[disabled]="passwordValidateForm.invalid || passwordValidateForm.disabled"
 						>
 							@if (passwordValidateForm.disabled) {
