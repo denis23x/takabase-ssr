@@ -439,40 +439,54 @@
 							<fieldset class="form-control h-full">
 								<!-- prettier-ignore -->
 								<div
-                  class="textarea-autosize w-full h-full focus-within:outline-0 relative"
-                  appSkeleton
-                  [appSkeletonToggle]="postSkeletonToggle || postFormTextareaSkeletonToggle"
-                  [appSkeletonClassListElementRef]="['!border-0']"
-                  [ngClass]="{ 'border-base-content/20': postForm.enabled, 'border-transparent': postForm.disabled }"
-                  [class.textarea-autosize-success]="markdown.value && markdown.valid"
-                  [class.textarea-autosize-error]="markdown.touched && markdown.invalid"
-                >
-                  <textarea
-                    class="textarea textarea-md w-full h-full"
-                    id="postFormTextarea"
-                    aria-label="Markdown"
-                    placeholder="Type post markdown"
-                    formControlName="markdown"
-                    appInputTrimWhitespace
-                    appTextareaAutosize
-                    [appAutosizeToggle]="!fullscreenToggle"
-                    [rows]="8"
-                    [class.max-h-96]="!fullscreenToggle"
-                    [class.whitespace-pre]="fullscreenToggle && !fullscreenTextWrapping"
-                    [class.font-mono]="postMarkdownMonospace"
-                  ></textarea>
-                  @if (!post && postForm.pristine && postForm.enabled && !markdown.value) {
-                    <a
-                      class="absolute top-11 left-4 text-sm text-base-content/50 link"
-                      title="About Markdown"
-                      aria-label="About Markdown"
-                      [routerLink]="['/help/markdown']"
-                      [class.font-mono]="postMarkdownMonospace"
-                    >
-                      How to make a greatest layout?
-                    </a>
-                  }
-                </div>
+									class="textarea-autosize w-full h-full focus-within:outline-0 relative"
+									appSkeleton
+									[appSkeletonToggle]="postSkeletonToggle || postFormTextareaSkeletonToggle"
+									[appSkeletonClassListElementRef]="['!border-0']"
+									[ngClass]="{ 'border-base-content/20': postForm.enabled, 'border-transparent': postForm.disabled }"
+									[class.textarea-autosize-success]="markdown.value && markdown.valid"
+									[class.textarea-autosize-error]="markdown.touched && markdown.invalid"
+								>
+									<textarea
+										class="textarea textarea-md w-full h-full"
+										id="postFormTextarea"
+										aria-label="Markdown"
+										formControlName="markdown"
+										appInputTrimWhitespace
+										appTextareaAutosize
+										[appAutosizeToggle]="!fullscreenToggle"
+										[rows]="8"
+										[class.max-h-96]="!fullscreenToggle"
+										[class.whitespace-pre]="fullscreenToggle && !fullscreenTextWrapping"
+										[class.font-mono]="postMarkdownMonospace"
+										(focusin)="postFormTextareaPlaceholderToggle = false"
+										(focusout)="postFormTextareaPlaceholderToggle = true"
+									></textarea>
+									@if (postFormTextareaPlaceholderToggle && !markdown.value) {
+										<div
+											class="absolute top-4 left-4 flex flex-col items-start justify-start pointer-events-none gap-2"
+											[class.font-mono]="postMarkdownMonospace"
+										>
+											<span class="text-sm text-base-content/50"> Type post markdown </span>
+											<a
+												class="text-sm text-base-content/50 link pointer-events-auto"
+												title="Markdown"
+												aria-label="Markdown"
+												target="_blank"
+												[routerLink]="['/help/markdown']"
+											>
+												How to make a greatest layout?
+											</a>
+											<div class="flex text-sm gap-2">
+												<span class="inline-block text-base-content/50"> Press </span>
+												<kbd class="kbd kbd-sm uppercase" appKbdCommand></kbd>
+												<span class="inline-block text-base-content/50"> + </span>
+												<kbd class="kbd kbd-sm uppercase">/</kbd>
+												<span class="inline-block text-base-content/50"> for shortcut help </span>
+											</div>
+										</div>
+									}
+								</div>
 							</fieldset>
 						}
 					</form>
@@ -496,7 +510,7 @@
 					[appSkeletonToggle]="postSkeletonToggle"
 					[appSkeletonClassListElementRef]="['border-0']"
 					[class.btn-outline]="postForm.valid && postForm.enabled"
-					[disabled]="(!post && postForm.pristine) || postForm.disabled"
+					[disabled]="postForm.disabled"
 					(click)="appPostPreviewComponent.onTogglePostPreviewDialog(true)"
 				>
 					Preview
@@ -568,4 +582,5 @@
 		[appPostDeletePost]="post"
 		(appPostDeleteToggle)="onTogglePostFormStatus($event)"
 	></div>
+	<div appShortcuts></div>
 </ng-container>

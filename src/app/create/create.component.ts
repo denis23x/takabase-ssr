@@ -45,6 +45,8 @@ import { FileService } from '../core/services/file.service';
 import { PostUpdateDto } from '../core/dto/post/post-update.dto';
 import { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
 import { BadgeErrorComponent } from '../standalone/components/badge-error/badge-error.component';
+import { ShortcutsComponent } from '../standalone/components/shortcuts/shortcuts.component';
+import { KbdCommandDirective } from '../standalone/directives/app-kbd-command.directive';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -75,7 +77,9 @@ interface PostForm {
 		CategoryCreateComponent,
 		CategoryUpdateComponent,
 		PostPreviewComponent,
-		BadgeErrorComponent
+		BadgeErrorComponent,
+		ShortcutsComponent,
+		KbdCommandDirective
 	],
 	templateUrl: './create.component.html'
 })
@@ -140,6 +144,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	postFormImageSkeletonToggle: boolean = false;
 	postFormImageRequest$: Subscription | undefined;
 
+	postFormTextareaPlaceholderToggle: boolean = true;
 	postFormTextareaSkeletonToggle: boolean = false;
 	postFormTextareaId: string = 'postFormTextarea';
 	postFormPreviewId: string = 'postFormPreview';

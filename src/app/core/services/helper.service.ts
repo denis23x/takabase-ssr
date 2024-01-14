@@ -88,4 +88,14 @@ export class HelperService {
 	getURL(): URL {
 		return new URL(this.document.URL, environment.appUrl);
 	}
+
+	getOSCommandKey(): string {
+		const os: string = this.platformService.getOS();
+
+		if (os === 'Mac') {
+			return '⌘';
+		} else {
+			return 'ctrl';
+		}
+	}
 }

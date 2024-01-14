@@ -1,0 +1,96 @@
+<!-- @format -->
+
+<ng-container>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#shortcutsDialog
+		(keydown.escape)="$event.preventDefault(); onToggleShortcutsDialog(false)"
+		(click)="$event.target === $event.currentTarget ? onToggleShortcutsDialog(false) : $event"
+	>
+		<div
+			class="flex items-center justify-center w-full max-w-lg"
+			appWindow
+			[appWindowTitle]="'Shortcuts'"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onToggleShortcutsDialog(false)"
+		>
+			<div class="flex flex-col items-center justify-start gap-4 p-4" slot="content">
+				<p class="alert" role="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appSvgIconIcon]="'info-circle'"
+						[appSvgIconSquare]="'1.5em'"
+					></i>
+					<span class="block"> Boost your productivity and focus on what matters </span>
+				</p>
+				<ul class="flex flex-col w-full">
+					<li class="flex items-center justify-between">
+						<p class="text-sm">Applies bold formatting</p>
+						<div class="flex items-center justify-start gap-2">
+							<kbd class="kbd kbd-sm uppercase" appKbdCommand></kbd>
+							<span class="text-sm text-base-content"> + </span>
+							<kbd class="kbd kbd-sm uppercase"> b </kbd>
+						</div>
+					</li>
+					<li class="block py-2">
+						<hr class="border-t border-base-content/20" />
+					</li>
+					<li class="flex items-center justify-between">
+						<p class="text-sm">Applies italics formatting</p>
+						<div class="flex items-center justify-start gap-2">
+							<kbd class="kbd kbd-sm uppercase" appKbdCommand></kbd>
+							<span class="text-sm text-base-content"> + </span>
+							<kbd class="kbd kbd-sm uppercase"> i </kbd>
+						</div>
+					</li>
+					<li class="block py-2">
+						<hr class="border-t border-base-content/20" />
+					</li>
+					<li class="flex items-center justify-between">
+						<p class="text-sm">Applies strikethrough formatting</p>
+						<div class="flex items-center justify-start gap-2">
+							<kbd class="kbd kbd-sm uppercase" appKbdCommand></kbd>
+							<span class="text-sm text-base-content"> + </span>
+							<kbd class="kbd kbd-sm uppercase"> s </kbd>
+						</div>
+					</li>
+					<li class="block py-2">
+						<hr class="border-t border-base-content/20" />
+					</li>
+					<li class="flex items-center justify-between">
+						<p class="text-sm">Applies strikethrough formatting</p>
+						<div class="flex items-center justify-start gap-2">
+							<kbd class="kbd kbd-sm uppercase" appKbdCommand></kbd>
+							<span class="text-sm text-base-content"> + </span>
+							<kbd class="kbd kbd-sm uppercase"> H </kbd>
+							<span class="text-sm text-base-content"> + </span>
+							<kbd class="kbd kbd-sm uppercase"> 1 </kbd>
+							<span class="text-sm text-base-content"> ... </span>
+							<kbd class="kbd kbd-sm uppercase"> 4 </kbd>
+						</div>
+					</li>
+					<!--					<li class="grid grid-cols-2 items-center">-->
+					<!--						<div class="col-span-1 flex items-center justify-start gap-2">-->
+					<!--							<kbd class="kbd kbd-sm uppercase" appKbdCommand></kbd>-->
+					<!--							<span class="text-base text-base-content"> + </span>-->
+					<!--							<kbd class="kbd kbd-sm uppercase"> c </kbd>-->
+					<!--						</div>-->
+					<!--						<p class="col-span-1 text-sm">Copy</p>-->
+					<!--					</li>-->
+					<!--					<li class="grid grid-cols-2 items-center">-->
+					<!--						<div class="col-span-1 flex items-center justify-start gap-2">-->
+					<!--							<kbd class="kbd kbd-sm uppercase" appKbdCommand></kbd>-->
+					<!--							<span class="text-base text-base-content"> + </span>-->
+					<!--							<kbd class="kbd kbd-sm uppercase"> v </kbd>-->
+					<!--						</div>-->
+					<!--						<p class="col-span-1 text-sm">Paste</p>-->
+					<!--					</li>-->
+				</ul>
+			</div>
+		</div>
+	</dialog>
+</ng-container>
+<!--https://docs.devexpress.com/WindowsForms/6263/controls-and-libraries/rich-text-editor/keyboard-shortcuts-->
+<!--https://www.howtogeek.com/115664/42-text-editing-keyboard-shortcuts-that-work-almost-everywhere/-->
