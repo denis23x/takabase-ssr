@@ -24,7 +24,7 @@ import {
 	MarkdownControlUrl
 } from './markdown';
 import { fromEvent, merge, Subscription } from 'rxjs';
-import { debounceTime, filter } from 'rxjs/operators';
+import { debounceTime, filter, map } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -41,6 +41,7 @@ import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-wh
 import { InputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
 import {
 	MarkdownControl,
+	MarkdownShortcut,
 	MarkdownTextarea,
 	MarkdownWrapper,
 	MarkdownWrapperPayload
@@ -132,6 +133,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	scrollSync: boolean = false;
 	scrollSync$: Subscription | undefined;
 
+	textareaShortcut$: Subscription | undefined;
 	textareaPaste$: Subscription | undefined;
 	textareaPasteFileImage$: Subscription | undefined;
 	textareaInput$: Subscription | undefined;
@@ -194,6 +196,23 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 					},
 					error: (error: any) => console.error(error)
 				});
+
+			this.textareaShortcut$?.unsubscribe();
+			this.textareaShortcut$ = this.markdownService.markdownItShortcut
+				.pipe(
+					filter((markdownShortcut: MarkdownShortcut | null) => !!markdownShortcut),
+					map((markdownShortcut: MarkdownShortcut) => {
+						return this.controlListHeading.find((control: MarkdownControl) => {
+							return control.key === markdownShortcut.key;
+						});
+					}),
+					filter((markdownControl: MarkdownControl | null) => !!markdownControl),
+					map((markdownControl: MarkdownControl) => this.getTextareaValue(markdownControl))
+				)
+				.subscribe({
+					next: (value: string) => this.setTextareaValue(value),
+					error: (error: any) => console.error(error)
+				});
 		}
 
 		this.setHandlerEmojiMart();
@@ -206,6 +225,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.textareaInput$,
 			this.textareaPaste$,
 			this.textareaPasteFileImage$,
+			this.textareaShortcut$,
 			this.scrollSync$,
 			this.urlForm$,
 			this.controlListEmojiMartColorScheme$

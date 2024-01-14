@@ -166,10 +166,10 @@ export const MarkdownControlList = (): MarkdownControl[] => [
 		}
 	},
 	{
-		key: 'list-task',
-		label: 'Task',
+		key: 'list-checkbox',
+		label: 'Checkbox',
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-			return setWrapper('- [x]  ' + (markdownTextarea.selection || 'Task list'), markdownTextarea, 'block');
+			return setWrapper('- [x]  ' + (markdownTextarea.selection || 'Checkbox list'), markdownTextarea, 'block');
 		}
 	}
 ];
