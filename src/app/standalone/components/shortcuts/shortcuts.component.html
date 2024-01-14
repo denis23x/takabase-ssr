@@ -9,7 +9,7 @@
 		(click)="$event.target === $event.currentTarget ? onToggleShortcutsDialog(false) : $event"
 	>
 		<div
-			class="flex items-center justify-center w-full max-w-md"
+			class="flex items-center justify-center w-full max-w-sm"
 			appWindow
 			[appWindowTitle]="'Shortcuts'"
 			[appWindowButtons]="['close']"
@@ -22,14 +22,7 @@
 							<p class="text-sm">{{ shortcut.label }}</p>
 							<div class="flex items-center justify-start gap-2">
 								@for (key of shortcut.shortcut; track $index; let keyLast = $last) {
-									@switch (key === "ctrl") {
-										@case (true) {
-											<kbd class="kbd kbd-sm uppercase" appKbdCommand></kbd>
-										}
-										@default {
-											<kbd class="kbd kbd-sm uppercase"> {{ key }} </kbd>
-										}
-									}
+									<kbd class="kbd kbd-sm uppercase"> {{ key }} </kbd>
 									@if (keyLast === false) {
 										<span class="text-sm text-base-content"> + </span>
 									}

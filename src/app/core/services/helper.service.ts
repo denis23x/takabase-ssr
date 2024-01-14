@@ -89,13 +89,32 @@ export class HelperService {
 		return new URL(this.document.URL, environment.appUrl);
 	}
 
-	getOSCommandKey(): string {
+	getOSSpecialKey(key: string): string {
 		const os: string = this.platformService.getOS();
 
 		if (os === 'Mac') {
-			return '⌘';
-		} else {
-			return 'ctrl';
+			switch (key) {
+				case 'ctrl': {
+					return '⌃';
+				}
+				case 'command': {
+					return '⌘';
+				}
+				case 'alt': {
+					return '⌥';
+				}
+				case 'shift': {
+					return '⇧';
+				}
+				case 'enter': {
+					return '↵';
+				}
+				default: {
+					return key;
+				}
+			}
 		}
+
+		return key;
 	}
 }

@@ -26,3 +26,11 @@ export interface MarkdownWrapperPayload {
 	newline: boolean;
 	character: boolean;
 }
+
+export interface MarkdownShortcut {
+	id: number;
+	label: string;
+	key?: string;
+	preventDefault: boolean;
+	shortcut: string[];
+}

@@ -24,7 +24,8 @@ import { environment } from '../../../environments/environment';
 import { RenderRule } from 'markdown-it/lib/renderer';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { MarkdownShortcut } from '../models/markdown.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -35,6 +36,7 @@ export class MarkdownService {
 
 	// prettier-ignore
 	markdownItClipboard: BehaviorSubject<ClipboardEventInit | undefined> = new BehaviorSubject<ClipboardEventInit | undefined>(undefined);
+	markdownItShortcut: Subject<MarkdownShortcut | null> = new Subject<MarkdownShortcut | null>();
 
 	markdownItCropperImage: BehaviorSubject<File | null> = new BehaviorSubject<File | null>(null);
 	markdownItCropperToggle: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);

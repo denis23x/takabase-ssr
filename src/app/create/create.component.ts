@@ -46,7 +46,7 @@ import { PostUpdateDto } from '../core/dto/post/post-update.dto';
 import { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
 import { BadgeErrorComponent } from '../standalone/components/badge-error/badge-error.component';
 import { ShortcutsComponent } from '../standalone/components/shortcuts/shortcuts.component';
-import { KbdCommandDirective } from '../standalone/directives/app-kbd-command.directive';
+import { KbdPipe } from '../standalone/pipes/kbd.pipe';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -79,7 +79,7 @@ interface PostForm {
 		PostPreviewComponent,
 		BadgeErrorComponent,
 		ShortcutsComponent,
-		KbdCommandDirective
+		KbdPipe
 	],
 	templateUrl: './create.component.html'
 })

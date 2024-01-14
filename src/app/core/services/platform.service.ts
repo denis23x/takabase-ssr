@@ -67,4 +67,14 @@ export class PlatformService {
 
 		return null;
 	}
+
+	getOSModifierKey(): string {
+		const os: string = this.getOS();
+
+		if (os === 'Mac') {
+			return 'command';
+		} else {
+			return 'ctrl';
+		}
+	}
 }
