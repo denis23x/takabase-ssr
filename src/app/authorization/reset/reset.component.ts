@@ -19,6 +19,7 @@ import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.
 import { PasswordService } from '../../core/services/password.service';
 import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
+import { CommonModule } from '@angular/common';
 
 interface ResetForm {
 	email: FormControl<string>;
@@ -27,6 +28,7 @@ interface ResetForm {
 @Component({
 	standalone: true,
 	imports: [
+		CommonModule,
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,

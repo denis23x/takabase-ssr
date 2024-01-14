@@ -1,8 +1,11 @@
 <!-- @format -->
 
 <ng-container>
-	<ul class="flex items-center justify-start gap-4">
-		<li class="block">
+	<ul
+		class="flex items-center justify-start gap-4"
+		[ngClass]="{ 'grayscale cursor-not-allowed': OAuthDisabled }"
+	>
+		<li class="block" [ngClass]="{ 'pointer-events-none': OAuthDisabled }">
 			<a
 				class="block rounded-full bg-[#EA4335] fill-current p-1.5 text-white"
 				title="Google"
@@ -10,13 +13,13 @@
 				target="_self"
 				rel="noopener noreferrer"
 				appSvgIcon
-				[href]="apiUrl + '/auth/google'"
+				[href]="OAuthApiUrl + '/auth/google'"
 				[appSvgIconIcon]="'google'"
 				[appSvgIconSquare]="'1em'"
 			>
 			</a>
 		</li>
-		<li class="block">
+		<li class="block" [ngClass]="{ 'pointer-events-none': OAuthDisabled }">
 			<a
 				class="block rounded-full bg-white fill-current text-[#1877f2]"
 				title="Facebook"
@@ -24,13 +27,13 @@
 				target="_self"
 				rel="noopener noreferrer"
 				appSvgIcon
-				[href]="apiUrl + '/auth/facebook'"
+				[href]="OAuthApiUrl + '/auth/facebook'"
 				[appSvgIconIcon]="'facebook'"
 				[appSvgIconSquare]="'1.75em'"
 			>
 			</a>
 		</li>
-		<li class="block">
+		<li class="block" [ngClass]="{ 'pointer-events-none': OAuthDisabled }">
 			<a
 				class="block rounded-full bg-white fill-current text-[#333333]"
 				title="Github"
@@ -38,7 +41,7 @@
 				target="_self"
 				rel="noopener noreferrer"
 				appSvgIcon
-				[href]="apiUrl + '/auth/github'"
+				[href]="OAuthApiUrl + '/auth/github'"
 				[appSvgIconIcon]="'github'"
 				[appSvgIconSquare]="'1.75em'"
 			>

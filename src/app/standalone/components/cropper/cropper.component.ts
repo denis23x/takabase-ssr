@@ -88,7 +88,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
 	// prettier-ignore
-	@ViewChild("cropperDialogElement") cropperDialogElement: | ElementRef<HTMLDialogElement> | undefined;
+	@ViewChild('cropperDialogElement') cropperDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
 	@ViewChild('imageFormFile') imageFormFile: ElementRef<HTMLInputElement> | undefined;
 

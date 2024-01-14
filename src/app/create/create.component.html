@@ -16,8 +16,8 @@
 							<!-- prettier-ignore -->
 							<figure
                 class="block rounded-btn relative border border-base-content/20 h-12 w-12 overflow-hidden transition"
-                [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-200': postForm.disabled, 'cursor-pointer': postForm.enabled, 'border-success': image.value }"
-                (click)="appCropperComponent.onToggleCropper(true)"
+                [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-300': postForm.disabled, 'cursor-pointer': postForm.enabled, 'border-success': image.value }"
+                (click)="postForm.enabled ? appCropperComponent.onToggleCropper(true) : false"
               >
                 @switch (true) {
                   @case (!!image.value === true) {
@@ -461,7 +461,7 @@
                     [class.whitespace-pre]="fullscreenToggle && !fullscreenTextWrapping"
                     [class.font-mono]="postMarkdownMonospace"
                   ></textarea>
-                  @if (!markdown.value && !post) {
+                  @if (!post && postForm.pristine && postForm.enabled && !markdown.value) {
                     <a
                       class="absolute top-11 left-4 text-sm text-base-content/50 link"
                       title="About Markdown"

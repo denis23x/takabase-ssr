@@ -75,7 +75,13 @@
 					</button>
 				</fieldset>
 			</form>
-			<a class="btn-primary btn-outline btn w-full" aria-label="Login" [routerLink]="'/login'">
+			<!-- prettier-ignore -->
+			<a
+				class="btn-primary btn w-full"
+				aria-label="Login"
+				[routerLink]="resetForm.enabled ? '/login' : null"
+				[ngClass]="{ 'btn-outline': resetForm.enabled, 'btn-disabled': resetForm.disabled }"
+			>
 				Login
 			</a>
 		</div>

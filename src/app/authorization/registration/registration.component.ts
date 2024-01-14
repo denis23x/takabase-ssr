@@ -22,6 +22,7 @@ import { OauthComponent } from '../../standalone/components/oauth/oauth.componen
 import { RegistrationDto } from '../../core/dto/auth/registration.dto';
 import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
+import { CommonModule } from '@angular/common';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -33,6 +34,7 @@ interface RegistrationForm {
 @Component({
 	standalone: true,
 	imports: [
+		CommonModule,
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,

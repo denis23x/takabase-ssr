@@ -21,6 +21,7 @@ import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-in
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
+import { CommonModule } from '@angular/common';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -30,6 +31,7 @@ interface LoginForm {
 @Component({
 	standalone: true,
 	imports: [
+		CommonModule,
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,

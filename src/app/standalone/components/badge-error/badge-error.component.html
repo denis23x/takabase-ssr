@@ -10,7 +10,7 @@
 				Email must be a real email address
 			}
 			@case (!!abstractControl.errors.pattern) {
-				Does not match pattern
+				Invalid value
 			}
 			@case (!!abstractControl.errors.minlength) {
 				Min length {{ abstractControl.errors.minlength["requiredLength"] }} characters

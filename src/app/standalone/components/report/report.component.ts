@@ -105,7 +105,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 		const abstractControl: AbstractControl = this.reportForm.get('name');
 
 		abstractControl.setValue(reportFormName);
-		abstractControl.updateValueAndValidity();
+		abstractControl.markAsTouched();
 	}
 
 	onSubmitReportForm(): void {
