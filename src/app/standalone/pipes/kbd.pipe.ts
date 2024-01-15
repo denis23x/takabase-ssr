@@ -1,16 +1,16 @@
 /** @format */
 
 import { inject, Pipe, PipeTransform } from '@angular/core';
-import { HelperService } from '../../core/services/helper.service';
+import { PlatformService } from '../../core/services/platform.service';
 
 @Pipe({
 	standalone: true,
 	name: 'kbd'
 })
 export class KbdPipe implements PipeTransform {
-	private readonly helperService: HelperService = inject(HelperService);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
 	transform(value: string): string {
-		return this.helperService.getOSSpecialKey(value);
+		return this.platformService.getOSKeyboardCharacter(value);
 	}
 }

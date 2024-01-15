@@ -77,4 +77,33 @@ export class PlatformService {
 			return 'ctrl';
 		}
 	}
+
+	getOSKeyboardCharacter(key: string): string {
+		const os: string = this.getOS();
+
+		if (os === 'Mac') {
+			switch (key) {
+				case 'ctrl': {
+					return '⌃';
+				}
+				case 'command': {
+					return '⌘';
+				}
+				case 'alt': {
+					return '⌥';
+				}
+				case 'shift': {
+					return '⇧';
+				}
+				case 'enter': {
+					return '↵';
+				}
+				default: {
+					return key;
+				}
+			}
+		}
+
+		return key;
+	}
 }

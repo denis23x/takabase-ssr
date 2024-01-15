@@ -1,9 +1,16 @@
 /** @format */
 
-import { AfterViewInit, Component, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
+import {
+	AfterViewInit,
+	ChangeDetectorRef,
+	Component,
+	ElementRef,
+	inject,
+	OnDestroy,
+	ViewChild
+} from '@angular/core';
 import { WindowComponent } from '../window/window.component';
 import { PlatformService } from '../../../core/services/platform.service';
-import { HelperService } from '../../../core/services/helper.service';
 import { MarkdownShortcut } from '../../../core/models/markdown.model';
 import { MarkdownService } from '../../../core/services/markdown.service';
 import hotkeys from 'hotkeys-js';
@@ -17,7 +24,7 @@ import hotkeys from 'hotkeys-js';
 export class ShortcutsComponent implements AfterViewInit, OnDestroy {
 	private readonly markdownService: MarkdownService = inject(MarkdownService);
 	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly helperService: HelperService = inject(HelperService);
+	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
 	@ViewChild('shortcutsDialog') shortcutsDialog: ElementRef<HTMLDialogElement> | undefined;
 
@@ -27,28 +34,28 @@ export class ShortcutsComponent implements AfterViewInit, OnDestroy {
 			label: 'Bold',
 			key: 'formatting-bold',
 			preventDefault: true,
-			shortcut: ['ctrl', 'b']
+			shortcut: ['modifier', 'b']
 		},
 		{
 			id: 2,
 			label: 'Italic',
 			key: 'formatting-italic',
 			preventDefault: true,
-			shortcut: ['ctrl', 'i']
+			shortcut: ['modifier', 'i']
 		},
 		{
 			id: 3,
 			key: 'formatting-strikethrough',
 			label: 'Strikethrough',
 			preventDefault: true,
-			shortcut: ['ctrl', 's']
+			shortcut: ['modifier', 's']
 		},
 		{
 			id: 31,
 			key: 'formatting-mark',
 			label: 'Mark',
 			preventDefault: true,
-			shortcut: ['ctrl', 'm']
+			shortcut: ['modifier', 'm']
 		},
 		{
 			id: 4,
@@ -82,34 +89,34 @@ export class ShortcutsComponent implements AfterViewInit, OnDestroy {
 			id: 71,
 			label: 'Quote',
 			preventDefault: true,
-			shortcut: ['ctrl', 'shift', '6']
+			shortcut: ['modifier', 'shift', '6']
 		},
 		{
 			id: 711,
 			label: 'Spoiler',
 			preventDefault: true,
-			shortcut: ['ctrl', 'shift', '5']
+			shortcut: ['modifier', 'shift', '5']
 		},
 		{
 			id: 8,
 			label: 'Ordered list',
 			key: 'list-unordered',
 			preventDefault: true,
-			shortcut: ['ctrl', 'shift', '7']
+			shortcut: ['modifier', 'shift', '7']
 		},
 		{
 			id: 9,
 			label: 'Unordered list',
 			key: 'list-ordered',
 			preventDefault: true,
-			shortcut: ['ctrl', 'shift', '8']
+			shortcut: ['modifier', 'shift', '8']
 		},
 		{
 			id: 10,
 			label: 'Checkbox list',
 			key: 'list-checkbox',
 			preventDefault: true,
-			shortcut: ['ctrl', 'shift', '9']
+			shortcut: ['modifier', 'shift', '9']
 		},
 		{
 			id: 11,
@@ -144,38 +151,43 @@ export class ShortcutsComponent implements AfterViewInit, OnDestroy {
 			label: 'Horizontal line',
 			key: '',
 			preventDefault: true,
-			shortcut: ['ctrl', 'enter']
+			shortcut: ['modifier', 'enter']
 		},
 		{
 			id: 15,
 			label: 'Fullscreen',
 			preventDefault: true,
-			shortcut: ['ctrl', 'shift', 'enter']
+			shortcut: ['modifier', 'shift', 'enter']
 		}
 	];
 
 	ngAfterViewInit(): void {
 		if (this.platformService.isBrowser()) {
 			const os: string = this.platformService.getOS();
+			const osModifierKey: string = this.platformService.getOSModifierKey();
 
 			/** Prepare shortcuts */
 
 			this.shortcutsList = this.shortcutsList.map((markdownShortcut: MarkdownShortcut) => {
 				markdownShortcut.shortcut = markdownShortcut.shortcut.map((shortcut: string) => {
-					if (os === 'Mac') {
-						if (shortcut === 'ctrl') {
-							return this.helperService.getOSSpecialKey('command');
-						}
+					if (shortcut === 'modifier') {
+						return this.platformService.getOSKeyboardCharacter(osModifierKey);
 					}
 
-					return this.helperService.getOSSpecialKey(shortcut);
+					return this.platformService.getOSKeyboardCharacter(shortcut);
 				});
 
 				return markdownShortcut;
 			});
 
+			// ExpressionChangedAfterItHasBeenCheckedError (command)
+
+			this.changeDetectorRef.detectChanges();
+
+			/** Init shortcuts */
+
 			hotkeys.filter = (): boolean => true;
-			hotkeys(os === 'Mac' ? 'command+/' : 'ctrl+/', () => this.onToggleShortcutsDialog(true));
+			hotkeys(osModifierKey + '+/', () => this.onToggleShortcutsDialog(true));
 
 			/** Bind shortcuts */
 

@@ -202,6 +202,8 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				.pipe(
 					filter((markdownShortcut: MarkdownShortcut | null) => !!markdownShortcut),
 					map((markdownShortcut: MarkdownShortcut) => {
+						console.log(markdownShortcut);
+
 						return this.controlListHeading.find((control: MarkdownControl) => {
 							return control.key === markdownShortcut.key;
 						});

@@ -1,6 +1,15 @@
 /** @format */
 
-import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+	Component,
+	computed,
+	ElementRef,
+	inject,
+	OnDestroy,
+	OnInit,
+	Signal,
+	ViewChild
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
@@ -144,6 +153,9 @@ export class CreateComponent implements OnInit, OnDestroy {
 	postFormImageSkeletonToggle: boolean = false;
 	postFormImageRequest$: Subscription | undefined;
 
+	postFormTextareaPlaceholderModifierKey: Signal<string> = computed(() => {
+		return this.platformService.getOSModifierKey();
+	});
 	postFormTextareaPlaceholderToggle: boolean = true;
 	postFormTextareaSkeletonToggle: boolean = false;
 	postFormTextareaId: string = 'postFormTextarea';
