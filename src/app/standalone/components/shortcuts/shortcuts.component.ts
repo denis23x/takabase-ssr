@@ -1,14 +1,6 @@
 /** @format */
 
-import {
-	AfterViewInit,
-	ChangeDetectorRef,
-	Component,
-	ElementRef,
-	inject,
-	OnDestroy,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { WindowComponent } from '../window/window.component';
 import { PlatformService } from '../../../core/services/platform.service';
 import { MarkdownShortcut } from '../../../core/models/markdown.model';
@@ -21,152 +13,115 @@ import hotkeys from 'hotkeys-js';
 	selector: 'app-shortcuts, [appShortcuts]',
 	templateUrl: './shortcuts.component.html'
 })
-export class ShortcutsComponent implements AfterViewInit, OnDestroy {
+export class ShortcutsComponent implements OnInit, OnDestroy {
 	private readonly markdownService: MarkdownService = inject(MarkdownService);
 	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
 	@ViewChild('shortcutsDialog') shortcutsDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	shortcutsList: MarkdownShortcut[] = [
 		{
-			id: 1,
-			label: 'Bold',
 			key: 'formatting-bold',
-			preventDefault: true,
+			label: 'Bold',
 			shortcut: ['modifier', 'b']
 		},
 		{
-			id: 2,
-			label: 'Italic',
 			key: 'formatting-italic',
-			preventDefault: true,
+			label: 'Italic',
 			shortcut: ['modifier', 'i']
 		},
 		{
-			id: 3,
 			key: 'formatting-strikethrough',
 			label: 'Strikethrough',
-			preventDefault: true,
-			shortcut: ['modifier', 's']
+			shortcut: ['modifier', 'd']
 		},
 		{
-			id: 31,
 			key: 'formatting-mark',
 			label: 'Mark',
-			preventDefault: true,
-			shortcut: ['modifier', 'm']
+			shortcut: ['modifier', 'u']
 		},
 		{
-			id: 4,
-			label: 'Heading 1',
+			key: 'hr',
+			label: 'Horizontal line',
+			shortcut: ['modifier', 'f']
+		},
+		{
 			key: 'heading-h1',
-			preventDefault: true,
+			label: 'Heading 1',
 			shortcut: ['alt', 'shift', '1']
 		},
 		{
-			id: 5,
-			label: 'Heading 2',
 			key: 'heading-h2',
-			preventDefault: true,
+			label: 'Heading 2',
 			shortcut: ['alt', 'shift', '2']
 		},
 		{
-			id: 6,
-			label: 'Heading 3',
 			key: 'heading-h3',
-			preventDefault: true,
+			label: 'Heading 3',
 			shortcut: ['alt', 'shift', '3']
 		},
 		{
-			id: 7,
-			label: 'Heading 4',
 			key: 'heading-h4',
-			preventDefault: true,
+			label: 'Heading 4',
 			shortcut: ['alt', 'shift', '4']
 		},
 		{
-			id: 71,
-			label: 'Quote',
-			preventDefault: true,
-			shortcut: ['modifier', 'shift', '6']
-		},
-		{
-			id: 711,
-			label: 'Spoiler',
-			preventDefault: true,
-			shortcut: ['modifier', 'shift', '5']
-		},
-		{
-			id: 8,
-			label: 'Ordered list',
 			key: 'list-unordered',
-			preventDefault: true,
+			label: 'Ordered list',
 			shortcut: ['modifier', 'shift', '7']
 		},
 		{
-			id: 9,
-			label: 'Unordered list',
 			key: 'list-ordered',
-			preventDefault: true,
+			label: 'Unordered list',
 			shortcut: ['modifier', 'shift', '8']
 		},
 		{
-			id: 10,
-			label: 'Checkbox list',
 			key: 'list-checkbox',
-			preventDefault: true,
+			label: 'Checkbox list',
 			shortcut: ['modifier', 'shift', '9']
 		},
 		{
-			id: 11,
-			label: 'Hyperlink dialog',
 			key: 'url-link',
-			preventDefault: true,
+			label: 'Hyperlink dialog',
 			shortcut: ['alt', '1']
 		},
 		{
-			id: 12,
-			label: 'Image dialog',
 			key: 'url-image',
-			preventDefault: true,
+			label: 'Image dialog',
 			shortcut: ['alt', '2']
 		},
 		{
-			id: 13,
-			label: 'Youtube dialog',
 			key: 'url-youtube',
-			preventDefault: true,
+			label: 'Youtube dialog',
 			shortcut: ['alt', '3']
 		},
 		{
-			id: 131,
-			label: 'Cropper dialog',
 			key: 'cropper',
-			preventDefault: true,
+			label: 'Cropper dialog',
 			shortcut: ['alt', '4']
 		},
 		{
-			id: 14,
-			label: 'Horizontal line',
-			key: '',
-			preventDefault: true,
-			shortcut: ['modifier', 'enter']
+			key: 'quote',
+			label: 'Quote',
+			shortcut: ['alt', '5']
 		},
 		{
-			id: 15,
-			label: 'Fullscreen',
-			preventDefault: true,
-			shortcut: ['modifier', 'shift', 'enter']
+			key: 'spoiler',
+			label: 'Spoiler',
+			shortcut: ['alt', '6']
+		},
+		{
+			key: 'code',
+			label: 'Code',
+			shortcut: ['alt', '7']
 		}
 	];
 
-	ngAfterViewInit(): void {
+	ngOnInit(): void {
 		if (this.platformService.isBrowser()) {
-			const os: string = this.platformService.getOS();
 			const osModifierKey: string = this.platformService.getOSModifierKey();
 
-			/** Prepare shortcuts */
+			/** Prepare osModifierKey */
 
 			this.shortcutsList = this.shortcutsList.map((markdownShortcut: MarkdownShortcut) => {
 				markdownShortcut.shortcut = markdownShortcut.shortcut.map((shortcut: string) => {
@@ -180,28 +135,33 @@ export class ShortcutsComponent implements AfterViewInit, OnDestroy {
 				return markdownShortcut;
 			});
 
-			// ExpressionChangedAfterItHasBeenCheckedError (command)
-
-			this.changeDetectorRef.detectChanges();
-
-			/** Init shortcuts */
-
-			hotkeys.filter = (): boolean => true;
-			hotkeys(osModifierKey + '+/', () => this.onToggleShortcutsDialog(true));
-
 			/** Bind shortcuts */
+
+			hotkeys(osModifierKey + '+/', () => this.onToggleShortcutsDialog(true));
 
 			this.shortcutsList.forEach((markdownShortcut: MarkdownShortcut) => {
 				hotkeys(markdownShortcut.shortcut.join('+'), 'markdown', (keyboardEvent: KeyboardEvent) => {
-					if (markdownShortcut.preventDefault) {
-						keyboardEvent.preventDefault();
-					}
+					keyboardEvent.stopPropagation();
+					keyboardEvent.preventDefault();
+
+					/** Emit to markdown-it */
 
 					this.markdownService.markdownItShortcut.next(markdownShortcut);
 				});
 			});
 
-			hotkeys.setScope('markdown');
+			hotkeys.filter = (keyboardEvent: KeyboardEvent): boolean => {
+				const target: EventTarget = keyboardEvent.target || keyboardEvent.srcElement;
+
+				// @ts-ignore
+				if (target.tagName === 'TEXTAREA') {
+					hotkeys.setScope('markdown');
+				} else {
+					hotkeys.setScope('all');
+				}
+
+				return true;
+			};
 		}
 	}
 

@@ -326,6 +326,20 @@ rounded-md
 rounded-lg
 rounded-xl
 
+// Aspect ratio
+
+aspect-auto
+aspect-square
+aspect-video
+
+// Object fit
+
+object-contain
+object-cover
+object-fill
+object-none
+object-scale-down
+
 // Shadow
 
 shadow-sm

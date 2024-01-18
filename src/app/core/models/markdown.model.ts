@@ -28,9 +28,7 @@ export interface MarkdownWrapperPayload {
 }
 
 export interface MarkdownShortcut {
-	id: number;
 	label: string;
-	key?: string;
-	preventDefault: boolean;
+	key: string;
 	shortcut: string[];
 }

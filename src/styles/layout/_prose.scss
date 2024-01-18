@@ -35,7 +35,7 @@
     }
 
     &:not([width]):not([height]) {
-      @apply w-full aspect-auto;
+      @apply w-full;
     }
   }
 

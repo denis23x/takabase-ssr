@@ -52,7 +52,7 @@ export class MarkdownService {
 
 		this.setMarkdownItPrism();
 
-		/** Set markdownIt */
+		/** Set markdown-it */
 
 		this.markdownIt = new MarkdownIt({
 			html: false,
@@ -246,7 +246,7 @@ export class MarkdownService {
 	setRender(value: string, element: HTMLElement): void {
 		const cloneElement: HTMLElement = element.cloneNode(true) as HTMLElement;
 
-		/** Set markdownIt render */
+		/** Set markdown-it render */
 
 		cloneElement.innerHTML = this.getMarkdownIt().render(value);
 

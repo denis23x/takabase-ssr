@@ -133,7 +133,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	scrollSync: boolean = false;
 	scrollSync$: Subscription | undefined;
 
-	textareaShortcut$: Subscription | undefined;
+	textareaShortcuts$: Subscription | undefined;
 	textareaPaste$: Subscription | undefined;
 	textareaPasteFileImage$: Subscription | undefined;
 	textareaInput$: Subscription | undefined;
@@ -161,6 +161,8 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 					error: (error: any) => console.error(error)
 				});
 
+			/** Cropper call */
+
 			this.textareaPaste$?.unsubscribe();
 			// prettier-ignore
 			this.textareaPaste$ = fromEvent(this.textarea, 'paste')
@@ -169,6 +171,8 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 					next: (clipboardEventInit: ClipboardEventInit) => this.markdownService.markdownItClipboard.next(clipboardEventInit),
 					error: (error: any) => console.error(error)
 				});
+
+			/** Cropper call by paste */
 
 			this.textareaPasteFileImage$?.unsubscribe();
 			this.textareaPasteFileImage$ = this.markdownService.markdownItCropperImage
@@ -197,16 +201,46 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 					error: (error: any) => console.error(error)
 				});
 
-			this.textareaShortcut$?.unsubscribe();
-			this.textareaShortcut$ = this.markdownService.markdownItShortcut
+			/** Shortcuts */
+
+			this.textareaShortcuts$?.unsubscribe();
+			this.textareaShortcuts$ = this.markdownService.markdownItShortcut
 				.pipe(
 					filter((markdownShortcut: MarkdownShortcut | null) => !!markdownShortcut),
 					map((markdownShortcut: MarkdownShortcut) => {
-						console.log(markdownShortcut);
+						const markdownControlList: MarkdownControl[] = [
+							...this.controlListHeading,
+							...this.controlListFormatting,
+							...this.controlListList,
+							...this.controlListUrl,
+							this.controlListQuote,
+							this.controlListCropper,
+							this.controlListSpoiler,
+							this.controlListCode
+						];
 
-						return this.controlListHeading.find((control: MarkdownControl) => {
-							return control.key === markdownShortcut.key;
-						});
+						// prettier-ignore
+						const markdownControl: MarkdownControl = markdownControlList.find((control: MarkdownControl) => {
+              return control.key === markdownShortcut.key;
+            });
+
+						switch (markdownControl.key) {
+							case 'url-link':
+							case 'url-image':
+							case 'url-youtube': {
+								this.onToggleUrlForm(true, markdownControl);
+
+								return null;
+							}
+							case 'cropper': {
+								this.onControlListCropperClick();
+
+								return null;
+							}
+							default: {
+								return markdownControl;
+							}
+						}
 					}),
 					filter((markdownControl: MarkdownControl | null) => !!markdownControl),
 					map((markdownControl: MarkdownControl) => this.getTextareaValue(markdownControl))
@@ -227,7 +261,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.textareaInput$,
 			this.textareaPaste$,
 			this.textareaPasteFileImage$,
-			this.textareaShortcut$,
+			this.textareaShortcuts$,
 			this.scrollSync$,
 			this.urlForm$,
 			this.controlListEmojiMartColorScheme$
@@ -361,11 +395,11 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	getTextareaMarkdown(textareaElement: HTMLTextAreaElement): MarkdownTextarea {
 		const { selectionStart, selectionEnd, value }: Record<string, any> = textareaElement;
 
-		const getWrapperPayload = (value: string): MarkdownWrapperPayload => {
+		const getWrapperPayload = (payload: string): MarkdownWrapperPayload => {
 			return {
-				space: !!value.length && value === ' ',
-				newline: !!value.length && value === '\n',
-				character: !!value.length && value !== ' ' && value !== '\n'
+				space: !!payload.length && payload === ' ',
+				newline: !!payload.length && payload === '\n',
+				character: !!payload.length && payload !== ' ' && payload !== '\n'
 			};
 		};
 
