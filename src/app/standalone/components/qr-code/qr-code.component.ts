@@ -37,7 +37,7 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 
 	@Input({ required: true })
 	set appQRCodeData(QRCodeData: string) {
-		this.QRCodeData$.next(QRCodeData);
+		this.QRCodeDataSubject$.next(QRCodeData);
 	}
 
 	@Input()
@@ -45,7 +45,8 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 		this.QRCodeOrigin = QRCodeOrigin;
 	}
 
-	QRCodeData$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+	QRCodeDataSubject$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+	QRCodeData$: Subscription | undefined;
 	QRCodeOrigin: boolean = false;
 
 	QRCodeValue: string | undefined;
@@ -61,7 +62,7 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 	};
 
 	ngAfterViewInit(): void {
-		this.QRCodeData$.pipe(
+		this.QRCodeData$ = this.QRCodeDataSubject$.pipe(
 			filter((value: string) => !!value && !!this.QRCodeCanvas?.nativeElement),
 			map((value: string) => {
 				if (this.platformService.isBrowser()) {
@@ -91,9 +92,8 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.QRCodeOptionsColorScheme$].forEach(($: Subscription) => $?.unsubscribe());
-
-		[this.QRCodeData$].forEach(($: BehaviorSubject<string>) => $?.complete());
+		// prettier-ignore
+		[this.QRCodeData$, this.QRCodeOptionsColorScheme$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleQRCodeDialog(toggle: boolean): void {

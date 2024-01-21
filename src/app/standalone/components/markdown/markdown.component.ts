@@ -164,10 +164,14 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			/** Cropper call */
 
 			this.textareaPaste$?.unsubscribe();
-			// prettier-ignore
 			this.textareaPaste$ = fromEvent(this.textarea, 'paste')
-				.pipe(filter((clipboardEventInit: ClipboardEventInit) => !!clipboardEventInit.clipboardData.files.length))
+				.pipe(
+					filter((clipboardEventInit: ClipboardEventInit) => {
+						return !!clipboardEventInit.clipboardData.files.length;
+					})
+				)
 				.subscribe({
+					// prettier-ignore
 					next: (clipboardEventInit: ClipboardEventInit) => this.markdownService.markdownItClipboard.next(clipboardEventInit),
 					error: (error: any) => console.error(error)
 				});
@@ -175,38 +179,34 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			/** Cropper call by paste */
 
 			this.textareaPasteFileImage$?.unsubscribe();
-			this.textareaPasteFileImage$ = this.markdownService.markdownItCropperImage
-				.pipe(filter((file: File | null) => !!file))
-				.subscribe({
-					next: (file: File) => {
-						this.appMarkdownUploadToggle.emit(true);
+			this.textareaPasteFileImage$ = this.markdownService.markdownItCropperImage.subscribe({
+				next: (file: File) => {
+					this.appMarkdownUploadToggle.emit(true);
 
-						// prettier-ignore
-						this.fileService.create(file, '/upload/post-images-markdown').subscribe({
-							next: (fileUrl: string) => {
-                const params: any = {
-                  title: Date.now(),
-                  url: fileUrl
-                };
+					this.fileService.create(file, '/upload/post-images-markdown').subscribe({
+						next: (fileUrl: string) => {
+							const params: any = {
+								title: Date.now(),
+								url: fileUrl
+							};
 
-                this.appMarkdownUploadToggle.emit(false);
+							this.appMarkdownUploadToggle.emit(false);
 
-                /** Apply result */
+							/** Apply result */
 
-                this.setTextareaValue(this.getTextareaValue(this.controlListCropper, params));
-							},
-							error: (error: any) => console.error(error)
-						});
-					},
-					error: (error: any) => console.error(error)
-				});
+							this.setTextareaValue(this.getTextareaValue(this.controlListCropper, params));
+						},
+						error: (error: any) => console.error(error)
+					});
+				},
+				error: (error: any) => console.error(error)
+			});
 
 			/** Shortcuts */
 
 			this.textareaShortcuts$?.unsubscribe();
 			this.textareaShortcuts$ = this.markdownService.markdownItShortcut
 				.pipe(
-					filter((markdownShortcut: MarkdownShortcut | null) => !!markdownShortcut),
 					map((markdownShortcut: MarkdownShortcut) => {
 						const markdownControlList: MarkdownControl[] = [
 							...this.controlListHeading,

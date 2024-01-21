@@ -1,43 +1,37 @@
 /** @format */
 
-import { Directive, ElementRef, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, inject, Input, OnDestroy } from '@angular/core';
 import { PlatformService } from '../../core/services/platform.service';
-import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
 @Directive({
 	standalone: true,
 	selector: '[appScrollPreset]'
 })
-export class ScrollPresetDirective implements OnInit, OnDestroy {
+export class ScrollPresetDirective implements AfterViewInit, OnDestroy {
 	private readonly elementRef: ElementRef = inject(ElementRef);
 	private readonly platformService: PlatformService = inject(PlatformService);
 
 	@Input({ required: true })
 	set appScrollActive(scrollActive: boolean) {
-		this.scrollActive$.next(scrollActive);
+		this.scrollActiveSubject$.next(scrollActive);
 	}
 
-	scrollActive: boolean = false;
-	scrollActive$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	scrollActiveSubject$: Subject<boolean> = new Subject<boolean>();
+	scrollActive$: Subscription | undefined;
 
 	parentLi: HTMLElement | undefined;
 	parentUl: HTMLElement | undefined;
 
-	ngOnInit(): void {
-		this.scrollActive$
-			.pipe(
-				distinctUntilChanged(),
-				tap((scrollActive: boolean) => (this.scrollActive = scrollActive))
-			)
-			.subscribe({
-				next: () => this.setScroll(this.scrollActive),
-				error: (error: any) => console.error(error)
-			});
+	ngAfterViewInit(): void {
+		this.scrollActive$ = this.scrollActiveSubject$.pipe(distinctUntilChanged()).subscribe({
+			next: (scrollActive: boolean) => this.setScroll(scrollActive),
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	ngOnDestroy(): void {
-		[this.scrollActive$].forEach(($: BehaviorSubject<boolean>) => $?.complete());
+		[this.scrollActive$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setScroll(toggle: boolean): void {
@@ -53,21 +47,21 @@ export class ScrollPresetDirective implements OnInit, OnDestroy {
 	}
 
 	setScrollX(): void {
-		const parentLi: DOMRect = this.parentLi.getBoundingClientRect();
-		const parentUl: DOMRect = this.parentUl.getBoundingClientRect();
+		const parentLiDOMRect: DOMRect = this.parentLi.getBoundingClientRect();
+		const parentUlDOMRect: DOMRect = this.parentUl.getBoundingClientRect();
 
-		const a: number = parentUl.width / 2;
-		const b: number = parentLi.width / 2;
+		const a: number = parentUlDOMRect.width / 2;
+		const b: number = parentLiDOMRect.width / 2;
 
 		this.parentUl.scrollLeft = this.parentLi.offsetLeft - (a - b);
 	}
 
 	setScrollY(): void {
-		const parentLi: DOMRect = this.parentLi.getBoundingClientRect();
-		const parentUl: DOMRect = this.parentUl.getBoundingClientRect();
+		const parentLiDOMRect: DOMRect = this.parentLi.getBoundingClientRect();
+		const parentUlDOMRect: DOMRect = this.parentUl.getBoundingClientRect();
 
-		const a: number = parentUl.height / 2;
-		const b: number = parentLi.height / 2;
+		const a: number = parentUlDOMRect.height / 2;
+		const b: number = parentLiDOMRect.height / 2;
 
 		this.parentUl.scrollTop = this.parentLi.offsetTop - (a - b);
 	}

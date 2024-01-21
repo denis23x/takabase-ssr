@@ -18,13 +18,15 @@
 						[appSvgIconIcon]="snack.options.icon"
 						[appSvgIconSquare]="'1.5em'"
 					></i>
-					<div class="flex flex-col">
+					<div class="flex flex-col w-full overflow-hidden">
 						@if (snack.title) {
 							<span class="block font-bold first-letter:capitalize">
 								{{ snack.title }}
 							</span>
 						}
-						<p class="font-base first-letter:capitalize">
+						<p
+							class="font-base whitespace-normal text-ellipsis overflow-hidden first-letter:capitalize"
+						>
 							{{ snack.message }}
 						</p>
 					</div>

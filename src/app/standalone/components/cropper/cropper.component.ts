@@ -206,7 +206,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			this.markdownItToggle$ = merge(
 				this.markdownService.markdownItCropperToggle.pipe(filter((toggle: boolean) => toggle)),
 				this.markdownService.markdownItClipboard.pipe(
-					filter((clipboardEvent: ClipboardEventInit | undefined) => !!clipboardEvent),
 					tap((clipboardEvent: ClipboardEventInit) => this.onGetFileFromClipboard(clipboardEvent))
 				)
 			).subscribe({
@@ -451,12 +450,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		this.cropperImageForm.reset();
 		this.cropperImageForm.enable();
-
-		/** markdown-it reset */
-
-		this.markdownService.markdownItClipboard.next(undefined);
-		this.markdownService.markdownItCropperImage.next(null);
-		this.markdownService.markdownItCropperToggle.next(false);
 	}
 
 	onToggleCropper(toggle: boolean, markdownItToggle: boolean = false): void {

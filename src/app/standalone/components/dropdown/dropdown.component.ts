@@ -77,7 +77,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 		this.dropdownElementContent = this.elementRef.nativeElement.querySelector('[slot=content]');
 
 		this.dropdownElementContent.classList.add('fixed', 'top-0', 'left-0', 'z-20');
-		this.dropdownElementContent.style.display = 'none';
+		this.dropdownElementContent.style.visibility = 'hidden';
 
 		/** onStateShow when onClick */
 
@@ -122,7 +122,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 
 	onStateShow(): void {
 		this.dropdownState = true;
-		this.dropdownElementContent.style.display = 'flex';
+		this.dropdownElementContent.style.visibility = 'visible';
 		this.dropdownBackdrop = !!Number(this.cookieService.getItem('dropdown-backdrop'));
 
 		this.elementRef.nativeElement.classList.add(...this.dropdownActiveClassList);
@@ -140,7 +140,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 
 	onStateHide(): void {
 		this.dropdownState = false;
-		this.dropdownElementContent.style.display = 'none';
+		this.dropdownElementContent.style.visibility = 'hidden';
 
 		this.elementRef.nativeElement.classList.remove(...this.dropdownActiveClassList);
 

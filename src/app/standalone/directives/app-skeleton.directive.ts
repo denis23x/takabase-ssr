@@ -2,8 +2,7 @@
 
 import { AfterViewInit, Directive, ElementRef, inject, Input, OnDestroy } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { HelperService } from '../../core/services/helper.service';
 
 @Directive({
@@ -17,7 +16,7 @@ export class SkeletonDirective implements AfterViewInit, OnDestroy {
 
 	@Input({ required: true })
 	set appSkeletonToggle(loading: boolean) {
-		this.skeletonToggle$.next(loading);
+		this.skeletonToggleSubject$.next(loading);
 	}
 
 	@Input()
@@ -35,8 +34,8 @@ export class SkeletonDirective implements AfterViewInit, OnDestroy {
 		this.skeletonClassList = this.skeletonClassList.concat(classList);
 	}
 
-	skeletonToggle: boolean = false;
-	skeletonToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	skeletonToggleSubject$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	skeletonToggle$: Subscription | undefined;
 
 	skeletonClassListElementRef: string[] = ['pointer-events-none'];
 	skeletonClassListParent: string[] = ['bg-base-100', 'absolute', 'inset-0', 'w-full', 'h-full'];
@@ -51,16 +50,14 @@ export class SkeletonDirective implements AfterViewInit, OnDestroy {
 	];
 
 	ngAfterViewInit(): void {
-		this.skeletonToggle$
-			.pipe(tap((skeletonToggle: boolean) => (this.skeletonToggle = skeletonToggle)))
-			.subscribe({
-				next: () => this.setSkeleton(),
-				error: (error: any) => console.error(error)
-			});
+		this.skeletonToggle$ = this.skeletonToggleSubject$.subscribe({
+			next: (skeletonToggle: boolean) => this.setSkeleton(skeletonToggle),
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	ngOnDestroy(): void {
-		[this.skeletonToggle$].forEach(($: BehaviorSubject<boolean>) => $?.complete());
+		[this.skeletonToggle$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	getSkeleton(): any {
@@ -81,8 +78,8 @@ export class SkeletonDirective implements AfterViewInit, OnDestroy {
 	}
 
 	// prettier-ignore
-	setSkeleton(): void {
-		if (this.skeletonToggle) {
+	setSkeleton(skeletonToggle: boolean): void {
+		if (skeletonToggle) {
 			this.elementRef.nativeElement.classList.add(...this.skeletonClassListElementRef, 'relative');
 			this.elementRef.nativeElement.appendChild(this.getSkeleton());
 		} else {

@@ -24,7 +24,7 @@ import { environment } from '../../../environments/environment';
 import { RenderRule } from 'markdown-it/lib/renderer';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { MarkdownShortcut } from '../models/markdown.model';
 
 @Injectable({
@@ -34,12 +34,11 @@ export class MarkdownService {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly platformService: PlatformService = inject(PlatformService);
 
-	// prettier-ignore
-	markdownItClipboard: BehaviorSubject<ClipboardEventInit | undefined> = new BehaviorSubject<ClipboardEventInit | undefined>(undefined);
+	markdownItClipboard: Subject<ClipboardEventInit> = new Subject<ClipboardEventInit>();
 	markdownItShortcut: Subject<MarkdownShortcut | null> = new Subject<MarkdownShortcut | null>();
 
-	markdownItCropperImage: BehaviorSubject<File | null> = new BehaviorSubject<File | null>(null);
-	markdownItCropperToggle: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	markdownItCropperImage: Subject<File> = new Subject<File>();
+	markdownItCropperToggle: Subject<boolean> = new Subject<boolean>();
 
 	markdownIt: MarkdownIt;
 
@@ -68,13 +67,13 @@ export class MarkdownService {
 					setTimeout(() => Prism.highlightAll());
 
 					// prettier-ignore
-					const prismTemplate = (value: string, language: string): string => {
+					const prismTemplate = (templateValue: string, templateLanguage: string): string => {
             const getValue = (): string => {
-              if (language === 'markup') {
-                return value.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+              if (templateLanguage === 'markup') {
+                return templateValue.replace(/</g, '&lt;').replace(/>/g, '&gt;')
               }
 
-              return value;
+              return templateValue;
             }
 
             return `<pre class="line-numbers language-${language}" data-language="${language}"><code class="language-${language} match-braces rainbow-braces">${getValue()}</code></pre>`;
@@ -148,7 +147,6 @@ export class MarkdownService {
 
 			token.attrs?.forEach(([key, value]: string[]) => {
 				if (key === 'class') {
-					// prettier-ignore
 					const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
 
 					imageElement.classList.add(...classList);
