@@ -33,6 +33,7 @@ import { SearchFormComponent } from '../standalone/components/search-form/search
 import { QrCodeComponent } from '../standalone/components/qr-code/qr-code.component';
 import { UserUrlPipe } from '../standalone/pipes/user-url.pipe';
 import { CopyUrlDirective } from '../standalone/directives/app-copy-url.directive';
+import { SnackbarService } from '../core/services/snackbar.service';
 
 @Component({
 	standalone: true,
@@ -67,6 +68,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	private readonly reportService: ReportService = inject(ReportService);
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
 	activatedRouteUrl$: Subscription | undefined;
@@ -113,7 +115,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
 		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
+			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
 
@@ -297,8 +299,14 @@ export class UserComponent implements OnInit, OnDestroy {
 	/** Report */
 
 	onToggleReportDialog(toggle: boolean): void {
-		this.reportService.reportSubject$.next({ user: this.user });
-		this.reportService.reportDialogToggle$.next(toggle);
+		if (this.currentUser) {
+			this.reportService.reportSubject$.next({ user: this.user });
+			this.reportService.reportDialogToggle$.next(toggle);
+		} else {
+			this.router.navigate(['login']).then(() => {
+				this.snackbarService.info('Nope', 'Log in before reporting');
+			});
+		}
 	}
 
 	/** Category */

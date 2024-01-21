@@ -56,6 +56,8 @@ import { PostDeleteComponent } from '../standalone/components/post/delete/delete
 import { BadgeErrorComponent } from '../standalone/components/badge-error/badge-error.component';
 import { ShortcutsComponent } from '../standalone/components/shortcuts/shortcuts.component';
 import { KbdPipe } from '../standalone/pipes/kbd.pipe';
+import { LoaderComponent } from '../standalone/components/loader/loader.component';
+import { PlatformDirective } from '../standalone/directives/app-platform.directive';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -88,7 +90,9 @@ interface PostForm {
 		PostPreviewComponent,
 		BadgeErrorComponent,
 		ShortcutsComponent,
-		KbdPipe
+		KbdPipe,
+		LoaderComponent,
+		PlatformDirective
 	],
 	templateUrl: './create.component.html'
 })

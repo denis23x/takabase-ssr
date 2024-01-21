@@ -44,7 +44,7 @@ export class AuthConfirmationEmailComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
+			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
 

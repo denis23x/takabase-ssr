@@ -112,7 +112,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		if (this.platformService.isBrowser()) {
 			this.currentUser$?.unsubscribe();
 			this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-				next: (currentUser: CurrentUser) => {
+				next: (currentUser: CurrentUser | undefined) => {
 					this.currentUser = currentUser;
 					this.currentUserSkeletonToggle = false;
 

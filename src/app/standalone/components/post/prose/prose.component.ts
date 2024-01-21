@@ -3,7 +3,7 @@
 import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NgOptimizedImage } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MarkdownPipe } from '../../../pipes/markdown.pipe';
 import { UserUrlPipe } from '../../../pipes/user-url.pipe';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
@@ -21,6 +21,7 @@ import { QrCodeComponent } from '../../qr-code/qr-code.component';
 import { ReportService } from '../../../../core/services/report.service';
 import { AdComponent } from '../../ad/ad.component';
 import { CopyUrlDirective } from '../../../directives/app-copy-url.directive';
+import { SnackbarService } from '../../../../core/services/snackbar.service';
 
 @Component({
 	standalone: true,
@@ -46,6 +47,8 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly reportService: ReportService = inject(ReportService);
+	private readonly router: Router = inject(Router);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
 	@Input({ required: true })
 	set appPostProsePost(post: Post) {
@@ -82,7 +85,7 @@ export class PostProseComponent implements OnInit, OnDestroy {
 
 		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
+			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
 
@@ -101,7 +104,13 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleReportDialog(toggle: boolean): void {
-		this.reportService.reportSubject$.next({ post: this.post });
-		this.reportService.reportDialogToggle$.next(toggle);
+		if (this.currentUser) {
+			this.reportService.reportSubject$.next({ post: this.post });
+			this.reportService.reportDialogToggle$.next(toggle);
+		} else {
+			this.router.navigate(['login']).then(() => {
+				this.snackbarService.info('Nope', 'Log in before reporting');
+			});
+		}
 	}
 }

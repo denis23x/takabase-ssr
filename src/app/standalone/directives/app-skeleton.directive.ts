@@ -34,7 +34,7 @@ export class SkeletonDirective implements AfterViewInit, OnDestroy {
 		this.skeletonClassList = this.skeletonClassList.concat(classList);
 	}
 
-	skeletonToggleSubject$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	skeletonToggleSubject$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 	skeletonToggle$: Subscription | undefined;
 
 	skeletonClassListElementRef: string[] = ['pointer-events-none'];
