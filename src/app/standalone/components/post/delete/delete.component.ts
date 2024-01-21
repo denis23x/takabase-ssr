@@ -22,6 +22,8 @@ import { Router } from '@angular/router';
 import { CurrentUser } from '../../../../core/models/current-user.model';
 import { Subscription } from 'rxjs';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
+import { PlatformService } from '../../../../core/services/platform.service';
+import { Location } from '@angular/common';
 
 @Component({
 	standalone: true,
@@ -36,6 +38,8 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	private readonly fileService: FileService = inject(FileService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly location: Location = inject(Location);
 
 	// prettier-ignore
 	@ViewChild('postDeleteDialogElement') postDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
@@ -62,6 +66,12 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
+
+		/** Extra toggle close when url change */
+
+		if (this.platformService.isBrowser()) {
+			this.location.onUrlChange(() => this.onTogglePostDeleteDialog(false));
+		}
 	}
 
 	ngOnDestroy(): void {

@@ -7,10 +7,11 @@ import {
 	inject,
 	Input,
 	OnDestroy,
+	OnInit,
 	Output,
 	ViewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
@@ -30,6 +31,7 @@ import { CategoryUpdateDto } from '../../../../core/dto/category/category-update
 import { Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
+import { PlatformService } from '../../../../core/services/platform.service';
 
 interface CategoryUpdateForm {
 	name: FormControl<string>;
@@ -50,11 +52,13 @@ interface CategoryUpdateForm {
 	selector: 'app-category-update, [appCategoryUpdate]',
 	templateUrl: './update.component.html'
 })
-export class CategoryUpdateComponent implements OnDestroy {
+export class CategoryUpdateComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly location: Location = inject(Location);
 
 	// prettier-ignore
 	@ViewChild('categoryUpdateDialogElement') categoryUpdateDialogElement: ElementRef<HTMLDialogElement> | undefined;
@@ -87,6 +91,14 @@ export class CategoryUpdateComponent implements OnDestroy {
 
 	categoryUpdateFormIsPristine$: Subscription | undefined;
 	categoryUpdateFormIsPristine: boolean = false;
+
+	ngOnInit(): void {
+		/** Extra toggle close when url change */
+
+		if (this.platformService.isBrowser()) {
+			this.location.onUrlChange(() => this.onToggleCategoryUpdateDialog(false));
+		}
+	}
 
 	ngOnDestroy(): void {
 		// prettier-ignore

@@ -1,7 +1,15 @@
 /** @format */
 
-import { AfterViewInit, Component, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import {
+	AfterViewInit,
+	Component,
+	ElementRef,
+	inject,
+	OnDestroy,
+	OnInit,
+	ViewChild
+} from '@angular/core';
+import { CommonModule, Location, NgOptimizedImage } from '@angular/common';
 import { WindowComponent } from '../window/window.component';
 import { Subscription } from 'rxjs';
 import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
@@ -25,6 +33,7 @@ import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { ReportSubject } from '../../../core/models/report.model';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
+import { PlatformService } from '../../../core/services/platform.service';
 
 interface ReportForm {
 	name: FormControl<string>;
@@ -50,11 +59,13 @@ interface ReportForm {
 	selector: 'app-report, [appReport]',
 	templateUrl: './report.component.html'
 })
-export class ReportComponent implements AfterViewInit, OnDestroy {
+export class ReportComponent implements OnInit, AfterViewInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly reportService: ReportService = inject(ReportService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly location: Location = inject(Location);
 
 	@ViewChild('reportDialog') reportDialog: ElementRef<HTMLDialogElement> | undefined;
 
@@ -85,6 +96,14 @@ export class ReportComponent implements AfterViewInit, OnDestroy {
 		'Technical glitch',
 		'Spam'
 	];
+
+	ngOnInit(): void {
+		/** Extra toggle close when url change */
+
+		if (this.platformService.isBrowser()) {
+			this.location.onUrlChange(() => this.onToggleReportDialog(false));
+		}
+	}
 
 	ngAfterViewInit(): void {
 		this.reportSubject$ = this.reportService.reportSubject$.subscribe({

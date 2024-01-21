@@ -8,6 +8,7 @@ import {
 	inject,
 	Input,
 	OnDestroy,
+	OnInit,
 	ViewChild
 } from '@angular/core';
 import { WindowComponent } from '../window/window.component';
@@ -17,6 +18,7 @@ import { AppearanceService } from '../../../core/services/appearance.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { HelperService } from '../../../core/services/helper.service';
 import { filter, map } from 'rxjs/operators';
+import { Location } from '@angular/common';
 import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 
 @Component({
@@ -25,12 +27,13 @@ import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 	selector: 'app-qr-code, [appQRCode]',
 	templateUrl: './qr-code.component.html'
 })
-export class QrCodeComponent implements AfterViewInit, OnDestroy {
+export class QrCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+	private readonly location: Location = inject(Location);
 
 	@ViewChild('QRCodeDialog') QRCodeDialog: ElementRef<HTMLDialogElement> | undefined;
 	@ViewChild('QRCodeCanvas') QRCodeCanvas: ElementRef<HTMLCanvasElement> | undefined;
@@ -60,6 +63,14 @@ export class QrCodeComponent implements AfterViewInit, OnDestroy {
 			light: '#ffffffff'
 		}
 	};
+
+	ngOnInit(): void {
+		/** Extra toggle close when url change */
+
+		if (this.platformService.isBrowser()) {
+			this.location.onUrlChange(() => this.onToggleQRCodeDialog(false));
+		}
+	}
 
 	ngAfterViewInit(): void {
 		this.QRCodeData$ = this.QRCodeDataSubject$.pipe(

@@ -11,7 +11,7 @@ import {
 	Output,
 	ViewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
@@ -37,6 +37,7 @@ import { HelperService } from '../../../../core/services/helper.service';
 import { CurrentUser } from '../../../../core/models/current-user.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
+import { PlatformService } from '../../../../core/services/platform.service';
 
 interface CategoryDeleteForm {
 	name: FormControl<string>;
@@ -64,6 +65,8 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	private readonly postService: PostService = inject(PostService);
 	private readonly fileService: FileService = inject(FileService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly location: Location = inject(Location);
 
 	// prettier-ignore
 	@ViewChild('categoryDeleteDialogElement') categoryDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
@@ -107,6 +110,12 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 			next: (currentUser: CurrentUser) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
+
+		/** Extra toggle close when url change */
+
+		if (this.platformService.isBrowser()) {
+			this.location.onUrlChange(() => this.onToggleCategoryDeleteDialog(false));
+		}
 	}
 
 	ngOnDestroy(): void {

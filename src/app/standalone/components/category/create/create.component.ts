@@ -6,10 +6,11 @@ import {
 	EventEmitter,
 	inject,
 	OnDestroy,
+	OnInit,
 	Output,
 	ViewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
@@ -28,6 +29,7 @@ import { HelperService } from '../../../../core/services/helper.service';
 import { CategoryService } from '../../../../core/services/category.service';
 import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
+import { PlatformService } from '../../../../core/services/platform.service';
 
 interface CategoryForm {
 	name: FormControl<string>;
@@ -48,11 +50,13 @@ interface CategoryForm {
 	selector: 'app-category-create, [appCategoryCreate]',
 	templateUrl: './create.component.html'
 })
-export class CategoryCreateComponent implements OnDestroy {
+export class CategoryCreateComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly location: Location = inject(Location);
 
 	// prettier-ignore
 	@ViewChild('categoryCreateDialogElement') categoryCreateDialogElement: ElementRef<HTMLDialogElement> | undefined;
@@ -70,6 +74,14 @@ export class CategoryCreateComponent implements OnDestroy {
 	});
 	categoryFormRequest$: Subscription | undefined;
 	categoryCreateDialogToggle: boolean = false;
+
+	ngOnInit(): void {
+		/** Extra toggle close when url change */
+
+		if (this.platformService.isBrowser()) {
+			this.location.onUrlChange(() => this.onToggleCategoryCreateDialog(false));
+		}
+	}
 
 	ngOnDestroy(): void {
 		[this.categoryFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
