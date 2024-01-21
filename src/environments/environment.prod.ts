@@ -6,6 +6,8 @@ export const environment = {
   apiUrl: "https://draft-api.web.app/api/v1",
   ipaUrl: "https://us-central1-draft-ssr.cloudfunctions.net/ext-image-processing-api-handler/process",
   ipaStorageBucket: 'gs://draft-ssr-image-processing',
+  reportTo: 'damage.23x@gmail.com',
+  reportBcc: [''],
   pwa: false,
   production: true,
   firebase: {

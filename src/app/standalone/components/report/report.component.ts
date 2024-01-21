@@ -1,7 +1,7 @@
 /** @format */
 
-import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { WindowComponent } from '../window/window.component';
 import { Subscription } from 'rxjs';
 import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
@@ -20,8 +20,11 @@ import { HelperService } from '../../../core/services/helper.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { ReportCreateDto } from '../../../core/dto/report/report-create.dto';
 import { ReportService } from '../../../core/services/report.service';
-import { filter } from 'rxjs/operators';
 import { BadgeErrorComponent } from '../badge-error/badge-error.component';
+import { RouterModule } from '@angular/router';
+import { AvatarComponent } from '../avatar/avatar.component';
+import { ReportSubject } from '../../../core/models/report.model';
+import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 
 interface ReportForm {
 	name: FormControl<string>;
@@ -32,24 +35,33 @@ interface ReportForm {
 	standalone: true,
 	imports: [
 		CommonModule,
+		RouterModule,
+		NgOptimizedImage,
 		WindowComponent,
 		InputTrimWhitespaceDirective,
 		TextareaAutosizeDirective,
 		DropdownComponent,
 		ReactiveFormsModule,
 		SvgIconComponent,
-		BadgeErrorComponent
+		BadgeErrorComponent,
+		AvatarComponent,
+		SkeletonDirective
 	],
 	selector: 'app-report, [appReport]',
 	templateUrl: './report.component.html'
 })
-export class ReportComponent implements OnInit, OnDestroy {
+export class ReportComponent implements AfterViewInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly reportService: ReportService = inject(ReportService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
 	@ViewChild('reportDialog') reportDialog: ElementRef<HTMLDialogElement> | undefined;
+
+	reportSubject: ReportSubject | null = null;
+	reportSubject$: Subscription | undefined;
+	reportSubjectUrl: string | undefined;
+	reportSubjectName: string | undefined;
 
 	reportDialogToggle: boolean = false;
 	reportDialogToggle$: Subscription | undefined;
@@ -70,23 +82,29 @@ export class ReportComponent implements OnInit, OnDestroy {
 	reportFormNameList: string[] = [
 		'Terms and conditions',
 		'Sex, sexuality and nudity',
-		'Spam Everywhere',
-		'Time spent waiting',
-		'Technical glitch'
+		'Technical glitch',
+		'Spam'
 	];
 
-	ngOnInit(): void {
-		this.reportDialogToggle$ = this.reportService.reportDialogToggle$
-			.pipe(filter(() => !!this.reportDialog))
-			.subscribe({
-				next: (reportDialogToggle: boolean) => this.onToggleReportDialog(reportDialogToggle),
-				error: (error: any) => console.error(error)
-			});
+	ngAfterViewInit(): void {
+		this.reportSubject$ = this.reportService.reportSubject$.subscribe({
+			next: (reportSubject: ReportSubject) => {
+				this.reportSubject = reportSubject;
+				this.reportSubjectUrl = this.helperService.getURL().toString();
+				this.reportSubjectName = reportSubject.user?.name || reportSubject.post?.name;
+			},
+			error: (error: any) => console.error(error)
+		});
+
+		this.reportDialogToggle$ = this.reportService.reportDialogToggle$.subscribe({
+			next: (reportDialogToggle: boolean) => this.onToggleReportDialog(reportDialogToggle),
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	ngOnDestroy(): void {
 		// prettier-ignore
-		[this.reportDialogToggle$, this.reportFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.reportSubject$, this.reportDialogToggle$, this.reportFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleReportDialog(toggle: boolean): void {
@@ -113,17 +131,23 @@ export class ReportComponent implements OnInit, OnDestroy {
 			this.reportForm.disable();
 
 			const reportCreateDto: ReportCreateDto = {
-				...this.reportForm.value
+				...this.reportForm.value,
+				subject: this.reportSubject
 			};
 
 			this.reportFormRequest$?.unsubscribe();
 			this.reportFormRequest$ = this.reportService.create(reportCreateDto).subscribe({
 				next: () => {
-					this.snackbarService.success('Great!', 'Thanks for your feedback');
+					this.snackbarService.success('Great!', 'Thanks for your report');
+
+					/* Close and clear */
 
 					this.reportForm.enable();
 
-					this.onToggleReportDialog(false);
+					/* Service */
+
+					this.reportService.reportSubject$.next(null);
+					this.reportService.reportDialogToggle$.next(false);
 				},
 				error: () => this.reportForm.enable()
 			});

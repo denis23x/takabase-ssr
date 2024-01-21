@@ -4,7 +4,6 @@ import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AvatarComponent } from '../../avatar/avatar.component';
 import { MarkdownPipe } from '../../../pipes/markdown.pipe';
 import { UserUrlPipe } from '../../../pipes/user-url.pipe';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
@@ -27,7 +26,6 @@ import { CopyUrlDirective } from '../../../directives/app-copy-url.directive';
 	standalone: true,
 	imports: [
 		RouterModule,
-		AvatarComponent,
 		MarkdownPipe,
 		UserUrlPipe,
 		DayjsPipe,
@@ -103,6 +101,7 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleReportDialog(toggle: boolean): void {
+		this.reportService.reportSubject$.next({ post: this.post });
 		this.reportService.reportDialogToggle$.next(toggle);
 	}
 }

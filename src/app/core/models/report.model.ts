@@ -1,12 +1,9 @@
 /** @format */
 
 import { User } from './user.model';
+import { Post } from './post.model';
 
-export interface Report {
-	id: number;
-	name: string;
-	description: string;
+export interface ReportSubject {
+	post?: Post;
 	user?: User;
-	createdAt: string;
-	updatedAt: string;
 }

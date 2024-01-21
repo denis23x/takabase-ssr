@@ -297,6 +297,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	/** Report */
 
 	onToggleReportDialog(toggle: boolean): void {
+		this.reportService.reportSubject$.next({ user: this.user });
 		this.reportService.reportDialogToggle$.next(toggle);
 	}
 

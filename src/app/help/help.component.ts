@@ -7,7 +7,6 @@ import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
-import { ReportService } from '../core/services/report.service';
 
 @Component({
 	standalone: true,
@@ -17,7 +16,6 @@ import { ReportService } from '../core/services/report.service';
 })
 export class HelpComponent implements OnInit {
 	private readonly metaService: MetaService = inject(MetaService);
-	private readonly reportService: ReportService = inject(ReportService);
 
 	helpNavigationList: any[] = [
 		{
@@ -70,9 +68,5 @@ export class HelpComponent implements OnInit {
 		};
 
 		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
-	}
-
-	onToggleReportDialog(toggle: boolean): void {
-		this.reportService.reportDialogToggle$.next(toggle);
 	}
 }

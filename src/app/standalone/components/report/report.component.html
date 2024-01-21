@@ -22,18 +22,61 @@
 				[formGroup]="reportForm"
 				(ngSubmit)="onSubmitReportForm()"
 			>
-				<p class="alert" role="alert">
-					<i
-						class="fill-current text-info"
-						appSvgIcon
-						[appSvgIconIcon]="'info-circle'"
-						[appSvgIconSquare]="'1.5em'"
-					></i>
-					<span class="block">
-						Your feedback is helping us enhance our services and create a more satisfying experience
-						for you
-					</span>
-				</p>
+				@if (reportSubject) {
+					<div
+						class="flex items-center justify-start gap-4 bg-base-200 p-4 rounded-btn overflow-hidden"
+					>
+						@switch (true) {
+							@case (!!reportSubject.user) {
+								<div class="avatar">
+									<figure
+										class="h-12 w-12 rounded-btn relative overflow-hidden"
+										appAvatar
+										[appAvatarUser]="reportSubject.user"
+									></figure>
+								</div>
+							}
+							@case (!!reportSubject.post && !!reportSubject.post.image) {
+								<div class="flex rounded-btn relative overflow-hidden">
+									<figure class="h-12 w-12 rounded-btn relative overflow-hidden">
+										<img
+											class="object-cover object-center bg-base-300"
+											loading="lazy"
+											[fill]="true"
+											[ngSrc]="reportSubject.post.image"
+											[alt]="reportSubject.post.name"
+										/>
+									</figure>
+								</div>
+							}
+						}
+						<div class="flex flex-1 flex-col gap-2 items-start overflow-hidden">
+							<span class="truncate text-xl leading-6 font-bold text-base-content max-w-full">
+								{{ reportSubjectName }}
+							</span>
+							<a
+								class="link text-sm text-base-content/50 leading-4 truncate max-w-full"
+								target="_blank"
+								[href]="reportSubjectUrl"
+							>
+								{{ reportSubjectUrl }}
+							</a>
+						</div>
+					</div>
+				} @else {
+					<p class="alert" role="alert">
+						<i
+							class="fill-current text-info"
+							appSvgIcon
+							[appSvgIconIcon]="'info-circle'"
+							[appSvgIconSquare]="'1.5em'"
+						></i>
+						<span class="block">
+							Your report is helping us enhance our services and create a more satisfying experience
+							for you
+						</span>
+					</p>
+				}
 				@if (reportForm.get("name"); as name) {
 					<fieldset class="form-control">
 						<label class="label" for="reportFormName">
