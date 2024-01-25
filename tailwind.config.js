@@ -531,6 +531,9 @@ module.exports = {
       mono: ["Ubuntu Mono", "monospace"],
     },
     extend: {
+      gridTemplateColumns: {
+        alert: "repeat(2, minmax(0, auto))",
+      },
       borderRadius: {
         btn: "var(--rounded-btn)",
       },
