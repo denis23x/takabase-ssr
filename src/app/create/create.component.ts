@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { startWith, tap } from 'rxjs/operators';
+import { filter, startWith, tap } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -182,7 +182,10 @@ export class CreateComponent implements OnInit, OnDestroy {
 		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService
 			.getCurrentUser()
-			.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)))
+			.pipe(
+				filter((currentUser: CurrentUser | undefined) => !!currentUser),
+				tap((currentUser: CurrentUser) => (this.currentUser = currentUser))
+			)
 			.subscribe({
 				next: () => {
 					/** Apply Data */

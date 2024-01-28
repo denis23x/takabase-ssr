@@ -294,6 +294,10 @@ export class UserComponent implements OnInit, OnDestroy {
 				})
 				.then(() => console.debug('Route changed'));
 		}
+
+		// ExpressionChangedAfterItHasBeenCheckedError (searchFormToggle)
+
+		this.changeDetectorRef.detectChanges();
 	}
 
 	/** Report */

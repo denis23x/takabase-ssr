@@ -9,7 +9,7 @@ import {
 	Validators
 } from '@angular/forms';
 import { from, Observable, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { environment } from '../../../environments/environment';
@@ -170,7 +170,10 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 			this.currentUser$?.unsubscribe();
 			this.currentUser$ = this.authorizationService
 				.getCurrentUser()
-				.pipe(tap((currentUser: CurrentUser) => (this.currentUser = currentUser)))
+				.pipe(
+					filter((currentUser: CurrentUser | undefined) => !!currentUser),
+					tap((currentUser: CurrentUser) => (this.currentUser = currentUser))
+				)
 				.subscribe({
 					next: () => {
 						this.appearanceCollection$?.unsubscribe();

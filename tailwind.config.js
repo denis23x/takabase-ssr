@@ -532,7 +532,7 @@ module.exports = {
     },
     extend: {
       gridTemplateColumns: {
-        alert: "repeat(2, minmax(0, auto))",
+        alert: "1.5rem minmax(0, auto)",
       },
       borderRadius: {
         btn: "var(--rounded-btn)",

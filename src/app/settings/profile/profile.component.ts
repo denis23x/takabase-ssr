@@ -9,7 +9,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { startWith, switchMap, tap } from 'rxjs/operators';
+import { filter, startWith, switchMap, tap } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -114,6 +114,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			this.currentUser$ = this.authorizationService
 				.getCurrentUser()
 				.pipe(
+					filter((currentUser: CurrentUser | undefined) => !!currentUser),
 					tap((currentUser: CurrentUser) => {
 						this.currentUser = currentUser;
 						this.currentUserSkeletonToggle = false;

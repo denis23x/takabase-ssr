@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="fixed z-20" appSnackbar></div>
+	<div class="relative z-20" appSnackbar></div>
 	<section
 		class="relative z-10 mx-auto grid min-h-screen w-full max-w-5xl grid-flow-row auto-rows-max grid-cols-1 grid-rows-none gap-4 p-4 md:gap-8 md:p-8"
 	>
@@ -10,6 +10,6 @@
 			<router-outlet></router-outlet>
 		</div>
 	</section>
-	<div class="z-10 relative" appScrollToTop></div>
+	<div class="relative z-10" appScrollToTop></div>
 	<div class="relative" appReport></div>
 </ng-container>
