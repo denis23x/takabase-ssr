@@ -55,23 +55,13 @@ export const environment = {
     "winter"
   ],
   backgrounds: [
-    "zig-zag",
-    "tortoise-shell",
-    "sun-tornado",
-    "subtle-prism",
-    "slanted-gradient",
-    "repeating-triangles",
-    "pattern-randomized",
-    "liquid-cheese",
-    "endless-constellation",
-    "diamond-sunset",
-    "diagonal-stripes",
-    "dalmatian-spots",
-    "cornered-stairs",
-    "confetti-doodles",
-    "bullseye-gradient",
-    "abstract-timekeeper",
-    "abstract-envelope"
+    "cosy-creatures",
+    "dia-de-muertos",
+    "gastronomy",
+    "medieval",
+    "movie",
+    "spring",
+    "summer"
   ],
   prism: {
     themes: [
