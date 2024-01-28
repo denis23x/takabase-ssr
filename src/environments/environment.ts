@@ -55,11 +55,16 @@ export const environment = {
     "winter"
   ],
   backgrounds: [
+    "beauty",
     "cosy-creatures",
     "dia-de-muertos",
+    "gaming",
     "gastronomy",
+    "gym",
+    "medicine",
     "medieval",
     "movie",
+    "ninja",
     "spring",
     "summer"
   ],
