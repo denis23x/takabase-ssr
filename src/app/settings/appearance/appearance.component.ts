@@ -236,8 +236,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	}
 
 	getTransformListValue(value: string, key: string, update?: boolean): string {
-		const getCase = (value: string): string => {
-			return update ? value.toLowerCase() : value.toUpperCase();
+		const getCase = (valueTemp: string): string => {
+			return update ? valueTemp.toLowerCase() : valueTemp.toUpperCase();
 		};
 
 		switch (key) {

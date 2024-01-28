@@ -162,20 +162,20 @@ export class AppearanceService {
 	}
 
 	setThemeBackground(themeBackground: string | null): void {
-		// prettier-ignore
-		const backgroundElement: HTMLElement | null = this.document.querySelector('[data-theme-background]');
-		const backgroundValue: string = themeBackground || 'slanted-gradient';
+		const backgroundElement: HTMLElement = this.document.querySelector('[data-theme-background]');
+		const backgroundElementPattern: HTMLElement = this.document.querySelector('#theme-background');
 
-		// TODO: update
-		if (backgroundElement.dataset.themeBackground !== backgroundValue) {
+		if (backgroundElement.dataset.themeBackground !== themeBackground) {
+			const background: string = themeBackground || 'cosy-creatures';
+
 			this.httpClient
-				.get('/assets/backgrounds/' + backgroundValue + '.svg', {
+				.get('/assets/backgrounds/' + background + '.svg', {
 					responseType: 'text'
 				})
 				.subscribe({
 					next: (svg: string) => {
-						backgroundElement.innerHTML = svg;
-						backgroundElement.dataset.themeBackground = backgroundValue;
+						backgroundElementPattern.innerHTML = svg;
+						backgroundElement.dataset.themeBackground = background;
 					},
 					error: (error: any) => console.error(error)
 				});
@@ -255,7 +255,7 @@ export class AppearanceService {
 								pageScrollInfinite: false,
 								pageScrollToTop: false,
 								theme: 'auto',
-								themeBackground: 'slanted-gradient',
+								themeBackground: 'cosy-creatures',
 								themePrism: 'auto',
 								windowButtonPosition: 'left'
 							};
