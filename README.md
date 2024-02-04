@@ -1,27 +1,43 @@
-# DraftSsr
+# Draft SSR
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.3.
+---
 
-## Development server
+## Development commands
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Setup
 
-## Code scaffolding
+- `npm install`
+- Setup **Prettier**
+- Setup **ESLint**
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Processes
 
-## Build
+> Don't use this use docker instead
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- `start:dev` local dev server http://localhost:4200
+- `start:network` local dev server with access through single network
+- `start:deploy` deploy to dev server https://draft-ssr.web.app
 
-## Running unit tests
+Builds
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- `build:prod` build production SSR bundle
+- `build:sprite` build SVG sprite and inject it into **index.html**
+- `build:sitemap` build **sitemap.xml** based on https://draft-ssr.web.app
 
-## Running end-to-end tests
+Makefile (using Docker)
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+- `make build` build docker image
+- `make up` run docker container with local dev server http://localhost:4200
+- `make down` stop docker container
 
-## Further help
+Some configurations
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- `src/environments` app .env
+- `angular.json` app config
+- `ecosystem.config.js` process handler (production docker)
+- `firebase.json` dev deploy config
+- `ngsw-config.json` PWA config
+
+---
+
+Contact https://t.me/denis23x
