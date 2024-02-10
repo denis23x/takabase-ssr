@@ -20,6 +20,10 @@ export class IPAService {
 	private readonly fileService: FileService = inject(FileService);
 	private readonly angularFireStorage: AngularFireStorage = inject(AngularFireStorage);
 
+	setUrl(url: string): string {
+		return environment.ipa.url + url;
+	}
+
 	getParams(IPAOperationParams: IPAOperation[]): string {
 		return '?operations=' + this.getParamsEncode(IPAOperationParams);
 	}
@@ -32,7 +36,7 @@ export class IPAService {
 
 	create(fileAlpha: File): Observable<string> {
 		// prettier-ignore
-		const ipaStorageBucket: firebase.storage.Storage = this.angularFireStorage.storage.app.storage(environment.ipaStorageBucket);
+		const ipaStorageBucket: firebase.storage.Storage = this.angularFireStorage.storage.app.storage(environment.ipa.bucket);
 		const ipaStorageBucketFileName: string = this.fileService.getFileName(fileAlpha);
 
 		return from(ipaStorageBucket.ref(ipaStorageBucketFileName).put(fileAlpha)).pipe(
@@ -56,7 +60,7 @@ export class IPAService {
 
 		// prettier-ignore
 		return this.httpClient
-			.get(environment.ipaUrl.concat(this.getParams(ipaOperationParams)), {
+			.get(this.setUrl(this.getParams(ipaOperationParams)), {
 				responseType: 'blob'
 			})
 			.pipe(
@@ -68,7 +72,7 @@ export class IPAService {
 	getOneViaGCS(ipaOperationParams: IPAOperation[]): Observable<File> {
 		// prettier-ignore
 		return this.httpClient
-			.get(environment.ipaUrl.concat(this.getParams(ipaOperationParams)), {
+			.get(this.setUrl(this.getParams(ipaOperationParams)), {
 				responseType: 'blob'
 			})
 			.pipe(

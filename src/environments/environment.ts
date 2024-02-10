@@ -8,10 +8,17 @@
 export const environment = {
   appUrl: "http://localhost:4200",
   apiUrl: "http://localhost:4400/api/v1",
-  ipaUrl: "https://us-central1-draft-ssr.cloudfunctions.net/ext-image-processing-api-handler/process",
-  ipaStorageBucket: 'gs://draft-ssr-image-processing',
-  reportTo: 'damage.23x@gmail.com',
-  reportBcc: [''],
+  ai: {
+    url: 'https://draft-ai.web.app/api/v1'
+  },
+  ipa: {
+    url: "https://us-central1-draft-ssr.cloudfunctions.net/ext-image-processing-api-handler/process",
+    bucket: 'gs://draft-ssr-image-processing',
+  },
+  mailer: {
+    to: 'damage.23x@gmail.com',
+    bcc: [''],
+  },
   pwa: false,
   production: false,
   firebase: {

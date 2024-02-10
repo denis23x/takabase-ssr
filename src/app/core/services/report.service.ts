@@ -55,8 +55,8 @@ export class ReportService {
 		return this.ngZone.runOutsideAngular(() => {
 			return from(
 				this.angularFirestore.collection('mailer').add({
-					to: environment.reportTo,
-					bcc: environment.reportBcc,
+					to: environment.mailer.to,
+					bcc: environment.mailer.bcc,
 					message: {
 						subject: templateSubject,
 						html: templateHtml
