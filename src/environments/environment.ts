@@ -56,6 +56,7 @@ export const environment = {
   ],
   backgrounds: [
     "beauty",
+    "circus",
     "cosy-creatures",
     "dia-de-muertos",
     "gaming",
@@ -65,6 +66,7 @@ export const environment = {
     "medieval",
     "movie",
     "ninja",
+    "police",
     "spring",
     "summer"
   ],
