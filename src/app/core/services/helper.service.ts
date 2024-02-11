@@ -18,8 +18,8 @@ export class HelperService {
 		return value.replace(/[A-Z]/g, (value: string): string => '-' + value.toLowerCase());
 	}
 
-	getRegex(regex: string, payload?: any): RegExp {
-		switch (regex) {
+	getRegex(regExp: string, payload?: any): RegExp {
+		switch (regExp) {
 			case 'extension':
 				return new RegExp('.[a-z]+$', 'i');
 			case 'no-whitespace':
@@ -35,7 +35,7 @@ export class HelperService {
 				// prettier-ignore
 				return new RegExp('^.*((youtu.be\\/)|(v\\/)|(\\/u\\/\\w\\/)|(embed\\/)|(watch\\?))\\??v?=?([^#&?]*).*', 'm');
 			default:
-				throw new Error(`Invalid regex type specified: ${regex}`);
+				throw new Error(`Invalid regex type specified: ${regExp}`);
 		}
 	}
 

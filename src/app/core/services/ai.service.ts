@@ -6,7 +6,11 @@ import { ApiService } from './api.service';
 import { catchError, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { AIModerateTextDto, AIModerateTextResult } from '../dto/ai/ai-moderate-text.dto';
+import {
+	AIModerateTextDto,
+	AIModerateTextResult,
+	AIModerateTextResultItem
+} from '../dto/ai/ai-moderate-text.dto';
 import { AIModerateImageResult } from '../dto/ai/ai-moderate-image.dto';
 
 @Injectable({
@@ -20,9 +24,30 @@ export class AIService {
 		return environment.ai.url + url;
 	}
 
+	setInput(object: any): string[] {
+		return Object.values(object)
+			.filter((value: any) => Boolean(value))
+			.map((value: any) => String(value))
+			.map((value: string) => {
+				const regExp: RegExp = /.{1,2000}/g;
+
+				/** For higher accuracy, try splitting long pieces of text into smaller chunks each less than 2,000 characters. */
+
+				if (value.length >= 2000) {
+					return value.match(regExp);
+				} else {
+					return value;
+				}
+			})
+			.flat();
+	}
+
+	/** Predictions */
+
 	getModeratedTextIsSafe(aiModerateTextResult: AIModerateTextResult): boolean {
-		return Object.values(aiModerateTextResult.categories).every((probability: boolean) => {
-			return probability === false;
+		// prettier-ignore
+		return Object.values(aiModerateTextResult.results).every((aiModerateTextResultItem: AIModerateTextResultItem) => {
+			return aiModerateTextResultItem.flagged === false;
 		});
 	}
 
@@ -47,7 +72,7 @@ export class AIService {
 
 	moderateText(aiModerateTextDto: AIModerateTextDto): Observable<AIModerateTextResult> {
 		return this.httpClient.post(this.setUrl('/moderation/text'), aiModerateTextDto).pipe(
-			map((response: any) => response.data.results.shift()),
+			map((response: any) => response.data),
 			switchMap((aiModerateTextResult: AIModerateTextResult) => {
 				if (this.getModeratedTextIsSafe(aiModerateTextResult)) {
 					return of(aiModerateTextResult);
