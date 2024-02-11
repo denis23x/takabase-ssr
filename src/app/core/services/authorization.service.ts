@@ -13,6 +13,8 @@ import { RegistrationDto } from '../dto/auth/registration.dto';
 import { CurrentUser } from '../models/current-user.model';
 import { AppearanceService } from './appearance.service';
 import { FirebaseError } from '@angular/fire/app';
+import { AIService } from './ai.service';
+import { AIModerateTextDto } from '../dto/ai/ai-moderate-text.dto';
 import firebase from 'firebase/compat';
 
 @Injectable({
@@ -23,6 +25,7 @@ export class AuthorizationService {
 	private readonly angularFireAuth: AngularFireAuth = inject(AngularFireAuth);
 	private readonly userService: UserService = inject(UserService);
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
+	private readonly aiService: AIService = inject(AIService);
 
 	// prettier-ignore
 	currentUser: BehaviorSubject<CurrentUser | undefined> = new BehaviorSubject<CurrentUser | undefined>(undefined);
@@ -63,22 +66,35 @@ export class AuthorizationService {
 	/** Authorization API */
 
 	onRegistration(registrationDto: RegistrationDto): Observable<CurrentUser> {
-		// prettier-ignore
-		return from(this.angularFireAuth.createUserWithEmailAndPassword(registrationDto.email, registrationDto.password)).pipe(
-			switchMap((userCredential: firebase.auth.UserCredential) => {
-				return from(userCredential.user.sendEmailVerification()).pipe(switchMap(() => of(userCredential)));
-			}),
-			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
-			switchMap((userCredential: firebase.auth.UserCredential) => {
-				const userCreateDto: UserCreateDto = {
-					firebaseId: userCredential.user.uid,
-					name: registrationDto.name,
-					terms: registrationDto.terms
-				};
+		const aiModerateTextDto: AIModerateTextDto = {
+			model: 'text-moderation-stable',
+			input: registrationDto.name
+		};
 
-				return this.userService.create(userCreateDto);
-			}),
-			switchMap(() => this.onLogin(registrationDto))
+		/** Moderate and registration */
+
+		// prettier-ignore
+		return this.aiService.moderateText(aiModerateTextDto).pipe(
+			switchMap(() => {
+				return from(this.angularFireAuth.createUserWithEmailAndPassword(registrationDto.email, registrationDto.password)).pipe(
+					switchMap((userCredential: firebase.auth.UserCredential) => {
+						return from(userCredential.user.sendEmailVerification()).pipe(switchMap(() => of(userCredential)));
+					}),
+					catchError((firebaseError: FirebaseError) => {
+            return this.apiService.setFirebaseError(firebaseError);
+          }),
+					switchMap((userCredential: firebase.auth.UserCredential) => {
+						const userCreateDto: UserCreateDto = {
+							firebaseId: userCredential.user.uid,
+							name: registrationDto.name,
+							terms: registrationDto.terms
+						};
+
+						return this.userService.create(userCreateDto);
+					}),
+					switchMap(() => this.onLogin(registrationDto))
+				);
+			})
 		);
 	}
 

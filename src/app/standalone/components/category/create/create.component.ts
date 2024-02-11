@@ -27,9 +27,11 @@ import {
 } from '@angular/forms';
 import { HelperService } from '../../../../core/services/helper.service';
 import { CategoryService } from '../../../../core/services/category.service';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { PlatformService } from '../../../../core/services/platform.service';
+import { AIModerateTextDto } from '../../../../core/dto/ai/ai-moderate-text.dto';
+import { AIService } from '../../../../core/services/ai.service';
 
 interface CategoryForm {
 	name: FormControl<string>;
@@ -57,6 +59,7 @@ export class CategoryCreateComponent implements OnInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly location: Location = inject(Location);
+	private readonly aiService: AIService = inject(AIService);
 
 	// prettier-ignore
 	@ViewChild('categoryCreateDialogElement') categoryCreateDialogElement: ElementRef<HTMLDialogElement> | undefined;
@@ -111,19 +114,29 @@ export class CategoryCreateComponent implements OnInit, OnDestroy {
 				...this.categoryForm.value
 			};
 
+			const aiModerateTextDto: AIModerateTextDto = {
+				model: 'text-moderation-stable',
+				input: this.aiService.setInput(categoryCreateDto)
+			};
+
+			/** Moderate and create */
+
 			this.categoryFormRequest$?.unsubscribe();
-			this.categoryFormRequest$ = this.categoryService.create(categoryCreateDto).subscribe({
-				next: (category: Category) => {
-					this.snackbarService.success('Cheers!', 'Category created');
+			this.categoryFormRequest$ = this.aiService
+				.moderateText(aiModerateTextDto)
+				.pipe(switchMap(() => this.categoryService.create(categoryCreateDto)))
+				.subscribe({
+					next: (category: Category) => {
+						this.snackbarService.success('Cheers!', 'Category created');
 
-					this.appCategoryCreateSuccess.emit(category);
+						this.appCategoryCreateSuccess.emit(category);
 
-					this.categoryForm.enable();
+						this.categoryForm.enable();
 
-					this.onToggleCategoryCreateDialog(false);
-				},
-				error: () => this.categoryForm.enable()
-			});
+						this.onToggleCategoryCreateDialog(false);
+					},
+					error: () => this.categoryForm.enable()
+				});
 		}
 	}
 }

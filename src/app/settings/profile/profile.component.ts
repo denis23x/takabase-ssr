@@ -33,6 +33,8 @@ import { PlatformService } from '../../core/services/platform.service';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { FileService } from '../../core/services/file.service';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
+import { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
+import { AIService } from '../../core/services/ai.service';
 
 interface ProfileForm {
 	avatar: FormControl<string | null>;
@@ -69,6 +71,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly fileService: FileService = inject(FileService);
+	private readonly aiService: AIService = inject(AIService);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -217,10 +220,20 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				...this.profileForm.value
 			};
 
+			const aiModerateTextDto: AIModerateTextDto = {
+				model: 'text-moderation-stable',
+				input: this.aiService.setInput(userUpdateDto)
+			};
+
+			/** Moderate and update */
+
 			this.currentUserRequest$?.unsubscribe();
-			this.currentUserRequest$ = this.userService
-				.update(this.currentUser.id, userUpdateDto)
-				.pipe(switchMap((user: User) => this.authorizationService.setCurrentUser(user)))
+			this.currentUserRequest$ = this.aiService
+				.moderateText(aiModerateTextDto)
+				.pipe(
+					switchMap(() => this.userService.update(this.currentUser.id, userUpdateDto)),
+					switchMap((user: User) => this.authorizationService.setCurrentUser(user))
+				)
 				.subscribe({
 					next: () => {
 						this.snackbarService.success('Success', 'Information has been updated');

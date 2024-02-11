@@ -28,10 +28,12 @@ import {
 import { HelperService } from '../../../../core/services/helper.service';
 import { CategoryService } from '../../../../core/services/category.service';
 import { CategoryUpdateDto } from '../../../../core/dto/category/category-update.dto';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { PlatformService } from '../../../../core/services/platform.service';
+import { AIModerateTextDto } from '../../../../core/dto/ai/ai-moderate-text.dto';
+import { AIService } from '../../../../core/services/ai.service';
 
 interface CategoryUpdateForm {
 	name: FormControl<string>;
@@ -59,6 +61,7 @@ export class CategoryUpdateComponent implements OnInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly location: Location = inject(Location);
+	private readonly aiService: AIService = inject(AIService);
 
 	// prettier-ignore
 	@ViewChild('categoryUpdateDialogElement') categoryUpdateDialogElement: ElementRef<HTMLDialogElement> | undefined;
@@ -145,9 +148,17 @@ export class CategoryUpdateComponent implements OnInit, OnDestroy {
 				...this.categoryUpdateForm.value
 			};
 
+			const aiModerateTextDto: AIModerateTextDto = {
+				model: 'text-moderation-stable',
+				input: this.aiService.setInput(categoryUpdateDto)
+			};
+
+			/** Moderate and update */
+
 			this.categoryUpdateFormRequest$?.unsubscribe();
-			this.categoryUpdateFormRequest$ = this.categoryService
-				.update(categoryId, categoryUpdateDto)
+			this.categoryUpdateFormRequest$ = this.aiService
+				.moderateText(aiModerateTextDto)
+				.pipe(switchMap(() => this.categoryService.update(categoryId, categoryUpdateDto)))
 				.subscribe({
 					next: (category: Category) => {
 						this.snackbarService.success(null, 'Category updated');

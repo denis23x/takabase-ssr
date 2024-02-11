@@ -2,10 +2,16 @@
 
 export interface AIModerateTextDto {
 	model: string;
-	input: string[];
+	input: string | string[];
 }
 
 export interface AIModerateTextResult {
+	id: string;
+	model: string;
+	results: AIModerateTextResultItem[];
+}
+
+export interface AIModerateTextResultItem {
 	flagged: boolean;
 	categories: AIModerateTextResultCategories;
 	category_scores: AIModerateTextResultCategoriesScores;

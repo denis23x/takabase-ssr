@@ -11,7 +11,7 @@ import {
 	ViewChild
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { filter, startWith, tap } from 'rxjs/operators';
 import {
 	AbstractControl,
@@ -59,6 +59,8 @@ import { KbdPipe } from '../standalone/pipes/kbd.pipe';
 import { LoaderComponent } from '../standalone/components/loader/loader.component';
 import { PlatformDirective } from '../standalone/directives/app-platform.directive';
 import { DeviceDirective } from '../standalone/directives/app-device.directive';
+import { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
+import { AIService } from '../core/services/ai.service';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -114,6 +116,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly fileService: FileService = inject(FileService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly aiService: AIService = inject(AIService);
 
 	// prettier-ignore
 	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
@@ -498,7 +501,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			this.postForm.disable();
 
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-			const postCreateDto: PostCreateDto = {
+			const postDto: PostCreateDto & PostUpdateDto = {
 				...this.postForm.value
 			};
 
@@ -509,18 +512,31 @@ export class CreateComponent implements OnInit, OnDestroy {
           .then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
 			};
 
+			const aiModerateTextDto: AIModerateTextDto = {
+				model: 'text-moderation-stable',
+				input: this.aiService.setInput(postDto)
+			};
+
+			/** Moderate and create/update */
+
 			if (postId) {
 				this.postFormRequest$?.unsubscribe();
-				this.postFormRequest$ = this.postService.update(postId, postCreateDto).subscribe({
-					next: (post: Post) => postFormRequestRedirect(post),
-					error: () => this.postForm.enable()
-				});
+				this.postFormRequest$ = this.aiService
+					.moderateText(aiModerateTextDto)
+					.pipe(switchMap(() => this.postService.update(postId, postDto)))
+					.subscribe({
+						next: (post: Post) => postFormRequestRedirect(post),
+						error: () => this.postForm.enable()
+					});
 			} else {
 				this.postFormRequest$?.unsubscribe();
-				this.postFormRequest$ = this.postService.create(postCreateDto).subscribe({
-					next: (post: Post) => postFormRequestRedirect(post),
-					error: () => this.postForm.enable()
-				});
+				this.postFormRequest$ = this.aiService
+					.moderateText(aiModerateTextDto)
+					.pipe(switchMap(() => this.postService.create(postDto)))
+					.subscribe({
+						next: (post: Post) => postFormRequestRedirect(post),
+						error: () => this.postForm.enable()
+					});
 			}
 		}
 	}
