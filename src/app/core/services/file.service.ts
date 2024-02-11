@@ -5,8 +5,8 @@ import { from, Observable, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { catchError } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
 import { HelperService } from './helper.service';
+import { FirebaseError } from '@angular/fire/app';
 import mime from 'mime';
 
 @Injectable({
@@ -59,9 +59,7 @@ export class FileService {
 				});
 			}),
 			switchMap(() => this.angularFireStorage.ref(filePath).getDownloadURL()),
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				return this.apiService.setError(httpErrorResponse);
-			})
+			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
 		);
 	}
 

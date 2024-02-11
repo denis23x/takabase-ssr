@@ -59,8 +59,6 @@ import { KbdPipe } from '../standalone/pipes/kbd.pipe';
 import { LoaderComponent } from '../standalone/components/loader/loader.component';
 import { PlatformDirective } from '../standalone/directives/app-platform.directive';
 import { DeviceDirective } from '../standalone/directives/app-device.directive';
-import { AIService } from '../core/services/ai.service';
-import { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -116,7 +114,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly fileService: FileService = inject(FileService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly aiService: AIService = inject(AIService);
 
 	// prettier-ignore
 	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
@@ -526,18 +523,5 @@ export class CreateComponent implements OnInit, OnDestroy {
 				});
 			}
 		}
-	}
-
-	testText(): void {
-		const aiModerateTextDto: AIModerateTextDto = {
-			model: 'text-moderation-stable',
-			input: [this.postForm.value.markdown]
-		};
-
-		this.aiService.moderateText(aiModerateTextDto).subscribe({
-			next: () => {
-				// console.log(res);
-			}
-		});
 	}
 }

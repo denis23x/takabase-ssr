@@ -8,11 +8,11 @@ import { LoginDto } from '../dto/auth/login.dto';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { UserService } from './user.service';
 import { UserCreateDto } from '../dto/user/user-create.dto';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ConnectDto } from '../dto/auth/connect.dto';
 import { RegistrationDto } from '../dto/auth/registration.dto';
 import { CurrentUser } from '../models/current-user.model';
 import { AppearanceService } from './appearance.service';
+import { FirebaseError } from '@angular/fire/app';
 import firebase from 'firebase/compat';
 
 @Injectable({
@@ -68,9 +68,7 @@ export class AuthorizationService {
 			switchMap((userCredential: firebase.auth.UserCredential) => {
 				return from(userCredential.user.sendEmailVerification()).pipe(switchMap(() => of(userCredential)));
 			}),
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				return this.apiService.setError(httpErrorResponse);
-			}),
+			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError)),
 			switchMap((userCredential: firebase.auth.UserCredential) => {
 				const userCreateDto: UserCreateDto = {
 					firebaseId: userCredential.user.uid,
@@ -89,9 +87,7 @@ export class AuthorizationService {
 
 		// prettier-ignore
 		return from(this.angularFireAuth.signInWithEmailAndPassword(loginDto.email, loginDto.password)).pipe(
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				return this.apiService.setError(httpErrorResponse);
-			}),
+			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError)),
 			tap((userCredential: firebase.auth.UserCredential) => currentUser.firebase = userCredential.user),
 			switchMap((userCredential: firebase.auth.UserCredential) => {
 				const connectDto: ConnectDto = {
@@ -114,9 +110,7 @@ export class AuthorizationService {
 
 	onLogout(): Observable<void> {
 		return from(this.angularFireAuth.signOut()).pipe(
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				return this.apiService.setError(httpErrorResponse);
-			}),
+			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError)),
 			tap(() => this.appearanceService.setSettings(null)),
 			tap(() => this.currentUser.next(undefined))
 		);

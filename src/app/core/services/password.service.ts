@@ -8,9 +8,9 @@ import { PasswordResetGetDto } from '../dto/password/password-reset-get.dto';
 import { PasswordResetUpdateDto } from '../dto/password/password-reset-update.dto';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { catchError } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
 import { EmailAuthProvider } from 'firebase/auth';
 import { PasswordUpdateDto } from '../dto/password/password-update.dto';
+import { FirebaseError } from '@angular/fire/app';
 import firebase from 'firebase/compat';
 
 @Injectable({
@@ -25,9 +25,7 @@ export class PasswordService {
 			switchMap((firebaseUser: firebase.User) => {
 				return from(firebaseUser.updatePassword(passwordUpdateDto.newPassword));
 			}),
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				return this.apiService.setError(httpErrorResponse);
-			})
+			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
 		);
 	}
 
@@ -42,17 +40,13 @@ export class PasswordService {
 
 				return from(firebaseUser.reauthenticateWithCredential(credentials));
 			}),
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				return this.apiService.setError(httpErrorResponse);
-			})
+			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
 		);
 	}
 
 	onResetGet(passwordResetGetDto: PasswordResetGetDto): Observable<void> {
 		return from(this.angularFireAuth.sendPasswordResetEmail(passwordResetGetDto.email)).pipe(
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				return this.apiService.setError(httpErrorResponse);
-			})
+			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
 		);
 	}
 
@@ -64,13 +58,9 @@ export class PasswordService {
           passwordResetUpdateDto.code,
           passwordResetUpdateDto.password
         )).pipe(
-        catchError((httpErrorResponse: HttpErrorResponse) => {
-          return this.apiService.setError(httpErrorResponse);
-        }));
+        catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError)));
 			}),
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				return this.apiService.setError(httpErrorResponse);
-			})
+			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
 		);
 	}
 }

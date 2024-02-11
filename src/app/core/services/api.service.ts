@@ -19,18 +19,18 @@ export class ApiService {
 		return environment.apiUrl + url;
 	}
 
-	setError(httpError: any, message?: string): Observable<never> {
+	setError(error: any): Observable<never> {
 		const defaultMessage: string = 'Oops! Something went wrong. Try again later';
 
 		const getMessage = (): string => {
 			switch (true) {
-				case httpError instanceof HttpErrorResponse: {
-					return httpError.error.message;
+				case error instanceof HttpErrorResponse: {
+					return error.error.message;
 				}
-				case httpError instanceof FirebaseError: {
+				case error instanceof FirebaseError: {
 					/** https://codinglatte.com/posts/angular/handling-firebase-password-resets-in-angular/ */
 
-					switch (httpError.code) {
+					switch (error.code) {
 						case 'auth/invalid-action-code':
 							return 'Invalid confirmation code';
 						case 'auth/invalid-login-credentials':
@@ -51,6 +51,10 @@ export class ApiService {
 							return 'Invalid email or password credentials';
 						case 'auth/invalid-email':
 							return 'The email address is not a valid email address!';
+						case 'auth/missing-email':
+							return 'Missing credentials. Please provide the email to proceed.';
+						case 'auth/missing-password':
+							return 'Missing credentials. Please provide the password to proceed.';
 						case 'auth/cannot-delete-own-user-account':
 							return 'You cannot delete your own user account';
 						default:
@@ -58,46 +62,44 @@ export class ApiService {
 					}
 				}
 				default: {
-					/** this.setErrorRedirect message OR default */
-
-					return httpError.error.message || defaultMessage;
+					return defaultMessage;
 				}
 			}
 		};
 
-		this.snackbarService.error('Error', message || getMessage(), {
+		this.snackbarService.error('Error', getMessage(), {
 			icon: 'bug',
 			duration: 6000
 		});
 
-		return throwError(() => httpError);
+		return throwError(() => error);
 	}
 
 	get(url: string, params?: any, options?: any): Observable<any> {
 		return this.httpClient.get(this.setUrl(url), { ...options, params }).pipe(
 			map((response: any) => response.data || response),
-			catchError((httpError: any) => this.setError(httpError))
+			catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse))
 		);
 	}
 
 	put(url: string, body: any, options?: any): Observable<any> {
 		return this.httpClient.put(this.setUrl(url), body, options).pipe(
 			map((response: any) => response.data || response),
-			catchError((httpError: any) => this.setError(httpError))
+			catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse))
 		);
 	}
 
 	post(url: string, body: any, options?: any): Observable<any> {
 		return this.httpClient.post(this.setUrl(url), body, options).pipe(
 			map((response: any) => response.data || response),
-			catchError((httpError: any) => this.setError(httpError))
+			catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse))
 		);
 	}
 
 	delete(url: string, params?: any): Observable<any> {
 		return this.httpClient.delete(this.setUrl(url), { params }).pipe(
 			map((response: any) => response.data || response),
-			catchError((httpError: any) => this.setError(httpError))
+			catchError((httpErrorResponse: HttpErrorResponse) => this.setError(httpErrorResponse))
 		);
 	}
 }

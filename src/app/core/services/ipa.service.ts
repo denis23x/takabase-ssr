@@ -5,10 +5,11 @@ import { from, Observable, of, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { catchError, map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { IPAOperation } from '../dto/ipa/ipa-operation.dto';
 import { FileService } from './file.service';
+import { FirebaseError } from '@angular/fire/app';
 import firebase from 'firebase/compat';
 
 @Injectable({
@@ -41,7 +42,7 @@ export class IPAService {
 
 		return from(ipaStorageBucket.ref(ipaStorageBucketFileName).put(fileAlpha)).pipe(
 			switchMap(() => of(ipaStorageBucket.ref(ipaStorageBucketFileName).fullPath)),
-			catchError((httpError: any) => this.apiService.setError(httpError, 'Unable to upload image'))
+			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
 		);
 	}
 
@@ -58,26 +59,32 @@ export class IPAService {
 			}
 		];
 
-		// prettier-ignore
 		return this.httpClient
 			.get(this.setUrl(this.getParams(ipaOperationParams)), {
 				responseType: 'blob'
 			})
 			.pipe(
 				map((blob: Blob) => this.fileService.getFileFromBlob(blob)),
-				catchError((httpError: any) => this.apiService.setError(httpError, 'The file returned from url does not seem to be a valid image type'))
+				catchError((httpErrorResponse: HttpErrorResponse) => {
+					httpErrorResponse.error.message = 'Invalid image type';
+
+					return this.apiService.setError(httpErrorResponse);
+				})
 			);
 	}
 
 	getOneViaGCS(ipaOperationParams: IPAOperation[]): Observable<File> {
-		// prettier-ignore
 		return this.httpClient
 			.get(this.setUrl(this.getParams(ipaOperationParams)), {
 				responseType: 'blob'
 			})
 			.pipe(
 				map((blob: Blob) => this.fileService.getFileFromBlob(blob)),
-				catchError((httpError: any) => this.apiService.setError(httpError, 'Oops! Something went wrong'))
+				catchError((httpErrorResponse: HttpErrorResponse) => {
+					httpErrorResponse.error.message = 'Unable to process image. Please try again later';
+
+					return this.apiService.setError(httpErrorResponse);
+				})
 			);
 	}
 }
