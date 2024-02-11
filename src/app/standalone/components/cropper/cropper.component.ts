@@ -46,6 +46,7 @@ import { FileService } from '../../../core/services/file.service';
 import { IPAOperation } from '../../../core/dto/ipa/ipa-operation.dto';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { BadgeErrorComponent } from '../badge-error/badge-error.component';
+import { AIService } from '../../../core/services/ai.service';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -86,6 +87,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly markdownService: MarkdownService = inject(MarkdownService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly aiService: AIService = inject(AIService);
 
 	// prettier-ignore
 	@ViewChild('cropperDialogElement') cropperDialogElement: ElementRef<HTMLDialogElement> | undefined;
@@ -477,10 +479,18 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		const fileCropped: File = this.fileService.getFileFromBlob(this.cropperBlob);
 
+		/** Moderate and make .webp image */
+
+		const formData: FormData = new FormData();
+
+		formData.append('model', 'gantman-mobilenet-v2-quantized');
+		formData.append('input', fileCropped);
+
 		this.imageFormRequest$?.unsubscribe();
-		this.imageFormRequest$ = this.ipaService
-			.create(fileCropped)
+		this.imageFormRequest$ = this.aiService
+			.moderateImage(formData)
 			.pipe(
+				switchMap(() => this.ipaService.create(fileCropped)),
 				switchMap((fileUrl: string) => {
 					const ipaOperationParams: IPAOperation[] = [
 						{

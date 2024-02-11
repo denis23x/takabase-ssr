@@ -535,22 +535,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 		};
 
 		this.aiService.moderateText(aiModerateTextDto).subscribe({
-			next: (res: any) => {
-				console.log(res);
-			}
-		});
-	}
-
-	testImage(event: any): void {
-		const file: File = event.target.files[0];
-		const formData: FormData = new FormData();
-
-		formData.append('model', 'gantman-mobilenet-v2-quantized');
-		formData.append('input', file);
-
-		this.aiService.moderateImage(formData).subscribe({
-			next: (res: any) => {
-				console.log(res);
+			next: () => {
+				// console.log(res);
 			}
 		});
 	}
