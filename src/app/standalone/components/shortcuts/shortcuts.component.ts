@@ -66,6 +66,36 @@ export class ShortcutsComponent implements OnInit, OnDestroy {
 			shortcut: ['alt', 'shift', '4']
 		},
 		{
+			key: 'url-link',
+			label: 'Hyperlink dialog',
+			shortcut: ['modifier', 'shift', '1']
+		},
+		{
+			key: 'url-image',
+			label: 'Image dialog',
+			shortcut: ['modifier', 'shift', '2']
+		},
+		{
+			key: 'url-youtube',
+			label: 'Youtube dialog',
+			shortcut: ['modifier', 'shift', '3']
+		},
+		{
+			key: 'cropper',
+			label: 'Cropper dialog',
+			shortcut: ['modifier', 'shift', '4']
+		},
+		{
+			key: 'quote',
+			label: 'Quote',
+			shortcut: ['modifier', 'shift', '5']
+		},
+		{
+			key: 'spoiler',
+			label: 'Spoiler',
+			shortcut: ['modifier', 'shift', '6']
+		},
+		{
 			key: 'list-unordered',
 			label: 'Ordered list',
 			shortcut: ['modifier', 'shift', '7']
@@ -81,39 +111,9 @@ export class ShortcutsComponent implements OnInit, OnDestroy {
 			shortcut: ['modifier', 'shift', '9']
 		},
 		{
-			key: 'url-link',
-			label: 'Hyperlink dialog',
-			shortcut: ['alt', '1']
-		},
-		{
-			key: 'url-image',
-			label: 'Image dialog',
-			shortcut: ['alt', '2']
-		},
-		{
-			key: 'url-youtube',
-			label: 'Youtube dialog',
-			shortcut: ['alt', '3']
-		},
-		{
-			key: 'cropper',
-			label: 'Cropper dialog',
-			shortcut: ['alt', '4']
-		},
-		{
-			key: 'quote',
-			label: 'Quote',
-			shortcut: ['alt', '5']
-		},
-		{
-			key: 'spoiler',
-			label: 'Spoiler',
-			shortcut: ['alt', '6']
-		},
-		{
 			key: 'code',
 			label: 'Code',
-			shortcut: ['alt', '7']
+			shortcut: ['modifier', 'shift', '0']
 		}
 	];
 
