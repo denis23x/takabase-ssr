@@ -23,7 +23,7 @@ export class EmailService {
 			switchMap((firebaseUser: firebase.User) => {
 				return from(firebaseUser.verifyBeforeUpdateEmail(emailUpdateDto.newEmail));
 			}),
-			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}
 
@@ -39,7 +39,7 @@ export class EmailService {
 			switchMap((actionCodeInfo: firebase.auth.ActionCodeInfo) => {
 				return from(this.angularFireAuth.sendPasswordResetEmail(actionCodeInfo.data.email));
 			}),
-			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}
 
@@ -48,13 +48,13 @@ export class EmailService {
 			switchMap((firebaseUser: firebase.User) => {
 				return from(firebaseUser.sendEmailVerification());
 			}),
-			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}
 
 	onConfirmationUpdate(emailConfirmationUpdateDto: EmailConfirmationUpdateDto): Observable<void> {
 		return from(this.angularFireAuth.applyActionCode(emailConfirmationUpdateDto.code)).pipe(
-			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}
 }

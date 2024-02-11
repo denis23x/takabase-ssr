@@ -68,7 +68,7 @@ export class AuthorizationService {
 			switchMap((userCredential: firebase.auth.UserCredential) => {
 				return from(userCredential.user.sendEmailVerification()).pipe(switchMap(() => of(userCredential)));
 			}),
-			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError)),
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
 			switchMap((userCredential: firebase.auth.UserCredential) => {
 				const userCreateDto: UserCreateDto = {
 					firebaseId: userCredential.user.uid,
@@ -87,7 +87,7 @@ export class AuthorizationService {
 
 		// prettier-ignore
 		return from(this.angularFireAuth.signInWithEmailAndPassword(loginDto.email, loginDto.password)).pipe(
-			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError)),
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
 			tap((userCredential: firebase.auth.UserCredential) => currentUser.firebase = userCredential.user),
 			switchMap((userCredential: firebase.auth.UserCredential) => {
 				const connectDto: ConnectDto = {
@@ -110,7 +110,7 @@ export class AuthorizationService {
 
 	onLogout(): Observable<void> {
 		return from(this.angularFireAuth.signOut()).pipe(
-			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError)),
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
 			tap(() => this.appearanceService.setSettings(null)),
 			tap(() => this.currentUser.next(undefined))
 		);

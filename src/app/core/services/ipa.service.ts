@@ -42,7 +42,7 @@ export class IPAService {
 
 		return from(ipaStorageBucket.ref(ipaStorageBucketFileName).put(fileAlpha)).pipe(
 			switchMap(() => of(ipaStorageBucket.ref(ipaStorageBucketFileName).fullPath)),
-			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}
 
@@ -68,7 +68,7 @@ export class IPAService {
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					httpErrorResponse.error.message = 'Invalid image type';
 
-					return this.apiService.setError(httpErrorResponse);
+					return this.apiService.setHttpErrorResponse(httpErrorResponse);
 				})
 			);
 	}
@@ -83,7 +83,7 @@ export class IPAService {
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					httpErrorResponse.error.message = 'Unable to process image. Please try again later';
 
-					return this.apiService.setError(httpErrorResponse);
+					return this.apiService.setHttpErrorResponse(httpErrorResponse);
 				})
 			);
 	}

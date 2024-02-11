@@ -59,7 +59,7 @@ export class FileService {
 				});
 			}),
 			switchMap(() => this.angularFireStorage.ref(filePath).getDownloadURL()),
-			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}
 

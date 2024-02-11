@@ -25,7 +25,7 @@ export class PasswordService {
 			switchMap((firebaseUser: firebase.User) => {
 				return from(firebaseUser.updatePassword(passwordUpdateDto.newPassword));
 			}),
-			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}
 
@@ -40,13 +40,13 @@ export class PasswordService {
 
 				return from(firebaseUser.reauthenticateWithCredential(credentials));
 			}),
-			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}
 
 	onResetGet(passwordResetGetDto: PasswordResetGetDto): Observable<void> {
 		return from(this.angularFireAuth.sendPasswordResetEmail(passwordResetGetDto.email)).pipe(
-			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}
 
@@ -58,9 +58,9 @@ export class PasswordService {
           passwordResetUpdateDto.code,
           passwordResetUpdateDto.password
         )).pipe(
-        catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError)));
+        catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)));
 			}),
-			catchError((firebaseError: FirebaseError) => this.apiService.setError(firebaseError))
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}
 }
