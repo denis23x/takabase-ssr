@@ -157,14 +157,7 @@
 			></article>
 			@if (!postPreview && !postSkeletonToggle) {
 				<hr class="my-0 w-full border-base-content/20" />
-				<footer
-					class="block w-full h-32 gap-4"
-					appAd
-					[appAdFormat]="'fluid'"
-					[appAdLayout]="'in-article'"
-					[appAdClient]="'ca-pub-1190910282815923'"
-					[appAdSlot]="'3296094591'"
-				></footer>
+				<footer class="block w-full h-32 gap-4" appAd></footer>
 			}
 		</section>
 		<div appPostDelete #appPostDeleteComponent [appPostDeletePost]="post"></div>

@@ -109,6 +109,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
+
+		if (this.platformService.isBrowser()) {
+			// @ts-ignore
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		}
 	}
 
 	ngOnDestroy(): void {
