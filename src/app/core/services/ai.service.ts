@@ -77,7 +77,7 @@ export class AIService {
 				if (this.getModeratedTextIsSafe(aiModerateTextResult)) {
 					return of(aiModerateTextResult);
 				} else {
-					return throwError(() => new Error('The text contains explicit content'));
+					return throwError(() => new Error('Seems like your input is prohibited to submit'));
 				}
 			}),
 			catchError((error: Error) => this.apiService.setError(error))

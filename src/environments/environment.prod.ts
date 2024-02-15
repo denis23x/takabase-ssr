@@ -5,7 +5,7 @@ export const environment = {
   appUrl: "https://draft-ssr.web.app",
   apiUrl: "https://draft-api.web.app/api/v1",
   ai: {
-    url: 'https://draft-ai.web.app'
+    url: 'https://draft-ai.web.app/api/v1'
   },
   ipa: {
     url: "https://us-central1-draft-ssr.cloudfunctions.net/ext-image-processing-api-handler/process",
