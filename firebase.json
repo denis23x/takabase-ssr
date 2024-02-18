@@ -1,15 +1,34 @@
 {
-  "hosting": {
-    "source": ".",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "frameworksBackend": {
-      "region": "us-central1",
-      "maxInstances": 5,
-      "memory": "256MiB"
+  "hosting": [
+    {
+      "target": "takabase-dev",
+      "source": ".",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "frameworksBackend": {
+        "region": "us-central1",
+        "minInstances": 0,
+        "maxInstances": 4,
+        "memory": "256MiB"
+      }
+    },
+    {
+      "target": "takabase-prod",
+      "source": ".",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "frameworksBackend": {
+        "region": "us-central1",
+        "minInstances": 0,
+        "maxInstances": 4,
+        "memory": "256MiB"
+      }
     }
-  }
+  ]
 }

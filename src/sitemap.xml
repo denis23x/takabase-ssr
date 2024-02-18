@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://draft-ssr.web.app/</loc>
+    <loc>https://takabase.com/</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://draft-ssr.web.app/login</loc>
+    <loc>https://takabase.com/login</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://draft-ssr.web.app/registration</loc>
+    <loc>https://takabase.com/registration</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://draft-ssr.web.app/help/markdown</loc>
+    <loc>https://takabase.com/help/markdown</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://draft-ssr.web.app/reset</loc>
+    <loc>https://takabase.com/reset</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://draft-ssr.web.app/terms/terms-of-use</loc>
+    <loc>https://takabase.com/terms/terms-of-use</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://draft-ssr.web.app/terms/cookie-policy</loc>
+    <loc>https://takabase.com/terms/cookie-policy</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://draft-ssr.web.app/help/about</loc>
+    <loc>https://takabase.com/help/about</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://draft-ssr.web.app/help/code-highlight</loc>
+    <loc>https://takabase.com/help/code-highlight</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://draft-ssr.web.app/help/style-safe-list</loc>
+    <loc>https://takabase.com/help/style-safe-list</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://draft-ssr.web.app/help/deep-dive</loc>
+    <loc>https://takabase.com/help/deep-dive</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://draft-ssr.web.app/help/compatibility</loc>
+    <loc>https://takabase.com/help/compatibility</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://draft-ssr.web.app/help/road-map</loc>
+    <loc>https://takabase.com/help/road-map</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>

@@ -6,4 +6,4 @@ Disallow: /settings/*
 User-agent: *
 Allow: /
 
-Sitemap: https://draft-ssr.web.app/sitemap.xml
+Sitemap: https://takabase.com/sitemap.xml

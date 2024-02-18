@@ -16,13 +16,13 @@ Processes
 
 - `start:dev` local dev server http://localhost:4200
 - `start:network` local dev server with access through single network
-- `start:deploy` deploy to dev server https://draft-ssr.web.app
+- `start:deploy` deploy
 
 Builds
 
 - `build:prod` build production SSR bundle
 - `build:sprite` build SVG sprite and inject it into **index.html**
-- `build:sitemap` build **sitemap.xml** based on https://draft-ssr.web.app
+- `build:sitemap` build **sitemap.xml** based on https://takabase.com
 
 Makefile (using Docker)
 

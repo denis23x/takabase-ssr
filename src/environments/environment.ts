@@ -22,13 +22,12 @@ export const environment = {
   pwa: false,
   production: false,
   firebase: {
-    apiKey: "AIzaSyDt88ljM_Bq3QvQlATnC-vrC4NdCwWIQzQ",
-    authDomain: "draft-ssr.firebaseapp.com",
-    projectId: "draft-ssr",
-    storageBucket: "draft-ssr.appspot.com",
-    messagingSenderId: "231627312637",
-    appId: "1:231627312637:web:f5e2ff009dfd5d3d279d94",
-    measurementId: "G-SYQEF6EH3K"
+    apiKey: "AIzaSyDxntkbYprxdDjuF39gCD6TUBKaMac5XqM",
+    authDomain: "takabase-dev.firebaseapp.com",
+    projectId: "takabase-dev",
+    storageBucket: "takabase-dev.appspot.com",
+    messagingSenderId: "154893506373",
+    appId: "1:154893506373:web:2319353415e6129a6b902c"
   },
   themes: [
     "light",

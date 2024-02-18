@@ -483,7 +483,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		const formData: FormData = new FormData();
 
-		formData.append('model', 'gantman-mobilenet-v2-quantized');
+		formData.append('model', 'gantman-mobilenet-v2');
 		formData.append('input', fileCropped);
 
 		this.imageFormRequest$?.unsubscribe();

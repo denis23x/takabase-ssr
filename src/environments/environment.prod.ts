@@ -2,10 +2,10 @@
 
 // prettier-ignore
 export const environment = {
-  appUrl: "https://draft-ssr.web.app",
-  apiUrl: "https://draft-api.web.app/api/v1",
+  appUrl: "https://takabase.com",
+  apiUrl: "https://takabase-prod-api.web.app/api/v1",
   ai: {
-    url: 'https://draft-ai.web.app/api/v1'
+    url: 'https://takabase-prod-ai.web.app/api/v1'
   },
   ipa: {
     url: "https://us-central1-draft-ssr.cloudfunctions.net/ext-image-processing-api-handler/process",
@@ -18,13 +18,12 @@ export const environment = {
   pwa: false,
   production: true,
   firebase: {
-    apiKey: "AIzaSyDt88ljM_Bq3QvQlATnC-vrC4NdCwWIQzQ",
-    authDomain: "draft-ssr.firebaseapp.com",
-    projectId: "draft-ssr",
-    storageBucket: "draft-ssr.appspot.com",
-    messagingSenderId: "231627312637",
-    appId: "1:231627312637:web:f5e2ff009dfd5d3d279d94",
-    measurementId: "G-SYQEF6EH3K"
+    apiKey: "AIzaSyAXXH474qF96wRTRu-t2tvt40UstCIHRp0",
+    authDomain: "takabase-prod.firebaseapp.com",
+    projectId: "takabase-prod",
+    storageBucket: "takabase-prod.appspot.com",
+    messagingSenderId: "125232720401",
+    appId: "1:125232720401:web:d8fa2325fba147d0e35fb0"
   },
   themes: [
     "light",
