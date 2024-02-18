@@ -52,9 +52,7 @@ export class HelpComponent implements OnInit {
 
 	setMetaTags(): void {
 		const title: string = 'Help & Support';
-
-		// prettier-ignore
-		const description: string = 'Find answers to commonly asked questions and resources to assist you in navigating and making the most out of Draft';
+		const description: string = 'Find answers to commonly asked questions';
 
 		const metaOpenGraph: Partial<MetaOpenGraph> = {
 			['og:title']: title,

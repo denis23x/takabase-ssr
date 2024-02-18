@@ -1,6 +1,6 @@
 ## Work In Progress
 
-Please note that Draft is currently a work in progress. While we're thrilled to share what we have so far, it's important to keep in mind that some features may be subject to change or even removal as we continue to refine and enhance our platform. Your understanding during this phase is greatly appreciated.
+Please note that Takabase is currently a work in progress. While we're thrilled to share what we have so far, it's important to keep in mind that some features may be subject to change or even removal as we continue to refine and enhance our platform. Your understanding during this phase is greatly appreciated.
 
 Our goal is to provide you with clear and concise guidance on account management, troubleshooting, feature explanations, and more. We value user feedback and are committed to continuously enhancing the platform's features and usability based on community input.
 

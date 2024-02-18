@@ -96,7 +96,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
 	setMetaTags(): void {
 		const title: string = 'Login';
-		const description: string = 'Not an Draft user yet? Sign up for free';
+		const description: string = 'Not an user yet? Sign up for free';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

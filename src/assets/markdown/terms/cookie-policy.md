@@ -1,6 +1,6 @@
 ## Cookie Policy
 
-We use cookies on our website **Draft** (the "Service"). By using the Service, you consent to the use of cookies.
+We use cookies on our website **Takabase** (the "Service"). By using the Service, you consent to the use of cookies.
 
 Our Cookie Policy explains what cookies are, how we use cookies, how third-parties we may partner with may use cookies on the Service, your choices regarding cookies, and further information about cookies.
 

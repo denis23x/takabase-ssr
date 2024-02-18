@@ -41,8 +41,8 @@ export class HelpMarkdownComponent {
     },
     {
       title: 'Links',
-      description: 'To create a link, enclose the link text in brackets <code>e.g., [Draft]</code> and then follow it immediately with the URL in parentheses <code>e.g., (https://draft-ssr.web.app)</code>. You can optionally add a title for a link. This will appear as a tooltip when the user hovers over the link. To add a title, enclose it in quotation marks after the URL',
-      markdown: `My favorite website is [Draft App](https://draft-ssr.web.app "The best website for enjoy")`
+      description: 'To create a link, enclose the link text in brackets <code>e.g., [Takabase]</code> and then follow it immediately with the URL in parentheses <code>e.g., (https://takabase.com)</code>. You can optionally add a title for a link. This will appear as a tooltip when the user hovers over the link. To add a title, enclose it in quotation marks after the URL',
+      markdown: `My favorite website is [Takabase App](https://takabase.com "The best website")`
     },
     {
       title: 'Blockquotes',
@@ -52,17 +52,17 @@ export class HelpMarkdownComponent {
     {
       title: 'Code',
       description: 'To denote a word or phrase as code, enclose it in backticks <code>`</code>.  The Markdown syntax allows you to create fenced code blocks. You should use three backticks <code>```</code> on the lines before and after the code block',
-      markdown: `\`<inline-code/>\`\n\n\`\`\` typescript\n// TODO: remake\nconst name: string = 'Draft';\n\`\`\``
+      markdown: `\`<inline-code/>\`\n\n\`\`\` typescript\n// TODO: remake\nconst name: string = 'Takabase';\n\`\`\``
     },
     {
       title: 'Images',
       description: 'To add an image, add an exclamation mark <code>!</code>, followed by alt text in brackets, and the path or URL to the image asset in parentheses. You can optionally add a title in quotation marks after the path or URL',
-      markdown: `![Draft](/assets/meta.jpg "Draft Image")`
+      markdown: `![Takabase](/assets/meta.jpg "Image")`
     },
     {
       title: 'Advanced',
       description: 'Add classes, identifiers and attributes to your markdown with <code>{.class .class2 attr=value}</code> curly brackets. Feel free to show your imagination and use the large set of CSS classes available in the style safe list section',
-      markdown: `![Draft](/assets/meta.jpg "Draft Image"){.mask .mask-heart width=100}\n\n[Draft App](https://draft-ssr.web.app){.link .link-info}\n\nBadge Primary{.badge .badge-primary}\n\n[Secondary]{.btn .btn-secondary .btn-outline}\n\n- Register{.step .step-primary}\n- Choose plan{.step .step-primary}\n- Purchase{.step}\n{.steps .steps-vertical .not-prose .p-0}`
+      markdown: `![Takabase](/assets/meta.jpg "Image"){.mask .mask-heart width=100}\n\n[Takabase App](https://takabase.com){.link .link-info}\n\nBadge Primary{.badge .badge-primary}\n\n[Secondary]{.btn .btn-secondary .btn-outline}\n\n- Register{.step .step-primary}\n- Choose plan{.step .step-primary}\n- Purchase{.step}\n{.steps .steps-vertical .not-prose .p-0}`
     }
   ];
 }

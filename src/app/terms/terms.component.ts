@@ -41,7 +41,7 @@ export class TermsComponent implements OnInit {
 		const title: string = 'Terms of use';
 
 		// prettier-ignore
-		const description: string = 'Read our terms of use to understand the rules and guidelines for using Draft.';
+		const description: string = 'Read our terms of use to understand the rules and guidelines for using Takabase.';
 
 		const metaOpenGraph: Partial<MetaOpenGraph> = {
 			['og:title']: title,

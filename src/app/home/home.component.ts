@@ -142,8 +142,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Draft';
-		const description: string = 'Stay up to date with the latest posts and insights from Draft';
+		const title: string = 'Takabase';
+		const description: string = 'Stay up to date with the latest posts and insights from Takabase';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

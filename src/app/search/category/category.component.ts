@@ -87,7 +87,7 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 
 	setMetaTags(): void {
 		const title: string = 'Search categories';
-		const description: string = "Use our search function to find what you're looking for on Draft";
+		const description: string = "Use the search to find what you're looking for";
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

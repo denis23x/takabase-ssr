@@ -1,6 +1,6 @@
 {
-  "name": "Draft PWA Application",
-  "short_name": "Draft App",
+  "name": "Takabase PWA Application",
+  "short_name": "Takabase",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",

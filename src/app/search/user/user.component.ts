@@ -90,7 +90,7 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 
 	setMetaTags(): void {
 		const title: string = 'Search users';
-		const description: string = "Use our search function to find what you're looking for on Draft";
+		const description: string = "Use the search to find what you're looking for";
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

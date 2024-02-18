@@ -64,7 +64,7 @@ export class ErrorComponent implements OnInit {
 
 	setMetaTags(): void {
 		const title: string = this.message;
-		const description: string = "Oops! It looks like you've landed on an error page on Draft";
+		const description: string = "Oops! It looks like you've landed on an error page";
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

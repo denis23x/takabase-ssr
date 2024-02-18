@@ -10,7 +10,7 @@ import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
 export class TitleService extends TitleStrategy {
 	private readonly title: Title = inject(Title);
 
-	titlePostfix: string = 'Draft';
+	titlePostfix: string = 'Takabase';
 	titlePostfixDelimiter: string = ' | ';
 
 	constructor() {

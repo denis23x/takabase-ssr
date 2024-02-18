@@ -1,6 +1,6 @@
 ## Terms of Use
 
-Please read these Terms of Use ("Terms", "Terms of Use") carefully before using **Draft** (the "Service") operated by **KW** ("us", "we", or "our").
+Please read these Terms of Use ("Terms", "Terms of Use") carefully before using **Takabase** (the "Service") operated by **KW** ("us", "we", or "our").
 
 Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users, and others who access or use the Service.
 

@@ -62,7 +62,7 @@ export class MetaService {
 			...metaOpenGraph,
 			['og:url']: url.href,
 			['og:locale']: 'en_US',
-			['og:site_name']: 'Draft'
+			['og:site_name']: 'Takabase'
 		};
 
 		/** Image absent case */
@@ -73,7 +73,7 @@ export class MetaService {
 		// @ts-ignore
 		if (metaOpenGraphImage.some((tag: string) => !metaOpenGraph[tag])) {
 			metaOpenGraph['og:image'] = url.origin + '/assets/meta.jpg';
-			metaOpenGraph['og:image:alt'] = 'Stay up to date with the latest posts and insights from Draft';
+			metaOpenGraph['og:image:alt'] = 'Stay up to date with the latest posts and insights from Takabase';
 			metaOpenGraph['og:image:type'] = 'image/svg';
 		}
 
@@ -145,7 +145,7 @@ export class MetaService {
 			// @ts-ignore
       metaTwitterImage['twitter:image'] = url.origin + '/assets/meta.jpg';
 			// @ts-ignore
-      metaTwitterImage['twitter:image:alt'] = 'Stay up to date with the latest posts and insights from Draft';
+      metaTwitterImage['twitter:image:alt'] = 'Stay up to date with the latest posts and insights from Takabase';
 		}
 
 		Object.keys(metaTwitter).forEach((key: string) => {
