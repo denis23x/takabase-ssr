@@ -28,7 +28,7 @@ const spawn = require('child_process').spawn;
     initial: select.value === 'takabase-dev'
   });
 
-  if (confirm.value) {
+  if (select.value && confirm.value) {
     const buildTarget = () => {
       switch (select.value) {
         case 'takabase-dev': {
