@@ -13,8 +13,8 @@ export const environment = {
     url: "https://localhost:4410/api/v1"
   },
   ipa: {
-    url: "",
-    bucket: "",
+    url: "https://us-central1-takabase-local.cloudfunctions.net/ext-image-processing-api-handler/process",
+    bucket: "gs://takabase-local-ipa",
   },
   mailer: {
     to: "damage.23x@gmail.com",
@@ -23,12 +23,12 @@ export const environment = {
   pwa: false,
   production: false,
   firebase: {
-    apiKey: "AIzaSyDxntkbYprxdDjuF39gCD6TUBKaMac5XqM",
-    authDomain: "takabase-dev.firebaseapp.com",
-    projectId: "takabase-dev",
-    storageBucket: "takabase-dev.appspot.com",
-    messagingSenderId: "154893506373",
-    appId: "1:154893506373:web:2319353415e6129a6b902c"
+    apiKey: "AIzaSyBjYjnCQeQzGPePjsDqgU_EpOqRyF0YadM",
+    authDomain: "takabase-local.firebaseapp.com",
+    projectId: "takabase-local",
+    storageBucket: "takabase-local.appspot.com",
+    messagingSenderId: "804966843833",
+    appId: "1:804966843833:web:5e4754d96302c521b36268"
   },
   themes: [
     "light",
