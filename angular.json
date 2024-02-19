@@ -177,8 +177,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1mb",
-                  "maximumError": "2mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "4mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -202,7 +202,7 @@
               "namedChunks": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -240,18 +240,13 @@
             "version": 2
           },
           "configurations": {
-            "takabase-prod": {
-              "buildTarget": "takabase-ssr:build:production",
-              "firebaseProject": "takabase-prod",
-              "siteTarget": "takabase-prod"
+            "production": {
+              "buildTarget": "takabase-ssr:build:production"
             },
-            "takabase-dev": {
-              "buildTarget": "takabase-ssr:build:development",
-              "firebaseProject": "takabase-dev",
-              "siteTarget": "takabase-dev"
+            "development": {
+              "buildTarget": "takabase-ssr:build:development"
             }
-          },
-          "defaultConfiguration": "production"
+          }
         }
       }
     }

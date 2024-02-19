@@ -8,7 +8,7 @@
   "scripts": {
     "start:dev": "ng run takabase-ssr:serve:localhost",
     "start:network": "ng run takabase-ssr:serve:localhost --host 0.0.0.0 --disable-host-check",
-    "start:deploy": "read alias && firebase use $alias && firebase deploy --only functions,hosting:$alias",
+    "start:deploy": "node firebase-deploy.js",
     "start:lint": "ng lint",
     "build:prod": "ng run takabase-ssr:build:production",
     "build:spite": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --inline --stripAttrs class --stripAttrs fill && node sprite && prettier --write src/index.html --log-level silent",
@@ -96,6 +96,7 @@
     "prettier": "^3.1.1",
     "prettier-plugin-organize-attributes": "^1.0.0",
     "prettier-plugin-tailwindcss": "^0.5.7",
+    "prompts": "^2.4.2",
     "rxfire": "^6.0.3",
     "sitemap-generator": "^8.5.1",
     "svg2sprite-cli": "^2.0.1",
