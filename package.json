@@ -6,15 +6,15 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "start:dev": "ng run draft-ssr:serve:development",
-    "start:network": "ng run draft-ssr:serve:development --host 0.0.0.0 --disable-host-check",
+    "start:dev": "ng run takabase-ssr:serve:localhost",
+    "start:network": "ng run takabase-ssr:serve:localhost --host 0.0.0.0 --disable-host-check",
     "start:deploy": "read alias && firebase use $alias && firebase deploy --only functions,hosting:$alias",
     "start:lint": "ng lint",
-    "build:prod": "ng run draft-ssr:build:production",
+    "build:prod": "ng run takabase-ssr:build:production",
     "build:spite": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --inline --stripAttrs class --stripAttrs fill && node sprite && prettier --write src/index.html --log-level silent",
     "build:sitemap": "node sitemap.js",
-    "dist:analyze": "esbuild-visualizer --metadata ./dist/draft-ssr/stats.json --filename ./dist/draft-ssr/stats.html --open",
-    "dist:start": "node dist/draft-ssr/server/server.mjs"
+    "dist:analyze": "esbuild-visualizer --metadata ./dist/takabase-ssr/stats.json --filename ./dist/takabase-ssr/stats.html --open",
+    "dist:start": "node dist/takabase-ssr/server/server.mjs"
   },
   "dependencies": {
     "@angular/animations": "^17.0.5",

@@ -5,15 +5,16 @@ export const environment = {
   appUrl: "https://takabase.com",
   apiUrl: "https://takabase-prod-api.web.app/api/v1",
   ai: {
-    url: 'https://takabase-prod-ai.web.app/api/v1'
+    moderation: true,
+    url: "https://takabase-prod-ai.web.app/api/v1"
   },
   ipa: {
-    url: "https://us-central1-draft-ssr.cloudfunctions.net/ext-image-processing-api-handler/process",
-    bucket: 'gs://draft-ssr-image-processing',
+    url: "https://us-central1-takabase-prod.cloudfunctions.net/ext-image-processing-api-handler/process",
+    bucket: "gs://takabase-prod-ipa",
   },
   mailer: {
-    to: 'damage.23x@gmail.com',
-    bcc: [''],
+    to: "damage.23x@gmail.com",
+    bcc: [""],
   },
   pwa: false,
   production: true,

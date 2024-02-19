@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "draft-ssr": {
+    "takabase-ssr": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -36,7 +36,7 @@
               "markdown-it-tasks",
               "markdown-it-video"
             ],
-            "outputPath": "dist/draft-ssr",
+            "outputPath": "dist/takabase-ssr",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -174,6 +174,28 @@
               "statsJson": true
             },
             "development": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "8kb",
+                  "maximumError": "16kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ],
+              "outputHashing": "all",
+              "statsJson": true
+            },
+            "localhost": {
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -186,18 +208,21 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "draft-ssr:build:production"
+              "buildTarget": "takabase-ssr:build:production"
             },
             "development": {
-              "buildTarget": "draft-ssr:build:development"
+              "buildTarget": "takabase-ssr:build:development"
+            },
+            "localhost": {
+              "buildTarget": "takabase-ssr:build:localhost"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "localhost"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "draft-ssr:build"
+            "buildTarget": "takabase-ssr:build"
           }
         },
         "lint": {
@@ -212,9 +237,21 @@
         "deploy": {
           "builder": "@angular/fire:deploy",
           "options": {
-            "version": 2,
-            "buildTarget": "draft-ssr:build:production"
-          }
+            "version": 2
+          },
+          "configurations": {
+            "takabase-prod": {
+              "buildTarget": "takabase-ssr:build:production",
+              "firebaseProject": "takabase-prod",
+              "siteTarget": "takabase-prod"
+            },
+            "takabase-dev": {
+              "buildTarget": "takabase-ssr:build:development",
+              "firebaseProject": "takabase-dev",
+              "siteTarget": "takabase-dev"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }

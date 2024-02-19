@@ -1,27 +1,23 @@
 /** @format */
 
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
 // prettier-ignore
 export const environment = {
-  appUrl: "http://localhost:4200",
-  apiUrl: "http://localhost:4400/api/v1",
+  appUrl: "https://takabase-dev.web.app",
+  apiUrl: "https://takabase-dev-api.web.app/api/v1",
   ai: {
-    moderation: false,
-    url: "https://localhost:4410/api/v1"
+    moderation: true,
+    url: "https://takabase-dev-ai.web.app/api/v1"
   },
   ipa: {
-    url: "",
-    bucket: "",
+    url: "https://us-central1-takabase-dev.cloudfunctions.net/ext-image-processing-api-handler/process",
+    bucket: "gs://takabase-dev-ipa",
   },
   mailer: {
     to: "damage.23x@gmail.com",
     bcc: [""],
   },
   pwa: false,
-  production: false,
+  production: true,
   firebase: {
     apiKey: "AIzaSyDxntkbYprxdDjuF39gCD6TUBKaMac5XqM",
     authDomain: "takabase-dev.firebaseapp.com",
@@ -394,12 +390,3 @@ export const environment = {
     ]
   }
 }
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.
