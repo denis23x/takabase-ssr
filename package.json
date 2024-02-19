@@ -1,6 +1,6 @@
 {
-  "name": "draft-ssr",
-  "version": "0.0.1",
+  "name": "takabase-ssr",
+  "version": "1.0.0",
   "description": "Node frontend project",
   "author": "Denis Iakimenko",
   "private": true,

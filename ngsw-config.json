@@ -43,7 +43,7 @@
     {
       "name": "api",
       "urls": [
-        "https://draft-api.web.app/api/*"
+        "https://takabase.com/api/v1/*"
       ],
       "cacheConfig": {
         "maxSize": 100,

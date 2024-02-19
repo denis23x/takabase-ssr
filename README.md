@@ -1,8 +1,4 @@
-# Draft SSR
-
----
-
-## Development commands
+# Takabase SSR
 
 Setup
 
@@ -37,7 +33,5 @@ Some configurations
 - `ecosystem.config.js` process handler (production docker)
 - `firebase.json` dev deploy config
 - `ngsw-config.json` PWA config
-
----
 
 Contact https://t.me/denis23x

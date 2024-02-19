@@ -1,9 +1,9 @@
 module.exports = [
   {
-    script: "dist/draft-ssr/server/main.js",
-    name: "app-ssr",
+    script: "dist/takabase-ssr/server/main.js",
+    name: "app-takabase-ssr",
     exec_mode: "cluster",
-    instances: 1,
+    instances: 4,
     max_memory_restart: "256M",
   },
 ]
