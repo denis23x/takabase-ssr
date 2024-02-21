@@ -72,7 +72,7 @@ export class MetaService {
 		// prettier-ignore
 		// @ts-ignore
 		if (metaOpenGraphImage.some((tag: string) => !metaOpenGraph[tag])) {
-			metaOpenGraph['og:image'] = url.origin + '/assets/meta.jpg';
+			metaOpenGraph['og:image'] = url.origin + '/assets/meta.png';
 			metaOpenGraph['og:image:alt'] = 'Stay up to date with the latest posts and insights from Takabase';
 			metaOpenGraph['og:image:type'] = 'image/svg';
 		}
@@ -143,7 +143,7 @@ export class MetaService {
 		// @ts-ignore
 		if (metaTwitterImage.some((tag: string) => !metaTwitter[tag])) {
 			// @ts-ignore
-      metaTwitterImage['twitter:image'] = url.origin + '/assets/meta.jpg';
+      metaTwitterImage['twitter:image'] = url.origin + '/assets/meta.png';
 			// @ts-ignore
       metaTwitterImage['twitter:image:alt'] = 'Stay up to date with the latest posts and insights from Takabase';
 		}
