@@ -14,7 +14,7 @@ import { APP_ROUTES } from './app.routes';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideServiceWorker } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { httpAppCheckInterceptor } from './core/interceptors/http.app-check.interceptor';
@@ -51,7 +51,7 @@ export const appConfig: ApplicationConfig = {
 		importProvidersFrom(provideFirestore(() => getFirestore())),
 		importProvidersFrom(
 			provideAppCheck((injector: Injector) => {
-				return initializeAppCheck(getApp(), {
+				return initializeAppCheck(undefined, {
 					provider: injector.get(RecaptchaBrowserProvider).provider(environment.firebase.appCheck),
 					isTokenAutoRefreshEnabled: true
 				});

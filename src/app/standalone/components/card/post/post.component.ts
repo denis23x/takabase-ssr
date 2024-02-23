@@ -1,15 +1,16 @@
 /** @format */
 
 import { Component, Input } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
+import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { Post } from '../../../../core/models/post.model';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
+import { AppCheckPipe } from '../../../pipes/app-check.pipe';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, DayjsPipe, NgOptimizedImage, SkeletonDirective],
+	imports: [RouterModule, DayjsPipe, NgOptimizedImage, SkeletonDirective, AppCheckPipe, AsyncPipe],
 	selector: 'app-card-post, [appCardPost]',
 	templateUrl: './post.component.html'
 })
