@@ -23,6 +23,7 @@ export const environment = {
   pwa: false,
   production: false,
   firebase: {
+    appCheck: "6LfD13wpAAAAAL7BUKaPZf-FdIc184KtQ3hpGHvl",
     apiKey: "AIzaSyBjYjnCQeQzGPePjsDqgU_EpOqRyF0YadM",
     authDomain: "takabase-local.firebaseapp.com",
     projectId: "takabase-local",
