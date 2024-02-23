@@ -56,16 +56,13 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 
 	registrationRequest$: Subscription | undefined;
 	registrationForm: FormGroup = this.formBuilder.group<RegistrationForm>({
-		name: this.formBuilder.nonNullable.control('denis', [
+		name: this.formBuilder.nonNullable.control('', [
 			Validators.required,
 			Validators.minLength(4),
 			Validators.maxLength(24)
 		]),
-		email: this.formBuilder.nonNullable.control('denis@mail.ru', [
-			Validators.required,
-			Validators.email
-		]),
-		password: this.formBuilder.nonNullable.control('denis@mail.ru', [
+		email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
+		password: this.formBuilder.nonNullable.control('', [
 			Validators.required,
 			Validators.pattern(this.helperService.getRegex('password'))
 		]),

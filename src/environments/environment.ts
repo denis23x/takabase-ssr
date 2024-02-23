@@ -28,7 +28,7 @@ export const environment = {
     projectId: "takabase-local",
     storageBucket: "takabase-local.appspot.com",
     messagingSenderId: "804966843833",
-    appId: "1:804966843833:web:5e4754d96302c521b36268"
+    appId: "1:804966843833:web:0fda27de913151deb36268"
   },
   themes: [
     "light",
