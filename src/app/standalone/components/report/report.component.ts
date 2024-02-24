@@ -34,6 +34,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
 import { ReportSubject } from '../../../core/models/report.model';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { PlatformService } from '../../../core/services/platform.service';
+import { filter } from 'rxjs/operators';
 
 interface ReportForm {
 	name: FormControl<string>;
@@ -106,15 +107,19 @@ export class ReportComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	ngAfterViewInit(): void {
-		this.reportSubject$ = this.reportService.reportSubject$.subscribe({
-			next: (reportSubject: ReportSubject) => {
-				this.reportSubject = reportSubject;
-				this.reportSubjectUrl = this.helperService.getURL().toString();
-				this.reportSubjectName = reportSubject.user?.name || reportSubject.post?.name;
-			},
-			error: (error: any) => console.error(error)
-		});
+		this.reportSubject$?.unsubscribe();
+		this.reportSubject$ = this.reportService.reportSubject$
+			.pipe(filter((reportSubject: ReportSubject | null) => !!reportSubject))
+			.subscribe({
+				next: (reportSubject: ReportSubject) => {
+					this.reportSubject = reportSubject;
+					this.reportSubjectUrl = this.helperService.getURL().toString();
+					this.reportSubjectName = reportSubject.user?.name || reportSubject.post?.name;
+				},
+				error: (error: any) => console.error(error)
+			});
 
+		this.reportDialogToggle$?.unsubscribe();
 		this.reportDialogToggle$ = this.reportService.reportDialogToggle$.subscribe({
 			next: (reportDialogToggle: boolean) => this.onToggleReportDialog(reportDialogToggle),
 			error: (error: any) => console.error(error)
