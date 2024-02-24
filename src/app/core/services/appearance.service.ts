@@ -33,8 +33,6 @@ export class AppearanceService {
 	private readonly angularFirestore: AngularFirestore = inject(AngularFirestore);
 	private readonly ngZone: NgZone = inject(NgZone);
 
-	collectionOrigin: string = '/appearance';
-
 	/** Utility */
 
 	getPrefersColorScheme(): Observable<any> {
@@ -82,9 +80,9 @@ export class AppearanceService {
 			'dropdownBackdrop',
 			'language',
 			'markdownMonospace',
+			'pageRedirectHome',
 			'pageScrollToTop',
 			'pageScrollInfinite',
-			'pageRedirectHome',
 			'theme',
 			'themeBackground',
 			'themePrism',
@@ -116,7 +114,7 @@ export class AppearanceService {
 
 	setLoader(toggle: boolean): void {
 		if (toggle) {
-			// this.document.querySelector('[data-loader]').remove();
+			// TODO: Do something ..
 		} else {
 			this.document.querySelector('[data-loader]')?.remove();
 		}
@@ -237,7 +235,7 @@ export class AppearanceService {
 	getCollection(firebaseId: string): Observable<firebase.firestore.DocumentSnapshot<DocumentData>> {
 		return this.ngZone.runOutsideAngular(() => {
 			return this.angularFirestore
-				.collection(this.collectionOrigin, (collectionReference: CollectionReference) => {
+				.collection('/user', (collectionReference: CollectionReference) => {
 					return collectionReference.where('firebaseId', '==', firebaseId);
 				})
 				.get()
@@ -248,28 +246,33 @@ export class AppearanceService {
 						} else {
 							const appearance: Appearance = {
 								dropdownBackdrop: false,
-								firebaseId,
 								language: 'en-US',
 								markdownMonospace: true,
 								pageRedirectHome: false,
-								pageScrollInfinite: false,
 								pageScrollToTop: false,
+								pageScrollInfinite: false,
 								theme: 'auto',
 								themeBackground: 'cosy-creatures',
 								themePrism: 'auto',
 								windowButtonPosition: 'left'
 							};
 
+							const user: any = {
+								firebaseId,
+								appearance
+							};
+
 							// prettier-ignore
-							return from(this.angularFirestore.collection(this.collectionOrigin).add(appearance)).pipe(
-							switchMap((documentReference: DocumentReference<unknown>) => {
-								return from(documentReference.get());
-							})
-						);
+							return from(this.angularFirestore.collection('/user').add(user)).pipe(
+								switchMap((documentReference: DocumentReference<unknown>) => from(documentReference.get()))
+							);
 						}
 					}),
-					tap((queryDocumentSnapshot: firebase.firestore.DocumentSnapshot<DocumentData>) => {
-						this.setSettings(queryDocumentSnapshot.data() as Appearance);
+					tap((documentSnapshot: firebase.firestore.DocumentSnapshot<DocumentData>) => {
+						const currentUserCollection: any = documentSnapshot.data();
+						const currentUserCollectionAppearance: Appearance = currentUserCollection.appearance;
+
+						this.setSettings(currentUserCollectionAppearance);
 					})
 				);
 		});

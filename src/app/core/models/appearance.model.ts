@@ -2,7 +2,6 @@
 
 export interface Appearance {
 	dropdownBackdrop: boolean;
-	firebaseId: string;
 	language: string;
 	markdownMonospace: boolean;
 	pageScrollToTop: boolean;
