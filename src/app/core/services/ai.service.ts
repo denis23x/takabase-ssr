@@ -70,31 +70,39 @@ export class AIService {
 
 	/** AI function */
 
-	moderateText(aiModerateTextDto: AIModerateTextDto): Observable<AIModerateTextResult> {
-		return this.httpClient.post(this.setUrl('/moderation/text'), aiModerateTextDto).pipe(
-			map((response: any) => response.data),
-			switchMap((aiModerateTextResult: AIModerateTextResult) => {
-				if (this.getModeratedTextIsSafe(aiModerateTextResult)) {
-					return of(aiModerateTextResult);
-				} else {
-					return throwError(() => new Error('Seems like your input is prohibited to submit'));
-				}
-			}),
-			catchError((error: Error) => this.apiService.setError(error))
-		);
+	moderateText(aiModerateTextDto: AIModerateTextDto): Observable<boolean> {
+		if (environment.ai.moderation) {
+			return this.httpClient.post(this.setUrl('/moderation/text'), aiModerateTextDto).pipe(
+				map((response: any) => response.data),
+				switchMap((aiModerateTextResult: AIModerateTextResult) => {
+					if (this.getModeratedTextIsSafe(aiModerateTextResult)) {
+						return of(true);
+					} else {
+						return throwError(() => new Error('Seems like your input is prohibited to submit'));
+					}
+				}),
+				catchError((error: Error) => this.apiService.setError(error))
+			);
+		}
+
+		return of(false);
 	}
 
-	moderateImage(formData: FormData): Observable<AIModerateImageResult[]> {
-		return this.httpClient.post(this.setUrl('/moderation/image'), formData).pipe(
-			map((response: any) => response.data),
-			switchMap((aiModerateImageResult: AIModerateImageResult[]) => {
-				if (this.getModeratedImageIsSafe(aiModerateImageResult)) {
-					return of(aiModerateImageResult);
-				} else {
-					return throwError(() => new Error('The image contains prohibited content'));
-				}
-			}),
-			catchError((error: Error) => this.apiService.setError(error))
-		);
+	moderateImage(formData: FormData): Observable<boolean> {
+		if (environment.ai.moderation) {
+			return this.httpClient.post(this.setUrl('/moderation/image'), formData).pipe(
+				map((response: any) => response.data),
+				switchMap((aiModerateImageResult: AIModerateImageResult[]) => {
+					if (this.getModeratedImageIsSafe(aiModerateImageResult)) {
+						return of(true);
+					} else {
+						return throwError(() => new Error('The image contains prohibited content'));
+					}
+				}),
+				catchError((error: Error) => this.apiService.setError(error))
+			);
+		}
+
+		return of(false);
 	}
 }

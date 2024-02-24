@@ -20,9 +20,11 @@ import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-in
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
 import { RegistrationDto } from '../../core/dto/auth/registration.dto';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
+import { AIService } from '../../core/services/ai.service';
+import { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -53,6 +55,7 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly aiService: AIService = inject(AIService);
 
 	registrationRequest$: Subscription | undefined;
 	registrationForm: FormGroup = this.formBuilder.group<RegistrationForm>({
@@ -109,9 +112,17 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 				...this.registrationForm.value
 			};
 
+			const aiModerateTextDto: AIModerateTextDto = {
+				model: 'text-moderation-stable',
+				input: registrationDto.name
+			};
+
+			/** Moderate and registration */
+
 			this.registrationRequest$?.unsubscribe();
-			this.registrationRequest$ = this.authorizationService
-				.onRegistration(registrationDto)
+			this.registrationRequest$ = this.aiService
+				.moderateText(aiModerateTextDto)
+				.pipe(switchMap(() => this.authorizationService.onRegistration(registrationDto)))
 				.subscribe({
 					next: (user: User) => {
 						this.router
