@@ -3,6 +3,7 @@
 // prettier-ignore
 export const environment = {
   appUrl: "https://takabase-dev.web.app",
+  appCheck: "6LdbRn0pAAAAAPESvk85IVZiep5mp_QnQKrs8lrg",
   apiUrl: "https://takabase-dev-api.web.app/api/v1",
   ai: {
     moderation: true,
@@ -19,7 +20,6 @@ export const environment = {
   pwa: false,
   production: true,
   firebase: {
-    appCheck: "6LdbRn0pAAAAAPESvk85IVZiep5mp_QnQKrs8lrg",
     apiKey: "AIzaSyDxntkbYprxdDjuF39gCD6TUBKaMac5XqM",
     authDomain: "takabase-dev.firebaseapp.com",
     projectId: "takabase-dev",

@@ -52,7 +52,7 @@ export const appConfig: ApplicationConfig = {
 		importProvidersFrom(
 			provideAppCheck((injector: Injector) => {
 				return initializeAppCheck(undefined, {
-					provider: injector.get(RecaptchaBrowserProvider).provider(environment.firebase.appCheck),
+					provider: injector.get(RecaptchaBrowserProvider).provider(environment.appCheck),
 					isTokenAutoRefreshEnabled: true
 				});
 			})

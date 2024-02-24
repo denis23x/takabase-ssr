@@ -7,6 +7,7 @@
 // prettier-ignore
 export const environment = {
   appUrl: "http://localhost:4200",
+  appCheck: "6LfD13wpAAAAAL7BUKaPZf-FdIc184KtQ3hpGHvl",
   apiUrl: "http://localhost:4400/api/v1",
   ai: {
     moderation: false,
@@ -23,7 +24,6 @@ export const environment = {
   pwa: false,
   production: false,
   firebase: {
-    appCheck: "6LfD13wpAAAAAL7BUKaPZf-FdIc184KtQ3hpGHvl",
     apiKey: "AIzaSyBjYjnCQeQzGPePjsDqgU_EpOqRyF0YadM",
     authDomain: "takabase-local.firebaseapp.com",
     projectId: "takabase-local",
