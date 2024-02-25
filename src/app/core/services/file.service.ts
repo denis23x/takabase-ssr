@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { from, Observable, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { HelperService } from './helper.service';
 import { FirebaseError } from '@angular/fire/app';
 import mime from 'mime';
@@ -59,6 +59,14 @@ export class FileService {
 				});
 			}),
 			switchMap(() => this.angularFireStorage.ref(filePath).getDownloadURL()),
+			map((fileUrl: string) => {
+				/** Remove access token and extra query params */
+
+				const url: URL = new URL(fileUrl);
+				const urlNew: string = fileUrl.replace(url.search, '');
+
+				return urlNew;
+			}),
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}

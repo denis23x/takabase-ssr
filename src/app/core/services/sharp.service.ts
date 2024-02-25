@@ -7,6 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { FileService } from './file.service';
+import { SharpFetchDto } from '../dto/sharp/sharp-fetch.dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -22,9 +23,12 @@ export class SharpService {
 
 	/** IPA function */
 
-	getOneViaProxy(url: string): Observable<File> {
+	getFetch(sharpFetchDto: SharpFetchDto): Observable<File> {
 		return this.httpClient
-			.get(this.setUrl(url), {
+			.get(this.setUrl('/fetch'), {
+				params: {
+					...sharpFetchDto
+				},
 				responseType: 'blob'
 			})
 			.pipe(

@@ -46,6 +46,7 @@ import { FileService } from '../../../core/services/file.service';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { BadgeErrorComponent } from '../badge-error/badge-error.component';
 import { AIService } from '../../../core/services/ai.service';
+import { SharpFetchDto } from '../../../core/dto/sharp/sharp-fetch.dto';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -280,8 +281,12 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.imageForm)) {
 			this.imageForm.disable();
 
+			const sharpFetchDto: SharpFetchDto = {
+				url
+			};
+
 			this.imageFormRequest$?.unsubscribe();
-			this.imageFormRequest$ = this.sharpService.getOneViaProxy(url).subscribe({
+			this.imageFormRequest$ = this.sharpService.getFetch(sharpFetchDto).subscribe({
 				next: (file: File) => this.setFile(file),
 				error: () => this.imageForm.enable()
 			});
