@@ -9,9 +9,8 @@ export const environment = {
     moderation: true,
     url: "https://takabase-prod-ai.web.app/api/v1"
   },
-  ipa: {
-    url: "https://us-central1-takabase-prod.cloudfunctions.net/ext-image-processing-api-handler/process",
-    bucket: "gs://takabase-prod-ipa",
+  sharp: {
+    url: "https://takabase-prod-sharp.web.app/api/v1"
   },
   mailer: {
     to: "damage.23x@gmail.com",

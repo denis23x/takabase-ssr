@@ -13,9 +13,8 @@ export const environment = {
     moderation: false,
     url: "https://localhost:4410/api/v1"
   },
-  ipa: {
-    url: "https://us-central1-takabase-local.cloudfunctions.net/ext-image-processing-api-handler/process",
-    bucket: "gs://takabase-local-ipa",
+  sharp: {
+    url: "https://takabase-local-sharp.web.app/api/v1"
   },
   mailer: {
     to: "damage.23x@gmail.com",

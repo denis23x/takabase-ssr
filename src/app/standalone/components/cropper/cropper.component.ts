@@ -41,9 +41,8 @@ import { PlatformService } from '../../../core/services/platform.service';
 import { MarkdownService } from '../../../core/services/markdown.service';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { DropdownComponent } from '../dropdown/dropdown.component';
-import { IPAService } from '../../../core/services/ipa.service';
+import { SharpService } from '../../../core/services/sharp.service';
 import { FileService } from '../../../core/services/file.service';
-import { IPAOperation } from '../../../core/dto/ipa/ipa-operation.dto';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { BadgeErrorComponent } from '../badge-error/badge-error.component';
 import { AIService } from '../../../core/services/ai.service';
@@ -83,7 +82,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly fileService: FileService = inject(FileService);
-	private readonly ipaService: IPAService = inject(IPAService);
+	private readonly sharpService: SharpService = inject(SharpService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly markdownService: MarkdownService = inject(MarkdownService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
@@ -282,7 +281,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			this.imageForm.disable();
 
 			this.imageFormRequest$?.unsubscribe();
-			this.imageFormRequest$ = this.ipaService.getOneViaProxy(url).subscribe({
+			this.imageFormRequest$ = this.sharpService.getOneViaProxy(url).subscribe({
 				next: (file: File) => this.setFile(file),
 				error: () => this.imageForm.enable()
 			});
@@ -481,30 +480,23 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		/** Moderate and make .webp image */
 
-		const formData: FormData = new FormData();
+		const formDataModeration: FormData = new FormData();
 
-		formData.append('model', 'gantman-mobilenet-v2');
-		formData.append('input', fileCropped);
+		formDataModeration.append('model', 'gantman-mobilenet-v2');
+		formDataModeration.append('input', fileCropped);
 
 		this.imageFormRequest$?.unsubscribe();
 		this.imageFormRequest$ = this.aiService
-			.moderateImage(formData)
+			.moderateImage(formDataModeration)
 			.pipe(
-				switchMap(() => this.ipaService.create(fileCropped)),
-				switchMap((fileUrl: string) => {
-					const ipaOperationParams: IPAOperation[] = [
-						{
-							operation: 'input',
-							type: 'gcs',
-							source: fileUrl
-						},
-						{
-							operation: 'output',
-							format: 'webp'
-						}
-					];
+				switchMap(() => {
+					const formDataOutput: FormData = new FormData();
 
-					return this.ipaService.getOneViaGCS(ipaOperationParams);
+					formDataOutput.append('quality', '80');
+					formDataOutput.append('lossless', 'false');
+					formDataOutput.append('input', fileCropped);
+
+					return this.sharpService.getOutputWebP(formDataOutput);
 				}),
 				tap((file: File) => {
 					if (this.markdownItToggle) {
