@@ -19,7 +19,12 @@ export class HelperService {
 	}
 
 	getRegex(regExp: string, payload?: any): RegExp {
+		// prettier-ignore
 		switch (regExp) {
+			case 'markdown-image':
+				return new RegExp('!\\[(.*?)]\\((.*?)\\)', 'g');
+			case 'markdown-image-url':
+				return new RegExp('(?<=\\().+?(?=\\))', 'i');
 			case 'extension':
 				return new RegExp('.[a-z]+$', 'i');
 			case 'no-whitespace':
@@ -29,10 +34,8 @@ export class HelperService {
 			case 'password':
 				return new RegExp('^((?=.*\\d)|(?=.*[!@#$%^&*]))(?=.*[a-zA-Z]).{6,32}$', 'm');
 			case 'url':
-				// eslint-disable-next-line no-control-regex
 				return new RegExp('^([a-zA-Z][a-zA-Z0-9+.\\-]{1,31}):([^<>\x00-\x20]*)$', 'm');
 			case 'youtube':
-				// prettier-ignore
 				return new RegExp('^.*((youtu.be\\/)|(v\\/)|(\\/u\\/\\w\\/)|(embed\\/)|(watch\\?))\\??v?=?([^#&?]*).*', 'm');
 			default:
 				throw new Error(`Invalid regex type specified: ${regExp}`);

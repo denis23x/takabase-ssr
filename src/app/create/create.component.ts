@@ -61,6 +61,8 @@ import { PlatformDirective } from '../standalone/directives/app-platform.directi
 import { DeviceDirective } from '../standalone/directives/app-device.directive';
 import { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../core/services/ai.service';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { environment } from '../../environments/environment';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -117,6 +119,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly aiService: AIService = inject(AIService);
+	private readonly angularFirestore: AngularFirestore = inject(AngularFirestore);
 
 	// prettier-ignore
 	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
@@ -504,6 +507,25 @@ export class CreateComponent implements OnInit, OnDestroy {
 			const postDto: PostCreateDto & PostUpdateDto = {
 				...this.postForm.value
 			};
+
+			/** Handle markdown embed images */
+
+			const regExpImage: RegExp = this.helperService.getRegex('markdown-image');
+			const regExpImageUrl: RegExp = this.helperService.getRegex('markdown-image-url');
+
+			const markdown: string = postDto.markdown;
+			const markdownImageList: string[] = markdown
+				.match(regExpImage)
+				.map((markdownImage: string) => markdownImage.match(regExpImageUrl).shift())
+				.filter((markdownImageUrl: string) => {
+					const a: boolean = markdownImageUrl.startsWith('https://firebasestorage.googleapis.com');
+					const b: boolean = markdownImageUrl.includes(environment.firebase.storageBucket);
+					const c: boolean = markdownImageUrl.includes('takabase-local-temp');
+
+					return a && (b || c);
+				});
+
+			console.log(markdownImageList);
 
 			// prettier-ignore
 			const postFormRequestRedirect = (post: Post): void => {
