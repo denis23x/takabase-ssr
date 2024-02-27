@@ -185,7 +185,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	onSubmitCropperAvatar(file: File): void {
 		const abstractControl: AbstractControl = this.profileForm.get('avatar');
-		const abstractControlPreviousValue: string | null = abstractControl.value;
+		const abstractControlValue: string | null = abstractControl.value;
 
 		/** Update profileForm avatar */
 
@@ -196,8 +196,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		this.profileFormAvatarRequest$ = this.fileService
 			.create(file, '/upload/user-avatars')
 			.subscribe({
-				// prettier-ignore
-				next: (fileUrl: string) => this.onUpdateCropperAvatar(fileUrl, abstractControlPreviousValue),
+				next: (fileUrl: string) => this.onUpdateCropperAvatar(fileUrl, abstractControlValue),
 				error: () => (this.profileFormAvatarSkeletonToggle = false)
 			});
 	}

@@ -8,6 +8,7 @@ import { catchError, map } from 'rxjs/operators';
 import { HelperService } from './helper.service';
 import { FirebaseError } from '@angular/fire/app';
 import mime from 'mime';
+import firebase from 'firebase/compat';
 
 @Injectable({
 	providedIn: 'root'
@@ -67,6 +68,17 @@ export class FileService {
 
 				return urlNew;
 			}),
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
+		);
+	}
+
+	createTemp(file: File): Observable<string> {
+		// prettier-ignore
+		const tempBucket: firebase.storage.Storage = this.angularFireStorage.storage.app.storage('gs://takabase-local-temp');
+		const tempBucketFileName: string = this.getFileName(file);
+
+		return from(tempBucket.ref(tempBucketFileName).put(file)).pipe(
+			switchMap(() => tempBucket.ref(tempBucketFileName).getDownloadURL()),
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}

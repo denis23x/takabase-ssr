@@ -11,7 +11,7 @@ export const environment = {
   apiUrl: "http://localhost:4400/api/v1",
   ai: {
     moderation: false,
-    url: "https://localhost:4410/api/v1"
+    url: "https://takabase-local-ai.web.app/api/v1"
   },
   sharp: {
     url: "https://takabase-local-sharp.web.app/api/v1"
