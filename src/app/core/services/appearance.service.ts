@@ -9,16 +9,21 @@ import { filter, map, tap } from 'rxjs/operators';
 import { Appearance } from '../models/appearance.model';
 import { HelperService } from './helper.service';
 import { CookieService } from './cookie.service';
-import {
-	AngularFirestore,
-	CollectionReference,
-	DocumentData
-} from '@angular/fire/compat/firestore';
-import firebase from 'firebase/compat';
-import { DocumentReference } from '@angular/fire/compat/firestore/interfaces';
 import { Meta } from '@angular/platform-browser';
 import { Coords } from 'colorjs.io/types/src/color';
 import Color from 'colorjs.io';
+import { FirebaseService } from './firebase.service';
+import {
+	collection,
+	CollectionReference,
+	doc,
+	setDoc,
+	getDoc,
+	DocumentReference,
+	DocumentSnapshot,
+	DocumentData,
+	SetOptions
+} from 'firebase/firestore';
 
 @Injectable({
 	providedIn: 'root'
@@ -30,8 +35,8 @@ export class AppearanceService {
 	private readonly meta: Meta = inject(Meta);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly cookieService: CookieService = inject(CookieService);
-	private readonly angularFirestore: AngularFirestore = inject(AngularFirestore);
 	private readonly ngZone: NgZone = inject(NgZone);
+	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 
 	/** Utility */
 
@@ -232,49 +237,48 @@ export class AppearanceService {
 
 	/** Firestore */
 
-	getCollection(firebaseId: string): Observable<firebase.firestore.DocumentSnapshot<DocumentData>> {
+	getAppearance(firebaseId: string): Observable<Appearance> {
 		return this.ngZone.runOutsideAngular(() => {
-			return this.angularFirestore
-				.collection('/user', (collectionReference: CollectionReference) => {
-					return collectionReference.where('firebaseId', '==', firebaseId);
-				})
-				.get()
-				.pipe(
-					switchMap((querySnapshot: firebase.firestore.QuerySnapshot) => {
-						if (querySnapshot.docs.length) {
-							return of(querySnapshot.docs[0]);
-						} else {
-							const appearance: Appearance = {
-								dropdownBackdrop: false,
-								language: 'en-US',
-								markdownMonospace: true,
-								pageRedirectHome: false,
-								pageScrollToTop: false,
-								pageScrollInfinite: false,
-								theme: 'auto',
-								themeBackground: 'cosy-creatures',
-								themePrism: 'auto',
-								windowButtonPosition: 'left'
-							};
+			// prettier-ignore
+			const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/user');
+			const userDoc: DocumentReference = doc(userCollection, firebaseId);
 
-							const user: any = {
-								firebaseId,
-								appearance
-							};
+			return from(getDoc(userDoc)).pipe(
+				switchMap((documentSnapshot: DocumentSnapshot | undefined) => {
+					const documentData: DocumentData | undefined = documentSnapshot.data();
 
-							// prettier-ignore
-							return from(this.angularFirestore.collection('/user').add(user)).pipe(
-								switchMap((documentReference: DocumentReference<unknown>) => from(documentReference.get()))
-							);
-						}
-					}),
-					tap((documentSnapshot: firebase.firestore.DocumentSnapshot<DocumentData>) => {
-						const currentUserCollection: any = documentSnapshot.data();
-						const currentUserCollectionAppearance: Appearance = currentUserCollection.appearance;
+					if (documentData) {
+						return of(documentData.appearance);
+					} else {
+						const appearanceDefault: Appearance = {
+							dropdownBackdrop: false,
+							language: 'en-US',
+							markdownMonospace: true,
+							pageRedirectHome: false,
+							pageScrollToTop: false,
+							pageScrollInfinite: false,
+							theme: 'auto',
+							themeBackground: 'cosy-creatures',
+							themePrism: 'auto',
+							windowButtonPosition: 'left'
+						};
 
-						this.setSettings(currentUserCollectionAppearance);
-					})
-				);
+						return this.setAppearance(firebaseId, appearanceDefault);
+					}
+				}),
+				tap((appearance: Appearance) => this.setSettings(appearance))
+			);
 		});
+	}
+
+	setAppearance(firebaseId: string, appearance: Appearance): Observable<Appearance> {
+		// prettier-ignore
+		const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/user');
+		const userDoc: DocumentReference = doc(userCollection, firebaseId);
+		const options: SetOptions = {
+			merge: true
+		};
+
+		return from(setDoc(userDoc, { appearance }, options)).pipe(map(() => appearance));
 	}
 }

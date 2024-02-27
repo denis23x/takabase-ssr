@@ -44,8 +44,8 @@ export const APP_ROUTES: Route[] = [
 		title: 'Login',
 		loadComponent: () => {
 			return import('./authorization/login/login.component').then(m => m.AuthLoginComponent);
-		},
-		canMatch: [redirectCurrentUserGuard(false)]
+		}
+		// canMatch: [redirectCurrentUserGuard(false)]
 	},
 	{
 		path: 'registration',
@@ -53,16 +53,16 @@ export const APP_ROUTES: Route[] = [
 		loadComponent: () => {
 			// prettier-ignore
 			return import('./authorization/registration/registration.component').then(m => m.AuthRegistrationComponent);
-		},
-		canMatch: [redirectCurrentUserGuard(false)]
+		}
+		// canMatch: [redirectCurrentUserGuard(false)]
 	},
 	{
 		path: 'reset',
 		title: 'Reset password',
 		loadComponent: () => {
 			return import('./authorization/reset/reset.component').then(m => m.AuthResetComponent);
-		},
-		canMatch: [redirectCurrentUserGuard(false)]
+		}
+		// canMatch: [redirectCurrentUserGuard(false)]
 	},
 	{
 		path: 'terms',
@@ -117,16 +117,16 @@ export const APP_ROUTES: Route[] = [
 		title: 'Create post',
 		loadComponent: () => {
 			return import('./create/create.component').then(m => m.CreateComponent);
-		},
-		canMatch: [redirectCurrentUserGuard(true)]
+		}
+		// canMatch: [redirectCurrentUserGuard(true)]
 	},
 	{
 		path: 'update/:postId',
 		title: 'Update post',
 		loadComponent: () => {
 			return import('./create/create.component').then(m => m.CreateComponent);
-		},
-		canMatch: [redirectCurrentUserGuard(true)]
+		}
+		// canMatch: [redirectCurrentUserGuard(true)]
 	},
 	{
 		path: 'search',
@@ -177,7 +177,7 @@ export const APP_ROUTES: Route[] = [
 		loadComponent: () => {
 			return import('./settings/settings.component').then(m => m.SettingsComponent);
 		},
-		canMatch: [redirectCurrentUserGuard(true)],
+		// canMatch: [redirectCurrentUserGuard(true)],
 		children: [
 			{
 				path: '',
@@ -227,7 +227,7 @@ export const APP_ROUTES: Route[] = [
 			return null;
 		},
 		title: 'Home',
-		canMatch: [redirectHomeGuard()],
+		// canMatch: [redirectHomeGuard()],
 		loadComponent: () => {
 			return import('./home/home.component').then(m => m.HomeComponent);
 		}

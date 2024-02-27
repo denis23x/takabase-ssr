@@ -8,8 +8,8 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { from, Observable, Subscription } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { environment } from '../../../environments/environment';
@@ -18,14 +18,12 @@ import { Appearance } from '../../core/models/appearance.model';
 import { AppearanceService } from '../../core/services/appearance.service';
 import { CurrentUser } from '../../core/models/current-user.model';
 import { AuthorizationService } from '../../core/services/authorization.service';
-import { DocumentData } from '@angular/fire/compat/firestore';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 import { HttpClient } from '@angular/common/http';
 import { PlatformService } from '../../core/services/platform.service';
-import firebase from 'firebase/compat';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
@@ -67,9 +65,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
-	currentUserCollection: firebase.firestore.QueryDocumentSnapshot<DocumentData> | undefined;
-	currentUserCollection$: Subscription | undefined;
-	currentUserCollectionUpdate$: Subscription | undefined;
+	currentUserAppearance$: Subscription | undefined;
+	currentUserAppearanceUpdate$: Subscription | undefined;
 
 	appearanceForm: FormGroup = this.formBuilder.group<AppearanceForm>({
 		theme: this.formBuilder.nonNullable.control('', [Validators.required]),
@@ -124,19 +121,18 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 					appearance[key] = this.getTransformListValue(appearance[key], key, true);
 				});
 
-				// prettier-ignore
-				const appearanceCollectionUpdate$: Observable<void> = from(this.currentUserCollection.ref.update({ appearance }))
-
 				/** Firestore */
 
-				this.currentUserCollection$?.unsubscribe();
-				this.currentUserCollection$ = appearanceCollectionUpdate$.subscribe({
-					next: () => {
-						this.appearanceService.setSettings(appearance);
-						this.appearanceForm.enable({ emitEvent: false });
-					},
-					error: () => this.appearanceForm.enable({ emitEvent: false })
-				});
+				this.currentUserAppearance$?.unsubscribe();
+				this.currentUserAppearance$ = this.appearanceService
+					.setAppearance(this.currentUser.firebase.uid, appearance)
+					.subscribe({
+						next: () => {
+							this.appearanceService.setSettings(appearance);
+							this.appearanceForm.enable({ emitEvent: false });
+						},
+						error: () => this.appearanceForm.enable({ emitEvent: false })
+					});
 			},
 			error: (error: any) => console.error(error)
 		});
@@ -153,8 +149,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		[
 			this.currentUser$,
-			this.currentUserCollection$,
-			this.currentUserCollectionUpdate$,
+			this.currentUserAppearance$,
+			this.currentUserAppearanceUpdate$,
 			this.appearanceForm$,
 			this.appearanceThemePrismMarkdown$
 		].forEach(($: Subscription) => $?.unsubscribe());
@@ -176,20 +172,9 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 				)
 				.subscribe({
 					next: () => {
-						this.currentUserCollection$?.unsubscribe();
-						this.currentUserCollection$ = this.appearanceService
-							.getCollection(this.currentUser.firebase.uid)
-							.pipe(
-								// prettier-ignore
-								map((documentSnapshot: firebase.firestore.QueryDocumentSnapshot<DocumentData>) => {
-									this.currentUserCollection = documentSnapshot;
-
-									const currentUserCollection: any = this.currentUserCollection.data();
-									const currentUserCollectionAppearance: Appearance = currentUserCollection.appearance;
-
-									return currentUserCollectionAppearance;
-								})
-							)
+						this.currentUserAppearance$?.unsubscribe();
+						this.currentUserAppearance$ = this.appearanceService
+							.getAppearance(this.currentUser.firebase.uid)
 							.subscribe({
 								next: (appearance: Appearance) => {
 									this.appearanceTransformList.forEach((key: string) => {
