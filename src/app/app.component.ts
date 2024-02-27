@@ -3,7 +3,7 @@
 import { AfterViewInit, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { AppearanceService } from './core/services/appearance.service';
 import { AuthorizationService } from './core/services/authorization.service';
-import { filter, first } from 'rxjs/operators';
+import { filter, first, switchMap } from 'rxjs/operators';
 import { CurrentUser } from './core/models/current-user.model';
 import { Subscription } from 'rxjs';
 import { RouterModule } from '@angular/router';
@@ -38,10 +38,11 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 			.onPopulate()
 			.pipe(
 				first(),
-				filter((currentUser: CurrentUser | undefined) => !!currentUser)
+				filter((currentUser: CurrentUser | undefined) => !!currentUser),
+				switchMap((currentUser: CurrentUser) => this.appearanceService.getAppearance(currentUser.firebase.uid))
 			)
 			.subscribe({
-				next: (currentUser: CurrentUser) => this.appearanceService.getCollection(currentUser.firebase.uid),
+				next: () => console.debug('User populated'),
 				error: (error: any) => console.error(error)
 			});
 

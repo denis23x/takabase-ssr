@@ -1,14 +1,10 @@
 /** @format */
 
 import { User } from './user.model';
-import firebase from 'firebase/compat';
+import { User as FirebaseUser } from 'firebase/auth';
 
 export interface CurrentUser extends User {
 	bearer?: string;
 	terms: boolean;
-	firebase: firebase.User;
-	// firebaseId?: string;
-	// facebookId?: string;
-	// githubId?: string;
-	// googleId?: string;
+	firebase: FirebaseUser;
 }

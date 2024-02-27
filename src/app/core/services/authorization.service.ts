@@ -5,24 +5,32 @@ import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { LoginDto } from '../dto/auth/login.dto';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { UserService } from './user.service';
 import { UserCreateDto } from '../dto/user/user-create.dto';
 import { ConnectDto } from '../dto/auth/connect.dto';
 import { RegistrationDto } from '../dto/auth/registration.dto';
 import { CurrentUser } from '../models/current-user.model';
 import { AppearanceService } from './appearance.service';
-import { FirebaseError } from '@angular/fire/app';
-import firebase from 'firebase/compat';
+import { FirebaseService } from './firebase.service';
+import {
+	onAuthStateChanged,
+	signInWithEmailAndPassword,
+	createUserWithEmailAndPassword,
+	sendEmailVerification,
+	signOut,
+	User as FirebaseUser,
+	UserCredential
+} from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class AuthorizationService {
 	private readonly apiService: ApiService = inject(ApiService);
-	private readonly angularFireAuth: AngularFireAuth = inject(AngularFireAuth);
 	private readonly userService: UserService = inject(UserService);
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
+	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 
 	// prettier-ignore
 	currentUser: BehaviorSubject<CurrentUser | undefined> = new BehaviorSubject<CurrentUser | undefined>(undefined);
@@ -35,8 +43,15 @@ export class AuthorizationService {
 					return of(currentUser);
 				}
 
-				return from(this.angularFireAuth.authState).pipe(
-					switchMap((firebaseUser: firebase.User | null) => {
+				// prettier-ignore
+				const getAuthState = (): Promise<FirebaseUser | null> => {
+					return new Promise((resolve) => {
+						onAuthStateChanged(this.firebaseService.getAuth(),  (firebaseUser: FirebaseUser | null) => resolve(firebaseUser));
+					});
+				}
+
+				return from(getAuthState()).pipe(
+					switchMap((firebaseUser: FirebaseUser | null) => {
 						if (firebaseUser) {
 							const connectDto: ConnectDto = {
 								firebaseId: firebaseUser.uid
@@ -64,12 +79,10 @@ export class AuthorizationService {
 
 	// prettier-ignore
 	onRegistration(registrationDto: RegistrationDto): Observable<CurrentUser> {
-		return from(this.angularFireAuth.createUserWithEmailAndPassword(registrationDto.email, registrationDto.password)).pipe(
-			switchMap((userCredential: firebase.auth.UserCredential) => {
-				return from(userCredential.user.sendEmailVerification()).pipe(switchMap(() => of(userCredential)));
-			}),
+		return from(createUserWithEmailAndPassword(this.firebaseService.getAuth(), registrationDto.email, registrationDto.password)).pipe(
+			switchMap((userCredential: UserCredential) => from(sendEmailVerification(userCredential.user)).pipe(switchMap(() => of(userCredential)))),
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
-			switchMap((userCredential: firebase.auth.UserCredential) => {
+			switchMap((userCredential: UserCredential) => {
 				const userCreateDto: UserCreateDto = {
 					firebaseId: userCredential.user.uid,
 					name: registrationDto.name,
@@ -86,19 +99,17 @@ export class AuthorizationService {
 		const currentUser: Partial<CurrentUser> = {};
 
 		// prettier-ignore
-		return from(this.angularFireAuth.signInWithEmailAndPassword(loginDto.email, loginDto.password)).pipe(
+		return from(signInWithEmailAndPassword(this.firebaseService.getAuth(), loginDto.email, loginDto.password)).pipe(
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
-			tap((userCredential: firebase.auth.UserCredential) => currentUser.firebase = userCredential.user),
-			switchMap((userCredential: firebase.auth.UserCredential) => {
+			tap((userCredential: UserCredential) => currentUser.firebase = userCredential.user),
+			switchMap((userCredential: UserCredential) => {
 				const connectDto: ConnectDto = {
 					firebaseId: userCredential.user.uid
 				};
 
 				return this.apiService.post('/authorization', connectDto);
 			}),
-			switchMap((user: Partial<CurrentUser>) => {
-				return this.appearanceService.getCollection(currentUser.firebase.uid).pipe(switchMap(() => of(user)));
-			}),
+			switchMap((user: Partial<CurrentUser>) => this.appearanceService.getAppearance(currentUser.firebase.uid).pipe(switchMap(() => of(user)))),
 			switchMap((user: Partial<CurrentUser>) => {
         return this.setCurrentUser({
           ...currentUser,
@@ -109,7 +120,7 @@ export class AuthorizationService {
 	}
 
 	onLogout(): Observable<void> {
-		return from(this.angularFireAuth.signOut()).pipe(
+		return from(signOut(this.firebaseService.getAuth())).pipe(
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
 			tap(() => this.appearanceService.setSettings(null)),
 			tap(() => this.currentUser.next(undefined))

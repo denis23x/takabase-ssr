@@ -6,7 +6,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SnackbarService } from './snackbar.service';
-import { FirebaseError } from '@angular/fire/app';
+import { FirebaseError } from 'firebase/app';
 
 @Injectable({
 	providedIn: 'root'
