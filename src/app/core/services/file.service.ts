@@ -3,12 +3,20 @@
 import { inject, Injectable } from '@angular/core';
 import { from, Observable, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { catchError, map } from 'rxjs/operators';
 import { HelperService } from './helper.service';
-import { FirebaseError } from '@angular/fire/app';
+import { FirebaseError } from 'firebase/app';
+import { FirebaseService } from './firebase.service';
+import {
+	FirebaseStorage,
+	ref,
+	StorageReference,
+	uploadBytes,
+	getDownloadURL,
+	deleteObject,
+	UploadMetadata
+} from 'firebase/storage';
 import mime from 'mime';
-import firebase from 'firebase/compat';
 
 @Injectable({
 	providedIn: 'root'
@@ -16,7 +24,7 @@ import firebase from 'firebase/compat';
 export class FileService {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly angularFireStorage: AngularFireStorage = inject(AngularFireStorage);
+	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 
 	/** Utility */
 
@@ -52,14 +60,15 @@ export class FileService {
 		const fileName: string = this.getFileName(file);
 		const filePath: string = [path, fileName].join('/');
 
-		return from(this.angularFireStorage.upload(filePath, file)).pipe(
-			switchMap(() => {
-				return this.angularFireStorage.ref(filePath).updateMetadata({
-					cacheControl: 'public, max-age=31536000, immutable',
-					contentType: file.type
-				});
-			}),
-			switchMap(() => this.angularFireStorage.ref(filePath).getDownloadURL()),
+		const storage: FirebaseStorage = this.firebaseService.getStorage();
+		const storageRef: StorageReference = ref(storage, filePath);
+		const storageRefMetadata: UploadMetadata = {
+			cacheControl: 'public, max-age=31536000, immutable',
+			contentType: file.type
+		};
+
+		return from(uploadBytes(storageRef, file, storageRefMetadata)).pipe(
+			switchMap(() => getDownloadURL(storageRef)),
 			map((fileUrl: string) => {
 				/** Remove access token and extra query params */
 
@@ -72,18 +81,21 @@ export class FileService {
 		);
 	}
 
-	createTemp(file: File): Observable<string> {
-		// prettier-ignore
-		const tempBucket: firebase.storage.Storage = this.angularFireStorage.storage.app.storage('gs://takabase-local-temp');
-		const tempBucketFileName: string = this.getFileName(file);
+	createTemp(file: File): any {
+		const storage: FirebaseStorage = this.firebaseService.getStorage('gs://takabase-local-temp');
+		const storageFileName: string = this.getFileName(file);
+		const storageRef: StorageReference = ref(storage, storageFileName);
 
-		return from(tempBucket.ref(tempBucketFileName).put(file)).pipe(
-			switchMap(() => tempBucket.ref(tempBucketFileName).getDownloadURL()),
+		return from(uploadBytes(storageRef, file)).pipe(
+			switchMap(() => getDownloadURL(storageRef)),
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}
 
-	delete(filePath: string): Observable<any> {
-		return this.angularFireStorage.refFromURL(filePath).delete();
+	delete(filePath: string): Observable<void> {
+		const storage: FirebaseStorage = this.firebaseService.getStorage();
+		const storageRef: StorageReference = ref(storage, filePath);
+
+		return from(deleteObject(storageRef));
 	}
 }
