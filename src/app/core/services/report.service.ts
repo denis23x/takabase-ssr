@@ -1,16 +1,16 @@
 /** @format */
 
 import { inject, Injectable, NgZone } from '@angular/core';
-import { from, Observable, Subject } from 'rxjs';
+import { from, Subject } from 'rxjs';
 import { ReportSubject } from '../models/report.model';
 import { ReportCreateDto } from '../dto/report/report-create.dto';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { environment } from '../../../environments/environment';
 import { AuthorizationService } from './authorization.service';
-import firebase from 'firebase/compat';
 import { CurrentUser } from '../models/current-user.model';
 import { HelperService } from './helper.service';
 import { UserService } from './user.service';
+import { collection, CollectionReference, addDoc } from 'firebase/firestore';
+import { FirebaseService } from './firebase.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -19,8 +19,8 @@ export class ReportService {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly userService: UserService = inject(UserService);
-	private readonly angularFirestore: AngularFirestore = inject(AngularFirestore);
 	private readonly ngZone: NgZone = inject(NgZone);
+	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 
 	reportSubject$: Subject<ReportSubject> = new Subject<ReportSubject>();
 	reportDialogToggle$: Subject<boolean> = new Subject<boolean>();
@@ -28,7 +28,7 @@ export class ReportService {
 	/** Firestore */
 
 	// prettier-ignore
-	create(reportCreateDto: ReportCreateDto): Observable<firebase.firestore.DocumentReference<unknown>> {
+	create(reportCreateDto: ReportCreateDto): any {
 		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
 
 		const url: URL = this.helperService.getURL();
@@ -53,16 +53,16 @@ export class ReportService {
     `;
 
 		return this.ngZone.runOutsideAngular(() => {
-			return from(
-				this.angularFirestore.collection('mailer').add({
-					to: environment.mailer.to,
-					bcc: environment.mailer.bcc,
-					message: {
-						subject: templateSubject,
-						html: templateHtml
-					}
-				})
-			);
+			const mailerCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/mailer');
+
+			return from(addDoc(mailerCollection, {
+				to: environment.mailer.to,
+				bcc: environment.mailer.bcc,
+				message: {
+					subject: templateSubject,
+					html: templateHtml
+				}
+			}))
 		});
 	}
 }

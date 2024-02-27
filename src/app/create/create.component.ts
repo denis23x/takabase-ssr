@@ -61,7 +61,6 @@ import { PlatformDirective } from '../standalone/directives/app-platform.directi
 import { DeviceDirective } from '../standalone/directives/app-device.directive';
 import { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../core/services/ai.service';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { environment } from '../../environments/environment';
 
 interface PostForm {
@@ -119,7 +118,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly aiService: AIService = inject(AIService);
-	private readonly angularFirestore: AngularFirestore = inject(AngularFirestore);
 
 	// prettier-ignore
 	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
