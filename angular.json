@@ -24,6 +24,7 @@
               "prismjs",
               "dompurify",
               "qrcode",
+              "markdown-it",
               "markdown-it-attrs",
               "markdown-it-bracketed-spans",
               "markdown-it-collapsible",
@@ -34,7 +35,12 @@
               "markdown-it-plain-text",
               "markdown-it-smartarrows",
               "markdown-it-tasks",
-              "markdown-it-video"
+              "markdown-it-video",
+              "compression",
+              "canvas-renderer",
+              "undici",
+              "@grpc/grpc-js",
+              "@grpc/proto-loader"
             ],
             "outputPath": "dist/takabase-ssr",
             "index": "src/index.html",
