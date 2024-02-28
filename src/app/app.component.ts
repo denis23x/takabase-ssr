@@ -11,6 +11,7 @@ import { SnackbarComponent } from './standalone/components/snackbar/snackbar.com
 import { HeaderComponent } from './standalone/components/header/header.component';
 import { ScrollToTopComponent } from './standalone/components/scroll-to-top/scroll-to-top.component';
 import { ReportComponent } from './standalone/components/report/report.component';
+import { PlatformService } from './core/services/platform.service';
 
 @Component({
 	standalone: true,
@@ -27,62 +28,31 @@ import { ReportComponent } from './standalone/components/report/report.component
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
-	// prettier-ignore
 	ngOnInit(): void {
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService
-			.onPopulate()
-			.pipe(
-				first(),
-				filter((currentUser: CurrentUser | undefined) => !!currentUser),
-				switchMap((currentUser: CurrentUser) => this.appearanceService.getAppearance(currentUser.firebase.uid))
-			)
-			.subscribe({
-				next: () => console.debug('User populated'),
-				error: (error: any) => console.error(error)
-			});
+		if (this.platformService.isBrowser()) {
+			/** Browser only */
 
-    /** DEBUG: Watch for stable */
-
-    // const o = window.setTimeout;
-    //
-    // (window as any)['setTimeout'] = function (handler: TimerHandler, timeout?: number, ...args: any[]) {
-    //   console.trace();
-    //   return o(handler, timeout, ...args);
-    // };
-    //
-    // const i = window.setInterval;
-    //
-    // (window as any)['setInterval'] = function (handler: TimerHandler, timeout?: number, ...args: any[]) {
-    //   console.trace();
-    //   return i(handler, timeout, ...args);
-    // };
-
-    /** DEBUG: Update seed meta */
-
-    // this.angularFireStorage.storage.ref('/upload/seed').listAll().then((xxx) => {
-    //   xxx.items.forEach((ccc) => {
-    //     // Get meta
-    //     //
-    //     // ccc.getMetadata().then((zzz) => {
-    //     //   console.log(zzz)
-    //     // })
-    //
-    //     // Set meta
-    //     //
-    //     // ccc.getDownloadURL().then((downloadURL) => {
-    //     //   this.angularFireStorage.refFromURL(downloadURL).updateMetadata({
-    //     //     cacheControl: 'public, max-age=31536000, immutable',
-    //     //     contentType: 'image/webp'
-    //     //   })
-    //     // })
-    //   })
-    // })
-  }
+			this.currentUser$?.unsubscribe();
+			this.currentUser$ = this.authorizationService
+				.onPopulate()
+				.pipe(
+					first(),
+					filter((currentUser: CurrentUser | undefined) => !!currentUser),
+					switchMap((currentUser: CurrentUser) => {
+						return this.appearanceService.getAppearance(currentUser.firebase.uid);
+					})
+				)
+				.subscribe({
+					next: () => console.debug('User populated'),
+					error: (error: any) => console.error(error)
+				});
+		}
+	}
 
 	ngAfterViewInit(): void {
 		// TODO: update set loader

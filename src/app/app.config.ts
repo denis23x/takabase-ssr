@@ -1,6 +1,6 @@
 /** @format */
 
-import { ApplicationConfig } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import {
 	PreloadAllModules,
 	provideRouter,
@@ -18,6 +18,8 @@ import { httpAppCheckInterceptor } from './core/interceptors/http.app-check.inte
 import { httpAuthorizationInterceptor } from './core/interceptors/http.authorization.interceptor';
 import { TitleService } from './core/services/title.service';
 import { provideClientHydration } from '@angular/platform-browser';
+import { FirebaseService } from './core/services/firebase.service';
+import { PlatformService } from './core/services/platform.service';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -40,6 +42,45 @@ export const appConfig: ApplicationConfig = {
 				paramsInheritanceStrategy: 'always'
 			})
 		),
+		{
+			provide: APP_INITIALIZER,
+			useFactory: (platformService: PlatformService, firebaseService: FirebaseService) => {
+				return () => {
+					if (platformService.isBrowser()) {
+						firebaseService.initializeApp();
+						firebaseService.initializeAppCheck();
+						firebaseService.initializeAuth();
+						firebaseService.initializeFirestore();
+						firebaseService.initializeStorage();
+					}
+				};
+			},
+			multi: true,
+			deps: [PlatformService, FirebaseService]
+		},
+		// TODO: For debug SSR issues
+		// {
+		// 	provide: APP_INITIALIZER,
+		// 	useFactory: (platformService: PlatformService) => {
+		// 		return () => {
+		// 			return new Promise<void>(resolve => {
+		// 				if (platformService.isBrowser()) {
+		// 					console.log('Emulate long initialization - started');
+		//
+		// 					setTimeout(() => {
+		// 						console.log('Emulate long initialization - completed');
+		//
+		// 						resolve();
+		// 					}, 10000);
+		// 				} else {
+		// 					resolve();
+		// 				}
+		// 			});
+		// 		};
+		// 	},
+		// 	multi: true,
+		// 	deps: [PlatformService]
+		// },
 		{
 			provide: TitleStrategy,
 			useClass: TitleService

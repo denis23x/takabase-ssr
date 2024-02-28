@@ -1,6 +1,6 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable, NgZone } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { initializeApp, FirebaseApp } from 'firebase/app';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider, AppCheck } from 'firebase/app-check';
@@ -12,57 +12,70 @@ import { getStorage, FirebaseStorage } from 'firebase/storage';
 	providedIn: 'root'
 })
 export class FirebaseService {
-	app: FirebaseApp | undefined;
-	appCheck: AppCheck | undefined;
-
-	auth: Auth | undefined;
-
-	firestore: Firestore | undefined;
-
-	storage: FirebaseStorage | undefined;
+	private readonly ngZone: NgZone = inject(NgZone);
 
 	/** https://firebase.google.com/docs/web/setup#add-sdk-and-initialize */
 
-	getApp(): FirebaseApp {
-		if (!this.app) {
-			this.app = initializeApp(environment.firebase);
-		}
+	app: FirebaseApp | undefined;
+	appCheck: AppCheck | undefined;
+	auth: Auth | undefined;
+	firestore: Firestore | undefined;
+	storage: FirebaseStorage | undefined;
 
+	/** APP */
+
+	initializeApp(): FirebaseApp {
+		return (this.app = initializeApp(environment.firebase));
+	}
+
+	getApp(): FirebaseApp {
 		return this.app;
 	}
 
-	getAppCheck(): AppCheck {
-		if (!this.appCheck) {
+	/** APP CHECK */
+
+	initializeAppCheck(): void {
+		return this.ngZone.runOutsideAngular(() => {
 			this.appCheck = initializeAppCheck(this.getApp(), {
 				provider: new ReCaptchaEnterpriseProvider(environment.appCheck),
 				isTokenAutoRefreshEnabled: true
 			});
-		}
+		});
+	}
 
+	getAppCheck(): AppCheck {
 		return this.appCheck;
 	}
 
-	getAuth(): Auth {
-		if (!this.auth) {
-			this.auth = getAuth(this.getApp());
-		}
+	/** AUTH */
 
+	initializeAuth(): void {
+		this.ngZone.runOutsideAngular(() => {
+			this.auth = getAuth(this.getApp());
+		});
+	}
+
+	getAuth(): Auth {
 		return this.auth;
 	}
 
-	getFirestore(): Firestore {
-		if (!this.firestore) {
-			this.firestore = getFirestore(this.getApp());
-		}
+	/** FIRESTORE */
 
+	initializeFirestore(): void {
+		this.firestore = getFirestore(this.getApp());
+	}
+
+	getFirestore(): Firestore {
 		return this.firestore;
 	}
 
-	getStorage(bucket?: string): FirebaseStorage {
-		if (!this.storage) {
-			this.storage = getStorage(this.getApp(), bucket);
-		}
+	/** STORAGE */
 
+	initializeStorage(): void {
+		this.storage = getStorage(this.getApp());
+	}
+
+	getStorage(): FirebaseStorage {
 		return this.storage;
 	}
 }

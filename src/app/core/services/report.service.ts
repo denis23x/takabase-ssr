@@ -1,7 +1,7 @@
 /** @format */
 
 import { inject, Injectable, NgZone } from '@angular/core';
-import { from, Subject } from 'rxjs';
+import { from, Observable, Subject } from 'rxjs';
 import { ReportSubject } from '../models/report.model';
 import { ReportCreateDto } from '../dto/report/report-create.dto';
 import { environment } from '../../../environments/environment';
@@ -9,7 +9,7 @@ import { AuthorizationService } from './authorization.service';
 import { CurrentUser } from '../models/current-user.model';
 import { HelperService } from './helper.service';
 import { UserService } from './user.service';
-import { collection, CollectionReference, addDoc } from 'firebase/firestore';
+import { collection, CollectionReference, addDoc, DocumentReference } from 'firebase/firestore';
 import { FirebaseService } from './firebase.service';
 
 @Injectable({
@@ -28,7 +28,7 @@ export class ReportService {
 	/** Firestore */
 
 	// prettier-ignore
-	create(reportCreateDto: ReportCreateDto): any {
+	create(reportCreateDto: ReportCreateDto): Observable<DocumentReference> {
 		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
 
 		const url: URL = this.helperService.getURL();

@@ -14,7 +14,8 @@ import {
 	uploadBytes,
 	getDownloadURL,
 	deleteObject,
-	UploadMetadata
+	UploadMetadata,
+	getStorage
 } from 'firebase/storage';
 import mime from 'mime';
 
@@ -82,7 +83,8 @@ export class FileService {
 	}
 
 	createTemp(file: File): any {
-		const storage: FirebaseStorage = this.firebaseService.getStorage('gs://takabase-local-temp');
+		// prettier-ignore
+		const storage: FirebaseStorage = getStorage(this.firebaseService.getApp(), 'gs://takabase-local-temp');
 		const storageFileName: string = this.getFileName(file);
 		const storageRef: StorageReference = ref(storage, storageFileName);
 
