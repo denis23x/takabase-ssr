@@ -5,6 +5,8 @@ import { FormGroup } from '@angular/forms';
 import { PlatformService } from './platform.service';
 import { DOCUMENT } from '@angular/common';
 import { environment } from '../../../environments/environment';
+import { customAlphabet } from 'nanoid';
+import { alphanumeric } from 'nanoid-dictionary';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,6 +23,10 @@ export class HelperService {
 	getRegex(regExp: string, payload?: any): RegExp {
 		// prettier-ignore
 		switch (regExp) {
+			case 'bucket':
+				return new RegExp('takabase-(local|dev|prod)\\.appspot\\.com', 'i');
+			case 'bucket-temp':
+				return new RegExp('takabase-(local|dev|prod)-temp', 'i');
 			case 'markdown-image':
 				return new RegExp('!\\[(.*?)]\\((.*?)\\)', 'g');
 			case 'markdown-image-url':
@@ -34,6 +40,7 @@ export class HelperService {
 			case 'password':
 				return new RegExp('^((?=.*\\d)|(?=.*[!@#$%^&*]))(?=.*[a-zA-Z]).{6,32}$', 'm');
 			case 'url':
+				// eslint-disable-next-line no-control-regex
 				return new RegExp('^([a-zA-Z][a-zA-Z0-9+.\\-]{1,31}):([^<>\x00-\x20]*)$', 'm');
 			case 'youtube':
 				return new RegExp('^.*((youtu.be\\/)|(v\\/)|(\\/u\\/\\w\\/)|(embed\\/)|(watch\\?))\\??v?=?([^#&?]*).*', 'm');
@@ -54,23 +61,12 @@ export class HelperService {
 		return true;
 	}
 
-	getUUID(): string {
+	getNanoId(size: number = 12): string {
 		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			// @ts-ignore
-			const source: string = [1e7] + -1e3 + -4e3 + -8e3 + -1e11;
-			const getUUID = (n: string): string => {
-				const m: number = Number(n);
-				const uint8Array: Uint8Array = window.crypto.getRandomValues(new Uint8Array(1));
-
-				return (m ^ (uint8Array[0] & (15 >> (m / 4)))).toString(16);
-			};
-
-			return source.replace(/[018]/g, getUUID);
+			return customAlphabet(alphanumeric, size)();
 		}
 
-		return (Math.random() + 1).toString(36).substring(7);
+		return (Math.random() + 1).toString(36).substring(2);
 	}
 
 	getDownload(url: string, filename: string): void {

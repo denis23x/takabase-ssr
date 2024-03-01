@@ -40,9 +40,9 @@ export class FileService {
 
 	getFileName(file: File): string {
 		const fileDate: number = Date.now();
-		const fileUUID: string = this.helperService.getUUID();
+		const fileId: string = this.helperService.getNanoId();
 		const fileExtension: string = mime.getExtension(file.type);
-		const fileName: string = [fileDate, fileUUID].join('-');
+		const fileName: string = [fileDate, fileId].join('-');
 
 		return fileName + '.' + fileExtension;
 	}

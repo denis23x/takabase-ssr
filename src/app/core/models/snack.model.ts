@@ -1,7 +1,7 @@
 /** @format */
 
 export interface Snack {
-	uuid: string;
+	id: string;
 	timestamp: number;
 	title: string | null;
 	message: string;

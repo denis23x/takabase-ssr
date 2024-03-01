@@ -61,7 +61,7 @@ export class SkeletonDirective implements AfterViewInit, OnDestroy {
 	}
 
 	getSkeleton(): any {
-		const uuid: string = this.helperService.getUUID();
+		const uuid: string = this.helperService.getNanoId();
 
 		const spanElementSkeleton: HTMLSpanElement = this.document.createElement('span');
 

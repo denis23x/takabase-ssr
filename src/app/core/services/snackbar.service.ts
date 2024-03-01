@@ -14,7 +14,7 @@ export class SnackbarService {
 	snackbarList$: BehaviorSubject<Snack[]> = new BehaviorSubject<Snack[]>([]);
 
 	setSnack(snack: Partial<Snack>): void {
-		snack.uuid = this.helperService.getUUID();
+		snack.id = this.helperService.getNanoId();
 		snack.timestamp = Date.now();
 
 		const timestampStart: number = snack.timestamp;
@@ -48,7 +48,7 @@ export class SnackbarService {
 
 		// prettier-ignore
 		this.snackbarList$.next(this.snackbarList$.getValue().filter((snackList: Snack) => {
-      return snackList.uuid !== snack.uuid;
+      return snackList.id !== snack.id;
     }));
 	}
 

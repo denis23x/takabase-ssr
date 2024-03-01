@@ -2,7 +2,7 @@
 
 <ng-container>
 	<ul class="toast toast-top toast-center w-full max-w-sm min-w-min">
-		@for (snack of snackbarList$ | async; track snack.uuid) {
+		@for (snack of snackbarList$ | async; track snack.id) {
 			<li
 				class="flex relative overflow-hidden rounded-box shadow-xl animate-none"
 				(click)="onClose(snack)"
