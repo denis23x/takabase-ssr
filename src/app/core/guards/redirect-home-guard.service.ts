@@ -2,7 +2,7 @@
 
 import { inject } from '@angular/core';
 import { CanMatchFn, Router, UrlTree } from '@angular/router';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PlatformService } from '../services/platform.service';
@@ -19,9 +19,9 @@ export const redirectHomeGuard = (): CanMatchFn => {
 		const cookieService: CookieService = inject(CookieService);
 		const router: Router = inject(Router);
 
-		return authorizationService.onPopulate().pipe(
-			map((currentUser: CurrentUser | undefined) => {
-				if (platformService.isBrowser()) {
+		if (platformService.isBrowser()) {
+			return authorizationService.onPopulate().pipe(
+				map((currentUser: CurrentUser | undefined) => {
 					if (currentUser) {
 						const pageRedirectHome: boolean = !!Number(cookieService.getItem('page-redirect-home'));
 
@@ -29,15 +29,17 @@ export const redirectHomeGuard = (): CanMatchFn => {
 							return router.createUrlTree([userService.getUserUrl(currentUser)]);
 						}
 					}
-				}
 
-				return true;
-			}),
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				router.navigate(['/error', 400]).then(() => console.debug('Route changed'));
+					return true;
+				}),
+				catchError((httpErrorResponse: HttpErrorResponse) => {
+					router.navigate(['/error', 400]).then(() => console.debug('Route changed'));
 
-				return throwError(() => httpErrorResponse);
-			})
-		);
+					return throwError(() => httpErrorResponse);
+				})
+			);
+		} else {
+			return of(router.createUrlTree(['/loading']));
+		}
 	};
 };

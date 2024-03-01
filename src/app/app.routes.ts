@@ -3,6 +3,7 @@
 import { Route, UrlMatchResult, UrlSegment } from '@angular/router';
 import { redirectCurrentUserGuard } from './core/guards/redirect-current-user-guard.service';
 import { redirectHomeGuard } from './core/guards/redirect-home-guard.service';
+import { redirectLoadingGuard } from './core/guards/redirect-loading-guard.service';
 
 export const APP_ROUTES: Route[] = [
 	{
@@ -209,6 +210,14 @@ export const APP_ROUTES: Route[] = [
 				}
 			}
 		]
+	},
+	{
+		path: 'loading',
+		title: 'Loading',
+		loadComponent: () => {
+			return import('./loader/loading.component').then(m => m.LoadingComponent);
+		},
+		canMatch: [redirectLoadingGuard()]
 	},
 	{
 		path: 'error/:status',

@@ -154,6 +154,10 @@
             "ssr": {
               "entry": "server.ts"
             },
+            "prerender": {
+              "discoverRoutes": false,
+              "routesFile": "prerender.txt"
+            },
             "serviceWorker": "ngsw-config.json"
           },
           "configurations": {
