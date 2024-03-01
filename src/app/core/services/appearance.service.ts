@@ -5,7 +5,7 @@ import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
 import { HttpClient } from '@angular/common/http';
 import { EMPTY, from, fromEvent, Observable, of, race, switchMap } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { catchError, filter, map, tap } from 'rxjs/operators';
 import { Appearance } from '../models/appearance.model';
 import { HelperService } from './helper.service';
 import { CookieService } from './cookie.service';
@@ -17,13 +17,13 @@ import {
 	collection,
 	CollectionReference,
 	doc,
-	setDoc,
+	updateDoc,
 	getDoc,
 	DocumentReference,
-	DocumentSnapshot,
-	DocumentData,
-	SetOptions
+	DocumentSnapshot
 } from 'firebase/firestore';
+import { FirebaseError } from 'firebase/app';
+import { ApiService } from './api.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -37,6 +37,7 @@ export class AppearanceService {
 	private readonly cookieService: CookieService = inject(CookieService);
 	private readonly ngZone: NgZone = inject(NgZone);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
+	private readonly apiService: ApiService = inject(ApiService);
 
 	/** Utility */
 
@@ -238,19 +239,21 @@ export class AppearanceService {
 	/** Firestore */
 
 	getAppearance(firebaseId: string): Observable<Appearance> {
+		// prettier-ignore
 		return this.ngZone.runOutsideAngular(() => {
-			// prettier-ignore
-			const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/user');
+			const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/users');
 			const userDoc: DocumentReference = doc(userCollection, firebaseId);
 
 			return from(getDoc(userDoc)).pipe(
-				switchMap((documentSnapshot: DocumentSnapshot | undefined) => {
-					const documentData: DocumentData | undefined = documentSnapshot.data();
+				catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
+				map((documentSnapshot: DocumentSnapshot) => documentSnapshot.data()),
+				switchMap((user: any) => {
+					const appearance: Appearance | undefined = user?.appearance;
 
-					if (documentData) {
-						return of(documentData.appearance);
+					if (appearance) {
+						return of(appearance);
 					} else {
-						const appearanceDefault: Appearance = {
+						return this.setAppearance(firebaseId, {
 							dropdownBackdrop: false,
 							language: 'en-US',
 							markdownMonospace: true,
@@ -261,9 +264,7 @@ export class AppearanceService {
 							themeBackground: 'cosy-creatures',
 							themePrism: 'auto',
 							windowButtonPosition: 'left'
-						};
-
-						return this.setAppearance(firebaseId, appearanceDefault);
+						});
 					}
 				}),
 				tap((appearance: Appearance) => this.setSettings(appearance))
@@ -273,12 +274,12 @@ export class AppearanceService {
 
 	setAppearance(firebaseId: string, appearance: Appearance): Observable<Appearance> {
 		// prettier-ignore
-		const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/user');
+		const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/users');
 		const userDoc: DocumentReference = doc(userCollection, firebaseId);
-		const options: SetOptions = {
-			merge: true
-		};
 
-		return from(setDoc(userDoc, { appearance }, options)).pipe(map(() => appearance));
+		return from(updateDoc(userDoc, { appearance })).pipe(
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
+			map(() => appearance)
+		);
 	}
 }

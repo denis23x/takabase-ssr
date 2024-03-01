@@ -35,9 +35,19 @@ export class ApiService {
 	setFirebaseError(firebaseError: FirebaseError): Observable<never> {
 		/** https://firebase.google.com/docs/auth/admin/errors */
 		/** https://codinglatte.com/posts/angular/handling-firebase-password-resets-in-angular/ */
+		/** https://github.com/firebase/firebase-js-sdk/blob/master/packages/firestore/src/util/error.ts */
+
+		console.debug(firebaseError.code);
 
 		const getMessage = (): string => {
 			switch (firebaseError.code) {
+				/** FIRESTORE */
+
+				case 'permission-denied':
+					return "You don't have the necessary permissions to do that";
+
+				/** AUTH */
+
 				case 'auth/invalid-action-code':
 					return 'Invalid confirmation code';
 				case 'auth/invalid-login-credentials':

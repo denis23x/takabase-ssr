@@ -2,7 +2,7 @@
 
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { LoginDto } from '../dto/auth/login.dto';
 import { UserService } from './user.service';
@@ -22,6 +22,14 @@ import {
 	UserCredential
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
+import { User } from '../models/user.model';
+import {
+	collection,
+	CollectionReference,
+	doc,
+	DocumentReference,
+	setDoc
+} from 'firebase/firestore';
 
 @Injectable({
 	providedIn: 'root'
@@ -77,19 +85,24 @@ export class AuthorizationService {
 
 	/** Authorization API */
 
-	// prettier-ignore
 	onRegistration(registrationDto: RegistrationDto): Observable<CurrentUser> {
-		return from(createUserWithEmailAndPassword(this.firebaseService.getAuth(), registrationDto.email, registrationDto.password)).pipe(
-			switchMap((userCredential: UserCredential) => from(sendEmailVerification(userCredential.user)).pipe(switchMap(() => of(userCredential)))),
-			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
-			switchMap((userCredential: UserCredential) => {
-				const userCreateDto: UserCreateDto = {
-					firebaseId: userCredential.user.uid,
-					name: registrationDto.name,
-					terms: registrationDto.terms
-				};
+		const userCreateDto: Partial<UserCreateDto> = {
+			name: registrationDto.name,
+			terms: registrationDto.terms
+		};
 
-				return this.userService.create(userCreateDto);
+		// prettier-ignore
+		return from(createUserWithEmailAndPassword(this.firebaseService.getAuth(), registrationDto.email, registrationDto.password)).pipe(
+			tap((userCredential: UserCredential) => userCreateDto.firebaseId = userCredential.user.uid),
+			switchMap((userCredential: UserCredential) => from(sendEmailVerification(userCredential.user))),
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
+			switchMap(() => this.userService.create(userCreateDto as UserCreateDto)),
+			map((user: User) => user.id),
+			switchMap((userId: number) => {
+				const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/users');
+				const userDoc: DocumentReference = doc(userCollection, userCreateDto.firebaseId);
+
+				return from(setDoc(userDoc, { userId }));
 			}),
 			switchMap(() => this.onLogin(registrationDto))
 		);
