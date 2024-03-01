@@ -56,7 +56,6 @@ import { PostDeleteComponent } from '../standalone/components/post/delete/delete
 import { BadgeErrorComponent } from '../standalone/components/badge-error/badge-error.component';
 import { ShortcutsComponent } from '../standalone/components/shortcuts/shortcuts.component';
 import { KbdPipe } from '../standalone/pipes/kbd.pipe';
-import { LoaderComponent } from '../standalone/components/loader/loader.component';
 import { PlatformDirective } from '../standalone/directives/app-platform.directive';
 import { DeviceDirective } from '../standalone/directives/app-device.directive';
 import { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
@@ -95,7 +94,6 @@ interface PostForm {
 		BadgeErrorComponent,
 		ShortcutsComponent,
 		KbdPipe,
-		LoaderComponent,
 		PlatformDirective,
 		DeviceDirective
 	],

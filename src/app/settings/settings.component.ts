@@ -5,12 +5,11 @@ import { RouterModule } from '@angular/router';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
-import { LoaderComponent } from '../standalone/components/loader/loader.component';
 import { PlatformDirective } from '../standalone/directives/app-platform.directive';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, ScrollPresetDirective, LoaderComponent, PlatformDirective],
+	imports: [RouterModule, ScrollPresetDirective, PlatformDirective],
 	selector: 'app-settings',
 	templateUrl: './settings.component.html'
 })
