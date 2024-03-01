@@ -25,6 +25,7 @@ import { AuthorizationService } from '../../core/services/authorization.service'
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { PlatformService } from '../../core/services/platform.service';
+import { filter } from 'rxjs/operators';
 
 interface PasswordValidateForm {
 	password: FormControl<string>;
@@ -111,20 +112,23 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	setResolver(): void {
 		if (this.platformService.isBrowser()) {
 			this.currentUser$?.unsubscribe();
-			this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-				next: (currentUser: CurrentUser | undefined) => {
-					this.currentUser = currentUser;
-					this.currentUserSkeletonToggle = false;
+			this.currentUser$ = this.authorizationService
+				.getCurrentUser()
+				.pipe(filter((currentUser: CurrentUser | undefined) => !!currentUser))
+				.subscribe({
+					next: (currentUser: CurrentUser | undefined) => {
+						this.currentUser = currentUser;
+						this.currentUserSkeletonToggle = false;
 
-					if (!this.currentUser.firebase.emailVerified) {
-						this.emailForm.get('email').setValue(this.currentUser.firebase.email);
-						this.emailForm.disable();
-					}
+						if (!this.currentUser.firebase.emailVerified) {
+							this.emailForm.get('email').setValue(this.currentUser.firebase.email);
+							this.emailForm.disable();
+						}
 
-					this.passwordValidateIsValid = !!Number(this.cookieService.getItem('password-valid'));
-				},
-				error: (error: any) => console.error(error)
-			});
+						this.passwordValidateIsValid = !!Number(this.cookieService.getItem('password-valid'));
+					},
+					error: (error: any) => console.error(error)
+				});
 		}
 	}
 
