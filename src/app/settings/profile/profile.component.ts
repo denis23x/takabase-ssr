@@ -193,12 +193,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		this.profileFormAvatarSkeletonToggle = true;
 
 		this.profileFormAvatarRequest$?.unsubscribe();
-		this.profileFormAvatarRequest$ = this.fileService
-			.create(file, '/upload/user-avatars')
-			.subscribe({
-				next: (fileUrl: string) => this.onUpdateCropperAvatar(fileUrl, abstractControlValue),
-				error: () => (this.profileFormAvatarSkeletonToggle = false)
-			});
+		this.profileFormAvatarRequest$ = this.fileService.create(file, '/temp').subscribe({
+			next: (fileUrl: string) => this.onUpdateCropperAvatar(fileUrl, abstractControlValue),
+			error: () => (this.profileFormAvatarSkeletonToggle = false)
+		});
 	}
 
 	/** profileForm */
