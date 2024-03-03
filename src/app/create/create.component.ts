@@ -532,32 +532,28 @@ export class CreateComponent implements OnInit, OnDestroy {
 								firebaseId: this.post.firebaseId
 							});
 						}),
+						// prettier-ignore
 						switchMap((post: Post) => {
-							return this.postService.getOneDocument(this.post.firebaseId).pipe(
-								// prettier-ignore
-								switchMap((postDocument: any) => {
-									const markdownImageList: string[] = this.markdownService.getMarkdownItStorageImageList(post.markdown);
-									const markdownImageListTempPath: string = 'users/' + this.currentUser.firebase.uid + '/posts/' + this.post.firebaseId;
+							const markdownImageList: string[] = this.markdownService.getMarkdownItStorageImageList(post.markdown);
+							const markdownImageListTempPath: string = 'users/' + this.currentUser.firebase.uid + '/posts/' + this.post.firebaseId;
 
-									return this.fileService.getList(markdownImageListTempPath).pipe(
-										switchMap((listResult: ListResult) => {
-											const markdownImageListSaved: string[] = listResult.items.map((storageReference: StorageReference) => storageReference.fullPath);
-											const markdownImageListDelete: string[] = markdownImageListSaved.filter((markdownImage: string) => !markdownImageList.includes(markdownImage));
+							return this.fileService.getList(markdownImageListTempPath).pipe(
+								switchMap((listResult: ListResult) => {
+									const markdownImageListSaved: string[] = listResult.items.map((storageReference: StorageReference) => storageReference.fullPath);
+									const markdownImageListDelete: string[] = markdownImageListSaved.filter((markdownImage: string) => !markdownImageList.includes(markdownImage));
 
-											return from(Promise.all(markdownImageListDelete.map((imageUrl: string) => {
-												return this.fileService.delete(imageUrl);
-											})));
-										}),
-										switchMap(() => {
-											const postUpdateDocumentDto: PostUpdateDocumentDto = {
-												markdownImageList
-											};
+									return from(Promise.all(markdownImageListDelete.map((imageUrl: string) => {
+										return this.fileService.delete(imageUrl);
+									})));
+								}),
+								switchMap(() => {
+									const postUpdateDocumentDto: PostUpdateDocumentDto = {
+										markdownImageList
+									};
 
-											return this.postService
-												.updateDocument(this.post.firebaseId, postUpdateDocumentDto)
-												.pipe(map(() => post));
-										})
-									);
+									return this.postService
+										.updateDocument(this.post.firebaseId, postUpdateDocumentDto)
+										.pipe(map(() => post));
 								})
 							);
 						})
