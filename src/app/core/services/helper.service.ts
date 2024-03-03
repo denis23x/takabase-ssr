@@ -23,14 +23,6 @@ export class HelperService {
 	getRegex(regExp: string, payload?: any): RegExp {
 		// prettier-ignore
 		switch (regExp) {
-			case 'bucket':
-				return new RegExp('takabase-(local|dev|prod)\\.appspot\\.com', 'i');
-			case 'bucket-temp':
-				return new RegExp('takabase-(local|dev|prod)-temp', 'i');
-			case 'markdown-image':
-				return new RegExp('!\\[(.*?)]\\((.*?)\\)', 'g');
-			case 'markdown-image-url':
-				return new RegExp('(?<=\\().+?(?=\\))', 'i');
 			case 'extension':
 				return new RegExp('.[a-z]+$', 'i');
 			case 'no-whitespace':

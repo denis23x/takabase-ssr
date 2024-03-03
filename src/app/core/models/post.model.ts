@@ -6,6 +6,7 @@ import { Category } from './category.model';
 export interface Post {
 	id: number;
 	name: string;
+	firebaseId: string;
 	description: string;
 	markdown?: string;
 	image: string | null;

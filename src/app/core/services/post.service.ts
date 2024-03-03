@@ -1,7 +1,7 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { UserService } from './user.service';
 import { PostGetAllDto } from '../dto/post/post-get-all.dto';
@@ -12,6 +12,19 @@ import { PostGetOneDto } from '../dto/post/post-get-one.dto';
 import { PostUpdateDto } from '../dto/post/post-update.dto';
 import { MetaService } from './meta.service';
 import { TitleService } from './title.service';
+import {
+	addDoc,
+	collection,
+	CollectionReference,
+	doc,
+	DocumentReference,
+	updateDoc
+} from 'firebase/firestore';
+import { catchError, map } from 'rxjs/operators';
+import { FirebaseError } from 'firebase/app';
+import { FirebaseService } from './firebase.service';
+import { CurrentUser } from '../models/current-user.model';
+import { AuthorizationService } from './authorization.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,11 +34,42 @@ export class PostService {
 	private readonly userService: UserService = inject(UserService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly titleService: TitleService = inject(TitleService);
+	private readonly firebaseService: FirebaseService = inject(FirebaseService);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 
 	backupPostMetaOpenGraph: MetaOpenGraph;
 	backupPostMetaTwitter: MetaTwitter;
 
 	backupPostTitle: string;
+
+	/** Firestore */
+
+	// prettier-ignore
+	createDocument(postCreateDocumentDto: any): Observable<string> {
+		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
+
+		const postCollectionPath: string = '/users/' + currentUser.firebase.uid + '/posts';
+		const postCollection: CollectionReference = collection(this.firebaseService.getFirestore(), postCollectionPath);
+
+		return from(addDoc(postCollection, postCreateDocumentDto)).pipe(
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
+			map((documentReference: DocumentReference) => documentReference.id)
+		);
+	}
+
+	// prettier-ignore
+	updateDocument(firebaseId: string, postUpdateDocumentDto: any): Observable<string> {
+		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
+
+		const postCollectionPath: string = '/users/' + currentUser.firebase.uid + '/posts';
+		const postCollection: CollectionReference = collection(this.firebaseService.getFirestore(), postCollectionPath);
+		const postDoc: DocumentReference = doc(postCollection, firebaseId);
+
+		return from(updateDoc(postDoc, postUpdateDocumentDto)).pipe(
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
+			map(() => firebaseId)
+		);
+	}
 
 	/** SEO Meta tags */
 

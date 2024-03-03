@@ -521,7 +521,15 @@ export class CreateComponent implements OnInit, OnDestroy {
 				this.postFormRequest$?.unsubscribe();
 				this.postFormRequest$ = this.aiService
 					.moderateText(aiModerateTextDto)
-					.pipe(switchMap(() => this.postService.update(postId, postDto)))
+					.pipe(
+						switchMap(() => {
+							// TODO: add payload
+							return this.postService
+								.updateDocument(this.post.firebaseId, {})
+								.pipe(tap((documentId: string) => (postDto.firebaseId = documentId)));
+						}),
+						switchMap(() => this.postService.update(postId, postDto))
+					)
 					.subscribe({
 						next: (post: Post) => postFormRequestRedirect(post),
 						error: () => this.postForm.enable()
@@ -530,7 +538,15 @@ export class CreateComponent implements OnInit, OnDestroy {
 				this.postFormRequest$?.unsubscribe();
 				this.postFormRequest$ = this.aiService
 					.moderateText(aiModerateTextDto)
-					.pipe(switchMap(() => this.postService.create(postDto)))
+					.pipe(
+						switchMap(() => {
+							// TODO: add payload
+							return this.postService
+								.createDocument({})
+								.pipe(tap((documentId: string) => (postDto.firebaseId = documentId)));
+						}),
+						switchMap(() => this.postService.create(postDto))
+					)
 					.subscribe({
 						next: (post: Post) => postFormRequestRedirect(post),
 						error: () => this.postForm.enable()
