@@ -18,6 +18,8 @@ import {
 	CollectionReference,
 	doc,
 	DocumentReference,
+	DocumentSnapshot,
+	getDoc,
 	updateDoc
 } from 'firebase/firestore';
 import { catchError, map } from 'rxjs/operators';
@@ -25,6 +27,8 @@ import { FirebaseError } from 'firebase/app';
 import { FirebaseService } from './firebase.service';
 import { CurrentUser } from '../models/current-user.model';
 import { AuthorizationService } from './authorization.service';
+import { PostCreateDocumentDto } from '../dto/post/post-create-document.dto';
+import { PostUpdateDocumentDto } from '../dto/post/post-update-document.dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -45,7 +49,7 @@ export class PostService {
 	/** Firestore */
 
 	// prettier-ignore
-	createDocument(postCreateDocumentDto: any): Observable<string> {
+	createDocument(postCreateDocumentDto: PostCreateDocumentDto = {}): Observable<string> {
 		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
 
 		const postCollectionPath: string = '/users/' + currentUser.firebase.uid + '/posts';
@@ -58,14 +62,28 @@ export class PostService {
 	}
 
 	// prettier-ignore
-	updateDocument(firebaseId: string, postUpdateDocumentDto: any): Observable<string> {
+	getOneDocument(firebaseId: string): Observable<any> {
 		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
 
 		const postCollectionPath: string = '/users/' + currentUser.firebase.uid + '/posts';
 		const postCollection: CollectionReference = collection(this.firebaseService.getFirestore(), postCollectionPath);
 		const postDoc: DocumentReference = doc(postCollection, firebaseId);
 
-		return from(updateDoc(postDoc, postUpdateDocumentDto)).pipe(
+		return from(getDoc(postDoc)).pipe(
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
+			map((documentSnapshot: DocumentSnapshot) => documentSnapshot.data())
+		);
+	}
+
+	// prettier-ignore
+	updateDocument(firebaseId: string, postUpdateDocumentDto: PostUpdateDocumentDto): Observable<string> {
+		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
+
+		const postCollectionPath: string = '/users/' + currentUser.firebase.uid + '/posts';
+		const postCollection: CollectionReference = collection(this.firebaseService.getFirestore(), postCollectionPath);
+		const postDoc: DocumentReference = doc(postCollection, firebaseId);
+
+		return from(updateDoc(postDoc, { ...postUpdateDocumentDto })).pipe(
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
 			map(() => firebaseId)
 		);

@@ -14,6 +14,8 @@ import {
 	uploadBytes,
 	getDownloadURL,
 	deleteObject,
+	listAll,
+	ListResult,
 	UploadMetadata
 } from 'firebase/storage';
 import mime from 'mime';
@@ -89,6 +91,13 @@ export class FileService {
 			switchMap(() => getDownloadURL(storageRef)),
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
+	}
+
+	getList(listPath: string): Observable<ListResult> {
+		const storage: FirebaseStorage = this.firebaseService.getStorage();
+		const storageRef: StorageReference = ref(storage, listPath);
+
+		return from(listAll(storageRef));
 	}
 
 	delete(filePath: string): Observable<void> {

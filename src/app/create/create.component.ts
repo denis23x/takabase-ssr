@@ -11,8 +11,8 @@ import {
 	ViewChild
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Subscription, switchMap } from 'rxjs';
-import { filter, startWith, tap } from 'rxjs/operators';
+import { from, Subscription, switchMap } from 'rxjs';
+import { filter, map, startWith, tap } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -60,6 +60,9 @@ import { PlatformDirective } from '../standalone/directives/app-platform.directi
 import { DeviceDirective } from '../standalone/directives/app-device.directive';
 import { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../core/services/ai.service';
+import { PostUpdateDocumentDto } from '../core/dto/post/post-update-document.dto';
+import { MarkdownService } from '../core/services/markdown.service';
+import { ListResult, StorageReference } from 'firebase/storage';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -115,6 +118,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly aiService: AIService = inject(AIService);
+	private readonly markdownService: MarkdownService = inject(MarkdownService);
 
 	// prettier-ignore
 	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
@@ -523,12 +527,40 @@ export class CreateComponent implements OnInit, OnDestroy {
 					.moderateText(aiModerateTextDto)
 					.pipe(
 						switchMap(() => {
-							// TODO: add payload
-							return this.postService
-								.updateDocument(this.post.firebaseId, {})
-								.pipe(tap((documentId: string) => (postDto.firebaseId = documentId)));
+							return this.postService.update(postId, {
+								...postDto,
+								firebaseId: this.post.firebaseId
+							});
 						}),
-						switchMap(() => this.postService.update(postId, postDto))
+						switchMap((post: Post) => {
+							return this.postService.getOneDocument(this.post.firebaseId).pipe(
+								// prettier-ignore
+								switchMap((postDocument: any) => {
+									const markdownImageList: string[] = this.markdownService.getMarkdownItStorageImageList(post.markdown);
+									const markdownImageListTempPath: string = 'users/' + this.currentUser.firebase.uid + '/posts/' + this.post.firebaseId;
+
+									return this.fileService.getList(markdownImageListTempPath).pipe(
+										switchMap((listResult: ListResult) => {
+											const markdownImageListSaved: string[] = listResult.items.map((storageReference: StorageReference) => storageReference.fullPath);
+											const markdownImageListDelete: string[] = markdownImageListSaved.filter((markdownImage: string) => !markdownImageList.includes(markdownImage));
+
+											return from(Promise.all(markdownImageListDelete.map((imageUrl: string) => {
+												return this.fileService.delete(imageUrl);
+											})));
+										}),
+										switchMap(() => {
+											const postUpdateDocumentDto: PostUpdateDocumentDto = {
+												markdownImageList
+											};
+
+											return this.postService
+												.updateDocument(this.post.firebaseId, postUpdateDocumentDto)
+												.pipe(map(() => post));
+										})
+									);
+								})
+							);
+						})
 					)
 					.subscribe({
 						next: (post: Post) => postFormRequestRedirect(post),
@@ -540,12 +572,24 @@ export class CreateComponent implements OnInit, OnDestroy {
 					.moderateText(aiModerateTextDto)
 					.pipe(
 						switchMap(() => {
-							// TODO: add payload
 							return this.postService
-								.createDocument({})
+								.createDocument()
 								.pipe(tap((documentId: string) => (postDto.firebaseId = documentId)));
 						}),
-						switchMap(() => this.postService.create(postDto))
+						switchMap(() => this.postService.create(postDto)),
+						switchMap((post: Post) => {
+							// prettier-ignore
+							const markdownImageList: string[] = this.markdownService.getMarkdownItStorageImageList(post.markdown);
+
+							const postUpdateDocumentDto: PostUpdateDocumentDto = {
+								postId: post.id,
+								markdownImageList
+							};
+
+							return this.postService
+								.updateDocument(post.firebaseId, postUpdateDocumentDto)
+								.pipe(map(() => post));
+						})
 					)
 					.subscribe({
 						next: (post: Post) => postFormRequestRedirect(post),
