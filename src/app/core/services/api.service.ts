@@ -36,15 +36,21 @@ export class ApiService {
 		/** https://firebase.google.com/docs/auth/admin/errors */
 		/** https://codinglatte.com/posts/angular/handling-firebase-password-resets-in-angular/ */
 		/** https://github.com/firebase/firebase-js-sdk/blob/master/packages/firestore/src/util/error.ts */
+		/** https://firebase.google.com/docs/storage/web/handle-errors */
 
 		console.debug(firebaseError.code);
 
 		const getMessage = (): string => {
 			switch (firebaseError.code) {
+				/** STORAGE */
+
+				case 'storage/unauthorized':
+					return "You don't have permissions to access";
+
 				/** FIRESTORE */
 
 				case 'permission-denied':
-					return "You don't have the necessary permissions to do that";
+					return "You don't have permissions to access";
 
 				/** AUTH */
 

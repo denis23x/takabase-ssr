@@ -196,7 +196,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 							this.setTextareaValue(this.getTextareaValue(this.controlListCropper, params));
 						},
-						error: (error: any) => console.error(error)
+						error: () => this.appMarkdownUploadToggle.emit(false)
 					});
 				},
 				error: (error: any) => console.error(error)

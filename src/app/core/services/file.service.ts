@@ -97,13 +97,17 @@ export class FileService {
 		const storage: FirebaseStorage = this.firebaseService.getStorage();
 		const storageRef: StorageReference = ref(storage, listPath);
 
-		return from(listAll(storageRef));
+		return from(listAll(storageRef)).pipe(
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
+		);
 	}
 
 	delete(filePath: string): Observable<void> {
 		const storage: FirebaseStorage = this.firebaseService.getStorage();
 		const storageRef: StorageReference = ref(storage, filePath);
 
-		return from(deleteObject(storageRef));
+		return from(deleteObject(storageRef)).pipe(
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
+		);
 	}
 }
