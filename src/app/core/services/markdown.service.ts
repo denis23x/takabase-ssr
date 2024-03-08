@@ -139,47 +139,6 @@ export class MarkdownService {
 		return this.markdownIt;
 	}
 
-	getMarkdownItStorageImageList(markdown: string): string[] {
-		const markdownImageRegExp: RegExp = /!\[(.*?)]\((.*?)\)/g;
-		const markdownImageList: RegExpMatchArray | null = markdown.match(markdownImageRegExp);
-
-		if (markdownImageList?.length) {
-			/** Get clean url address */
-
-			// prettier-ignore
-			const markdownImageListUrl: string[] = markdownImageList
-				.map((markdownImageUrl: string) => {
-					const markdownImageUrlRegExp: RegExp = /(?<=\().+?(?=\))/i;
-					const markdownImageUrlList: RegExpMatchArray | null = markdownImageUrl.match(markdownImageUrlRegExp);
-
-					if (markdownImageUrlList?.length) {
-						return markdownImageUrlList.shift() as string;
-					} else {
-						return '';
-					}
-				})
-				.filter((markdownImageUrl: string) => !!markdownImageUrl);
-
-			/** Filter and take move ready file path  */
-
-			// prettier-ignore
-			return markdownImageListUrl
-				.filter((markdownImageUrl: string) => markdownImageUrl.startsWith('https://firebasestorage.googleapis.com'))
-				.filter((markdownImageUrl: string) => markdownImageUrl.includes(environment.firebase.storageBucket))
-				.filter((markdownImageUrl: string) => markdownImageUrl.includes('users'))
-				.filter((markdownImageUrl: string) => markdownImageUrl.includes('posts'))
-				.map((markdownImageUrl: string) => {
-					const url: URL = new URL(markdownImageUrl);
-					const pathname: string = url.pathname;
-					const index: number = pathname.indexOf('users');
-
-					return decodeURIComponent(pathname.substring(index));
-				});
-		}
-
-		return [];
-	}
-
 	setMarkdownItRule(rule: string): RenderRule {
 		const ruleImage: RenderRule = (tokenList: Token[], idx: number): string => {
 			const imageElement: HTMLImageElement = this.document.createElement('img');

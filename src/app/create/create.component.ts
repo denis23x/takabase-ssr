@@ -504,7 +504,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 			const postDto: PostCreateDto & PostUpdateDto = {
-				...this.postForm.value
+				...this.postForm.value,
+				firebaseId: this.post?.firebaseId
 			};
 
 			// prettier-ignore
@@ -526,15 +527,10 @@ export class CreateComponent implements OnInit, OnDestroy {
 				this.postFormRequest$ = this.aiService
 					.moderateText(aiModerateTextDto)
 					.pipe(
-						switchMap(() => {
-							return this.postService.update(postId, {
-								...postDto,
-								firebaseId: this.post.firebaseId
-							});
-						}),
+						switchMap(() => this.postService.update(postId, postDto)),
 						// prettier-ignore
 						switchMap((post: Post) => {
-							const markdownImageList: string[] = this.markdownService.getMarkdownItStorageImageList(post.markdown);
+							const markdownImageList: string[] = post.markdownImageList.map((imageUrl: string) => decodeURIComponent(imageUrl));
 							const markdownImageListTempPath: string = 'users/' + this.currentUser.firebase.uid + '/posts/' + this.post.firebaseId;
 
 							return this.fileService.getList(markdownImageListTempPath).pipe(
@@ -574,12 +570,9 @@ export class CreateComponent implements OnInit, OnDestroy {
 						}),
 						switchMap(() => this.postService.create(postDto)),
 						switchMap((post: Post) => {
-							// prettier-ignore
-							const markdownImageList: string[] = this.markdownService.getMarkdownItStorageImageList(post.markdown);
-
 							const postUpdateDocumentDto: PostUpdateDocumentDto = {
 								postId: post.id,
-								markdownImageList
+								markdownImageList: post.markdownImageList
 							};
 
 							return this.postService

@@ -9,6 +9,7 @@ export interface Post {
 	firebaseId: string;
 	description: string;
 	markdown?: string;
+	markdownImageList?: string[];
 	image: string | null;
 	user?: User;
 	category?: Category;
