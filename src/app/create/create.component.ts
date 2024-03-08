@@ -528,30 +528,15 @@ export class CreateComponent implements OnInit, OnDestroy {
 					.moderateText(aiModerateTextDto)
 					.pipe(
 						switchMap(() => this.postService.update(postId, postDto)),
-						// prettier-ignore
 						switchMap((post: Post) => {
-							const markdownImageList: string[] = post.markdownImageList.map((imageUrl: string) => decodeURIComponent(imageUrl));
-							const markdownImageListTempPath: string = 'users/' + this.currentUser.firebase.uid + '/posts/' + this.post.firebaseId;
+							const postUpdateDocumentDto: PostUpdateDocumentDto = {
+								postId: post.id,
+								markdownImageList: post.markdownImageList
+							};
 
-							return this.fileService.getList(markdownImageListTempPath).pipe(
-								switchMap((listResult: ListResult) => {
-									const markdownImageListSaved: string[] = listResult.items.map((storageReference: StorageReference) => storageReference.fullPath);
-									const markdownImageListDelete: string[] = markdownImageListSaved.filter((markdownImage: string) => !markdownImageList.includes(markdownImage));
-
-									return from(Promise.all(markdownImageListDelete.map((imageUrl: string) => {
-										return this.fileService.delete(imageUrl);
-									})));
-								}),
-								switchMap(() => {
-									const postUpdateDocumentDto: PostUpdateDocumentDto = {
-										markdownImageList
-									};
-
-									return this.postService
-										.updateDocument(this.post.firebaseId, postUpdateDocumentDto)
-										.pipe(map(() => post));
-								})
-							);
+							return this.postService
+								.updateDocument(post.firebaseId, postUpdateDocumentDto)
+								.pipe(map(() => post));
 						})
 					)
 					.subscribe({
