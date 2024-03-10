@@ -24,11 +24,25 @@
 								{{ snack.title }}
 							</span>
 						}
-						<p
-							class="font-base first-letter:capitalize whitespace-normal text-ellipsis overflow-hidden"
-						>
-							{{ snack.message }}
-						</p>
+						@switch (true) {
+							@case (snack.message.includes("prisma.io")) {
+								<a
+									class="link font-base whitespace-normal text-ellipsis overflow-hidden"
+									target="_blank"
+									rel="noopener noreferrer"
+									[href]="snack.message"
+								>
+									{{ snack.message }}
+								</a>
+							}
+							@default {
+								<p
+									class="font-base first-letter:capitalize whitespace-normal text-ellipsis overflow-hidden"
+								>
+									{{ snack.message }}
+								</p>
+							}
+						}
 					</div>
 				</div>
 				@if (snack.options.progress) {
