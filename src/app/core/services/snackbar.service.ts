@@ -104,7 +104,7 @@ export class SnackbarService {
 			options: {
 				icon: 'x-circle',
 				progress: false,
-				duration: 5000,
+				duration: 6000,
 				alertClassList: 'alert-error',
 				progressClassList: 'progress-error',
 				...options
