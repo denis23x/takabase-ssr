@@ -179,11 +179,11 @@
 							<ul class="m-0 grid h-full w-full grid-cols-5 grid-rows-5 p-0">
 								@for (cell of controlListTableCells; track $index) {
 									<li
-										class="col-span-1 row-span-1 h-full w-full bg-transparent p-0 border-4 border-base-100 outline outline-base-content/20 outline-1 -outline-offset-4 m-0"
-										[class.rounded-tl-box]="cell === 0"
-										[class.rounded-tr-box]="cell === 4"
-										[class.rounded-bl-box]="cell === 20"
-										[class.rounded-br-box]="cell === 24"
+										class="col-span-1 row-span-1 h-full w-full bg-transparent opacity-100 p-0 border-4 border-base-100 outline outline-base-content/20 outline-1 -outline-offset-4 m-0"
+										[class.rounded-tl-lg]="cell === 0"
+										[class.rounded-tr-lg]="cell === 4"
+										[class.rounded-bl-lg]="cell === 20"
+										[class.rounded-br-lg]="cell === 24"
 										(mouseenter)="onControlListTableMouseEnter($event, 'enter')"
 										(mouseleave)="onControlListTableMouseEnter($event, 'leave')"
 										(click)="setTextareaValue(getTextareaValue(controlListTable, cell))"

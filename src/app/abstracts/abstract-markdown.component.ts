@@ -3,7 +3,7 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, filter } from 'rxjs/operators';
+import { catchError, filter, map } from 'rxjs/operators';
 import { Subscription, throwError } from 'rxjs';
 import { PlatformService } from '../core/services/platform.service';
 
@@ -59,6 +59,14 @@ export abstract class AbstractMarkdownComponent implements OnInit, OnDestroy {
 					responseType: 'text'
 				})
 				.pipe(
+					// prettier-ignore
+					map((prose: string) => {
+						const modifierKey: string = this.platformService.getOSModifierKey();
+						const keyboardCharacter: string = this.platformService.getOSKeyboardCharacter(modifierKey);
+						const proseUpdated: string = prose.replaceAll('modifierKey', keyboardCharacter);
+
+						return proseUpdated;
+					}),
 					catchError((httpErrorResponse: HttpErrorResponse) => {
 						this.router
 							.navigate(['/error', httpErrorResponse.status])
