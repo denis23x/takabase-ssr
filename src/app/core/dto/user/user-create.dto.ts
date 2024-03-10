@@ -3,5 +3,5 @@
 export interface UserCreateDto {
 	name: string;
 	terms: boolean;
-	firebaseId: string;
+	firebaseUid: string;
 }

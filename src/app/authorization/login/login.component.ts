@@ -75,20 +75,22 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
-		const email: string = String(this.activatedRoute.snapshot.queryParamMap.get('email') || '');
-
+		// TODO: social auth
+		//
+		// const email: string = String(this.activatedRoute.snapshot.queryParamMap.get('email') || '');
+		//
 		// prettier-ignore
-		const social: any = ['facebookId', 'githubId', 'googleId']
-      .filter((social: string) => !!this.activatedRoute.snapshot.queryParamMap.get(social))
-      .map((social: string) => ({ [social]: this.activatedRoute.snapshot.queryParamMap.get(social) }))
-      .shift();
-
-		if (!!email && !!social) {
-			this.loginForm.get('email').setValue(email);
-			this.loginForm.get('email').markAsTouched();
-
-			this.onLogin(this.activatedRoute.snapshot.queryParams);
-		}
+		// const social: any = ['facebookId', 'githubId', 'googleId']
+    //   .filter((social: string) => !!this.activatedRoute.snapshot.queryParamMap.get(social))
+    //   .map((social: string) => ({ [social]: this.activatedRoute.snapshot.queryParamMap.get(social) }))
+    //   .shift();
+		//
+		// if (!!email && !!social) {
+		// 	this.loginForm.get('email').setValue(email);
+		// 	this.loginForm.get('email').markAsTouched();
+		//
+		// 	this.onLogin(this.activatedRoute.snapshot.queryParams);
+		// }
 	}
 
 	setMetaTags(): void {

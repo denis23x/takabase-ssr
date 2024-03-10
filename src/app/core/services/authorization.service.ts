@@ -62,7 +62,7 @@ export class AuthorizationService {
 					switchMap((firebaseUser: FirebaseUser | null) => {
 						if (firebaseUser) {
 							const connectDto: ConnectDto = {
-								firebaseId: firebaseUser.uid
+								firebaseUid: firebaseUser.uid
 							};
 
 							return this.apiService.post('/authorization', connectDto).pipe(
@@ -93,14 +93,14 @@ export class AuthorizationService {
 
 		// prettier-ignore
 		return from(createUserWithEmailAndPassword(this.firebaseService.getAuth(), registrationDto.email, registrationDto.password)).pipe(
-			tap((userCredential: UserCredential) => userCreateDto.firebaseId = userCredential.user.uid),
+			tap((userCredential: UserCredential) => userCreateDto.firebaseUid = userCredential.user.uid),
 			switchMap((userCredential: UserCredential) => from(sendEmailVerification(userCredential.user))),
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
 			switchMap(() => this.userService.create(userCreateDto as UserCreateDto)),
 			map((user: User) => user.id),
 			switchMap((userId: number) => {
 				const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/users');
-				const userDoc: DocumentReference = doc(userCollection, userCreateDto.firebaseId);
+				const userDoc: DocumentReference = doc(userCollection, userCreateDto.firebaseUid);
 
 				return from(setDoc(userDoc, { userId }));
 			}),
@@ -117,7 +117,7 @@ export class AuthorizationService {
 			tap((userCredential: UserCredential) => currentUser.firebase = userCredential.user),
 			switchMap((userCredential: UserCredential) => {
 				const connectDto: ConnectDto = {
-					firebaseId: userCredential.user.uid
+					firebaseUid: userCredential.user.uid
 				};
 
 				return this.apiService.post('/authorization', connectDto);

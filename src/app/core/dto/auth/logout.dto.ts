@@ -1,5 +1,3 @@
 /** @format */
 
-export interface LogoutDto {
-	fingerprint: string;
-}
+export interface LogoutDto {}

@@ -62,12 +62,12 @@ export class PostService {
 	}
 
 	// prettier-ignore
-	getOneDocument(firebaseId: string): Observable<any> {
+	getOneDocument(firebaseUid: string): Observable<any> {
 		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
 
 		const postCollectionPath: string = '/users/' + currentUser.firebase.uid + '/posts';
 		const postCollection: CollectionReference = collection(this.firebaseService.getFirestore(), postCollectionPath);
-		const postDoc: DocumentReference = doc(postCollection, firebaseId);
+		const postDoc: DocumentReference = doc(postCollection, firebaseUid);
 
 		return from(getDoc(postDoc)).pipe(
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
@@ -76,16 +76,16 @@ export class PostService {
 	}
 
 	// prettier-ignore
-	updateDocument(firebaseId: string, postUpdateDocumentDto: PostUpdateDocumentDto): Observable<string> {
+	updateDocument(firebaseUid: string, postUpdateDocumentDto: PostUpdateDocumentDto): Observable<string> {
 		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
 
 		const postCollectionPath: string = '/users/' + currentUser.firebase.uid + '/posts';
 		const postCollection: CollectionReference = collection(this.firebaseService.getFirestore(), postCollectionPath);
-		const postDoc: DocumentReference = doc(postCollection, firebaseId);
+		const postDoc: DocumentReference = doc(postCollection, firebaseUid);
 
 		return from(updateDoc(postDoc, { ...postUpdateDocumentDto })).pipe(
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
-			map(() => firebaseId)
+			map(() => firebaseUid)
 		);
 	}
 

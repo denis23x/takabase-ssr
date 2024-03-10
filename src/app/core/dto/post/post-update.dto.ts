@@ -1,8 +1,8 @@
 /** @format */
 
 export interface PostUpdateDto {
+	firebaseUid?: string;
 	name?: string;
-	firebaseId?: string;
 	description?: string;
 	markdown?: string;
 	image?: string;

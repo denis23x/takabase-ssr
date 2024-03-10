@@ -238,11 +238,11 @@ export class AppearanceService {
 
 	/** Firestore */
 
-	getAppearance(firebaseId: string): Observable<Appearance> {
+	getAppearance(firebaseUid: string): Observable<Appearance> {
 		// prettier-ignore
 		return this.ngZone.runOutsideAngular(() => {
 			const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/users');
-			const userDoc: DocumentReference = doc(userCollection, firebaseId);
+			const userDoc: DocumentReference = doc(userCollection, firebaseUid);
 
 			return from(getDoc(userDoc)).pipe(
 				catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
@@ -253,7 +253,7 @@ export class AppearanceService {
 					if (appearance) {
 						return of(appearance);
 					} else {
-						return this.setAppearance(firebaseId, {
+						return this.setAppearance(firebaseUid, {
 							dropdownBackdrop: false,
 							language: 'en-US',
 							markdownMonospace: true,
@@ -272,10 +272,10 @@ export class AppearanceService {
 		});
 	}
 
-	setAppearance(firebaseId: string, appearance: Appearance): Observable<Appearance> {
+	setAppearance(firebaseUid: string, appearance: Appearance): Observable<Appearance> {
 		// prettier-ignore
 		const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/users');
-		const userDoc: DocumentReference = doc(userCollection, firebaseId);
+		const userDoc: DocumentReference = doc(userCollection, firebaseUid);
 
 		return from(updateDoc(userDoc, { appearance })).pipe(
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),

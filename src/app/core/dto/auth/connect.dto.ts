@@ -1,5 +1,5 @@
 /** @format */
 
 export interface ConnectDto {
-	firebaseId: string;
+	firebaseUid: string;
 }

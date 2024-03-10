@@ -78,7 +78,7 @@ export class SkeletonService {
 		return {
 			id: 0,
 			name: 'Paint it Black',
-			firebaseId: this.helperService.getNanoId(4),
+			firebaseUid: this.helperService.getNanoId(4),
 			description: 'Synagoga absconditus depereo cedo.',
 			image: null,
 			category: scope.includes('category') ? this.getCategory() : undefined,
@@ -94,7 +94,7 @@ export class SkeletonService {
 			{
 				id: 0,
 				name: 'Paint it Black',
-				firebaseId: this.helperService.getNanoId(4),
+				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Synagoga absconditus depereo cedo id ulterius culpo adsum spectaculum umbra.',
 				image: null,
 				category: scope.includes('category') ? this.getCategory() : undefined,
@@ -105,7 +105,7 @@ export class SkeletonService {
 			{
 				id: 0,
 				name: 'You make Me Wanna',
-				firebaseId: this.helperService.getNanoId(4),
+				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Terminatio optio claustrum.',
 				image: null,
 				category: scope.includes('category') ? this.getCategory() : undefined,
@@ -116,7 +116,7 @@ export class SkeletonService {
 			{
 				id: 0,
 				name: 'Jailhouse Rock',
-				firebaseId: this.helperService.getNanoId(4),
+				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Compono adduco demitto curatio tabgo ipsum demo sto ubi.',
 				image: null,
 				category: scope.includes('category') ? this.getCategory() : undefined,
@@ -127,7 +127,7 @@ export class SkeletonService {
 			{
 				id: 0,
 				name: 'Can You Feel the Love Tonight',
-				firebaseId: this.helperService.getNanoId(4),
+				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Recusandae texo pauci terga compono.',
 				image: null,
 				category: scope.includes('category') ? this.getCategory() : undefined,
@@ -138,7 +138,7 @@ export class SkeletonService {
 			{
 				id: 0,
 				name: 'Make it With You',
-				firebaseId: this.helperService.getNanoId(4),
+				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Adversus stips allatus paulatim.',
 				image: null,
 				category: scope.includes('category') ? this.getCategory() : undefined,
@@ -149,7 +149,7 @@ export class SkeletonService {
 			{
 				id: 0,
 				name: 'Morning Train (Nine to Five)',
-				firebaseId: this.helperService.getNanoId(4),
+				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Super tardus approbo vorago vulgus angustus creta tremo subito approbo.',
 				image: null,
 				category: scope.includes('category') ? this.getCategory() : undefined,
@@ -160,7 +160,7 @@ export class SkeletonService {
 			{
 				id: 0,
 				name: 'Be My Baby',
-				firebaseId: this.helperService.getNanoId(4),
+				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Taceo vulgo confugo derideo.',
 				image: null,
 				category: scope.includes('category') ? this.getCategory() : undefined,
@@ -171,7 +171,7 @@ export class SkeletonService {
 			{
 				id: 0,
 				name: 'White Christmas',
-				firebaseId: this.helperService.getNanoId(4),
+				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Turpis nesciunt tendo ago urbanus.',
 				image: null,
 				category: scope.includes('category') ? this.getCategory() : undefined,
@@ -182,7 +182,7 @@ export class SkeletonService {
 			{
 				id: 0,
 				name: 'Wichita Lineman',
-				firebaseId: this.helperService.getNanoId(4),
+				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Speciosus casso eligendi facilis amiculum.',
 				image: null,
 				category: scope.includes('category') ? this.getCategory() : undefined,
@@ -193,7 +193,7 @@ export class SkeletonService {
 			{
 				id: 0,
 				name: 'Get Down Tonight',
-				firebaseId: this.helperService.getNanoId(4),
+				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Sonitus pax tabernus turba viriliter agnitio nulla arca.',
 				image: null,
 				category: scope.includes('category') ? this.getCategory() : undefined,

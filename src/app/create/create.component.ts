@@ -505,7 +505,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 			const postDto: PostCreateDto & PostUpdateDto = {
 				...this.postForm.value,
-				firebaseId: this.post?.firebaseId
+				firebaseUid: this.post?.firebaseUid
 			};
 
 			// prettier-ignore
@@ -535,7 +535,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 							};
 
 							return this.postService
-								.updateDocument(post.firebaseId, postUpdateDocumentDto)
+								.updateDocument(post.firebaseUid, postUpdateDocumentDto)
 								.pipe(map(() => post));
 						})
 					)
@@ -551,7 +551,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 						switchMap(() => {
 							return this.postService
 								.createDocument()
-								.pipe(tap((documentId: string) => (postDto.firebaseId = documentId)));
+								.pipe(tap((documentId: string) => (postDto.firebaseUid = documentId)));
 						}),
 						switchMap(() => this.postService.create(postDto)),
 						switchMap((post: Post) => {
@@ -561,7 +561,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 							};
 
 							return this.postService
-								.updateDocument(post.firebaseId, postUpdateDocumentDto)
+								.updateDocument(post.firebaseUid, postUpdateDocumentDto)
 								.pipe(map(() => post));
 						})
 					)
