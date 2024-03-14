@@ -11,8 +11,8 @@ import {
 	ViewChild
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { from, Subscription, switchMap } from 'rxjs';
-import { filter, map, startWith, tap } from 'rxjs/operators';
+import { Subscription, switchMap } from 'rxjs';
+import { filter, startWith, tap } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -60,9 +60,6 @@ import { PlatformDirective } from '../standalone/directives/app-platform.directi
 import { DeviceDirective } from '../standalone/directives/app-device.directive';
 import { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../core/services/ai.service';
-import { PostUpdateDocumentDto } from '../core/dto/post/post-update-document.dto';
-import { MarkdownService } from '../core/services/markdown.service';
-import { ListResult, StorageReference } from 'firebase/storage';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -118,7 +115,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly aiService: AIService = inject(AIService);
-	private readonly markdownService: MarkdownService = inject(MarkdownService);
 
 	// prettier-ignore
 	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
@@ -526,19 +522,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 				this.postFormRequest$?.unsubscribe();
 				this.postFormRequest$ = this.aiService
 					.moderateText(aiModerateTextDto)
-					.pipe(
-						switchMap(() => this.postService.update(postId, postDto)),
-						switchMap((post: Post) => {
-							const postUpdateDocumentDto: PostUpdateDocumentDto = {
-								postId: post.id,
-								markdownImageList: post.markdownImageList
-							};
-
-							return this.postService
-								.updateDocument(post.firebaseUid, postUpdateDocumentDto)
-								.pipe(map(() => post));
-						})
-					)
+					.pipe(switchMap(() => this.postService.update(postId, postDto)))
 					.subscribe({
 						next: (post: Post) => postFormRequestRedirect(post),
 						error: () => this.postForm.enable()
@@ -547,24 +531,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 				this.postFormRequest$?.unsubscribe();
 				this.postFormRequest$ = this.aiService
 					.moderateText(aiModerateTextDto)
-					.pipe(
-						switchMap(() => {
-							return this.postService
-								.createDocument()
-								.pipe(tap((documentId: string) => (postDto.firebaseUid = documentId)));
-						}),
-						switchMap(() => this.postService.create(postDto)),
-						switchMap((post: Post) => {
-							const postUpdateDocumentDto: PostUpdateDocumentDto = {
-								postId: post.id,
-								markdownImageList: post.markdownImageList
-							};
-
-							return this.postService
-								.updateDocument(post.firebaseUid, postUpdateDocumentDto)
-								.pipe(map(() => post));
-						})
-					)
+					.pipe(switchMap(() => this.postService.create(postDto)))
 					.subscribe({
 						next: (post: Post) => postFormRequestRedirect(post),
 						error: () => this.postForm.enable()

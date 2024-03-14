@@ -24,6 +24,7 @@
               "prismjs",
               "dompurify",
               "qrcode",
+              "nanoid-dictionary",
               "markdown-it",
               "markdown-it-attrs",
               "markdown-it-bracketed-spans",

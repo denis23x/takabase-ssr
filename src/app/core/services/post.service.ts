@@ -1,7 +1,7 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { from, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { UserService } from './user.service';
 import { PostGetAllDto } from '../dto/post/post-get-all.dto';
@@ -12,23 +12,6 @@ import { PostGetOneDto } from '../dto/post/post-get-one.dto';
 import { PostUpdateDto } from '../dto/post/post-update.dto';
 import { MetaService } from './meta.service';
 import { TitleService } from './title.service';
-import {
-	addDoc,
-	collection,
-	CollectionReference,
-	doc,
-	DocumentReference,
-	DocumentSnapshot,
-	getDoc,
-	updateDoc
-} from 'firebase/firestore';
-import { catchError, map } from 'rxjs/operators';
-import { FirebaseError } from 'firebase/app';
-import { FirebaseService } from './firebase.service';
-import { CurrentUser } from '../models/current-user.model';
-import { AuthorizationService } from './authorization.service';
-import { PostCreateDocumentDto } from '../dto/post/post-create-document.dto';
-import { PostUpdateDocumentDto } from '../dto/post/post-update-document.dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -38,56 +21,11 @@ export class PostService {
 	private readonly userService: UserService = inject(UserService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly titleService: TitleService = inject(TitleService);
-	private readonly firebaseService: FirebaseService = inject(FirebaseService);
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 
 	backupPostMetaOpenGraph: MetaOpenGraph;
 	backupPostMetaTwitter: MetaTwitter;
 
 	backupPostTitle: string;
-
-	/** Firestore */
-
-	// prettier-ignore
-	createDocument(postCreateDocumentDto: PostCreateDocumentDto = {}): Observable<string> {
-		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
-
-		const postCollectionPath: string = '/users/' + currentUser.firebase.uid + '/posts';
-		const postCollection: CollectionReference = collection(this.firebaseService.getFirestore(), postCollectionPath);
-
-		return from(addDoc(postCollection, postCreateDocumentDto)).pipe(
-			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
-			map((documentReference: DocumentReference) => documentReference.id)
-		);
-	}
-
-	// prettier-ignore
-	getOneDocument(firebaseUid: string): Observable<any> {
-		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
-
-		const postCollectionPath: string = '/users/' + currentUser.firebase.uid + '/posts';
-		const postCollection: CollectionReference = collection(this.firebaseService.getFirestore(), postCollectionPath);
-		const postDoc: DocumentReference = doc(postCollection, firebaseUid);
-
-		return from(getDoc(postDoc)).pipe(
-			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
-			map((documentSnapshot: DocumentSnapshot) => documentSnapshot.data())
-		);
-	}
-
-	// prettier-ignore
-	updateDocument(firebaseUid: string, postUpdateDocumentDto: PostUpdateDocumentDto): Observable<string> {
-		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
-
-		const postCollectionPath: string = '/users/' + currentUser.firebase.uid + '/posts';
-		const postCollection: CollectionReference = collection(this.firebaseService.getFirestore(), postCollectionPath);
-		const postDoc: DocumentReference = doc(postCollection, firebaseUid);
-
-		return from(updateDoc(postDoc, { ...postUpdateDocumentDto })).pipe(
-			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
-			map(() => firebaseUid)
-		);
-	}
 
 	/** SEO Meta tags */
 
