@@ -22,7 +22,7 @@ export class ApiService {
 	/** ERROR */
 
 	setError(error: Error): Observable<never> {
-		const message: string = error.message || 'Oops! Something went wrong. Try again later';
+		const message: string = error.message || 'Uh-oh! We encountered an issue while moderation';
 
 		this.snackbarService.warning('Moderation', message, {
 			icon: 'ban',
@@ -40,20 +40,14 @@ export class ApiService {
 
 		console.debug(firebaseError.code);
 
+		/** STORAGE && FIRESTORE && AUTH */
+
 		const getMessage = (): string => {
 			switch (firebaseError.code) {
-				/** STORAGE */
-
 				case 'storage/unauthorized':
 					return "You don't have permissions to access";
-
-				/** FIRESTORE */
-
 				case 'permission-denied':
 					return "You don't have permissions to access";
-
-				/** AUTH */
-
 				case 'auth/invalid-action-code':
 					return 'Invalid confirmation code';
 				case 'auth/invalid-login-credentials':
@@ -81,7 +75,7 @@ export class ApiService {
 				case 'auth/cannot-delete-own-user-account':
 					return 'You cannot delete your own user account';
 				default:
-					return 'Oops! Something went wrong. Try again later';
+					return 'Sorry, something unexpected occurred';
 			}
 		};
 
@@ -96,8 +90,32 @@ export class ApiService {
 	}
 
 	setHttpErrorResponse(httpErrorResponse: HttpErrorResponse): Observable<never> {
-		// prettier-ignore
-		const message: string = httpErrorResponse.error.message || 'Oops! Something went wrong. Try again later';
+		/** https://github.com/denis23x/takabase-dd */
+
+		console.debug(httpErrorResponse.error.code);
+
+		/** FASTIFY */
+
+		const getMessage = (): string => {
+			switch (httpErrorResponse.error.code) {
+				case 'fastify/storage/failed-move-temp-image-to-post':
+					return 'Failed to move file within the storage';
+				case 'fastify/storage/failed-move-post-image-to-temp':
+					return 'Failed to move file within the storage';
+				case 'fastify/firestore/failed-add-post':
+					return 'Failed to create document';
+				case 'fastify/firestore/failed-update-post':
+					return 'Failed to update document';
+				case 'fastify/prisma/failed-create-post':
+					return 'Failed to create. Try again later';
+				case 'fastify/prisma/failed-update-post':
+					return 'Failed to update. Try again later';
+				default:
+					return httpErrorResponse.error.message || 'We hit a snag';
+			}
+		};
+
+		const message: string = getMessage();
 
 		this.snackbarService.error('Error', message, {
 			icon: 'bug',

@@ -400,7 +400,8 @@ export class CreateComponent implements OnInit, OnDestroy {
 	onUpdateCropperImage(nextImage: string | null, previousImage: string | null): void {
 		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 		const postUpdateDto: PostUpdateDto = {
-			image: nextImage
+			image: nextImage,
+			firebaseUid: this.post?.firebaseUid
 		};
 
 		if (postId) {
