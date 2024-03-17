@@ -96,26 +96,30 @@ export class ApiService {
 
 		/** FASTIFY */
 
-		const getMessage = (): string => {
+		const getMessage = (): string | undefined => {
 			switch (httpErrorResponse.error.code) {
+				case 'fastify/storage/failed-read-file-list':
+					return 'Failed to fetch file list';
 				case 'fastify/storage/failed-move-temp-image-to-post':
-					return 'Failed to move file within the storage';
+					return 'Failed to move image within the storage';
 				case 'fastify/storage/failed-move-post-image-to-temp':
-					return 'Failed to move file within the storage';
+					return 'Failed to move image within the storage';
+				case 'fastify/firestore/failed-get-post':
+					return 'Failed to get post document';
 				case 'fastify/firestore/failed-add-post':
-					return 'Failed to create document';
+					return 'Failed to create post document';
 				case 'fastify/firestore/failed-update-post':
-					return 'Failed to update document';
+					return 'Failed to update post document';
 				case 'fastify/prisma/failed-create-post':
-					return 'Failed to create. Try again later';
+					return 'Failed to create post. Try again later';
 				case 'fastify/prisma/failed-update-post':
-					return 'Failed to update. Try again later';
+					return 'Failed to update post. Try again later';
 				default:
-					return httpErrorResponse.error.message || 'We hit a snag';
+					return httpErrorResponse.error.message;
 			}
 		};
 
-		const message: string = getMessage();
+		const message: string = getMessage() || 'We hit a snag';
 
 		this.snackbarService.error('Error', message, {
 			icon: 'bug',
