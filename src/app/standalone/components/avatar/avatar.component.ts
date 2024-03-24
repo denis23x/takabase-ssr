@@ -5,16 +5,22 @@ import { toSvg } from 'jdenticon';
 import { User } from '../../../core/models/user.model';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from '../../../core/services/platform.service';
+import { AppCheckPipe } from '../../pipes/app-check.pipe';
+import { HelperService } from '../../../core/services/helper.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
 	standalone: true,
 	selector: 'app-avatar, [appAvatar]',
-	templateUrl: './avatar.component.html'
+	templateUrl: './avatar.component.html',
+	providers: [AppCheckPipe]
 })
 export class AvatarComponent {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly elementRef: ElementRef = inject(ElementRef);
 	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly helperService: HelperService = inject(HelperService);
+	private readonly appCheckPipe: AppCheckPipe = inject(AppCheckPipe);
 
 	@Input({ required: true })
 	set appAvatarUser(user: Partial<User> | undefined) {
@@ -32,14 +38,29 @@ export class AvatarComponent {
 	setImage(): void {
 		if (this.platformService.isBrowser()) {
 			const elementRef: HTMLElement = this.elementRef.nativeElement;
-			const elementImage: HTMLImageElement = this.document.createElement('img');
+			const elementRefImage: HTMLImageElement = this.document.createElement('img');
 
-			elementImage.classList.add('bg-base-300');
-			elementImage.loading = 'lazy';
-			elementImage.src = this.user.avatar;
-			elementImage.alt = this.user.name;
+			elementRefImage.id = this.helperService.getNanoId(12);
+			elementRefImage.classList.add(...['bg-base-300', 'object-cover', 'object-center']);
+			elementRefImage.src = './assets/images/placeholder-image.svg';
+			elementRefImage.alt = this.user.name;
 
-			elementRef.innerHTML = elementImage.outerHTML;
+			/** Insert HTML */
+
+			elementRef.innerHTML = elementRefImage.outerHTML;
+
+			const elementHTML: HTMLElement | null = this.document.getElementById(elementRefImage.id);
+			const elementHTMLImage: HTMLImageElement = elementHTML as HTMLImageElement;
+
+			/** Set Image */
+
+			this.appCheckPipe
+				.transform(this.user.avatar)
+				.pipe(filter(() => !!elementHTMLImage))
+				.subscribe({
+					next: (blob: string) => (elementHTMLImage.src = blob),
+					error: (error: any) => console.error(error)
+				});
 		}
 	}
 
@@ -48,13 +69,11 @@ export class AvatarComponent {
 			const elementRef: HTMLElement = this.elementRef.nativeElement;
 			const elementRefDOMRect: DOMRect = elementRef.getBoundingClientRect();
 
-			const elementIcon: string = toSvg(this.user.name, elementRefDOMRect.width, {
+			elementRef.innerHTML = toSvg(this.user.name, elementRefDOMRect.width, {
 				backColor: '#00000000',
 				padding: 0,
 				replaceMode: 'observe'
 			});
-
-			elementRef.innerHTML = elementIcon;
 		}
 	}
 }
