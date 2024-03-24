@@ -39,11 +39,12 @@
 							@case (!!reportSubject.post && !!reportSubject.post.image) {
 								<div class="flex rounded-btn relative overflow-hidden">
 									<figure class="h-12 w-12 rounded-btn relative overflow-hidden">
+										<!-- prettier-ignore -->
 										<img
 											class="object-cover object-center bg-base-300"
 											loading="lazy"
 											[fill]="true"
-											[ngSrc]="reportSubject.post.image"
+                      [ngSrc]="(reportSubject.post.image | appCheck | async) || './assets/images/placeholder-image.svg'"
 											[alt]="reportSubject.post.name"
 										/>
 									</figure>

@@ -35,6 +35,7 @@ import { ReportSubject } from '../../../core/models/report.model';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { PlatformService } from '../../../core/services/platform.service';
 import { filter } from 'rxjs/operators';
+import { AppCheckPipe } from '../../pipes/app-check.pipe';
 
 interface ReportForm {
 	name: FormControl<string>;
@@ -55,7 +56,8 @@ interface ReportForm {
 		SvgIconComponent,
 		BadgeErrorComponent,
 		AvatarComponent,
-		SkeletonDirective
+		SkeletonDirective,
+		AppCheckPipe
 	],
 	selector: 'app-report, [appReport]',
 	templateUrl: './report.component.html'

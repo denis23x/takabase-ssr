@@ -11,6 +11,9 @@ import { HelperService } from './helper.service';
 import { UserService } from './user.service';
 import { collection, CollectionReference, addDoc, DocumentReference } from 'firebase/firestore';
 import { FirebaseService } from './firebase.service';
+import { catchError } from 'rxjs/operators';
+import { FirebaseError } from 'firebase/app';
+import { ApiService } from './api.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -19,6 +22,7 @@ export class ReportService {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly userService: UserService = inject(UserService);
+	private readonly apiService: ApiService = inject(ApiService);
 	private readonly ngZone: NgZone = inject(NgZone);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 
@@ -55,6 +59,7 @@ export class ReportService {
 		return this.ngZone.runOutsideAngular(() => {
 			const mailerCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/mailer');
 
+			// prettier-ignore
 			return from(addDoc(mailerCollection, {
 				to: environment.mailer.to,
 				bcc: environment.mailer.bcc,
@@ -62,7 +67,7 @@ export class ReportService {
 					subject: templateSubject,
 					html: templateHtml
 				}
-			}))
+			})).pipe(catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)))
 		});
 	}
 }
