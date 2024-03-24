@@ -27,7 +27,7 @@
                       height="48"
                       loading="lazy"
                       [alt]="'Image'"
-                      [src]="image.value"
+                      [ngSrc]="(image.value | appCheck | async) || './assets/images/placeholder-image.svg'"
                     />
                   }
                   @case (!!image.value === false) {

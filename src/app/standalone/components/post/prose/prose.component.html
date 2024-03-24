@@ -13,11 +13,12 @@
 								[appSkeletonToggle]="postSkeletonToggle"
 							>
 								<figure class="h-12 w-12 rounded-btn relative overflow-hidden">
+									<!-- prettier-ignore -->
 									<img
 										class="object-cover object-center bg-base-300"
 										loading="lazy"
 										[fill]="true"
-										[ngSrc]="post.image"
+                    [ngSrc]="(post.image | appCheck | async) || './assets/images/placeholder-image.svg'"
 										[alt]="post.name"
 									/>
 								</figure>

@@ -60,6 +60,7 @@ import { PlatformDirective } from '../standalone/directives/app-platform.directi
 import { DeviceDirective } from '../standalone/directives/app-device.directive';
 import { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../core/services/ai.service';
+import { AppCheckPipe } from '../standalone/pipes/app-check.pipe';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -94,7 +95,8 @@ interface PostForm {
 		ShortcutsComponent,
 		KbdPipe,
 		PlatformDirective,
-		DeviceDirective
+		DeviceDirective,
+		AppCheckPipe
 	],
 	templateUrl: './create.component.html'
 })

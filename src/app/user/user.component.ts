@@ -307,9 +307,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.reportService.reportSubject$.next({ user: this.user });
 			this.reportService.reportDialogToggle$.next(toggle);
 		} else {
-			this.router.navigate(['login']).then(() => {
-				this.snackbarService.info('Nope', 'Log in before reporting');
-			});
+			this.snackbarService.warning('Nope', 'Log in before reporting');
 		}
 	}
 

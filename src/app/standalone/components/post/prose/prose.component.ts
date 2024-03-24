@@ -2,8 +2,8 @@
 
 import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { NgOptimizedImage } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { AsyncPipe, NgOptimizedImage } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { MarkdownPipe } from '../../../pipes/markdown.pipe';
 import { UserUrlPipe } from '../../../pipes/user-url.pipe';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
@@ -22,6 +22,7 @@ import { ReportService } from '../../../../core/services/report.service';
 import { AdComponent } from '../../ad/ad.component';
 import { CopyUrlDirective } from '../../../directives/app-copy-url.directive';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
+import { AppCheckPipe } from '../../../pipes/app-check.pipe';
 
 @Component({
 	standalone: true,
@@ -38,7 +39,9 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
 		PostDeleteComponent,
 		QrCodeComponent,
 		AdComponent,
-		CopyUrlDirective
+		CopyUrlDirective,
+		AppCheckPipe,
+		AsyncPipe
 	],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
@@ -47,7 +50,6 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly reportService: ReportService = inject(ReportService);
-	private readonly router: Router = inject(Router);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
 	@Input({ required: true })
@@ -108,9 +110,7 @@ export class PostProseComponent implements OnInit, OnDestroy {
 			this.reportService.reportSubject$.next({ post: this.post });
 			this.reportService.reportDialogToggle$.next(toggle);
 		} else {
-			this.router.navigate(['login']).then(() => {
-				this.snackbarService.info('Nope', 'Log in before reporting');
-			});
+			this.snackbarService.warning('Nope', 'Log in before reporting');
 		}
 	}
 }

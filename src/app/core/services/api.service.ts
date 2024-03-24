@@ -112,12 +112,6 @@ export class ApiService {
 					return 'Failed to find documents post list';
 				case 'fastify/firestore/failed-update-post':
 					return 'Failed to update post document';
-				case 'fastify/prisma/failed-create-post':
-					return 'Failed to create post. Try again later';
-				case 'fastify/prisma/failed-find-many-post':
-					return 'Failed to find post list. Try again later';
-				case 'fastify/prisma/failed-update-post':
-					return 'Failed to update post. Try again later';
 				default:
 					return httpErrorResponse.error.message;
 			}

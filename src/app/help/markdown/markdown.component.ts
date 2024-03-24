@@ -57,12 +57,12 @@ export class HelpMarkdownComponent {
     {
       title: 'Images',
       description: 'To add an image, add an exclamation mark <code>!</code>, followed by alt text in brackets, and the path or URL to the image asset in parentheses. You can optionally add a title in quotation marks after the path or URL',
-      markdown: `![Takabase](/assets/meta.png "Image")`
+      markdown: `![Takabase](/assets/images/placeholder-image-meta.png "Image")`
     },
     {
       title: 'Advanced',
       description: 'Add classes, identifiers and attributes to your markdown with <code>{.class .class2 attr=value}</code> curly brackets. Feel free to show your imagination and use the large set of CSS classes available in the style safe list section',
-      markdown: `![Takabase](/assets/meta.png "Image"){.mask .mask-heart width=100}\n\n[Takabase App](https://takabase.com){.link .link-info}\n\nBadge Primary{.badge .badge-primary}\n\n[Secondary]{.btn .btn-secondary .btn-outline}\n\n- Register{.step .step-primary}\n- Choose plan{.step .step-primary}\n- Purchase{.step}\n{.steps .steps-vertical .not-prose .p-0}`
+      markdown: `![Takabase](/assets/images/placeholder-image-meta.png "Image"){.mask .mask-heart width=100}\n\n[Takabase App](https://takabase.com){.link .link-info}\n\nBadge Primary{.badge .badge-primary}\n\n[Secondary]{.btn .btn-secondary .btn-outline}\n\n- Register{.step .step-primary}\n- Choose plan{.step .step-primary}\n- Purchase{.step}\n{.steps .steps-vertical .not-prose .p-0}`
     }
   ];
 }
