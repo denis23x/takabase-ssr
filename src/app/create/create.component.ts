@@ -399,56 +399,18 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	/** Image Cropper */
 
-	onUpdateCropperImage(nextImage: string | null, previousImage: string | null): void {
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-		const postUpdateDto: PostUpdateDto = {
-			image: nextImage,
-			firebaseUid: this.post?.firebaseUid
-		};
-
-		if (postId) {
-			this.postFormImageSkeletonToggle = true;
-
-			this.postFormRequest$?.unsubscribe();
-			this.postFormRequest$ = this.postService.update(postId, postUpdateDto).subscribe({
-				next: () => {
-					this.snackbarService.success('Alright', 'Post has been updated');
-
-					this.postFormImageSkeletonToggle = false;
-				},
-				error: () => (this.postFormImageSkeletonToggle = false)
-			});
-		} else {
-			this.postFormImageSkeletonToggle = false;
-		}
-
-		/** Silent deleting image */
-
-		if (previousImage) {
-			this.postFormImageRequest$?.unsubscribe();
-			this.postFormImageRequest$ = this.fileService.delete(previousImage).subscribe({
-				next: () => console.debug('File erased'),
-				error: () => (this.postFormImageSkeletonToggle = false)
-			});
-		}
-
-		/** Update postForm image */
-
-		this.postForm.get('image').setValue(nextImage, { emitEvent: false });
+	onUpdateCropperImage(fileUrl: string | null): void {
+		this.postForm.get('image').setValue(fileUrl, { emitEvent: true });
+		this.postFormImageSkeletonToggle = false;
 	}
 
 	onSubmitCropperImage(file: File): void {
-		const abstractControl: AbstractControl = this.postForm.get('image');
-		const abstractControlPreviousValue: string | null = abstractControl.value;
-
-		/** Update postForm image */
-
 		this.postForm.get('image').setValue(null, { emitEvent: false });
 		this.postFormImageSkeletonToggle = true;
 
 		this.postFormImageRequest$?.unsubscribe();
-		this.postFormImageRequest$ = this.fileService.create(file, '/temp').subscribe({
-			next: (fileUrl: string) => this.onUpdateCropperImage(fileUrl, abstractControlPreviousValue),
+		this.postFormImageRequest$ = this.fileService.create(file).subscribe({
+			next: (fileUrl: string) => this.onUpdateCropperImage(fileUrl),
 			error: () => (this.postFormImageSkeletonToggle = false)
 		});
 	}

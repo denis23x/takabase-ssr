@@ -28,11 +28,7 @@ import { CategoryService } from '../../../../core/services/category.service';
 import { Subscription } from 'rxjs';
 import { Post } from '../../../../core/models/post.model';
 import { CategoryDeleteDto } from '../../../../core/dto/category/category-delete.dto';
-import { PostGetAllDto } from '../../../../core/dto/post/post-get-all.dto';
-import { filter } from 'rxjs/operators';
 import { Category } from '../../../../core/models/category.model';
-import { PostService } from '../../../../core/services/post.service';
-import { FileService } from '../../../../core/services/file.service';
 import { HelperService } from '../../../../core/services/helper.service';
 import { CurrentUser } from '../../../../core/models/current-user.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
@@ -62,8 +58,6 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly postService: PostService = inject(PostService);
-	private readonly fileService: FileService = inject(FileService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly location: Location = inject(Location);
@@ -177,27 +171,6 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 						this.categoryDeleteForm.enable();
 
 						this.onToggleCategoryDeleteDialog(false);
-
-						// Delete post images
-
-						if (!categoryDeleteDto.categoryId) {
-							const postGetAllDto: PostGetAllDto = {
-								categoryId
-							};
-
-							this.postListRequest$?.unsubscribe();
-							this.postListRequest$ = this.postService
-								.getAll(postGetAllDto)
-								.pipe(filter((postList: Post[]) => !!postList.length))
-								.subscribe({
-									next: (postList: Post[]) => {
-										postList
-											.filter((post: Post) => !!post.image)
-											.forEach((post: Post) => this.fileService.delete(post.image));
-									},
-									error: (error: any) => console.error(error)
-								});
-						}
 					},
 					error: () => this.categoryDeleteForm.enable()
 				});

@@ -92,7 +92,7 @@ export class PostService {
 		return this.apiService.put('/posts/' + id, postUpdateDto);
 	}
 
-	delete(id: number): Observable<Post> {
+	delete(id: number): Observable<Partial<Post>> {
 		return this.apiService.delete('/posts/' + id);
 	}
 }

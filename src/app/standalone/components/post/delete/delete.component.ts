@@ -15,7 +15,6 @@ import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { Post } from '../../../../core/models/post.model';
 import { PostService } from '../../../../core/services/post.service';
-import { FileService } from '../../../../core/services/file.service';
 import { UserService } from '../../../../core/services/user.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { Router } from '@angular/router';
@@ -35,7 +34,6 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	private readonly router: Router = inject(Router);
 	private readonly userService: UserService = inject(UserService);
 	private readonly postService: PostService = inject(PostService);
-	private readonly fileService: FileService = inject(FileService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly platformService: PlatformService = inject(PlatformService);
@@ -97,14 +95,7 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 
 		this.postDeleteRequest$?.unsubscribe();
 		this.postDeleteRequest$ = this.postService.delete(postId).subscribe({
-			next: (post: Post) => {
-				if (post.image) {
-					this.fileService.delete(post.image).subscribe({
-						next: () => console.debug('File erased'),
-						error: (error: any) => console.error(error)
-					});
-				}
-
+			next: () => {
 				this.router
 					.navigate([this.userService.getUserUrl(this.currentUser)])
 					.then(() => this.snackbarService.success('Sadly..', 'Post has been deleted'));

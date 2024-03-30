@@ -183,7 +183,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				next: (file: File) => {
 					this.appMarkdownUploadToggle.emit(true);
 
-					this.fileService.create(file, '/temp').subscribe({
+					this.fileService.create(file).subscribe({
 						next: (fileUrl: string) => {
 							const params: any = {
 								title: Date.now(),

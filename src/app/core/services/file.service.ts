@@ -13,7 +13,6 @@ import {
 	StorageReference,
 	uploadBytes,
 	getDownloadURL,
-	deleteObject,
 	UploadMetadata
 } from 'firebase/storage';
 import mime from 'mime';
@@ -68,11 +67,11 @@ export class FileService {
 
 	/** REST */
 
-	create(file: File, path: string): Observable<string> {
+	create(file: File): Observable<string> {
 		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
 
 		const fileName: string = this.getFileName(file);
-		const filePath: string = ['/users', currentUser.firebase.uid, path, fileName].join('/');
+		const filePath: string = ['/users', currentUser.firebase.uid, 'temp', fileName].join('/');
 
 		const storage: FirebaseStorage = this.firebaseService.getStorage();
 		const storageRef: StorageReference = ref(storage, filePath);
@@ -87,15 +86,6 @@ export class FileService {
 
 		return from(uploadBytes(storageRef, file, storageRefMetadata)).pipe(
 			switchMap(() => getDownloadURL(storageRef)),
-			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
-		);
-	}
-
-	delete(filePath: string): Observable<void> {
-		const storage: FirebaseStorage = this.firebaseService.getStorage();
-		const storageRef: StorageReference = ref(storage, filePath);
-
-		return from(deleteObject(storageRef)).pipe(
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}
