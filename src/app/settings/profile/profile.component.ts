@@ -2,7 +2,6 @@
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import {
-	AbstractControl,
 	FormBuilder,
 	FormControl,
 	FormGroup,
@@ -148,53 +147,34 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	/** Avatar Cropper */
 
-	onUpdateCropperAvatar(nextAvatar: string | null, previousAvatar: string | null): void {
-		this.profileFormAvatarSkeletonToggle = true;
+	onUpdateCropperAvatar(fileUrl: string | null): void {
+		this.profileForm.get('avatar').setValue(fileUrl, { emitEvent: true });
+		this.profileFormAvatarSkeletonToggle = false;
 
-		const userUpdateDto: UserUpdateDto = {
-			avatar: nextAvatar
+		/** Update current user */
+
+		this.currentUser = {
+			...this.currentUser,
+			...this.profileForm.value
 		};
-
-		this.currentUserRequest$?.unsubscribe();
-		this.currentUserRequest$ = this.userService
-			.update(this.currentUser.id, userUpdateDto)
-			.pipe(switchMap((user: User) => this.authorizationService.setCurrentUser(user)))
-			.subscribe({
-				next: () => {
-					this.snackbarService.success('Success', 'Avatar has been updated');
-
-					this.profileFormAvatarSkeletonToggle = false;
-				},
-				error: () => (this.profileFormAvatarSkeletonToggle = false)
-			});
-
-		/** Silent deleting image */
-
-		if (previousAvatar) {
-			this.profileFormAvatarRequest$?.unsubscribe();
-			this.profileFormAvatarRequest$ = this.fileService.delete(previousAvatar).subscribe({
-				next: () => console.debug('File erased'),
-				error: () => (this.profileFormAvatarSkeletonToggle = false)
-			});
-		}
-
-		/** Update profileForm avatar */
-
-		this.profileForm.get('avatar').setValue(nextAvatar);
 	}
 
 	onSubmitCropperAvatar(file: File): void {
-		const abstractControl: AbstractControl = this.profileForm.get('avatar');
-		const abstractControlValue: string | null = abstractControl.value;
-
-		/** Update profileForm avatar */
-
-		this.profileForm.get('avatar').setValue(null);
+		this.profileForm.get('avatar').setValue(null, { emitEvent: false });
 		this.profileFormAvatarSkeletonToggle = true;
 
+		/** Update current user */
+
+		this.currentUser = {
+			...this.currentUser,
+			...this.profileForm.value
+		};
+
+		/** Request */
+
 		this.profileFormAvatarRequest$?.unsubscribe();
-		this.profileFormAvatarRequest$ = this.fileService.create(file, '/temp').subscribe({
-			next: (fileUrl: string) => this.onUpdateCropperAvatar(fileUrl, abstractControlValue),
+		this.profileFormAvatarRequest$ = this.fileService.create(file).subscribe({
+			next: (fileUrl: string) => this.onUpdateCropperAvatar(fileUrl),
 			error: () => (this.profileFormAvatarSkeletonToggle = false)
 		});
 	}
