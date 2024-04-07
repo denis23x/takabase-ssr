@@ -40,6 +40,6 @@ export class UserService {
 	}
 
 	delete(id: number): Observable<User> {
-		return this.apiService.delete('/users/', id);
+		return this.apiService.delete('/users/' + id);
 	}
 }

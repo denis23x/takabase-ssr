@@ -16,15 +16,12 @@ import {
 	UploadMetadata
 } from 'firebase/storage';
 import mime from 'mime';
-import { CurrentUser } from '../models/current-user.model';
-import { AuthorizationService } from './authorization.service';
 import dayjs from 'dayjs/esm';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class FileService {
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
@@ -68,10 +65,8 @@ export class FileService {
 	/** REST */
 
 	create(file: File): Observable<string> {
-		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
-
 		const fileName: string = this.getFileName(file);
-		const filePath: string = ['/users', currentUser.firebase.uid, 'temp', fileName].join('/');
+		const filePath: string = ['temp', fileName].join('/');
 
 		const storage: FirebaseStorage = this.firebaseService.getStorage();
 		const storageRef: StorageReference = ref(storage, filePath);
