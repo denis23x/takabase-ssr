@@ -29,7 +29,11 @@
 						[appSvgIconIcon]="'info-circle'"
 						[appSvgIconSquare]="'1.5em'"
 					></i>
-					<span class="block"> This action cannot be undone </span>
+					<span class="block">
+						<strong class="font-bold">Warning:</strong> Deleting your account will permanently
+						remove all associated posts, categories, and account data. This action cannot be undone.
+						Are you sure you want to proceed with account deletion?
+					</span>
 				</p>
 				@if (userDeleteForm.get("name"); as name) {
 					<fieldset class="form-control">
