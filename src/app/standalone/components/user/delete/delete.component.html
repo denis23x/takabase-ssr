@@ -1,0 +1,95 @@
+<!-- @format -->
+
+<ng-container>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#userDeleteDialogElement
+		(keydown.escape)="$event.preventDefault(); onToggleUserDeleteDialog(false)"
+		(click)="$event.target === $event.currentTarget ? onToggleUserDeleteDialog(false) : $event"
+	>
+		<div
+			class="flex items-center justify-center w-full max-w-lg"
+			appWindow
+			[appWindowTitle]="'Delete'"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onToggleUserDeleteDialog(false)"
+		>
+			<form
+				class="flex flex-col gap-4 p-4"
+				autocomplete="off"
+				slot="content"
+				[formGroup]="userDeleteForm"
+				(ngSubmit)="onSubmitUserDeleteForm()"
+			>
+				<p class="alert" role="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appSvgIconIcon]="'info-circle'"
+						[appSvgIconSquare]="'1.5em'"
+					></i>
+					<span class="block"> This action cannot be undone </span>
+				</p>
+				@if (userDeleteForm.get("name"); as name) {
+					<fieldset class="form-control">
+						<label class="label" for="userDeleteFormName">
+							<div class="indicator">
+								@if (name.touched && !!name.errors && userDeleteForm.enabled) {
+									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
+								}
+								<!-- prettier-ignore -->
+								<span class="label-text mr-2">
+                  Please type <strong class="font-bold">{{ currentUser?.name }}</strong> to confirm
+                </span>
+							</div>
+						</label>
+						<div class="relative">
+							<input
+								class="input-bordered input input-md w-full !pr-12"
+								id="userDeleteFormName"
+								type="text"
+								aria-label="Name"
+								formControlName="name"
+								placeholder="Type your name"
+								appInputTrimWhitespace
+								[class.input-success]="name.dirty && name.valid"
+								[class.input-error]="name.touched && name.invalid"
+							/>
+							@if (name.value) {
+								<button
+									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+									type="button"
+									aria-label="Clear"
+									appSvgIcon
+									[class.btn-success]="name.dirty && name.value"
+									[class.btn-error]="name.touched && name.invalid"
+									[class.btn-ghost]="name.untouched && name.dirty && name.invalid"
+									[disabled]="userDeleteForm.disabled"
+									[appSvgIconIcon]="'x'"
+									[appSvgIconSquare]="'2em'"
+									(click)="name.setValue('')"
+								></button>
+							}
+						</div>
+					</fieldset>
+				}
+				<fieldset class="form-control">
+					<button
+						class="btn btn-md btn-error"
+						type="submit"
+						title="Delete"
+						aria-label="Delete"
+						[class.btn-outline]="userDeleteForm.valid && userDeleteForm.enabled"
+						[disabled]="userDeleteForm.invalid || userDeleteForm.disabled"
+					>
+						@if (userDeleteForm.disabled) {
+							<span class="loading loading-spinner"></span>
+						}
+						Delete
+					</button>
+				</fieldset>
+			</form>
+		</div>
+	</dialog>
+</ng-container>

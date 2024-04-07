@@ -8,8 +8,8 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Router, RouterModule } from '@angular/router';
+import { Subscription, throwError } from 'rxjs';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../core/services/helper.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
@@ -25,7 +25,9 @@ import { AuthorizationService } from '../../core/services/authorization.service'
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { PlatformService } from '../../core/services/platform.service';
-import { filter } from 'rxjs/operators';
+import { catchError, filter } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
+import { UserDeleteComponent } from '../../standalone/components/user/delete/delete.component';
 
 interface PasswordValidateForm {
 	password: FormControl<string>;
@@ -47,7 +49,8 @@ interface PasswordForm {
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
 		BadgeErrorComponent,
-		SkeletonDirective
+		SkeletonDirective,
+		UserDeleteComponent
 	],
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'
@@ -61,10 +64,12 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	private readonly emailService: EmailService = inject(EmailService);
 	private readonly passwordService: PasswordService = inject(PasswordService);
 	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly router: Router = inject(Router);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 	currentUserSkeletonToggle: boolean = true;
+	currentUserLogoutRequest$: Subscription | undefined;
 
 	passwordValidateForm: FormGroup = this.formBuilder.group<PasswordValidateForm>({
 		password: this.formBuilder.nonNullable.control('', [
@@ -99,6 +104,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		[
 			this.currentUser$,
+			this.currentUserLogoutRequest$,
 			this.passwordValidateFormRequest$,
 			this.emailFormRequest$,
 			this.passwordFormRequest$
@@ -219,5 +225,34 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				error: () => this.passwordForm.enable()
 			});
 		}
+	}
+
+	onToggleDeleteForm(toggle: boolean): void {
+		if (toggle) {
+			this.emailForm.disable();
+			this.passwordForm.disable();
+		} else {
+			this.emailForm.enable();
+			this.passwordForm.enable();
+		}
+	}
+
+	onSubmitDeleteForm(): void {
+		this.currentUserLogoutRequest$?.unsubscribe();
+		this.currentUserLogoutRequest$ = this.authorizationService
+			.onLogout()
+			.pipe(
+				catchError((httpErrorResponse: HttpErrorResponse) => {
+					this.router
+						.navigate(['/error', httpErrorResponse.status])
+						.then(() => console.debug('Route changed'));
+
+					return throwError(() => httpErrorResponse);
+				})
+			)
+			.subscribe({
+				next: () => this.router.navigateByUrl('/').then(() => console.debug('Route changed')),
+				error: (error: any) => console.error(error)
+			});
 	}
 }

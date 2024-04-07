@@ -67,6 +67,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 
 	// prettier-ignore
 	@Output() appCategoryDeleteSuccess: EventEmitter<Category & CategoryDeleteDto> = new EventEmitter<Category & CategoryDeleteDto>();
+	@Output() appCategoryDeleteToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input({ required: true })
 	set appCategoryDeleteCategory(category: Category) {
@@ -79,8 +80,8 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	@Input()
-	set appCategoryDeletePostList(postList: Post[]) {
-		this.postList = postList;
+	set appCategoryDeleteCategoryPostList(categoryPostList: Post[]) {
+		this.categoryPostList = categoryPostList;
 	}
 
 	currentUser: CurrentUser | undefined;
@@ -88,10 +89,9 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 
 	category: Category | undefined;
 	categoryList: Category[] = [];
+	categoryPostList: Post[] = [];
 
-	postList: Post[] = [];
-	postListRequest$: Subscription | undefined;
-
+	categoryDeleteDialogToggle: boolean = false;
 	categoryDeleteForm: FormGroup = this.formBuilder.group<CategoryDeleteForm>({
 		name: this.formBuilder.nonNullable.control('', []),
 		categoryId: this.formBuilder.control(null, [])
@@ -114,10 +114,12 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		// prettier-ignore
-		[this.currentUser$, this.categoryDeleteFormRequest$, this.postListRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$, this.categoryDeleteFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleCategoryDeleteDialog(toggle: boolean): void {
+		this.categoryDeleteDialogToggle = toggle;
+
 		if (toggle) {
 			this.categoryDeleteForm.reset();
 			this.categoryDeleteDialogElement.nativeElement.showModal();
@@ -134,6 +136,8 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 			this.categoryDeleteForm.reset();
 			this.categoryDeleteDialogElement.nativeElement.close();
 		}
+
+		this.appCategoryDeleteToggle.emit(toggle);
 	}
 
 	onSubmitCategoryDeleteForm(): void {
