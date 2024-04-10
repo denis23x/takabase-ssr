@@ -98,20 +98,20 @@ export class ApiService {
 
 		const getMessage = (): string | undefined => {
 			switch (httpErrorResponse.error.code) {
-				case 'fastify/storage/failed-read-file-list':
-					return 'Failed to fetch file list';
-				case 'fastify/storage/failed-move-temp-image-to-post':
-					return 'Failed to move image within the storage';
-				case 'fastify/storage/failed-move-post-image-to-temp':
-					return 'Failed to move image within the storage';
-				case 'fastify/firestore/failed-get-post':
-					return 'Failed to get post document';
-				case 'fastify/firestore/failed-add-post':
-					return 'Failed to create post document';
-				case 'fastify/firestore/failed-get-all-post':
-					return 'Failed to find documents post list';
-				case 'fastify/firestore/failed-update-post':
-					return 'Failed to update post document';
+				case 'firestore/add-document-failed':
+					return 'Failed to add document';
+				case 'firestore/get-document-failed':
+					return 'Failed to get document';
+				case 'firestore/get-list-failed':
+					return 'Failed to get list of documents';
+				case 'firestore/update-document-failed':
+					return 'Failed to update document';
+				case 'firestore/delete-document-failed':
+					return 'Failed to delete document';
+				case 'storage/get-filelist-failed':
+					return 'Failed to get list of files';
+				case 'storage/file-move-failed':
+					return 'Failed to move the file inside the storage';
 				default:
 					return httpErrorResponse.error.message;
 			}
