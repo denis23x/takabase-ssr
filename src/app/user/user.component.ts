@@ -186,8 +186,6 @@ export class UserComponent implements OnInit, OnDestroy {
 						)
 						.subscribe({
 							next: () => {
-								// Apply SEO meta tags && title
-
 								// prettier-ignore
 								const setMeta = (): void => {
 									const postId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('postId'));
@@ -195,6 +193,9 @@ export class UserComponent implements OnInit, OnDestroy {
                   // Allow the post to record its tags
 
 									if (!postId) {
+
+										/** Apply SEO meta tags */
+
 										this.setMetaTags();
 										this.setTitle();
 									}

@@ -469,10 +469,11 @@
                     >
                       <span class="text-sm text-base-content/50"> Type post markdown </span>
                       <a
-                        class="text-sm text-base-content/50 link pointer-events-auto"
+                        class="text-sm text-base-content/50 link"
                         title="Markdown"
                         aria-label="Markdown"
                         target="_blank"
+                        [class.pointer-events-auto]="postForm.enabled"
                         [routerLink]="['/help/markdown']"
                       >
                         How to make a greatest layout?

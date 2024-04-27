@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<ul class="toast toast-top toast-center w-full max-w-sm min-w-min">
+	<ul class="toast toast-top toast-center w-full max-w-sm min-w-min pointer-events-none">
 		@for (snack of snackbarList$ | async; track snack.id) {
 			<li
 				class="flex relative overflow-hidden rounded-box shadow-xl animate-none"

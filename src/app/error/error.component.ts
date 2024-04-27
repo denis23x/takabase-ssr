@@ -44,10 +44,7 @@ export class ErrorComponent implements OnInit {
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
-
-		/** Apply title */
-
-		this.titleService.setTitle([this.statusCode, this.message].join(' '));
+		this.setTitle();
 	}
 
 	setResolver(): void {
@@ -60,6 +57,10 @@ export class ErrorComponent implements OnInit {
 
 		this.statusCode = statusCode;
 		this.message = message;
+	}
+
+	setTitle(): void {
+		this.titleService.setTitle([this.statusCode, this.message].join(' '));
 	}
 
 	setMetaTags(): void {
