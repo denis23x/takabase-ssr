@@ -8,6 +8,7 @@ import { UserCreateDto } from '../dto/user/user-create.dto';
 import { UserGetAllDto } from '../dto/user/user-get-all.dto';
 import { UserGetOneDto } from '../dto/user/user-get-one.dto';
 import { UserUpdateDto } from '../dto/user/user-update.dto';
+import { UserDeleteDto } from '../dto/user/user-delete.dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -39,7 +40,7 @@ export class UserService {
 		return this.apiService.put('/users/' + id, userUpdateDto);
 	}
 
-	delete(id: number): Observable<User> {
-		return this.apiService.delete('/users/' + id);
+	delete(id: number, userDeleteDto: UserDeleteDto): Observable<User> {
+		return this.apiService.delete('/users/' + id, userDeleteDto);
 	}
 }

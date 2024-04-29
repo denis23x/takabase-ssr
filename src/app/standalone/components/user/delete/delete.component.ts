@@ -31,6 +31,7 @@ import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { User } from '../../../../core/models/user.model';
 import { UserService } from '../../../../core/services/user.service';
+import { UserDeleteDto } from '../../../../core/dto/user/user-delete.dto';
 
 interface UserDeleteForm {
 	name: FormControl<string>;
@@ -69,6 +70,7 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 	currentUser$: Subscription | undefined;
 
 	userDeleteDialogToggle: boolean = false;
+	userDeleteFormPassword: string | undefined;
 	userDeleteForm: FormGroup = this.formBuilder.group<UserDeleteForm>({
 		name: this.formBuilder.nonNullable.control('', [])
 	});
@@ -121,9 +123,12 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 			this.userDeleteForm.disable();
 
 			const userId: number = this.currentUser.id;
+			const userDeleteDto: UserDeleteDto = {
+				password: this.userDeleteFormPassword
+			};
 
 			this.userDeleteFormRequest$?.unsubscribe();
-			this.userDeleteFormRequest$ = this.userService.delete(userId).subscribe({
+			this.userDeleteFormRequest$ = this.userService.delete(userId, userDeleteDto).subscribe({
 				next: (user: User) => {
 					this.snackbarService.success('Chao', 'We will not miss you');
 

@@ -75,6 +75,13 @@ export class AuthorizationService {
 	/** Authorization API */
 
 	onRegistration(userCreateDto: UserCreateDto): Observable<CurrentUser> {
+		/** Insert default appearance */
+
+		userCreateDto = {
+			...userCreateDto,
+			appearance: this.appearanceService.getAppearanceDefault()
+		};
+
 		const loginDto: LoginDto = {
 			email: userCreateDto.email,
 			password: userCreateDto.password
@@ -99,10 +106,10 @@ export class AuthorizationService {
 			}),
 			switchMap((user: Partial<CurrentUser>) => this.appearanceService.getAppearance(currentUser.firebase.uid).pipe(switchMap(() => of(user)))),
 			switchMap((user: Partial<CurrentUser>) => {
-        return this.setCurrentUser({
-          ...currentUser,
-          ...user
-        });
+		    return this.setCurrentUser({
+		      ...currentUser,
+		      ...user
+		    });
 			})
 		);
 	}

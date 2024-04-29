@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -15,7 +15,6 @@ import { HelperService } from '../../core/services/helper.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { PasswordValidateGetDto } from '../../core/dto/password/password-validate-get.dto';
-import { CookieService } from '../../core/services/cookie.service';
 import { PasswordService } from '../../core/services/password.service';
 import { EmailService } from '../../core/services/email.service';
 import { PasswordUpdateDto } from '../../core/dto/password/password-update.dto';
@@ -60,11 +59,13 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
-	private readonly cookieService: CookieService = inject(CookieService);
 	private readonly emailService: EmailService = inject(EmailService);
 	private readonly passwordService: PasswordService = inject(PasswordService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly router: Router = inject(Router);
+
+	// prettier-ignore
+	@ViewChild('appUserDeleteComponent') appUserDeleteComponent: UserDeleteComponent | undefined;
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -130,8 +131,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 							this.emailForm.get('email').setValue(this.currentUser.firebase.email);
 							this.emailForm.disable();
 						}
-
-						this.passwordValidateIsValid = !!Number(this.cookieService.getItem('password-valid'));
 					},
 					error: (error: any) => console.error(error)
 				});
@@ -151,18 +150,17 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				.onValidateGet(passwordValidateGetDto)
 				.subscribe({
 					next: () => {
+						/** Pass password to appUserDeleteComponent */
+
+						// prettier-ignore
+						this.appUserDeleteComponent.userDeleteFormPassword = this.passwordValidateForm.value.password;
+
+						/** Reset form and change view */
+
 						this.passwordValidateForm.enable();
 						this.passwordValidateForm.reset();
 
 						this.passwordValidateIsValid = true;
-
-						const dateNow: Date = new Date();
-
-						/** Set 5 minutes cookie */
-
-						this.cookieService.setItem('password-valid', '1', {
-							expires: new Date(dateNow.setTime(dateNow.getTime() + 5 * 60 * 1000))
-						});
 					},
 					error: () => this.passwordValidateForm.enable()
 				});

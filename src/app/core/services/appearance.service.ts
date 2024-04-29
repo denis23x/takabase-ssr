@@ -238,6 +238,21 @@ export class AppearanceService {
 
 	/** Firestore */
 
+	getAppearanceDefault(): Appearance {
+		return {
+			dropdownBackdrop: false,
+			language: 'en-US',
+			markdownMonospace: true,
+			pageRedirectHome: false,
+			pageScrollToTop: false,
+			pageScrollInfinite: false,
+			theme: 'auto',
+			themeBackground: 'cosy-creatures',
+			themePrism: 'auto',
+			windowButtonPosition: 'left'
+		};
+	}
+
 	getAppearance(firebaseUid: string): Observable<Appearance> {
 		// prettier-ignore
 		return this.ngZone.runOutsideAngular(() => {
@@ -253,18 +268,7 @@ export class AppearanceService {
 					if (appearance) {
 						return of(appearance);
 					} else {
-						return this.setAppearance(firebaseUid, {
-							dropdownBackdrop: false,
-							language: 'en-US',
-							markdownMonospace: true,
-							pageRedirectHome: false,
-							pageScrollToTop: false,
-							pageScrollInfinite: false,
-							theme: 'auto',
-							themeBackground: 'cosy-creatures',
-							themePrism: 'auto',
-							windowButtonPosition: 'left'
-						});
+						return this.setAppearance(firebaseUid, this.getAppearanceDefault());
 					}
 				}),
 				tap((appearance: Appearance) => this.setSettings(appearance))
