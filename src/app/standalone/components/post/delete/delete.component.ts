@@ -42,7 +42,7 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild('postDeleteDialogElement') postDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
-	@Output() appPostDeleteSubmit: EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() appPostDeleteSuccess: EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() appPostDeleteToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input({ required: true })

@@ -470,7 +470,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			};
 
 			// prettier-ignore
-			const postFormRequestRedirect = (post: Post): void => {
+			const postFormRedirect = (post: Post): void => {
 				this.router
           .navigate([this.userService.getUserUrl(post.user), 'category', post.category.id, 'post', post.id])
           .then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
@@ -489,7 +489,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 					.moderateText(aiModerateTextDto)
 					.pipe(switchMap(() => this.postService.update(postId, postDto)))
 					.subscribe({
-						next: (post: Post) => postFormRequestRedirect(post),
+						next: (post: Post) => postFormRedirect(post),
 						error: () => this.postForm.enable()
 					});
 			} else {
@@ -498,7 +498,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 					.moderateText(aiModerateTextDto)
 					.pipe(switchMap(() => this.postService.create(postDto)))
 					.subscribe({
-						next: (post: Post) => postFormRequestRedirect(post),
+						next: (post: Post) => postFormRedirect(post),
 						error: () => this.postForm.enable()
 					});
 			}
