@@ -2,34 +2,23 @@
 
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { LoginDto } from '../dto/auth/login.dto';
 import { UserService } from './user.service';
-import { UserCreateDto } from '../dto/user/user-create.dto';
 import { ConnectDto } from '../dto/auth/connect.dto';
-import { RegistrationDto } from '../dto/auth/registration.dto';
 import { CurrentUser } from '../models/current-user.model';
 import { AppearanceService } from './appearance.service';
 import { FirebaseService } from './firebase.service';
 import {
 	onAuthStateChanged,
 	signInWithEmailAndPassword,
-	createUserWithEmailAndPassword,
-	sendEmailVerification,
 	signOut,
 	User as FirebaseUser,
 	UserCredential
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
-import { User } from '../models/user.model';
-import {
-	collection,
-	CollectionReference,
-	doc,
-	DocumentReference,
-	setDoc
-} from 'firebase/firestore';
+import { UserCreateDto } from '../dto/user/user-create.dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -85,27 +74,13 @@ export class AuthorizationService {
 
 	/** Authorization API */
 
-	onRegistration(registrationDto: RegistrationDto): Observable<CurrentUser> {
-		const userCreateDto: Partial<UserCreateDto> = {
-			name: registrationDto.name,
-			terms: registrationDto.terms
+	onRegistration(userCreateDto: UserCreateDto): Observable<CurrentUser> {
+		const loginDto: LoginDto = {
+			email: userCreateDto.email,
+			password: userCreateDto.password
 		};
 
-		// prettier-ignore
-		return from(createUserWithEmailAndPassword(this.firebaseService.getAuth(), registrationDto.email, registrationDto.password)).pipe(
-			tap((userCredential: UserCredential) => userCreateDto.firebaseUid = userCredential.user.uid),
-			switchMap((userCredential: UserCredential) => from(sendEmailVerification(userCredential.user))),
-			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
-			switchMap(() => this.userService.create(userCreateDto as UserCreateDto)),
-			map((user: User) => user.id),
-			switchMap((userId: number) => {
-				const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/users');
-				const userDoc: DocumentReference = doc(userCollection, userCreateDto.firebaseUid);
-
-				return from(setDoc(userDoc, { userId }));
-			}),
-			switchMap(() => this.onLogin(registrationDto))
-		);
+		return this.userService.create(userCreateDto).pipe(switchMap(() => this.onLogin(loginDto)));
 	}
 
 	onLogin(loginDto: LoginDto): Observable<CurrentUser> {

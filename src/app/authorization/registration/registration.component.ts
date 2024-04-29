@@ -19,12 +19,12 @@ import { MetaService } from '../../core/services/meta.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
-import { RegistrationDto } from '../../core/dto/auth/registration.dto';
 import { Subscription, switchMap } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
 import { AIService } from '../../core/services/ai.service';
 import { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
+import { UserCreateDto } from '../../core/dto/user/user-create.dto';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -108,13 +108,13 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.registrationForm)) {
 			this.registrationForm.disable();
 
-			const registrationDto: RegistrationDto = {
+			const userCreateDto: UserCreateDto = {
 				...this.registrationForm.value
 			};
 
 			const aiModerateTextDto: AIModerateTextDto = {
 				model: 'text-moderation-stable',
-				input: registrationDto.name
+				input: userCreateDto.name
 			};
 
 			/** Moderate and registration */
@@ -122,7 +122,7 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 			this.registrationRequest$?.unsubscribe();
 			this.registrationRequest$ = this.aiService
 				.moderateText(aiModerateTextDto)
-				.pipe(switchMap(() => this.authorizationService.onRegistration(registrationDto)))
+				.pipe(switchMap(() => this.authorizationService.onRegistration(userCreateDto)))
 				.subscribe({
 					next: (user: User) => {
 						this.router

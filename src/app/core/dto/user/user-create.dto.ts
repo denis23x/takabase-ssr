@@ -2,6 +2,7 @@
 
 export interface UserCreateDto {
 	name: string;
+	email: string;
+	password: string;
 	terms: boolean;
-	firebaseUid: string;
 }

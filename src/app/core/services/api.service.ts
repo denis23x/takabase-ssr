@@ -48,6 +48,8 @@ export class ApiService {
 					return "You don't have permissions to access";
 				case 'permission-denied':
 					return "You don't have permissions to access";
+				case 'not-found':
+					return 'No document to update';
 				case 'auth/invalid-action-code':
 					return 'Invalid confirmation code';
 				case 'auth/invalid-login-credentials':
