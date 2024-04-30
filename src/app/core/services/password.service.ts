@@ -50,7 +50,7 @@ export class PasswordService {
 		);
 	}
 
-	onResetGet(passwordResetGetDto: PasswordResetGetDto): Observable<void> {
+	onResetSendEmail(passwordResetGetDto: PasswordResetGetDto): Observable<void> {
 		const auth: Auth = this.firebaseService.getAuth();
 
 		return from(sendPasswordResetEmail(auth, passwordResetGetDto.email)).pipe(
@@ -58,7 +58,7 @@ export class PasswordService {
 		);
 	}
 
-	onResetUpdate(passwordResetUpdateDto: PasswordResetUpdateDto): Observable<void> {
+	onReset(passwordResetUpdateDto: PasswordResetUpdateDto): Observable<void> {
 		const auth: Auth = this.firebaseService.getAuth();
 
 		// prettier-ignore

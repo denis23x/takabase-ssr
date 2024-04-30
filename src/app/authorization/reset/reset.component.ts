@@ -91,9 +91,9 @@ export class AuthResetComponent implements OnInit, OnDestroy {
 			};
 
 			this.resetRequest$?.unsubscribe();
-			this.resetRequest$ = this.passwordService.onResetGet(passwordResetGetDto).subscribe({
+			this.resetRequest$ = this.passwordService.onResetSendEmail(passwordResetGetDto).subscribe({
 				next: () => {
-					this.snackbarService.warning('Success', 'Check your email to continue process');
+					this.snackbarService.warning('Okay', 'Check your email to continue process');
 
 					this.resetForm.reset();
 					this.resetForm.enable();

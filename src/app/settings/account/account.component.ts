@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
 	FormBuilder,
 	FormControl,
@@ -9,7 +9,7 @@ import {
 	Validators
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { Subscription, throwError } from 'rxjs';
+import { Subscription, switchMap, throwError } from 'rxjs';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../core/services/helper.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
@@ -27,6 +27,8 @@ import { PlatformService } from '../../core/services/platform.service';
 import { catchError, filter } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserDeleteComponent } from '../../standalone/components/user/delete/delete.component';
+import { WindowComponent } from '../../standalone/components/window/window.component';
+import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
 
 interface PasswordValidateForm {
 	password: FormControl<string>;
@@ -49,7 +51,8 @@ interface PasswordForm {
 		InputTrimWhitespaceDirective,
 		BadgeErrorComponent,
 		SkeletonDirective,
-		UserDeleteComponent
+		UserDeleteComponent,
+		WindowComponent
 	],
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'
@@ -67,6 +70,9 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	// prettier-ignore
 	@ViewChild('appUserDeleteComponent') appUserDeleteComponent: UserDeleteComponent | undefined;
 
+	// prettier-ignore
+	@ViewChild('userForgotPasswordDialogElement') userForgotPasswordDialogElement: ElementRef<HTMLDialogElement> | undefined;
+
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 	currentUserSkeletonToggle: boolean = true;
@@ -83,6 +89,9 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	});
 	passwordValidateFormRequest$: Subscription | undefined;
 	passwordValidateToggle: boolean = false;
+
+	userForgotPasswordToggle: boolean = false;
+	userForgotPasswordIsSubmitted: boolean = false;
 
 	emailForm: FormGroup = this.formBuilder.group<EmailForm>({
 		email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email])
@@ -169,6 +178,39 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 					error: () => this.passwordValidateForm.enable()
 				});
 		}
+	}
+
+	onToggleUserForgotPasswordDialog(toggle: boolean): void {
+		this.userForgotPasswordToggle = toggle;
+
+		if (toggle) {
+			this.userForgotPasswordDialogElement.nativeElement.showModal();
+			this.passwordValidateForm.disable();
+		} else {
+			this.userForgotPasswordDialogElement.nativeElement.close();
+			this.passwordValidateForm.enable();
+		}
+	}
+
+	onSubmitUserForgotPassword(): void {
+		this.userForgotPasswordIsSubmitted = true;
+
+		const passwordResetGetDto: PasswordResetGetDto = {
+			...this.emailForm.value
+		};
+
+		this.currentUserLogoutRevokeRequest$?.unsubscribe();
+		this.currentUserLogoutRevokeRequest$ = this.passwordService
+			.onResetSendEmail(passwordResetGetDto)
+			.pipe(switchMap(() => this.authorizationService.onLogoutRevoke()))
+			.subscribe({
+				next: () => {
+					this.router.navigateByUrl('/').then(() => {
+						this.snackbarService.warning('Okay', 'Check your email to continue process');
+					});
+				},
+				error: () => (this.userForgotPasswordIsSubmitted = false)
+			});
 	}
 
 	onSubmitEmailForm(): void {

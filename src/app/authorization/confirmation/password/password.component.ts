@@ -101,7 +101,7 @@ export class AuthConfirmationPasswordComponent implements OnInit, OnDestroy {
 			};
 
 			this.passwordRequest$?.unsubscribe();
-			this.passwordRequest$ = this.passwordService.onResetUpdate(passwordResetUpdateDto).subscribe({
+			this.passwordRequest$ = this.passwordService.onReset(passwordResetUpdateDto).subscribe({
 				next: () => {
 					this.router
 						.navigate(['/'])

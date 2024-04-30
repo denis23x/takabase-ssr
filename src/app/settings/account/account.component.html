@@ -252,7 +252,7 @@
 				>
 					@if (passwordValidateForm.get("password"); as password) {
 						<fieldset class="form-control">
-							<label class="label" for="passwordValidateFormPassword">
+							<div class="label">
 								<div
 									class="indicator"
 									appSkeleton
@@ -266,9 +266,18 @@
 											[appBadgeErrorAbstractControl]="password"
 										></div>
 									}
-									<span class="label-text mr-2">Current password</span>
+									<label class="label-text mr-2" for="passwordValidateFormPassword">
+										Current password
+									</label>
 								</div>
-							</label>
+								<button
+									class="label-text-alt link"
+									type="button"
+									(click)="onToggleUserForgotPasswordDialog(true)"
+								>
+									Forgot password?
+								</button>
+							</div>
 							<div class="relative" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
 								<input
 									class="input-bordered input input-md w-full !pr-12"
@@ -336,6 +345,49 @@
 			}
 		}
 	</div>
+	<!-- prettier-ignore-attribute (click) -->
+	<dialog
+		class="modal"
+		#userForgotPasswordDialogElement
+		(keydown.escape)="$event.preventDefault(); onToggleUserForgotPasswordDialog(false)"
+		(click)="$event.target === $event.currentTarget ? onToggleUserForgotPasswordDialog(false) : $event"
+	>
+		<div
+			class="flex items-center justify-center w-full max-w-lg"
+			appWindow
+			[appWindowTitle]="'Reset'"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onToggleUserForgotPasswordDialog(false)"
+		>
+			<div class="flex flex-col gap-4 p-4" slot="content">
+				<p class="alert" role="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appSvgIconIcon]="'info-circle'"
+						[appSvgIconSquare]="'1.5em'"
+					></i>
+					<span class="block">
+						For security reasons, we will log you out from all devices. Please check your email for
+						further instructions on resetting your password
+					</span>
+				</p>
+				<button
+					class="btn btn-md btn-success"
+					type="submit"
+					title="Reset"
+					aria-label="Reset"
+					[disabled]="userForgotPasswordIsSubmitted"
+					(click)="onSubmitUserForgotPassword()"
+				>
+					@if (userForgotPasswordIsSubmitted) {
+						<span class="loading loading-spinner"></span>
+					}
+					Submit
+				</button>
+			</div>
+		</div>
+	</dialog>
 	<div
 		appUserDelete
 		#appUserDeleteComponent
