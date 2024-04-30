@@ -2,7 +2,7 @@
 
 <ng-container>
 	<div class="flex flex-col items-start justify-start gap-4">
-		@switch (passwordValidateIsValid) {
+		@switch (passwordValidateToggle) {
 			@case (true) {
 				<form
 					class="flex w-full flex-col gap-4"
@@ -192,17 +192,49 @@
 							[appSvgIconIcon]="'info-circle'"
 							[appSvgIconSquare]="'1.5em'"
 						></i>
+						<!-- prettier-ignore -->
 						<span class="block">
-							By proceeding with the deletion of your account, please be aware that all associated
-							data and information will be permanently removed from our system. This action is
-							irreversible and cannot be undone
+							Terminating all other sessions will log you out from any other devices or locations
+							where you're currently logged in, <strong class="inline font-bold"> including your current session </strong>
+						</span>
+					</p>
+					<div class="form-control">
+						<!-- prettier-ignore -->
+						<button
+							class="btn-error btn-md btn w-full"
+							type="button"
+							aria-label="Delete"
+              [class.btn-outline]="!currentUserLogoutRevokeRequestIsSubmitted && !appUserDeleteComponent.userDeleteDialogToggle"
+							[disabled]="currentUserLogoutRevokeRequestIsSubmitted || appUserDeleteComponent.userDeleteDialogToggle"
+							(click)="onSubmitLogoutRevoke()"
+						>
+              @if (currentUserLogoutRevokeRequestIsSubmitted && !appUserDeleteComponent.userDeleteDialogToggle) {
+                <span class="loading loading-spinner"></span>
+              }
+							Revoke tokens
+						</button>
+					</div>
+				</div>
+				<hr class="w-full border-base-content/20" />
+				<div class="flex w-full flex-col gap-4">
+					<p class="alert" role="alert">
+						<i
+							class="fill-current text-info"
+							appSvgIcon
+							[appSvgIconIcon]="'info-circle'"
+							[appSvgIconSquare]="'1.5em'"
+						></i>
+						<span class="block">
+							Deleting your account will permanently remove all associated account data. This action
+							cannot be undone
 						</span>
 					</p>
 					<div class="form-control">
 						<button
-							class="btn-error btn-outline btn-md btn w-full"
+							class="btn-error btn-md btn w-full"
 							type="button"
 							aria-label="Delete"
+							[class.btn-outline]="!appUserDeleteComponent.userDeleteDialogToggle"
 							[disabled]="appUserDeleteComponent.userDeleteDialogToggle"
 							(click)="appUserDeleteComponent.onToggleUserDeleteDialog(true)"
 						>

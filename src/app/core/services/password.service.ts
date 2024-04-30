@@ -37,7 +37,7 @@ export class PasswordService {
 		);
 	}
 
-	onValidateGet(passwordValidateGetDto: PasswordValidateGetDto): Observable<UserCredential> {
+	onValidate(passwordValidateGetDto: PasswordValidateGetDto): Observable<UserCredential> {
 		const auth: Auth = this.firebaseService.getAuth();
 
 		const credentials: AuthCredential = EmailAuthProvider.credential(

@@ -72,6 +72,9 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	currentUserSkeletonToggle: boolean = true;
 	currentUserLogoutRequest$: Subscription | undefined;
 
+	currentUserLogoutRevokeRequestIsSubmitted: boolean = false;
+	currentUserLogoutRevokeRequest$: Subscription | undefined;
+
 	passwordValidateForm: FormGroup = this.formBuilder.group<PasswordValidateForm>({
 		password: this.formBuilder.nonNullable.control('', [
 			Validators.required,
@@ -79,7 +82,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		])
 	});
 	passwordValidateFormRequest$: Subscription | undefined;
-	passwordValidateIsValid: boolean = false;
+	passwordValidateToggle: boolean = false;
 
 	emailForm: FormGroup = this.formBuilder.group<EmailForm>({
 		email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email])
@@ -106,6 +109,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		[
 			this.currentUser$,
 			this.currentUserLogoutRequest$,
+			this.currentUserLogoutRevokeRequest$,
 			this.passwordValidateFormRequest$,
 			this.emailFormRequest$,
 			this.passwordFormRequest$
@@ -147,7 +151,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 			this.passwordValidateFormRequest$?.unsubscribe();
 			this.passwordValidateFormRequest$ = this.passwordService
-				.onValidateGet(passwordValidateGetDto)
+				.onValidate(passwordValidateGetDto)
 				.subscribe({
 					next: () => {
 						/** Pass password to appUserDeleteComponent */
@@ -160,7 +164,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 						this.passwordValidateForm.enable();
 						this.passwordValidateForm.reset();
 
-						this.passwordValidateIsValid = true;
+						this.passwordValidateToggle = true;
 					},
 					error: () => this.passwordValidateForm.enable()
 				});
@@ -197,7 +201,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.emailFormConfirmationIsSubmitted = false;
 
-					this.snackbarService.info('All right', 'We sent you a verification email');
+					this.snackbarService.warning('All right', 'We sent you a verification email');
 				},
 				error: () => (this.emailFormConfirmationIsSubmitted = false)
 			});
@@ -223,6 +227,20 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				error: () => this.passwordForm.enable()
 			});
 		}
+	}
+
+	onSubmitLogoutRevoke(): void {
+		this.currentUserLogoutRevokeRequestIsSubmitted = true;
+
+		this.currentUserLogoutRevokeRequest$?.unsubscribe();
+		this.currentUserLogoutRevokeRequest$ = this.authorizationService.onLogoutRevoke().subscribe({
+			next: () => {
+				this.router.navigateByUrl('/').then(() => {
+					this.snackbarService.success('As you wish..', 'We have revoked all tokens');
+				});
+			},
+			error: () => (this.currentUserLogoutRevokeRequestIsSubmitted = false)
+		});
 	}
 
 	onToggleDeleteForm(toggle: boolean): void {

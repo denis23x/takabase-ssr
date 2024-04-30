@@ -6,7 +6,6 @@ import { catchError, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { LoginDto } from '../dto/auth/login.dto';
 import { UserService } from './user.service';
-import { ConnectDto } from '../dto/auth/connect.dto';
 import { CurrentUser } from '../models/current-user.model';
 import { AppearanceService } from './appearance.service';
 import { FirebaseService } from './firebase.service';
@@ -50,11 +49,12 @@ export class AuthorizationService {
 				return from(getAuthState()).pipe(
 					switchMap((firebaseUser: FirebaseUser | null) => {
 						if (firebaseUser) {
-							const connectDto: ConnectDto = {
+							const loginDto: Partial<LoginDto> = {
+								email: firebaseUser.email,
 								firebaseUid: firebaseUser.uid
 							};
 
-							return this.apiService.post('/authorization', connectDto).pipe(
+							return this.apiService.post('/authorization/login', loginDto).pipe(
 								switchMap((user: Partial<CurrentUser>) => {
 									return this.setCurrentUser({
 										firebase: firebaseUser,
@@ -98,11 +98,12 @@ export class AuthorizationService {
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
 			tap((userCredential: UserCredential) => currentUser.firebase = userCredential.user),
 			switchMap((userCredential: UserCredential) => {
-				const connectDto: ConnectDto = {
+				loginDto = {
+					email: userCredential.user.email,
 					firebaseUid: userCredential.user.uid
-				};
+				}
 
-				return this.apiService.post('/authorization', connectDto);
+				return this.apiService.post('/authorization/login', loginDto);
 			}),
 			switchMap((user: Partial<CurrentUser>) => this.appearanceService.getAppearance(currentUser.firebase.uid).pipe(switchMap(() => of(user)))),
 			switchMap((user: Partial<CurrentUser>) => {
@@ -120,6 +121,12 @@ export class AuthorizationService {
 			tap(() => this.appearanceService.setSettings(null)),
 			tap(() => this.currentUser.next(undefined))
 		);
+	}
+
+	onLogoutRevoke(): Observable<void> {
+		return this.apiService
+			.post('/authorization/logout/revoke')
+			.pipe(switchMap(() => this.onLogout()));
 	}
 
 	/** Current User */

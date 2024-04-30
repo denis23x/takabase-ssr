@@ -61,7 +61,7 @@ export class ApiService {
 				case 'auth/user-disabled':
 					return 'Your account has been disabled or deleted. Please contact support team';
 				case 'auth/requires-recent-login':
-					return 'Please login again and try again!';
+					return 'Please login again and try again';
 				case 'auth/email-already-in-use':
 					return 'Email address is already in use by an existing user';
 				case 'auth/user-not-found':
@@ -69,7 +69,7 @@ export class ApiService {
 				case 'auth/invalid-credential':
 					return 'Invalid email or password credentials';
 				case 'auth/invalid-email':
-					return 'The email address is not a valid email address!';
+					return 'The email address is not a valid email address';
 				case 'auth/missing-email':
 					return 'Missing credentials. Please provide the email to proceed.';
 				case 'auth/missing-password':
@@ -140,7 +140,7 @@ export class ApiService {
 		);
 	}
 
-	put(url: string, body: any, options?: any): Observable<any> {
+	put(url: string, body?: any, options?: any): Observable<any> {
 		return this.httpClient.put(this.setUrl(url), body, options).pipe(
 			map((response: any) => response.data),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
@@ -149,7 +149,7 @@ export class ApiService {
 		);
 	}
 
-	post(url: string, body: any, options?: any): Observable<any> {
+	post(url: string, body?: any, options?: any): Observable<any> {
 		return this.httpClient.post(this.setUrl(url), body, options).pipe(
 			map((response: any) => response.data),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
