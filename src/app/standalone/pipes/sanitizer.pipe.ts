@@ -13,7 +13,7 @@ export class SanitizerPipe implements PipeTransform {
 	private readonly domSanitizer: DomSanitizer = inject(DomSanitizer);
 	private readonly platformService: PlatformService = inject(PlatformService);
 
-	transform(value: string, context: string): SafeValue | null {
+	transform(value: string, context: string): SafeValue | string {
 		if (this.platformService.isBrowser()) {
 			const config: Config = {
 				ADD_TAGS: ['iframe'],
@@ -23,7 +23,7 @@ export class SanitizerPipe implements PipeTransform {
 			return this.bypassSecurityTrust(String(DOMPurify.sanitize(value, config)), context);
 		}
 
-		return null;
+		return value;
 	}
 
 	private bypassSecurityTrust(value: string, context: string): SafeValue | null {

@@ -18,10 +18,10 @@
 						@if (profileForm.get("avatar"); as avatar) {
 							<!-- prettier-ignore -->
 							<figure
-                class="block rounded-btn relative border border-base-content/20 h-12 w-12 overflow-hidden transition"
+                class="block rounded-btn relative h-12 w-12 overflow-hidden transition"
                 data-pw="app-settings-profile-image-avatar"
                 appAvatar
-                [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-200': profileForm.disabled, 'cursor-pointer': profileForm.enabled, 'border-success': avatar.value }"
+                [ngClass]="{ 'cursor-not-allowed border border-transparent opacity-50 grayscale bg-base-200': profileForm.disabled, 'cursor-pointer': profileForm.enabled, 'border border-success': avatar.value }"
                 [appAvatarUser]="currentUser"
                 (click)="appCropperComponent.onToggleCropper(true)"
               ></figure>

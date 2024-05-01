@@ -34,6 +34,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 	currentUser$: Subscription | undefined;
 
 	ngOnInit(): void {
+		// prettier-ignore
 		if (this.platformService.isBrowser()) {
 			/** Browser only */
 
@@ -43,9 +44,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 				.pipe(
 					first(),
 					filter((currentUser: CurrentUser | undefined) => !!currentUser),
-					switchMap((currentUser: CurrentUser) => {
-						return this.appearanceService.getAppearance(currentUser.firebase.uid);
-					})
+					switchMap((currentUser: CurrentUser) => this.appearanceService.getAppearance(currentUser.firebase.uid))
 				)
 				.subscribe({
 					next: () => console.debug('User populated'),
