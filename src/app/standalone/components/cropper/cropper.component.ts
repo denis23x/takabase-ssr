@@ -461,6 +461,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	onToggleCropper(toggle: boolean, markdownItToggle: boolean = false): void {
 		this.markdownItToggle = markdownItToggle;
 
+		this.cropperAspectRatioActive = this.markdownItToggle ? null : 1;
 		this.cropperDialogToggle = toggle;
 
 		if (toggle) {

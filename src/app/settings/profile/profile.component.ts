@@ -8,7 +8,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { filter, startWith, switchMap, tap } from 'rxjs/operators';
+import { filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -173,10 +173,13 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		/** Request */
 
 		this.profileFormAvatarRequest$?.unsubscribe();
-		this.profileFormAvatarRequest$ = this.fileService.create(file).subscribe({
-			next: (fileUrl: string) => this.onUpdateCropperAvatar(fileUrl),
-			error: () => (this.profileFormAvatarSkeletonToggle = false)
-		});
+		this.profileFormAvatarRequest$ = this.fileService
+			.create(file)
+			.pipe(map((fileUrl: string) => this.fileService.getFileUrlClean(fileUrl)))
+			.subscribe({
+				next: (fileUrl: string) => this.onUpdateCropperAvatar(fileUrl),
+				error: () => (this.profileFormAvatarSkeletonToggle = false)
+			});
 	}
 
 	/** profileForm */

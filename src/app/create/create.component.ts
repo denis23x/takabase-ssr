@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subscription, switchMap } from 'rxjs';
-import { filter, startWith, tap } from 'rxjs/operators';
+import { filter, map, startWith, tap } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -409,10 +409,13 @@ export class CreateComponent implements OnInit, OnDestroy {
 		this.postFormImageSkeletonToggle = true;
 
 		this.postFormImageRequest$?.unsubscribe();
-		this.postFormImageRequest$ = this.fileService.create(file).subscribe({
-			next: (fileUrl: string) => this.onUpdateCropperImage(fileUrl),
-			error: () => (this.postFormImageSkeletonToggle = false)
-		});
+		this.postFormImageRequest$ = this.fileService
+			.create(file)
+			.pipe(map((fileUrl: string) => this.fileService.getFileUrlClean(fileUrl)))
+			.subscribe({
+				next: (fileUrl: string) => this.onUpdateCropperImage(fileUrl),
+				error: () => (this.postFormImageSkeletonToggle = false)
+			});
 	}
 
 	/** Fullscreen */
