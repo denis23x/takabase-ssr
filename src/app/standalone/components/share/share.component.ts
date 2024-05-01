@@ -6,11 +6,11 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { Post } from '../../../core/models/post.model';
 import { HelperService } from '../../../core/services/helper.service';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
-import { CopyUrlDirective } from '../../directives/app-copy-url.directive';
+import { CopyToClipboardDirective } from '../../directives/app-copy-to-clipboard.directive';
 
 @Component({
 	standalone: true,
-	imports: [SvgIconComponent, SkeletonDirective, CopyUrlDirective],
+	imports: [SvgIconComponent, SkeletonDirective, CopyToClipboardDirective],
 	selector: 'app-share, [appShare]',
 	templateUrl: './share.component.html'
 })

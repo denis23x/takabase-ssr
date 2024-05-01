@@ -6,6 +6,8 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { CookieService } from '../core/services/cookie.service';
 import { AppearanceService } from '../core/services/appearance.service';
 import { AbstractGetAllDto } from '../core/dto/abstract/abstract-get-all.dto';
+import { CurrentUser } from '../core/models/current-user.model';
+import { AuthorizationService } from '../core/services/authorization.service';
 
 @Component({
 	selector: 'app-abstract-search',
@@ -14,6 +16,7 @@ import { AbstractGetAllDto } from '../core/dto/abstract/abstract-get-all.dto';
 export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 	public readonly cookieService: CookieService = inject(CookieService);
 	public readonly appearanceService: AppearanceService = inject(AppearanceService);
+	public readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 
 	@Input({ transform: numberAttribute })
 	set categoryId(categoryId: number | undefined) {
@@ -43,6 +46,9 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	currentUser: CurrentUser | undefined;
+	currentUser$: Subscription | undefined;
+
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
 	// prettier-ignore
@@ -63,7 +69,8 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.abstractListPageScrollInfinite$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.currentUser$, this.abstractListPageScrollInfinite$].forEach(($: Subscription) => $?.unsubscribe());
 
 		// prettier-ignore
 		[this.abstractListIsLoading$, this.abstractGetAllDto$].forEach(($: BehaviorSubject<any>) => $?.complete());

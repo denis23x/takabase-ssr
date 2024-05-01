@@ -32,7 +32,7 @@ import { ReportService } from '../core/services/report.service';
 import { SearchFormComponent } from '../standalone/components/search-form/search-form.component';
 import { QrCodeComponent } from '../standalone/components/qr-code/qr-code.component';
 import { UserUrlPipe } from '../standalone/pipes/user-url.pipe';
-import { CopyUrlDirective } from '../standalone/directives/app-copy-url.directive';
+import { CopyToClipboardDirective } from '../standalone/directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../core/services/snackbar.service';
 
 @Component({
@@ -53,7 +53,7 @@ import { SnackbarService } from '../core/services/snackbar.service';
 		SearchFormComponent,
 		QrCodeComponent,
 		UserUrlPipe,
-		CopyUrlDirective
+		CopyToClipboardDirective
 	],
 	selector: 'app-user',
 	templateUrl: './user.component.html'

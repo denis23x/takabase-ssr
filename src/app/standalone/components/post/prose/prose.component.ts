@@ -20,7 +20,7 @@ import { PlatformService } from '../../../../core/services/platform.service';
 import { QrCodeComponent } from '../../qr-code/qr-code.component';
 import { ReportService } from '../../../../core/services/report.service';
 import { AdComponent } from '../../ad/ad.component';
-import { CopyUrlDirective } from '../../../directives/app-copy-url.directive';
+import { CopyToClipboardDirective } from '../../../directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { AppCheckPipe } from '../../../pipes/app-check.pipe';
 
@@ -39,7 +39,7 @@ import { AppCheckPipe } from '../../../pipes/app-check.pipe';
 		PostDeleteComponent,
 		QrCodeComponent,
 		AdComponent,
-		CopyUrlDirective,
+		CopyToClipboardDirective,
 		AppCheckPipe,
 		AsyncPipe
 	],
