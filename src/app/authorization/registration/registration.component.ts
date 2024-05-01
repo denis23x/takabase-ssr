@@ -8,7 +8,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { UserService } from '../../core/services/user.service';
@@ -25,6 +25,9 @@ import { CommonModule } from '@angular/common';
 import { AIService } from '../../core/services/ai.service';
 import { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
 import { UserCreateDto } from '../../core/dto/user/user-create.dto';
+import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
+import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
+import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -42,7 +45,10 @@ interface RegistrationForm {
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
 		OauthComponent,
-		BadgeErrorComponent
+		BadgeErrorComponent,
+		AvatarComponent,
+		UserUrlPipe,
+		DayjsPipe
 	],
 	selector: 'app-authorization-registration',
 	templateUrl: './registration.component.html'
@@ -56,6 +62,7 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly aiService: AIService = inject(AIService);
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
 	registrationRequest$: Subscription | undefined;
 	registrationForm: FormGroup = this.formBuilder.group<RegistrationForm>({
@@ -72,10 +79,13 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 		terms: this.formBuilder.nonNullable.control(true, [Validators.requiredTrue])
 	});
 
+	invitedByUser: User | undefined;
+	invitedByUserRequest$: Subscription | undefined;
+
 	ngOnInit(): void {
 		/** Apply Data */
 
-		// Nothing to apply
+		this.setResolver();
 
 		/** Apply SEO meta tags */
 
@@ -83,7 +93,21 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.registrationRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.invitedByUserRequest$, this.registrationRequest$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	setResolver(): void {
+		// prettier-ignore
+		const invitedById: number = Number(this.activatedRoute.snapshot.queryParamMap.get('invitedBy') || '');
+
+		if (invitedById) {
+			this.invitedByUserRequest$?.unsubscribe();
+			this.invitedByUserRequest$ = this.userService.getOne(invitedById).subscribe({
+				next: (user: User) => (this.invitedByUser = user),
+				error: (error: any) => console.error(error)
+			});
+		}
 	}
 
 	setMetaTags(): void {

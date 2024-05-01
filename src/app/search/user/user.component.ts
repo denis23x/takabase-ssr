@@ -18,6 +18,11 @@ import { MetaService } from '../../core/services/meta.service';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
+import { AuthenticatedDirective } from '../../standalone/directives/app-authenticated.directive';
+import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
+import { environment } from '../../../environments/environment';
+import { filter, tap } from 'rxjs/operators';
+import { CurrentUser } from '../../core/models/current-user.model';
 
 @Component({
 	standalone: true,
@@ -30,7 +35,9 @@ import { AdComponent } from '../../standalone/components/ad/ad.component';
 		DayjsPipe,
 		CardUserComponent,
 		SkeletonDirective,
-		AdComponent
+		AdComponent,
+		AuthenticatedDirective,
+		CopyToClipboardDirective
 	],
 	selector: 'app-search-user',
 	templateUrl: './user.component.html'
@@ -46,6 +53,8 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 
 	userGetAllDto: UserGetAllDto | undefined;
 	userGetAllDto$: Subscription | undefined;
+
+	userInviteURL: string | undefined;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -68,6 +77,27 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 			},
 			error: (error: any) => console.error(error)
 		});
+
+		/** Make invite link */
+
+		this.currentUser$?.unsubscribe();
+		this.currentUser$ = this.authorizationService
+			.getCurrentUser()
+			.pipe(
+				filter((currentUser: CurrentUser | undefined) => !!currentUser),
+				tap((currentUser: CurrentUser) => (this.currentUser = currentUser))
+			)
+			.subscribe({
+				next: () => {
+					const inviteURL: URL = new URL(environment.appUrl);
+
+					inviteURL.pathname = 'registration';
+					inviteURL.searchParams.append('invitedBy', String(this.currentUser.id));
+
+					this.userInviteURL = inviteURL.toString();
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	ngOnDestroy(): void {

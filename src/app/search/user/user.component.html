@@ -30,10 +30,22 @@
 						class="link text-sm"
 						title="Registration"
 						aria-label="Registration"
+						*appAuthenticated="false"
 						[routerLink]="['/registration']"
 					>
-						Registration
+						Unlock limitless: Register today!
 					</a>
+					<span class="text-sm" *appAuthenticated="true">
+						Can't find your friends?
+						<span
+							class="link"
+							appCopyToClipboard
+							[appCopyToClipboardValue]="userInviteURL"
+							[appCopyToClipboardMessage]="'Invite URL has been copied'"
+						>
+							Invite them!
+						</span>
+					</span>
 				</div>
 			</li>
 		}

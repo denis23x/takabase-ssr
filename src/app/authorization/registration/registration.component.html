@@ -5,6 +5,41 @@
 		class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 	>
 		<div class="flex flex-col gap-4">
+			@if (invitedByUser) {
+				<span class="block text-xl font-bold">You have been invited by</span>
+				<div class="flex items-center justify-start gap-4 overflow-hidden">
+					<a
+						class="avatar"
+						target="_blank"
+						[routerLink]="[invitedByUser | userUrl]"
+						[attr.aria-label]="invitedByUser.name"
+						[title]="invitedByUser.name"
+					>
+						<figure
+							class="h-12 w-12 rounded-btn relative overflow-hidden"
+							appAvatar
+							[appAvatarUser]="invitedByUser"
+						></figure>
+					</a>
+					<div class="flex flex-1 flex-col gap-2 items-start overflow-hidden">
+						<a
+							class="truncate text-xl leading-6 font-bold text-base-content max-w-full link"
+							target="_blank"
+							[routerLink]="[invitedByUser | userUrl]"
+							[attr.aria-label]="invitedByUser.name"
+							[title]="invitedByUser.name"
+						>
+							{{ invitedByUser.name }}
+						</a>
+						<time
+							class="truncate text-sm leading-4 text-base-content/50 max-w-full"
+							[attr.datetime]="invitedByUser.createdAt | dayjs: 'format' : 'YYYY-M-D'"
+						>
+							Registered {{ invitedByUser.createdAt | dayjs: "fromX" }}
+						</time>
+					</div>
+				</div>
+			}
 			<h1 class="text-2xl font-bold">Registration</h1>
 			<hr class="border-t border-base-content/20" />
 			<nav class="block w-fit" appOAuth [appOAuthDisabled]="registrationForm.disabled"></nav>
