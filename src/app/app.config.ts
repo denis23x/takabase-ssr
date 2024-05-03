@@ -3,6 +3,7 @@
 import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import {
 	PreloadAllModules,
+	RouteReuseStrategy,
 	provideRouter,
 	TitleStrategy,
 	withComponentInputBinding,
@@ -16,10 +17,11 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { httpAppCheckInterceptor } from './core/interceptors/http.app-check.interceptor';
 import { httpAuthorizationInterceptor } from './core/interceptors/http.authorization.interceptor';
-import { TitleService } from './core/services/title.service';
 import { provideClientHydration } from '@angular/platform-browser';
 import { FirebaseService } from './core/services/firebase.service';
 import { PlatformService } from './core/services/platform.service';
+import { AppTitleStrategy } from './core/strategies/title.strategy';
+import { AppRouteReuseStrategy } from './core/strategies/route-reuse.strategy';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -83,7 +85,11 @@ export const appConfig: ApplicationConfig = {
 		// },
 		{
 			provide: TitleStrategy,
-			useClass: TitleService
+			useClass: AppTitleStrategy
+		},
+		{
+			provide: RouteReuseStrategy,
+			useClass: AppRouteReuseStrategy
 		}
 	]
 };

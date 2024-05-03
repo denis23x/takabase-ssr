@@ -1,7 +1,7 @@
 /** @format */
 
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule, Event } from '@angular/router';
 import { distinctUntilKeyChanged, Subscription } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
@@ -179,8 +179,9 @@ export class UserComponent implements OnInit, OnDestroy {
 					// Set category
 
 					this.activatedRouteFirstChildParams$?.unsubscribe();
-					this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params
+					this.activatedRouteFirstChildParams$ = this.router.events
 						.pipe(
+							filter((event: Event) => event instanceof NavigationEnd),
 							switchMap(() => this.activatedRoute.firstChild.params),
 							distinctUntilKeyChanged('categoryId')
 						)
