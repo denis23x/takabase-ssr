@@ -12,7 +12,6 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { PostService } from '../../core/services/post.service';
 import { MetaService } from '../../core/services/meta.service';
-import { SkeletonService } from '../../core/services/skeleton.service';
 import { Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 
@@ -32,7 +31,6 @@ import { AdComponent } from '../../standalone/components/ad/ad.component';
 export class SearchPostComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
 	private readonly postService: PostService = inject(PostService);
 	private readonly metaService: MetaService = inject(MetaService);
-	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 
 	postList: Post[] = [];
 	postListRequest$: Subscription | undefined;

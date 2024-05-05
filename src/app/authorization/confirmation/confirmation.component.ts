@@ -28,7 +28,7 @@ export class AuthConfirmationComponent implements OnInit {
 	setResolver(): void {
 		const mode: string = String(this.activatedRoute.snapshot.queryParamMap.get('mode') || '');
 
-		const navigateToMode = (commands: any[]) => {
+		const redirectToMode = (commands: any[]) => {
 			this.router
 				.navigate(commands, {
 					queryParamsHandling: 'preserve',
@@ -39,16 +39,16 @@ export class AuthConfirmationComponent implements OnInit {
 
 		switch (mode) {
 			case 'resetPassword':
-				navigateToMode(['password']);
+				redirectToMode(['password']);
 
 				break;
 			case 'recoverEmail':
-				navigateToMode(['recovery']);
+				redirectToMode(['recovery']);
 
 				break;
 			case 'verifyEmail':
 			case 'verifyAndChangeEmail':
-				navigateToMode(['email']);
+				redirectToMode(['email']);
 
 				break;
 			default:

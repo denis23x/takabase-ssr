@@ -13,7 +13,6 @@ import { SkeletonDirective } from '../../standalone/directives/app-skeleton.dire
 import { CardCategoryComponent } from '../../standalone/components/card/category/category.component';
 import { CategoryService } from '../../core/services/category.service';
 import { MetaService } from '../../core/services/meta.service';
-import { SkeletonService } from '../../core/services/skeleton.service';
 import { Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 
@@ -34,7 +33,6 @@ import { AdComponent } from '../../standalone/components/ad/ad.component';
 export class SearchCategoryComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly metaService: MetaService = inject(MetaService);
-	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 
 	categoryList: Category[] = [];
 	categoryListRequest$: Subscription | undefined;

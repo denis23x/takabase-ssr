@@ -8,15 +8,20 @@ import { AppearanceService } from '../core/services/appearance.service';
 import { AbstractGetAllDto } from '../core/dto/abstract/abstract-get-all.dto';
 import { CurrentUser } from '../core/models/current-user.model';
 import { AuthorizationService } from '../core/services/authorization.service';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { SkeletonService } from '../core/services/skeleton.service';
 
 @Component({
 	selector: 'app-abstract-search',
 	template: ''
 })
 export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
+	public readonly router: Router = inject(Router);
 	public readonly cookieService: CookieService = inject(CookieService);
 	public readonly appearanceService: AppearanceService = inject(AppearanceService);
 	public readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	public readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	public readonly skeletonService: SkeletonService = inject(SkeletonService);
 
 	@Input({ transform: numberAttribute })
 	set categoryId(categoryId: number | undefined) {
@@ -44,6 +49,25 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 		this.setAbstractGetAllDto({
 			orderBy
 		});
+	}
+
+	@Input()
+	set status(status: string | undefined) {
+		if (status) {
+			const queryParams: Params = {
+				...this.activatedRoute.snapshot.queryParams,
+				status: null
+			};
+
+			this.router
+				.navigate([], {
+					queryParams,
+					queryParamsHandling: 'merge',
+					relativeTo: this.activatedRoute,
+					replaceUrl: true
+				})
+				.then(() => this.setAbstractGetAllDto(this.getAbstractGetAllDto()));
+		}
 	}
 
 	currentUser: CurrentUser | undefined;

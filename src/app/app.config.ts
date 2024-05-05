@@ -3,7 +3,6 @@
 import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import {
 	PreloadAllModules,
-	RouteReuseStrategy,
 	provideRouter,
 	TitleStrategy,
 	withComponentInputBinding,
@@ -21,7 +20,6 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { FirebaseService } from './core/services/firebase.service';
 import { PlatformService } from './core/services/platform.service';
 import { AppTitleStrategy } from './core/strategies/title.strategy';
-import { AppRouteReuseStrategy } from './core/strategies/route-reuse.strategy';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -86,10 +84,6 @@ export const appConfig: ApplicationConfig = {
 		{
 			provide: TitleStrategy,
 			useClass: AppTitleStrategy
-		},
-		{
-			provide: RouteReuseStrategy,
-			useClass: AppRouteReuseStrategy
 		}
 	]
 };

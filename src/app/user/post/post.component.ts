@@ -10,7 +10,6 @@ import { AbstractSearchComponent } from '../../abstracts/abstract-search.compone
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 import { Subscription } from 'rxjs';
 import { PostService } from '../../core/services/post.service';
-import { SkeletonService } from '../../core/services/skeleton.service';
 
 @Component({
 	standalone: true,
@@ -20,7 +19,6 @@ import { SkeletonService } from '../../core/services/skeleton.service';
 })
 export class UserPostComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
 	private readonly postService: PostService = inject(PostService);
-	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 
 	postList: Post[] = [];
 	postListRequest$: Subscription | undefined;

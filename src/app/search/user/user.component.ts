@@ -15,7 +15,6 @@ import { CardUserComponent } from '../../standalone/components/card/user/user.co
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { UserService } from '../../core/services/user.service';
 import { MetaService } from '../../core/services/meta.service';
-import { SkeletonService } from '../../core/services/skeleton.service';
 import { Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { AuthenticatedDirective } from '../../standalone/directives/app-authenticated.directive';
@@ -45,7 +44,6 @@ import { CurrentUser } from '../../core/models/current-user.model';
 export class SearchUserComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
 	private readonly userService: UserService = inject(UserService);
 	private readonly metaService: MetaService = inject(MetaService);
-	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 
 	userList: User[] = [];
 	userListRequest$: Subscription | undefined;
