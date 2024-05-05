@@ -179,9 +179,8 @@ export class UserComponent implements OnInit, OnDestroy {
 					// Set category
 
 					this.activatedRouteFirstChildParams$?.unsubscribe();
-					this.activatedRouteFirstChildParams$ = this.router.events
+					this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params
 						.pipe(
-							filter((event: Event) => event instanceof NavigationEnd),
 							switchMap(() => this.activatedRoute.firstChild.params),
 							distinctUntilKeyChanged('categoryId')
 						)
