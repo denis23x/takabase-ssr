@@ -56,23 +56,15 @@ export class AppearanceService {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
-			const colorName: string = window
+			const value: string = window
 				.getComputedStyle(this.document.documentElement)
 				.getPropertyValue(name)
 				.trim();
 
-			if (colorName) {
-				const colorCoords: Coords = [0, 0, 0];
-				const color: Color = new Color({
-					space: 'oklch',
-					coords: colorCoords
-				});
+			if (value) {
+				const color: Color = new Color('oklch(' + value + ')');
 
-				colorName
-					.split(/\s/g)
-					.forEach((value: string, index: number) => (color.coords[index] = parseFloat(value)));
-
-				return color.to('srgb').toString({ format });
+				return color.to('sRGB').toString({ format });
 			} else {
 				return '';
 			}
