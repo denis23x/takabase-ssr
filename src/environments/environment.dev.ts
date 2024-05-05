@@ -16,7 +16,7 @@ export const environment = {
     to: "damage.23x@gmail.com",
     bcc: [""],
   },
-  pwa: false,
+  pwa: true,
   production: true,
   firebase: {
     apiKey: "AIzaSyDxntkbYprxdDjuF39gCD6TUBKaMac5XqM",

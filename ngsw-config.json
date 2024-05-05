@@ -41,26 +41,14 @@
   ],
   "dataGroups": [
     {
-      "name": "api",
-      "urls": [
-        "https://takabase.com/api/v1/*"
-      ],
-      "cacheConfig": {
-        "maxSize": 100,
-        "maxAge": "30d",
-        "timeout": "10s",
-        "strategy": "freshness"
-      }
-    },
-    {
       "name": "api-freshness",
       "urls": [
         "https://firebasestorage.googleapis.com/v0/b/*",
         "https://fonts.googleapis.com/*"
       ],
       "cacheConfig": {
-        "maxSize": 100,
-        "maxAge": "180d",
+        "maxSize": 200,
+        "maxAge": "90d",
         "timeout": "10s",
         "strategy": "freshness"
       }
