@@ -217,13 +217,14 @@ export const APP_ROUTES: Route[] = [
 		loadComponent: () => {
 			return import('./loader/loading.component').then(m => m.LoadingComponent);
 		},
-		canMatch: [redirectLoadingGuard()]
+		canMatch: [redirectLoadingGuard('browser')]
 	},
 	{
 		path: 'error/:status',
 		loadComponent: () => {
 			return import('./error/error.component').then(m => m.ErrorComponent);
-		}
+		},
+		canMatch: [redirectLoadingGuard('server')]
 	},
 	{
 		matcher: (urlSegment: UrlSegment[]): UrlMatchResult | null => {
