@@ -1,53 +1,78 @@
 const prompts = require('prompts');
 const spawn = require('child_process').spawn;
 
+const projectList = {
+  ['takabase-dev']: {
+    url: 'https://takabase-dev-api.web.app'
+  },
+  ['takabase-prod']: {
+    url: 'https://takabase-prod-api.web.app'
+  },
+};
+
 (async () => {
-  const select = await prompts({
+  const project = await prompts({
     type: 'select',
-    name: 'value',
+    name: 'project',
     message: 'Select a environment',
+    choices: Object.keys(projectList).map((key ) => {
+      return {
+        title: key,
+        value: key,
+        description: projectList[key].url,
+      }
+    }),
+    initial: 0
+  });
+
+  const action = await prompts({
+    type: 'select',
+    name: 'action',
+    message: 'Select an action',
     choices: [
       {
-        title: 'takabase-dev',
-        value: 'takabase-dev',
-        description: 'https://takabase-dev.web.app',
+        title: 'Deploy function',
+        value: 'function',
+        description: projectList[project.project].url,
       },
       {
-        title: 'takabase-prod',
-        value: 'takabase-prod',
-        description: 'https://takabase-prod.web.app',
-      },
+        title: 'Deploy hosting',
+        value: 'hosting',
+        description: projectList[project.project].url,
+      }
     ],
     initial: 0
   });
 
   const confirm = await prompts({
     type: 'confirm',
-    name: 'value',
+    name: 'confirm',
     message: 'Can you confirm?',
-    initial: select.value !== 'takabase-prod'
+    initial: project.project !== 'takabase-prod'
   });
 
-  if (select.value && confirm.value) {
-    const buildTarget = () => {
-      switch (select.value) {
-        case 'takabase-dev': {
-          return 'export FIREBASE_FRAMEWORKS_BUILD_TARGET=\'development\'';
-        }
-        case 'takabase-prod': {
-          return 'export FIREBASE_FRAMEWORKS_BUILD_TARGET=\'production\'';
-        }
-        default: {
-          return 'exit;';
-        }
-      }
-    };
+  if (project.project && action.action && confirm.confirm) {
+    const command = [`firebase use ${project.project}`];
 
-    const command = `${buildTarget()} && firebase use ${select.value} && firebase deploy --only functions,hosting:${select.value}`;
+    if (project.project === 'takabase-dev') {
+      command.unshift('export FIREBASE_FRAMEWORKS_BUILD_TARGET=\'development\'')
+    }
+
+    if (project.project === 'takabase-prod') {
+      command.unshift('export FIREBASE_FRAMEWORKS_BUILD_TARGET=\'production\'')
+    }
+
+    if (action.action === 'function') {
+      command.push(`firebase deploy --only functions`);
+    }
+
+    if (action.action === 'hosting') {
+      command.push(`firebase deploy --only hosting:${project.project}`);
+    }
 
     /** RUN */
 
-    spawn(command, {
+    spawn(command.join(' && '), {
       shell: true,
       stdio:'inherit'
     });
