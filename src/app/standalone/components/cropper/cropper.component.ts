@@ -323,20 +323,20 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 					const width: number = event.target.width;
 					const height: number = event.target.height;
 
-					const cropperMinWidth: number = width * 0.25;
-					const cropperMinHeight: number = height * 0.25;
+					const cropperMinWidth: number = width * 0.33;
+					const cropperMinHeight: number = height * 0.33;
 
 					/** Update Cropper settings */
 
-					this.cropperMinWidth = cropperMinWidth >= 128 ? cropperMinWidth : 128;
-					this.cropperMinHeight = cropperMinHeight >= 128 ? cropperMinHeight : 128;
+					this.cropperMinWidth = cropperMinWidth >= 256 ? cropperMinWidth : 256;
+					this.cropperMinHeight = cropperMinHeight >= 256 ? cropperMinHeight : 256;
 
 					if (this.markdownItToggle) {
-						this.cropperResizeToWidth = 0;
-						this.cropperResizeToHeight = 0;
+						this.cropperResizeToWidth = 1024;
+						this.cropperResizeToHeight = 1024;
 					} else {
-						this.cropperResizeToWidth = 256;
-						this.cropperResizeToHeight = 256;
+						this.cropperResizeToWidth = 512;
+						this.cropperResizeToHeight = 512;
 					}
 
 					/** Return acceptable file */
