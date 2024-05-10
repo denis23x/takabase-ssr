@@ -8,9 +8,9 @@
 export const environment = {
   appUrl: "http://localhost:4200",
   appCheck: "6LfD13wpAAAAAL7BUKaPZf-FdIc184KtQ3hpGHvl",
-  apiUrl: "http://localhost:4400/api/v1",
+  apiUrl: "http://localhost:8080/api/v1",
   ai: {
-    moderation: false,
+    moderation: true,
     url: "https://takabase-local-ai.web.app/api/v1"
   },
   sharp: {

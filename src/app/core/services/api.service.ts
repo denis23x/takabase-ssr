@@ -21,17 +21,6 @@ export class ApiService {
 
 	/** ERROR */
 
-	setError(error: Error): Observable<never> {
-		const message: string = error.message || 'Uh-oh! We encountered an issue while moderation';
-
-		this.snackbarService.warning('Moderation', message, {
-			icon: 'ban',
-			duration: 6000
-		});
-
-		return throwError(() => error);
-	}
-
 	setFirebaseError(firebaseError: FirebaseError): Observable<never> {
 		/** https://firebase.google.com/docs/auth/admin/errors */
 		/** https://codinglatte.com/posts/angular/handling-firebase-password-resets-in-angular/ */

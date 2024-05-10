@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, of, switchMap, throwError } from 'rxjs';
 import { ApiService } from './api.service';
 import { catchError, map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import {
 	AIModerateTextDto,
@@ -12,6 +12,7 @@ import {
 	AIModerateTextResultItem
 } from '../dto/ai/ai-moderate-text.dto';
 import { AIModerateImageResult } from '../dto/ai/ai-moderate-image.dto';
+import { SnackbarService } from './snackbar.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -19,6 +20,7 @@ import { AIModerateImageResult } from '../dto/ai/ai-moderate-image.dto';
 export class AIService {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly httpClient: HttpClient = inject(HttpClient);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
 	setUrl(url: string): string {
 		return environment.ai.url + url;
@@ -31,7 +33,7 @@ export class AIService {
 			.map((value: string) => {
 				const regExp: RegExp = /.{1,2000}/g;
 
-				/** For higher accuracy, try splitting long pieces of text into smaller chunks each less than 2,000 characters. */
+				/** For higher accuracy, try splitting long pieces of text into smaller chunks each less than 2,000 characters */
 
 				if (value.length >= 2000) {
 					return value.match(regExp);
@@ -72,16 +74,24 @@ export class AIService {
 
 	moderateText(aiModerateTextDto: AIModerateTextDto): Observable<boolean> {
 		if (environment.ai.moderation) {
+			// prettier-ignore
 			return this.httpClient.post(this.setUrl('/moderation/text'), aiModerateTextDto).pipe(
+				catchError((httpErrorResponse: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpErrorResponse)),
 				map((response: any) => response.data),
 				switchMap((aiModerateTextResult: AIModerateTextResult) => {
 					if (this.getModeratedTextIsSafe(aiModerateTextResult)) {
 						return of(true);
 					} else {
-						return throwError(() => new Error('Seems like your input is prohibited to submit'));
+						this.snackbarService.warning('Moderation', 'Seems like your input is prohibited to submit', {
+							icon: 'ban',
+							duration: 6000
+						});
+
+						/** Return Error for break the pipe */
+
+						return throwError(() => new Error());
 					}
-				}),
-				catchError((error: Error) => this.apiService.setError(error))
+				})
 			);
 		}
 
@@ -90,16 +100,24 @@ export class AIService {
 
 	moderateImage(formData: FormData): Observable<boolean> {
 		if (environment.ai.moderation) {
+			// prettier-ignore
 			return this.httpClient.post(this.setUrl('/moderation/image'), formData).pipe(
+				catchError((httpErrorResponse: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpErrorResponse)),
 				map((response: any) => response.data),
 				switchMap((aiModerateImageResult: AIModerateImageResult[]) => {
 					if (this.getModeratedImageIsSafe(aiModerateImageResult)) {
 						return of(true);
 					} else {
-						return throwError(() => new Error('The image contains prohibited content'));
+						this.snackbarService.warning('Moderation', 'The image contains prohibited content', {
+							icon: 'ban',
+							duration: 6000
+						});
+
+						/** Return Error for break the pipe */
+
+						return throwError(() => new Error());
 					}
-				}),
-				catchError((error: Error) => this.apiService.setError(error))
+				})
 			);
 		}
 
