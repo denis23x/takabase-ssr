@@ -10,6 +10,8 @@ import { AuthorizationService } from '../services/authorization.service';
 import { CurrentUser } from '../models/current-user.model';
 import { UserService } from '../services/user.service';
 import { CookieService } from '../services/cookie.service';
+import { environment } from '../../../environments/environment';
+import { DOCUMENT } from '@angular/common';
 
 export const redirectHomeGuard = (): CanMatchFn => {
 	return (): Observable<boolean | UrlTree> => {
@@ -18,14 +20,23 @@ export const redirectHomeGuard = (): CanMatchFn => {
 		const userService: UserService = inject(UserService);
 		const cookieService: CookieService = inject(CookieService);
 		const router: Router = inject(Router);
+		const document: Document = inject(DOCUMENT);
 
 		if (platformService.isBrowser()) {
 			return authorizationService.onPopulate().pipe(
 				map((currentUser: CurrentUser | undefined) => {
 					if (currentUser) {
-						const pageRedirectHome: boolean = !!Number(cookieService.getItem('page-redirect-home'));
+						const pageRedirectHome = (): boolean => {
+							const url: URL = new URL(document.URL, environment.appUrl);
 
-						if (pageRedirectHome) {
+							const redirectName: string = 'page-redirect-home';
+							const redirectCookie: boolean = !!Number(cookieService.getItem(redirectName));
+							const redirectSearchParams: boolean = !!url.searchParams.get(redirectName);
+
+							return redirectCookie || redirectSearchParams;
+						};
+
+						if (pageRedirectHome()) {
 							return router.createUrlTree([userService.getUserUrl(currentUser)]);
 						}
 					}

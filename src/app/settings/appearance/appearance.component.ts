@@ -24,6 +24,7 @@ import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 import { HttpClient } from '@angular/common/http';
 import { PlatformService } from '../../core/services/platform.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
@@ -61,6 +62,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -130,6 +132,8 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 						next: () => {
 							this.appearanceService.setSettings(appearance);
 							this.appearanceForm.enable({ emitEvent: false });
+
+							this.snackbarService.success('Done', 'Appearance settings updated');
 						},
 						error: () => this.appearanceForm.enable({ emitEvent: false })
 					});

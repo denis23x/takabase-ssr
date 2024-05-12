@@ -53,10 +53,10 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.activatedRouteQueryParams$?.unsubscribe();
 		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe({
-			next: (params: Params) => {
+			next: (queryParams: Params) => {
 				const value: any = {
-					query: params.query || '',
-					orderBy: params.orderBy || ''
+					query: queryParams.query || '',
+					orderBy: queryParams.orderBy || ''
 				};
 
 				this.searchForm.setValue(value, { emitEvent: false });

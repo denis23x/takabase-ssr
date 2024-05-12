@@ -5,7 +5,7 @@
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
-  "start_url": "./",
+  "start_url": "./?page-redirect-home=1",
   "icons": [
     {
       "src": "assets/icons/favicon/icon-72x72.png",
