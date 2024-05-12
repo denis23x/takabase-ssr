@@ -10,7 +10,7 @@ export const environment = {
   appCheck: "6LfD13wpAAAAAL7BUKaPZf-FdIc184KtQ3hpGHvl",
   apiUrl: "http://localhost:8080/api/v1",
   ai: {
-    moderation: true,
+    moderation: false,
     url: "https://takabase-local-ai.web.app/api/v1"
   },
   sharp: {

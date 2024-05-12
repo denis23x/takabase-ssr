@@ -34,11 +34,6 @@ const projectList = {
         title: 'Deploy function',
         value: 'function',
         description: projectList[project.project].url,
-      },
-      {
-        title: 'Deploy hosting',
-        value: 'hosting',
-        description: projectList[project.project].url,
       }
     ],
     initial: 0
@@ -63,11 +58,7 @@ const projectList = {
     }
 
     if (action.action === 'function') {
-      command.push(`firebase deploy --only functions`);
-    }
-
-    if (action.action === 'hosting') {
-      command.push(`firebase deploy --only hosting:${project.project}`);
+      command.push(`firebase deploy --only functions,hosting:${project.project}`);
     }
 
     /** RUN */
