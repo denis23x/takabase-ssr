@@ -25,7 +25,7 @@ export class SharpService {
 
 	getFetch(sharpFetchDto: SharpFetchDto): Observable<File> {
 		return this.httpClient
-			.get(this.setUrl('/fetch'), {
+			.get(this.setUrl('/v1/fetch'), {
 				params: {
 					...sharpFetchDto
 				},
@@ -43,7 +43,7 @@ export class SharpService {
 
 	getOutputWebP(formData: FormData): Observable<File> {
 		return this.httpClient
-			.post(this.setUrl('/output/webp'), formData, {
+			.post(this.setUrl('/v1/output/webp'), formData, {
 				responseType: 'blob'
 			})
 			.pipe(

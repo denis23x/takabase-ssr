@@ -77,22 +77,22 @@ export class PostService {
 	/** REST */
 
 	create(postCreateDto: PostCreateDto): Observable<Post> {
-		return this.apiService.post('/posts', postCreateDto);
+		return this.apiService.post('/v1/posts', postCreateDto);
 	}
 
 	getAll(postGetAllDto: PostGetAllDto): Observable<Post[]> {
-		return this.apiService.get('/posts', postGetAllDto);
+		return this.apiService.get('/v1/posts', postGetAllDto);
 	}
 
 	getOne(id: number, postGetOneDto: PostGetOneDto): Observable<Post> {
-		return this.apiService.get('/posts/' + id, postGetOneDto);
+		return this.apiService.get('/v1/posts/' + id, postGetOneDto);
 	}
 
 	update(id: number, postUpdateDto: PostUpdateDto): Observable<Post> {
-		return this.apiService.put('/posts/' + id, postUpdateDto);
+		return this.apiService.put('/v1/posts/' + id, postUpdateDto);
 	}
 
 	delete(id: number): Observable<Partial<Post>> {
-		return this.apiService.delete('/posts/' + id);
+		return this.apiService.delete('/v1/posts/' + id);
 	}
 }

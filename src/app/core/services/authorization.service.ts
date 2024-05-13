@@ -54,7 +54,7 @@ export class AuthorizationService {
 								firebaseUid: firebaseUser.uid
 							};
 
-							return this.apiService.post('/authorization/login', loginDto).pipe(
+							return this.apiService.post('/v1/authorization/login', loginDto).pipe(
 								switchMap((user: Partial<CurrentUser>) => {
 									return this.setCurrentUser({
 										firebase: firebaseUser,
@@ -103,7 +103,7 @@ export class AuthorizationService {
 					firebaseUid: userCredential.user.uid
 				}
 
-				return this.apiService.post('/authorization/login', loginDto);
+				return this.apiService.post('/v1/authorization/login', loginDto);
 			}),
 			switchMap((user: Partial<CurrentUser>) => this.appearanceService.getAppearance(currentUser.firebase.uid).pipe(switchMap(() => of(user)))),
 			switchMap((user: Partial<CurrentUser>) => {
@@ -125,7 +125,7 @@ export class AuthorizationService {
 
 	onLogoutRevoke(): Observable<void> {
 		return this.apiService
-			.post('/authorization/logout/revoke')
+			.post('/v1/authorization/logout/revoke')
 			.pipe(switchMap(() => this.onLogout()));
 	}
 

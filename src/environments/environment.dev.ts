@@ -4,13 +4,13 @@
 export const environment = {
   appUrl: "https://takabase-dev.web.app",
   appCheck: "6LdbRn0pAAAAAPESvk85IVZiep5mp_QnQKrs8lrg",
-  apiUrl: "https://takabase-dev-api.web.app/api/v1",
+  apiUrl: "https://takabase-dev-api.web.app/api",
   ai: {
     moderation: true,
-    url: "https://takabase-dev-ai.web.app/api/v1"
+    url: "https://takabase-dev-ai.web.app/api"
   },
   sharp: {
-    url: "https://takabase-dev-sharp.web.app/api/v1"
+    url: "https://takabase-dev-sharp.web.app/api"
   },
   mailer: {
     to: "damage.23x@gmail.com",

@@ -8,13 +8,13 @@
 export const environment = {
   appUrl: "http://localhost:4200",
   appCheck: "6LfD13wpAAAAAL7BUKaPZf-FdIc184KtQ3hpGHvl",
-  apiUrl: "http://localhost:8080/api/v1",
+  apiUrl: "http://localhost:8080/api",
   ai: {
     moderation: false,
-    url: "https://takabase-local-ai.web.app/api/v1"
+    url: "https://takabase-local-ai.web.app/api"
   },
   sharp: {
-    url: "https://takabase-local-sharp.web.app/api/v1"
+    url: "https://takabase-local-sharp.web.app/api"
   },
   mailer: {
     to: "damage.23x@gmail.com",
