@@ -8,7 +8,6 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { FileService } from './file.service';
 import { SharpFetchDto } from '../dto/sharp/sharp-fetch.dto';
-import { SharpOutputAppCheckDto } from '../dto/sharp/sharp-output-app-check.dto';
 import { SharpOutputDownloadUrlDto } from '../dto/sharp/sharp-output-download-url.dto';
 
 @Injectable({
@@ -35,22 +34,6 @@ export class SharpService {
 			})
 			.pipe(
 				map((blob: Blob) => this.fileService.getFileFromBlob(blob)),
-				catchError((httpErrorResponse: HttpErrorResponse) => {
-					return this.apiService.setHttpErrorResponse(httpErrorResponse);
-				})
-			);
-	}
-
-	getOutputAppCheck(sharpOutputAppCheckDto: SharpOutputAppCheckDto): Observable<any> {
-		return this.httpClient
-			.get(this.setUrl('/v1/output/app-check'), {
-				params: {
-					...sharpOutputAppCheckDto
-				},
-				responseType: 'blob'
-			})
-			.pipe(
-				map((blob: Blob) => URL.createObjectURL(blob)),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					return this.apiService.setHttpErrorResponse(httpErrorResponse);
 				})

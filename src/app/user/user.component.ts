@@ -2,7 +2,7 @@
 
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { distinctUntilKeyChanged, lastValueFrom, Subscription } from 'rxjs';
+import { distinctUntilKeyChanged, Subscription } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
@@ -250,11 +250,14 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		lastValueFrom(this.metaService.getMetaImageDownloadURL(this.user.avatar))
-			.then((downloadURL: string | null) => {
+		// prettier-ignore
+		this.metaService.getMetaImageDownloadURL(this.user.avatar).subscribe({
+			next: (downloadURL: string | null) => {
 				const userName: string = this.userService.getUserUrl(this.user, 1);
+				const userDescription: string = this.user.description || 'User has not yet added a profile description.';
+
 				const title: string = this.category?.name || userName;
-				const description: string = this.category?.description || this.user.description;
+				const description: string = this.category?.description || userDescription;
 
 				/** Set meta (SSR SEO trick) */
 
@@ -281,8 +284,9 @@ export class UserComponent implements OnInit, OnDestroy {
 				};
 
 				this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
-			})
-			.catch((error: any) => console.error(error));
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	/** Search */

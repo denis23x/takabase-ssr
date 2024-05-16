@@ -30,8 +30,8 @@ export class PostService {
 	/** SEO Meta tags */
 
 	setPostMetaTags(post: Post): void {
-		lastValueFrom(this.metaService.getMetaImageDownloadURL(post.image))
-			.then((downloadURL: string | null) => {
+		this.metaService.getMetaImageDownloadURL(post.image).subscribe({
+			next: (downloadURL: string | null) => {
 				this.backupPostMetaOpenGraph = this.metaService.getMetaOpenGraph();
 				this.backupPostMetaTwitter = this.metaService.getMetaTwitter();
 
@@ -58,8 +58,9 @@ export class PostService {
 				};
 
 				this.metaService.setMeta(metaOpenGraph, metaTwitter);
-			})
-			.catch((error: any) => console.error(error));
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	removePostMeta(): void {
