@@ -1,8 +1,8 @@
 /** @format */
 
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterModule, Event } from '@angular/router';
-import { distinctUntilKeyChanged, Subscription } from 'rxjs';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { distinctUntilKeyChanged, lastValueFrom, Subscription } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
@@ -250,33 +250,39 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		const userName: string = this.userService.getUserUrl(this.user, 1);
-		const title: string = this.category?.name || userName;
-		const description: string = this.category?.description || this.user.description;
+		lastValueFrom(this.metaService.getMetaImageDownloadURL(this.user.avatar))
+			.then((downloadURL: string | null) => {
+				const userName: string = this.userService.getUserUrl(this.user, 1);
+				const title: string = this.category?.name || userName;
+				const description: string = this.category?.description || this.user.description;
 
-		const metaOpenGraph: Partial<MetaOpenGraph> = {
-			['og:title']: title,
-			['og:description']: description,
-			['og:image']: this.user.avatar,
-			['og:image:alt']: userName,
-			['og:image:type']: 'image/png'
-		};
+				/** Set meta (SSR SEO trick) */
 
-		if (this.category) {
-			metaOpenGraph['og:type'] = 'website';
-		} else {
-			metaOpenGraph['og:type'] = 'profile';
-			metaOpenGraph['profile:username'] = userName;
-		}
+				const metaOpenGraph: Partial<MetaOpenGraph> = {
+					['og:title']: title,
+					['og:description']: description,
+					['og:image']: downloadURL,
+					['og:image:alt']: userName,
+					['og:image:type']: 'image/png'
+				};
 
-		const metaTwitter: MetaTwitter = {
-			['twitter:title']: title,
-			['twitter:description']: description,
-			['twitter:image']: this.user.avatar,
-			['twitter:image:alt']: userName
-		};
+				if (this.category) {
+					metaOpenGraph['og:type'] = 'website';
+				} else {
+					metaOpenGraph['og:type'] = 'profile';
+					metaOpenGraph['profile:username'] = userName;
+				}
 
-		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
+				const metaTwitter: MetaTwitter = {
+					['twitter:title']: title,
+					['twitter:description']: description,
+					['twitter:image']: downloadURL,
+					['twitter:image:alt']: userName
+				};
+
+				this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
+			})
+			.catch((error: any) => console.error(error));
 	}
 
 	/** Search */

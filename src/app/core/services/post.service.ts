@@ -1,7 +1,7 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { UserService } from './user.service';
 import { PostGetAllDto } from '../dto/post/post-get-all.dto';
@@ -30,32 +30,36 @@ export class PostService {
 	/** SEO Meta tags */
 
 	setPostMetaTags(post: Post): void {
-		this.backupPostMetaOpenGraph = this.metaService.getMetaOpenGraph();
-		this.backupPostMetaTwitter = this.metaService.getMetaTwitter();
+		lastValueFrom(this.metaService.getMetaImageDownloadURL(post.image))
+			.then((downloadURL: string | null) => {
+				this.backupPostMetaOpenGraph = this.metaService.getMetaOpenGraph();
+				this.backupPostMetaTwitter = this.metaService.getMetaTwitter();
 
-		/** Set new meta */
+				/** Set meta (SSR SEO trick) */
 
-		const metaOpenGraph: MetaOpenGraph = {
-			['og:title']: post.name,
-			['og:description']: post.description,
-			['og:type']: 'article',
-			['article:published_time']: post.createdAt,
-			['article:modified_time']: post.updatedAt,
-			['article:author']: this.userService.getUserUrl(post.user, 1),
-			['article:section']: post.category.name,
-			['og:image']: post.image,
-			['og:image:alt']: post.name,
-			['og:image:type']: 'image/png'
-		};
+				const metaOpenGraph: MetaOpenGraph = {
+					['og:title']: post.name,
+					['og:description']: post.description,
+					['og:type']: 'article',
+					['article:published_time']: post.createdAt,
+					['article:modified_time']: post.updatedAt,
+					['article:author']: this.userService.getUserUrl(post.user, 1),
+					['article:section']: post.category.name,
+					['og:image']: downloadURL,
+					['og:image:alt']: post.name,
+					['og:image:type']: 'image/webp'
+				};
 
-		const metaTwitter: MetaTwitter = {
-			['twitter:title']: post.name,
-			['twitter:description']: post.description,
-			['twitter:image']: post.image,
-			['twitter:image:alt']: post.name
-		};
+				const metaTwitter: MetaTwitter = {
+					['twitter:title']: post.name,
+					['twitter:description']: post.description,
+					['twitter:image']: downloadURL,
+					['twitter:image:alt']: post.name
+				};
 
-		this.metaService.setMeta(metaOpenGraph, metaTwitter);
+				this.metaService.setMeta(metaOpenGraph, metaTwitter);
+			})
+			.catch((error: any) => console.error(error));
 	}
 
 	removePostMeta(): void {

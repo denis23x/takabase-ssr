@@ -72,7 +72,7 @@ export class FileService {
 		const storageRef: StorageReference = ref(storage, filePath);
 		const storageRefMetadata: UploadMetadata = {
 			cacheControl: 'public, max-age=31536000, immutable',
-			contentDisposition: 'attachment; filename=' + fileName,
+			contentDisposition: 'inline',
 			contentType: file.type,
 			customMetadata: {
 				'Custom-Time': dayjs().format('YYYY-MM-DD[T]HH:mm:ss[Z]')

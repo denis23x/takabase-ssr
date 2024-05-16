@@ -5,6 +5,11 @@ import { Meta, MetaDefinition } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
 import { HelperService } from './helper.service';
+import { Observable, of } from 'rxjs';
+import { SharpOutputDownloadUrlDto } from '../dto/sharp/sharp-output-download-url.dto';
+import { map } from 'rxjs/operators';
+import { PlatformService } from './platform.service';
+import { SharpService } from './sharp.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,6 +18,24 @@ export class MetaService {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly meta: Meta = inject(Meta);
 	private readonly helperService: HelperService = inject(HelperService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly sharpService: SharpService = inject(SharpService);
+
+	getMetaImageDownloadURL(url: string | null): Observable<string | null> {
+		if (url !== null) {
+			if (this.platformService.isServer()) {
+				const sharpOutputDownloadUrlDto: SharpOutputDownloadUrlDto = {
+					url
+				};
+
+				return this.sharpService
+					.getOutputDownloadUrl(sharpOutputDownloadUrlDto)
+					.pipe(map((data: any) => data.downloadURL));
+			}
+		}
+
+		return of(url);
+	}
 
 	setCanonicalURL(): void {
 		const url: URL = this.helperService.getURL();
@@ -143,9 +166,9 @@ export class MetaService {
 		// @ts-ignore
 		if (metaTwitterImage.some((tag: string) => !metaTwitter[tag])) {
 			// @ts-ignore
-      metaTwitterImage['twitter:image'] = url.origin + '/assets/images/placeholder-image-meta.png';
+			metaTwitter['twitter:image'] = url.origin + '/assets/images/placeholder-image-meta.png';
 			// @ts-ignore
-      metaTwitterImage['twitter:image:alt'] = 'Stay up to date with the latest posts and insights from Takabase';
+			metaTwitter['twitter:image:alt'] = 'Stay up to date with the latest posts and insights from Takabase';
 		}
 
 		Object.keys(metaTwitter).forEach((key: string) => {
