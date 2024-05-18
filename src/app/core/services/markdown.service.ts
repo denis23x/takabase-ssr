@@ -1,12 +1,11 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import MarkdownIt from 'markdown-it';
-import Token from 'markdown-it/lib/token';
+import MarkdownIt, { Token, Renderer } from 'markdown-it';
 import attrs from 'markdown-it-attrs';
 import bracketedSpans from 'markdown-it-bracketed-spans';
 import collapsible from 'markdown-it-collapsible';
-import emoji from 'markdown-it-emoji';
+import { full as emoji } from 'markdown-it-emoji';
 import linkAttributes from 'markdown-it-link-attributes';
 import mark from 'markdown-it-mark';
 import multiMdTable from 'markdown-it-multimd-table';
@@ -21,7 +20,6 @@ import 'prismjs/plugins/autoloader/prism-autoloader.min.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.min.js';
 import 'prismjs/plugins/match-braces/prism-match-braces.min.js';
 import { environment } from '../../../environments/environment';
-import { RenderRule } from 'markdown-it/lib/renderer';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
 import { Subject } from 'rxjs';
@@ -139,8 +137,8 @@ export class MarkdownService {
 		return this.markdownIt;
 	}
 
-	setMarkdownItRule(rule: string): RenderRule {
-		const ruleImage: RenderRule = (tokenList: Token[], idx: number): string => {
+	setMarkdownItRule(rule: string): Renderer.RenderRule {
+		const ruleImage: Renderer.RenderRule = (tokenList: Token[], idx: number): string => {
 			const imageElement: HTMLImageElement = this.document.createElement('img');
 
 			const token: Token = tokenList[idx];
@@ -163,7 +161,7 @@ export class MarkdownService {
 			return imageElement.outerHTML;
 		};
 
-		const ruleVideo: RenderRule = (tokenList: Token[], idx: number): string => {
+		const ruleVideo: Renderer.RenderRule = (tokenList: Token[], idx: number): string => {
 			const iframeSrc: string = 'https://www.youtube-nocookie.com/embed/';
 			const iframeElement: HTMLIFrameElement = this.document.createElement('iframe');
 
@@ -185,7 +183,7 @@ export class MarkdownService {
 			return iframeElement.outerHTML;
 		};
 
-		const ruleTableOpen: RenderRule = (tokenList: Token[], idx: number): string => {
+		const ruleTableOpen: Renderer.RenderRule = (tokenList: Token[], idx: number): string => {
 			const tableElement: HTMLTableElement = this.document.createElement('table');
 
 			const token: Token = tokenList[idx];
@@ -205,19 +203,20 @@ export class MarkdownService {
 			return `<div class="overflow-auto my-4">${tableElement.outerHTML.replace('</table>', '')}`;
 		};
 
-		const ruleTableClose: RenderRule = (): string => {
+		const ruleTableClose: Renderer.RenderRule = (): string => {
 			return `</table></div>`;
 		};
 
-		const ruleCollapsibleOpen: RenderRule = (): string => {
+		const ruleCollapsibleOpen: Renderer.RenderRule = (): string => {
 			return '<details class="collapse collapse-arrow bg-base-200 border border-base-content/20">';
 		};
 
-		const ruleCollapsibleSummary: RenderRule = (tokenList: Token[], idx: number): string => {
+		// prettier-ignore
+		const ruleCollapsibleSummary: Renderer.RenderRule = (tokenList: Token[], idx: number): string => {
 			return `<summary class="collapse-title text-xl font-medium">${tokenList[idx].content}</summary><div class="collapse-content">`;
 		};
 
-		const ruleCollapsibleClose: RenderRule = (): string => {
+		const ruleCollapsibleClose: Renderer.RenderRule = (): string => {
 			return '</div></details>';
 		};
 

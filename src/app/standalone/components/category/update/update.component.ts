@@ -37,7 +37,7 @@ import { AIService } from '../../../../core/services/ai.service';
 
 interface CategoryUpdateForm {
 	name: FormControl<string>;
-	description: FormControl<string | null>;
+	description: FormControl<string>;
 }
 
 @Component({
@@ -88,10 +88,7 @@ export class CategoryUpdateComponent implements OnInit, OnDestroy {
 			Validators.minLength(4),
 			Validators.maxLength(48)
 		]),
-		description: this.formBuilder.control(null, [
-			Validators.minLength(16),
-			Validators.maxLength(192)
-		])
+		description: this.formBuilder.control('', [Validators.maxLength(192)])
 	});
 	categoryUpdateFormRequest$: Subscription | undefined;
 

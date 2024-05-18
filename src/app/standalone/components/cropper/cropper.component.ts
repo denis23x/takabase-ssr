@@ -12,12 +12,7 @@ import {
 	Signal,
 	ViewChild
 } from '@angular/core';
-import {
-	Dimensions,
-	ImageCroppedEvent,
-	ImageCropperComponent,
-	ImageCropperModule
-} from 'ngx-image-cropper';
+import { Dimensions, ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
 import { Subscription, merge } from 'rxjs';
@@ -65,7 +60,6 @@ interface CropperImageForm {
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
-		ImageCropperModule,
 		SvgIconComponent,
 		InputOnlyPasteDirective,
 		InputTrimWhitespaceDirective,
@@ -73,7 +67,8 @@ interface CropperImageForm {
 		PlatformDirective,
 		DropdownComponent,
 		SkeletonDirective,
-		BadgeErrorComponent
+		BadgeErrorComponent,
+		ImageCropperComponent
 	],
 	selector: 'app-cropper, [appCropper]',
 	templateUrl: './cropper.component.html'
