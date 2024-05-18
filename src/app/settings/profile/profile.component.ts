@@ -38,7 +38,7 @@ import { AIService } from '../../core/services/ai.service';
 interface ProfileForm {
 	avatar: FormControl<string | null>;
 	name: FormControl<string>;
-	description: FormControl<string>;
+	description: FormControl<string | null>;
 }
 
 @Component({
@@ -85,7 +85,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			Validators.maxLength(32),
 			Validators.pattern(this.helperService.getRegex('no-whitespace'))
 		]),
-		description: this.formBuilder.control('', [Validators.maxLength(192)])
+		description: this.formBuilder.control(null, [
+			Validators.minLength(16),
+			Validators.maxLength(192)
+		])
 	});
 	profileFormIsPristine: boolean = false;
 	profileFormIsPristine$: Subscription | undefined;
