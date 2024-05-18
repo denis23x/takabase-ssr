@@ -246,7 +246,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 			const categoryGetAllDto: CategoryGetAllDto = {
 				page: 1,
-				size: 999,
+				size: 50,
 				userId: this.currentUser.id
 			};
 
