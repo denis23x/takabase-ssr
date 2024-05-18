@@ -84,6 +84,8 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	passwordValidateForm: FormGroup = this.formBuilder.group<PasswordValidateForm>({
 		password: this.formBuilder.nonNullable.control('', [
 			Validators.required,
+			Validators.minLength(6),
+			Validators.maxLength(48),
 			Validators.pattern(this.helperService.getRegex('password'))
 		])
 	});
@@ -102,6 +104,8 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	passwordForm: FormGroup = this.formBuilder.group<PasswordForm>({
 		password: this.formBuilder.nonNullable.control('', [
 			Validators.required,
+			Validators.minLength(6),
+			Validators.maxLength(48),
 			Validators.pattern(this.helperService.getRegex('password'))
 		])
 	});

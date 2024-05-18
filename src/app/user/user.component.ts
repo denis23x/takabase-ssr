@@ -160,8 +160,10 @@ export class UserComponent implements OnInit, OnDestroy {
 		const userName: string = String(this.activatedRoute.snapshot.paramMap.get('userName') || '');
 
 		const userGetAllDto: UserGetAllDto = {
-			name: userName.substring(1),
-			scope: ['categories']
+			userName: userName.substring(1),
+			scope: ['categories'],
+			page: 1,
+			size: 10
 		};
 
 		this.userRequest$?.unsubscribe();

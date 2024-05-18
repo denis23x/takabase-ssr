@@ -69,11 +69,14 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 		name: this.formBuilder.nonNullable.control('', [
 			Validators.required,
 			Validators.minLength(4),
-			Validators.maxLength(24)
+			Validators.maxLength(32),
+			Validators.pattern(this.helperService.getRegex('no-whitespace'))
 		]),
 		email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
 		password: this.formBuilder.nonNullable.control('', [
 			Validators.required,
+			Validators.minLength(6),
+			Validators.maxLength(48),
 			Validators.pattern(this.helperService.getRegex('password'))
 		]),
 		terms: this.formBuilder.nonNullable.control(true, [Validators.requiredTrue])

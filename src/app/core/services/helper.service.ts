@@ -30,7 +30,7 @@ export class HelperService {
 			case 'exact':
 				return new RegExp('^' + payload + '$', 'm');
 			case 'password':
-				return new RegExp('^((?=.*\\d)|(?=.*[!@#$%^&*]))(?=.*[a-zA-Z]).{6,32}$', 'm');
+				return new RegExp('^(?=.*[\\d\\W]).{6,48}$', 'm');
 			case 'url':
 				// eslint-disable-next-line no-control-regex
 				return new RegExp('^([a-zA-Z][a-zA-Z0-9+.\\-]{1,31}):([^<>\x00-\x20]*)$', 'm');

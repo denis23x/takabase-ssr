@@ -23,6 +23,7 @@ import { from, Subscription, switchMap } from 'rxjs';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { Location } from '@angular/common';
+import { PostDeleteDto } from '../../../../core/dto/post/post-delete.dto';
 
 @Component({
 	standalone: true,
@@ -116,10 +117,19 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 		this.postDeleteIsSubmitted = true;
 
 		const postId: number = this.post.id;
+		const postDeleteDto: PostDeleteDto = {
+			firebaseUid: this.post.firebaseUid
+		};
+
+		// Attach only if exists (querystring parse issue)
+
+		if (this.post.image) {
+			postDeleteDto.image = this.post.image;
+		}
 
 		this.postDeleteRequest$?.unsubscribe();
 		this.postDeleteRequest$ = this.postService
-			.delete(postId)
+			.delete(postId, postDeleteDto)
 			.pipe(switchMap(() => from(redirectToBack())))
 			.subscribe({
 				next: () => this.snackbarService.success('Sadly..', 'Post has been deleted'),

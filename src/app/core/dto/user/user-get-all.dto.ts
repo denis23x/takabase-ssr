@@ -1,7 +1,7 @@
 /** @format */
 
 export interface UserGetAllDto {
-	name?: string;
+	userName?: string;
 	query?: string;
 	page?: number;
 	size?: number;

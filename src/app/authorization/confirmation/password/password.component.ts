@@ -50,6 +50,8 @@ export class AuthConfirmationPasswordComponent implements OnInit, OnDestroy {
 		code: this.formBuilder.nonNullable.control('', [Validators.required]),
 		password: this.formBuilder.nonNullable.control('', [
 			Validators.required,
+			Validators.minLength(6),
+			Validators.maxLength(48),
 			Validators.pattern(this.helperService.getRegex('password'))
 		])
 	});

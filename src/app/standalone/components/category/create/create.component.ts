@@ -71,9 +71,12 @@ export class CategoryCreateComponent implements OnInit, OnDestroy {
 		name: this.formBuilder.nonNullable.control('', [
 			Validators.required,
 			Validators.minLength(4),
-			Validators.maxLength(36)
+			Validators.maxLength(48)
 		]),
-		description: this.formBuilder.control(null, [Validators.maxLength(255)])
+		description: this.formBuilder.control(null, [
+			Validators.minLength(16),
+			Validators.maxLength(192)
+		])
 	});
 	categoryFormRequest$: Subscription | undefined;
 	categoryCreateDialogToggle: boolean = false;

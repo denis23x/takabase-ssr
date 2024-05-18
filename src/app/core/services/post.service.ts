@@ -12,6 +12,7 @@ import { PostGetOneDto } from '../dto/post/post-get-one.dto';
 import { PostUpdateDto } from '../dto/post/post-update.dto';
 import { MetaService } from './meta.service';
 import { TitleService } from './title.service';
+import { PostDeleteDto } from '../dto/post/post-delete.dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -97,7 +98,7 @@ export class PostService {
 		return this.apiService.put('/v1/posts/' + id, postUpdateDto);
 	}
 
-	delete(id: number): Observable<Partial<Post>> {
-		return this.apiService.delete('/v1/posts/' + id);
+	delete(id: number, postDeleteDto: PostDeleteDto): Observable<Partial<Post>> {
+		return this.apiService.delete('/v1/posts/' + id, postDeleteDto);
 	}
 }

@@ -139,20 +139,20 @@ export class CreateComponent implements OnInit, OnDestroy {
 		name: this.formBuilder.nonNullable.control('', [
 			Validators.required,
 			Validators.minLength(4),
-			Validators.maxLength(36)
+			Validators.maxLength(48)
 		]),
 		image: this.formBuilder.control(null, []),
 		description: this.formBuilder.nonNullable.control('', [
 			Validators.required,
-			Validators.minLength(4),
-			Validators.maxLength(255)
+			Validators.minLength(16),
+			Validators.maxLength(192)
 		]),
 		categoryId: this.formBuilder.control(null, [Validators.required]),
 		categoryName: this.formBuilder.nonNullable.control('', []),
 		markdown: this.formBuilder.nonNullable.control('', [
 			Validators.required,
-			Validators.minLength(24),
-			Validators.maxLength(7200)
+			Validators.minLength(64),
+			Validators.maxLength(8192)
 		])
 	});
 	postFormRequest$: Subscription | undefined;

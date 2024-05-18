@@ -56,6 +56,8 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 		email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
 		password: this.formBuilder.nonNullable.control('', [
 			Validators.required,
+			Validators.minLength(6),
+			Validators.maxLength(48),
 			Validators.pattern(this.helperService.getRegex('password'))
 		])
 	});
