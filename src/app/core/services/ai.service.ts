@@ -73,54 +73,46 @@ export class AIService {
 	/** AI function */
 
 	moderateText(aiModerateTextDto: AIModerateTextDto): Observable<boolean> {
-		if (environment.ai.moderation) {
-			// prettier-ignore
-			return this.httpClient.post(this.setUrl('/v1/moderation/text'), aiModerateTextDto).pipe(
-				catchError((httpErrorResponse: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpErrorResponse)),
-				map((response: any) => response.data),
-				switchMap((aiModerateTextResult: AIModerateTextResult) => {
-					if (this.getModeratedTextIsSafe(aiModerateTextResult)) {
-						return of(true);
-					} else {
-						this.snackbarService.warning('Moderation', 'Seems like your input is prohibited to submit', {
-							icon: 'ban',
-							duration: 6000
-						});
+		// prettier-ignore
+		return this.httpClient.post(this.setUrl('/v1/moderation/text'), aiModerateTextDto).pipe(
+			catchError((httpErrorResponse: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpErrorResponse)),
+			map((response: any) => response.data),
+			switchMap((aiModerateTextResult: AIModerateTextResult) => {
+				if (this.getModeratedTextIsSafe(aiModerateTextResult)) {
+					return of(true);
+				} else {
+					this.snackbarService.warning('Moderation', 'Seems like your input is prohibited to submit', {
+						icon: 'ban',
+						duration: 6000
+					});
 
-						/** Return Error for break the pipe */
+					/** Return Error for break the pipe */
 
-						return throwError(() => new Error());
-					}
-				})
-			);
-		}
-
-		return of(false);
+					return throwError(() => new Error());
+				}
+			})
+		);
 	}
 
 	moderateImage(formData: FormData): Observable<boolean> {
-		if (environment.ai.moderation) {
-			// prettier-ignore
-			return this.httpClient.post(this.setUrl('/v1/moderation/image'), formData).pipe(
-				catchError((httpErrorResponse: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpErrorResponse)),
-				map((response: any) => response.data),
-				switchMap((aiModerateImageResult: AIModerateImageResult[]) => {
-					if (this.getModeratedImageIsSafe(aiModerateImageResult)) {
-						return of(true);
-					} else {
-						this.snackbarService.warning('Moderation', 'The image contains prohibited content', {
-							icon: 'ban',
-							duration: 6000
-						});
+		// prettier-ignore
+		return this.httpClient.post(this.setUrl('/v1/moderation/image'), formData).pipe(
+			catchError((httpErrorResponse: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpErrorResponse)),
+			map((response: any) => response.data),
+			switchMap((aiModerateImageResult: AIModerateImageResult[]) => {
+				if (this.getModeratedImageIsSafe(aiModerateImageResult)) {
+					return of(true);
+				} else {
+					this.snackbarService.warning('Moderation', 'The image contains prohibited content', {
+						icon: 'ban',
+						duration: 6000
+					});
 
-						/** Return Error for break the pipe */
+					/** Return Error for break the pipe */
 
-						return throwError(() => new Error());
-					}
-				})
-			);
-		}
-
-		return of(false);
+					return throwError(() => new Error());
+				}
+			})
+		);
 	}
 }

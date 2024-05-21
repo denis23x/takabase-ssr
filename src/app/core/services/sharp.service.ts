@@ -26,7 +26,7 @@ export class SharpService {
 
 	getFetch(sharpFetchDto: SharpFetchDto): Observable<File> {
 		return this.httpClient
-			.get(this.setUrl('/v1/fetch'), {
+			.get(this.setUrl('/v1/utilities/fetch'), {
 				params: {
 					...sharpFetchDto
 				},

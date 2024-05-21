@@ -6,7 +6,6 @@ export const environment = {
   appCheck: "6LeGQX0pAAAAAEkP4djKRXUv0kcdGbN6urm6NrHH",
   apiUrl: "https://api.takabase.com/api",
   ai: {
-    moderation: true,
     url: "https://ai.takabase.com/api"
   },
   sharp: {
