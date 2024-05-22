@@ -17,11 +17,11 @@ import { UserService } from '../../core/services/user.service';
 import { MetaService } from '../../core/services/meta.service';
 import { Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
-import { AuthenticatedDirective } from '../../standalone/directives/app-authenticated.directive';
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
 import { environment } from '../../../environments/environment';
 import { filter, tap } from 'rxjs/operators';
 import { CurrentUser } from '../../core/models/current-user.model';
+import { AuthenticatedComponent } from '../../standalone/components/authenticated/authenticated.component';
 
 @Component({
 	standalone: true,
@@ -35,8 +35,8 @@ import { CurrentUser } from '../../core/models/current-user.model';
 		CardUserComponent,
 		SkeletonDirective,
 		AdComponent,
-		AuthenticatedDirective,
-		CopyToClipboardDirective
+		CopyToClipboardDirective,
+		AuthenticatedComponent
 	],
 	selector: 'app-search-user',
 	templateUrl: './user.component.html'
@@ -52,7 +52,12 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 	userGetAllDto: UserGetAllDto | undefined;
 	userGetAllDto$: Subscription | undefined;
 
-	userInviteURL: string | undefined;
+	currentUserInviteURL: string | undefined;
+	currentUser: CurrentUser | undefined;
+	currentUser$: Subscription | undefined;
+
+	currentUserSkeletonToggle: boolean = true;
+	currentUserSkeletonToggle$: Subscription | undefined;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -92,8 +97,16 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 					inviteURL.pathname = 'registration';
 					inviteURL.searchParams.append('invitedBy', String(this.currentUser.id));
 
-					this.userInviteURL = inviteURL.toString();
+					this.currentUserInviteURL = inviteURL.toString();
 				},
+				error: (error: any) => console.error(error)
+			});
+
+		this.currentUserSkeletonToggle$?.unsubscribe();
+		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
+			.pipe(filter((currentUserIsPopulated: boolean) => currentUserIsPopulated))
+			.subscribe({
+				next: () => (this.currentUserSkeletonToggle = false),
 				error: (error: any) => console.error(error)
 			});
 	}
@@ -101,8 +114,12 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		// prettier-ignore
-		[this.userListRequest$, this.userGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
+		[
+			this.userListRequest$,
+			this.userGetAllDto$,
+			this.currentUser$,
+			this.currentUserSkeletonToggle$
+		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {

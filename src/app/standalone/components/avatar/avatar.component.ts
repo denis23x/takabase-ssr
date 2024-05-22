@@ -7,7 +7,6 @@ import { DOCUMENT } from '@angular/common';
 import { PlatformService } from '../../../core/services/platform.service';
 import { AppCheckPipe } from '../../pipes/app-check.pipe';
 import { HelperService } from '../../../core/services/helper.service';
-import { filter } from 'rxjs/operators';
 
 @Component({
 	standalone: true,
@@ -26,11 +25,13 @@ export class AvatarComponent {
 	set appAvatarUser(user: Partial<User> | undefined) {
 		this.user = user;
 
-		if (this.user?.avatar) {
-			this.setImage();
-		} else {
-			this.setIcon();
-		}
+		setTimeout(() => {
+			if (this.user?.avatar) {
+				this.setImage();
+			} else {
+				this.setIcon();
+			}
+		});
 	}
 
 	user: Partial<User> | undefined;
@@ -54,13 +55,12 @@ export class AvatarComponent {
 
 			/** Set Image */
 
-			this.appCheckPipe
-				.transform(this.user.avatar)
-				.pipe(filter(() => !!elementHTMLImage))
-				.subscribe({
+			if (elementHTMLImage) {
+				this.appCheckPipe.transform(this.user.avatar).subscribe({
 					next: (blob: string) => (elementHTMLImage.src = blob),
 					error: (error: any) => console.error(error)
 				});
+			}
 		}
 	}
 

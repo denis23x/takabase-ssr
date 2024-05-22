@@ -12,13 +12,14 @@
 				Takabase
 			</a>
 		</div>
-		<div class="navbar-end gap-4">
+		<div class="navbar-end">
 			<nav
-				class="flex items-center justify-end gap-4"
+				class="block"
+				appAuthenticated
 				appSkeleton
 				[appSkeletonToggle]="currentUserSkeletonToggle"
 			>
-				<ng-container *appAuthenticated="false">
+				<div class="flex items-center justify-end gap-4" slot="public">
 					<a
 						class="btn-ghost btn-square btn fill-current"
 						title="Login"
@@ -30,8 +31,8 @@
 						[appSvgIconSquare]="'1.5em'"
 					>
 					</a>
-				</ng-container>
-				<ng-container *appAuthenticated="true">
+				</div>
+				<div class="flex items-center justify-end gap-4" slot="private">
 					<a
 						class="btn-ghost btn-square btn fill-current"
 						title="Search"
@@ -55,67 +56,69 @@
 						[appSvgIconSquare]="'1.5em'"
 					>
 					</a>
-					<div
-						class="flex cursor-pointer relative"
-						data-pw="app-header-profile-dropdown"
-						appDropdown
-						[appDropdownPlacement]="'bottom-end'"
-					>
-						<div class="avatar" slot="target">
-							<figure
-								class="h-12 w-12 rounded-btn relative overflow-hidden"
-								appAvatar
-								[appAvatarUser]="currentUser"
-							></figure>
+					@if (currentUser) {
+						<div
+							class="flex cursor-pointer relative"
+							data-pw="app-header-profile-dropdown"
+							appDropdown
+							[appDropdownPlacement]="'bottom-end'"
+						>
+							<div class="avatar" slot="target">
+								<figure
+									class="h-12 w-12 rounded-btn relative overflow-hidden"
+									appAvatar
+									[appAvatarUser]="currentUser"
+								></figure>
+							</div>
+							<ul class="menu menu-vertical menu-md" slot="content">
+								<li class="flex w-full snap-start scroll-my-2">
+									<a
+										class="rounded-btn block w-full truncate text-right"
+										[title]="currentUser.name"
+										[attr.aria-label]="currentUser.name"
+										[routerLink]="[currentUser | userUrl]"
+									>
+										My Profile
+									</a>
+								</li>
+								<li class="flex w-full snap-start scroll-my-2">
+									<a
+										class="rounded-btn block w-full truncate text-right"
+										title="Settings"
+										aria-label="Settings"
+										[routerLink]="['/settings']"
+									>
+										Settings
+									</a>
+								</li>
+								<li class="flex w-full snap-start scroll-my-2">
+									<a
+										class="rounded-btn block w-full truncate text-right"
+										title="About"
+										aria-label="About"
+										[routerLink]="['/help/about']"
+									>
+										About
+									</a>
+								</li>
+								<li class="flex w-full snap-start scroll-my-2 menu-title">
+									<hr class="my-0 border-base-content/20" />
+								</li>
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										type="button"
+										title="Logout"
+										aria-label="Logout"
+										(click)="onLogout()"
+									>
+										Logout
+									</button>
+								</li>
+							</ul>
 						</div>
-						<ul class="menu menu-vertical menu-md" slot="content">
-							<li class="flex w-full snap-start scroll-my-2">
-								<a
-									class="rounded-btn block w-full truncate text-right"
-									[title]="currentUser.name"
-									[attr.aria-label]="currentUser.name"
-									[routerLink]="[currentUser | userUrl]"
-								>
-									My Profile
-								</a>
-							</li>
-							<li class="flex w-full snap-start scroll-my-2">
-								<a
-									class="rounded-btn block w-full truncate text-right"
-									title="Settings"
-									aria-label="Settings"
-									[routerLink]="['/settings']"
-								>
-									Settings
-								</a>
-							</li>
-							<li class="flex w-full snap-start scroll-my-2">
-								<a
-									class="rounded-btn block w-full truncate text-right"
-									title="About"
-									aria-label="About"
-									[routerLink]="['/help/about']"
-								>
-									About
-								</a>
-							</li>
-							<li class="flex w-full snap-start scroll-my-2 menu-title">
-								<hr class="my-0 border-base-content/20" />
-							</li>
-							<li class="flex w-full snap-start scroll-my-2">
-								<button
-									class="rounded-btn block w-full truncate text-right"
-									type="button"
-									title="Logout"
-									aria-label="Logout"
-									(click)="onLogout()"
-								>
-									Logout
-								</button>
-							</li>
-						</ul>
-					</div>
-				</ng-container>
+					}
+				</div>
 			</nav>
 		</div>
 	</div>

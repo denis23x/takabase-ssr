@@ -22,7 +22,7 @@ export class MetaService {
 	private readonly sharpService: SharpService = inject(SharpService);
 
 	getMetaImageDownloadURL(url: string | null): Observable<string | null> {
-		if (url !== null) {
+		if (url) {
 			if (this.platformService.isServer()) {
 				const sharpOutputDownloadUrlDto: SharpOutputDownloadUrlDto = {
 					url

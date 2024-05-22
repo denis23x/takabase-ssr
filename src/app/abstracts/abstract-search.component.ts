@@ -6,7 +6,6 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { CookieService } from '../core/services/cookie.service';
 import { AppearanceService } from '../core/services/appearance.service';
 import { AbstractGetAllDto } from '../core/dto/abstract/abstract-get-all.dto';
-import { CurrentUser } from '../core/models/current-user.model';
 import { AuthorizationService } from '../core/services/authorization.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SkeletonService } from '../core/services/skeleton.service';
@@ -70,9 +69,6 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	currentUser: CurrentUser | undefined;
-	currentUser$: Subscription | undefined;
-
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
 	// prettier-ignore
@@ -94,7 +90,7 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		// prettier-ignore
-		[this.currentUser$, this.abstractListPageScrollInfinite$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.abstractListPageScrollInfinite$].forEach(($: Subscription) => $?.unsubscribe());
 
 		// prettier-ignore
 		[this.abstractListIsLoading$, this.abstractGetAllDto$].forEach(($: BehaviorSubject<any>) => $?.complete());

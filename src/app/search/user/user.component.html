@@ -26,26 +26,33 @@
 					<p class="text-xl font-bold text-base-content">
 						Users <span class="text-error"> not found </span>
 					</p>
-					<a
-						class="link text-sm"
-						title="Registration"
-						aria-label="Registration"
-						*appAuthenticated="false"
-						[routerLink]="['/registration']"
+					<div
+						class="block"
+						appAuthenticated
+						appSkeleton
+						[appSkeletonToggle]="currentUserSkeletonToggle"
 					>
-						Unlock limitless: Register today!
-					</a>
-					<span class="text-sm" *appAuthenticated="true">
-						Can't find your friends?
-						<span
-							class="link"
-							appCopyToClipboard
-							[appCopyToClipboardValue]="userInviteURL"
-							[appCopyToClipboardMessage]="'Invite URL has been copied'"
+						<a
+							class="link text-sm"
+							title="Registration"
+							aria-label="Registration"
+							slot="public"
+							[routerLink]="['/registration']"
 						>
-							Invite them!
+							Unlock limitless: Register today!
+						</a>
+						<span class="text-sm" slot="private">
+							Can't find your friends?
+							<span
+								class="link"
+								appCopyToClipboard
+								[appCopyToClipboardValue]="currentUserInviteURL"
+								[appCopyToClipboardMessage]="'Invite URL has been copied'"
+							>
+								Invite them!
+							</span>
 						</span>
-					</span>
+					</div>
 				</div>
 			</li>
 		}

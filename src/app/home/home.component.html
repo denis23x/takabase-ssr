@@ -17,14 +17,16 @@
 				</figure>
 			</div>
 			<nav class="flex flex-wrap items-center justify-start gap-4">
-				<a
-					class="btn btn-outline btn-success btn-md"
-					aria-label="Registration"
-					*appAuthenticated="false"
-					[routerLink]="'/registration'"
-				>
-					Registration
-				</a>
+				<div class="block empty:hidden" appAuthenticated>
+					<a
+						class="btn btn-outline btn-success btn-md"
+						aria-label="Registration"
+						slot="public"
+						[routerLink]="'/registration'"
+					>
+						Registration
+					</a>
+				</div>
 				<a class="btn btn-outline btn-info btn-md" aria-label="Search" [routerLink]="'/search'">
 					Search
 				</a>

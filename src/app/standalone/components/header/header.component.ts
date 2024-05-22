@@ -5,7 +5,6 @@ import { Router, RouterModule } from '@angular/router';
 import { Subscription, throwError } from 'rxjs';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { AvatarComponent } from '../avatar/avatar.component';
-import { AuthenticatedDirective } from '../../directives/app-authenticated.directive';
 import { UserUrlPipe } from '../../pipes/user-url.pipe';
 import { AuthorizationService } from '../../../core/services/authorization.service';
 import { catchError, filter } from 'rxjs/operators';
@@ -14,6 +13,7 @@ import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '../../../core/services/snackbar.service';
+import { AuthenticatedComponent } from '../authenticated/authenticated.component';
 
 @Component({
 	standalone: true,
@@ -22,10 +22,10 @@ import { SnackbarService } from '../../../core/services/snackbar.service';
 		RouterModule,
 		SvgIconComponent,
 		AvatarComponent,
-		AuthenticatedDirective,
 		UserUrlPipe,
 		SkeletonDirective,
-		DropdownComponent
+		DropdownComponent,
+		AuthenticatedComponent
 	],
 	templateUrl: './header.component.html'
 })

@@ -1,0 +1,9 @@
+<!-- @format -->
+
+<ng-container>
+	@if (authenticated) {
+		<ng-content select="[slot=private]"></ng-content>
+	} @else {
+		<ng-content select="[slot=public]"></ng-content>
+	}
+</ng-container>

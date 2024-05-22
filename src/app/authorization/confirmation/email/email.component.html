@@ -52,24 +52,31 @@
 				</button>
 			} @else {
 				@if (confirmationRequestIsSucceed) {
-					<div appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
+					<div
+						class="block empty:hidden"
+						appAuthenticated
+						appSkeleton
+						[appSkeletonToggle]="currentUserSkeletonToggle"
+					>
 						<a
 							class="btn-success btn-outline btn w-full no-animation"
 							aria-label="Login"
-							*appAuthenticated="false"
+							slot="public"
 							[routerLink]="'/login'"
 						>
 							Login
 						</a>
-						<a
-							class="btn-success btn-outline btn w-full no-animation"
-							*appAuthenticated="true"
-							[title]="currentUser.name"
-							[attr.aria-label]="currentUser.name"
-							[routerLink]="[currentUser | userUrl]"
-						>
-							My Profile
-						</a>
+						@if (currentUser) {
+							<a
+								class="btn-success btn-outline btn w-full no-animation"
+								slot="private"
+								[title]="currentUser.name"
+								[attr.aria-label]="currentUser.name"
+								[routerLink]="[currentUser | userUrl]"
+							>
+								My Profile
+							</a>
+						}
 					</div>
 				}
 			}
