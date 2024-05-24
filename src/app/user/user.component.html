@@ -96,7 +96,7 @@
 				<div
 					class="w-full"
 					appSkeleton
-					[appSkeletonToggle]="userSkeletonToggle"
+					[appSkeletonToggle]="userSkeletonToggle || platformServiceIsServerSkeletonToggle"
 					[appSkeletonClassListParent]="['!rounded-box']"
 					[appSkeletonClassList]="['!rounded-box']"
 				>
@@ -297,7 +297,7 @@
 					<div
 						class="block"
 						appSkeleton
-						[appSkeletonToggle]="categorySkeletonToggle"
+						[appSkeletonToggle]="categorySkeletonToggle || platformServiceIsServerSkeletonToggle"
 						[appSkeletonClassListParent]="['!rounded-box']"
 						[appSkeletonClassList]="['!rounded-box']"
 					>

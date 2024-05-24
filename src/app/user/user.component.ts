@@ -34,6 +34,7 @@ import { QrCodeComponent } from '../standalone/components/qr-code/qr-code.compon
 import { UserUrlPipe } from '../standalone/pipes/user-url.pipe';
 import { CopyToClipboardDirective } from '../standalone/directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../core/services/snackbar.service';
+import { PlatformService } from '../core/services/platform.service';
 
 @Component({
 	standalone: true,
@@ -70,6 +71,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
 	activatedRouteUrl$: Subscription | undefined;
 	activatedRouteFirstChildParams$: Subscription | undefined;
@@ -93,6 +95,8 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	categoryList: Category[] = [];
 	categoryListSkeletonToggle: boolean = true;
+
+	platformServiceIsServerSkeletonToggle: boolean = true;
 
 	ngOnInit(): void {
 		this.activatedRouteUrl$?.unsubscribe();
@@ -126,6 +130,10 @@ export class UserComponent implements OnInit, OnDestroy {
 				next: () => (this.currentUserSkeletonToggle = false),
 				error: (error: any) => console.error(error)
 			});
+
+		/** Mask Markdown initialization */
+
+		this.platformServiceIsServerSkeletonToggle = this.platformService.isServer();
 	}
 
 	ngOnDestroy(): void {
