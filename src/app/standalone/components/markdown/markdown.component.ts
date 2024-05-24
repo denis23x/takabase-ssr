@@ -183,21 +183,24 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				next: (file: File) => {
 					this.appMarkdownUploadToggle.emit(true);
 
-					this.fileService.create(file).subscribe({
-						next: (fileUrl: string) => {
-							const params: any = {
-								title: Date.now(),
-								url: fileUrl
-							};
+					this.fileService
+						.create(file)
+						.pipe(map((fileUrl: string) => this.fileService.getFileUrlClean(fileUrl)))
+						.subscribe({
+							next: (fileUrl: string) => {
+								const params: any = {
+									title: Date.now(),
+									url: fileUrl
+								};
 
-							this.appMarkdownUploadToggle.emit(false);
+								this.appMarkdownUploadToggle.emit(false);
 
-							/** Apply result */
+								/** Apply result */
 
-							this.setTextareaValue(this.getTextareaValue(this.controlListCropper, params));
-						},
-						error: () => this.appMarkdownUploadToggle.emit(false)
-					});
+								this.setTextareaValue(this.getTextareaValue(this.controlListCropper, params));
+							},
+							error: () => this.appMarkdownUploadToggle.emit(false)
+						});
 				},
 				error: (error: any) => console.error(error)
 			});

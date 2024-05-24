@@ -24,6 +24,9 @@ import { DOCUMENT } from '@angular/common';
 import { PlatformService } from './platform.service';
 import { Subject } from 'rxjs';
 import { MarkdownShortcut } from '../models/markdown.model';
+import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { HelperService } from './helper.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -31,6 +34,8 @@ import { MarkdownShortcut } from '../models/markdown.model';
 export class MarkdownService {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly httpClient: HttpClient = inject(HttpClient);
+	private readonly helperService: HelperService = inject(HelperService);
 
 	markdownItClipboard: Subject<ClipboardEventInit> = new Subject<ClipboardEventInit>();
 	markdownItShortcut: Subject<MarkdownShortcut | null> = new Subject<MarkdownShortcut | null>();
@@ -144,13 +149,56 @@ export class MarkdownService {
 			const token: Token = tokenList[idx];
 
 			token.attrs?.forEach(([key, value]: string[]) => {
-				if (key === 'class') {
-					const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
+				switch (key) {
+					case 'class': {
+						const classList: string[] = value
+							.split(/\s/)
+							.filter((className: string) => !!className);
 
-					imageElement.classList.add(...classList);
-				} else {
-					// @ts-ignore
-					imageElement[key] = value;
+						imageElement.classList.add(...classList);
+
+						break;
+					}
+					case 'src': {
+						if (value.includes(environment.firebase.storageBucket)) {
+							imageElement.id = this.helperService.getNanoId(12);
+							imageElement.src = './assets/images/placeholder-image.svg';
+
+							this.httpClient
+								.get(value, {
+									params: {
+										alt: 'media'
+									},
+									responseType: 'blob'
+								})
+								.pipe(map((blob: Blob) => URL.createObjectURL(blob)))
+								.subscribe({
+									next: (blob: string) => {
+										// prettier-ignore
+										const elementHTML: HTMLElement | null = this.document.getElementById(imageElement.id);
+										const elementHTMLImage: HTMLImageElement = elementHTML as HTMLImageElement;
+
+										/** Set Image */
+
+										if (elementHTMLImage) {
+											elementHTMLImage.src = blob;
+										}
+									},
+									error: (error: any) => console.error(error)
+								});
+						} else {
+							// @ts-ignore
+							imageElement[key] = value;
+						}
+
+						break;
+					}
+					default: {
+						// @ts-ignore
+						imageElement[key] = value;
+
+						break;
+					}
 				}
 			});
 
