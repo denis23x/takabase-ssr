@@ -12,6 +12,7 @@ import { HeaderComponent } from './standalone/components/header/header.component
 import { ScrollToTopComponent } from './standalone/components/scroll-to-top/scroll-to-top.component';
 import { ReportComponent } from './standalone/components/report/report.component';
 import { PlatformService } from './core/services/platform.service';
+import { CookiesComponent } from './standalone/components/cookies/cookies.component';
 
 @Component({
 	standalone: true,
@@ -20,7 +21,8 @@ import { PlatformService } from './core/services/platform.service';
 		SnackbarComponent,
 		HeaderComponent,
 		ScrollToTopComponent,
-		ReportComponent
+		ReportComponent,
+		CookiesComponent
 	],
 	selector: 'app-root',
 	templateUrl: './app.component.html'

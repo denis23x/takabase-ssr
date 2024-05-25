@@ -1,0 +1,26 @@
+<!-- @format -->
+
+<ng-container>
+	@if (currentUserIsPopulatedToggle && !currentUser && !currentUserIsAcceptedCookies) {
+		<div class="fixed bottom-0 right-0 p-4 md:p-8 z-10">
+			<div
+				class="alert !items-center rounded-box border border-base-content/20 bg-base-100 shadow-xl"
+				role="alert"
+			>
+				<i
+					class="fill-current text-info"
+					appSvgIcon
+					[appSvgIconIcon]="'info-circle'"
+					[appSvgIconSquare]="'1.5em'"
+				></i>
+				<!-- prettier-ignore -->
+				<span class="block"> By using our website, you agree to <a class="link inline-block" target="_blank" [routerLink]="['/terms/cookie-policy']"> use of cookies </a></span>
+				<div class="w-full">
+					<button class="btn btn-info btn-sm w-full" type="button" (click)="onSubmit()">
+						Yas, accept
+					</button>
+				</div>
+			</div>
+		</div>
+	}
+</ng-container>
