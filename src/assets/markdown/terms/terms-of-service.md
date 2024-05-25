@@ -26,7 +26,7 @@ When you create an account with me, please provide accurate, complete, and up-to
 
 ### 5. Intellectual Property {.divider .divider-start}
 
-The Service and its original content, features, and functionality are and will remain my exclusive property. The Service is protected by copyright, trademark, and other laws of foreign countries.
+The Service and its original content, features, and functionality are and will remain my exclusive property.
 
 ### 6. Links To Other Web Sites {.divider .divider-start}
 

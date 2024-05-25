@@ -31,7 +31,7 @@ export class AIService {
 			.filter((value: any) => Boolean(value))
 			.map((value: any) => String(value))
 			.map((value: string) => {
-				const regExp: RegExp = /.{1,2000}/g;
+				const regExp: RegExp = /(.|[\r\n\t]){1,2000}/g;
 
 				/** For higher accuracy, try splitting long pieces of text into smaller chunks each less than 2,000 characters */
 
