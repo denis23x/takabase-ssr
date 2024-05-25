@@ -1,43 +1,50 @@
 ## Cookie Policy
 
-We use cookies on our website **Takabase** (the "Service"). By using the Service, you consent to the use of cookies.
+Please read these Policy carefully. If you disagree with any part of the Policy, you may not use the Website. {.alert}
 
-Our Cookie Policy explains what cookies are, how we use cookies, how third-parties we may partner with may use cookies on the Service, your choices regarding cookies, and further information about cookies.
+### 1. Introduction {.divider .divider-start}
 
-### What are cookies? {.divider .divider-start}
+This Cookie Policy explains how Denis Iakimenko ("I", "me", "my") uses cookies on my website [Takabase](https://takabase.com) ("Website").
 
-Cookies are small pieces of text sent by your web browser by a website you visit. A cookie file is stored in your web browser and allows the Service or a third-party to recognize you and make your next visit easier and the Service more useful to you.
+My Cookie Policy explains what cookies are, how we use cookies, how third-parties we may partner with may use cookies on the Website, your choices regarding cookies, and further information about cookies.
 
-Cookies can be "persistent" or "session" cookies. Persistent cookies remain on your personal computer or mobile device when you go offline, while session cookies are deleted as soon as you close your web browser.
+### 2. What Are Cookies? {.divider .divider-start}
 
-### How we use cookies? {.divider .divider-start}
+Cookies are small text files that are stored on your device when you visit a website. They help me to remember your preferences and track your activities on my Website.
 
-We use cookies for the following purposes:
+### 3. Types of Cookies I Use {.divider .divider-start}
 
-- To enable certain functions of the Service
-- To provide analytics
-- To store your preferences
-- To enable advertisements delivery, including behavioral advertising
+I use both session and persistent cookies on the Website and I use different types of cookies to run the Website:
 
-We use both session and persistent cookies on the Service and we use different types of cookies to run the Service:
+- **Essential Cookies**: These cookies are necessary for the Website to function properly. They enable basic functions like page navigation and access to secure areas of the Website.
+- **Analytical/Performance Cookies**: These cookies allow me to analyze how visitors use my Website and monitor Website performance.
+- **Functionality Cookies**: These cookies enable the Website to remember your preferences and provide enhanced features.
+- **Advertising/Targeting Cookies**: These cookies are used to deliver advertisements that are relevant to you and your interests.
 
-- Essential cookies. We may use essential cookies to authenticate users and prevent fraudulent use of user accounts.
+### 4. Purpose of Cookies {.divider .divider-start}
 
-- Analytics cookies. We may use analytics cookies to track information how the Service is used so that we can make improvements. We may also use analytics cookies to test new advertisements, pages, features or new functionality of the Service to see how our users react to them.
+I use cookies for the following purposes::
 
-- Advertising cookies. Advertising cookies allow us and our advertising partners to serve you with advertisements that we believe are relevant to you and your interests.
+- Improve the functionality and performance of my Website.
+- Analyze Website traffic and usage.
+- Provide personalized content and advertisements.
 
-### Third-party cookies {.divider .divider-start}
+### 5. Third-Party Cookies {.divider .divider-start}
 
-In addition to our own cookies, we may also use various third-party cookies to report usage statistics of the Service, deliver advertisements on and through the Service, and so on.
+I may use third-party services that place cookies on your device to assist me in analyzing usage and providing advertisements. These third-party cookies are subject to the respective privacy policies of these external services.
 
-### What are your choices regarding cookies? {.divider .divider-start}
+### 6. Managing Cookies {.divider .divider-start}
 
-If you'd like to delete cookies or instruct your web browser to delete or refuse cookies, please visit the help pages of your web browser. Please note, however, that if you delete cookies or refuse to accept them, you might not be able to use all of the features we offer, you may not be able to store your preferences, and some of our pages might not display properly.
+You can manage or disable cookies through your browser settings. Please note that disabling cookies may affect the functionality of my Website.
 
-### Where can you find more information about cookies? {.divider .divider-start}
+### 7. Consent {.divider .divider-start}
 
-You can learn more about cookies and the following third-party websites:
+By using my Website, you consent to the use of cookies as described in this Cookie Policy. You can withdraw your consent at any time by changing your browser settings to reject cookies.
 
-- AllAboutCookies: http://www.allaboutcookies.org
-- Network Advertising Initiative: http://www.networkadvertising.org
+### 8. Changes to Cookie Policy {.divider .divider-start}
+
+I reserve the right to modify or replace these Policy at any time. If a revision is material, I will provide at least 7 days' notice prior to the changes taking effect.
+
+### 9. Contact Information {.divider .divider-start}
+
+If you have any questions about our use of cookies, please contact Denis Iakimenko via Telegram at [https://t.me/denis23x](https://t.me/denis23x)

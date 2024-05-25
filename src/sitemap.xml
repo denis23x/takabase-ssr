@@ -26,7 +26,12 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://takabase.com/terms/terms-of-use</loc>
+    <loc>https://takabase.com/terms/terms-of-service</loc>
+    <lastmod>2023-11-26</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://takabase.com/terms/privacy-policy</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>
