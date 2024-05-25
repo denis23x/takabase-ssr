@@ -37,7 +37,7 @@ import { CategoryService } from '../core/services/category.service';
 import { UserService } from '../core/services/user.service';
 import { PostCreateDto } from '../core/dto/post/post-create.dto';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
-import { CookieService } from '../core/services/cookie.service';
+import { CookiesService } from '../core/services/cookies.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 import { TextareaAutosizeDirective } from '../standalone/directives/app-textarea-autosize.directive';
@@ -111,7 +111,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly userService: UserService = inject(UserService);
-	private readonly cookieService: CookieService = inject(CookieService);
+	private readonly cookiesService: CookiesService = inject(CookiesService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly fileService: FileService = inject(FileService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
@@ -325,7 +325,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	setAppearance(): void {
-		this.postMarkdownMonospace = !!Number(this.cookieService.getItem('markdown-monospace'));
+		this.postMarkdownMonospace = !!Number(this.cookiesService.getItem('markdown-monospace'));
 	}
 
 	setMetaTags(): void {

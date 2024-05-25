@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
-import { CookieService } from '../../../core/services/cookie.service';
+import { CookiesService } from '../../../core/services/cookies.service';
 import {
 	autoUpdate,
 	computePosition,
@@ -34,7 +34,7 @@ import {
 export class DropdownComponent implements AfterViewInit, OnDestroy {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly elementRef: ElementRef = inject(ElementRef);
-	private readonly cookieService: CookieService = inject(CookieService);
+	private readonly cookiesService: CookiesService = inject(CookiesService);
 
 	@Output() appDropdownToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -123,7 +123,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 	onStateShow(): void {
 		this.dropdownState = true;
 		this.dropdownElementContent.style.visibility = 'visible';
-		this.dropdownBackdrop = !!Number(this.cookieService.getItem('dropdown-backdrop'));
+		this.dropdownBackdrop = !!Number(this.cookiesService.getItem('dropdown-backdrop'));
 
 		this.elementRef.nativeElement.classList.add(...this.dropdownActiveClassList);
 

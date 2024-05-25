@@ -8,9 +8,8 @@ import { EMPTY, from, fromEvent, Observable, of, race, switchMap } from 'rxjs';
 import { catchError, filter, map, tap } from 'rxjs/operators';
 import { Appearance } from '../models/appearance.model';
 import { HelperService } from './helper.service';
-import { CookieService } from './cookie.service';
+import { CookiesService } from './cookies.service';
 import { Meta } from '@angular/platform-browser';
-import { Coords } from 'colorjs.io/types/src/color';
 import Color from 'colorjs.io';
 import { FirebaseService } from './firebase.service';
 import {
@@ -34,7 +33,7 @@ export class AppearanceService {
 	private readonly httpClient: HttpClient = inject(HttpClient);
 	private readonly meta: Meta = inject(Meta);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly cookieService: CookieService = inject(CookieService);
+	private readonly cookiesService: CookiesService = inject(CookiesService);
 	private readonly ngZone: NgZone = inject(NgZone);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 	private readonly apiService: ApiService = inject(ApiService);
@@ -95,11 +94,11 @@ export class AppearanceService {
 				const cookieKey: string = this.helperService.setCamelCaseToDashCase(key);
 				const cookieValue: any = typeof value === 'boolean' ? String(+value) : value;
 
-				this.cookieService.setItem(cookieKey, cookieValue);
+				this.cookiesService.setItem(cookieKey, cookieValue);
 			});
 		} else {
 			settingsList.forEach((key: string) => {
-				this.cookieService.removeItem(this.helperService.setCamelCaseToDashCase(key));
+				this.cookiesService.removeItem(this.helperService.setCamelCaseToDashCase(key));
 			});
 		}
 
@@ -143,14 +142,14 @@ export class AppearanceService {
 
 			/** Set */
 
-			this.cookieService.setItem(name, content);
+			this.cookiesService.setItem(name, content);
 
 			this.meta.updateTag({ name, content }, selectorDark);
 			this.meta.updateTag({ name, content }, selectorLight);
 		} else {
 			/** Remove */
 
-			this.cookieService.removeItem(name);
+			this.cookiesService.removeItem(name);
 
 			this.meta.updateTag({ name, content: '#191e24' }, selectorDark);
 			this.meta.updateTag({ name, content: '#f2f2f2' }, selectorLight);

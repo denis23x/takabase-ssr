@@ -3,7 +3,7 @@
 import { Component, inject, Input, numberAttribute, OnDestroy, OnInit } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { CookieService } from '../core/services/cookie.service';
+import { CookiesService } from '../core/services/cookies.service';
 import { AppearanceService } from '../core/services/appearance.service';
 import { AbstractGetAllDto } from '../core/dto/abstract/abstract-get-all.dto';
 import { AuthorizationService } from '../core/services/authorization.service';
@@ -16,7 +16,7 @@ import { SkeletonService } from '../core/services/skeleton.service';
 })
 export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 	public readonly router: Router = inject(Router);
-	public readonly cookieService: CookieService = inject(CookieService);
+	public readonly cookiesService: CookiesService = inject(CookiesService);
 	public readonly appearanceService: AppearanceService = inject(AppearanceService);
 	public readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	public readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
@@ -98,7 +98,7 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 
 	setAbstractAppearance(): void {
 		// prettier-ignore
-		this.abstractListPageScrollInfinite = !!Number(this.cookieService.getItem('page-scroll-infinite'));
+		this.abstractListPageScrollInfinite = !!Number(this.cookiesService.getItem('page-scroll-infinite'));
 
 		if (this.abstractListPageScrollInfinite) {
 			this.abstractListPageScrollInfinite$?.unsubscribe();

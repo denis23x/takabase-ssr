@@ -6,7 +6,7 @@ import { distinctUntilChanged, fromEvent, of, Subscription, switchMap } from 'rx
 import { debounceTime, map } from 'rxjs/operators';
 import { PlatformService } from '../../../core/services/platform.service';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { CookieService } from '../../../core/services/cookie.service';
+import { CookiesService } from '../../../core/services/cookies.service';
 
 @Component({
 	standalone: true,
@@ -17,7 +17,7 @@ import { CookieService } from '../../../core/services/cookie.service';
 export class ScrollToTopComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly viewportScroller: ViewportScroller = inject(ViewportScroller);
-	private readonly cookieService: CookieService = inject(CookieService);
+	private readonly cookiesService: CookiesService = inject(CookiesService);
 	private readonly location: Location = inject(Location);
 
 	windowScroll$: Subscription | undefined;
@@ -33,7 +33,8 @@ export class ScrollToTopComponent implements OnInit, OnDestroy {
 				this.windowScrollToTopToggleValue = window.innerHeight * 2;
 				this.windowScroll$?.unsubscribe();
 
-				const pageScrollToTop: boolean = !!Number(this.cookieService.getItem('page-scroll-to-top'));
+				// prettier-ignore
+				const pageScrollToTop: boolean = !!Number(this.cookiesService.getItem('page-scroll-to-top'));
 
 				if (pageScrollToTop) {
 					// Not affecting hydration

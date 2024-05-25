@@ -3,7 +3,7 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { CommonModule } from '@angular/common';
-import { CookieService } from '../../../core/services/cookie.service';
+import { CookiesService } from '../../../core/services/cookies.service';
 import { SnackbarComponent } from '../snackbar/snackbar.component';
 
 @Component({
@@ -13,7 +13,7 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
 	templateUrl: 'window.component.html'
 })
 export class WindowComponent implements OnInit {
-	private readonly cookieService: CookieService = inject(CookieService);
+	private readonly cookiesService: CookiesService = inject(CookiesService);
 
 	@Output() appWindowClose: EventEmitter<void> = new EventEmitter<void>();
 
@@ -52,7 +52,7 @@ export class WindowComponent implements OnInit {
 	}
 
 	setAppearance(): void {
-		this.captionButtonsPosition = this.cookieService.getItem('window-button-position') || 'left';
+		this.captionButtonsPosition = this.cookiesService.getItem('window-button-position') || 'left';
 	}
 
 	onClose(): void {

@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
 @Injectable({
 	providedIn: 'root'
 })
-export class CookieService {
+export class CookiesService {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly platformService: PlatformService = inject(PlatformService);
 

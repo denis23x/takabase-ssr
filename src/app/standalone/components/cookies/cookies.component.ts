@@ -7,7 +7,7 @@ import { AuthorizationService } from '../../../core/services/authorization.servi
 import { CurrentUser } from '../../../core/models/current-user.model';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { CookieService } from '../../../core/services/cookie.service';
+import { CookiesService } from '../../../core/services/cookies.service';
 
 @Component({
 	standalone: true,
@@ -17,7 +17,7 @@ import { CookieService } from '../../../core/services/cookie.service';
 })
 export class CookiesComponent implements OnInit, OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
-	private readonly cookieService: CookieService = inject(CookieService);
+	private readonly cookiesService: CookiesService = inject(CookiesService);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -42,7 +42,7 @@ export class CookiesComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
-		this.currentUserIsAcceptedCookies = !!Number(this.cookieService.getItem('cookies-accepted'));
+		this.currentUserIsAcceptedCookies = !!Number(this.cookiesService.getItem('cookies-accepted'));
 	}
 
 	ngOnDestroy(): void {
@@ -54,7 +54,7 @@ export class CookiesComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmit(): void {
-		this.cookieService.setItem('cookies-accepted', '1', {
+		this.cookiesService.setItem('cookies-accepted', '1', {
 			expires: new Date('2077-06-12')
 		});
 

@@ -9,7 +9,7 @@ import { PlatformService } from '../services/platform.service';
 import { AuthorizationService } from '../services/authorization.service';
 import { CurrentUser } from '../models/current-user.model';
 import { UserService } from '../services/user.service';
-import { CookieService } from '../services/cookie.service';
+import { CookiesService } from '../services/cookies.service';
 import { environment } from '../../../environments/environment';
 import { DOCUMENT } from '@angular/common';
 
@@ -18,7 +18,7 @@ export const redirectHomeGuard = (): CanMatchFn => {
 		const authorizationService: AuthorizationService = inject(AuthorizationService);
 		const platformService: PlatformService = inject(PlatformService);
 		const userService: UserService = inject(UserService);
-		const cookieService: CookieService = inject(CookieService);
+		const cookiesService: CookiesService = inject(CookiesService);
 		const router: Router = inject(Router);
 		const document: Document = inject(DOCUMENT);
 
@@ -30,7 +30,7 @@ export const redirectHomeGuard = (): CanMatchFn => {
 							const url: URL = new URL(document.URL, environment.appUrl);
 
 							const redirectName: string = 'page-redirect-home';
-							const redirectCookie: boolean = !!Number(cookieService.getItem(redirectName));
+							const redirectCookie: boolean = !!Number(cookiesService.getItem(redirectName));
 							const redirectSearchParams: boolean = !!url.searchParams.get(redirectName);
 
 							return redirectCookie || redirectSearchParams;
