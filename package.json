@@ -17,6 +17,7 @@
     "dist:start": "node dist/takabase-ssr/server/server.mjs"
   },
   "dependencies": {
+    "@agoose77/markdown-it-mermaid": "^1.1.0",
     "@angular/animations": "^17.3.9",
     "@angular/common": "^17.3.9",
     "@angular/compiler": "^17.3.9",

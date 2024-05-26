@@ -142,7 +142,7 @@
                 "bundleName": "emoji-mart"
               },
               {
-                "input": "node_modules/autosize/dist/autosize.js",
+                "input": "node_modules/autosize/dist/autosize.min.js",
                 "inject": true,
                 "bundleName": "autosize"
               },

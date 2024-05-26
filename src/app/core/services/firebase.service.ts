@@ -25,7 +25,7 @@ export class FirebaseService {
 	/** APP */
 
 	initializeApp(): FirebaseApp {
-		return (this.app = initializeApp(environment.firebase));
+		return (this.app = initializeApp(environment.firebase, 'takabase'));
 	}
 
 	getApp(): FirebaseApp {

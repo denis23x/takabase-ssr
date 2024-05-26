@@ -3,3 +3,9 @@
 .alert {
   @apply justify-items-start text-left items-start;
 }
+
+/* Mermaid */
+
+.alert-danger {
+  @apply alert-error;
+}

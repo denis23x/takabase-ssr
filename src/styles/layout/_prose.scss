@@ -28,7 +28,7 @@
   }
 
   img {
-    @apply bg-base-300 m-0;
+    @apply bg-base-200 m-0;
 
     &:not(.mask) {
       @apply rounded-box;
@@ -37,20 +37,33 @@
     &:not([width]):not([height]) {
       @apply w-full;
     }
+
+    /* Mermaid */
+
+    &[src^="data:image/svg+xml"] {
+      @apply object-scale-down object-center h-fit opacity-100;
+
+      max-width: initial !important;
+      max-height: initial !important;
+    }
   }
 
   /* https://stackoverflow.com/questions/5379752/css-style-external-links */
 
   a {
     &[href]:not(:where([href^="#"],[href^="/"]:not([href^="//"]),[href*="//localhost"])) {
-      &:not(.not-prose) {
+      &:not(.not-prose):not(.token.url-link) {
         @apply link after:content-['\279A'] after:inline-block after:px-1;
       }
     }
   }
 
   blockquote {
-    @apply my-4 border-primary;
+    @apply my-4 border-primary bg-primary/10;
+
+    p {
+      @apply before:content-none after:content-none not-italic;
+    }
   }
 
   p {

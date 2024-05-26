@@ -13,8 +13,9 @@ import plainText from 'markdown-it-plain-text';
 import smartArrows from 'markdown-it-smartarrows';
 import tasks from 'markdown-it-tasks';
 import video from 'markdown-it-video';
-import Prism from 'prismjs';
+import mermaid from '@agoose77/markdown-it-mermaid';
 import morphdom from 'morphdom';
+import Prism from 'prismjs';
 import 'prismjs/plugins/autolinker/prism-autolinker.min.js';
 import 'prismjs/plugins/autoloader/prism-autoloader.min.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.min.js';
@@ -27,6 +28,7 @@ import { MarkdownShortcut } from '../models/markdown.model';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { HelperService } from './helper.service';
+import { AppearanceService } from './appearance.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -36,6 +38,7 @@ export class MarkdownService {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly httpClient: HttpClient = inject(HttpClient);
 	private readonly helperService: HelperService = inject(HelperService);
+	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 
 	markdownItClipboard: Subject<ClipboardEventInit> = new Subject<ClipboardEventInit>();
 	markdownItShortcut: Subject<MarkdownShortcut | null> = new Subject<MarkdownShortcut | null>();
@@ -92,42 +95,18 @@ export class MarkdownService {
 				return value;
 			}
 		})
-			.use(attrs, {
-				allowedAttributes: ['class', 'style', 'width', 'height']
-			})
+			.use(attrs, this.getMarkdownItAttrsConfig())
 			.use(bracketedSpans)
 			.use(collapsible)
 			.use(emoji)
-			.use(linkAttributes, [
-				{
-					matcher(href: string) {
-						return href.match(/^https?:\/\//);
-					},
-					attrs: {
-						target: '_blank',
-						rel: 'ugc noopener noreferrer'
-					}
-				}
-			])
+			.use(linkAttributes, this.getMarkdownItLinkAttributesConfig())
 			.use(mark)
-			.use(multiMdTable, {
-				multiline: true,
-				rowspan: true,
-				headerless: true,
-				multibody: false,
-				autolabel: false
-			})
+			.use(multiMdTable, this.getMarkdownItMultiMdTableConfig())
 			.use(plainText)
 			.use(smartArrows)
-			.use(tasks, {
-				enabled: true,
-				label: true,
-				labelAfter: false,
-				itemClass: 'form-control',
-				inputClass: 'checkbox checkbox-success mr-4',
-				labelClass: 'label cursor-pointer'
-			})
-			.use(video);
+			.use(tasks, this.getMarkdownITasksConfig())
+			.use(video)
+			.use(mermaid, this.getMarkdownItMermaidConfig());
 
 		this.markdownIt.renderer.rules.image = this.setMarkdownItRule('image');
 		this.markdownIt.renderer.rules.video = this.setMarkdownItRule('video');
@@ -286,6 +265,65 @@ export class MarkdownService {
 			Prism.manual = true;
 			Prism.plugins.autoloader.languages_path = '/assets/grammars/';
 		}
+	}
+
+	getMarkdownItAttrsConfig(): any {
+		return {
+			allowedAttributes: ['class', 'style', 'width', 'height']
+		};
+	}
+
+	getMarkdownItLinkAttributesConfig(): any[] {
+		return [
+			{
+				matcher(href: string) {
+					return href.match(/^https?:\/\//);
+				},
+				attrs: {
+					target: '_blank',
+					rel: 'ugc noopener noreferrer'
+				}
+			}
+		];
+	}
+
+	getMarkdownItMultiMdTableConfig(): any {
+		return {
+			multiline: true,
+			rowspan: true,
+			headerless: true,
+			multibody: false,
+			autolabel: false
+		};
+	}
+
+	getMarkdownITasksConfig(): any {
+		return {
+			enabled: true,
+			label: true,
+			labelAfter: false,
+			itemClass: 'form-control',
+			inputClass: 'checkbox checkbox-success mr-4',
+			labelClass: 'label cursor-pointer'
+		};
+	}
+
+	getMarkdownItMermaidConfig(): any {
+		return {
+			theme: 'base',
+			themeVariables: {
+				darkMode: false,
+				background: this.appearanceService.getCSSColor('--b1', 'hex'),
+				primaryColor: this.appearanceService.getCSSColor('--b1', 'hex'),
+				primaryTextColor: this.appearanceService.getCSSColor('--bc', 'hex'),
+				primaryBorderColor: this.appearanceService.getCSSColor('--p', 'hex'),
+				secondaryColor: this.appearanceService.getCSSColor('--b1', 'hex'),
+				secondaryTextColor: this.appearanceService.getCSSColor('--bc', 'hex'),
+				secondaryBorderColor: this.appearanceService.getCSSColor('--s', 'hex'),
+				lineColor: this.appearanceService.getCSSColor('--bc', 'hex'),
+				textColor: this.appearanceService.getCSSColor('--bc', 'hex')
+			}
+		};
 	}
 
 	setRender(value: string, element: HTMLElement): void {
