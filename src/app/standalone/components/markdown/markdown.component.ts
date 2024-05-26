@@ -155,7 +155,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 			this.textareaInput$?.unsubscribe();
 			this.textareaInput$ = fromEvent(this.textarea, 'input')
-				.pipe(debounceTime(200))
+				.pipe(debounceTime(100))
 				.subscribe({
 					next: () => this.markdownService.setRender(this.textarea.value, this.preview),
 					error: (error: any) => console.error(error)
@@ -440,7 +440,10 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		const selectionEnd: number = this.textarea.selectionEnd + difference;
 
 		this.textarea.value = value;
-		this.textarea.dispatchEvent(new Event('input', { bubbles: true }));
+
+		// Update Markdown directly
+
+		this.markdownService.setRender(this.textarea.value, this.preview);
 
 		// prettier-ignore
 		this.textarea.selectionStart = selectionStart !== selectionEnd ? selectionEnd : selectionStart

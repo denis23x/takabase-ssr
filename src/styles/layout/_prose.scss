@@ -41,7 +41,7 @@
     /* Mermaid */
 
     &[src^="data:image/svg+xml"] {
-      @apply object-scale-down object-center h-fit opacity-100;
+      @apply object-center opacity-100 p-8;
 
       max-width: initial !important;
       max-height: initial !important;
