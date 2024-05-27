@@ -16,11 +16,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/help/markdown</loc>
-    <lastmod>2023-11-26</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://takabase.com/reset</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
@@ -46,27 +41,27 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://takabase.com/help/markdown</loc>
+    <lastmod>2023-11-26</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://takabase.com/help/code-highlight</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://takabase.com/help/style-safe-list</loc>
+    <loc>https://takabase.com/help/diagrams</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://takabase.com/help/deep-dive</loc>
+    <loc>https://takabase.com/help/safe-list</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://takabase.com/help/compatibility</loc>
-    <lastmod>2023-11-26</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/help/road-map</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
   </url>

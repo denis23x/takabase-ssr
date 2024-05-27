@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<section class="flex flex-col items-stretch justify-start">
+	<section class="flex flex-col items-stretch justify-start gap-4">
 		<header class="flex flex-col items-stretch justify-start gap-4">
 			<h3 class="text-2xl font-semibold text-base-content">What is Markdown?</h3>
 			<p class="text-base text-base-content">
@@ -18,20 +18,33 @@
 			<nav class="prose">
 				<ul class="list-disc">
 					<li class="list-item">
-						<a class="link" href="https://www.markdownguide.org/extended-syntax/" target="_blank">
-							Extended syntax
-						</a>
-					</li>
-					<li class="list-item">
 						<a class="link" href="https://www.markdownguide.org/cheat-sheet/" target="_blank">
 							Cheat sheet
 						</a>
 					</li>
 					<li class="list-item">
+						<a class="link" href="https://www.markdownguide.org/basic-syntax/" target="_blank">
+							Basic syntax
+						</a>
+					</li>
+					<li class="list-item">
+						<a class="link" href="https://www.markdownguide.org/extended-syntax/" target="_blank">
+							Extended syntax
+						</a>
+					</li>
+					<li class="list-item">
 						<a class="link" href="https://www.markdownguide.org/hacks/" target="_blank">Hacks</a>
+					</li>
+					<li class="list-item">
+						<a class="link" href="https://www.markdownguide.org/tools/" target="_blank">Tools</a>
 					</li>
 				</ul>
 			</nav>
+			<p class="text-base text-base-content">
+				Markdown layout is highly customizable, allowing users to tailor it to their specific needs
+				and preferences. This makes it easy to add and remove elements as needed and adjust layouts
+				to better suit the content and audience.
+			</p>
 		</header>
 		<ul class="flex flex-col gap-4">
 			@for (basicSyntax of markdownBasicSyntax; track $index) {
@@ -40,7 +53,7 @@
 						{{ basicSyntax.title }}
 					</h4>
 					<p
-						class="text-base text-base-content"
+						class="text-base text-base-content prose max-w-full"
 						[innerHTML]="basicSyntax.description | sanitizer: 'html'"
 					></p>
 					<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -66,26 +79,5 @@
 				</li>
 			}
 		</ul>
-		<footer class="flex flex-col items-stretch justify-start gap-4">
-			<h4 class="text-xl font-semibold text-base-content divider divider-start">Conclusion</h4>
-			<p class="text-base text-base-content">
-				Our layout is also highly customizable, allowing users to tailor it to their specific needs
-				and preferences. This makes it easy to add and remove elements as needed, change color
-				schemes, and adjust layouts to better suit the content and audience
-			</p>
-			<nav class="prose">
-				<ul class="list-disc">
-					<li class="list-item">
-						<a class="link" [routerLink]="['../style-safe-list']"> Style safe list </a>
-					</li>
-					<li class="list-item">
-						<a class="link" [routerLink]="['../compatibility']"> Compatibility </a>
-					</li>
-					<li class="list-item">
-						<a class="link" [routerLink]="['../code-highlight']"> Code highlight </a>
-					</li>
-				</ul>
-			</nav>
-		</footer>
 	</section>
 </ng-container>

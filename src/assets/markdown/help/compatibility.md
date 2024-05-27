@@ -16,3 +16,4 @@ Connected Markdown plugins
 - [markdown-it-smartarrows](https://www.npmjs.com/package/markdown-it-smartarrows)
 - [markdown-it-tasks](https://www.npmjs.com/package/markdown-it-tasks)
 - [markdown-it-video](https://www.npmjs.com/package/markdown-it-video)
+- [markdown-it-mermaid](@agoose77/markdown-it-mermaid)

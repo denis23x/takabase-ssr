@@ -51,8 +51,13 @@ export class HelpMarkdownComponent {
     },
     {
       title: 'Code',
-      description: 'To denote a word or phrase as code, enclose it in backticks <code>`</code>.  The Markdown syntax allows you to create fenced code blocks. You should use three backticks <code>```</code> on the lines before and after the code block',
+      description: 'To denote a word or phrase as code, enclose it in backticks <code>`</code>.  The Markdown syntax allows you to create fenced code blocks. You should use three backticks <code>```</code> on the lines before and after the code block. <a class="not-prose link" href="help/code-highlight" target="_self">Read here</a> for more information',
       markdown: `\`<inline-code/>\`\n\n\`\`\` typescript\n// TODO: remake\nconst name: string = 'Takabase';\n\`\`\``
+    },
+    {
+      title: 'Diagrams',
+      description: 'To create and modify diagrams dynamically you can use syntax of <a class="link" href="https://mermaid.js.org" target="_blank">Mermaid.js</a> JavaScript based diagramming and charting tool. For more detailed information about it, please <a class="not-prose link" href="help/diagrams" target="_self">read here</a>',
+      markdown: `\`\`\` mermaid\ngraph LR\n  A[Square Rect] -- Link text --> B((Circle))\n  A --> C(Round Rect)\n  B --> D{Rhombus}\n  C --> D\n\`\`\``
     },
     {
       title: 'Images',
@@ -61,7 +66,7 @@ export class HelpMarkdownComponent {
     },
     {
       title: 'Advanced',
-      description: 'Add classes, identifiers and attributes to your markdown with <code>{.class .class2 attr=value}</code> curly brackets. Feel free to show your imagination and use the large set of CSS classes available in the style safe list section',
+      description: 'Add classes, identifiers and attributes to your markdown with <code>{.class .class2 attr=value}</code> curly brackets. Feel free to show your imagination and use the large set of CSS classes available <a class="not-prose link" href="help/safe-list" target="_self">here</a>',
       markdown: `![Takabase](/assets/images/placeholder-image-meta.png "Image"){.mask .mask-heart width=100}\n\n[Takabase App](https://takabase.com){.link .link-info}\n\nBadge Primary{.badge .badge-primary}\n\n[Secondary]{.btn .btn-secondary .btn-outline}\n\n- Register{.step .step-primary}\n- Choose plan{.step .step-primary}\n- Purchase{.step}\n{.steps .steps-vertical .not-prose .p-0}`
     }
   ];

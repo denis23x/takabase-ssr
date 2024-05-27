@@ -27,16 +27,20 @@ export class HelpComponent implements OnInit {
 			name: 'Markdown'
 		},
 		{
-			path: 'style-safe-list',
-			name: 'Style safe list'
+			path: 'code-highlight',
+			name: 'Code highlight'
+		},
+		{
+			path: 'diagrams',
+			name: 'Diagrams'
+		},
+		{
+			path: 'safe-list',
+			name: 'Safe list'
 		},
 		{
 			path: 'compatibility',
 			name: 'Compatibility'
-		},
-		{
-			path: 'code-highlight',
-			name: 'Code highlight'
 		}
 	];
 

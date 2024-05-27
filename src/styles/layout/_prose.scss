@@ -28,7 +28,7 @@
   }
 
   img {
-    @apply bg-base-200 m-0;
+    @apply bg-base-200 my-4 mx-0;
 
     &:not(.mask) {
       @apply rounded-box;
@@ -52,8 +52,8 @@
 
   a {
     &[href]:not(:where([href^="#"],[href^="/"]:not([href^="//"]),[href*="//localhost"])) {
-      &:not(.not-prose):not(.token.url-link) {
-        @apply link after:content-['\279A'] after:inline-block after:px-1;
+      &:not(.not-prose):not(.token.url-link):not(.btn) {
+        @apply link inline-block after:content-['\279A'] after:inline-block after:px-1;
       }
     }
   }

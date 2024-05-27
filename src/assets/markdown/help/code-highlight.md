@@ -28,4 +28,4 @@ _SCSS_
 }
 ```
 
-Support all **297 languages** currently provided by [Prism](https://prismjs.com/) and pack of awesome color schemes for it. With our customizable layout, you can easily visualize and create keyboards with custom buttons that suit your needs, for example press [modifierKey]{.kbd .kbd-sm} + [D]{.kbd .kbd-sm} to add this website to your browser favorites.
+Support all **297 languages** currently provided by [Prism](https://prismjs.com/) and pack of awesome color schemes for it. With our customizable layout, you can also easily visualize and create keyboards with custom buttons that suit your needs, for example press [modifierKey]{.kbd .kbd-sm .uppercase} + [D]{.kbd .kbd-sm} to add this website to your browser favorites.
