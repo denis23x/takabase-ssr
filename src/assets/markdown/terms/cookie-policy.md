@@ -6,7 +6,7 @@ Please read these Policy carefully. If you disagree with any part of the Policy,
 
 This Cookie Policy explains how Denis Iakimenko ("I", "me", "my") uses cookies on my website [Takabase](https://takabase.com) ("Website").
 
-My Cookie Policy explains what cookies are, how we use cookies, how third-parties we may partner with may use cookies on the Website, your choices regarding cookies, and further information about cookies.
+My Cookie Policy explains what cookies are, how I use cookies, how third-parties partner may use cookies on the Website, your choices regarding cookies, and further information about cookies.
 
 ### 2. What Are Cookies? {.divider .divider-start}
 
@@ -47,4 +47,4 @@ I reserve the right to modify or replace these Policy at any time. If a revision
 
 ### 9. Contact Information {.divider .divider-start}
 
-If you have any questions about our use of cookies, please contact Denis Iakimenko via Telegram at [https://t.me/denis23x](https://t.me/denis23x)
+If you have any questions about this use of cookies, please contact Denis Iakimenko via Telegram at [https://t.me/denis23x](https://t.me/denis23x)

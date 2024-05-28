@@ -130,7 +130,7 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 			this.userDeleteFormRequest$?.unsubscribe();
 			this.userDeleteFormRequest$ = this.userService.delete(userId, userDeleteDto).subscribe({
 				next: (user: User) => {
-					this.snackbarService.success('Chao', 'We will not miss you');
+					this.snackbarService.success('Chao', 'You will not be missed');
 
 					this.appUserDeleteSuccess.emit(user);
 

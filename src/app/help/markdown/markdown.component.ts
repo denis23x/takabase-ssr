@@ -36,22 +36,22 @@ export class HelpMarkdownComponent {
     },
     {
       title: 'Lists',
-      description: 'You can organize items into ordered and unordered lists. To create an ordered list, add line items with numbers followed by periods. The numbers don’t have to be in numerical order, but the list should start with the number one. To create an unordered list, add dashes <code>-</code>, asterisks <code>*</code>, or plus signs <code>+</code> in front of line items. Indent one or more items to create a nested list',
+      description: 'You can organize items into ordered and unordered lists. To create an ordered list, add line items with numbers followed by periods. The numbers don’t have to be in numerical order, but the list should start with the number one. To create an unordered list, add dashes <code>-</code>, asterisks <code>*</code>, or plus signs <code>+</code> in front of line items. Indent one or more items to create a nested list.',
       markdown: `1. Ordered list\n    1. Ordered list\n    2. Ordered list\n        1. Ordered list\n2. Ordered list\n\n---\n\n- Unordered list\n    - Unordered list\n    - Unordered list\n        - Unordered list\n- Unordered list`
     },
     {
       title: 'Links',
-      description: 'To create a link, enclose the link text in brackets <code>e.g., [Takabase]</code> and then follow it immediately with the URL in parentheses <code>e.g., (https://takabase.com)</code>. You can optionally add a title for a link. This will appear as a tooltip when the user hovers over the link. To add a title, enclose it in quotation marks after the URL',
+      description: 'To create a link, enclose the link text in brackets <code>e.g., [Takabase]</code> and then follow it immediately with the URL in parentheses <code>e.g., (https://takabase.com)</code>. You can optionally add a title for a link. This will appear as a tooltip when the user hovers over the link. To add a title, enclose it in quotation marks after the URL.',
       markdown: `My favorite website is [Takabase App](https://takabase.com "The best website")`
     },
     {
       title: 'Blockquotes',
-      description: 'To create a blockquote, add a <code>></code> in front of a paragraph. Blockquotes can be nested. Add a <code>>></code> in front of the paragraph you want to nest',
+      description: 'To create a blockquote, add a <code>></code> in front of a paragraph. Blockquotes can be nested. Add a <code>>></code> in front of the paragraph you want to nest.',
       markdown: `> Dorothy followed her through many of the beautiful rooms in her castle\n\n---\n\n> Dorothy followed her through many of the beautiful rooms in her castle\n>\n>> The Witch bade her clean the pots and kettles and sweep the floor and keep the fire fed with wood`
     },
     {
       title: 'Code',
-      description: 'To denote a word or phrase as code, enclose it in backticks <code>`</code>.  The Markdown syntax allows you to create fenced code blocks. You should use three backticks <code>```</code> on the lines before and after the code block. <a class="not-prose link" href="help/code-highlight" target="_self">Read here</a> for more information',
+      description: 'To denote a word or phrase as code, enclose it in backticks <code>`</code>.  The Markdown syntax allows you to create fenced code blocks. You should use three backticks <code>```</code> on the lines before and after the code block. <a class="not-prose link" href="help/code-highlight" target="_self">Read here</a> for more information.',
       markdown: `\`<inline-code/>\`\n\n\`\`\` typescript\n// TODO: remake\nconst name: string = 'Takabase';\n\`\`\``
     },
     {
@@ -61,7 +61,7 @@ export class HelpMarkdownComponent {
     },
     {
       title: 'Images',
-      description: 'To add an image, add an exclamation mark <code>!</code>, followed by alt text in brackets, and the path or URL to the image asset in parentheses. You can optionally add a title in quotation marks after the path or URL',
+      description: 'To add an image, add an exclamation mark <code>!</code>, followed by alt text in brackets, and the path or URL to the image asset in parentheses. You can optionally add a title in quotation marks after the path or URL.',
       markdown: `![Takabase](/assets/images/placeholder-image-meta.png "Image")`
     },
     {

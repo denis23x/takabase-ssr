@@ -17,25 +17,25 @@
 				></i>
 				@if (confirmationRequestToggle) {
 					<span class="block">
-						Sit tight! We're in the final steps of confirming your email. This process usually takes
+						Please wait! This is the final step of confirming your email. This process usually takes
 						just a moment. Meanwhile, feel free to check out the amazing features awaiting you on
-						our platform. Once confirmed, you'll have full access. Thank you for your patience!
+						the platform. Once confirmed, you'll have full access. Thank you for your patience!
 					</span>
 				} @else {
 					@switch (confirmationRequestIsSucceed) {
 						@case (true) {
 							<span class="block">
-								Thank you for verifying your email address. You are now officially a member of our
+								Thank you for verifying your email address. You are now officially a member of the
 								community. Get ready to enjoy exclusive updates and exciting content delivered
-								straight to you.
+								straight to you
 							</span>
 						}
 						@case (false) {
 							<span class="block">
-								Our system encountered an issue while attempting to verify your email address. We
-								apologize for any inconvenience this may cause. To resolve this matter, please
-								ensure that you have entered the correct email address and try the confirmation
-								process again.
+								The system encountered an issue while attempting to verify your email address.
+								Apologies for any inconvenience this may have caused. To resolve this matter, please
+								ensure that the correct email address has been entered and retry the confirmation
+								process
 							</span>
 						}
 					}

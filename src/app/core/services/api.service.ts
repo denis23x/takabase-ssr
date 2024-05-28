@@ -46,7 +46,7 @@ export class ApiService {
 				case 'auth/network-request-failed':
 					return 'Please check your internet connection';
 				case 'auth/too-many-requests':
-					return 'We have detected too many requests from your device. Take a break please!';
+					return 'Detected too many requests from your device. Take a break please!';
 				case 'auth/user-disabled':
 					return 'Your account has been disabled or deleted. Please contact support team';
 				case 'auth/requires-recent-login':
@@ -54,7 +54,7 @@ export class ApiService {
 				case 'auth/email-already-in-use':
 					return 'Email address is already in use by an existing user';
 				case 'auth/user-not-found':
-					return 'We could not find user account associated with the email address';
+					return 'Not found any user account associated with the email address';
 				case 'auth/invalid-credential':
 					return 'Invalid email or password credentials';
 				case 'auth/invalid-email':
@@ -108,7 +108,7 @@ export class ApiService {
 			}
 		};
 
-		const message: string = getMessage() || 'We hit a snag';
+		const message: string = getMessage() || 'Something went wrong';
 
 		this.snackbarService.error('Error', message, {
 			icon: 'bug',

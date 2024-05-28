@@ -1,10 +1,10 @@
 ## Compatibility
 
-Implementation of markdown includes a wide range of features beyond the standard markdown syntax. While default markdown is a great tool for simple formatting, we recognize that many of our users require more advanced functionality to fully express their ideas and creativity. That's why we've developed a custom markdown implementation that supports a range of features, including advanced tables, attributes, media, syntax highlighting, and more.
+The Markdown implementation encompasses a broad spectrum of features extending beyond the conventional Markdown syntax. While basic Markdown serves as a valuable tool for straightforward formatting, acknowledging that many users seek more sophisticated functionality to articulate their ideas and creativity comprehensively. Hence, a bespoke Markdown implementation has been devised that accommodates an array of features, including advanced tables, attributes, media embedding, diagrams, syntax highlighting, and more.
 
-Using our connected plugins we can't guarantee your syntax will work well in third party editors. Use only [base syntax](https://www.markdownguide.org/basic-syntax/) to achieve 100% compatibility.
+Please note that while utilizing integrated plugins, seamless compatibility with third-party editors cannot be ensured. It's advisable to adhere to the [basic syntax](https://www.markdownguide.org/basic-syntax/) to ensure optimal compatibility
 
-Connected Markdown plugins
+**Markdown plugins**
 
 - [markdown-it-attrs](https://www.npmjs.com/package/markdown-it-attrs)
 - [markdown-it-bracketed-spans](https://www.npmjs.com/package/markdown-it-bracketed-spans)

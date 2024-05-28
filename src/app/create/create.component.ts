@@ -330,7 +330,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	setMetaTags(): void {
 		const title: string = 'Create post';
-		const description: string = 'Create and share your thoughts with a new post on our platform';
+		const description: string = 'Create and share your thoughts with a new post on the platform';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

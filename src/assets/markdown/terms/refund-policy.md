@@ -4,7 +4,7 @@ Please read these Policy carefully. If you disagree with any part of the Policy,
 
 ### No Refunds
 
-Thank you for subscribing to [Takabase](https://takabase.com). Please read this Refund Policy carefully before subscribing to ensure you fully understand our no-refund policy.
+Thank you for subscribing to [Takabase](https://takabase.com). Please read this Refund Policy carefully before subscribing to ensure you fully understand this no-refund policy.
 
 ### 1. No Refunds {.divider .divider-start}
 
@@ -20,4 +20,4 @@ In exceptional circumstances, Denis Iakimenko may, at his sole discretion, consi
 
 ### 4. Contact Information {.divider .divider-start}
 
-If you have any questions about our Refund Policy or wish to request an exception, please contact Denis Iakimenko via Telegram at [https://t.me/denis23x](https://t.me/denis23x)
+If you have any questions about this Refund Policy or wish to request an exception, please contact Denis Iakimenko via Telegram at [https://t.me/denis23x](https://t.me/denis23x)

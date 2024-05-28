@@ -154,7 +154,7 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 					next: (user: User) => {
 						this.router
 							.navigate([this.userService.getUserUrl(user)])
-							.then(() => this.snackbarService.success('Success', 'Welcome to our website'));
+							.then(() => this.snackbarService.success('Success', 'Welcome here'));
 					},
 					error: () => this.registrationForm.enable()
 				});

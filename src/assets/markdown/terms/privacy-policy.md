@@ -10,7 +10,7 @@ This Privacy Policy explains in detail how Denis Iakimenko ("I", "me", "my") col
 
 I collect various types of information from you, including personal information you provide directly to me, such as when you create an account or communicate with me. Additionally, I gather information automatically through cookies and other tracking technologies to enhance your experience on the Website.
 
-### 3. How We Use Information {.divider .divider-start}
+### 3. How I Use Information {.divider .divider-start}
 
 I utilize the information I collect to provide, maintain, and improve my services. This includes personalizing your experience, analyzing usage data to understand how visitors interact with the Website, and communicating with you regarding updates or changes to my services.
 

@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 			id: 1,
 			icon: 'gem',
 			title: 'Clarity',
-			description: 'By eliminating direct messaging and likes, we create an environment where users can focus on sharing knowledge and experiences without the noise of constant notifications.',
+			description: 'By eliminating direct messaging and likes, the environment allows users to focus on sharing knowledge and experiences without the noise of constant notifications.',
       list: [
 				{
 					title: 'Topic Diversity',
@@ -38,11 +38,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 				},
 				{
 					title: 'Social Authorization',
-					description: 'Enjoy the convenience of social authorization. Link your existing social media accounts to our platform, allowing you to log in quickly without the need to remember additional usernames and passwords.'
+					description: 'Enjoy the convenience of social authorization. Link your existing social media accounts with Takabase, allowing you to log in quickly without the need to remember additional usernames and passwords.'
 				},
 				{
 					title: 'Minimalistic UI',
-					description: "Enjoy a clutter-free and easy-to-navigate user interface. Our website's design focuses on essential elements, ensuring a clean and intuitive mobile experience."
+					description: "Enjoy a clutter-free and easy-to-navigate user interface. This website's design focuses on essential elements, ensuring a clean and intuitive mobile experience."
 				}
 			]
 		},
@@ -50,11 +50,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 			id: 2,
 			icon: 'robot',
 			title: 'PWA',
-			description: "Access the website even when you're offline or facing unreliable network connectivity. Our Progressive Web App technology ensures that you can continue browsing and interacting with content without interruption.",
+			description: "Access the website even when you're offline or facing unreliable network connectivity. Progressive Web App technology ensures that you can continue browsing and interacting with content without interruption.",
       list: [
 				{
 					title: 'Responsive Layout',
-					description: "Experience consistent and intuitive browsing across a range of mobile devices. Our website's responsive design ensures that content adapts seamlessly to various screen sizes and orientations."
+					description: "Experience consistent and intuitive browsing across a range of mobile devices. This website's responsive design ensures that content adapts seamlessly to various screen sizes and orientations."
 				},
 				{
 					title: 'Touch-Friendly Interactions',

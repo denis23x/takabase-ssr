@@ -23,7 +23,7 @@ export class LoadingComponent implements OnInit {
 
 	setMetaTags(): void {
 		const title: string = 'Loading';
-		const description: string = "We're loading something exciting for you. Stay tuned!";
+		const description: string = 'Loading something exciting just for you. Stay tuned!';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

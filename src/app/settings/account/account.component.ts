@@ -231,7 +231,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 					this.emailForm.enable();
 					this.emailForm.reset();
 
-					this.snackbarService.success('All right', 'We sent you a verification email');
+					this.snackbarService.success('All right', 'A verification email has been sent to you');
 				},
 				error: () => this.emailForm.enable()
 			});
@@ -247,7 +247,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.emailFormConfirmationIsSubmitted = false;
 
-					this.snackbarService.warning('All right', 'We sent you a verification email');
+					this.snackbarService.warning('All right', 'A verification email has been sent to you');
 				},
 				error: () => (this.emailFormConfirmationIsSubmitted = false)
 			});
@@ -282,7 +282,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		this.currentUserLogoutRevokeRequest$ = this.authorizationService.onLogoutRevoke().subscribe({
 			next: () => {
 				this.router.navigateByUrl('/').then(() => {
-					this.snackbarService.success('As you wish..', 'We have revoked all tokens');
+					this.snackbarService.success('As you wish..', 'All tokens has been revoked');
 				});
 			},
 			error: () => (this.currentUserLogoutRevokeRequestIsSubmitted = false)

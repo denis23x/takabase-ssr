@@ -60,7 +60,7 @@ export class AuthConfirmationComponent implements OnInit {
 
 	setMetaTags(): void {
 		const title: string = 'Confirmation page';
-		const description: string = 'Please wait a moment while we redirect you';
+		const description: string = 'Please wait a moment for redirect';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,
