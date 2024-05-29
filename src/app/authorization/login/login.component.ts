@@ -13,15 +13,15 @@ import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { HelperService } from '../../core/services/helper.service';
 import { UserService } from '../../core/services/user.service';
-import { LoginDto } from '../../core/dto/auth/login.dto';
 import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
-import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
+import { SignInComponent } from '../../standalone/components/sign-in/sign-in.component';
 import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
+import { SignInDto } from '../../core/dto/authorization/sign-in.dto';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -36,7 +36,7 @@ interface LoginForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
-		OauthComponent,
+		SignInComponent,
 		BadgeErrorComponent
 	],
 	selector: 'app-authorization-login',
@@ -77,7 +77,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
-		// TODO: social auth
+		// TODO: social authorization
 		//
 		// const email: string = String(this.activatedRoute.snapshot.queryParamMap.get('email') || '');
 		//
@@ -116,19 +116,21 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	onLogin(value: any): void {
 		this.loginForm.disable();
 
-		const loginDto: LoginDto = {
+		const signInDto: SignInDto = {
 			...value
 		};
 
 		this.loginRequest$?.unsubscribe();
-		this.loginRequest$ = this.authorizationService.onLogin(loginDto).subscribe({
-			next: (user: User) => {
-				this.router
-					.navigate([this.userService.getUserUrl(user)])
-					.then(() => console.debug('Route changed'));
-			},
-			error: () => this.loginForm.enable()
-		});
+		this.loginRequest$ = this.authorizationService
+			.onSignInWithEmailAndPassword(signInDto)
+			.subscribe({
+				next: (user: User) => {
+					this.router
+						.navigate([this.userService.getUserUrl(user)])
+						.then(() => console.debug('Route changed'));
+				},
+				error: () => this.loginForm.enable()
+			});
 	}
 
 	onSubmitLoginForm(): void {

@@ -42,7 +42,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
 			this.currentUser$?.unsubscribe();
 			this.currentUser$ = this.authorizationService
-				.onPopulate()
+				.getPopulate()
 				.pipe(
 					first(),
 					filter((currentUser: CurrentUser | undefined) => !!currentUser),

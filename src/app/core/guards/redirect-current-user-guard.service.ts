@@ -16,7 +16,7 @@ export const redirectCurrentUserGuard = (currentUserState: boolean): CanMatchFn 
 		const router: Router = inject(Router);
 
 		if (platformService.isBrowser()) {
-			return authorizationService.onPopulate().pipe(
+			return authorizationService.getPopulate().pipe(
 				map((currentUser: CurrentUser | undefined) => {
 					if (!!currentUser !== currentUserState) {
 						if (currentUser) {

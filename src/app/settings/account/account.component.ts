@@ -302,7 +302,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	onSubmitDeleteForm(): void {
 		this.currentUserLogoutRequest$?.unsubscribe();
 		this.currentUserLogoutRequest$ = this.authorizationService
-			.onLogout()
+			.onSignOut()
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					this.router

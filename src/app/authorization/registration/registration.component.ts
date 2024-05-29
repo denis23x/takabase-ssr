@@ -18,7 +18,7 @@ import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { OauthComponent } from '../../standalone/components/oauth/oauth.component';
+import { SignInComponent } from '../../standalone/components/sign-in/sign-in.component';
 import { Subscription, switchMap } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
@@ -44,7 +44,7 @@ interface RegistrationForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
-		OauthComponent,
+		SignInComponent,
 		BadgeErrorComponent,
 		AvatarComponent,
 		UserUrlPipe,

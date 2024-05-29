@@ -23,7 +23,7 @@ export const redirectHomeGuard = (): CanMatchFn => {
 		const document: Document = inject(DOCUMENT);
 
 		if (platformService.isBrowser()) {
-			return authorizationService.onPopulate().pipe(
+			return authorizationService.getPopulate().pipe(
 				map((currentUser: CurrentUser | undefined) => {
 					if (currentUser) {
 						const pageRedirectHome = (): boolean => {

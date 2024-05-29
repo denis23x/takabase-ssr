@@ -52,6 +52,8 @@ export class FirebaseService {
 	initializeAuth(): void {
 		this.ngZone.runOutsideAngular(() => {
 			this.auth = getAuth(this.getApp());
+
+			this.auth.useDeviceLanguage();
 		});
 	}
 

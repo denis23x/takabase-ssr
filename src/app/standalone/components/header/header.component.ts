@@ -69,7 +69,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	onLogout(): void {
 		this.currentUserLogoutRequest$?.unsubscribe();
 		this.currentUserLogoutRequest$ = this.authorizationService
-			.onLogout()
+			.onSignOut()
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					this.router
