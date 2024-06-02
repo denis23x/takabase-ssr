@@ -4,7 +4,6 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
-import { LoginDto } from '../dto/authorization/login.dto';
 import { UserService } from './user.service';
 import { CurrentUser } from '../models/current-user.model';
 import { AppearanceService } from './appearance.service';
@@ -53,12 +52,7 @@ export class AuthorizationService {
 				return from(getAuthState()).pipe(
 					switchMap((firebaseUser: FirebaseUser | null) => {
 						if (firebaseUser) {
-							const loginDto: LoginDto = {
-								email: firebaseUser.email,
-								firebaseUid: firebaseUser.uid
-							};
-
-							return this.onLogin(loginDto).pipe(
+							return this.onProfile().pipe(
 								switchMap((user: Partial<CurrentUser>) => {
 									return this.setCurrentUser({
 										firebase: firebaseUser,
@@ -81,13 +75,8 @@ export class AuthorizationService {
 			firebase: userCredential.user
 		};
 
-		const loginDto: LoginDto = {
-			email: userCredential.user.email,
-			firebaseUid: userCredential.user.uid
-		};
-
 		// prettier-ignore
-		return this.onLogin(loginDto).pipe(
+		return this.onProfile().pipe(
 			switchMap((user: Partial<CurrentUser>) => this.appearanceService.getAppearance(currentUser.firebase.uid).pipe(switchMap(() => of(user)))),
 			switchMap((user: Partial<CurrentUser>) => {
 				return this.setCurrentUser({
@@ -118,8 +107,8 @@ export class AuthorizationService {
 			.pipe(switchMap(() => this.onSignInWithEmailAndPassword(signInDto)));
 	}
 
-	onLogin(loginDto: LoginDto): Observable<CurrentUser> {
-		return this.apiService.post('/v1/authorization/login', loginDto);
+	onProfile(): Observable<CurrentUser> {
+		return this.apiService.post('/v1/authorization/profile');
 	}
 
 	onLogoutRevoke(): Observable<void> {
