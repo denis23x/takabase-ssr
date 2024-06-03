@@ -1,7 +1,7 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, from, Observable, of } from 'rxjs';
+import { BehaviorSubject, from, Observable, of, throwError } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { UserService } from './user.service';
@@ -10,17 +10,19 @@ import { AppearanceService } from './appearance.service';
 import { FirebaseService } from './firebase.service';
 import {
 	FacebookAuthProvider,
-	GoogleAuthProvider,
 	onAuthStateChanged,
 	signInWithEmailAndPassword,
 	signInWithPopup,
 	signOut,
+	linkWithCredential,
 	User as FirebaseUser,
-	UserCredential
+	UserCredential,
+	GithubAuthProvider
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { UserCreateDto } from '../dto/user/user-create.dto';
 import { SignInDto } from '../dto/authorization/sign-in.dto';
+import { AuthProvider, OAuthCredential } from '@firebase/auth';
 
 @Injectable({
 	providedIn: 'root'
@@ -34,6 +36,7 @@ export class AuthorizationService {
 	// prettier-ignore
 	currentUser: BehaviorSubject<CurrentUser | undefined> = new BehaviorSubject<CurrentUser | undefined>(undefined);
 	currentUserIsPopulated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	currentUserPendingOAuthCredential: OAuthCredential | undefined;
 
 	getPopulate(): Observable<CurrentUser | undefined> {
 		return this.getCurrentUser().pipe(
@@ -71,16 +74,27 @@ export class AuthorizationService {
 	}
 
 	setPopulate(userCredential: UserCredential): Observable<CurrentUser> {
-		const currentUser: Partial<CurrentUser> = {
-			firebase: userCredential.user
+		const getObservable = (): Observable<UserCredential> => {
+			const pendingCredential: OAuthCredential | undefined = this.currentUserPendingOAuthCredential;
+
+			if (!!pendingCredential) {
+				// prettier-ignore
+				return from(linkWithCredential(userCredential.user, pendingCredential)).pipe(tap(() => (this.currentUserPendingOAuthCredential = undefined)));
+			} else {
+				return of(userCredential);
+			}
 		};
 
-		// prettier-ignore
-		return this.onProfile().pipe(
-			switchMap((user: Partial<CurrentUser>) => this.appearanceService.getAppearance(currentUser.firebase.uid).pipe(switchMap(() => of(user)))),
+		return getObservable().pipe(
+			switchMap(() => this.onProfile()),
+			switchMap((user: Partial<CurrentUser>) => {
+				return this.appearanceService
+					.getAppearance(userCredential.user.uid)
+					.pipe(switchMap(() => of(user)));
+			}),
 			switchMap((user: Partial<CurrentUser>) => {
 				return this.setCurrentUser({
-					...currentUser,
+					firebase: userCredential.user,
 					...user
 				});
 			})
@@ -90,13 +104,6 @@ export class AuthorizationService {
 	/** Authorization API */
 
 	onRegistration(userCreateDto: UserCreateDto): Observable<CurrentUser> {
-		/** Insert default appearance */
-
-		userCreateDto = {
-			...userCreateDto,
-			appearance: this.appearanceService.getAppearanceDefault()
-		};
-
 		const signInDto: SignInDto = {
 			email: userCreateDto.email,
 			password: userCreateDto.password
@@ -127,9 +134,19 @@ export class AuthorizationService {
 		);
 	}
 
-	onSignInWithPopup(provider: GoogleAuthProvider | FacebookAuthProvider): Observable<CurrentUser> {
-		return from(signInWithPopup(this.firebaseService.getAuth(), provider)).pipe(
-			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
+	onSignInWithPopup(authProvider: AuthProvider): Observable<CurrentUser> {
+		return from(signInWithPopup(this.firebaseService.getAuth(), authProvider)).pipe(
+			catchError((firebaseError: FirebaseError) => {
+				if (firebaseError.code === 'auth/account-exists-with-different-credential') {
+					// Save the pending credential
+					// prettier-ignore
+					this.currentUserPendingOAuthCredential = this.getCredentialFromError(authProvider, firebaseError);
+
+					return throwError(() => firebaseError);
+				} else {
+					return this.apiService.setFirebaseError(firebaseError);
+				}
+			}),
 			switchMap((userCredential: UserCredential) => this.setPopulate(userCredential))
 		);
 	}
@@ -141,6 +158,21 @@ export class AuthorizationService {
 			tap(() => this.currentUser.next(undefined))
 		);
 	}
+
+	// prettier-ignore
+	getCredentialFromError = (authProvider: AuthProvider, firebaseError: FirebaseError): OAuthCredential => {
+		switch (authProvider.providerId) {
+			case 'github.com': {
+				return GithubAuthProvider.credentialFromError(firebaseError);
+			}
+			case 'facebook.com': {
+				return FacebookAuthProvider.credentialFromError(firebaseError);
+			}
+			default: {
+				throw new Error('Invalid providerId specified: ' + authProvider.providerId);
+			}
+		}
+	};
 
 	/** Current User */
 

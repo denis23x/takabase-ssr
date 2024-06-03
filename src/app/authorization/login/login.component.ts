@@ -8,7 +8,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { HelperService } from '../../core/services/helper.service';
@@ -22,6 +22,9 @@ import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
 import { SignInDto } from '../../core/dto/authorization/sign-in.dto';
+import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { FirebaseService } from '../../core/services/firebase.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -43,13 +46,14 @@ interface LoginForm {
 	templateUrl: './login.component.html'
 })
 export class AuthLoginComponent implements OnInit, OnDestroy {
-	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly router: Router = inject(Router);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly userService: UserService = inject(UserService);
 	private readonly metaService: MetaService = inject(MetaService);
+	private readonly firebaseService: FirebaseService = inject(FirebaseService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
 	loginRequest$: Subscription | undefined;
 	loginForm: FormGroup = this.formBuilder.group<LoginForm>({
@@ -63,9 +67,17 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	});
 
 	ngOnInit(): void {
+		onAuthStateChanged(this.firebaseService.getAuth(), (firebaseUser: FirebaseUser) => {
+			if (firebaseUser) {
+				this.snackbarService.success('Success', 'Redirecting, please wait...');
+
+				this.loginForm.disable();
+			}
+		});
+
 		/** Apply Data */
 
-		this.setResolver();
+		// Nothing to apply
 
 		/** Apply SEO meta tags */
 
@@ -74,25 +86,6 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[this.loginRequest$].forEach(($: Subscription) => $?.unsubscribe());
-	}
-
-	setResolver(): void {
-		// TODO: social authorization
-		//
-		// const email: string = String(this.activatedRoute.snapshot.queryParamMap.get('email') || '');
-		//
-		// prettier-ignore
-		// const social: any = ['facebookId', 'githubId', 'googleId']
-    //   .filter((social: string) => !!this.activatedRoute.snapshot.queryParamMap.get(social))
-    //   .map((social: string) => ({ [social]: this.activatedRoute.snapshot.queryParamMap.get(social) }))
-    //   .shift();
-		//
-		// if (!!email && !!social) {
-		// 	this.loginForm.get('email').setValue(email);
-		// 	this.loginForm.get('email').markAsTouched();
-		//
-		// 	this.onLogin(this.activatedRoute.snapshot.queryParams);
-		// }
 	}
 
 	setMetaTags(): void {
@@ -113,29 +106,25 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	onLogin(value: any): void {
-		this.loginForm.disable();
-
-		const signInDto: SignInDto = {
-			...value
-		};
-
-		this.loginRequest$?.unsubscribe();
-		this.loginRequest$ = this.authorizationService
-			.onSignInWithEmailAndPassword(signInDto)
-			.subscribe({
-				next: (user: User) => {
-					this.router
-						.navigate([this.userService.getUserUrl(user)])
-						.then(() => console.debug('Route changed'));
-				},
-				error: () => this.loginForm.enable()
-			});
-	}
-
 	onSubmitLoginForm(): void {
 		if (this.helperService.getFormValidation(this.loginForm)) {
-			this.onLogin(this.loginForm.value);
+			this.loginForm.disable();
+
+			const signInDto: SignInDto = {
+				...this.loginForm.value
+			};
+
+			this.loginRequest$?.unsubscribe();
+			this.loginRequest$ = this.authorizationService
+				.onSignInWithEmailAndPassword(signInDto)
+				.subscribe({
+					next: (user: User) => {
+						this.router
+							.navigate([this.userService.getUserUrl(user)])
+							.then(() => console.debug('Route changed'));
+					},
+					error: () => this.loginForm.enable()
+				});
 		}
 	}
 }

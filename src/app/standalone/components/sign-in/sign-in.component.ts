@@ -3,12 +3,13 @@
 import { Component, inject, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import { GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider } from 'firebase/auth';
 import { User } from '../../../core/models/user.model';
 import { AuthorizationService } from '../../../core/services/authorization.service';
 import { Router } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { Subscription } from 'rxjs';
+import { AuthProvider } from '@firebase/auth';
 
 @Component({
 	standalone: true,
@@ -36,42 +37,38 @@ export class SignInComponent implements OnDestroy {
 	onSignInWithGoogle(): void {
 		const googleAuthProvider: GoogleAuthProvider = new GoogleAuthProvider();
 
-		googleAuthProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-		googleAuthProvider.setCustomParameters({
-			login_hint: 'user@example.com'
-		});
+		googleAuthProvider.addScope('https://www.googleapis.com/auth/userinfo.profile');
 
-		this.signInWithPopup$?.unsubscribe();
-		this.signInWithPopup$ = this.authorizationService
-			.onSignInWithPopup(googleAuthProvider)
-			.subscribe({
-				next: (user: User) => {
-					this.router
-						.navigate([this.userService.getUserUrl(user)])
-						.then(() => console.debug('Route changed'));
-				},
-				error: (error: any) => console.error(error)
-			});
+		this.onSignIn(googleAuthProvider);
 	}
 
 	onSignInWithFacebook(): void {
 		const facebookAuthProvider: FacebookAuthProvider = new FacebookAuthProvider();
 
-		facebookAuthProvider.addScope('user_birthday');
-		facebookAuthProvider.setCustomParameters({
-			display: 'popup'
-		});
+		facebookAuthProvider.addScope('public_profile');
 
+		this.onSignIn(facebookAuthProvider);
+	}
+
+	onSignInWithGithub(): void {
+		const githubAuthProvider: GithubAuthProvider = new GithubAuthProvider();
+
+		githubAuthProvider.addScope('read:user');
+
+		this.onSignIn(githubAuthProvider);
+	}
+
+	onSignInWithTwitter(): void {}
+
+	onSignIn(authProvider: AuthProvider): void {
 		this.signInWithPopup$?.unsubscribe();
-		this.signInWithPopup$ = this.authorizationService
-			.onSignInWithPopup(facebookAuthProvider)
-			.subscribe({
-				next: (user: User) => {
-					this.router
-						.navigate([this.userService.getUserUrl(user)])
-						.then(() => console.debug('Route changed'));
-				},
-				error: (error: any) => console.error(error)
-			});
+		this.signInWithPopup$ = this.authorizationService.onSignInWithPopup(authProvider).subscribe({
+			next: (user: User) => {
+				this.router
+					.navigate([this.userService.getUserUrl(user)])
+					.then(() => console.debug('Route changed'));
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 }
