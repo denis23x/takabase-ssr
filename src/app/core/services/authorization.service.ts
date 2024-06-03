@@ -17,7 +17,8 @@ import {
 	linkWithCredential,
 	User as FirebaseUser,
 	UserCredential,
-	GithubAuthProvider
+	GithubAuthProvider,
+	Unsubscribe
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { UserCreateDto } from '../dto/user/user-create.dto';
@@ -48,7 +49,12 @@ export class AuthorizationService {
 				// prettier-ignore
 				const getAuthState = (): Promise<FirebaseUser | null> => {
 					return new Promise((resolve) => {
-						onAuthStateChanged(this.firebaseService.getAuth(),  (firebaseUser: FirebaseUser | null) => resolve(firebaseUser));
+						const authStateChanged$: Unsubscribe = onAuthStateChanged(this.firebaseService.getAuth(),  (firebaseUser: FirebaseUser | null) => {
+							resolve(firebaseUser);
+
+							// Unsubscribe
+							authStateChanged$?.();
+						});
 					});
 				}
 

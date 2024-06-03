@@ -22,9 +22,10 @@ import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
 import { SignInDto } from '../../core/dto/authorization/sign-in.dto';
-import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { onAuthStateChanged, User as FirebaseUser, Unsubscribe } from 'firebase/auth';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
+import { PlatformService } from '../../core/services/platform.service';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -54,7 +55,9 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
+	loginAuthStateChanged$: Unsubscribe | undefined;
 	loginRequest$: Subscription | undefined;
 	loginForm: FormGroup = this.formBuilder.group<LoginForm>({
 		email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
@@ -67,13 +70,16 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	});
 
 	ngOnInit(): void {
-		onAuthStateChanged(this.firebaseService.getAuth(), (firebaseUser: FirebaseUser) => {
-			if (firebaseUser) {
-				this.snackbarService.success('Success', 'Redirecting, please wait...');
+		if (this.platformService.isBrowser()) {
+			// prettier-ignore
+			this.loginAuthStateChanged$ = onAuthStateChanged(this.firebaseService.getAuth(), (firebaseUser: FirebaseUser | null) => {
+				if (firebaseUser) {
+					this.snackbarService.success('Success', 'Redirecting, please wait...');
 
-				this.loginForm.disable();
-			}
-		});
+					this.loginForm.disable();
+				}
+			});
+		}
 
 		/** Apply Data */
 
@@ -86,6 +92,8 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[this.loginRequest$].forEach(($: Subscription) => $?.unsubscribe());
+
+		[this.loginAuthStateChanged$].forEach(($: Unsubscribe) => $?.());
 	}
 
 	setMetaTags(): void {

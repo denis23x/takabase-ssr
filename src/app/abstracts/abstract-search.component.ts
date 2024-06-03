@@ -89,7 +89,6 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
 		[this.abstractListPageScrollInfinite$].forEach(($: Subscription) => $?.unsubscribe());
 
 		// prettier-ignore
