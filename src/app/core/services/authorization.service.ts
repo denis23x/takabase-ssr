@@ -18,12 +18,14 @@ import {
 	User as FirebaseUser,
 	UserCredential,
 	GithubAuthProvider,
-	Unsubscribe
+	Unsubscribe,
+	GoogleAuthProvider,
+	AuthProvider,
+	OAuthCredential
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { UserCreateDto } from '../dto/user/user-create.dto';
 import { SignInDto } from '../dto/authorization/sign-in.dto';
-import { AuthProvider, OAuthCredential } from '@firebase/auth';
 
 @Injectable({
 	providedIn: 'root'
@@ -168,17 +170,52 @@ export class AuthorizationService {
 	// prettier-ignore
 	getCredentialFromError = (authProvider: AuthProvider, firebaseError: FirebaseError): OAuthCredential => {
 		switch (authProvider.providerId) {
-			case 'github.com': {
-				return GithubAuthProvider.credentialFromError(firebaseError);
+			case 'google.com': {
+				return GoogleAuthProvider.credentialFromError(firebaseError);
 			}
 			case 'facebook.com': {
 				return FacebookAuthProvider.credentialFromError(firebaseError);
+			}
+			case 'github.com': {
+				return GithubAuthProvider.credentialFromError(firebaseError);
 			}
 			default: {
 				throw new Error('Invalid providerId specified: ' + authProvider.providerId);
 			}
 		}
 	};
+
+	getAuthProvider(providerId: string): AuthProvider {
+		switch (providerId) {
+			case 'google.com': {
+				const googleAuthProvider: GoogleAuthProvider = new GoogleAuthProvider();
+
+				googleAuthProvider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+				googleAuthProvider.setDefaultLanguage('en');
+
+				return googleAuthProvider;
+			}
+			case 'facebook.com': {
+				const facebookAuthProvider: FacebookAuthProvider = new FacebookAuthProvider();
+
+				facebookAuthProvider.addScope('public_profile');
+				facebookAuthProvider.setDefaultLanguage('en');
+
+				return facebookAuthProvider;
+			}
+			case 'github.com': {
+				const githubAuthProvider: GithubAuthProvider = new GithubAuthProvider();
+
+				githubAuthProvider.addScope('read:user');
+				githubAuthProvider.setDefaultLanguage('en');
+
+				return githubAuthProvider;
+			}
+			default: {
+				throw new Error('Invalid providerId specified: ' + providerId);
+			}
+		}
+	}
 
 	/** Current User */
 

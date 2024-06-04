@@ -2,351 +2,424 @@
 
 <ng-container>
 	<div class="flex flex-col items-start justify-start gap-4">
-		@switch (passwordValidateToggle) {
-			@case (true) {
-				<form
-					class="flex w-full flex-col gap-4"
-					autocomplete="off"
-					[formGroup]="emailForm"
-					(ngSubmit)="onSubmitEmailForm()"
-				>
-					@if (emailForm.get("email"); as email) {
-						<fieldset class="form-control">
-							<label class="label" for="emailFormEmail">
-								<div class="indicator">
-									@if (email.touched && !!email.errors && emailForm.enabled) {
-										<div class="block" appBadgeError [appBadgeErrorAbstractControl]="email"></div>
-									}
-									<span class="label-text mr-2">New email</span>
-								</div>
-							</label>
-							<div class="relative">
-								<input
-									class="input-bordered input input-md w-full !pr-12"
-									id="emailFormEmail"
-									type="email"
-									aria-label="Email"
-									inputmode="email"
-									enterkeyhint="done"
-									formControlName="email"
-									autocomplete="email"
-									placeholder="Type your new email"
-									appInputTrimWhitespace
-									[class.input-success]="email.dirty && email.valid"
-									[class.input-error]="email.touched && email.invalid"
-								/>
-								@if (email.value) {
-									<button
-										class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-										type="button"
-										aria-label="Reset"
-										appSvgIcon
-										[class.btn-success]="email.dirty && email.valid"
-										[class.btn-error]="email.touched && email.invalid"
-										[class.btn-ghost]="email.untouched && email.dirty && email.invalid"
-										[disabled]="email.disabled"
-										[appSvgIconIcon]="'x'"
-										[appSvgIconSquare]="'2em'"
-										(click)="email.setValue('')"
-									></button>
-								}
-							</div>
-						</fieldset>
-					}
-					<fieldset class="form-control">
-						@switch (currentUser.firebase.emailVerified) {
-							@case (true) {
-								<button
-									class="btn-success btn-md btn w-full"
-									type="submit"
-									aria-label="Submit"
-									[disabled]="emailForm.invalid || emailForm.disabled"
-								>
-									@if (emailForm.disabled && !appUserDeleteComponent.userDeleteDialogToggle) {
-										<span class="loading loading-spinner"></span>
-									}
-									Submit
-								</button>
-							}
-							@case (false) {
-								<div class="flex flex-col gap-4">
-									<p class="alert" role="alert">
-										<i
-											class="fill-current text-info"
+		<div class="flex w-full flex-col gap-4">
+			@switch (passwordValidateToggle) {
+				@case (true) {
+					<form
+						class="flex w-full flex-col gap-4"
+						autocomplete="off"
+						[formGroup]="emailForm"
+						(ngSubmit)="onSubmitEmailForm()"
+					>
+						@if (emailForm.get("email"); as email) {
+							<fieldset class="form-control">
+								<label class="label" for="emailFormEmail">
+									<div class="indicator">
+										@if (email.touched && !!email.errors && emailForm.enabled) {
+											<div class="block" appBadgeError [appBadgeErrorAbstractControl]="email"></div>
+										}
+										<span class="label-text mr-2">New email</span>
+									</div>
+								</label>
+								<div class="relative">
+									<input
+										class="input-bordered input input-md w-full !pr-12"
+										id="emailFormEmail"
+										type="email"
+										aria-label="Email"
+										inputmode="email"
+										enterkeyhint="done"
+										formControlName="email"
+										autocomplete="email"
+										placeholder="Type your new email"
+										appInputTrimWhitespace
+										[class.input-success]="email.dirty && email.valid"
+										[class.input-error]="email.touched && email.invalid"
+									/>
+									@if (email.value) {
+										<button
+											class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+											type="button"
+											aria-label="Reset"
 											appSvgIcon
-											[appSvgIconIcon]="'info-circle'"
-											[appSvgIconSquare]="'1.5em'"
-										></i>
-										<span class="block">
-											To maintain the security and validity of your account, email address
-											verification is required before any changes can be made. This verification
-											step ensures that you have full control over your account and protects your
-											information from unauthorized access.
-										</span>
-									</p>
-									<!-- prettier-ignore -->
+											[class.btn-success]="email.dirty && email.valid"
+											[class.btn-error]="email.touched && email.invalid"
+											[class.btn-ghost]="email.untouched && email.dirty && email.invalid"
+											[disabled]="email.disabled"
+											[appSvgIconIcon]="'x'"
+											[appSvgIconSquare]="'2em'"
+											(click)="email.setValue('')"
+										></button>
+									}
+								</div>
+							</fieldset>
+						}
+						<fieldset class="form-control">
+							@switch (currentUser.firebase.emailVerified) {
+								@case (true) {
 									<button
 										class="btn-success btn-md btn w-full"
-										type="button"
-										aria-label="Send me verification email"
-										[disabled]="emailFormConfirmationIsSubmitted || appUserDeleteComponent.userDeleteDialogToggle"
-										(click)="onSubmitEmailConfirmation()"
+										type="submit"
+										aria-label="Submit"
+										[disabled]="emailForm.invalid || emailForm.disabled"
 									>
-										@if (emailFormConfirmationIsSubmitted) {
+										@if (emailForm.disabled && !appUserDeleteComponent.userDeleteDialogToggle) {
 											<span class="loading loading-spinner"></span>
 										}
-										Send me verification email
+										Submit
+									</button>
+								}
+								@case (false) {
+									<div class="flex flex-col gap-4">
+										<p class="alert" role="alert">
+											<i
+												class="fill-current text-info"
+												appSvgIcon
+												[appSvgIconIcon]="'info-circle'"
+												[appSvgIconSquare]="'1.5em'"
+											></i>
+											<span class="block">
+												To maintain the security and validity of your account, email address
+												verification is required before any changes can be made. This verification
+												step ensures that you have full control over your account and protects your
+												information from unauthorized access.
+											</span>
+										</p>
+										<!-- prettier-ignore -->
+										<button
+                      class="btn-success btn-md btn w-full"
+                      type="button"
+                      aria-label="Send me verification email"
+                      [disabled]="emailFormConfirmationIsSubmitted || appUserDeleteComponent.userDeleteDialogToggle"
+                      (click)="onSubmitEmailConfirmation()"
+                    >
+                      @if (emailFormConfirmationIsSubmitted) {
+                        <span class="loading loading-spinner"></span>
+                      }
+                      Send me verification email
+                    </button>
+									</div>
+								}
+							}
+						</fieldset>
+					</form>
+					<hr class="w-full border-base-content/20" />
+					<form
+						class="flex w-full flex-col gap-4"
+						autocomplete="off"
+						[formGroup]="passwordForm"
+						(ngSubmit)="onSubmitPasswordForm()"
+					>
+						@if (passwordForm.get("password"); as password) {
+							<fieldset class="form-control">
+								<label class="label" for="passwordFormPassword">
+									<div class="indicator">
+										@if (password.touched && !!password.errors && passwordForm.enabled) {
+											<div
+												class="block"
+												appBadgeError
+												[appBadgeErrorAbstractControl]="password"
+											></div>
+										}
+										<span class="label-text mr-2">New password</span>
+									</div>
+								</label>
+								<div class="relative">
+									<input
+										class="input-bordered input input-md w-full !pr-12"
+										id="passwordFormPassword"
+										aria-label="Password"
+										enterkeyhint="done"
+										formControlName="password"
+										autocomplete="new-password"
+										placeholder="Type your new password"
+										appInputTrimWhitespace
+										#passwordFormPasswordElement
+										[type]="'password'"
+										[class.input-success]="password.dirty && password.valid"
+										[class.input-error]="password.touched && password.invalid"
+									/>
+									@if (password.value) {
+										<button
+											class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+											type="button"
+											aria-label="Password"
+											appSvgIcon
+											[class.btn-success]="password.dirty && password.value"
+											[class.btn-error]="password.touched && password.invalid"
+											[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
+											[disabled]="password.disabled"
+											[appSvgIconIcon]="'incognito'"
+											[appSvgIconSquare]="'1.5em'"
+											(touchstart)="passwordFormPasswordElement.type = 'text'"
+											(touchend)="passwordFormPasswordElement.type = 'password'"
+											(mouseenter)="passwordFormPasswordElement.type = 'text'"
+											(mouseleave)="passwordFormPasswordElement.type = 'password'"
+										></button>
+									}
+								</div>
+							</fieldset>
+						}
+						<p class="alert" role="alert">
+							<i
+								class="fill-current text-info"
+								appSvgIcon
+								[appSvgIconIcon]="'info-circle'"
+								[appSvgIconSquare]="'1.5em'"
+							></i>
+							<span class="block">
+								The password must be 6-32 characters long, must contain at least one number or
+								special character
+							</span>
+						</p>
+						<fieldset class="form-control">
+							<button
+								class="btn btn-md btn-success w-full"
+								type="submit"
+								aria-label="Submit"
+								[disabled]="passwordForm.invalid || passwordForm.disabled"
+							>
+								@if (passwordForm.disabled && !appUserDeleteComponent.userDeleteDialogToggle) {
+									<span class="loading loading-spinner"></span>
+								}
+								Submit
+							</button>
+						</fieldset>
+					</form>
+				}
+				@case (false) {
+					<form
+						class="flex w-full flex-col gap-4"
+						autocomplete="off"
+						[formGroup]="passwordValidateForm"
+						(ngSubmit)="onSubmitPasswordValidateForm()"
+					>
+						@if (passwordValidateForm.get("password"); as password) {
+							<fieldset class="form-control">
+								<div class="label">
+									<div
+										class="indicator"
+										appSkeleton
+										[appSkeletonToggle]="currentUserSkeletonToggle"
+										[appSkeletonClassListElementRef]="['!-mx-1']"
+									>
+										@if (password.touched && !!password.errors && passwordValidateForm.enabled) {
+											<div
+												class="block"
+												appBadgeError
+												[appBadgeErrorAbstractControl]="password"
+											></div>
+										}
+										<label class="label-text mr-2" for="passwordValidateFormPassword">
+											Current password
+										</label>
+									</div>
+									<button
+										class="label-text-alt link"
+										type="button"
+										(click)="onToggleUserForgotPasswordDialog(true)"
+									>
+										Forgot password?
 									</button>
 								</div>
-							}
+								<div class="relative" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
+									<input
+										class="input-bordered input input-md w-full !pr-12"
+										id="passwordValidateFormPassword"
+										aria-label="Password"
+										formControlName="password"
+										autocomplete="new-password"
+										enterkeyhint="done"
+										placeholder="Type your current password"
+										appInputTrimWhitespace
+										#passwordValidateFormPasswordElement
+										[type]="'password'"
+										[class.input-success]="password.dirty && password.valid"
+										[class.input-error]="password.touched && password.invalid"
+									/>
+									@if (password.value) {
+										<button
+											class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+											type="button"
+											aria-label="Password"
+											appSvgIcon
+											[class.btn-success]="password.dirty && password.value"
+											[class.btn-error]="password.touched && password.invalid"
+											[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
+											[disabled]="password.disabled"
+											[appSvgIconIcon]="'incognito'"
+											[appSvgIconSquare]="'1.5em'"
+											(touchstart)="passwordValidateFormPasswordElement.type = 'text'"
+											(touchend)="passwordValidateFormPasswordElement.type = 'password'"
+											(mouseenter)="passwordValidateFormPasswordElement.type = 'text'"
+											(mouseleave)="passwordValidateFormPasswordElement.type = 'password'"
+										></button>
+									}
+								</div>
+							</fieldset>
 						}
-					</fieldset>
-				</form>
-				<hr class="w-full border-base-content/20" />
-				<form
-					class="flex w-full flex-col gap-4"
-					autocomplete="off"
-					[formGroup]="passwordForm"
-					(ngSubmit)="onSubmitPasswordForm()"
-				>
-					@if (passwordForm.get("password"); as password) {
-						<fieldset class="form-control">
-							<label class="label" for="passwordFormPassword">
-								<div class="indicator">
-									@if (password.touched && !!password.errors && passwordForm.enabled) {
-										<div
-											class="block"
-											appBadgeError
-											[appBadgeErrorAbstractControl]="password"
-										></div>
-									}
-									<span class="label-text mr-2">New password</span>
-								</div>
-							</label>
-							<div class="relative">
-								<input
-									class="input-bordered input input-md w-full !pr-12"
-									id="passwordFormPassword"
-									aria-label="Password"
-									enterkeyhint="done"
-									formControlName="password"
-									autocomplete="new-password"
-									placeholder="Type your new password"
-									appInputTrimWhitespace
-									#passwordFormPasswordElement
-									[type]="'password'"
-									[class.input-success]="password.dirty && password.valid"
-									[class.input-error]="password.touched && password.invalid"
-								/>
-								@if (password.value) {
-									<button
-										class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-										type="button"
-										aria-label="Password"
-										appSvgIcon
-										[class.btn-success]="password.dirty && password.value"
-										[class.btn-error]="password.touched && password.invalid"
-										[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
-										[disabled]="password.disabled"
-										[appSvgIconIcon]="'incognito'"
-										[appSvgIconSquare]="'1.5em'"
-										(touchstart)="passwordFormPasswordElement.type = 'text'"
-										(touchend)="passwordFormPasswordElement.type = 'password'"
-										(mouseenter)="passwordFormPasswordElement.type = 'text'"
-										(mouseleave)="passwordFormPasswordElement.type = 'password'"
-									></button>
-								}
-							</div>
-						</fieldset>
-					}
-					<p class="alert" role="alert">
-						<i
-							class="fill-current text-info"
-							appSvgIcon
-							[appSvgIconIcon]="'info-circle'"
-							[appSvgIconSquare]="'1.5em'"
-						></i>
-						<span class="block">
-							The password must be 6-32 characters long, must contain at least one number or special
-							character
-						</span>
-					</p>
-					<fieldset class="form-control">
-						<button
-							class="btn btn-md btn-success w-full"
-							type="submit"
-							aria-label="Submit"
-							[disabled]="passwordForm.invalid || passwordForm.disabled"
-						>
-							@if (passwordForm.disabled && !appUserDeleteComponent.userDeleteDialogToggle) {
-								<span class="loading loading-spinner"></span>
-							}
-							Submit
-						</button>
-					</fieldset>
-				</form>
-				<hr class="w-full border-base-content/20" />
-				<div class="flex w-full flex-col gap-4">
-					<p class="alert" role="alert">
-						<i
-							class="fill-current text-info"
-							appSvgIcon
-							[appSvgIconIcon]="'info-circle'"
-							[appSvgIconSquare]="'1.5em'"
-						></i>
-						<!-- prettier-ignore -->
-						<span class="block">
-							Terminating all other sessions will log you out from any other devices or locations
-							where you're currently logged in, <strong class="inline font-bold"> including your current session </strong>
-						</span>
-					</p>
-					<div class="form-control">
-						<!-- prettier-ignore -->
-						<button
-							class="btn-error btn-md btn w-full"
-							type="button"
-							aria-label="Delete"
-              [class.btn-outline]="!currentUserLogoutRevokeRequestIsSubmitted && !appUserDeleteComponent.userDeleteDialogToggle"
-							[disabled]="currentUserLogoutRevokeRequestIsSubmitted || appUserDeleteComponent.userDeleteDialogToggle"
-							(click)="onSubmitLogoutRevoke()"
-						>
-              @if (currentUserLogoutRevokeRequestIsSubmitted && !appUserDeleteComponent.userDeleteDialogToggle) {
-                <span class="loading loading-spinner"></span>
-              }
-							Revoke tokens
-						</button>
-					</div>
-				</div>
-				<hr class="w-full border-base-content/20" />
-				<div class="flex w-full flex-col gap-4">
-					<p class="alert" role="alert">
-						<i
-							class="fill-current text-info"
-							appSvgIcon
-							[appSvgIconIcon]="'info-circle'"
-							[appSvgIconSquare]="'1.5em'"
-						></i>
-						<span class="block">
-							Deleting your account will permanently remove all associated account data. This action
-							cannot be undone
-						</span>
-					</p>
-					<div class="form-control">
-						<button
-							class="btn-error btn-md btn w-full"
-							type="button"
-							aria-label="Delete"
-							[class.btn-outline]="!appUserDeleteComponent.userDeleteDialogToggle"
-							[disabled]="appUserDeleteComponent.userDeleteDialogToggle"
-							(click)="appUserDeleteComponent.onToggleUserDeleteDialog(true)"
-						>
-							Delete
-						</button>
-					</div>
-				</div>
-			}
-			@case (false) {
-				<form
-					class="flex w-full flex-col gap-4"
-					autocomplete="off"
-					[formGroup]="passwordValidateForm"
-					(ngSubmit)="onSubmitPasswordValidateForm()"
-				>
-					@if (passwordValidateForm.get("password"); as password) {
-						<fieldset class="form-control">
-							<div class="label">
-								<div
-									class="indicator"
-									appSkeleton
-									[appSkeletonToggle]="currentUserSkeletonToggle"
-									[appSkeletonClassListElementRef]="['!-mx-1']"
-								>
-									@if (password.touched && !!password.errors && passwordValidateForm.enabled) {
-										<div
-											class="block"
-											appBadgeError
-											[appBadgeErrorAbstractControl]="password"
-										></div>
-									}
-									<label class="label-text mr-2" for="passwordValidateFormPassword">
-										Current password
-									</label>
-								</div>
-								<button
-									class="label-text-alt link"
-									type="button"
-									(click)="onToggleUserForgotPasswordDialog(true)"
-								>
-									Forgot password?
-								</button>
-							</div>
-							<div class="relative" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
-								<input
-									class="input-bordered input input-md w-full !pr-12"
-									id="passwordValidateFormPassword"
-									aria-label="Password"
-									formControlName="password"
-									autocomplete="new-password"
-									enterkeyhint="done"
-									placeholder="Type your current password"
-									appInputTrimWhitespace
-									#passwordValidateFormPasswordElement
-									[type]="'password'"
-									[class.input-success]="password.dirty && password.valid"
-									[class.input-error]="password.touched && password.invalid"
-								/>
-								@if (password.value) {
-									<button
-										class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-										type="button"
-										aria-label="Password"
-										appSvgIcon
-										[class.btn-success]="password.dirty && password.value"
-										[class.btn-error]="password.touched && password.invalid"
-										[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
-										[disabled]="password.disabled"
-										[appSvgIconIcon]="'incognito'"
-										[appSvgIconSquare]="'1.5em'"
-										(touchstart)="passwordValidateFormPasswordElement.type = 'text'"
-										(touchend)="passwordValidateFormPasswordElement.type = 'password'"
-										(mouseenter)="passwordValidateFormPasswordElement.type = 'text'"
-										(mouseleave)="passwordValidateFormPasswordElement.type = 'password'"
-									></button>
-								}
-							</div>
-						</fieldset>
-					}
-					<p class="alert" role="alert" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
-						<i
-							class="fill-current text-info"
-							appSvgIcon
-							[appSvgIconIcon]="'info-circle'"
-							[appSvgIconSquare]="'1.5em'"
-						></i>
-						<span class="block">
-							Please provide your current password to continue. Your password ensures the security
-							and integrity of your account
-						</span>
-					</p>
-					<fieldset class="form-control">
-						<button
-							class="btn btn-success btn-md w-full"
-							type="submit"
-							aria-label="Continue"
+						<p
+							class="alert"
+							role="alert"
 							appSkeleton
 							[appSkeletonToggle]="currentUserSkeletonToggle"
-							[appSkeletonClassListElementRef]="['border-0']"
-							[disabled]="passwordValidateForm.invalid || passwordValidateForm.disabled"
 						>
-							@if (passwordValidateForm.disabled) {
-								<span class="loading loading-spinner"></span>
-							}
-							Continue
-						</button>
-					</fieldset>
-				</form>
+							<i
+								class="fill-current text-info"
+								appSvgIcon
+								[appSvgIconIcon]="'info-circle'"
+								[appSvgIconSquare]="'1.5em'"
+							></i>
+							<span class="block">
+								Please provide your current password to continue. Your password ensures the security
+								and integrity of your account
+							</span>
+						</p>
+						<fieldset class="form-control">
+							<button
+								class="btn btn-success btn-md w-full"
+								type="submit"
+								aria-label="Continue"
+								appSkeleton
+								[appSkeletonToggle]="currentUserSkeletonToggle"
+								[appSkeletonClassListElementRef]="['border-0']"
+								[disabled]="passwordValidateForm.invalid || passwordValidateForm.disabled"
+							>
+								@if (passwordValidateForm.disabled) {
+									<span class="loading loading-spinner"></span>
+								}
+								Continue
+							</button>
+						</fieldset>
+					</form>
+				}
 			}
-		}
+		</div>
+		<hr class="w-full border-base-content/20" />
+		<div class="flex w-full flex-col gap-4">
+			<p class="alert" role="alert">
+				<i
+					class="fill-current text-info"
+					appSvgIcon
+					[appSvgIconIcon]="'info-circle'"
+					[appSvgIconSquare]="'1.5em'"
+				></i>
+				<span class="block">
+					You can easily link your social accounts to enhance your login experience. Click on the
+					respective buttons below to link or unlink your accounts
+				</span>
+			</p>
+			<hr class="w-full border-base-content/20" />
+			<ul class="flex flex-col items-start justify-start gap-4 w-full">
+				@for (providerData of currentUserProviderData; track providerData.uid) {
+					<li class="flex items-center justify-between w-full gap-4">
+						<div class="avatar">
+							<figure
+								class="flex items-center justify-center rounded-btn h-12 w-12 overflow-hidden"
+							>
+								<img
+									class="object-cover object-center"
+									[ngClass]="providerData.linked ? 'bg-base-300' : 'max-w-8 max-h-8'"
+									[src]="providerData.photoURL || providerData.providerIcon"
+									[alt]="providerData.providerLabel"
+								/>
+							</figure>
+						</div>
+						<div class="flex flex-col items-start justify-start gap-2 w-full overflow-hidden">
+							<a
+								class="truncate text-lg leading-6 font-bold text-base-content max-w-full link first-letter:uppercase"
+								target="_blank"
+								rel="noopener noreferrer"
+								[href]="providerData.providerLink"
+								[title]="providerData.providerLabel"
+								[attr.aria-label]="providerData.providerLabel"
+							>
+								{{ providerData.providerLabel }}
+							</a>
+							<span class="truncate text-sm leading-4 text-base-content/50 max-w-full">
+								{{ providerData.displayName || "Connect account" }}
+							</span>
+						</div>
+						@if (providerData.linked) {
+							<button
+								class="btn btn-outline btn-error w-20"
+								type="button"
+								[title]="providerData.providerLabel"
+								[attr.aria-label]="providerData.providerLabel"
+								(click)="onProviderUnlink(providerData)"
+							>
+								Unlink
+							</button>
+						} @else {
+							<button
+								class="btn btn-outline btn-success w-20"
+								type="button"
+								[title]="providerData.providerLabel"
+								[attr.aria-label]="providerData.providerLabel"
+								(click)="onProviderLink(providerData)"
+							>
+								Link
+							</button>
+						}
+					</li>
+					<hr class="w-full border-base-content/20" />
+				}
+			</ul>
+		</div>
+		<hr class="w-full border-base-content/20" />
+		<div class="flex w-full flex-col gap-4">
+			<p class="alert" role="alert">
+				<i
+					class="fill-current text-info"
+					appSvgIcon
+					[appSvgIconIcon]="'info-circle'"
+					[appSvgIconSquare]="'1.5em'"
+				></i>
+				<!-- prettier-ignore -->
+				<span class="block"> Terminating all other sessions will log you out from any other devices or locations where you're currently logged in <strong class="inline font-bold">including your current session</strong> </span>
+			</p>
+			<div class="form-control">
+				<!-- prettier-ignore -->
+				<button
+          class="btn-error btn-md btn w-full"
+          type="button"
+          aria-label="Delete"
+          [class.btn-outline]="!currentUserLogoutRevokeRequestIsSubmitted && !appUserDeleteComponent.userDeleteDialogToggle"
+          [disabled]="currentUserLogoutRevokeRequestIsSubmitted || appUserDeleteComponent.userDeleteDialogToggle"
+          (click)="onSubmitLogoutRevoke()"
+        >
+          @if (currentUserLogoutRevokeRequestIsSubmitted && !appUserDeleteComponent.userDeleteDialogToggle) {
+            <span class="loading loading-spinner"></span>
+          }
+          Revoke tokens
+        </button>
+			</div>
+		</div>
+		<hr class="w-full border-base-content/20" />
+		<div class="flex w-full flex-col gap-4">
+			<p class="alert" role="alert">
+				<i
+					class="fill-current text-info"
+					appSvgIcon
+					[appSvgIconIcon]="'info-circle'"
+					[appSvgIconSquare]="'1.5em'"
+				></i>
+				<!-- prettier-ignore -->
+				<span class="block"> Deleting your account will permanently remove all associated account data. <strong class="inline font-bold">This action cannot be undone</strong> </span>
+			</p>
+			<div class="form-control">
+				<button
+					class="btn-error btn-md btn w-full"
+					type="button"
+					aria-label="Delete"
+					[class.btn-outline]="!appUserDeleteComponent.userDeleteDialogToggle"
+					[disabled]="appUserDeleteComponent.userDeleteDialogToggle"
+					(click)="appUserDeleteComponent.onToggleUserDeleteDialog(true)"
+				>
+					Delete
+				</button>
+			</div>
+		</div>
 	</div>
 	<!-- prettier-ignore-attribute (click) -->
 	<dialog

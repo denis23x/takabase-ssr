@@ -1,10 +1,17 @@
 /** @format */
 
 import { User } from './user.model';
-import { User as FirebaseUser } from 'firebase/auth';
+import { UserInfo, User as FirebaseUser } from 'firebase/auth';
 
 export interface CurrentUser extends User {
 	bearer?: string;
 	terms: boolean;
 	firebase: FirebaseUser;
+}
+
+export interface CurrentUserProviderData extends Partial<UserInfo> {
+	providerLabel: string;
+	providerIcon: string;
+	providerLink: string;
+	linked: boolean;
 }

@@ -9,7 +9,7 @@ import {
 	Validators
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { Subscription, switchMap, throwError } from 'rxjs';
+import { from, Subscription, switchMap, throwError } from 'rxjs';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../core/services/helper.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
@@ -19,7 +19,7 @@ import { PasswordService } from '../../core/services/password.service';
 import { EmailService } from '../../core/services/email.service';
 import { PasswordUpdateDto } from '../../core/dto/password/password-update.dto';
 import { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
-import { CurrentUser } from '../../core/models/current-user.model';
+import { CurrentUser, CurrentUserProviderData } from '../../core/models/current-user.model';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
@@ -29,6 +29,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { UserDeleteComponent } from '../../standalone/components/user/delete/delete.component';
 import { WindowComponent } from '../../standalone/components/window/window.component';
 import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
+import {
+	UserInfo,
+	unlink,
+	linkWithPopup,
+	AuthProvider,
+	UserCredential,
+	User as FirebaseUser
+} from 'firebase/auth';
+import { CommonModule } from '@angular/common';
 
 interface PasswordValidateForm {
 	password: FormControl<string>;
@@ -46,6 +55,7 @@ interface PasswordForm {
 	standalone: true,
 	imports: [
 		RouterModule,
+		CommonModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
@@ -75,6 +85,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
+	currentUserProviderData: CurrentUserProviderData[] = [];
 	currentUserSkeletonToggle: boolean = true;
 	currentUserLogoutRequest$: Subscription | undefined;
 
@@ -148,11 +159,91 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 							this.emailForm.get('email').setValue(this.currentUser.firebase.email);
 							this.emailForm.disable();
 						}
+
+						// Set provider data
+
+						this.onProviderDataChange(this.currentUser.firebase);
 					},
 					error: (error: any) => console.error(error)
 				});
 		}
 	}
+
+	/** PROVIDER */
+
+	onProviderDataChange(firebaseUser: FirebaseUser): void {
+		const currentUserProviderData: CurrentUserProviderData[] = [
+			{
+				providerId: 'google.com',
+				providerLabel: 'Google',
+				providerIcon: './assets/icons/socials/google.svg',
+				providerLink: 'https://google.com',
+				linked: false
+			},
+			{
+				providerId: 'facebook.com',
+				providerLabel: 'Facebook',
+				providerIcon: './assets/icons/socials/facebook.svg',
+				providerLink: 'https://facebook.com',
+				linked: false
+			},
+			{
+				providerId: 'github.com',
+				providerLabel: 'Github',
+				providerIcon: './assets/icons/socials/github.svg',
+				providerLink: 'https://github.com',
+				linked: false
+			}
+		];
+
+		// prettier-ignore
+		this.currentUserProviderData = currentUserProviderData.map((providerData: CurrentUserProviderData) => {
+			const userInfo: UserInfo = firebaseUser.providerData.find((userInfo: UserInfo) => {
+				return providerData.providerId === userInfo.providerId;
+			});
+
+			if (userInfo) {
+				providerData = {
+					...providerData,
+					...userInfo,
+					linked: true
+				}
+			}
+
+			return providerData;
+		});
+	}
+
+	onProviderLink(currentUserProviderData: CurrentUserProviderData): void {
+		// prettier-ignore
+		const authProvider: AuthProvider = this.authorizationService.getAuthProvider(currentUserProviderData.providerId);
+
+		from(linkWithPopup(this.currentUser.firebase, authProvider)).subscribe({
+			next: (userCredential: UserCredential) => {
+				this.authorizationService.setCurrentUser({
+					firebase: userCredential.user
+				});
+
+				this.snackbarService.success('Done', 'This social account has been linked');
+			},
+			error: (error: any) => console.error(error)
+		});
+	}
+
+	onProviderUnlink(currentUserProviderData: CurrentUserProviderData): void {
+		from(unlink(this.currentUser.firebase, currentUserProviderData.providerId)).subscribe({
+			next: (firebaseUser: FirebaseUser) => {
+				this.authorizationService.setCurrentUser({
+					firebase: firebaseUser
+				});
+
+				this.snackbarService.warning('Done', 'This social account has been unlinked');
+			},
+			error: (error: any) => console.error(error)
+		});
+	}
+
+	/** PASSWORD */
 
 	onSubmitPasswordValidateForm(): void {
 		if (this.helperService.getFormValidation(this.passwordValidateForm)) {

@@ -11,7 +11,7 @@
 				type="button"
 				title="Google"
 				aria-label="Google"
-				(click)="onSignInWithGoogle()"
+				(click)="onSignInWithProvider('google.com')"
 			>
 				<img src="./assets/icons/socials/google.svg" alt="Google" />
 			</button>
@@ -22,7 +22,7 @@
 				type="button"
 				title="Facebook"
 				aria-label="Facebook"
-				(click)="onSignInWithFacebook()"
+				(click)="onSignInWithProvider('facebook.com')"
 			>
 				<img src="./assets/icons/socials/facebook.svg" alt="Facebook" />
 			</button>
@@ -33,21 +33,22 @@
 				type="button"
 				title="Github"
 				aria-label="Github"
-				(click)="onSignInWithGithub()"
+				(click)="onSignInWithProvider('github.com')"
 			>
 				<img src="./assets/icons/socials/github.svg" alt="Github" />
 			</button>
 		</li>
-		<li class="block" [ngClass]="{ 'pointer-events-none': signInDisabled }">
+		<!-- TODO: twitter
+    <li class="block" [ngClass]="{ 'pointer-events-none': signInDisabled }">
 			<button
 				class="block"
 				type="button"
 				title="Twitter"
 				aria-label="Twitter"
-				(click)="onSignInWithTwitter()"
+				(click)="onSignInWithProvider('twitter.com')"
 			>
 				<img src="./assets/icons/socials/twitter.svg" alt="Twitter" />
 			</button>
-		</li>
+		</li>	-->
 	</ul>
 </ng-container>
