@@ -25,7 +25,7 @@ export class CopyToClipboardDirective {
 	copyToClipboardValue: string | undefined;
 	copyToClipboardMessage: string = 'URL has been copied';
 
-	@HostListener('click', ['$event']) onClick() {
+	@HostListener('click', ['$event']) onClick(): void {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 

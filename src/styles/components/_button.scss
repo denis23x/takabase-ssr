@@ -1,6 +1,7 @@
 /* Update default behavior */
 
 .btn-disabled,
+.btn:disabled,
 .btn[disabled] {
   @apply pointer-events-auto cursor-not-allowed no-animation;
   @apply border-transparent #{!important};

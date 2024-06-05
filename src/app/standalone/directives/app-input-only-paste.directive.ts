@@ -7,7 +7,7 @@ import { Directive, HostListener } from '@angular/core';
 	selector: '[appInputOnlyPaste]'
 })
 export class InputOnlyPasteDirective {
-	@HostListener('keydown', ['$event']) onKeydown(keyboardEvent: KeyboardEvent) {
+	@HostListener('keydown', ['$event']) onKeydown(keyboardEvent: KeyboardEvent): void {
 		const ctrlKey: boolean = keyboardEvent.ctrlKey;
 		const metaKey: boolean = keyboardEvent.metaKey;
 

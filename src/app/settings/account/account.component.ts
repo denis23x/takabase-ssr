@@ -1,15 +1,17 @@
 /** @format */
 
-import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal, Signal, WritableSignal } from '@angular/core';
 import {
+	AbstractControl,
 	FormBuilder,
 	FormControl,
+	FormControlStatus,
 	FormGroup,
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { from, Subscription, switchMap, throwError } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../core/services/helper.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
@@ -18,37 +20,49 @@ import { PasswordValidateGetDto } from '../../core/dto/password/password-validat
 import { PasswordService } from '../../core/services/password.service';
 import { EmailService } from '../../core/services/email.service';
 import { PasswordUpdateDto } from '../../core/dto/password/password-update.dto';
-import { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
 import { CurrentUser, CurrentUserProviderData } from '../../core/models/current-user.model';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
-import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { PlatformService } from '../../core/services/platform.service';
-import { catchError, filter } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
+import { filter } from 'rxjs/operators';
 import { UserDeleteComponent } from '../../standalone/components/user/delete/delete.component';
 import { WindowComponent } from '../../standalone/components/window/window.component';
-import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
 import {
 	UserInfo,
 	unlink,
 	linkWithPopup,
 	AuthProvider,
 	UserCredential,
-	User as FirebaseUser
+	User as FirebaseUser,
+	EmailAuthProvider,
+	EmailAuthCredential,
+	linkWithCredential
 } from 'firebase/auth';
 import { CommonModule } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { UserPasswordReset } from '../../standalone/components/user/password-reset/password-reset.component';
+import { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
+import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
 
-interface PasswordValidateForm {
+interface EmailAuthProviderForm {
+	email: FormControl<string>;
 	password: FormControl<string>;
 }
 
-interface EmailForm {
+interface CurrentUserEmailForm {
 	email: FormControl<string>;
 }
 
-interface PasswordForm {
+interface CurrentUserPasswordForm {
 	password: FormControl<string>;
+}
+
+interface NewEmailForm {
+	newEmail: FormControl<string>;
+}
+
+interface NewPasswordForm {
+	newPassword: FormControl<string>;
 }
 
 @Component({
@@ -60,9 +74,10 @@ interface PasswordForm {
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
 		BadgeErrorComponent,
-		SkeletonDirective,
 		UserDeleteComponent,
-		WindowComponent
+		WindowComponent,
+		UserPasswordReset,
+		InputShowPassword
 	],
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'
@@ -77,22 +92,27 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly router: Router = inject(Router);
 
-	// prettier-ignore
-	@ViewChild('appUserDeleteComponent') appUserDeleteComponent: UserDeleteComponent | undefined;
+	formIsDisabled: Signal<boolean> = computed(() => {
+		const isSubmittedSuspect: boolean[] = [
+			this.emailAuthProviderFormIsSubmitted() === 'DISABLED',
+			this.currentUserEmailFormIsSubmitted(),
+			this.currentUserPasswordFormIsSubmitted() === 'DISABLED',
+			this.currentUserProviderDataRequestIsSubmitted() !== undefined,
+			this.currentUserLogoutRevokeRequestIsSubmitted(),
+			this.newEmailFormIsSubmitted() === 'DISABLED',
+			this.newPasswordFormIsSubmitted() === 'DISABLED'
+		];
 
-	// prettier-ignore
-	@ViewChild('userForgotPasswordDialogElement') userForgotPasswordDialogElement: ElementRef<HTMLDialogElement> | undefined;
+		return isSubmittedSuspect.some((isSubmitted: boolean) => !!isSubmitted);
+	});
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 	currentUserProviderData: CurrentUserProviderData[] = [];
-	currentUserSkeletonToggle: boolean = true;
-	currentUserLogoutRequest$: Subscription | undefined;
+	currentUserProviderDataRequestIsSubmitted: WritableSignal<string | undefined> = signal(undefined);
 
-	currentUserLogoutRevokeRequestIsSubmitted: boolean = false;
-	currentUserLogoutRevokeRequest$: Subscription | undefined;
-
-	passwordValidateForm: FormGroup = this.formBuilder.group<PasswordValidateForm>({
+	emailAuthProviderForm: FormGroup = this.formBuilder.group<EmailAuthProviderForm>({
+		email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
 		password: this.formBuilder.nonNullable.control('', [
 			Validators.required,
 			Validators.minLength(6),
@@ -100,19 +120,17 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			Validators.pattern(this.helperService.getRegex('password'))
 		])
 	});
-	passwordValidateFormRequest$: Subscription | undefined;
-	passwordValidateToggle: boolean = false;
+	emailAuthProviderFormToggle: boolean = false;
+	emailAuthProviderFormRequest$: Subscription | undefined;
+	emailAuthProviderFormIsSubmitted: Signal<FormControlStatus> = toSignal(this.emailAuthProviderForm.statusChanges);
 
-	userForgotPasswordToggle: boolean = false;
-	userForgotPasswordIsSubmitted: boolean = false;
-
-	emailForm: FormGroup = this.formBuilder.group<EmailForm>({
+	currentUserEmailForm: FormGroup = this.formBuilder.group<CurrentUserEmailForm>({
 		email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email])
 	});
-	emailFormRequest$: Subscription | undefined;
-	emailFormConfirmationIsSubmitted: boolean = false;
+	currentUserEmailFormRequest$: Subscription | undefined;
+	currentUserEmailFormIsSubmitted: WritableSignal<boolean> = signal(false);
 
-	passwordForm: FormGroup = this.formBuilder.group<PasswordForm>({
+	currentUserPasswordForm: FormGroup = this.formBuilder.group<CurrentUserPasswordForm>({
 		password: this.formBuilder.nonNullable.control('', [
 			Validators.required,
 			Validators.minLength(6),
@@ -120,28 +138,46 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			Validators.pattern(this.helperService.getRegex('password'))
 		])
 	});
-	passwordFormRequest$: Subscription | undefined;
+	currentUserPasswordFormFormToggle: boolean = false;
+	currentUserPasswordFormRequest$: Subscription | undefined;
+	currentUserPasswordFormIsSubmitted: Signal<FormControlStatus> = toSignal(this.currentUserPasswordForm.statusChanges);
+
+	newEmailForm: FormGroup = this.formBuilder.group<NewEmailForm>({
+		newEmail: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email])
+	});
+	newEmailFormRequest$: Subscription | undefined;
+	newEmailFormIsSubmitted: Signal<FormControlStatus> = toSignal(this.newEmailForm.statusChanges);
+
+	newPasswordForm: FormGroup = this.formBuilder.group<NewPasswordForm>({
+		newPassword: this.formBuilder.nonNullable.control('', [
+			Validators.required,
+			Validators.minLength(6),
+			Validators.maxLength(48),
+			Validators.pattern(this.helperService.getRegex('password'))
+		])
+	});
+	newPasswordFormRequest$: Subscription | undefined;
+	newPasswordFormIsSubmitted: Signal<FormControlStatus> = toSignal(this.newPasswordForm.statusChanges);
+
+	currentUserLogoutRevokeRequest$: Subscription | undefined;
+	currentUserLogoutRevokeRequestIsSubmitted: WritableSignal<boolean> = signal(false);
 
 	ngOnInit(): void {
 		/** Apply Data */
 
-		this.setSkeleton();
 		this.setResolver();
 	}
 
 	ngOnDestroy(): void {
 		[
+			this.emailAuthProviderFormRequest$,
 			this.currentUser$,
-			this.currentUserLogoutRequest$,
+			this.currentUserEmailFormRequest$,
+			this.currentUserPasswordFormRequest$,
 			this.currentUserLogoutRevokeRequest$,
-			this.passwordValidateFormRequest$,
-			this.emailFormRequest$,
-			this.passwordFormRequest$
+			this.newEmailFormRequest$,
+			this.newPasswordFormRequest$
 		].forEach(($: Subscription) => $?.unsubscribe());
-	}
-
-	setSkeleton(): void {
-		this.currentUserSkeletonToggle = true;
 	}
 
 	setResolver(): void {
@@ -153,11 +189,14 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: (currentUser: CurrentUser | undefined) => {
 						this.currentUser = currentUser;
-						this.currentUserSkeletonToggle = false;
+
+						// Set email for verification
 
 						if (!this.currentUser.firebase.emailVerified) {
-							this.emailForm.get('email').setValue(this.currentUser.firebase.email);
-							this.emailForm.disable();
+							const abstractControl: AbstractControl = this.currentUserEmailForm.get('email');
+
+							abstractControl.setValue(this.currentUser.firebase.email);
+							abstractControl.disable();
 						}
 
 						// Set provider data
@@ -173,6 +212,13 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 	onProviderDataChange(firebaseUser: FirebaseUser): void {
 		const currentUserProviderData: CurrentUserProviderData[] = [
+			{
+				providerId: 'password',
+				providerLabel: 'Takabase',
+				providerIcon: './assets/icons/favicon/icon-256x256.png',
+				providerLink: 'https://takabase.com',
+				linked: false
+			},
 			{
 				providerId: 'google.com',
 				providerLabel: 'Google',
@@ -199,7 +245,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		// prettier-ignore
 		this.currentUserProviderData = currentUserProviderData.map((providerData: CurrentUserProviderData) => {
 			const userInfo: UserInfo = firebaseUser.providerData.find((userInfo: UserInfo) => {
-				return providerData.providerId === userInfo.providerId;
+				return userInfo.providerId === providerData.providerId;
 			});
 
 			if (userInfo) {
@@ -231,143 +277,144 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	}
 
 	onProviderUnlink(currentUserProviderData: CurrentUserProviderData): void {
+		this.currentUserProviderDataRequestIsSubmitted.set(currentUserProviderData.providerId);
+
 		from(unlink(this.currentUser.firebase, currentUserProviderData.providerId)).subscribe({
 			next: (firebaseUser: FirebaseUser) => {
+				this.currentUserProviderDataRequestIsSubmitted.set(undefined);
+
 				this.authorizationService.setCurrentUser({
 					firebase: firebaseUser
 				});
 
-				this.snackbarService.warning('Done', 'This social account has been unlinked');
+				this.snackbarService.warning('Done', 'Sign-in method has been removed');
 			},
 			error: (error: any) => console.error(error)
 		});
 	}
 
-	/** PASSWORD */
+	/** EMAIL AUTH PROVIDER */
 
-	onSubmitPasswordValidateForm(): void {
-		if (this.helperService.getFormValidation(this.passwordValidateForm)) {
-			this.passwordValidateForm.disable();
+	onToggleEmailAuthProviderForm(): void {
+		this.emailAuthProviderFormToggle = !this.emailAuthProviderFormToggle;
+	}
+
+	onSubmitEmailAuthProviderForm(): void {
+		// prettier-ignore
+		if (this.helperService.getFormValidation(this.emailAuthProviderForm)) {
+			this.emailAuthProviderForm.disable();
+
+			const email: string = this.emailAuthProviderForm.value.email;
+			const password: string = this.emailAuthProviderForm.value.password;
+
+			const emailAuthCredential: EmailAuthCredential = EmailAuthProvider.credential(email, password);
+
+			this.emailAuthProviderFormRequest$?.unsubscribe();
+			this.emailAuthProviderFormRequest$ = from(linkWithCredential(this.currentUser.firebase, emailAuthCredential)).subscribe({
+				next: (userCredential: UserCredential) => {
+					this.authorizationService.setCurrentUser({
+						firebase: userCredential.user
+					});
+
+					this.snackbarService.success('Nice', 'Your credentials have been applied');
+
+					this.emailAuthProviderForm.enable();
+					this.emailAuthProviderForm.reset();
+				},
+				error: () => this.emailAuthProviderForm.enable()
+			});
+		}
+	}
+
+	/** CURRENT CREDENTIALS */
+
+	onSubmitCurrentUserEmailForm(): void {
+		if (this.helperService.getFormValidation(this.currentUserEmailForm)) {
+			this.currentUserEmailFormIsSubmitted.set(true);
+
+			this.currentUserEmailFormRequest$?.unsubscribe();
+			this.currentUserEmailFormRequest$ = this.emailService.onConfirmationGet().subscribe({
+				next: () => {
+					this.currentUserEmailFormIsSubmitted.set(false);
+
+					this.snackbarService.success('All right', 'A verification email has been sent');
+				},
+				error: () => this.currentUserEmailFormIsSubmitted.set(false)
+			});
+		}
+	}
+
+	onSubmitCurrentUserPasswordForm(): void {
+		if (this.helperService.getFormValidation(this.currentUserPasswordForm)) {
+			this.currentUserPasswordForm.disable();
 
 			const passwordValidateGetDto: PasswordValidateGetDto = {
-				...this.passwordValidateForm.value
+				...this.currentUserPasswordForm.value
 			};
 
-			this.passwordValidateFormRequest$?.unsubscribe();
-			this.passwordValidateFormRequest$ = this.passwordService
-				.onValidate(passwordValidateGetDto)
-				.subscribe({
-					next: () => {
-						/** Pass password to appUserDeleteComponent */
-
-						// prettier-ignore
-						this.appUserDeleteComponent.userDeleteFormPassword = this.passwordValidateForm.value.password;
-
-						/** Reset form and change view */
-
-						this.passwordValidateForm.enable();
-						this.passwordValidateForm.reset();
-
-						this.passwordValidateToggle = true;
-					},
-					error: () => this.passwordValidateForm.enable()
-				});
-		}
-	}
-
-	onToggleUserForgotPasswordDialog(toggle: boolean): void {
-		this.userForgotPasswordToggle = toggle;
-
-		if (toggle) {
-			this.userForgotPasswordDialogElement.nativeElement.showModal();
-			this.passwordValidateForm.disable();
-		} else {
-			this.userForgotPasswordDialogElement.nativeElement.close();
-			this.passwordValidateForm.enable();
-		}
-	}
-
-	onSubmitUserForgotPassword(): void {
-		this.userForgotPasswordIsSubmitted = true;
-
-		const passwordResetGetDto: PasswordResetGetDto = {
-			...this.emailForm.value
-		};
-
-		this.currentUserLogoutRevokeRequest$?.unsubscribe();
-		this.currentUserLogoutRevokeRequest$ = this.passwordService
-			.onResetSendEmail(passwordResetGetDto)
-			.pipe(switchMap(() => this.authorizationService.onLogoutRevoke()))
-			.subscribe({
+			this.currentUserPasswordFormRequest$?.unsubscribe();
+			this.currentUserPasswordFormRequest$ = this.passwordService.onValidate(passwordValidateGetDto).subscribe({
 				next: () => {
-					this.router.navigateByUrl('/').then(() => {
-						this.snackbarService.warning('Okay', 'Check your email to continue process');
-					});
+					this.currentUserPasswordForm.enable();
+					this.currentUserPasswordForm.reset();
+
+					// Show newEmail and newPassword
+
+					this.currentUserPasswordFormFormToggle = true;
 				},
-				error: () => (this.userForgotPasswordIsSubmitted = false)
+				error: () => this.currentUserPasswordForm.enable()
 			});
+		}
 	}
 
-	onSubmitEmailForm(): void {
-		if (this.helperService.getFormValidation(this.emailForm)) {
-			this.emailForm.disable();
+	/** NEW CREDENTIALS */
+
+	onSubmitNewEmailForm(): void {
+		if (this.helperService.getFormValidation(this.newEmailForm)) {
+			this.newEmailForm.disable();
 
 			const emailUpdateDto: EmailUpdateDto = {
-				newEmail: this.emailForm.value.email
+				...this.newEmailForm.value
 			};
 
-			this.emailFormRequest$?.unsubscribe();
-			this.emailFormRequest$ = this.emailService.onUpdate(emailUpdateDto).subscribe({
+			this.newEmailFormRequest$?.unsubscribe();
+			this.newEmailFormRequest$ = this.emailService.onUpdate(emailUpdateDto).subscribe({
 				next: () => {
-					this.emailForm.enable();
-					this.emailForm.reset();
+					this.newEmailForm.enable();
+					this.newEmailForm.reset();
 
 					this.snackbarService.success('All right', 'A verification email has been sent to you');
 				},
-				error: () => this.emailForm.enable()
+				error: () => this.newEmailForm.enable()
 			});
 		}
 	}
 
-	onSubmitEmailConfirmation(): void {
-		if (this.helperService.getFormValidation(this.emailForm)) {
-			this.emailFormConfirmationIsSubmitted = true;
-
-			this.emailFormRequest$?.unsubscribe();
-			this.emailFormRequest$ = this.emailService.onConfirmationGet().subscribe({
-				next: () => {
-					this.emailFormConfirmationIsSubmitted = false;
-
-					this.snackbarService.warning('All right', 'A verification email has been sent to you');
-				},
-				error: () => (this.emailFormConfirmationIsSubmitted = false)
-			});
-		}
-	}
-
-	onSubmitPasswordForm(): void {
-		if (this.helperService.getFormValidation(this.passwordForm)) {
-			this.passwordForm.disable();
+	onSubmitNewPasswordForm(): void {
+		if (this.helperService.getFormValidation(this.newPasswordForm)) {
+			this.newPasswordForm.disable();
 
 			const passwordUpdateDto: PasswordUpdateDto = {
-				newPassword: this.passwordForm.value.password
+				...this.newPasswordForm.value
 			};
 
-			this.passwordFormRequest$?.unsubscribe();
-			this.passwordFormRequest$ = this.passwordService.onUpdate(passwordUpdateDto).subscribe({
+			this.newPasswordFormRequest$?.unsubscribe();
+			this.newPasswordFormRequest$ = this.passwordService.onUpdate(passwordUpdateDto).subscribe({
 				next: () => {
-					this.passwordForm.enable();
-					this.passwordForm.reset();
+					this.newPasswordForm.enable();
+					this.newPasswordForm.reset();
 
 					this.snackbarService.success('Success', 'Password has been changed');
 				},
-				error: () => this.passwordForm.enable()
+				error: () => this.newPasswordForm.enable()
 			});
 		}
 	}
 
+	/** REVOKE */
+
 	onSubmitLogoutRevoke(): void {
-		this.currentUserLogoutRevokeRequestIsSubmitted = true;
+		this.currentUserLogoutRevokeRequestIsSubmitted.set(true);
 
 		this.currentUserLogoutRevokeRequest$?.unsubscribe();
 		this.currentUserLogoutRevokeRequest$ = this.authorizationService.onLogoutRevoke().subscribe({
@@ -376,36 +423,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 					this.snackbarService.success('As you wish..', 'All tokens has been revoked');
 				});
 			},
-			error: () => (this.currentUserLogoutRevokeRequestIsSubmitted = false)
+			error: () => this.currentUserLogoutRevokeRequestIsSubmitted.set(false)
 		});
-	}
-
-	onToggleDeleteForm(toggle: boolean): void {
-		if (toggle) {
-			this.emailForm.disable();
-			this.passwordForm.disable();
-		} else {
-			this.emailForm.enable();
-			this.passwordForm.enable();
-		}
-	}
-
-	onSubmitDeleteForm(): void {
-		this.currentUserLogoutRequest$?.unsubscribe();
-		this.currentUserLogoutRequest$ = this.authorizationService
-			.onSignOut()
-			.pipe(
-				catchError((httpErrorResponse: HttpErrorResponse) => {
-					this.router
-						.navigate(['/error', httpErrorResponse.status])
-						.then(() => console.debug('Route changed'));
-
-					return throwError(() => httpErrorResponse);
-				})
-			)
-			.subscribe({
-				next: () => this.router.navigateByUrl('/').then(() => console.debug('Route changed')),
-				error: (error: any) => console.error(error)
-			});
 	}
 }

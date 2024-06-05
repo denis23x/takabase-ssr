@@ -1,7 +1,7 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, from, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { UserService } from './user.service';
@@ -36,7 +36,6 @@ export class AuthorizationService {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 
-	// prettier-ignore
 	currentUser: BehaviorSubject<CurrentUser | undefined> = new BehaviorSubject<CurrentUser | undefined>(undefined);
 	currentUserIsPopulated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	currentUserPendingOAuthCredential: OAuthCredential | undefined;
@@ -48,9 +47,9 @@ export class AuthorizationService {
 					return of(currentUser);
 				}
 
-				// prettier-ignore
 				const getAuthState = (): Promise<FirebaseUser | null> => {
-					return new Promise((resolve) => {
+					return new Promise(resolve => {
+						// prettier-ignore
 						const authStateChanged$: Unsubscribe = onAuthStateChanged(this.firebaseService.getAuth(),  (firebaseUser: FirebaseUser | null) => {
 							resolve(firebaseUser);
 
@@ -58,7 +57,7 @@ export class AuthorizationService {
 							authStateChanged$?.();
 						});
 					});
-				}
+				};
 
 				return from(getAuthState()).pipe(
 					switchMap((firebaseUser: FirebaseUser | null) => {
@@ -96,9 +95,7 @@ export class AuthorizationService {
 		return getObservable().pipe(
 			switchMap(() => this.onProfile()),
 			switchMap((user: Partial<CurrentUser>) => {
-				return this.appearanceService
-					.getAppearance(userCredential.user.uid)
-					.pipe(switchMap(() => of(user)));
+				return this.appearanceService.getAppearance(userCredential.user.uid).pipe(switchMap(() => of(user)));
 			}),
 			switchMap((user: Partial<CurrentUser>) => {
 				return this.setCurrentUser({
@@ -117,9 +114,7 @@ export class AuthorizationService {
 			password: userCreateDto.password
 		};
 
-		return this.userService
-			.create(userCreateDto)
-			.pipe(switchMap(() => this.onSignInWithEmailAndPassword(signInDto)));
+		return this.userService.create(userCreateDto).pipe(switchMap(() => this.onSignInWithEmailAndPassword(signInDto)));
 	}
 
 	onProfile(): Observable<CurrentUser> {
@@ -127,15 +122,12 @@ export class AuthorizationService {
 	}
 
 	onLogoutRevoke(): Observable<void> {
-		return this.apiService
-			.post('/v1/authorization/logout/revoke')
-			.pipe(switchMap(() => this.onSignOut()));
+		return this.apiService.post('/v1/authorization/logout/revoke').pipe(switchMap(() => this.onSignOut()));
 	}
 
 	/** Firebase API */
 
 	onSignInWithEmailAndPassword(signInDto: SignInDto): Observable<CurrentUser> {
-		// prettier-ignore
 		return from(signInWithEmailAndPassword(this.firebaseService.getAuth(), signInDto.email, signInDto.password)).pipe(
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
 			switchMap((userCredential: UserCredential) => this.setPopulate(userCredential))
@@ -145,15 +137,12 @@ export class AuthorizationService {
 	onSignInWithPopup(authProvider: AuthProvider): Observable<CurrentUser> {
 		return from(signInWithPopup(this.firebaseService.getAuth(), authProvider)).pipe(
 			catchError((firebaseError: FirebaseError) => {
+				// Save the pending credential
 				if (firebaseError.code === 'auth/account-exists-with-different-credential') {
-					// Save the pending credential
-					// prettier-ignore
 					this.currentUserPendingOAuthCredential = this.getCredentialFromError(authProvider, firebaseError);
-
-					return throwError(() => firebaseError);
-				} else {
-					return this.apiService.setFirebaseError(firebaseError);
 				}
+
+				return this.apiService.setFirebaseError(firebaseError);
 			}),
 			switchMap((userCredential: UserCredential) => this.setPopulate(userCredential))
 		);
@@ -167,7 +156,6 @@ export class AuthorizationService {
 		);
 	}
 
-	// prettier-ignore
 	getCredentialFromError = (authProvider: AuthProvider, firebaseError: FirebaseError): OAuthCredential => {
 		switch (authProvider.providerId) {
 			case 'google.com': {

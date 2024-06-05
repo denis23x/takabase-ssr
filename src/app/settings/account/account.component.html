@@ -3,74 +3,347 @@
 <ng-container>
 	<div class="flex flex-col items-start justify-start gap-4">
 		<div class="flex w-full flex-col gap-4">
-			@switch (passwordValidateToggle) {
-				@case (true) {
-					<form
-						class="flex w-full flex-col gap-4"
-						autocomplete="off"
-						[formGroup]="emailForm"
-						(ngSubmit)="onSubmitEmailForm()"
-					>
-						@if (emailForm.get("email"); as email) {
-							<fieldset class="form-control">
-								<label class="label" for="emailFormEmail">
-									<div class="indicator">
-										@if (email.touched && !!email.errors && emailForm.enabled) {
-											<div class="block" appBadgeError [appBadgeErrorAbstractControl]="email"></div>
-										}
-										<span class="label-text mr-2">New email</span>
-									</div>
-								</label>
-								<div class="relative">
-									<input
-										class="input-bordered input input-md w-full !pr-12"
-										id="emailFormEmail"
-										type="email"
-										aria-label="Email"
-										inputmode="email"
-										enterkeyhint="done"
-										formControlName="email"
-										autocomplete="email"
-										placeholder="Type your new email"
-										appInputTrimWhitespace
-										[class.input-success]="email.dirty && email.valid"
-										[class.input-error]="email.touched && email.invalid"
-									/>
-									@if (email.value) {
-										<button
-											class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-											type="button"
-											aria-label="Reset"
-											appSvgIcon
-											[class.btn-success]="email.dirty && email.valid"
-											[class.btn-error]="email.touched && email.invalid"
-											[class.btn-ghost]="email.untouched && email.dirty && email.invalid"
-											[disabled]="email.disabled"
-											[appSvgIconIcon]="'x'"
-											[appSvgIconSquare]="'2em'"
-											(click)="email.setValue('')"
-										></button>
+			<ul class="flex flex-col items-start justify-start gap-4 w-full">
+				@for (providerData of currentUserProviderData | slice: 0 : 1; track providerData.providerId) {
+					<li class="flex flex-col gap-4 rounded-box border border-base-content/20 w-full p-4">
+						<div class="flex items-center justify-between gap-4">
+							<button
+								class="btn-ghost btn-square btn fill-current bg-base-200"
+								type="button"
+								title="Security"
+								aria-label="Security"
+								appSvgIcon
+								[appSvgIconIcon]="'shield-lock'"
+								[appSvgIconSquare]="'1.75em'"
+							></button>
+							<div class="flex flex-col items-start justify-start gap-2 w-full overflow-hidden">
+								<span class="truncate text-lg leading-6 font-bold text-base-content max-w-full"> Takabase </span>
+								<span class="truncate text-sm leading-4 text-base-content/50 max-w-full">
+									Keep your account secure
+								</span>
+							</div>
+							<button
+								class="btn btn-outline btn-success min-w-20"
+								type="button"
+								[title]="'Takabase credentials'"
+								[attr.aria-label]="'Takabase credentials'"
+								[disabled]="formIsDisabled()"
+								(click)="onToggleEmailAuthProviderForm()"
+							>
+								{{ providerData.linked ? "Update credentials" : "Set credentials" }}
+							</button>
+						</div>
+						@if (emailAuthProviderFormToggle) {
+							<hr class="w-full border-base-content/20" />
+							@if (providerData.linked) {
+								@if (currentUser.firebase.emailVerified) {
+									@if (currentUserPasswordFormFormToggle) {
+										<form
+											class="flex w-full flex-col gap-4"
+											autocomplete="off"
+											[formGroup]="newEmailForm"
+											(ngSubmit)="onSubmitNewEmailForm()"
+										>
+											@if (newEmailForm.get("newEmail"); as newEmail) {
+												<fieldset class="form-control" [disabled]="formIsDisabled()">
+													<label class="label" for="newEmailFormNewEmail">
+														<div class="indicator">
+															@if (newEmail.touched && !!newEmail.errors && newEmail.enabled && !formIsDisabled()) {
+																<div class="block" appBadgeError [appBadgeErrorAbstractControl]="newEmail"></div>
+															}
+															<span class="label-text mr-2"> New email </span>
+														</div>
+													</label>
+													<div class="relative">
+														<input
+															class="input-bordered input input-md w-full !pr-12"
+															id="newEmailFormNewEmail"
+															type="email"
+															title="New email"
+															aria-label="New email"
+															inputmode="email"
+															enterkeyhint="done"
+															formControlName="newEmail"
+															autocomplete="email"
+															placeholder="Type your new email"
+															appInputTrimWhitespace
+															[class.input-success]="newEmail.dirty && newEmail.valid"
+															[class.input-error]="newEmail.touched && newEmail.invalid"
+														/>
+														@if (newEmail.value) {
+															<button
+																class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+																type="button"
+																title="Clear input"
+																aria-label="Clear input"
+																appSvgIcon
+																[class.btn-success]="newEmail.dirty && newEmail.valid"
+																[class.btn-error]="newEmail.touched && newEmail.invalid"
+																[class.btn-ghost]="newEmail.untouched && newEmail.dirty && newEmail.invalid"
+																[disabled]="newEmail.disabled"
+																[appSvgIconIcon]="'x'"
+																[appSvgIconSquare]="'2em'"
+																(click)="newEmail.setValue('')"
+															></button>
+														}
+													</div>
+												</fieldset>
+											}
+											<fieldset class="form-control" [disabled]="formIsDisabled()">
+												<button
+													class="btn-success btn-md btn w-full"
+													type="submit"
+													title="Submit"
+													aria-label="Submit"
+													[disabled]="newEmailForm.invalid || newEmailForm.disabled"
+												>
+													@if (newEmailForm.disabled) {
+														<span class="loading loading-spinner"></span>
+													}
+													Submit
+												</button>
+											</fieldset>
+										</form>
+										<form
+											class="flex w-full flex-col gap-4"
+											autocomplete="off"
+											[formGroup]="newPasswordForm"
+											(ngSubmit)="onSubmitNewPasswordForm()"
+										>
+											@if (newPasswordForm.get("newPassword"); as newPassword) {
+												<fieldset class="form-control" [disabled]="formIsDisabled()">
+													<label class="label" for="newPasswordFormNewPassword">
+														<!-- prettier-ignore -->
+														<div class="indicator">
+															@if (newPassword.touched && !!newPassword.errors && newPassword.enabled && !formIsDisabled()) {
+																<div class="block" appBadgeError [appBadgeErrorAbstractControl]="newPassword"></div>
+															}
+															<span class="label-text mr-2"> New password </span>
+														</div>
+													</label>
+													<div class="relative">
+														<input
+															class="input-bordered input input-md w-full !pr-12"
+															id="newPasswordFormNewPassword"
+															title="New password"
+															aria-label="New password"
+															formControlName="newPassword"
+															autocomplete="new-password"
+															enterkeyhint="done"
+															placeholder="Type your new password"
+															appInputTrimWhitespace
+															#newPasswordFormNewPasswordElement
+															[type]="'password'"
+															[class.input-success]="newPassword.dirty && newPassword.valid"
+															[class.input-error]="newPassword.touched && newPassword.invalid"
+														/>
+														@if (newPassword.value) {
+															<button
+																class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+																type="button"
+																title="Show password"
+																aria-label="Show password"
+																appSvgIcon
+																appInputShowPassword
+																[class.btn-success]="newPassword.dirty && newPassword.value"
+																[class.btn-error]="newPassword.touched && newPassword.invalid"
+																[class.btn-ghost]="newPassword.untouched && newPassword.dirty && newPassword.invalid"
+																[disabled]="newPassword.disabled"
+																[appSvgIconIcon]="'incognito'"
+																[appSvgIconSquare]="'1.5em'"
+																[appInputShowPasswordFormControl]="newPassword"
+																[appInputShowPasswordInputElement]="newPasswordFormNewPasswordElement"
+															></button>
+														}
+													</div>
+												</fieldset>
+											}
+											<p class="alert" role="alert">
+												<i
+													class="fill-current text-info"
+													appSvgIcon
+													[appSvgIconIcon]="'info-circle'"
+													[appSvgIconSquare]="'1.5em'"
+												></i>
+												<span class="block">
+													The password must be 6-32 characters long, must contain at least one number or special
+													character
+												</span>
+											</p>
+											<fieldset class="form-control" [disabled]="formIsDisabled()">
+												<button
+													class="btn btn-success btn-md w-full"
+													type="submit"
+													title="Submit"
+													aria-label="Submit"
+													[disabled]="newPasswordForm.invalid || newPasswordForm.disabled"
+												>
+													@if (newPasswordForm.disabled) {
+														<span class="loading loading-spinner"></span>
+													}
+													Submit
+												</button>
+											</fieldset>
+										</form>
+									} @else {
+										<form
+											class="flex w-full flex-col gap-4"
+											autocomplete="off"
+											[formGroup]="currentUserPasswordForm"
+											(ngSubmit)="onSubmitCurrentUserPasswordForm()"
+										>
+											@if (currentUserPasswordForm.get("password"); as password) {
+												<fieldset class="form-control" [disabled]="formIsDisabled()">
+													<div class="label">
+														<div class="indicator">
+															@if (password.touched && !!password.errors && password.enabled && !formIsDisabled()) {
+																<div class="block" appBadgeError [appBadgeErrorAbstractControl]="password"></div>
+															}
+															<label class="label-text mr-2" for="currentUserPasswordFormPassword">
+																Current password
+															</label>
+														</div>
+														<button
+															class="label-text-alt link"
+															type="button"
+															title="Reset password"
+															aria-label="Reset password"
+															[disabled]="password.disabled"
+															(click)="appUserPasswordResetComponent.onToggleUserPasswordResetDialog(true)"
+														>
+															Forgot password?
+														</button>
+													</div>
+													<div class="relative">
+														<input
+															class="input-bordered input input-md w-full !pr-12"
+															id="currentUserPasswordFormPassword"
+															title="Current password"
+															aria-label="Current password"
+															formControlName="password"
+															autocomplete="new-password"
+															enterkeyhint="done"
+															placeholder="Type your current password"
+															appInputTrimWhitespace
+															#currentUserPasswordFormPasswordElement
+															[type]="'password'"
+															[class.input-success]="password.dirty && password.valid"
+															[class.input-error]="password.touched && password.invalid"
+														/>
+														@if (password.value) {
+															<button
+																class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+																type="button"
+																title="Show password"
+																aria-label="Show password"
+																appSvgIcon
+																appInputShowPassword
+																[disabled]="password.disabled"
+																[class.btn-success]="password.dirty && password.value"
+																[class.btn-error]="password.touched && password.invalid"
+																[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
+																[appSvgIconIcon]="'incognito'"
+																[appSvgIconSquare]="'1.5em'"
+																[appInputShowPasswordFormControl]="password"
+																[appInputShowPasswordInputElement]="currentUserPasswordFormPasswordElement"
+															></button>
+														}
+													</div>
+												</fieldset>
+											}
+											<p class="alert" role="alert">
+												<i
+													class="fill-current text-info"
+													appSvgIcon
+													[appSvgIconIcon]="'info-circle'"
+													[appSvgIconSquare]="'1.5em'"
+												></i>
+												<span class="block">
+													Please provide your current password to continue. Your password ensures the security and
+													integrity of your account
+												</span>
+											</p>
+											<fieldset class="form-control gap-4" [disabled]="formIsDisabled()">
+												<button
+													class="btn btn-success btn-md w-full"
+													type="submit"
+													title="Continue"
+													aria-label="Continue"
+													[disabled]="currentUserPasswordForm.invalid || currentUserPasswordForm.disabled"
+												>
+													@if (currentUserPasswordForm.disabled) {
+														<span class="loading loading-spinner"></span>
+													}
+													Continue
+												</button>
+												<button
+													class="btn btn-error btn-outline btn-md w-full"
+													type="button"
+													title="Remove credentials"
+													aria-label="Remove credentials"
+													[disabled]="currentUserPasswordForm.disabled"
+													(click)="onProviderUnlink(providerData)"
+												>
+													@if (currentUserProviderDataRequestIsSubmitted() === providerData.providerId) {
+														<span class="loading loading-spinner"></span>
+													}
+													Remove credentials
+												</button>
+											</fieldset>
+										</form>
 									}
-								</div>
-							</fieldset>
-						}
-						<fieldset class="form-control">
-							@switch (currentUser.firebase.emailVerified) {
-								@case (true) {
-									<button
-										class="btn-success btn-md btn w-full"
-										type="submit"
-										aria-label="Submit"
-										[disabled]="emailForm.invalid || emailForm.disabled"
+								} @else {
+									<form
+										class="flex w-full flex-col gap-4"
+										autocomplete="off"
+										[formGroup]="currentUserEmailForm"
+										(ngSubmit)="onSubmitCurrentUserEmailForm()"
 									>
-										@if (emailForm.disabled && !appUserDeleteComponent.userDeleteDialogToggle) {
-											<span class="loading loading-spinner"></span>
+										@if (currentUserEmailForm.get("email"); as email) {
+											<fieldset class="form-control" [disabled]="formIsDisabled()">
+												<label class="label" for="currentUserEmailFormEmail">
+													<div class="indicator">
+														@if (email.touched && !!email.errors && email.enabled && !formIsDisabled()) {
+															<div class="block" appBadgeError [appBadgeErrorAbstractControl]="email"></div>
+														}
+														<span class="label-text mr-2">Current email</span>
+													</div>
+												</label>
+												<div class="relative">
+													<input
+														class="input-bordered input input-md w-full !pr-12"
+														id="currentUserEmailFormEmail"
+														type="email"
+														title="Email"
+														aria-label="Email"
+														inputmode="email"
+														enterkeyhint="done"
+														formControlName="email"
+														autocomplete="email"
+														placeholder="Type your email"
+														appInputTrimWhitespace
+														[class.input-success]="email.dirty && email.valid"
+														[class.input-error]="email.touched && email.invalid"
+													/>
+													@if (email.value) {
+														<button
+															class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+															type="button"
+															title="Clear input"
+															aria-label="Clear input"
+															appSvgIcon
+															[class.btn-success]="email.dirty && email.valid"
+															[class.btn-error]="email.touched && email.invalid"
+															[class.btn-ghost]="email.untouched && email.dirty && email.invalid"
+															[disabled]="email.disabled"
+															[appSvgIconIcon]="'x'"
+															[appSvgIconSquare]="'2em'"
+															(click)="email.setValue('')"
+														></button>
+													}
+												</div>
+											</fieldset>
 										}
-										Submit
-									</button>
-								}
-								@case (false) {
-									<div class="flex flex-col gap-4">
 										<p class="alert" role="alert">
 											<i
 												class="fill-current text-info"
@@ -79,244 +352,187 @@
 												[appSvgIconSquare]="'1.5em'"
 											></i>
 											<span class="block">
-												To maintain the security and validity of your account, email address
-												verification is required before any changes can be made. This verification
-												step ensures that you have full control over your account and protects your
-												information from unauthorized access.
+												To maintain the security and validity of your account, email address verification is required
+												before any changes can be made. This verification step ensures that you have full control over
+												your account and protects your information from unauthorized access.
 											</span>
 										</p>
-										<!-- prettier-ignore -->
-										<button
-                      class="btn-success btn-md btn w-full"
-                      type="button"
-                      aria-label="Send me verification email"
-                      [disabled]="emailFormConfirmationIsSubmitted || appUserDeleteComponent.userDeleteDialogToggle"
-                      (click)="onSubmitEmailConfirmation()"
-                    >
-                      @if (emailFormConfirmationIsSubmitted) {
-                        <span class="loading loading-spinner"></span>
-                      }
-                      Send me verification email
-                    </button>
-									</div>
+										<fieldset class="form-control gap-4" [disabled]="formIsDisabled()">
+											<button
+												class="btn-success btn-md btn w-full"
+												type="submit"
+												title="Send me verification email"
+												aria-label="Send me verification email"
+												[disabled]="currentUserEmailForm.invalid || currentUserEmailFormIsSubmitted()"
+											>
+												@if (currentUserEmailFormIsSubmitted()) {
+													<span class="loading loading-spinner"></span>
+												}
+												Send me verification email
+											</button>
+											<button
+												class="btn btn-error btn-outline btn-md w-full"
+												type="button"
+												title="Remove credentials"
+												aria-label="Remove credentials"
+												[disabled]="currentUserEmailFormIsSubmitted()"
+												(click)="onProviderUnlink(providerData)"
+											>
+												@if (currentUserProviderDataRequestIsSubmitted() === providerData.providerId) {
+													<span class="loading loading-spinner"></span>
+												}
+												Remove credentials
+											</button>
+										</fieldset>
+									</form>
 								}
+							} @else {
+								<form
+									class="flex w-full flex-col gap-4"
+									autocomplete="off"
+									[formGroup]="emailAuthProviderForm"
+									(ngSubmit)="onSubmitEmailAuthProviderForm()"
+								>
+									<div class="flex w-full flex-col items-start gap-4 sm:flex-row sm:justify-between">
+										@if (emailAuthProviderForm.get("email"); as email) {
+											<fieldset class="form-control w-full" [disabled]="formIsDisabled()">
+												<label class="label" for="emailAuthProviderFormEmail">
+													<div class="indicator">
+														@if (email.touched && !!email.errors && email.enabled && !formIsDisabled()) {
+															<div class="block" appBadgeError [appBadgeErrorAbstractControl]="email"></div>
+														}
+														<span class="label-text mr-2">Email</span>
+													</div>
+												</label>
+												<div class="relative">
+													<input
+														class="input-bordered input input-md w-full !pr-12"
+														id="emailAuthProviderFormEmail"
+														type="email"
+														title="Email"
+														aria-label="Email"
+														inputmode="email"
+														enterkeyhint="done"
+														formControlName="email"
+														autocomplete="email"
+														placeholder="Type your email"
+														appInputTrimWhitespace
+														[class.input-success]="email.dirty && email.valid"
+														[class.input-error]="email.touched && email.invalid"
+													/>
+													@if (email.value) {
+														<button
+															class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+															type="button"
+															title="Clear input"
+															aria-label="Clear input"
+															appSvgIcon
+															[class.btn-success]="email.dirty && email.valid"
+															[class.btn-error]="email.touched && email.invalid"
+															[class.btn-ghost]="email.untouched && email.dirty && email.invalid"
+															[disabled]="email.disabled"
+															[appSvgIconIcon]="'x'"
+															[appSvgIconSquare]="'2em'"
+															(click)="email.setValue('')"
+														></button>
+													}
+												</div>
+											</fieldset>
+										}
+										@if (emailAuthProviderForm.get("password"); as password) {
+											<fieldset class="form-control w-full" [disabled]="formIsDisabled()">
+												<label class="label" for="emailAuthProviderFormPassword">
+													<div class="indicator">
+														@if (password.touched && !!password.errors && password.enabled && !formIsDisabled()) {
+															<div class="block" appBadgeError [appBadgeErrorAbstractControl]="password"></div>
+														}
+														<span class="label-text mr-2">Password</span>
+													</div>
+												</label>
+												<div class="relative">
+													<input
+														class="input-bordered input input-md w-full !pr-12"
+														id="emailAuthProviderFormPassword"
+														title="Password"
+														aria-label="Password"
+														enterkeyhint="done"
+														formControlName="password"
+														autocomplete="new-password"
+														placeholder="Type your password"
+														appInputTrimWhitespace
+														#emailAuthProviderFormPassword
+														[type]="'password'"
+														[class.input-success]="password.dirty && password.valid"
+														[class.input-error]="password.touched && password.invalid"
+													/>
+													@if (password.value) {
+														<button
+															class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+															type="button"
+															title="Show password"
+															aria-label="Show password"
+															appSvgIcon
+															appInputShowPassword
+															[class.btn-success]="password.dirty && password.value"
+															[class.btn-error]="password.touched && password.invalid"
+															[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
+															[disabled]="password.disabled"
+															[appSvgIconIcon]="'incognito'"
+															[appSvgIconSquare]="'1.5em'"
+															[appInputShowPasswordFormControl]="password"
+															[appInputShowPasswordInputElement]="emailAuthProviderFormPassword"
+														></button>
+													}
+												</div>
+											</fieldset>
+										}
+									</div>
+									<p class="alert" role="alert">
+										<i
+											class="fill-current text-info"
+											appSvgIcon
+											[appSvgIconIcon]="'info-circle'"
+											[appSvgIconSquare]="'1.5em'"
+										></i>
+										<span class="block">
+											The password must be 6-32 characters long, must contain at least one number or special character
+										</span>
+									</p>
+									<fieldset class="form-control" [disabled]="formIsDisabled()">
+										<button
+											class="btn-success btn-md btn w-full"
+											type="submit"
+											aria-label="Submit"
+											[disabled]="emailAuthProviderForm.invalid || emailAuthProviderForm.disabled"
+										>
+											@if (emailAuthProviderForm.disabled) {
+												<span class="loading loading-spinner"></span>
+											}
+											Submit
+										</button>
+									</fieldset>
+								</form>
 							}
-						</fieldset>
-					</form>
-					<hr class="w-full border-base-content/20" />
-					<form
-						class="flex w-full flex-col gap-4"
-						autocomplete="off"
-						[formGroup]="passwordForm"
-						(ngSubmit)="onSubmitPasswordForm()"
-					>
-						@if (passwordForm.get("password"); as password) {
-							<fieldset class="form-control">
-								<label class="label" for="passwordFormPassword">
-									<div class="indicator">
-										@if (password.touched && !!password.errors && passwordForm.enabled) {
-											<div
-												class="block"
-												appBadgeError
-												[appBadgeErrorAbstractControl]="password"
-											></div>
-										}
-										<span class="label-text mr-2">New password</span>
-									</div>
-								</label>
-								<div class="relative">
-									<input
-										class="input-bordered input input-md w-full !pr-12"
-										id="passwordFormPassword"
-										aria-label="Password"
-										enterkeyhint="done"
-										formControlName="password"
-										autocomplete="new-password"
-										placeholder="Type your new password"
-										appInputTrimWhitespace
-										#passwordFormPasswordElement
-										[type]="'password'"
-										[class.input-success]="password.dirty && password.valid"
-										[class.input-error]="password.touched && password.invalid"
-									/>
-									@if (password.value) {
-										<button
-											class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-											type="button"
-											aria-label="Password"
-											appSvgIcon
-											[class.btn-success]="password.dirty && password.value"
-											[class.btn-error]="password.touched && password.invalid"
-											[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
-											[disabled]="password.disabled"
-											[appSvgIconIcon]="'incognito'"
-											[appSvgIconSquare]="'1.5em'"
-											(touchstart)="passwordFormPasswordElement.type = 'text'"
-											(touchend)="passwordFormPasswordElement.type = 'password'"
-											(mouseenter)="passwordFormPasswordElement.type = 'text'"
-											(mouseleave)="passwordFormPasswordElement.type = 'password'"
-										></button>
-									}
-								</div>
-							</fieldset>
 						}
-						<p class="alert" role="alert">
-							<i
-								class="fill-current text-info"
-								appSvgIcon
-								[appSvgIconIcon]="'info-circle'"
-								[appSvgIconSquare]="'1.5em'"
-							></i>
-							<span class="block">
-								The password must be 6-32 characters long, must contain at least one number or
-								special character
-							</span>
-						</p>
-						<fieldset class="form-control">
-							<button
-								class="btn btn-md btn-success w-full"
-								type="submit"
-								aria-label="Submit"
-								[disabled]="passwordForm.invalid || passwordForm.disabled"
-							>
-								@if (passwordForm.disabled && !appUserDeleteComponent.userDeleteDialogToggle) {
-									<span class="loading loading-spinner"></span>
-								}
-								Submit
-							</button>
-						</fieldset>
-					</form>
+					</li>
 				}
-				@case (false) {
-					<form
-						class="flex w-full flex-col gap-4"
-						autocomplete="off"
-						[formGroup]="passwordValidateForm"
-						(ngSubmit)="onSubmitPasswordValidateForm()"
-					>
-						@if (passwordValidateForm.get("password"); as password) {
-							<fieldset class="form-control">
-								<div class="label">
-									<div
-										class="indicator"
-										appSkeleton
-										[appSkeletonToggle]="currentUserSkeletonToggle"
-										[appSkeletonClassListElementRef]="['!-mx-1']"
-									>
-										@if (password.touched && !!password.errors && passwordValidateForm.enabled) {
-											<div
-												class="block"
-												appBadgeError
-												[appBadgeErrorAbstractControl]="password"
-											></div>
-										}
-										<label class="label-text mr-2" for="passwordValidateFormPassword">
-											Current password
-										</label>
-									</div>
-									<button
-										class="label-text-alt link"
-										type="button"
-										(click)="onToggleUserForgotPasswordDialog(true)"
-									>
-										Forgot password?
-									</button>
-								</div>
-								<div class="relative" appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
-									<input
-										class="input-bordered input input-md w-full !pr-12"
-										id="passwordValidateFormPassword"
-										aria-label="Password"
-										formControlName="password"
-										autocomplete="new-password"
-										enterkeyhint="done"
-										placeholder="Type your current password"
-										appInputTrimWhitespace
-										#passwordValidateFormPasswordElement
-										[type]="'password'"
-										[class.input-success]="password.dirty && password.valid"
-										[class.input-error]="password.touched && password.invalid"
-									/>
-									@if (password.value) {
-										<button
-											class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-											type="button"
-											aria-label="Password"
-											appSvgIcon
-											[class.btn-success]="password.dirty && password.value"
-											[class.btn-error]="password.touched && password.invalid"
-											[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
-											[disabled]="password.disabled"
-											[appSvgIconIcon]="'incognito'"
-											[appSvgIconSquare]="'1.5em'"
-											(touchstart)="passwordValidateFormPasswordElement.type = 'text'"
-											(touchend)="passwordValidateFormPasswordElement.type = 'password'"
-											(mouseenter)="passwordValidateFormPasswordElement.type = 'text'"
-											(mouseleave)="passwordValidateFormPasswordElement.type = 'password'"
-										></button>
-									}
-								</div>
-							</fieldset>
-						}
-						<p
-							class="alert"
-							role="alert"
-							appSkeleton
-							[appSkeletonToggle]="currentUserSkeletonToggle"
-						>
-							<i
-								class="fill-current text-info"
-								appSvgIcon
-								[appSvgIconIcon]="'info-circle'"
-								[appSvgIconSquare]="'1.5em'"
-							></i>
-							<span class="block">
-								Please provide your current password to continue. Your password ensures the security
-								and integrity of your account
-							</span>
-						</p>
-						<fieldset class="form-control">
-							<button
-								class="btn btn-success btn-md w-full"
-								type="submit"
-								aria-label="Continue"
-								appSkeleton
-								[appSkeletonToggle]="currentUserSkeletonToggle"
-								[appSkeletonClassListElementRef]="['border-0']"
-								[disabled]="passwordValidateForm.invalid || passwordValidateForm.disabled"
-							>
-								@if (passwordValidateForm.disabled) {
-									<span class="loading loading-spinner"></span>
-								}
-								Continue
-							</button>
-						</fieldset>
-					</form>
-				}
-			}
+			</ul>
 		</div>
-		<hr class="w-full border-base-content/20" />
 		<div class="flex w-full flex-col gap-4">
 			<p class="alert" role="alert">
-				<i
-					class="fill-current text-info"
-					appSvgIcon
-					[appSvgIconIcon]="'info-circle'"
-					[appSvgIconSquare]="'1.5em'"
-				></i>
+				<i class="fill-current text-info" appSvgIcon [appSvgIconIcon]="'info-circle'" [appSvgIconSquare]="'1.5em'"></i>
 				<span class="block">
-					You can easily link your social accounts to enhance your login experience. Click on the
-					respective buttons below to link or unlink your accounts
+					You can easily link your social accounts to enhance your login experience. Click on the respective buttons
+					below to link or unlink your accounts
 				</span>
 			</p>
-			<hr class="w-full border-base-content/20" />
-			<ul class="flex flex-col items-start justify-start gap-4 w-full">
-				@for (providerData of currentUserProviderData; track providerData.uid) {
-					<li class="flex items-center justify-between w-full gap-4">
+			<ul class="flex flex-col items-start justify-start w-full">
+				@for (providerData of currentUserProviderData | slice: 1; track providerData.providerId) {
+					<li
+						class="flex items-center justify-between w-full gap-4 first:border-t border-b border-base-content/20 py-4"
+					>
 						<div class="avatar">
-							<figure
-								class="flex items-center justify-center rounded-btn h-12 w-12 overflow-hidden"
-							>
+							<figure class="flex items-center justify-center rounded-btn h-12 w-12 overflow-hidden">
 								<img
 									class="object-cover object-center"
 									[ngClass]="providerData.linked ? 'bg-base-300' : 'max-w-8 max-h-8'"
@@ -327,7 +543,7 @@
 						</div>
 						<div class="flex flex-col items-start justify-start gap-2 w-full overflow-hidden">
 							<a
-								class="truncate text-lg leading-6 font-bold text-base-content max-w-full link first-letter:uppercase"
+								class="truncate text-lg leading-6 font-bold text-base-content max-w-full link"
 								target="_blank"
 								rel="noopener noreferrer"
 								[href]="providerData.providerLink"
@@ -342,132 +558,77 @@
 						</div>
 						@if (providerData.linked) {
 							<button
-								class="btn btn-outline btn-error w-20"
+								class="btn btn-outline btn-error min-w-20"
 								type="button"
-								[title]="providerData.providerLabel"
-								[attr.aria-label]="providerData.providerLabel"
+								[title]="'Unlink ' + providerData.providerLabel + ' account'"
+								[attr.aria-label]="'Unlink ' + providerData.providerLabel + ' account'"
+								[disabled]="formIsDisabled()"
 								(click)="onProviderUnlink(providerData)"
 							>
+								@if (currentUserProviderDataRequestIsSubmitted() === providerData.providerId) {
+									<span class="loading loading-spinner"></span>
+								}
 								Unlink
 							</button>
 						} @else {
 							<button
-								class="btn btn-outline btn-success w-20"
+								class="btn btn-outline btn-success min-w-20"
 								type="button"
-								[title]="providerData.providerLabel"
-								[attr.aria-label]="providerData.providerLabel"
+								[title]="'Link ' + providerData.providerLabel + ' account'"
+								[attr.aria-label]="'Link ' + providerData.providerLabel + ' account'"
+								[disabled]="formIsDisabled()"
 								(click)="onProviderLink(providerData)"
 							>
 								Link
 							</button>
 						}
 					</li>
-					<hr class="w-full border-base-content/20" />
 				}
 			</ul>
 		</div>
-		<hr class="w-full border-base-content/20" />
 		<div class="flex w-full flex-col gap-4">
 			<p class="alert" role="alert">
-				<i
-					class="fill-current text-info"
-					appSvgIcon
-					[appSvgIconIcon]="'info-circle'"
-					[appSvgIconSquare]="'1.5em'"
-				></i>
+				<i class="fill-current text-info" appSvgIcon [appSvgIconIcon]="'info-circle'" [appSvgIconSquare]="'1.5em'"></i>
 				<!-- prettier-ignore -->
 				<span class="block"> Terminating all other sessions will log you out from any other devices or locations where you're currently logged in <strong class="inline font-bold">including your current session</strong> </span>
 			</p>
-			<div class="form-control">
-				<!-- prettier-ignore -->
+			<fieldset class="form-control" [disabled]="formIsDisabled()">
 				<button
-          class="btn-error btn-md btn w-full"
-          type="button"
-          aria-label="Delete"
-          [class.btn-outline]="!currentUserLogoutRevokeRequestIsSubmitted && !appUserDeleteComponent.userDeleteDialogToggle"
-          [disabled]="currentUserLogoutRevokeRequestIsSubmitted || appUserDeleteComponent.userDeleteDialogToggle"
-          (click)="onSubmitLogoutRevoke()"
-        >
-          @if (currentUserLogoutRevokeRequestIsSubmitted && !appUserDeleteComponent.userDeleteDialogToggle) {
-            <span class="loading loading-spinner"></span>
-          }
-          Revoke tokens
-        </button>
-			</div>
+					class="btn-error btn-md btn btn-outline w-full"
+					type="button"
+					title="Revoke tokens"
+					aria-label="Revoke tokens"
+					[disabled]="currentUserLogoutRevokeRequestIsSubmitted()"
+					(click)="onSubmitLogoutRevoke()"
+				>
+					@if (currentUserLogoutRevokeRequestIsSubmitted()) {
+						<span class="loading loading-spinner"></span>
+					}
+					Revoke tokens
+				</button>
+			</fieldset>
 		</div>
 		<hr class="w-full border-base-content/20" />
 		<div class="flex w-full flex-col gap-4">
 			<p class="alert" role="alert">
-				<i
-					class="fill-current text-info"
-					appSvgIcon
-					[appSvgIconIcon]="'info-circle'"
-					[appSvgIconSquare]="'1.5em'"
-				></i>
+				<i class="fill-current text-info" appSvgIcon [appSvgIconIcon]="'info-circle'" [appSvgIconSquare]="'1.5em'"></i>
 				<!-- prettier-ignore -->
 				<span class="block"> Deleting your account will permanently remove all associated account data. <strong class="inline font-bold">This action cannot be undone</strong> </span>
 			</p>
-			<div class="form-control">
+			<fieldset class="form-control" [disabled]="formIsDisabled()">
 				<button
-					class="btn-error btn-md btn w-full"
+					class="btn-error btn-md btn btn-outline w-full"
 					type="button"
-					aria-label="Delete"
-					[class.btn-outline]="!appUserDeleteComponent.userDeleteDialogToggle"
+					title="Delete account"
+					aria-label="Delete account"
 					[disabled]="appUserDeleteComponent.userDeleteDialogToggle"
 					(click)="appUserDeleteComponent.onToggleUserDeleteDialog(true)"
 				>
-					Delete
+					Delete account
 				</button>
-			</div>
+			</fieldset>
 		</div>
 	</div>
-	<!-- prettier-ignore-attribute (click) -->
-	<dialog
-		class="modal"
-		#userForgotPasswordDialogElement
-		(keydown.escape)="$event.preventDefault(); onToggleUserForgotPasswordDialog(false)"
-		(click)="$event.target === $event.currentTarget ? onToggleUserForgotPasswordDialog(false) : $event"
-	>
-		<div
-			class="flex items-center justify-center w-full max-w-lg"
-			appWindow
-			[appWindowTitle]="'Reset'"
-			[appWindowButtons]="['close']"
-			(appWindowClose)="onToggleUserForgotPasswordDialog(false)"
-		>
-			<div class="flex flex-col gap-4 p-4" slot="content">
-				<p class="alert" role="alert">
-					<i
-						class="fill-current text-info"
-						appSvgIcon
-						[appSvgIconIcon]="'info-circle'"
-						[appSvgIconSquare]="'1.5em'"
-					></i>
-					<span class="block">
-						For security reasons, you will be logged out from all devices. Please check your email
-						for further instructions on resetting your password
-					</span>
-				</p>
-				<button
-					class="btn btn-md btn-success"
-					type="submit"
-					title="Reset"
-					aria-label="Reset"
-					[disabled]="userForgotPasswordIsSubmitted"
-					(click)="onSubmitUserForgotPassword()"
-				>
-					@if (userForgotPasswordIsSubmitted) {
-						<span class="loading loading-spinner"></span>
-					}
-					Submit
-				</button>
-			</div>
-		</div>
-	</dialog>
-	<div
-		appUserDelete
-		#appUserDeleteComponent
-		(appUserDeleteSuccess)="onSubmitDeleteForm()"
-		(appUserDeleteToggle)="onToggleDeleteForm($event)"
-	></div>
+	<div appUserPasswordReset #appUserPasswordResetComponent></div>
+	<div appUserDelete #appUserDeleteComponent></div>
 </ng-container>

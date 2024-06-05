@@ -65,6 +65,8 @@ export class ApiService {
 					return 'Missing credentials. Please provide the password to proceed.';
 				case 'auth/cannot-delete-own-user-account':
 					return 'You cannot delete your own user account';
+				case 'auth/account-exists-with-different-credential':
+					return 'Account already exists. Try to use another provider';
 				default:
 					return 'Sorry, something unexpected occurred';
 			}
