@@ -1,20 +1,59 @@
-/* Add feature by default */
-
-html[data-theme="black"],
-html[data-theme="business"],
-html[data-theme="coffee"],
-html[data-theme="dark"],
-html[data-theme="forest"],
-html[data-theme="halloween"] {
-  img {
-    @apply opacity-75;
-  }
-}
+/* Prefers Color Scheme */
 
 html:not([data-theme]) {
   @media (prefers-color-scheme: dark) {
     img {
       @apply opacity-75;
     }
+  }
+
+  @media (prefers-color-scheme: light) {
+    img {
+      @apply opacity-100;
+    }
+  }
+}
+
+/* Image opacity */
+
+html[data-theme="aqua"],
+html[data-theme="black"],
+html[data-theme="business"],
+html[data-theme="coffee"],
+html[data-theme="cyberpunk"],
+html[data-theme="dark"],
+html[data-theme="dim"],
+html[data-theme="dracula"],
+html[data-theme="forest"],
+html[data-theme="halloween"],
+html[data-theme="luxury"],
+html[data-theme="night"],
+html[data-theme="sunset"],
+html[data-theme="synthwave"] {
+  img {
+    @apply opacity-75;
+  }
+}
+
+html[data-theme="acid"],
+html[data-theme="autumn"],
+html[data-theme="bumblebee"],
+html[data-theme="cmyk"],
+html[data-theme="corporate"],
+html[data-theme="cupcake"],
+html[data-theme="emerald"],
+html[data-theme="fantasy"],
+html[data-theme="garden"],
+html[data-theme="lemonade"],
+html[data-theme="light"],
+html[data-theme="lofi"],
+html[data-theme="nord"],
+html[data-theme="pastel"],
+html[data-theme="retro"],
+html[data-theme="valentine"],
+html[data-theme="winter"],
+html[data-theme="wireframe"] {
+  img {
+    @apply opacity-100;
   }
 }

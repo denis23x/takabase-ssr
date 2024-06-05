@@ -1,5 +1,6 @@
 /** @format */
 
 export interface UserDeleteDto {
-	password: string;
+	name: string;
+	password?: string;
 }

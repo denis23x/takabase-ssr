@@ -1,29 +1,13 @@
 /** @format */
 
-import {
-	Component,
-	ElementRef,
-	EventEmitter,
-	inject,
-	OnDestroy,
-	OnInit,
-	Output,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
-import {
-	AbstractControl,
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { of, Subscription, switchMap, throwError } from 'rxjs';
 import { HelperService } from '../../../../core/services/helper.service';
 import { CurrentUser } from '../../../../core/models/current-user.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
@@ -32,6 +16,10 @@ import { PlatformService } from '../../../../core/services/platform.service';
 import { User } from '../../../../core/models/user.model';
 import { UserService } from '../../../../core/services/user.service';
 import { UserDeleteDto } from '../../../../core/dto/user/user-delete.dto';
+import { catchError } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { UserInfo } from 'firebase/auth';
 
 interface UserDeleteForm {
 	name: FormControl<string>;
@@ -58,11 +46,10 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly location: Location = inject(Location);
 	private readonly userService: UserService = inject(UserService);
+	private readonly router: Router = inject(Router);
 
-	// prettier-ignore
 	@ViewChild('userDeleteDialogElement') userDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
-	// prettier-ignore
 	@Output() appUserDeleteSuccess: EventEmitter<User> = new EventEmitter<User>();
 	@Output() appUserDeleteToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -70,7 +57,6 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 	currentUser$: Subscription | undefined;
 
 	userDeleteDialogToggle: boolean = false;
-	userDeleteFormPassword: string | undefined;
 	userDeleteForm: FormGroup = this.formBuilder.group<UserDeleteForm>({
 		name: this.formBuilder.nonNullable.control('', [])
 	});
@@ -91,7 +77,6 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
 		[this.currentUser$, this.userDeleteFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -102,14 +87,38 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 			this.userDeleteForm.reset();
 			this.userDeleteDialogElement.nativeElement.showModal();
 
-			const abstractControl: AbstractControl = this.userDeleteForm.get('name');
+			const abstractControlName: AbstractControl = this.userDeleteForm.get('name');
 
-			abstractControl.setValidators([
+			abstractControlName.setValidators([
 				Validators.required,
 				Validators.pattern(this.helperService.getRegex('exact', this.currentUser.name))
 			]);
 
-			abstractControl.updateValueAndValidity();
+			abstractControlName.updateValueAndValidity();
+
+			// prettier-ignore
+			const passwordProvider: UserInfo | undefined = this.currentUser.firebase.providerData.find((userInfo: UserInfo) => {
+				return userInfo.providerId === 'password';
+			});
+
+			if (passwordProvider) {
+				// prettier-ignore
+				this.userDeleteForm.addControl('password', this.formBuilder.nonNullable.control('', [
+					Validators.required,
+					Validators.pattern(this.helperService.getRegex('password'))
+				]));
+
+				const abstractControlPassword: AbstractControl = this.userDeleteForm.get('password');
+
+				abstractControlPassword.setValidators([
+					Validators.required,
+					Validators.minLength(6),
+					Validators.maxLength(48),
+					Validators.pattern(this.helperService.getRegex('password'))
+				]);
+
+				abstractControlName.updateValueAndValidity();
+			}
 		} else {
 			this.userDeleteForm.reset();
 			this.userDeleteDialogElement.nativeElement.close();
@@ -124,22 +133,38 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 
 			const userId: number = this.currentUser.id;
 			const userDeleteDto: UserDeleteDto = {
-				password: this.userDeleteFormPassword
+				...this.userDeleteForm.value
 			};
 
 			this.userDeleteFormRequest$?.unsubscribe();
-			this.userDeleteFormRequest$ = this.userService.delete(userId, userDeleteDto).subscribe({
-				next: (user: User) => {
-					this.snackbarService.success('Chao', 'You will not be missed');
+			this.userDeleteFormRequest$ = this.userService
+				.delete(userId, userDeleteDto)
+				.pipe(
+					switchMap((user: User) => {
+						return this.authorizationService.onSignOut().pipe(
+							catchError((httpErrorResponse: HttpErrorResponse) => {
+								this.router.navigate(['/error', httpErrorResponse.status]).then(() => console.debug('Route changed'));
 
-					this.appUserDeleteSuccess.emit(user);
+								return throwError(() => httpErrorResponse);
+							}),
+							switchMap(() => of(user))
+						);
+					})
+				)
+				.subscribe({
+					next: (user: User) => {
+						this.appUserDeleteSuccess.emit(user);
 
-					this.userDeleteForm.enable();
+						this.userDeleteForm.enable();
 
-					this.onToggleUserDeleteDialog(false);
-				},
-				error: () => this.userDeleteForm.enable()
-			});
+						this.onToggleUserDeleteDialog(false);
+
+						this.router.navigateByUrl('/').then(() => {
+							this.snackbarService.success('Chao', 'You will not be missed');
+						});
+					},
+					error: () => this.userDeleteForm.enable()
+				});
 		}
 	}
 }

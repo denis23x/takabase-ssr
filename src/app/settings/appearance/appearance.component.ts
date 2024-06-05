@@ -199,17 +199,17 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	}
 
 	setTransformList(): void {
-		this.appearanceThemeList = ['auto', ...environment.themes.sort()].map((theme: string) => {
+		this.appearanceThemeList = ['auto', ...environment.themes].map((theme: string) => {
 			return this.getTransformListValue(theme, 'theme');
 		});
 
 		// prettier-ignore
-		this.appearanceThemeBackgroundList = environment.backgrounds.sort().map((themeBackground: string) => {
+		this.appearanceThemeBackgroundList = environment.backgrounds.map((themeBackground: string) => {
       return this.getTransformListValue(themeBackground, "themeBackground")
     })
 
 		// prettier-ignore
-		this.appearanceThemePrismList = ["auto", ...environment.prism.themes.sort()].map((themePrism: string) => {
+		this.appearanceThemePrismList = ['auto', ...environment.prism.themes].map((themePrism: string) => {
       return this.getTransformListValue(themePrism, "themePrism")
     })
 	}

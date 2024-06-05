@@ -25,14 +25,7 @@ import {
 } from './markdown';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, filter, map } from 'rxjs/operators';
-import {
-	AbstractControl,
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -320,12 +313,10 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			};
 
 			this.controlListEmojiMartColorScheme$?.unsubscribe();
-			this.controlListEmojiMartColorScheme$ = this.appearanceService
-				.getPrefersColorScheme()
-				.subscribe({
-					next: () => setThemeColor(),
-					error: (error: any) => console.error(error)
-				});
+			this.controlListEmojiMartColorScheme$ = this.appearanceService.getPrefersColorScheme().subscribe({
+				next: () => setThemeColor(),
+				error: (error: any) => console.error(error)
+			});
 
 			// Initial call
 
@@ -371,10 +362,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
       }
 
 			this.scrollSync$?.unsubscribe();
-			this.scrollSync$ = merge(
-				fromEvent(this.textarea, 'scroll'),
-				fromEvent(this.preview, 'scroll')
-			)
+			this.scrollSync$ = merge(fromEvent(this.textarea, 'scroll'), fromEvent(this.preview, 'scroll'))
 				.pipe(filter(() => this.scrollSync))
 				.subscribe({
 					next: (event: Event) => {
@@ -459,35 +447,44 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 			// prettier-ignore
 			switch (markdownControl.key) {
-        case "url-link": {
-          this.urlForm.addControl("title", this.formBuilder.nonNullable.control("", [Validators.required]))
-          this.urlForm.addControl("url", this.formBuilder.nonNullable.control("", [Validators.required, Validators.pattern(this.helperService.getRegex("url"))]))
+				case 'url-link': {
+					this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', [Validators.required]));
+					this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [
+						Validators.required,
+						Validators.pattern(this.helperService.getRegex('url'))
+					]));
 
-          const abstractControlTitle: AbstractControl = this.urlForm.get("title")
-          const abstractControlUrl: AbstractControl = this.urlForm.get("url")
+					const abstractControlTitle: AbstractControl = this.urlForm.get('title');
+					const abstractControlUrl: AbstractControl = this.urlForm.get('url');
 
-          this.urlForm$?.unsubscribe()
-          this.urlForm$ = abstractControlUrl.valueChanges
-            .pipe(filter(() => abstractControlTitle.untouched))
-            .subscribe((value: string) => abstractControlTitle.setValue(value))
+					this.urlForm$?.unsubscribe();
+					this.urlForm$ = abstractControlUrl.valueChanges
+						.pipe(filter(() => abstractControlTitle.untouched))
+						.subscribe((value: string) => abstractControlTitle.setValue(value));
 
-          break
-        }
-        case "url-image": {
-          this.urlForm.addControl("title", this.formBuilder.nonNullable.control("", []))
-          this.urlForm.addControl("url", this.formBuilder.nonNullable.control("", [Validators.required, Validators.pattern(this.helperService.getRegex("url"))]))
+					break;
+				}
+				case 'url-image': {
+					this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', []));
+					this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [
+						Validators.required,
+						Validators.pattern(this.helperService.getRegex('url'))
+					]));
 
-          break
-        }
-        case "url-youtube": {
-          this.urlForm.addControl("url", this.formBuilder.nonNullable.control("", [Validators.required, Validators.pattern(this.helperService.getRegex("youtube"))]))
+					break;
+				}
+				case 'url-youtube': {
+					this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [
+						Validators.required,
+						Validators.pattern(this.helperService.getRegex('youtube'))
+					]));
 
-          break
-        }
-        default: {
-          break
-        }
-      }
+					break;
+				}
+				default: {
+					break;
+				}
+			}
 
 			/** Apply selection */
 
