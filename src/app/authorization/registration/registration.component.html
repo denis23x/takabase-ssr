@@ -10,8 +10,8 @@
 						class="avatar"
 						target="_blank"
 						[routerLink]="[invitedByUser | userUrl]"
-						[attr.aria-label]="invitedByUser.name"
 						[title]="invitedByUser.name"
+						[attr.aria-label]="invitedByUser.name"
 					>
 						<figure
 							class="h-12 w-12 rounded-btn relative overflow-hidden"
@@ -24,8 +24,8 @@
 							class="truncate text-xl leading-6 font-bold text-base-content max-w-full link"
 							target="_blank"
 							[routerLink]="[invitedByUser | userUrl]"
-							[attr.aria-label]="invitedByUser.name"
 							[title]="invitedByUser.name"
+							[attr.aria-label]="invitedByUser.name"
 						>
 							{{ invitedByUser.name }}
 						</a>
@@ -57,9 +57,10 @@
 						</label>
 						<div class="relative">
 							<input
-								class="input-bordered input input-md w-full !pr-12"
+								class="input-bordered input input-md w-full"
 								id="registrationFormName"
 								type="text"
+								title="Name"
 								aria-label="Name"
 								autocomplete="username"
 								formControlName="name"
@@ -72,7 +73,8 @@
 								<button
 									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 									type="button"
-									aria-label="Clear"
+									title="Clear input"
+									aria-label="Clear input"
 									appSvgIcon
 									[class.btn-success]="name.valid"
 									[class.btn-error]="name.touched && name.invalid"
@@ -98,9 +100,10 @@
 						</label>
 						<div class="relative">
 							<input
-								class="input-bordered input input-md w-full !pr-12"
+								class="input-bordered input input-md w-full"
 								id="registrationFormEmail"
 								type="email"
+								title="Email"
 								aria-label="Email"
 								inputmode="email"
 								autocomplete="username"
@@ -114,7 +117,8 @@
 								<button
 									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 									type="button"
-									aria-label="Clear"
+									title="Clear input"
+									aria-label="Clear input"
 									appSvgIcon
 									[class.btn-success]="email.valid"
 									[class.btn-error]="email.touched && email.invalid"
@@ -140,8 +144,9 @@
 						</label>
 						<div class="relative">
 							<input
-								class="input-bordered input input-md w-full !pr-12"
+								class="input-bordered input input-md w-full"
 								id="registrationFormPassword"
+								title="Password"
 								aria-label="Password"
 								autocomplete="current-password"
 								formControlName="password"
@@ -191,7 +196,8 @@
 								class="checkbox checkbox-md"
 								id="registrationFormTerms"
 								type="checkbox"
-								aria-label="Terms of use"
+								title="Terms of Service"
+								aria-label="Terms of Service"
 								formControlName="terms"
 								[class.checkbox-success]="terms.valid"
 								[class.checkbox-error]="terms.invalid"
@@ -205,6 +211,7 @@
 					<button
 						class="btn-success btn w-full"
 						type="submit"
+						title="Registration"
 						aria-label="Registration"
 						[disabled]="registrationForm.invalid || registrationForm.disabled"
 					>
@@ -215,9 +222,9 @@
 					</button>
 				</fieldset>
 			</form>
-			<!-- prettier-ignore -->
 			<a
 				class="btn-primary btn w-full"
+				title="Login"
 				aria-label="Login"
 				[routerLink]="registrationForm.enabled ? '/login' : null"
 				[ngClass]="{ 'btn-outline': registrationForm.enabled, 'btn-disabled': registrationForm.disabled }"

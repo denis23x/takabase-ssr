@@ -23,9 +23,7 @@
 				(ngSubmit)="onSubmitReportForm()"
 			>
 				@if (reportSubject) {
-					<div
-						class="flex items-center justify-start gap-4 bg-base-200 p-4 rounded-btn overflow-hidden"
-					>
+					<div class="flex items-center justify-start gap-4 bg-base-200 p-4 rounded-btn overflow-hidden">
 						@switch (true) {
 							@case (!!reportSubject.user) {
 								<div class="avatar">
@@ -73,8 +71,7 @@
 							[appSvgIconSquare]="'1.5em'"
 						></i>
 						<span class="block">
-							Your report is helping improve the services and create a more satisfying experience
-							for other users
+							Your report is helping improve the services and create a more satisfying experience for other users
 						</span>
 					</p>
 				}
@@ -91,9 +88,10 @@
 						<div class="flex items-center justify-between gap-4">
 							<div class="relative w-full">
 								<input
-									class="input-bordered input input-md w-full !pr-12"
+									class="input-bordered input input-md w-full"
 									id="reportFormName"
 									type="text"
+									title="Name"
 									aria-label="Name"
 									formControlName="name"
 									placeholder="Type name"
@@ -105,7 +103,8 @@
 									<button
 										class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 										type="button"
-										aria-label="Clear"
+										title="Clear input"
+										aria-label="Clear input"
 										appSvgIcon
 										[class.btn-success]="name.valid"
 										[class.btn-error]="name.touched && name.invalid"
@@ -121,8 +120,8 @@
 								<button
 									class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
 									type="button"
-									title="List"
-									aria-label="List"
+									title="Report menu"
+									aria-label="Report menu"
 									appSvgIcon
 									slot="target"
 									[disabled]="reportForm.disabled"
@@ -178,6 +177,7 @@
               <textarea
                 class="textarea textarea-md w-full max-h-64"
                 id="reportFormDescription"
+                title="Description"
                 aria-label="Description"
                 placeholder="Type description"
                 formControlName="description"
@@ -192,6 +192,7 @@
 					<button
 						class="btn-success btn-md btn w-full"
 						type="submit"
+						title="Submit"
 						aria-label="Submit"
 						[disabled]="reportForm.invalid || reportForm.disabled"
 					>

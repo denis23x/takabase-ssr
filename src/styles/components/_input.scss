@@ -30,4 +30,8 @@
   &.input-error {
     @apply caret-error;
   }
+
+  &:has(+ .btn-circle) {
+    @apply pr-12;
+  }
 }

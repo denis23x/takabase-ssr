@@ -20,15 +20,8 @@
 					[appSvgIconSquare]="'3em'"
 				></i>
 				<div class="text-center">
-					<p class="text-xl font-bold text-base-content">
-						Posts <span class="text-error">not found</span>
-					</p>
-					<a
-						class="link text-sm"
-						title="Create post"
-						aria-label="Create post"
-						[routerLink]="['/create']"
-					>
+					<p class="text-xl font-bold text-base-content">Posts <span class="text-error">not found</span></p>
+					<a class="link text-sm" title="Create post" aria-label="Create post" [routerLink]="['/create']">
 						Create post
 					</a>
 				</div>
@@ -39,6 +32,7 @@
 		<button
 			class="btn-md btn-success btn mt-4 w-full"
 			type="button"
+			title="Load more"
 			aria-label="Load more"
 			[disabled]="abstractListIsLoading$ | async"
 			(click)="getAbstractListLoadMore()"

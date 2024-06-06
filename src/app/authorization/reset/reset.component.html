@@ -1,9 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<div
-		class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-	>
+	<div class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
 		<div class="flex flex-col gap-4">
 			<h1 class="text-2xl font-bold">Password reset</h1>
 			<hr class="border-t border-base-content/20" />
@@ -31,9 +29,10 @@
 						</label>
 						<div class="relative">
 							<input
-								class="input-bordered input input-md w-full !pr-12"
+								class="input-bordered input input-md w-full"
 								id="resetFormEmail"
 								type="email"
+								title="Email"
 								aria-label="Email"
 								inputmode="email"
 								enterkeyhint="done"
@@ -48,7 +47,8 @@
 								<button
 									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 									type="button"
-									aria-label="Clear"
+									title="Clear input"
+									aria-label="Clear input"
 									appSvgIcon
 									[class.btn-success]="email.valid"
 									[class.btn-error]="email.touched && email.invalid"
@@ -66,6 +66,7 @@
 					<button
 						class="btn-success btn btn-md w-full"
 						type="submit"
+						title="Submit"
 						aria-label="Submit"
 						[disabled]="resetForm.invalid || resetForm.disabled"
 					>
@@ -76,9 +77,9 @@
 					</button>
 				</fieldset>
 			</form>
-			<!-- prettier-ignore -->
 			<a
 				class="btn-primary btn w-full"
+				title="Login"
 				aria-label="Login"
 				[routerLink]="resetForm.enabled ? '/login' : null"
 				[ngClass]="{ 'btn-outline': resetForm.enabled, 'btn-disabled': resetForm.disabled }"

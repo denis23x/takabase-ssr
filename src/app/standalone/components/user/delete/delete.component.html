@@ -44,9 +44,10 @@
 						</label>
 						<div class="relative">
 							<input
-								class="input-bordered input input-md w-full !pr-12"
+								class="input-bordered input input-md w-full"
 								id="userDeleteFormName"
 								type="text"
+								title="Name"
 								aria-label="Name"
 								enterkeyhint="done"
 								formControlName="name"
@@ -59,7 +60,8 @@
 								<button
 									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 									type="button"
-									aria-label="Clear"
+									title="Clear input"
+									aria-label="Clear input"
 									appSvgIcon
 									[class.btn-success]="name.dirty && name.value"
 									[class.btn-error]="name.touched && name.invalid"
@@ -85,9 +87,10 @@
 						</label>
 						<div class="relative">
 							<input
-								class="input-bordered input input-md w-full !pr-12"
+								class="input-bordered input input-md w-full"
 								id="userDeleteFormPassword"
-								aria-label="Password"
+								title="Current password"
+								aria-label="Current password"
 								formControlName="password"
 								autocomplete="new-password"
 								enterkeyhint="done"

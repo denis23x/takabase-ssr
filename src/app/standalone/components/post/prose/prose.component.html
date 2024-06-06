@@ -38,6 +38,7 @@
 								[target]="postPreview ? '_blank' : '_self'"
 								[appSkeletonToggle]="postSkeletonToggle"
 								[routerLink]="[post.user | userUrl, 'category', post.category?.id]"
+								[title]="post.category?.name || 'Category'"
 								[attr.aria-label]="post.category?.name || 'Category'"
 							>
 								{{ post.category?.name || "Category" }}
@@ -55,8 +56,8 @@
 							<button
 								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
 								type="button"
-								title="Menu"
-								aria-label="Menu"
+								title="Post menu"
+								aria-label="Post menu"
 								appSvgIcon
 								slot="target"
 								[appSvgIconIcon]="'three-dots-vertical'"
@@ -162,11 +163,6 @@
 			}
 		</section>
 		<div appPostDelete #appPostDeleteComponent [appPostDeletePost]="post"></div>
-		<div
-			appQRCode
-			#appQrCodeComponent
-			[appQRCodeData]="postShareUrl"
-			[appQRCodeOrigin]="false"
-		></div>
+		<div appQRCode #appQrCodeComponent [appQRCodeData]="postShareUrl" [appQRCodeOrigin]="false"></div>
 	}
 </ng-container>

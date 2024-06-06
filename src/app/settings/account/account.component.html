@@ -25,8 +25,8 @@
 							<button
 								class="btn btn-outline btn-md btn-success min-w-20"
 								type="button"
-								[title]="'Takabase credentials'"
-								[attr.aria-label]="'Takabase credentials'"
+								title="Takabase credentials"
+								aria-label="Takabase credentials"
 								[disabled]="formIsDisabled()"
 								(click)="onToggleEmailAuthProviderForm()"
 							>
@@ -56,7 +56,7 @@
 													</label>
 													<div class="relative">
 														<input
-															class="input-bordered input input-md w-full !pr-12"
+															class="input-bordered input input-md w-full"
 															id="newEmailFormNewEmail"
 															type="email"
 															title="New email"
@@ -123,7 +123,7 @@
 													</label>
 													<div class="relative">
 														<input
-															class="input-bordered input input-md w-full !pr-12"
+															class="input-bordered input input-md w-full"
 															id="newPasswordFormNewPassword"
 															title="New password"
 															aria-label="New password"
@@ -216,7 +216,7 @@
 													</div>
 													<div class="relative">
 														<input
-															class="input-bordered input input-md w-full !pr-12"
+															class="input-bordered input input-md w-full"
 															id="currentUserPasswordFormPassword"
 															title="Current password"
 															aria-label="Current password"
@@ -298,7 +298,7 @@
 												</label>
 												<div class="relative">
 													<input
-														class="input-bordered input input-md w-full !pr-12"
+														class="input-bordered input input-md w-full"
 														id="currentUserEmailFormEmail"
 														type="email"
 														title="Email"
@@ -393,7 +393,7 @@
 												</label>
 												<div class="relative">
 													<input
-														class="input-bordered input input-md w-full !pr-12"
+														class="input-bordered input input-md w-full"
 														id="emailAuthProviderFormEmail"
 														type="email"
 														title="Email"
@@ -438,7 +438,7 @@
 												</label>
 												<div class="relative">
 													<input
-														class="input-bordered input input-md w-full !pr-12"
+														class="input-bordered input input-md w-full"
 														id="emailAuthProviderFormPassword"
 														title="Password"
 														aria-label="Password"
@@ -583,8 +583,8 @@
 				<button
 					class="btn-error btn-md btn btn-outline w-full"
 					type="button"
-					title="Revoke tokens"
-					aria-label="Revoke tokens"
+					title="Revoke authorization tokens"
+					aria-label="Revoke authorization tokens"
 					[disabled]="currentUserLogoutRevokeRequestIsSubmitted()"
 					(click)="onSubmitLogoutRevoke()"
 				>

@@ -10,8 +10,8 @@
 				appSkeleton
 				[appSkeletonToggle]="categorySkeletonToggle"
 				[routerLink]="[category.user | userUrl]"
-				[attr.aria-label]="category.user.name"
 				[title]="category.user.name"
+				[attr.aria-label]="category.user.name"
 			>
 				<figure
 					class="h-12 w-12 rounded-btn relative overflow-hidden"
@@ -25,6 +25,7 @@
 					appSkeleton
 					[appSkeletonToggle]="categorySkeletonToggle"
 					[routerLink]="[category.user | userUrl, 'category', category.id]"
+					[title]="category.name"
 					[attr.aria-label]="category.name"
 				>
 					{{ category.name }}

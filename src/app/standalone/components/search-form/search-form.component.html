@@ -1,18 +1,15 @@
 <!-- @format -->
 
 <ng-container>
-	<form
-		class="flex items-end justify-between gap-4 w-full"
-		autocomplete="off"
-		[formGroup]="searchForm"
-	>
+	<form class="flex items-end justify-between gap-4 w-full" autocomplete="off" [formGroup]="searchForm">
 		@if (searchForm.get("query"); as query) {
 			<fieldset class="form-control flex-1">
 				<div class="relative">
 					<input
-						class="input-bordered input input-md w-full !pr-12"
+						class="input-bordered input input-md w-full"
 						id="searchFormSearch"
 						type="search"
+						title="Search"
 						aria-label="Search"
 						inputmode="search"
 						enterkeyhint="search"
@@ -26,7 +23,8 @@
 						<button
 							class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 							type="button"
-							aria-label="Clear query"
+							title="Clear input"
+							aria-label="Clear input"
 							appSvgIcon
 							[class.btn-success]="query.valid"
 							[class.btn-error]="query.touched && query.invalid"
@@ -74,6 +72,7 @@
                     class="rounded-btn block w-full truncate text-right first-letter:uppercase"
                     type="button"
                     [class.active]="searchFormOrderBy === orderBy.value"
+                    [title]="searchFormOrderBy"
                     [attr.aria-label]="searchFormOrderBy"
                     (click)="searchFormOrderBy === orderBy.value ? orderBy.reset() : orderBy.setValue(searchFormOrderBy)"
                   >

@@ -8,11 +8,7 @@
 			<div class="flex w-full items-center justify-between gap-4">
 				<div class="flex items-center justify-start gap-4 overflow-hidden">
 					<div class="avatar" appSkeleton [appSkeletonToggle]="userSkeletonToggle">
-						<figure
-							class="h-12 w-12 rounded-btn relative overflow-hidden"
-							appAvatar
-							[appAvatarUser]="user"
-						></figure>
+						<figure class="h-12 w-12 rounded-btn relative overflow-hidden" appAvatar [appAvatarUser]="user"></figure>
 					</div>
 					<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
 						<h1
@@ -43,8 +39,8 @@
 					<button
 						class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
 						type="button"
-						title="Menu"
-						aria-label="Menu"
+						title="User menu"
+						aria-label="User menu"
 						appSvgIcon
 						slot="target"
 						[appSvgIconIcon]="'three-dots-vertical'"
@@ -81,8 +77,8 @@
 								<button
 									class="rounded-btn block w-full truncate text-right"
 									type="button"
-									title="Report"
-									aria-label="Report"
+									title="Report user"
+									aria-label="Report user"
 									(click)="onToggleReportDialog(true)"
 								>
 									Report
@@ -122,7 +118,8 @@
 					>
 						<a
 							class="block whitespace-nowrap px-4"
-							aria-label="All"
+							title="All posts"
+							aria-label="All posts"
 							[routerLink]="['.']"
 							[queryParamsHandling]="'merge'"
 						>
@@ -147,6 +144,7 @@
 								[routerLink]="['./category', category.id]"
 								[queryParamsHandling]="'merge'"
 								[routerLinkActive]="''"
+								[title]="category.name"
 								[attr.aria-label]="category.name"
 							>
 								<span class="block truncate max-w-[192px]">{{ category.name }}</span>
@@ -155,9 +153,7 @@
 					}
 				</ul>
 			</nav>
-			<div
-				class="rounded-box border border-base-content/20 bg-base-100 p-4 flex flex-col gap-4 shadow-xl"
-			>
+			<div class="rounded-box border border-base-content/20 bg-base-100 p-4 flex flex-col gap-4 shadow-xl">
 				<div class="flex w-full items-center justify-between gap-4">
 					<!-- prettier-ignore -->
 					<button
@@ -165,8 +161,8 @@
 						type="button"
 						appSvgIcon
 						appSkeleton
-						[title]="searchFormToggle ? 'Close' : 'Search'"
-						[attr.aria-label]="searchFormToggle ? 'Close' : 'Search'"
+						[title]="searchFormToggle ? 'Close search' : 'Search'"
+						[attr.aria-label]="searchFormToggle ? 'Close search' : 'Search'"
 						[disabled]="false"
 						[appSkeletonToggle]="(categorySkeletonToggle || userPostComponent?.postListSkeletonToggle) && !searchFormToggle"
 						[appSkeletonClassListElementRef]="['border-0']"
@@ -228,8 +224,8 @@
                   <button
                     class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
                     type="button"
-                    title="Menu"
-                    aria-label="Menu"
+                    title="Category menu"
+                    aria-label="Category menu"
                     appSvgIcon
                     slot="target"
                     [appSvgIconIcon]="'three-dots-vertical'"
@@ -279,10 +275,10 @@
                           <button
                             class="rounded-btn block w-full truncate text-right"
                             type="button"
-                            title="Idk"
-                            aria-label="Idk"
+                            title="Work In Progress"
+                            aria-label="Work In Progress"
                           >
-                            Idk
+                            WIP
                           </button>
                         </li>
                       }
@@ -316,11 +312,7 @@
 			</div>
 		</div>
 	</section>
-	<div
-		appCategoryCreate
-		#appCategoryCreateComponent
-		(appCategoryCreateSuccess)="onCreateCategory($event)"
-	></div>
+	<div appCategoryCreate #appCategoryCreateComponent (appCategoryCreateSuccess)="onCreateCategory($event)"></div>
 	<div
 		appCategoryUpdate
 		#appCategoryUpdateComponent
@@ -336,10 +328,5 @@
 		[appCategoryDeleteCategoryPostList]="userPostComponent?.postList"
 		(appCategoryDeleteSuccess)="onDeleteCategory($event)"
 	></div>
-	<div
-		appQRCode
-		#appQrCodeComponent
-		[appQRCodeData]="user | userUrl: 1"
-		[appQRCodeOrigin]="true"
-	></div>
+	<div appQRCode #appQrCodeComponent [appQRCodeData]="user | userUrl: 1" [appQRCodeOrigin]="true"></div>
 </ng-container>

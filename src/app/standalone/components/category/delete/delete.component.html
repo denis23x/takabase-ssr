@@ -46,9 +46,10 @@
 						</label>
 						<div class="relative">
 							<input
-								class="input-bordered input input-md w-full !pr-12"
+								class="input-bordered input input-md w-full"
 								id="categoryDeleteFormName"
 								type="text"
+								title="Name"
 								aria-label="Name"
 								enterkeyhint="done"
 								formControlName="name"
@@ -61,7 +62,8 @@
 								<button
 									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 									type="button"
-									aria-label="Clear"
+									title="Clear input"
+									aria-label="Clear input"
 									appSvgIcon
 									[class.btn-success]="name.dirty && name.value"
 									[class.btn-error]="name.touched && name.invalid"
@@ -114,6 +116,7 @@
                               class="rounded-btn block w-full truncate text-left"
                               type="button"
                               [ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
+                              [title]="category.name"
                               [attr.aria-label]="category.name"
                               (click)="categoryId.patchValue(category.id)"
                             >

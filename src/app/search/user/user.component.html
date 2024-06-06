@@ -3,19 +3,12 @@
 <ng-container>
 	<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
 		@for (user of userList; track user.id; let i = $index) {
-			<li
-				class="block"
-				appCardUser
-				[appCardUserUser]="user"
-				[appCardUserSkeletonToggle]="userListSkeletonToggle"
-			></li>
+			<li class="block" appCardUser [appCardUserUser]="user" [appCardUserSkeletonToggle]="userListSkeletonToggle"></li>
 			@if (i === 10 || i === 20 || i === 30) {
 				<li class="block" appAd></li>
 			}
 		} @empty {
-			<li
-				class="col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-5 flex flex-col items-center gap-4"
-			>
+			<li class="col-span-2 sm:col-span-3 md:col-span-4 lg:col-span-5 flex flex-col items-center gap-4">
 				<i
 					class="fill-current text-base-content"
 					appSvgIcon
@@ -23,15 +16,8 @@
 					[appSvgIconSquare]="'3em'"
 				></i>
 				<div class="text-center">
-					<p class="text-xl font-bold text-base-content">
-						Users <span class="text-error"> not found </span>
-					</p>
-					<div
-						class="block"
-						appAuthenticated
-						appSkeleton
-						[appSkeletonToggle]="currentUserSkeletonToggle"
-					>
+					<p class="text-xl font-bold text-base-content">Users <span class="text-error"> not found </span></p>
+					<div class="block" appAuthenticated appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
 						<a
 							class="link text-sm"
 							title="Registration"
@@ -39,7 +25,7 @@
 							slot="public"
 							[routerLink]="['/registration']"
 						>
-							Unlock limitless: Register today!
+							Unlock limitless and register today!
 						</a>
 						<span class="text-sm" slot="private">
 							Can't find your friends?

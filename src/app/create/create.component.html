@@ -7,11 +7,7 @@
 		>
 			<div class="flex flex-row w-full items-center justify-between gap-4">
 				<div class="flex items-center justify-start gap-4 overflow-auto w-full">
-					<div
-						class="flex"
-						appSkeleton
-						[appSkeletonToggle]="postSkeletonToggle || postFormImageSkeletonToggle"
-					>
+					<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle || postFormImageSkeletonToggle">
 						@if (postForm.get("image"); as image) {
 							<!-- prettier-ignore -->
 							<figure
@@ -22,7 +18,7 @@
                 @switch (true) {
                   @case (!!image.value === true) {
                     <img
-                      class="block object-cover"
+                      class="block bg-base-300 object-cover object-center"
                       width="48"
                       height="48"
                       loading="lazy"
@@ -69,8 +65,8 @@
 					<button
 						class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
 						type="button"
-						title="Menu"
-						aria-label="Menu"
+						title="Image menu"
+						aria-label="Image menu"
 						appSvgIcon
 						slot="target"
 						[disabled]="postForm.disabled"
@@ -83,8 +79,8 @@
 								<button
 									class="rounded-btn block w-full truncate text-right"
 									type="button"
-									title="Update"
-									aria-label="Update"
+									[title]="(image.value ? 'Update' : 'Set') + ' image'"
+									[attr.aria-label]="(image.value ? 'Update' : 'Set') + ' image'"
 									(click)="appCropperComponent.onToggleCropper(true)"
 								>
 									{{ image.value ? "Update" : "Set image" }}
@@ -108,11 +104,7 @@
 				</div>
 			</div>
 			<hr class="w-full border-base-content/20" />
-			<form
-				class="grid flex-1 grid-cols-12 gap-x-4 gap-y-2"
-				autocomplete="off"
-				[formGroup]="postForm"
-			>
+			<form class="grid flex-1 grid-cols-12 gap-x-4 gap-y-2" autocomplete="off" [formGroup]="postForm">
 				@if (postForm.get("name"); as name) {
 					<fieldset class="form-control items-start col-span-12 sm:col-span-6">
 						<label class="label" for="postFormTitle">
@@ -130,9 +122,10 @@
 						</label>
 						<div class="relative w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 							<input
-								class="input-bordered input input-md w-full !pr-12"
+								class="input-bordered input input-md w-full"
 								id="postFormTitle"
 								type="text"
+								title="Name"
 								aria-label="Name"
 								placeholder="Type post name"
 								formControlName="name"
@@ -144,7 +137,8 @@
 								<button
 									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 									type="button"
-									aria-label="Clear"
+									title="Clear input"
+									aria-label="Clear input"
 									appSvgIcon
 									[class.btn-success]="name.valid"
 									[class.btn-error]="name.touched && name.invalid"
@@ -162,113 +156,108 @@
 					@if (postForm.get("categoryName"); as categoryName) {
 						<fieldset class="form-control items-start w-full">
 							<label class="label" for="postFormCategoryName">
-								<!-- prettier-ignore -->
 								<div
-                  class="indicator"
-                  appSkeleton
-                  [appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
-                  [appSkeletonClassListElementRef]="['!-mx-1']"
-                >
-                  @if (categoryName.touched && !!categoryName.errors && postForm.enabled) {
-                    <div class="block" appBadgeError [appBadgeErrorAbstractControl]="categoryName"></div>
-                  }
-                  <span class="label-text mr-2">Category</span>
-                </div>
+									class="indicator"
+									appSkeleton
+									[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
+									[appSkeletonClassListElementRef]="['!-mx-1']"
+								>
+									@if (categoryName.touched && !!categoryName.errors && postForm.enabled) {
+										<div class="block" appBadgeError [appBadgeErrorAbstractControl]="categoryName"></div>
+									}
+									<span class="label-text mr-2">Category</span>
+								</div>
 							</label>
-							<!-- prettier-ignore -->
 							<div
-                class="block w-full relative"
-                appSkeleton
-                appDropdown
-                [appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
-                [appDropdownFit]="true"
-                [class.cursor-not-allowed]="postForm.disabled"
-                (appDropdownToggle)="onToggleCategory($event)"
-              >
-                <input
-                  class="input input-bordered input-md w-full cursor-pointer truncate"
-                  id="postFormCategoryName"
-                  type="text"
-                  aria-label="Category"
-                  placeholder="Select post category"
-                  formControlName="categoryName"
-                  slot="target"
-                  readonly
-                  [class.input-success]="categoryName.touched && categoryName.value"
-                  [class.input-error]="categoryName.touched && categoryName.invalid"
-                />
-                <div
-                  class="menu menu-vertical menu-md p-0"
-                  slot="content"
-                  [class.hidden]="!categoryList.length"
-                >
-                  <ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
-                    @for (category of categoryList; track category.id) {
-                      <li class="flex w-full snap-start scroll-my-2">
-                        <button
-                          class="rounded-btn block w-full truncate text-left"
-                          type="button"
-                          appScrollPreset
-                          [appScrollActive]="categoryName.value === category.name"
-                          [class.active]="categoryName.value === category.name"
-                          [attr.aria-label]="category.name"
-                          (click)="onSelectCategory(category)"
-                        >
-                          {{ category.name }}
-                        </button>
-                      </li>
-                    }
-                  </ul>
-                </div>
-              </div>
+								class="block w-full relative"
+								appSkeleton
+								appDropdown
+								[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
+								[appDropdownFit]="true"
+								[class.cursor-not-allowed]="postForm.disabled"
+								(appDropdownToggle)="onToggleCategory($event)"
+							>
+								<input
+									class="input input-bordered input-md w-full cursor-pointer truncate"
+									id="postFormCategoryName"
+									type="text"
+									title="Category"
+									aria-label="Category"
+									placeholder="Select post category"
+									formControlName="categoryName"
+									slot="target"
+									readonly
+									[class.input-success]="categoryName.touched && categoryName.value"
+									[class.input-error]="categoryName.touched && categoryName.invalid"
+								/>
+								<div class="menu menu-vertical menu-md p-0" slot="content" [class.hidden]="!categoryList.length">
+									<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
+										@for (category of categoryList; track category.id) {
+											<li class="flex w-full snap-start scroll-my-2">
+												<button
+													class="rounded-btn block w-full truncate text-left"
+													type="button"
+													appScrollPreset
+													[appScrollActive]="categoryName.value === category.name"
+													[class.active]="categoryName.value === category.name"
+													[title]="category.name"
+													[attr.aria-label]="category.name"
+													(click)="onSelectCategory(category)"
+												>
+													{{ category.name }}
+												</button>
+											</li>
+										}
+									</ul>
+								</div>
+							</div>
 						</fieldset>
 					}
-					<!-- prettier-ignore -->
 					<div
-            class="flex p-0 relative"
-            appDropdown
-            appSkeleton
-            [appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
-            [appDropdownPlacement]="'bottom-end'"
-          >
-            <button
-              class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
-              type="button"
-              title="Menu"
-              aria-label="Menu"
-              appSvgIcon
-              slot="target"
-              [disabled]="postForm.disabled"
-              [appSvgIconIcon]="'three-dots-vertical'"
-              [appSvgIconSquare]="'1.5em'"
-            ></button>
-            <ul class="menu menu-vertical menu-md" slot="content">
-              <li class="flex w-full snap-start scroll-my-2">
-                <button
-                  class="rounded-btn block w-full truncate text-right"
-                  type="button"
-                  title="Create"
-                  aria-label="Create"
-                  (click)="appCategoryCreateComponent.onToggleCategoryCreateDialog(true)"
-                >
-                  Create
-                </button>
-              </li>
-              @if (category) {
-                <li class="flex w-full snap-start scroll-my-2">
-                  <button
-                    class="rounded-btn block w-full truncate text-right"
-                    type="button"
-                    title="Update"
-                    aria-label="Update"
-                    (click)="appCategoryUpdateComponent.onToggleCategoryUpdateDialog(true)"
-                  >
-                    Update
-                  </button>
-                </li>
-              }
-            </ul>
-          </div>
+						class="flex p-0 relative"
+						appDropdown
+						appSkeleton
+						[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
+						[appDropdownPlacement]="'bottom-end'"
+					>
+						<button
+							class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
+							type="button"
+							title="Category menu"
+							aria-label="Category menu"
+							appSvgIcon
+							slot="target"
+							[disabled]="postForm.disabled"
+							[appSvgIconIcon]="'three-dots-vertical'"
+							[appSvgIconSquare]="'1.5em'"
+						></button>
+						<ul class="menu menu-vertical menu-md" slot="content">
+							<li class="flex w-full snap-start scroll-my-2">
+								<button
+									class="rounded-btn block w-full truncate text-right"
+									type="button"
+									title="Create"
+									aria-label="Create"
+									(click)="appCategoryCreateComponent.onToggleCategoryCreateDialog(true)"
+								>
+									Create
+								</button>
+							</li>
+							@if (category) {
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										type="button"
+										title="Update"
+										aria-label="Update"
+										(click)="appCategoryUpdateComponent.onToggleCategoryUpdateDialog(true)"
+									>
+										Update
+									</button>
+								</li>
+							}
+						</ul>
+					</div>
 				</div>
 				@if (postForm.get("description"); as description) {
 					<fieldset class="form-control items-start col-span-12 sm:col-span-12">
@@ -280,7 +269,6 @@
 								[appSkeletonClassListElementRef]="['!-mx-1']"
 							>
 								@if (description.touched && !!description.errors && postForm.enabled) {
-									<!-- prettier-ignore -->
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
 								}
 								<span class="label-text mr-2">Description</span>
@@ -288,9 +276,10 @@
 						</label>
 						<div class="relative w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 							<input
-								class="input-bordered input input-md w-full !pr-12"
+								class="input-bordered input input-md w-full"
 								id="postFormDescription"
 								type="text"
+								title="Description"
 								aria-label="Description"
 								placeholder="Type post description"
 								formControlName="description"
@@ -302,7 +291,8 @@
 								<button
 									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 									type="button"
-									aria-label="Clear"
+									title="Clear input"
+									aria-label="Clear input"
 									appSvgIcon
 									[class.btn-success]="description.valid"
 									[class.btn-error]="description.touched && description.invalid"
@@ -340,8 +330,8 @@
 							type="button"
 							appSkeleton
 							appSvgIcon
-							[title]="fullscreenToggle ? 'Exit Full Screen' : 'Enter Full Screen'"
-							[attr.aria-label]="fullscreenToggle ? 'Exit Full Screen' : 'Enter Full Screen'"
+							[title]="(fullscreenToggle ? 'Exit' : 'Enter') + ' Full Screen'"
+							[attr.aria-label]="(fullscreenToggle ? 'Exit' : 'Enter') + ' Full Screen'"
 							[appSkeletonToggle]="postSkeletonToggle"
 							[appSkeletonClassListElementRef]="['border-0']"
 							[disabled]="postForm.disabled"
@@ -350,17 +340,12 @@
 							(click)="onFullscreen(!fullscreenToggle)"
 						></button>
 						@if (fullscreenToggle) {
-							<div
-								class="flex p-0"
-								appDropdown
-								[appDropdownPlacement]="'bottom-end'"
-								[appDropdownClose]="false"
-							>
+							<div class="flex p-0" appDropdown [appDropdownPlacement]="'bottom-end'" [appDropdownClose]="false">
 								<button
 									class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
 									type="button"
-									title="Menu"
-									aria-label="Menu"
+									title="Full Screen menu"
+									aria-label="Full Screen menu"
 									appSvgIcon
 									slot="target"
 									[disabled]="postForm.disabled"
@@ -374,6 +359,7 @@
 											<input
 												class="checkbox checkbox-md"
 												type="checkbox"
+												title="Scroll Sync"
 												aria-label="Scroll Sync"
 												[checked]="fullscreenScrollSync"
 												[class.checkbox-success]="fullscreenScrollSync"
@@ -387,6 +373,7 @@
 											<input
 												class="checkbox checkbox-md"
 												type="checkbox"
+												title="Text Wrap"
 												aria-label="Text Wrap"
 												[checked]="fullscreenTextWrapping"
 												[class.checkbox-success]="fullscreenTextWrapping"
@@ -403,6 +390,7 @@
 											<input
 												class="toggle toggle-md"
 												type="checkbox"
+												title="Markdown"
 												aria-label="Markdown"
 												[checked]="fullscreenMarkdown"
 												[class.toggle-success]="fullscreenMarkdown"
@@ -416,6 +404,7 @@
 											<input
 												class="toggle toggle-md"
 												type="checkbox"
+												title="Render"
 												aria-label="Render"
 												[checked]="fullscreenRender"
 												[class.toggle-success]="fullscreenRender"
@@ -437,60 +426,60 @@
 					>
 						@if (postForm.get("markdown"); as markdown) {
 							<fieldset class="form-control h-full">
-								<!-- prettier-ignore -->
 								<div
-                  class="textarea-autosize w-full h-full focus-within:outline-0 relative"
-                  appSkeleton
-                  [appSkeletonToggle]="postSkeletonToggle || postFormTextareaSkeletonToggle"
-                  [appSkeletonClassListElementRef]="['!border-0']"
-                  [ngClass]="{ 'border-base-content/20': postForm.enabled, 'border-transparent': postForm.disabled }"
-                  [class.textarea-autosize-success]="markdown.value && markdown.valid"
-                  [class.textarea-autosize-error]="markdown.touched && markdown.invalid"
-                >
-                  <textarea
-                    class="textarea textarea-md w-full h-full"
-                    id="postFormTextarea"
-                    aria-label="Markdown"
-                    enterkeyhint="enter"
-                    formControlName="markdown"
-                    appInputTrimWhitespace
-                    appTextareaAutosize
-                    [appAutosizeToggle]="!fullscreenToggle"
-                    [rows]="8"
-                    [class.max-h-96]="!fullscreenToggle"
-                    [class.whitespace-pre]="fullscreenToggle && !fullscreenTextWrapping"
-                    [class.font-mono]="postMarkdownMonospace"
-                    (focusin)="postFormTextareaPlaceholderToggle = false"
-                    (focusout)="postFormTextareaPlaceholderToggle = true"
-                  ></textarea>
-                  @if (postFormTextareaPlaceholderToggle && !markdown.value) {
-                    <div
-                      class="absolute top-4 left-4 flex flex-col items-start justify-start pointer-events-none gap-2"
-                      [class.font-mono]="postMarkdownMonospace"
-                    >
-                      <span class="text-sm text-base-content/50"> Type post markdown </span>
-                      <a
-                        class="text-sm text-base-content/50 link"
-                        title="Markdown"
-                        aria-label="Markdown"
-                        target="_blank"
-                        [class.pointer-events-auto]="postForm.enabled"
-                        [routerLink]="['/help/markdown']"
-                      >
-                        How to make a greatest layout?
-                      </a>
-                      <ng-container *appDevice="'desktop'">
-                        <div class="flex items-center justify-start text-sm gap-2">
-                          <span class="inline-block text-base-content/50"> Press </span>
-                          <kbd class="kbd kbd-sm uppercase">{{ postFormTextareaPlaceholderModifierKey() | kbd }}</kbd>
-                          <span class="inline-block text-base-content/50"> + </span>
-                          <kbd class="kbd kbd-sm uppercase">/</kbd>
-                          <span class="inline-block text-base-content/50"> for shortcut help </span>
-                        </div>
-                      </ng-container>
-                    </div>
-                  }
-                </div>
+									class="textarea-autosize w-full h-full focus-within:outline-0 relative"
+									appSkeleton
+									[appSkeletonToggle]="postSkeletonToggle || postFormTextareaSkeletonToggle"
+									[appSkeletonClassListElementRef]="['!border-0']"
+									[ngClass]="{ 'border-base-content/20': postForm.enabled, 'border-transparent': postForm.disabled }"
+									[class.textarea-autosize-success]="markdown.value && markdown.valid"
+									[class.textarea-autosize-error]="markdown.touched && markdown.invalid"
+								>
+									<textarea
+										class="textarea textarea-md w-full h-full"
+										id="postFormTextarea"
+										title="Markdown"
+										aria-label="Markdown"
+										enterkeyhint="enter"
+										formControlName="markdown"
+										appInputTrimWhitespace
+										appTextareaAutosize
+										[appAutosizeToggle]="!fullscreenToggle"
+										[rows]="8"
+										[class.max-h-96]="!fullscreenToggle"
+										[class.whitespace-pre]="fullscreenToggle && !fullscreenTextWrapping"
+										[class.font-mono]="postMarkdownMonospace"
+										(focusin)="postFormTextareaPlaceholderToggle = false"
+										(focusout)="postFormTextareaPlaceholderToggle = true"
+									></textarea>
+									@if (postFormTextareaPlaceholderToggle && !markdown.value) {
+										<div
+											class="absolute top-4 left-4 flex flex-col items-start justify-start pointer-events-none gap-2"
+											[class.font-mono]="postMarkdownMonospace"
+										>
+											<span class="text-sm text-base-content/50"> Type post markdown </span>
+											<a
+												class="text-sm text-base-content/50 link"
+												title="Markdown guide"
+												aria-label="Markdown guide"
+												target="_blank"
+												[class.pointer-events-auto]="postForm.enabled"
+												[routerLink]="['/help/markdown']"
+											>
+												How to make a greatest layout?
+											</a>
+											<ng-container *appDevice="'desktop'">
+												<div class="flex items-center justify-start text-sm gap-2">
+													<span class="inline-block text-base-content/50"> Press </span>
+													<kbd class="kbd kbd-sm uppercase">{{ postFormTextareaPlaceholderModifierKey() | kbd }}</kbd>
+													<span class="inline-block text-base-content/50"> + </span>
+													<kbd class="kbd kbd-sm uppercase">/</kbd>
+													<span class="inline-block text-base-content/50"> for shortcut help </span>
+												</div>
+											</ng-container>
+										</div>
+									}
+								</div>
 							</fieldset>
 						}
 					</form>
@@ -498,10 +487,7 @@
 						class="flex h-full w-full flex-col overflow-auto rounded-btn border border-base-content/20"
 						[class.hidden]="!fullscreenToggle || !fullscreenRender"
 					>
-						<article
-							class="prose max-w-none overflow-auto px-4 py-3"
-							id="postFormPreview"
-						></article>
+						<article class="prose max-w-none overflow-auto px-4 py-3" id="postFormPreview"></article>
 					</div>
 				</div>
 			</div>
@@ -509,6 +495,7 @@
 				<button
 					class="btn btn-primary btn-md col-span-4 sm:col-span-3"
 					type="button"
+					title="Preview"
 					aria-label="Preview"
 					appSkeleton
 					[appSkeletonToggle]="postSkeletonToggle"
@@ -519,26 +506,28 @@
 				>
 					Preview
 				</button>
-				<!-- prettier-ignore -->
 				<button
-          class="btn btn-success btn-md col-span-8 sm:col-span-9"
-          type="button"
-          aria-label="Submit"
-          appSkeleton
-          [appSkeletonToggle]="postSkeletonToggle"
-          [appSkeletonClassListElementRef]="['border-0']"
-          [disabled]="postForm.invalid || postForm.disabled || postFormIsPristine || postFormImageSkeletonToggle"
-          (click)="onSubmitPostForm()"
-        >
-          @if (postForm.disabled && !appCropperComponent.cropperDialogToggle && !appCategoryCreateComponent.categoryCreateDialogToggle && !appPostPreviewComponent.postPreviewDialogToggle && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownDialogToggle) {
+					class="btn btn-success btn-md col-span-8 sm:col-span-9"
+					type="button"
+					title="Submit"
+					aria-label="Submit"
+					appSkeleton
+					[appSkeletonToggle]="postSkeletonToggle"
+					[appSkeletonClassListElementRef]="['border-0']"
+					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine || postFormImageSkeletonToggle"
+					(click)="onSubmitPostForm()"
+				>
+					<!-- prettier-ignore -->
+					@if (postForm.disabled && !appCropperComponent.cropperDialogToggle && !appCategoryCreateComponent.categoryCreateDialogToggle && !appPostPreviewComponent.postPreviewDialogToggle && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownDialogToggle) {
             <span class="loading loading-spinner"></span>
           }
-          Submit
-        </button>
+					Submit
+				</button>
 				@if (post) {
 					<button
 						class="btn btn-md btn-error col-span-12"
 						type="button"
+						title="Delete"
 						aria-label="Delete"
 						appSkeleton
 						[appSkeletonToggle]="postSkeletonToggle"

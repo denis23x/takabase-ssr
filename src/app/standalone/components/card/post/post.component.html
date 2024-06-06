@@ -13,6 +13,7 @@
 					[appSkeletonClassList]="['!rounded-none']"
 					[routerLink]="[postUrl, post.id]"
 					[queryParamsHandling]="'preserve'"
+					[title]="post.name"
 					[attr.aria-label]="post.name"
 				>
 					<img
@@ -32,6 +33,7 @@
 				[appSkeletonToggle]="postSkeletonToggle"
 				[routerLink]="[postUrl, post.id]"
 				[queryParamsHandling]="'preserve'"
+				[title]="post.name"
 				[attr.aria-label]="post.name"
 			>
 				{{ post.name }}

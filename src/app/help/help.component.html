@@ -16,8 +16,8 @@
 						[appSvgIconSquare]="'1.5em'"
 					></i>
 					<span class="block">
-						Get the assistance you need to navigate the website and make the most of the services
-						available. Browse through the helpful resources to find answers to your queries
+						Get the assistance you need to navigate the website and make the most of the services available. Browse
+						through the helpful resources to find answers to your queries
 					</span>
 				</p>
 			</div>
@@ -34,6 +34,7 @@
 								[appScrollActive]="routerLinkActive.isActive"
 								[routerLink]="[helpNavigation.path]"
 								[routerLinkActive]="''"
+								[title]="helpNavigation.name"
 								[attr.aria-label]="helpNavigation.name"
 							>
 								<span class="block truncate max-w-[192px]">{{ helpNavigation.name }}</span>

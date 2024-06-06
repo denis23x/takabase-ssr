@@ -44,10 +44,11 @@
 							<div class="flex items-center justify-between gap-4">
 								<div class="relative w-full">
 									<input
-										class="input input-bordered input-md w-full !pr-12"
+										class="input input-bordered input-md w-full"
 										id="imageFormUrl"
 										type="text"
-										aria-label="Url"
+										title="Paste image"
+										aria-label="Paste image"
 										inputmode="none"
 										formControlName="url"
 										placeholder="Paste image from clipboard or URL"
@@ -61,7 +62,8 @@
 										<button
 											class="btn btn-circle btn-sm absolute top-2 right-2 fill-current"
 											type="button"
-											aria-label="Clear"
+											title="Clear input"
+											aria-label="Clear input"
 											appSvgIcon
 											[class.btn-success]="url.valid"
 											[class.btn-error]="url.dirty && url.invalid"
@@ -83,6 +85,7 @@
 								<button
 									class="btn-success btn-md btn-square btn fill-current p-3"
 									type="button"
+									title="Browse"
 									aria-label="Browse"
 									[class.btn-outline]="imageForm.enabled"
 									[disabled]="imageForm.disabled"
@@ -229,6 +232,7 @@
                               class="w-full whitespace-nowrap text-base-content"
                               type="button"
                               [class.active]="cropperAspectRatioActive === cropperAspectRatio.value"
+                              [title]="cropperAspectRatio.label"
                               [attr.aria-label]="cropperAspectRatio.label"
                               (click)="cropperAspectRatioActive = cropperAspectRatio.value"
                             >
@@ -275,7 +279,8 @@
                               <input
                                 class="range range-success range-md flex-1"
                                 type="range"
-                                aria-label="Rotate"
+                                title="Rotate range"
+                                aria-label="Rotate range"
                                 formControlName="rotate"
                                 [min]="0"
                                 [max]="360"
@@ -286,7 +291,8 @@
                                 class="input-bordered input input-sm w-14 text-center"
                                 type="number"
                                 inputmode="numeric"
-                                aria-label="Rotate"
+                                title="Rotate value"
+                                aria-label="Rotate value"
                                 formControlName="rotate"
                                 [class.input-success]="rotate.valid"
                                 [class.input-error]="rotate.invalid"
@@ -310,8 +316,8 @@
                     <button
                       class="fill-current p-3"
                       type="button"
-                      title="Zoom"
-                      aria-label="Zoom"
+                      title="Scale"
+                      aria-label="Scale"
                       appSvgIcon
                       slot="target"
                       [disabled]="cropperImageForm.disabled"
@@ -334,7 +340,8 @@
                               <input
                                 class="range range-success range-md flex-1"
                                 type="range"
-                                aria-label="Scale"
+                                title="Scale range"
+                                aria-label="Scale range"
                                 formControlName="scale"
                                 [min]="1"
                                 [max]="5"
@@ -345,7 +352,8 @@
                                 class="input-bordered input input-sm w-14 text-center"
                                 type="number"
                                 inputmode="numeric"
-                                aria-label="Scale"
+                                title="Scale value"
+                                aria-label="Scale value"
                                 formControlName="scale"
                                 [class.input-success]="scale.valid"
                                 [class.input-error]="scale.invalid"
@@ -376,6 +384,7 @@
 						<button
 							class="btn btn-success w-full"
 							type="button"
+							title="Submit"
 							aria-label="Submit"
 							[disabled]="cropperImageForm.disabled"
 							(click)="onSubmitCropper()"
@@ -388,7 +397,8 @@
 						<button
 							class="btn btn-error w-full"
 							type="button"
-							aria-label="Delete"
+							title="Delete image"
+							aria-label="Delete image"
 							[class.btn-outline]="cropperImageForm.enabled"
 							[disabled]="cropperImageForm.disabled"
 							(click)="onResetCropper()"

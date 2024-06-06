@@ -28,7 +28,8 @@
 								<button
 									class="w-full whitespace-nowrap text-base-content"
 									type="button"
-									[attr.aria-label]="control.label"
+									[title]="'Set ' + control.label"
+									[attr.aria-label]="'Set ' + control.label"
 									(click)="setTextareaValue(getTextareaValue(control))"
 								>
 									<span class="block" [ngClass]="control.classList">
@@ -59,7 +60,8 @@
 								<button
 									class="w-full whitespace-nowrap text-base-content"
 									type="button"
-									[attr.aria-label]="control.label"
+									[title]="'Apply ' + control.label.toLowerCase() + ' formatting'"
+									[attr.aria-label]="'Apply ' + control.label.toLowerCase() + ' formatting'"
 									(click)="setTextareaValue(getTextareaValue(control))"
 								>
 									<span class="block" [ngClass]="control.classList">
@@ -90,8 +92,8 @@
 								<button
 									class="w-full whitespace-nowrap text-base-content"
 									type="button"
-									[attr.aria-label]="control.label"
-									[attr.title]="control.label"
+									[title]="'Add ' + control.label.toLowerCase() + ' list'"
+									[attr.aria-label]="'Add ' + control.label.toLowerCase() + ' list'"
 									(click)="setTextareaValue(getTextareaValue(control))"
 								>
 									{{ control.label }}
@@ -104,9 +106,10 @@
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<button
 					class="fill-current p-3"
+					type="button"
 					appSvgIcon
+					[title]="controlListQuote.label"
 					[attr.aria-label]="controlListQuote.label"
-					[attr.title]="controlListQuote.label"
 					[appSvgIconIcon]="controlListQuote.icon"
 					[appSvgIconSquare]="'1.5725em'"
 					(click)="setTextareaValue(getTextareaValue(controlListQuote))"
@@ -116,9 +119,10 @@
 				<li class="inline-block" [class.disabled]="controlListDisabled">
 					<button
 						class="fill-current p-3"
+						type="button"
 						appSvgIcon
+						[title]="control.label"
 						[attr.aria-label]="control.label"
-						[attr.title]="control.label"
 						[appSvgIconIcon]="control.icon"
 						[appSvgIconSquare]="'1.5725em'"
 						(click)="onToggleUrlForm(true, control)"
@@ -128,9 +132,10 @@
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<button
 					class="fill-current p-3"
+					type="button"
 					appSvgIcon
+					[title]="controlListCropper.label"
 					[attr.aria-label]="controlListCropper.label"
-					[attr.title]="controlListCropper.label"
 					[appSvgIconIcon]="controlListCropper.icon"
 					[appSvgIconSquare]="'1.5725em'"
 					(click)="onControlListCropperClick()"
@@ -149,8 +154,8 @@
 						appSvgIcon
 						slot="target"
 						[disabled]="controlListDisabled"
+						[title]="controlListEmojiMart.label"
 						[attr.aria-label]="controlListEmojiMart.label"
-						[attr.title]="controlListEmojiMart.label"
 						[appSvgIconIcon]="controlListEmojiMart.icon"
 						[appSvgIconSquare]="'1.5725em'"
 					></button>
@@ -165,17 +170,14 @@
 						appSvgIcon
 						slot="target"
 						[disabled]="controlListDisabled"
+						[title]="controlListTable.label"
 						[attr.aria-label]="controlListTable.label"
-						[attr.title]="controlListTable.label"
 						[appSvgIconIcon]="controlListTable.icon"
 						[appSvgIconSquare]="'1.5725em'"
 					></button>
 					<div class="menu menu-vertical menu-md m-0" slot="content">
 						<div class="relative h-40 w-40 overflow-hidden rounded-box">
-							<div
-								class="pointer-events-none absolute left-0 top-0 bg-base-content/10"
-								data-control-table
-							></div>
+							<div class="pointer-events-none absolute left-0 top-0 bg-base-content/10" data-control-table></div>
 							<ul class="m-0 grid h-full w-full grid-cols-5 grid-rows-5 p-0">
 								@for (cell of controlListTableCells; track $index) {
 									<li
@@ -197,9 +199,10 @@
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<button
 					class="fill-current p-3"
+					type="button"
 					appSvgIcon
+					[title]="controlListSpoiler.label"
 					[attr.aria-label]="controlListSpoiler.label"
-					[attr.title]="controlListSpoiler.label"
 					[appSvgIconIcon]="controlListSpoiler.icon"
 					[appSvgIconSquare]="'1.5725em'"
 					(click)="setTextareaValue(getTextareaValue(controlListSpoiler))"
@@ -208,10 +211,11 @@
 			<li class="inline-block" [class.disabled]="controlListDisabled">
 				<button
 					class="fill-current p-3"
+					type="button"
 					appSvgIcon
 					[appSvgIconSquare]="'1.5725em'"
+					[title]="controlListCode.label"
 					[attr.aria-label]="controlListCode.label"
-					[attr.title]="controlListCode.label"
 					[appSvgIconIcon]="controlListCode.icon"
 					(click)="setTextareaValue(getTextareaValue(controlListCode))"
 				></button>
@@ -286,7 +290,7 @@
               </label>
               <div class="relative">
                 <input
-                  class="input-bordered input input-md w-full !pr-12"
+                  class="input-bordered input input-md w-full"
                   id="urlFormTitle"
                   type="text"
                   appInputTrimWhitespace
@@ -300,7 +304,8 @@
                   <button
                     class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
                     type="button"
-                    aria-label="Clear"
+                    title="Clear input"
+                    aria-label="Clear input"
                     appSvgIcon
                     [class.btn-success]="title.valid"
                     [class.btn-error]="title.touched && title.invalid"
@@ -327,7 +332,7 @@
 						</label>
 						<div class="relative">
 							<input
-								class="input input-bordered input-md w-full !pr-12"
+								class="input input-bordered input-md w-full"
 								id="urlFormUrl"
 								type="text"
 								aria-label="URL"
@@ -343,7 +348,8 @@
 								<button
 									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 									type="button"
-									aria-label="Clear"
+									title="Clear input"
+									aria-label="Clear input"
 									appSvgIcon
 									[class.btn-success]="url.valid"
 									[class.btn-error]="url.touched && url.invalid"

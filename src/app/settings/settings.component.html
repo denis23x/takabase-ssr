@@ -14,7 +14,8 @@
 							[routerLink]="link.toLowerCase()"
 							[routerLinkActive]="''"
 							[queryParamsHandling]="'preserve'"
-							[attr.aria-label]="link"
+							[title]="link + ' settings'"
+							[attr.aria-label]="link + ' settings'"
 						>
 							{{ link }}
 						</a>

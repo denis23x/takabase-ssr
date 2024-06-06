@@ -42,8 +42,8 @@
 					<button
 						class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
 						type="button"
-						title="Menu"
-						aria-label="Menu"
+						title="Avatar menu"
+						aria-label="Avatar menu"
 						appSvgIcon
 						slot="target"
 						[disabled]="profileForm.disabled"
@@ -57,8 +57,8 @@
 									class="rounded-btn block w-full truncate text-right"
 									data-pw="app-settings-profile-button-show-cropper-modal"
 									type="button"
-									title="Update"
-									aria-label="Update"
+									[title]="(avatar.value ? 'Update' : 'Set') + ' avatar'"
+									[attr.aria-label]="(avatar.value ? 'Update' : 'Set') + ' avatar'"
 									(click)="appCropperComponent.onToggleCropper(true)"
 								>
 									{{ avatar.value ? "Update" : "Set avatar" }}
@@ -94,10 +94,11 @@
 					</label>
 					<div class="relative">
 						<input
-							class="input-bordered input input-md w-full !pr-12"
+							class="input-bordered input input-md w-full"
 							id="profileFormName"
 							data-pw="app-settings-profile-form-name"
 							type="text"
+							title="Name"
 							aria-label="Name"
 							formControlName="name"
 							placeholder="Type your name"
@@ -110,7 +111,8 @@
 								class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 								data-pw="app-settings-profile-form-name-clear"
 								type="button"
-								aria-label="Clear"
+								title="Clear input"
+								aria-label="Clear input"
 								appSvgIcon
 								[class.btn-success]="name.touched && name.valid"
 								[class.btn-error]="name.touched && name.invalid"
@@ -167,6 +169,7 @@
 							class="textarea textarea-md w-full max-h-64"
 							id="profileFormDescription"
 							data-pw="app-settings-profile-form-description"
+							title="Description"
 							aria-label="Description"
 							placeholder="Type your description"
 							formControlName="description"
@@ -183,6 +186,7 @@
 					class="btn btn-md btn-success w-full"
 					data-pw="app-settings-profile-form-submit"
 					type="submit"
+					title="Submit"
 					aria-label="Submit"
 					[disabled]="profileForm.invalid || profileForm.disabled || profileFormIsPristine || profileFormAvatarSkeletonToggle"
 				>

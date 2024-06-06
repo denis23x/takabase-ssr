@@ -1,15 +1,8 @@
 <!-- @format -->
 
 <ng-container>
-	<div
-		class="rounded-box flex flex-col items-center gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-	>
-		<i
-			class="fill-current text-base-content"
-			appSvgIcon
-			[appSvgIconIcon]="'robot'"
-			[appSvgIconSquare]="'3em'"
-		></i>
+	<div class="rounded-box flex flex-col items-center gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
+		<i class="fill-current text-base-content" appSvgIcon [appSvgIconIcon]="'robot'" [appSvgIconSquare]="'3em'"></i>
 		<div class="flex flex-col items-center justify-start gap-4">
 			<div class="flex flex-col items-center justify-start">
 				<p class="text-xl font-bold">
@@ -17,13 +10,11 @@
 					<span class="text-error"> {{ statusCode }}</span>
 					<span class="text-base-content"> {{ message }}</span>
 				</p>
-				<p class="text-sm text-base-content/50 text-center">
-					It looks like you've landed on an error page
-				</p>
+				<p class="text-sm text-base-content/50 text-center">It looks like you've landed on an error page</p>
 			</div>
 			<!-- prettier-ignore -->
 			<p class="text-base text-base-content text-center">
-				Go <a class="link" aria-label="home" [routerLink]="['/']">home</a> or if you believe this is a technical glitch please <a class="link" aria-label="help" [routerLink]="['/help']">contact us</a>
+				Go <a class="link" title="Home" aria-label="Home" [routerLink]="['/']">home</a> or if you believe this is a technical glitch please <a class="link" aria-label="help" [routerLink]="['/help']">contact us</a>
 			</p>
 		</div>
 	</div>

@@ -8,9 +8,9 @@
 			<h1 class="text-4xl text-base-content font-semibold">The easiest post platform</h1>
 			<div class="flex items-start justify-start gap-4">
 				<p class="text-base text-base-content/50">
-					Takabase is designed to provide you with an easy-to-use, lightweight app that is highly
-					customizable to your preferences. Whether you’re a blogger, writer, or developer, this
-					website is the perfect tool to bring your ideas to life.
+					Takabase is designed to provide you with an easy-to-use, lightweight app that is highly customizable to your
+					preferences. Whether you’re a blogger, writer, or developer, this website is the perfect tool to bring your
+					ideas to life.
 				</p>
 				<figure class="hidden md:flex items-start justify-end">
 					<img class="rounded-box w-full" src="https://placehold.co/136x136" alt="Placeholder" />
@@ -20,6 +20,7 @@
 				<div class="block empty:hidden" appAuthenticated>
 					<a
 						class="btn btn-outline btn-success btn-md"
+						title="Registration"
 						aria-label="Registration"
 						slot="public"
 						[routerLink]="'/registration'"
@@ -27,12 +28,13 @@
 						Registration
 					</a>
 				</div>
-				<a class="btn btn-outline btn-info btn-md" aria-label="Search" [routerLink]="'/search'">
+				<a class="btn btn-outline btn-info btn-md" title="Search" aria-label="Search" [routerLink]="'/search'">
 					Search
 				</a>
 				<a
 					class="btn btn-outline btn-primary btn-md"
-					aria-label="Markdown"
+					title="Markdown guide"
+					aria-label="Markdown guide"
 					[routerLink]="'/help/markdown'"
 				>
 					Markdown
@@ -41,7 +43,8 @@
 					<button
 						class="btn btn-outline btn-warning btn-md"
 						type="button"
-						aria-label="PWA"
+						title="Progressive Web Application"
+						aria-label="Progressive Web Application"
 						(click)="onClickPWAInstall()"
 					>
 						PWA
@@ -49,6 +52,7 @@
 				}
 				<a
 					class="btn btn-outline btn-error btn-md flex-1"
+					title="Work In Progress"
 					aria-label="WIP"
 					[routerLink]="'/help/about'"
 				>
@@ -89,7 +93,7 @@
 					{{ appFeatureActive.description }}
 				</p>
 				<ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-					@for (appFeatureActive of appFeatureActive.list; track $index) {
+					@for (appFeatureActive of $any(appFeatureActive.list); track $index) {
 						<li class="flex flex-col items-start justify-start gap-4 col-span-1">
 							<span class="text-base sm:text-xl font-semibold text-base-content">
 								{{ appFeatureActive.title }}

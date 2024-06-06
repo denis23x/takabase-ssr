@@ -6,9 +6,7 @@
 			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
 			<div class="flex w-full flex-col items-stretch justify-between gap-4">
-				<h1 class="block truncate text-2xl font-bold text-base-content">
-					Terms and conditions of use
-				</h1>
+				<h1 class="block truncate text-2xl font-bold text-base-content">Terms and conditions of use</h1>
 				<hr class="my-0 border-base-content/20" />
 				<p class="alert" role="alert">
 					<i
@@ -18,9 +16,8 @@
 						[appSvgIconSquare]="'1.5em'"
 					></i>
 					<span class="block">
-						By accessing and using this website, you agree to comply with and be bound by the
-						following terms and conditions of use. Please read these terms carefully before using
-						this website
+						By accessing and using this website, you agree to comply with and be bound by the following terms and
+						conditions of use. Please read these terms carefully before using this website
 					</span>
 				</p>
 			</div>
@@ -37,6 +34,7 @@
 								[appScrollActive]="routerLinkActive.isActive"
 								[routerLink]="[termsNavigation.path]"
 								[routerLinkActive]="''"
+								[title]="termsNavigation.name"
 								[attr.aria-label]="termsNavigation.name"
 							>
 								<span class="block truncate max-w-[192px]">{{ termsNavigation.name }}</span>

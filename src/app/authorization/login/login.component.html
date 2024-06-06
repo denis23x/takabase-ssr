@@ -22,9 +22,10 @@
 						</label>
 						<div class="relative">
 							<input
-								class="input-bordered input input-md w-full !pr-12"
+								class="input-bordered input input-md w-full"
 								id="loginFormEmail"
 								type="email"
+								title="Email"
 								aria-label="Email"
 								inputmode="email"
 								autocomplete="username"
@@ -38,7 +39,8 @@
 								<button
 									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 									type="button"
-									aria-label="Clear"
+									title="Clear input"
+									aria-label="Clear input"
 									appSvgIcon
 									[class.btn-success]="email.valid"
 									[class.btn-error]="email.touched && email.invalid"
@@ -64,8 +66,9 @@
 						</label>
 						<div class="relative">
 							<input
-								class="input-bordered input input-md w-full !pr-12"
+								class="input-bordered input input-md w-full"
 								id="loginFormPassword"
+								title="Password"
 								aria-label="Password"
 								autocomplete="current-password"
 								formControlName="password"
@@ -96,7 +99,12 @@
 							}
 						</div>
 						<div class="label">
-							<a class="label-text-alt link" aria-label="Forgot password" [routerLink]="['../reset']">
+							<a
+								class="label-text-alt link"
+								title="Forgot password"
+								aria-label="Forgot password"
+								[routerLink]="['../reset']"
+							>
 								Forgot password?
 							</a>
 						</div>
@@ -116,6 +124,7 @@
 					<button
 						class="btn-success btn w-full"
 						type="submit"
+						title="Login"
 						aria-label="Login"
 						[disabled]="loginForm.invalid || loginForm.disabled"
 					>
@@ -128,6 +137,7 @@
 			</form>
 			<a
 				class="btn-primary btn w-full"
+				title="Registration"
 				aria-label="Registration"
 				[routerLink]="loginForm.enabled ? '/registration' : null"
 				[ngClass]="{ 'btn-outline': loginForm.enabled, 'btn-disabled': loginForm.disabled }"
