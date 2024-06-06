@@ -36,6 +36,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://takabase.com/terms/user-data-deletion</loc>
+    <lastmod>2024-06-06</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://takabase.com/help/about</loc>
     <lastmod>2023-11-26</lastmod>
     <priority>0.6</priority>
@@ -52,7 +57,7 @@
   </url>
   <url>
     <loc>https://takabase.com/help/diagrams</loc>
-    <lastmod>2023-11-26</lastmod>
+    <lastmod>2023-05-27</lastmod>
     <priority>0.6</priority>
   </url>
   <url>

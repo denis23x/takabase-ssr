@@ -3,22 +3,15 @@
 <ng-container>
 	<div class="navbar rounded-box border border-base-content/20 bg-base-100 shadow-xl !p-4">
 		<div class="navbar-start">
-			<a
-				class="btn-warning btn w-12 h-12 btn-square text-xl"
-				title="Takabase"
-				aria-label="Takabase"
-				[routerLink]="['/']"
-			>
-				T
+			<a class="flex items-center justify-center w-12 h-12" title="Takabase" aria-label="Takabase" [routerLink]="['/']">
+				<svg width="48" height="48" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<rect width="256" height="256" rx="32" fill="#FFC61A" />
+					<path d="M158.58 91.1262V105.304H136.301V165H119.671V105.304H97.3921V91.1262H158.58Z" fill="black" />
+				</svg>
 			</a>
 		</div>
 		<div class="navbar-end">
-			<nav
-				class="block"
-				appAuthenticated
-				appSkeleton
-				[appSkeletonToggle]="currentUserSkeletonToggle"
-			>
+			<nav class="block" appAuthenticated appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
 				<div class="flex items-center justify-end gap-4" slot="public">
 					<a
 						class="btn-ghost btn-square btn fill-current"

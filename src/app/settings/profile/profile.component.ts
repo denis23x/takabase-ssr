@@ -1,13 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -29,7 +23,6 @@ import { User } from '../../core/models/user.model';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { PlatformService } from '../../core/services/platform.service';
-import { SkeletonService } from '../../core/services/skeleton.service';
 import { FileService } from '../../core/services/file.service';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
@@ -67,14 +60,12 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	private readonly userService: UserService = inject(UserService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
-	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly fileService: FileService = inject(FileService);
 	private readonly aiService: AIService = inject(AIService);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
-	currentUserSkeletonToggle: boolean = true;
 	currentUserRequest$: Subscription | undefined;
 
 	profileForm: FormGroup = this.formBuilder.group<ProfileForm>({
@@ -85,10 +76,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			Validators.maxLength(32),
 			Validators.pattern(this.helperService.getRegex('no-whitespace'))
 		]),
-		description: this.formBuilder.control(null, [
-			Validators.minLength(16),
-			Validators.maxLength(192)
-		])
+		description: this.formBuilder.control(null, [Validators.minLength(16), Validators.maxLength(192)])
 	});
 	profileFormIsPristine: boolean = false;
 	profileFormIsPristine$: Subscription | undefined;
@@ -99,18 +87,12 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		/** Apply Data */
 
-		this.setSkeleton();
 		this.setResolver();
 	}
 
 	ngOnDestroy(): void {
 		// prettier-ignore
 		[this.currentUser$, this.currentUserRequest$, this.profileFormIsPristine$].forEach(($: Subscription) => $?.unsubscribe());
-	}
-
-	setSkeleton(): void {
-		this.currentUser = this.skeletonService.getUser() as CurrentUser;
-		this.currentUserSkeletonToggle = true;
 	}
 
 	setResolver(): void {
@@ -120,10 +102,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				.getCurrentUser()
 				.pipe(
 					filter((currentUser: CurrentUser | undefined) => !!currentUser),
-					tap((currentUser: CurrentUser) => {
-						this.currentUser = currentUser;
-						this.currentUserSkeletonToggle = false;
-					})
+					tap((currentUser: CurrentUser) => (this.currentUser = currentUser))
 				)
 				.subscribe({
 					next: () => {

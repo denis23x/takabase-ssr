@@ -8,7 +8,7 @@
 					<li class="flex flex-col gap-4 rounded-box border border-base-content/20 w-full p-4">
 						<div class="flex items-center justify-between gap-4">
 							<button
-								class="btn-ghost btn-square btn fill-current bg-base-200"
+								class="btn-ghost btn-md btn-square btn fill-current bg-base-200 hidden sm:flex"
 								type="button"
 								title="Security"
 								aria-label="Security"
@@ -23,7 +23,7 @@
 								</span>
 							</div>
 							<button
-								class="btn btn-outline btn-success min-w-20"
+								class="btn btn-outline btn-md btn-success min-w-20"
 								type="button"
 								[title]="'Takabase credentials'"
 								[attr.aria-label]="'Takabase credentials'"
@@ -263,7 +263,7 @@
 													integrity of your account
 												</span>
 											</p>
-											<fieldset class="form-control gap-4" [disabled]="formIsDisabled()">
+											<fieldset class="form-control" [disabled]="formIsDisabled()">
 												<button
 													class="btn btn-success btn-md w-full"
 													type="submit"
@@ -275,19 +275,6 @@
 														<span class="loading loading-spinner"></span>
 													}
 													Continue
-												</button>
-												<button
-													class="btn btn-error btn-outline btn-md w-full"
-													type="button"
-													title="Remove credentials"
-													aria-label="Remove credentials"
-													[disabled]="currentUserPasswordForm.disabled"
-													(click)="onProviderUnlink(providerData)"
-												>
-													@if (currentUserProviderDataRequestIsSubmitted() === providerData.providerId) {
-														<span class="loading loading-spinner"></span>
-													}
-													Remove credentials
 												</button>
 											</fieldset>
 										</form>
@@ -558,7 +545,7 @@
 						</div>
 						@if (providerData.linked) {
 							<button
-								class="btn btn-outline btn-error min-w-20"
+								class="btn btn-md btn-outline btn-error min-w-20"
 								type="button"
 								[title]="'Unlink ' + providerData.providerLabel + ' account'"
 								[attr.aria-label]="'Unlink ' + providerData.providerLabel + ' account'"
@@ -572,7 +559,7 @@
 							</button>
 						} @else {
 							<button
-								class="btn btn-outline btn-success min-w-20"
+								class="btn btn-md btn-outline btn-success min-w-20"
 								type="button"
 								[title]="'Link ' + providerData.providerLabel + ' account'"
 								[attr.aria-label]="'Link ' + providerData.providerLabel + ' account'"

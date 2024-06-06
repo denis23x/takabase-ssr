@@ -1,13 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../../core/services/helper.service';
@@ -19,6 +13,7 @@ import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 import { MetaService } from '../../../core/services/meta.service';
 import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../../standalone/components/badge-error/badge-error.component';
+import { InputShowPassword } from '../../../standalone/directives/app-input-show-password.directive';
 
 interface PasswordForm {
 	code: FormControl<string>;
@@ -31,7 +26,8 @@ interface PasswordForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
-		BadgeErrorComponent
+		BadgeErrorComponent,
+		InputShowPassword
 	],
 	selector: 'app-authorization-confirmation-password',
 	templateUrl: './password.component.html'
@@ -105,9 +101,7 @@ export class AuthConfirmationPasswordComponent implements OnInit, OnDestroy {
 			this.passwordRequest$?.unsubscribe();
 			this.passwordRequest$ = this.passwordService.onReset(passwordResetUpdateDto).subscribe({
 				next: () => {
-					this.router
-						.navigate(['/'])
-						.then(() => this.snackbarService.success('Success', 'Password has been changed'));
+					this.router.navigate(['/']).then(() => this.snackbarService.success('Success', 'Password has been changed'));
 				},
 				error: () => this.passwordForm.enable()
 			});

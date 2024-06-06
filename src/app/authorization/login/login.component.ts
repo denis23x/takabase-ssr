@@ -1,13 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AuthorizationService } from '../../core/services/authorization.service';
@@ -26,6 +20,7 @@ import { onAuthStateChanged, User as FirebaseUser, Unsubscribe } from 'firebase/
 import { FirebaseService } from '../../core/services/firebase.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { PlatformService } from '../../core/services/platform.service';
+import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -41,7 +36,8 @@ interface LoginForm {
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
 		SignInComponent,
-		BadgeErrorComponent
+		BadgeErrorComponent,
+		InputShowPassword
 	],
 	selector: 'app-authorization-login',
 	templateUrl: './login.component.html'
@@ -123,16 +119,12 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 			};
 
 			this.loginRequest$?.unsubscribe();
-			this.loginRequest$ = this.authorizationService
-				.onSignInWithEmailAndPassword(signInDto)
-				.subscribe({
-					next: (user: User) => {
-						this.router
-							.navigate([this.userService.getUserUrl(user)])
-							.then(() => console.debug('Route changed'));
-					},
-					error: () => this.loginForm.enable()
-				});
+			this.loginRequest$ = this.authorizationService.onSignInWithEmailAndPassword(signInDto).subscribe({
+				next: (user: User) => {
+					this.router.navigate([this.userService.getUserUrl(user)]).then(() => console.debug('Route changed'));
+				},
+				error: () => this.loginForm.enable()
+			});
 		}
 	}
 }

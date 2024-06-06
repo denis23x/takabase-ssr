@@ -20,6 +20,7 @@ import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { UserInfo } from 'firebase/auth';
+import { InputShowPassword } from '../../../directives/app-input-show-password.directive';
 
 interface UserDeleteForm {
 	name: FormControl<string>;
@@ -33,7 +34,8 @@ interface UserDeleteForm {
 		WindowComponent,
 		InputTrimWhitespaceDirective,
 		ReactiveFormsModule,
-		BadgeErrorComponent
+		BadgeErrorComponent,
+		InputShowPassword
 	],
 	selector: 'app-user-delete, [appUserDelete]',
 	templateUrl: './delete.component.html'

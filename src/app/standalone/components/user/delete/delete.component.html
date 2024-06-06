@@ -102,18 +102,18 @@
 								<button
 									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 									type="button"
-									aria-label="Password"
+									title="Show password"
+									aria-label="Show password"
 									appSvgIcon
+									appInputShowPassword
+									[disabled]="password.disabled"
 									[class.btn-success]="password.dirty && password.value"
 									[class.btn-error]="password.touched && password.invalid"
 									[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
-									[disabled]="password.disabled"
 									[appSvgIconIcon]="'incognito'"
 									[appSvgIconSquare]="'1.5em'"
-									(touchstart)="userDeleteFormPasswordElement.type = 'text'"
-									(touchend)="userDeleteFormPasswordElement.type = 'password'"
-									(mouseenter)="userDeleteFormPasswordElement.type = 'text'"
-									(mouseleave)="userDeleteFormPasswordElement.type = 'password'"
+									[appInputShowPasswordFormControl]="password"
+									[appInputShowPasswordInputElement]="userDeleteFormPasswordElement"
 								></button>
 							}
 						</div>

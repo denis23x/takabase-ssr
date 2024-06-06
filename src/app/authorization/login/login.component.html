@@ -1,9 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<div
-		class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-	>
+	<div class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
 		<div class="flex flex-col gap-4">
 			<h1 class="text-2xl font-bold">Login</h1>
 			<hr class="border-t border-base-content/20" />
@@ -82,27 +80,23 @@
 								<button
 									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 									type="button"
-									aria-label="Password"
+									title="Show password"
+									aria-label="Show password"
 									appSvgIcon
+									appInputShowPassword
+									[disabled]="loginForm.disabled"
 									[class.btn-success]="password.valid"
 									[class.btn-error]="password.touched && password.invalid"
 									[class.btn-ghost]="password.untouched && password.invalid"
-									[disabled]="loginForm.disabled"
 									[appSvgIconIcon]="'incognito'"
 									[appSvgIconSquare]="'1.5em'"
-									(touchstart)="loginFormPasswordElement.type = 'text'"
-									(touchend)="loginFormPasswordElement.type = 'password'"
-									(mouseenter)="loginFormPasswordElement.type = 'text'"
-									(mouseleave)="loginFormPasswordElement.type = 'password'"
+									[appInputShowPasswordFormControl]="password"
+									[appInputShowPasswordInputElement]="loginFormPasswordElement"
 								></button>
 							}
 						</div>
 						<div class="label">
-							<a
-								class="label-text-alt link"
-								aria-label="Forgot password"
-								[routerLink]="['../reset']"
-							>
+							<a class="label-text-alt link" aria-label="Forgot password" [routerLink]="['../reset']">
 								Forgot password?
 							</a>
 						</div>

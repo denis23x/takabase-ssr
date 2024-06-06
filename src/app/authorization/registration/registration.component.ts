@@ -1,13 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AuthorizationService } from '../../core/services/authorization.service';
@@ -28,6 +22,7 @@ import { UserCreateDto } from '../../core/dto/user/user-create.dto';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
+import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -48,7 +43,8 @@ interface RegistrationForm {
 		BadgeErrorComponent,
 		AvatarComponent,
 		UserUrlPipe,
-		DayjsPipe
+		DayjsPipe,
+		InputShowPassword
 	],
 	selector: 'app-authorization-registration',
 	templateUrl: './registration.component.html'
