@@ -1,6 +1,6 @@
 ## Terms of Service
 
-Please read these Terms carefully. If you disagree with any part of the Terms, you may not use the Service. {.alert}
+Please read these Terms carefully. If you disagree with any part of the Terms, you may not use the Service {.alert}
 
 ### 1. Introduction  {.divider .divider-start}
 

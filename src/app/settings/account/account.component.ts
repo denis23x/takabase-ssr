@@ -297,6 +297,23 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 	onToggleEmailAuthProviderForm(): void {
 		this.emailAuthProviderFormToggle = !this.emailAuthProviderFormToggle;
+
+		// Reset any forms inside of credentials
+
+		this.emailAuthProviderForm.enable();
+		this.emailAuthProviderForm.reset();
+
+		// this.currentUserEmailForm.enable();
+		// this.currentUserEmailForm.reset();
+
+		this.currentUserPasswordForm.enable();
+		this.currentUserPasswordForm.reset();
+
+		this.newEmailForm.enable();
+		this.newEmailForm.reset();
+
+		this.newPasswordForm.enable();
+		this.newPasswordForm.reset();
 	}
 
 	onSubmitEmailAuthProviderForm(): void {

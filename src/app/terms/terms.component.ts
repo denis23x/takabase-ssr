@@ -32,6 +32,10 @@ export class TermsComponent implements OnInit {
 		{
 			path: 'terms-of-service',
 			name: 'Terms of Service'
+		},
+		{
+			path: 'user-data-deletion',
+			name: 'User data deletion'
 		}
 	];
 

@@ -1,6 +1,6 @@
 ## Privacy Policy
 
-Please read these Policy carefully. If you disagree with any part of the Policy, you may not use the Website. {.alert}
+Please read this Policy carefully. If you disagree with any part of the Policy, you may not use the Website {.alert}
 
 ### 1. Introduction {.divider .divider-start}
 

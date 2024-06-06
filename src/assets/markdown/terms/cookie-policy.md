@@ -1,6 +1,6 @@
 ## Cookie Policy
 
-Please read these Policy carefully. If you disagree with any part of the Policy, you may not use the Website. {.alert}
+Please read this Policy carefully. If you disagree with any part of the Policy, you may not use the Website {.alert}
 
 ### 1. Introduction {.divider .divider-start}
 
@@ -16,18 +16,18 @@ Cookies are small text files that are stored on your device when you visit a web
 
 I use both session and persistent cookies on the Website and I use different types of cookies to run the Website:
 
-- **Essential Cookies**: These cookies are necessary for the Website to function properly. They enable basic functions like page navigation and access to secure areas of the Website.
-- **Analytical/Performance Cookies**: These cookies allow me to analyze how visitors use my Website and monitor Website performance.
-- **Functionality Cookies**: These cookies enable the Website to remember your preferences and provide enhanced features.
-- **Advertising/Targeting Cookies**: These cookies are used to deliver advertisements that are relevant to you and your interests.
+- **Essential Cookies**: These cookies are necessary for the Website to function properly. They enable basic functions like page navigation and access to secure areas of the Website
+- **Analytical/Performance Cookies**: These cookies allow me to analyze how visitors use my Website and monitor Website performance
+- **Functionality Cookies**: These cookies enable the Website to remember your preferences and provide enhanced features
+- **Advertising/Targeting Cookies**: These cookies are used to deliver advertisements that are relevant to you and your interests
 
 ### 4. Purpose of Cookies {.divider .divider-start}
 
-I use cookies for the following purposes::
+I use cookies for the following purposes:
 
-- Improve the functionality and performance of my Website.
-- Analyze Website traffic and usage.
-- Provide personalized content and advertisements.
+- Improve the functionality and performance of my Website
+- Analyze Website traffic and usage
+- Provide personalized content and advertisements
 
 ### 5. Third-Party Cookies {.divider .divider-start}
 

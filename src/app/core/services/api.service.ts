@@ -48,7 +48,7 @@ export class ApiService {
 				case 'auth/too-many-requests':
 					return 'Detected too many requests from your device. Take a break please!';
 				case 'auth/user-disabled':
-					return 'Your account has been disabled or deleted. Please contact support team';
+					return 'Your account has been disabled or deleted';
 				case 'auth/requires-recent-login':
 					return 'Please login again and try again';
 				case 'auth/email-already-in-use':
