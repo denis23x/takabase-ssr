@@ -102,7 +102,7 @@ export class ShareComponent {
 				};
 			}
 			default: {
-				return null;
+				throw new Error('Invalid share key specified: ' + shareKey);
 			}
 		}
 	}

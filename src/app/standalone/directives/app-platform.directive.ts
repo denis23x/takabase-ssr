@@ -34,7 +34,7 @@ export class PlatformDirective implements OnInit {
 			case 'server':
 				return this.platformService.isServer();
 			default:
-				return false;
+				throw new Error('Invalid platform specified: ' + this.platform);
 		}
 	}
 }

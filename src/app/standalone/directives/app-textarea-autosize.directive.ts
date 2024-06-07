@@ -31,9 +31,9 @@ export class TextareaAutosizeDirective implements AfterViewInit, OnDestroy {
 	}
 
 	@Input()
-	set appAutosizeToggle(autosizeToggle: boolean) {
-		if (autosizeToggle) {
-			if (this.autosizeState === 'destroy') {
+	set appTextareaAutosizeToggle(textareaAutosizeToggle: boolean) {
+		if (textareaAutosizeToggle) {
+			if (this.textareaAutosizeState === 'destroy') {
 				this.setAutosize();
 			}
 		} else {
@@ -41,7 +41,7 @@ export class TextareaAutosizeDirective implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	autosizeState: string | undefined;
+	textareaAutosizeState: string | undefined;
 
 	ngAfterViewInit(): void {
 		this.setAutosize();
@@ -72,7 +72,7 @@ export class TextareaAutosizeDirective implements AfterViewInit, OnDestroy {
 
 			// Save current state of autosize
 
-			this.autosizeState = method;
+			this.textareaAutosizeState = method;
 		}
 	}
 }

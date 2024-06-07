@@ -60,24 +60,18 @@ export class PlatformService {
 			const ios: string[] = ['iPhone', 'iPad', 'iPod'];
 
 			switch (true) {
-				case macos.indexOf(platform) !== -1: {
+				case macos.indexOf(platform) !== -1:
 					return 'Mac';
-				}
-				case windows.indexOf(platform) !== -1: {
+				case windows.indexOf(platform) !== -1:
 					return 'Windows';
-				}
-				case ios.indexOf(platform) !== -1: {
+				case ios.indexOf(platform) !== -1:
 					return 'iOS';
-				}
-				case /Android/.test(userAgent): {
+				case /Android/.test(userAgent):
 					return 'Android';
-				}
-				case /Linux/.test(userAgent): {
+				case /Linux/.test(userAgent):
 					return 'Linux';
-				}
-				default: {
+				default:
 					return null;
-				}
 			}
 		}
 
@@ -99,24 +93,18 @@ export class PlatformService {
 
 		if (os === 'Mac') {
 			switch (key) {
-				case 'ctrl': {
+				case 'ctrl':
 					return '⌃';
-				}
-				case 'command': {
+				case 'command':
 					return '⌘';
-				}
-				case 'alt': {
+				case 'alt':
 					return '⌥';
-				}
-				case 'shift': {
+				case 'shift':
 					return '⇧';
-				}
-				case 'enter': {
+				case 'enter':
 					return '↵';
-				}
-				default: {
+				default:
 					return key;
-				}
 			}
 		}
 

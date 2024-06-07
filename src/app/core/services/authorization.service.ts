@@ -158,18 +158,14 @@ export class AuthorizationService {
 
 	getCredentialFromError = (authProvider: AuthProvider, firebaseError: FirebaseError): OAuthCredential => {
 		switch (authProvider.providerId) {
-			case 'google.com': {
+			case 'google.com':
 				return GoogleAuthProvider.credentialFromError(firebaseError);
-			}
-			case 'facebook.com': {
+			case 'facebook.com':
 				return FacebookAuthProvider.credentialFromError(firebaseError);
-			}
-			case 'github.com': {
+			case 'github.com':
 				return GithubAuthProvider.credentialFromError(firebaseError);
-			}
-			default: {
+			default:
 				throw new Error('Invalid providerId specified: ' + authProvider.providerId);
-			}
 		}
 	};
 

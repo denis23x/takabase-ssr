@@ -13,25 +13,25 @@ export class ScrollPresetDirective implements AfterViewInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 
 	@Input({ required: true })
-	set appScrollActive(scrollActive: boolean) {
-		this.scrollActiveSubject$.next(scrollActive);
+	set appScrollPresetActive(scrollActive: boolean) {
+		this.scrollPresetActiveSubject$.next(scrollActive);
 	}
 
-	scrollActiveSubject$: Subject<boolean> = new Subject<boolean>();
-	scrollActive$: Subscription | undefined;
+	scrollPresetActiveSubject$: Subject<boolean> = new Subject<boolean>();
+	scrollPresetActive$: Subscription | undefined;
 
 	parentLi: HTMLElement | undefined;
 	parentUl: HTMLElement | undefined;
 
 	ngAfterViewInit(): void {
-		this.scrollActive$ = this.scrollActiveSubject$.pipe(distinctUntilChanged()).subscribe({
+		this.scrollPresetActive$ = this.scrollPresetActiveSubject$.pipe(distinctUntilChanged()).subscribe({
 			next: (scrollActive: boolean) => this.setScroll(scrollActive),
 			error: (error: any) => console.error(error)
 		});
 	}
 
 	ngOnDestroy(): void {
-		[this.scrollActive$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.scrollPresetActive$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setScroll(toggle: boolean): void {

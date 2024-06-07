@@ -34,7 +34,7 @@ export class DeviceDirective implements OnInit {
 			case 'desktop':
 				return this.platformService.isMobile() === false;
 			default:
-				return true;
+				throw new Error('Invalid device specified: ' + this.device);
 		}
 	}
 }

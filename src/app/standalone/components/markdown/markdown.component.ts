@@ -478,7 +478,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 					break;
 				}
 				default: {
-					break;
+					throw new Error('Invalid control key specified: ' + markdownControl.key);
 				}
 			}
 

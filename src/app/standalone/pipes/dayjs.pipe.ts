@@ -18,7 +18,7 @@ export class DayjsPipe implements PipeTransform {
 			case 'format':
 				return dayjs(value).format(options);
 			default:
-				throw new Error(`Invalid action type specified: ${type}`);
+				throw new Error('Invalid action specified: ' + type);
 		}
 	}
 }

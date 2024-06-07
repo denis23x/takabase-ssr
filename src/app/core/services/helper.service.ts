@@ -37,7 +37,7 @@ export class HelperService {
 				// prettier-ignore
 				return new RegExp('^.*((youtu.be\\/)|(v\\/)|(\\/u\\/\\w\\/)|(embed\\/)|(watch\\?))\\??v?=?([^#&?]*).*', 'm');
 			default:
-				throw new Error(`Invalid regex type specified: ${regExp}`);
+				throw new Error('Invalid regex specified: ' + regExp);
 		}
 	}
 
