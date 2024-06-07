@@ -6,7 +6,7 @@
 			<h1 class="text-2xl font-bold">Email recovery</h1>
 		</div>
 		@switch (true) {
-			@case (!recoveryIsSubmitted && !recoveryIsSucceed) {
+			@case (!recoveryIsSubmitted() && !recoveryIsSucceed()) {
 				<div class="flex flex-col gap-4">
 					<p class="alert" role="alert">
 						<i
@@ -34,7 +34,7 @@
 						<!-- prettier-ignore -->
 						<span class="block"> Your email address has been successfully restored. <strong class="inline font-bold"> For security purposes, it is recommended to change your password now. </strong> Please check your email and proceed to update your password to ensure the safety of your account </span>
 					</p>
-					@switch (recoveryIsSucceed) {
+					@switch (recoveryIsSucceed()) {
 						@case (true) {
 							<a class="btn-success btn-outline btn w-full" title="Success" aria-label="Success" [routerLink]="'/'">
 								Success

@@ -16,14 +16,7 @@ import { Dimensions, ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
 import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
 import { Subscription, merge } from 'rxjs';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	FormsModule,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { HelperService } from '../../../core/services/helper.service';
@@ -84,20 +77,15 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly aiService: AIService = inject(AIService);
 
-	// prettier-ignore
 	@ViewChild('cropperDialogElement') cropperDialogElement: ElementRef<HTMLDialogElement> | undefined;
-
 	@ViewChild('imageFormFile') imageFormFile: ElementRef<HTMLInputElement> | undefined;
-
 	@ViewChild(ImageCropperComponent) imageCropperComponent: ImageCropperComponent | undefined;
 
 	@Output() appCropperSubmit: EventEmitter<File> = new EventEmitter<File>();
 	@Output() appCropperToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	imageForm: FormGroup = this.formBuilder.group<ImageForm>({
-		url: this.formBuilder.nonNullable.control('', [
-			Validators.pattern(this.helperService.getRegex('url'))
-		])
+		url: this.formBuilder.nonNullable.control('', [Validators.pattern(this.helperService.getRegex('url'))])
 	});
 	imageFormRequest$: Subscription | undefined;
 	imageFormMime: string[] = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
@@ -113,16 +101,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	markdownItToggle$: Subscription | undefined;
 
 	cropperImageForm: FormGroup = this.formBuilder.group<CropperImageForm>({
-		scale: this.formBuilder.nonNullable.control(1, [
-			Validators.required,
-			Validators.min(1),
-			Validators.max(5)
-		]),
-		rotate: this.formBuilder.nonNullable.control(0, [
-			Validators.required,
-			Validators.min(0),
-			Validators.max(360)
-		]),
+		scale: this.formBuilder.nonNullable.control(1, [Validators.required, Validators.min(1), Validators.max(5)]),
+		rotate: this.formBuilder.nonNullable.control(0, [Validators.required, Validators.min(0), Validators.max(360)]),
 		flipV: this.formBuilder.nonNullable.control(false, [Validators.required]),
 		flipH: this.formBuilder.nonNullable.control(false, [Validators.required])
 	});
@@ -214,7 +194,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 			this.cropperImageTransform$?.unsubscribe();
 			this.cropperImageTransform$ = this.imageCropperComponent.transformChange.subscribe({
-				// prettier-ignore
 				next: (cropperImageTransform: ImageTransform) => (this.cropperImageTransform = cropperImageTransform),
 				error: (error: any) => console.error(error)
 			});
@@ -237,12 +216,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[
-			this.imageFormRequest$,
-			this.cropperImageForm$,
-			this.cropperImageTransform$,
-			this.markdownItToggle$
-		].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.imageFormRequest$, this.cropperImageForm$, this.cropperImageTransform$, this.markdownItToggle$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	/** INPUT */

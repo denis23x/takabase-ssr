@@ -40,7 +40,6 @@ export abstract class AbstractMarkdownComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
 		[this.activatedRouteParams$, this.abstractProse$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -59,7 +58,6 @@ export abstract class AbstractMarkdownComponent implements OnInit, OnDestroy {
 					responseType: 'text'
 				})
 				.pipe(
-					// prettier-ignore
 					map((prose: string) => {
 						const modifierKey: string = this.platformService.getOSModifierKey();
 						const keyboardCharacter: string = this.platformService.getOSKeyboardCharacter(modifierKey);
@@ -68,9 +66,7 @@ export abstract class AbstractMarkdownComponent implements OnInit, OnDestroy {
 						return proseUpdated;
 					}),
 					catchError((httpErrorResponse: HttpErrorResponse) => {
-						this.router
-							.navigate(['/error', httpErrorResponse.status])
-							.then(() => console.debug('Route changed'));
+						this.router.navigate(['/error', httpErrorResponse.status]).then(() => console.debug('Route changed'));
 
 						return throwError(() => httpErrorResponse);
 					})

@@ -1,7 +1,6 @@
 <!-- @format -->
 
 <ng-container>
-	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
 		#cropperDialogElement
@@ -83,11 +82,10 @@
 									(change)="onGetFileFromDevice($event)"
 								/>
 								<button
-									class="btn-success btn-md btn-square btn fill-current p-3"
+									class="btn-success btn-outline btn-md btn-square btn fill-current p-3"
 									type="button"
 									title="Browse"
 									aria-label="Browse"
-									[class.btn-outline]="imageForm.enabled"
 									[disabled]="imageForm.disabled"
 									(click)="imageFormFile.click()"
 								>
@@ -139,14 +137,13 @@
 						</image-cropper>
 					</div>
 					<div class="flex items-start justify-between gap-4">
-						<!-- prettier-ignore -->
 						<div
 							class="flex overflow-auto rounded-btn border border-base-content/20"
 							[ngClass]="{ 'border-transparent bg-base-200 cursor-not-allowed': cropperImageForm.disabled }"
 						>
 							<ul
 								class="menu rounded-btn menu-horizontal menu-md flex-nowrap border-none p-0"
-                [class.pointer-events-none]="cropperImageForm.disabled"
+								[class.pointer-events-none]="cropperImageForm.disabled"
 							>
 								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
 									<button
@@ -158,8 +155,8 @@
 										[disabled]="cropperImageForm.disabled"
 										[appSvgIconIcon]="'bounding-box-circles'"
 										[appSvgIconSquare]="'1.5725em'"
-                    [class.active]="!cropperMoveImage && !cropperImageForm.disabled"
-                    (click)="cropperMoveImage = false"
+										[class.active]="!cropperMoveImage && !cropperImageForm.disabled"
+										(click)="cropperMoveImage = false"
 									></button>
 								</li>
 								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
@@ -172,200 +169,194 @@
 										[disabled]="cropperImageForm.disabled"
 										[appSvgIconIcon]="'arrows-move'"
 										[appSvgIconSquare]="'1.5725em'"
-                    [class.active]="cropperMoveImage && !cropperImageForm.disabled"
+										[class.active]="cropperMoveImage && !cropperImageForm.disabled"
 										(click)="cropperMoveImage = true"
 									></button>
 								</li>
 								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
-                  @if (cropperImageForm.get("flipV"); as flipV) {
-                    <button
-                      class="rotate-90 fill-current p-3"
-                      type="button"
-                      title="Mirror horizontal"
-                      aria-label="Mirror horizontal"
-                      appSvgIcon
-                      [disabled]="cropperImageForm.disabled"
-                      [appSvgIconIcon]="'symmetry-vertical'"
-                      [appSvgIconSquare]="'1.5725em'"
-                      (click)="flipV.setValue(!flipV.value)"
-                    ></button>
-                  }
+									@if (cropperImageForm.get("flipV"); as flipV) {
+										<button
+											class="rotate-90 fill-current p-3"
+											type="button"
+											title="Mirror horizontal"
+											aria-label="Mirror horizontal"
+											appSvgIcon
+											[disabled]="cropperImageForm.disabled"
+											[appSvgIconIcon]="'symmetry-vertical'"
+											[appSvgIconSquare]="'1.5725em'"
+											(click)="flipV.setValue(!flipV.value)"
+										></button>
+									}
 								</li>
 								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
-                  @if (cropperImageForm.get("flipH"); as flipH) {
-                    <button
-                      class="fill-current p-3"
-                      type="button"
-                      title="Mirror vertical"
-                      aria-label="Mirror vertical"
-                      appSvgIcon
-                      [disabled]="cropperImageForm.disabled"
-                      [appSvgIconIcon]="'symmetry-vertical'"
-                      [appSvgIconSquare]="'1.5725em'"
-                      (click)="flipH.setValue(!flipH.value)"
-                    ></button>
-                  }
+									@if (cropperImageForm.get("flipH"); as flipH) {
+										<button
+											class="fill-current p-3"
+											type="button"
+											title="Mirror vertical"
+											aria-label="Mirror vertical"
+											appSvgIcon
+											[disabled]="cropperImageForm.disabled"
+											[appSvgIconIcon]="'symmetry-vertical'"
+											[appSvgIconSquare]="'1.5725em'"
+											(click)="flipH.setValue(!flipH.value)"
+										></button>
+									}
 								</li>
-                @if (markdownItToggle) {
-                  <li class="inline-block" [class.disabled]="cropperImageForm.disabled">
-                    <div
-                      class="flex p-0"
-                      appDropdown
-                      [appDropdownPlacement]="'top-start'"
-                      [appDropdownActiveClassList]="['bg-base-content/10']"
-                    >
-                      <button
-                        class="fill-current p-3"
-                        type="button"
-                        title="Aspect ratio"
-                        aria-label="Aspect ratio"
-                        appSvgIcon
-                        slot="target"
-                        [disabled]="cropperImageForm.disabled"
-                        [appSvgIconIcon]="'aspect-ratio'"
-                        [appSvgIconSquare]="'1.5725em'"
-                      ></button>
-                      <ul class="menu menu-vertical menu-md m-0" slot="content">
-                        @for (cropperAspectRatio of cropperAspectRatioList; track cropperAspectRatio.id) {
-                          <li class="flex w-full">
-                            <button
-                              class="w-full whitespace-nowrap text-base-content"
-                              type="button"
-                              [class.active]="cropperAspectRatioActive === cropperAspectRatio.value"
-                              [title]="cropperAspectRatio.label"
-                              [attr.aria-label]="cropperAspectRatio.label"
-                              (click)="cropperAspectRatioActive = cropperAspectRatio.value"
-                            >
-                              {{ cropperAspectRatio.label }}
-                            </button>
-                          </li>
-                        }
-                      </ul>
-                    </div>
-                  </li>
-                }
-                <li class="inline-block" [class.disabled]="cropperImageForm.disabled">
-                  <div
-                    class="flex p-0"
-                    appDropdown
-                    [appDropdownPlacement]="'top'"
-                    [appDropdownClose]="false"
-                    [appDropdownActiveClassList]="['bg-base-content/10']"
-                  >
-                    <button
-                      class="fill-current p-3"
-                      type="button"
-                      title="Rotate"
-                      aria-label="Rotate"
-                      appSvgIcon
-                      slot="target"
-                      [disabled]="cropperImageForm.disabled"
-                      [appSvgIconIcon]="'arrow-clockwise'"
-                      [appSvgIconSquare]="'1.5725em'"
-                    ></button>
-                    <div
-                      class="min-w-80 sm:min-w-96 px-4"
-                      slot="content"
-                    >
-                      <form
-                        class="flex rounded-box cursor-default border border-base-content/20 bg-base-100 shadow w-full p-4"
-                        autocomplete="off"
-                        [formGroup]="cropperImageForm"
-                      >
-                        @if (cropperImageForm.get("rotate"); as rotate) {
-                          <fieldset class="form-control w-full">
-                            <label class="label w-full gap-4 p-0">
-                              <span class="label-text">Rotate</span>
-                              <input
-                                class="range range-success range-md flex-1"
-                                type="range"
-                                title="Rotate range"
-                                aria-label="Rotate range"
-                                formControlName="rotate"
-                                [min]="0"
-                                [max]="360"
-                                [step]="5"
-                                [value]="rotate.value"
-                              />
-                              <input
-                                class="input-bordered input input-sm w-14 text-center"
-                                type="number"
-                                inputmode="numeric"
-                                title="Rotate value"
-                                aria-label="Rotate value"
-                                formControlName="rotate"
-                                [class.input-success]="rotate.valid"
-                                [class.input-error]="rotate.invalid"
-                                [value]="rotate.value"
-                              />
-                            </label>
-                          </fieldset>
-                        }
-                      </form>
-                    </div>
-                  </div>
-                </li>
-                <li class="inline-block" [class.disabled]="cropperImageForm.disabled">
-                  <div
-                    class="flex p-0"
-                    appDropdown
-                    [appDropdownPlacement]="'top'"
-                    [appDropdownClose]="false"
-                    [appDropdownActiveClassList]="['bg-base-content/10']"
-                  >
-                    <button
-                      class="fill-current p-3"
-                      type="button"
-                      title="Scale"
-                      aria-label="Scale"
-                      appSvgIcon
-                      slot="target"
-                      [disabled]="cropperImageForm.disabled"
-                      [appSvgIconIcon]="'zoom-in'"
-                      [appSvgIconSquare]="'1.5725em'"
-                    ></button>
-                    <div
-                      class="min-w-80 sm:min-w-96 px-4"
-                      slot="content"
-                    >
-                      <form
-                        class="flex rounded-box cursor-default border border-base-content/20 bg-base-100 shadow w-full p-4"
-                        autocomplete="off"
-                        [formGroup]="cropperImageForm"
-                      >
-                        @if (cropperImageForm.get("scale"); as scale) {
-                          <fieldset class="form-control w-full">
-                            <label class="label w-full gap-4 p-0">
-                              <span class="label-text">Scale</span>
-                              <input
-                                class="range range-success range-md flex-1"
-                                type="range"
-                                title="Scale range"
-                                aria-label="Scale range"
-                                formControlName="scale"
-                                [min]="1"
-                                [max]="5"
-                                [step]="0.1"
-                                [value]="scale.value"
-                              />
-                              <input
-                                class="input-bordered input input-sm w-14 text-center"
-                                type="number"
-                                inputmode="numeric"
-                                title="Scale value"
-                                aria-label="Scale value"
-                                formControlName="scale"
-                                [class.input-success]="scale.valid"
-                                [class.input-error]="scale.invalid"
-                                [value]="scale.value"
-                              />
-                            </label>
-                          </fieldset>
-                        }
-                      </form>
-                    </div>
-                  </div>
-                </li>
+								@if (markdownItToggle) {
+									<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
+										<div
+											class="flex p-0"
+											appDropdown
+											[appDropdownPlacement]="'top-start'"
+											[appDropdownActiveClassList]="['bg-base-content/10']"
+										>
+											<button
+												class="fill-current p-3"
+												type="button"
+												title="Aspect ratio"
+												aria-label="Aspect ratio"
+												appSvgIcon
+												slot="target"
+												[disabled]="cropperImageForm.disabled"
+												[appSvgIconIcon]="'aspect-ratio'"
+												[appSvgIconSquare]="'1.5725em'"
+											></button>
+											<ul class="menu menu-vertical menu-md m-0" slot="content">
+												@for (cropperAspectRatio of cropperAspectRatioList; track cropperAspectRatio.id) {
+													<li class="flex w-full">
+														<button
+															class="w-full whitespace-nowrap text-base-content"
+															type="button"
+															[class.active]="cropperAspectRatioActive === cropperAspectRatio.value"
+															[title]="cropperAspectRatio.label"
+															[attr.aria-label]="cropperAspectRatio.label"
+															(click)="cropperAspectRatioActive = cropperAspectRatio.value"
+														>
+															{{ cropperAspectRatio.label }}
+														</button>
+													</li>
+												}
+											</ul>
+										</div>
+									</li>
+								}
+								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
+									<div
+										class="flex p-0"
+										appDropdown
+										[appDropdownPlacement]="'top'"
+										[appDropdownClose]="false"
+										[appDropdownActiveClassList]="['bg-base-content/10']"
+									>
+										<button
+											class="fill-current p-3"
+											type="button"
+											title="Rotate"
+											aria-label="Rotate"
+											appSvgIcon
+											slot="target"
+											[disabled]="cropperImageForm.disabled"
+											[appSvgIconIcon]="'arrow-clockwise'"
+											[appSvgIconSquare]="'1.5725em'"
+										></button>
+										<div class="min-w-80 sm:min-w-96 px-4" slot="content">
+											<form
+												class="flex rounded-box cursor-default border border-base-content/20 bg-base-100 shadow w-full p-4"
+												autocomplete="off"
+												[formGroup]="cropperImageForm"
+											>
+												@if (cropperImageForm.get("rotate"); as rotate) {
+													<fieldset class="form-control w-full">
+														<label class="label w-full gap-4 p-0">
+															<span class="label-text">Rotate</span>
+															<input
+																class="range range-success range-md flex-1"
+																type="range"
+																title="Rotate range"
+																aria-label="Rotate range"
+																formControlName="rotate"
+																[min]="0"
+																[max]="360"
+																[step]="5"
+																[value]="rotate.value"
+															/>
+															<input
+																class="input-bordered input input-sm w-14 text-center"
+																type="number"
+																title="Rotate value"
+																aria-label="Rotate value"
+																inputmode="numeric"
+																formControlName="rotate"
+																[class.input-success]="rotate.valid"
+																[class.input-error]="rotate.invalid"
+																[value]="rotate.value"
+															/>
+														</label>
+													</fieldset>
+												}
+											</form>
+										</div>
+									</div>
+								</li>
+								<li class="inline-block" [class.disabled]="cropperImageForm.disabled">
+									<div
+										class="flex p-0"
+										appDropdown
+										[appDropdownPlacement]="'top'"
+										[appDropdownClose]="false"
+										[appDropdownActiveClassList]="['bg-base-content/10']"
+									>
+										<button
+											class="fill-current p-3"
+											type="button"
+											title="Scale"
+											aria-label="Scale"
+											appSvgIcon
+											slot="target"
+											[disabled]="cropperImageForm.disabled"
+											[appSvgIconIcon]="'zoom-in'"
+											[appSvgIconSquare]="'1.5725em'"
+										></button>
+										<div class="min-w-80 sm:min-w-96 px-4" slot="content">
+											<form
+												class="flex rounded-box cursor-default border border-base-content/20 bg-base-100 shadow w-full p-4"
+												autocomplete="off"
+												[formGroup]="cropperImageForm"
+											>
+												@if (cropperImageForm.get("scale"); as scale) {
+													<fieldset class="form-control w-full">
+														<label class="label w-full gap-4 p-0">
+															<span class="label-text">Scale</span>
+															<input
+																class="range range-success range-md flex-1"
+																type="range"
+																title="Scale range"
+																aria-label="Scale range"
+																formControlName="scale"
+																[min]="1"
+																[max]="5"
+																[step]="0.1"
+																[value]="scale.value"
+															/>
+															<input
+																class="input-bordered input input-sm w-14 text-center"
+																type="number"
+																title="Scale value"
+																aria-label="Scale value"
+																inputmode="numeric"
+																formControlName="scale"
+																[class.input-success]="scale.valid"
+																[class.input-error]="scale.invalid"
+																[value]="scale.value"
+															/>
+														</label>
+													</fieldset>
+												}
+											</form>
+										</div>
+									</div>
+								</li>
 							</ul>
 						</div>
 						<button
@@ -395,11 +386,10 @@
 							Submit
 						</button>
 						<button
-							class="btn btn-error w-full"
+							class="btn btn-error btn-outline w-full"
 							type="button"
 							title="Delete image"
 							aria-label="Delete image"
-							[class.btn-outline]="cropperImageForm.enabled"
 							[disabled]="cropperImageForm.disabled"
 							(click)="onResetCropper()"
 						>

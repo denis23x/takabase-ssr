@@ -92,7 +92,6 @@ export class MetaService {
 
 		const metaOpenGraphImage: string[] = ['og:image', 'og:image:alt', 'og:image:type'];
 
-		// prettier-ignore
 		// @ts-ignore
 		if (metaOpenGraphImage.some((tag: string) => !metaOpenGraph[tag])) {
 			metaOpenGraph['og:image'] = url.origin + '/assets/images/placeholder-image-meta.png';
@@ -162,7 +161,6 @@ export class MetaService {
 
 		const metaTwitterImage: string[] = ['twitter:image', 'twitter:image:alt'];
 
-		// prettier-ignore
 		// @ts-ignore
 		if (metaTwitterImage.some((tag: string) => !metaTwitter[tag])) {
 			// @ts-ignore

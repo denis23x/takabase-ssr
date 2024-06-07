@@ -58,11 +58,11 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
-	userDeleteDialogToggle: boolean = false;
 	userDeleteForm: FormGroup = this.formBuilder.group<UserDeleteForm>({
 		name: this.formBuilder.nonNullable.control('', [])
 	});
 	userDeleteFormRequest$: Subscription | undefined;
+	userDeleteDialogToggle: boolean = false;
 
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();

@@ -92,12 +92,10 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
 		[this.invitedByUserRequest$, this.registrationRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setResolver(): void {
-		// prettier-ignore
 		const invitedById: number = Number(this.activatedRoute.snapshot.queryParamMap.get('invitedBy') || '');
 
 		if (invitedById) {

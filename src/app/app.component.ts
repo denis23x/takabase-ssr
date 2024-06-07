@@ -16,14 +16,7 @@ import { CookiesComponent } from './standalone/components/cookies/cookies.compon
 
 @Component({
 	standalone: true,
-	imports: [
-		RouterModule,
-		SnackbarComponent,
-		HeaderComponent,
-		ScrollToTopComponent,
-		ReportComponent,
-		CookiesComponent
-	],
+	imports: [RouterModule, SnackbarComponent, HeaderComponent, ScrollToTopComponent, ReportComponent, CookiesComponent],
 	selector: 'app-root',
 	templateUrl: './app.component.html'
 })
@@ -36,10 +29,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 	currentUser$: Subscription | undefined;
 
 	ngOnInit(): void {
-		// prettier-ignore
 		if (this.platformService.isBrowser()) {
-			/** Browser only */
-
 			this.currentUser$?.unsubscribe();
 			this.currentUser$ = this.authorizationService
 				.getPopulate()

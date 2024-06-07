@@ -1,7 +1,8 @@
-/* Hide native search icon */
 
 .input {
   @apply truncate;
+
+  /* Hide native search icon */
 
   &[type="search"] {
     &::-webkit-search-decoration,
@@ -12,6 +13,8 @@
     }
   }
 
+  /* Hide native arrows */
+
   &[type="number"] {
     -moz-appearance: textfield;
 
@@ -19,6 +22,14 @@
     &::-webkit-inner-spin-button {
       -webkit-appearance: none;
     }
+  }
+
+  /* Update default behavior */
+
+  &.input-disabled,
+  &:disabled,
+  &[disabled] {
+    @apply select-none;
   }
 
   /* Caret */

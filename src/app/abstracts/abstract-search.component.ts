@@ -71,7 +71,6 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
-	// prettier-ignore
 	abstractGetAllDto$: BehaviorSubject<AbstractGetAllDto> = new BehaviorSubject<AbstractGetAllDto>({});
 	abstractGetAllDtoPageDefault: number = 1;
 	abstractGetAllDtoSizeDefault: number = 20;
@@ -91,12 +90,10 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		[this.abstractListPageScrollInfinite$].forEach(($: Subscription) => $?.unsubscribe());
 
-		// prettier-ignore
 		[this.abstractListIsLoading$, this.abstractGetAllDto$].forEach(($: BehaviorSubject<any>) => $?.complete());
 	}
 
 	setAbstractAppearance(): void {
-		// prettier-ignore
 		this.abstractListPageScrollInfinite = !!Number(this.cookiesService.getItem('page-scroll-infinite'));
 
 		if (this.abstractListPageScrollInfinite) {

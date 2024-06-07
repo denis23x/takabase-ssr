@@ -1,7 +1,6 @@
 <!-- @format -->
 
 <ng-container>
-	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
 		#categoryDeleteDialogElement
@@ -38,10 +37,9 @@
 								@if (name.touched && !!name.errors && categoryDeleteForm.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
 								}
-								<!-- prettier-ignore -->
 								<span class="label-text mr-2">
-                  Please type <strong class="font-bold">{{ category?.name }}</strong> to confirm
-                </span>
+									Please type <strong class="font-bold">{{ category?.name }}</strong> to confirm
+								</span>
 							</div>
 						</label>
 						<div class="relative">
@@ -134,11 +132,10 @@
 				}
 				<fieldset class="form-control">
 					<button
-						class="btn btn-md btn-error"
+						class="btn btn-md btn-error btn-outline"
 						type="submit"
 						title="Delete"
 						aria-label="Delete"
-						[class.btn-outline]="categoryDeleteForm.valid && categoryDeleteForm.enabled"
 						[disabled]="categoryDeleteForm.invalid || categoryDeleteForm.disabled"
 					>
 						@if (categoryDeleteForm.disabled) {

@@ -1,7 +1,6 @@
 <!-- @format -->
 
 <ng-container>
-	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
 		#reportDialog
@@ -37,12 +36,11 @@
 							@case (!!reportSubject.post && !!reportSubject.post.image) {
 								<div class="flex rounded-btn relative overflow-hidden">
 									<figure class="h-12 w-12 rounded-btn relative overflow-hidden">
-										<!-- prettier-ignore -->
 										<img
 											class="object-cover object-center bg-base-300"
 											loading="lazy"
 											[fill]="true"
-                      [ngSrc]="(reportSubject.post.image | appCheck | async) || './assets/images/placeholder-image.svg'"
+											[ngSrc]="(reportSubject.post.image | appCheck | async) || './assets/images/placeholder-image.svg'"
 											[alt]="reportSubject.post.name"
 										/>
 									</figure>
@@ -150,14 +148,13 @@
 				}
 				@if (reportForm.get("description"); as description) {
 					<fieldset class="form-control">
-						<!-- prettier-ignore -->
 						<label class="label" for="reportFormDescription">
 							<div class="indicator">
-                @if (description.touched && !!description.errors && reportForm.enabled) {
-                  <div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
-                }
-                <span class="label-text mr-2">Description</span>
-              </div>
+								@if (description.touched && !!description.errors && reportForm.enabled) {
+									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
+								}
+								<span class="label-text mr-2">Description</span>
+							</div>
 							<span
 								class="label-text-alt"
 								[class.text-base-content]="reportForm.disabled"
@@ -167,25 +164,24 @@
 								{{ description.value?.length || 0 }}/192
 							</span>
 						</label>
-						<!-- prettier-ignore -->
 						<div
-              class="textarea-autosize w-full"
-              [ngClass]="{ 'border-base-content/20': reportForm.enabled, 'border-transparent': reportForm.disabled }"
-              [class.textarea-autosize-success]="description.value && description.valid"
-              [class.textarea-autosize-error]="description.touched && description.invalid"
-            >
-              <textarea
-                class="textarea textarea-md w-full max-h-64"
-                id="reportFormDescription"
-                title="Description"
-                aria-label="Description"
-                placeholder="Type description"
-                formControlName="description"
-                appInputTrimWhitespace
-                appTextareaAutosize
-                [rows]="4"
-              ></textarea>
-            </div>
+							class="textarea-autosize w-full"
+							[ngClass]="{ 'border-base-content/20': reportForm.enabled, 'border-transparent': reportForm.disabled }"
+							[class.textarea-autosize-success]="description.value && description.valid"
+							[class.textarea-autosize-error]="description.touched && description.invalid"
+						>
+							<textarea
+								class="textarea textarea-md w-full max-h-64"
+								id="reportFormDescription"
+								title="Description"
+								aria-label="Description"
+								placeholder="Type description"
+								formControlName="description"
+								appInputTrimWhitespace
+								appTextareaAutosize
+								[rows]="4"
+							></textarea>
+						</div>
 					</fieldset>
 				}
 				<fieldset class="form-control">

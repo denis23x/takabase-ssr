@@ -212,21 +212,20 @@
 									</ul>
 								</div>
 							</div>
-							<!-- prettier-ignore -->
 							<button
-                class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
-                type="button"
-                title="Prism preview"
-                aria-label="Prism preview"
-                appSvgIcon
-                appSkeleton
-                [appSkeletonToggle]="appearanceFormSkeletonToggle || appearanceThemePrismMarkdownSkeletonToggle"
-                [appSkeletonClassListElementRef]="['border-0']"
-                [disabled]="appearanceForm.disabled"
-                [appSvgIconIcon]="'code-slash'"
-                [appSvgIconSquare]="'1.75em'"
-                (click)="appearanceThemePrismPreviewToggle = !appearanceThemePrismPreviewToggle"
-              ></button>
+								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
+								type="button"
+								title="Prism preview"
+								aria-label="Prism preview"
+								appSvgIcon
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle || appearanceThemePrismMarkdownSkeletonToggle"
+								[appSkeletonClassListElementRef]="['border-0']"
+								[disabled]="appearanceForm.disabled"
+								[appSvgIconIcon]="'code-slash'"
+								[appSvgIconSquare]="'1.75em'"
+								(click)="appearanceThemePrismPreviewToggle = !appearanceThemePrismPreviewToggle"
+							></button>
 						</div>
 					</fieldset>
 				}
@@ -369,23 +368,22 @@
 							<ul class="join join-horizontal">
 								@for (appearanceButtons of appearanceButtonsList; track $index) {
 									<li class="block">
-										<!-- prettier-ignore -->
 										<label
-                      class="btn btn-success btn-sm join-item"
-                      [class.btn-outline]="windowButtonPosition.value !== appearanceButtons && appearanceForm.enabled"
-                      [class.btn-inline]="windowButtonPosition.value === appearanceButtons && appearanceForm.disabled"
-                      [class.btn-disabled]="appearanceForm.disabled"
-                    >
-                      <input
-                        class="hidden"
-                        type="radio"
-                        title="Window button position"
-                        aria-label="Window button position"
-                        formControlName="windowButtonPosition"
-                        [value]="appearanceButtons"
-                      />
-                      <span class="block uppercase">{{ appearanceButtons }}</span>
-                    </label>
+											class="btn btn-success btn-sm join-item"
+											[class.btn-outline]="windowButtonPosition.value !== appearanceButtons && appearanceForm.enabled"
+											[class.btn-inline]="windowButtonPosition.value === appearanceButtons && appearanceForm.disabled"
+											[class.btn-disabled]="appearanceForm.disabled"
+										>
+											<input
+												class="hidden"
+												type="radio"
+												title="Window button position"
+												aria-label="Window button position"
+												formControlName="windowButtonPosition"
+												[value]="appearanceButtons"
+											/>
+											<span class="block uppercase">{{ appearanceButtons }}</span>
+										</label>
 									</li>
 								}
 							</ul>

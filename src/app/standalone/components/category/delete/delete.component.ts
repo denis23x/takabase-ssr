@@ -16,14 +16,7 @@ import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
-import {
-	AbstractControl,
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategoryService } from '../../../../core/services/category.service';
 import { Subscription } from 'rxjs';
 import { Post } from '../../../../core/models/post.model';
@@ -62,7 +55,6 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly location: Location = inject(Location);
 
-	// prettier-ignore
 	@ViewChild('categoryDeleteDialogElement') categoryDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
 	// prettier-ignore
@@ -91,12 +83,12 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	categoryList: Category[] = [];
 	categoryPostList: Post[] = [];
 
-	categoryDeleteDialogToggle: boolean = false;
 	categoryDeleteForm: FormGroup = this.formBuilder.group<CategoryDeleteForm>({
 		name: this.formBuilder.nonNullable.control('', []),
 		categoryId: this.formBuilder.control(null, [])
 	});
 	categoryDeleteFormRequest$: Subscription | undefined;
+	categoryDeleteDialogToggle: boolean = false;
 
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();
@@ -113,7 +105,6 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
 		[this.currentUser$, this.categoryDeleteFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -156,28 +147,26 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 			}
 
 			this.categoryDeleteFormRequest$?.unsubscribe();
-			this.categoryDeleteFormRequest$ = this.categoryService
-				.delete(categoryId, categoryDeleteDto)
-				.subscribe({
-					next: () => {
-						this.snackbarService.success(null, 'Category deleted');
+			this.categoryDeleteFormRequest$ = this.categoryService.delete(categoryId, categoryDeleteDto).subscribe({
+				next: () => {
+					this.snackbarService.success(null, 'Category deleted');
 
-						this.appCategoryDeleteSuccess.emit({
-							...this.category,
-							...categoryDeleteDto
-						});
+					this.appCategoryDeleteSuccess.emit({
+						...this.category,
+						...categoryDeleteDto
+					});
 
-						this.category = undefined;
-						this.categoryList = this.categoryList.filter((category: Category) => {
-							return category.id !== categoryId;
-						});
+					this.category = undefined;
+					this.categoryList = this.categoryList.filter((category: Category) => {
+						return category.id !== categoryId;
+					});
 
-						this.categoryDeleteForm.enable();
+					this.categoryDeleteForm.enable();
 
-						this.onToggleCategoryDeleteDialog(false);
-					},
-					error: () => this.categoryDeleteForm.enable()
-				});
+					this.onToggleCategoryDeleteDialog(false);
+				},
+				error: () => this.categoryDeleteForm.enable()
+			});
 		}
 	}
 }

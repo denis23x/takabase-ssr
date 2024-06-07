@@ -59,11 +59,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		// prettier-ignore
-		[
-      this.currentUser$,
-      this.currentUserSkeletonToggle$,
-      this.currentUserLogoutRequest$
-    ].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$, this.currentUserSkeletonToggle$, this.currentUserLogoutRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onLogout(): void {
@@ -72,9 +68,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			.onSignOut()
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
-					this.router
-						.navigate(['/error', httpErrorResponse.status])
-						.then(() => console.debug('Route changed'));
+					this.router.navigate(['/error', httpErrorResponse.status]).then(() => console.debug('Route changed'));
 
 					return throwError(() => httpErrorResponse);
 				})

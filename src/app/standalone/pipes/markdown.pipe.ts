@@ -22,7 +22,6 @@ export class MarkdownPipe implements PipeTransform {
 			switch (type) {
 				case 'time-to-read': {
 					// @ts-ignore
-					// prettier-ignore
 					const plainText: string = this.markdownIt.plainText.replace(/<\/?[a-z][a-z0-9]*[^<>]*>|<!--.*?-->/gim, '');
 
 					const timeToRead = (): number => {

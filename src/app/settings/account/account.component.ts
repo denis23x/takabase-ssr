@@ -242,7 +242,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			}
 		];
 
-		// prettier-ignore
 		this.currentUserProviderData = currentUserProviderData.map((providerData: CurrentUserProviderData) => {
 			const userInfo: UserInfo = firebaseUser.providerData.find((userInfo: UserInfo) => {
 				return userInfo.providerId === providerData.providerId;
@@ -253,7 +252,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 					...providerData,
 					...userInfo,
 					linked: true
-				}
+				};
 			}
 
 			return providerData;
@@ -261,7 +260,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	}
 
 	onProviderLink(currentUserProviderData: CurrentUserProviderData): void {
-		// prettier-ignore
 		const authProvider: AuthProvider = this.authorizationService.getAuthProvider(currentUserProviderData.providerId);
 
 		from(linkWithPopup(this.currentUser.firebase, authProvider)).subscribe({

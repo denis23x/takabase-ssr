@@ -46,11 +46,7 @@ export class CookiesComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
-		[
-			this.currentUser$,
-			this.currentUserIsPopulatedToggle$,
-		].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$, this.currentUserIsPopulatedToggle$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onSubmit(): void {

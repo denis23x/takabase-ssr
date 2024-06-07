@@ -21,7 +21,6 @@ export class HelperService {
 	}
 
 	getRegex(regExp: string, payload?: any): RegExp {
-		// prettier-ignore
 		switch (regExp) {
 			case 'extension':
 				return new RegExp('.[a-z]+$', 'i');
@@ -35,6 +34,7 @@ export class HelperService {
 				// eslint-disable-next-line no-control-regex
 				return new RegExp('^([a-zA-Z][a-zA-Z0-9+.\\-]{1,31}):([^<>\x00-\x20]*)$', 'm');
 			case 'youtube':
+				// prettier-ignore
 				return new RegExp('^.*((youtu.be\\/)|(v\\/)|(\\/u\\/\\w\\/)|(embed\\/)|(watch\\?))\\??v?=?([^#&?]*).*', 'm');
 			default:
 				throw new Error(`Invalid regex type specified: ${regExp}`);

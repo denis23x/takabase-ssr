@@ -113,8 +113,6 @@ export class MarkdownService {
 		this.markdownIt.renderer.rules.table_open = this.setMarkdownItRule('tableOpen');
 		this.markdownIt.renderer.rules.table_close = this.setMarkdownItRule('tableClose');
 		this.markdownIt.renderer.rules.collapsible_open = this.setMarkdownItRule('collapsibleOpen');
-
-		// prettier-ignore
 		this.markdownIt.renderer.rules.collapsible_summary = this.setMarkdownItRule('collapsibleSummary');
 		this.markdownIt.renderer.rules.collapsible_close = this.setMarkdownItRule('collapsibleClose');
 
@@ -130,9 +128,7 @@ export class MarkdownService {
 			token.attrs?.forEach(([key, value]: string[]) => {
 				switch (key) {
 					case 'class': {
-						const classList: string[] = value
-							.split(/\s/)
-							.filter((className: string) => !!className);
+						const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
 
 						imageElement.classList.add(...classList);
 
@@ -153,7 +149,6 @@ export class MarkdownService {
 								.pipe(map((blob: Blob) => URL.createObjectURL(blob)))
 								.subscribe({
 									next: (blob: string) => {
-										// prettier-ignore
 										const elementHTML: HTMLElement | null = this.document.getElementById(imageElement.id);
 										const elementHTMLImage: HTMLImageElement = elementHTML as HTMLImageElement;
 
@@ -217,7 +212,6 @@ export class MarkdownService {
 
 			token.attrs?.forEach(([key, value]: string[]) => {
 				if (key === 'class') {
-					// prettier-ignore
 					const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
 
 					tableElement.classList.add(...classList);
@@ -238,8 +232,8 @@ export class MarkdownService {
 			return '<details class="collapse collapse-arrow bg-base-200 border border-base-content/20">';
 		};
 
-		// prettier-ignore
 		const ruleCollapsibleSummary: Renderer.RenderRule = (tokenList: Token[], idx: number): string => {
+			// prettier-ignore
 			return `<summary class="collapse-title text-xl font-medium">${tokenList[idx].content}</summary><div class="collapse-content">`;
 		};
 

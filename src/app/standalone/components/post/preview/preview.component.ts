@@ -29,7 +29,6 @@ import { Category } from '../../../../core/models/category.model';
 export class PostPreviewComponent implements OnInit, OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 
-	// prettier-ignore
 	@ViewChild('postPreviewDialogElement') postPreviewDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() appPostPreviewToggle: EventEmitter<boolean> = new EventEmitter<boolean>();

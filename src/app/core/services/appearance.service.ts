@@ -55,10 +55,7 @@ export class AppearanceService {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
-			const value: string = window
-				.getComputedStyle(this.document.documentElement)
-				.getPropertyValue(name)
-				.trim();
+			const value: string = window.getComputedStyle(this.document.documentElement).getPropertyValue(name).trim();
 
 			if (value) {
 				const color: Color = new Color('oklch(' + value + ')');
@@ -178,14 +175,13 @@ export class AppearanceService {
 	}
 
 	setThemePrism(themePrism: string | null): void {
-		// prettier-ignore
 		const setPrismLink = (theme: string): void => {
 			const linkElement: HTMLLinkElement | null = this.document.querySelector('[data-theme-prism]');
-      const linkElementUpdate: boolean = linkElement.dataset.themePrism !== theme
+			const linkElementUpdate: boolean = linkElement.dataset.themePrism !== theme;
 
 			if (linkElementUpdate) {
-        linkElement.href = 'prism-' + theme + '.css';
-        linkElement.dataset.themePrism = theme;
+				linkElement.href = 'prism-' + theme + '.css';
+				linkElement.dataset.themePrism = theme;
 			}
 		};
 
@@ -245,7 +241,6 @@ export class AppearanceService {
 	}
 
 	getAppearance(firebaseUid: string): Observable<Appearance> {
-		// prettier-ignore
 		return this.ngZone.runOutsideAngular(() => {
 			const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/users');
 			const userDoc: DocumentReference = doc(userCollection, firebaseUid);
@@ -268,7 +263,6 @@ export class AppearanceService {
 	}
 
 	setAppearance(firebaseUid: string, appearance: Appearance): Observable<Appearance> {
-		// prettier-ignore
 		const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/users');
 		const userDoc: DocumentReference = doc(userCollection, firebaseUid);
 

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 import { MetaService } from '../../../core/services/meta.service';
@@ -25,8 +25,8 @@ export class AuthConfirmationRecoveryComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 
 	recoveryRequest$: Subscription | undefined;
-	recoveryIsSucceed: boolean = false;
-	recoveryIsSubmitted: boolean = true;
+	recoveryIsSucceed: WritableSignal<boolean> = signal(false);
+	recoveryIsSubmitted: WritableSignal<boolean> = signal(true);
 
 	ngOnInit(): void {
 		/** Apply Data */
@@ -44,7 +44,6 @@ export class AuthConfirmationRecoveryComponent implements OnInit, OnDestroy {
 
 	setResolver(): void {
 		if (this.platformService.isBrowser()) {
-			// prettier-ignore
 			const oobCode: string = String(this.activatedRoute.snapshot.queryParamMap.get('oobCode') || '');
 
 			const emailRecoveryDto: EmailRecoveryDto = {
@@ -54,12 +53,12 @@ export class AuthConfirmationRecoveryComponent implements OnInit, OnDestroy {
 			this.recoveryRequest$?.unsubscribe();
 			this.recoveryRequest$ = this.emailService.onRecovery(emailRecoveryDto).subscribe({
 				next: () => {
-					this.recoveryIsSucceed = true;
-					this.recoveryIsSubmitted = false;
+					this.recoveryIsSucceed.set(true);
+					this.recoveryIsSubmitted.set(false);
 
 					this.snackbarService.success('Hooray, it worked', 'Email successfully restored');
 				},
-				error: () => (this.recoveryIsSubmitted = false)
+				error: () => this.recoveryIsSubmitted.set(false)
 			});
 		}
 	}

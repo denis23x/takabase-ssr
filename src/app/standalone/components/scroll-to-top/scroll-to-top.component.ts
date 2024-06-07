@@ -33,7 +33,6 @@ export class ScrollToTopComponent implements OnInit, OnDestroy {
 				this.windowScrollToTopToggleValue = window.innerHeight * 2;
 				this.windowScroll$?.unsubscribe();
 
-				// prettier-ignore
 				const pageScrollToTop: boolean = !!Number(this.cookiesService.getItem('page-scroll-to-top'));
 
 				if (pageScrollToTop) {

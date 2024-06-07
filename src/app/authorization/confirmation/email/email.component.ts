@@ -74,7 +74,6 @@ export class AuthConfirmationEmailComponent implements OnInit, OnDestroy {
 		if (this.platformService.isBrowser()) {
 			this.confirmationRequestToggle = true;
 
-			// prettier-ignore
 			const oobCode: string = String(this.activatedRoute.snapshot.queryParamMap.get('oobCode') || '');
 
 			const emailConfirmationUpdateDto: EmailConfirmationUpdateDto = {
@@ -82,17 +81,15 @@ export class AuthConfirmationEmailComponent implements OnInit, OnDestroy {
 			};
 
 			this.confirmationRequest$?.unsubscribe();
-			this.confirmationRequest$ = this.emailService
-				.onConfirmationUpdate(emailConfirmationUpdateDto)
-				.subscribe({
-					next: () => {
-						this.confirmationRequestIsSucceed = true;
-						this.confirmationRequestToggle = false;
+			this.confirmationRequest$ = this.emailService.onConfirmationUpdate(emailConfirmationUpdateDto).subscribe({
+				next: () => {
+					this.confirmationRequestIsSucceed = true;
+					this.confirmationRequestToggle = false;
 
-						this.snackbarService.success('Great', 'Email successfully confirmed');
-					},
-					error: () => (this.confirmationRequestToggle = false)
-				});
+					this.snackbarService.success('Great', 'Email successfully confirmed');
+				},
+				error: () => (this.confirmationRequestToggle = false)
+			});
 		}
 	}
 

@@ -17,14 +17,7 @@ import { AdComponent } from '../../standalone/components/ad/ad.component';
 
 @Component({
 	standalone: true,
-	imports: [
-		CommonModule,
-		RouterModule,
-		SvgIconComponent,
-		CardPostComponent,
-		SkeletonDirective,
-		AdComponent
-	],
+	imports: [CommonModule, RouterModule, SvgIconComponent, CardPostComponent, SkeletonDirective, AdComponent],
 	selector: 'app-search-post',
 	templateUrl: './post.component.html'
 })
@@ -65,7 +58,6 @@ export class SearchPostComponent extends AbstractSearchComponent implements OnIn
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		// prettier-ignore
 		[this.postListRequest$, this.postGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 

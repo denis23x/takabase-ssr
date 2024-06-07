@@ -59,7 +59,6 @@ export class ReportService {
 		return this.ngZone.runOutsideAngular(() => {
 			const mailerCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/mailer');
 
-			// prettier-ignore
 			return from(addDoc(mailerCollection, {
 				to: environment.mailer.to,
 				bcc: environment.mailer.bcc,

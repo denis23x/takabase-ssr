@@ -10,7 +10,7 @@
 		>
 			<div class="flex flex-row w-full items-center justify-between gap-4">
 				<div class="flex items-center justify-start gap-4 overflow-auto w-full">
-					<div class="avatar" appSkeleton [appSkeletonToggle]="profileFormAvatarSkeletonToggle">
+					<div class="avatar" appSkeleton [appSkeletonToggle]="profileFormAvatarIsSubmitted()">
 						@if (profileForm.get("avatar"); as avatar) {
 							<!-- prettier-ignore -->
 							<figure
@@ -188,9 +188,9 @@
 					type="submit"
 					title="Submit"
 					aria-label="Submit"
-					[disabled]="profileForm.invalid || profileForm.disabled || profileFormIsPristine || profileFormAvatarSkeletonToggle"
+					[disabled]="profileForm.invalid || profileForm.disabled || profileFormIsPristine || profileFormAvatarIsSubmitted()"
 				>
-					@if (profileForm.disabled && !appCropperComponent.cropperDialogToggle) {
+					@if (profileForm.disabled) {
 						<span class="loading loading-spinner"></span>
 					}
 					Submit
@@ -198,10 +198,5 @@
 			</fieldset>
 		</form>
 	</div>
-	<div
-		appCropper
-		#appCropperComponent
-		(appCropperSubmit)="onSubmitCropperAvatar($event)"
-		(appCropperToggle)="onToggleProfileFormStatus($event)"
-	></div>
+	<div appCropper #appCropperComponent (appCropperSubmit)="onSubmitCropperAvatar($event)"></div>
 </ng-container>

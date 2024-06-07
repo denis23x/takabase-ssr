@@ -68,7 +68,6 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		// prettier-ignore
 		[this.categoryListRequest$, this.categoryGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 

@@ -222,7 +222,6 @@
 			</li>
 		</ul>
 	</div>
-	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
 		#urlFormDialog
@@ -264,62 +263,61 @@
 						}
 					</span>
 				</p>
-				<!-- prettier-ignore -->
-				@if ({ value: urlFormControl?.key === 'url-link' ? 'Text' : 'Title' }; as label) {
-          @if (urlForm.get('title'); as title) {
-            <fieldset class="form-control">
-              <label class="label" for="urlFormTitle">
-                <div class="indicator">
-                  @switch (true) {
-                    @case (urlFormControl?.key === 'url-link' && title.touched && !!title.errors && urlForm.enabled) {
-                      <div class="block" appBadgeError [appBadgeErrorAbstractControl]="title"></div>
-                    }
-                    @case (urlFormControl?.key === 'url-image') {
-                      <span
-                        class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-                        [class.badge-ghost]="!title.value"
-                        [class.badge-success]="!!title.value && urlForm.enabled"
-                        [class.opacity-25]="urlForm.disabled"
-                      >
-                        Optional
-                      </span>
-                    }
-                  }
-                  <span class="label-text mr-2">{{ label.value }}</span>
-                </div>
-              </label>
-              <div class="relative">
-                <input
-                  class="input-bordered input input-md w-full"
-                  id="urlFormTitle"
-                  type="text"
-                  appInputTrimWhitespace
-                  [attr.aria-label]="label.value"
-                  [placeholder]="['Type', label.value.toLowerCase()].join(' ')"
-                  [formControl]="$any(title)"
-                  [class.input-success]="title.value && title.valid"
-                  [class.input-error]="title.touched && title.invalid"
-                />
-                @if (title.value) {
-                  <button
-                    class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-                    type="button"
-                    title="Clear input"
-                    aria-label="Clear input"
-                    appSvgIcon
-                    [class.btn-success]="title.valid"
-                    [class.btn-error]="title.touched && title.invalid"
-                    [class.btn-ghost]="title.untouched && title.invalid"
-                    [disabled]="urlForm.disabled"
-                    [appSvgIconIcon]="'x'"
-                    [appSvgIconSquare]="'2em'"
-                    (click)="title.setValue('')"
-                  ></button>
-                }
-              </div>
-            </fieldset>
-          }
-        }
+				@if ({ value: urlFormControl?.key === "url-link" ? "Text" : "Title" }; as label) {
+					@if (urlForm.get("title"); as title) {
+						<fieldset class="form-control">
+							<label class="label" for="urlFormTitle">
+								<div class="indicator">
+									@switch (true) {
+										@case (urlFormControl?.key === "url-link" && title.touched && !!title.errors && urlForm.enabled) {
+											<div class="block" appBadgeError [appBadgeErrorAbstractControl]="title"></div>
+										}
+										@case (urlFormControl?.key === "url-image") {
+											<span
+												class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+												[class.badge-ghost]="!title.value"
+												[class.badge-success]="!!title.value && urlForm.enabled"
+												[class.opacity-25]="urlForm.disabled"
+											>
+												Optional
+											</span>
+										}
+									}
+									<span class="label-text mr-2">{{ label.value }}</span>
+								</div>
+							</label>
+							<div class="relative">
+								<input
+									class="input-bordered input input-md w-full"
+									id="urlFormTitle"
+									type="text"
+									appInputTrimWhitespace
+									[attr.aria-label]="label.value"
+									[placeholder]="['Type', label.value.toLowerCase()].join(' ')"
+									[formControl]="$any(title)"
+									[class.input-success]="title.value && title.valid"
+									[class.input-error]="title.touched && title.invalid"
+								/>
+								@if (title.value) {
+									<button
+										class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+										type="button"
+										title="Clear input"
+										aria-label="Clear input"
+										appSvgIcon
+										[class.btn-success]="title.valid"
+										[class.btn-error]="title.touched && title.invalid"
+										[class.btn-ghost]="title.untouched && title.invalid"
+										[disabled]="urlForm.disabled"
+										[appSvgIconIcon]="'x'"
+										[appSvgIconSquare]="'2em'"
+										(click)="title.setValue('')"
+									></button>
+								}
+							</div>
+						</fieldset>
+					}
+				}
 				@if (urlForm.get("url"); as url) {
 					<fieldset class="form-control">
 						<label class="label" for="urlFormUrl">

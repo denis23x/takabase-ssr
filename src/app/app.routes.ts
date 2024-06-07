@@ -10,7 +10,6 @@ export const APP_ROUTES: Route[] = [
 		path: 'confirmation',
 		title: 'Confirmation',
 		loadComponent: () => {
-			// prettier-ignore
 			return import('./authorization/confirmation/confirmation.component').then(m => m.AuthConfirmationComponent);
 		},
 		children: [
@@ -52,7 +51,6 @@ export const APP_ROUTES: Route[] = [
 		path: 'registration',
 		title: 'Registration',
 		loadComponent: () => {
-			// prettier-ignore
 			return import('./authorization/registration/registration.component').then(m => m.AuthRegistrationComponent);
 		},
 		canMatch: [redirectCurrentUserGuard(false)]
@@ -100,7 +98,6 @@ export const APP_ROUTES: Route[] = [
 				path: 'markdown',
 				title: 'Markdown',
 				loadComponent: () => {
-					// prettier-ignore
 					return import('./help/markdown/markdown.component').then(m => m.HelpMarkdownComponent);
 				}
 			},
@@ -150,7 +147,6 @@ export const APP_ROUTES: Route[] = [
 					{
 						path: ':postId',
 						loadComponent: () => {
-							// prettier-ignore
 							return import('./search/post/details/details.component').then(m => m.SearchPostDetailsComponent);
 						}
 					}
@@ -160,7 +156,6 @@ export const APP_ROUTES: Route[] = [
 				path: 'categories',
 				title: 'Categories search',
 				loadComponent: () => {
-					// prettier-ignore
 					return import('./search/category/category.component').then(m => m.SearchCategoryComponent);
 				}
 			},
@@ -189,7 +184,6 @@ export const APP_ROUTES: Route[] = [
 				path: 'account',
 				title: 'Account settings',
 				loadComponent: () => {
-					// prettier-ignore
 					return import('./settings/account/account.component').then(m => m.SettingsAccountComponent);
 				}
 			},
@@ -197,7 +191,6 @@ export const APP_ROUTES: Route[] = [
 				path: 'appearance',
 				title: 'Appearance settings',
 				loadComponent: () => {
-					// prettier-ignore
 					return import('./settings/appearance/appearance.component').then(m => m.SettingsAppearanceComponent);
 				}
 			},
@@ -205,7 +198,6 @@ export const APP_ROUTES: Route[] = [
 				path: 'profile',
 				title: 'Profile settings',
 				loadComponent: () => {
-					// prettier-ignore
 					return import('./settings/profile/profile.component').then(m => m.SettingsProfileComponent);
 				}
 			}
@@ -302,7 +294,6 @@ export const APP_ROUTES: Route[] = [
 						}
 					}
 
-					// prettier-ignore
 					if (urlSegment.length === 4 && urlSegment[0].path === 'category' && urlSegment[2].path === 'post') {
 						return {
 							consumed: urlSegment.slice(0, 2),
@@ -322,7 +313,6 @@ export const APP_ROUTES: Route[] = [
 					{
 						path: 'post/:postId',
 						loadComponent: () => {
-							// prettier-ignore
 							return import('./user/post/details/details.component').then(m => m.UserPostDetailsComponent);
 						}
 					}

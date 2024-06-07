@@ -18,13 +18,7 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
 import { TextareaAutosizeDirective } from '../../../directives/app-textarea-autosize.directive';
 import { Category } from '../../../../core/models/category.model';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HelperService } from '../../../../core/services/helper.service';
 import { CategoryService } from '../../../../core/services/category.service';
 import { CategoryUpdateDto } from '../../../../core/dto/category/category-update.dto';
@@ -63,7 +57,6 @@ export class CategoryUpdateComponent implements OnInit, OnDestroy {
 	private readonly location: Location = inject(Location);
 	private readonly aiService: AIService = inject(AIService);
 
-	// prettier-ignore
 	@ViewChild('categoryUpdateDialogElement') categoryUpdateDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() appCategoryUpdateToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -88,10 +81,7 @@ export class CategoryUpdateComponent implements OnInit, OnDestroy {
 			Validators.minLength(4),
 			Validators.maxLength(48)
 		]),
-		description: this.formBuilder.control(null, [
-			Validators.minLength(16),
-			Validators.maxLength(192)
-		])
+		description: this.formBuilder.control(null, [Validators.minLength(16), Validators.maxLength(192)])
 	});
 	categoryUpdateFormRequest$: Subscription | undefined;
 

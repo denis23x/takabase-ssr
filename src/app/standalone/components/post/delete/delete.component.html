@@ -1,7 +1,6 @@
 <!-- @format -->
 
 <ng-container>
-	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
 		#postDeleteDialogElement
@@ -26,15 +25,14 @@
 					<span class="block"> Are you sure you want to delete this post? </span>
 				</p>
 				<button
-					class="btn-error btn-md btn"
+					class="btn-error btn-outline btn-md btn"
 					type="button"
 					title="Delete"
 					aria-label="Delete"
-					[class.btn-outline]="!postDeleteIsSubmitted"
-					[disabled]="postDeleteIsSubmitted"
+					[disabled]="postDeleteIsSubmitted()"
 					(click)="onSubmitPostDelete()"
 				>
-					@if (postDeleteIsSubmitted) {
+					@if (postDeleteIsSubmitted()) {
 						<span class="loading loading-spinner"></span>
 					}
 					Delete

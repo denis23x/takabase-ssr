@@ -124,11 +124,10 @@
 				}
 				<fieldset class="form-control">
 					<button
-						class="btn btn-md btn-error"
+						class="btn btn-md btn-outline btn-error"
 						type="submit"
 						title="Delete"
 						aria-label="Delete"
-						[class.btn-outline]="userDeleteForm.valid && userDeleteForm.enabled"
 						[disabled]="userDeleteForm.invalid || userDeleteForm.disabled"
 					>
 						@if (userDeleteForm.disabled) {

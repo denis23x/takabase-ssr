@@ -1,15 +1,6 @@
 /** @format */
 
-import {
-	Component,
-	ElementRef,
-	EventEmitter,
-	inject,
-	OnDestroy,
-	OnInit,
-	Output,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
@@ -18,13 +9,7 @@ import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim
 import { TextareaAutosizeDirective } from '../../../directives/app-textarea-autosize.directive';
 import { CategoryCreateDto } from '../../../../core/dto/category/category-create.dto';
 import { Category } from '../../../../core/models/category.model';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HelperService } from '../../../../core/services/helper.service';
 import { CategoryService } from '../../../../core/services/category.service';
 import { Subscription, switchMap } from 'rxjs';
@@ -61,7 +46,6 @@ export class CategoryCreateComponent implements OnInit, OnDestroy {
 	private readonly location: Location = inject(Location);
 	private readonly aiService: AIService = inject(AIService);
 
-	// prettier-ignore
 	@ViewChild('categoryCreateDialogElement') categoryCreateDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() appCategoryCreateToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -73,10 +57,7 @@ export class CategoryCreateComponent implements OnInit, OnDestroy {
 			Validators.minLength(4),
 			Validators.maxLength(48)
 		]),
-		description: this.formBuilder.control(null, [
-			Validators.minLength(16),
-			Validators.maxLength(192)
-		])
+		description: this.formBuilder.control(null, [Validators.minLength(16), Validators.maxLength(192)])
 	});
 	categoryFormRequest$: Subscription | undefined;
 	categoryCreateDialogToggle: boolean = false;

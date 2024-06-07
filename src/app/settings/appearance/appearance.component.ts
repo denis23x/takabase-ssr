@@ -1,13 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
@@ -203,15 +197,13 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 			return this.getTransformListValue(theme, 'theme');
 		});
 
-		// prettier-ignore
 		this.appearanceThemeBackgroundList = environment.backgrounds.map((themeBackground: string) => {
-      return this.getTransformListValue(themeBackground, "themeBackground")
-    })
+			return this.getTransformListValue(themeBackground, 'themeBackground');
+		});
 
-		// prettier-ignore
 		this.appearanceThemePrismList = ['auto', ...environment.prism.themes].map((themePrism: string) => {
-      return this.getTransformListValue(themePrism, "themePrism")
-    })
+			return this.getTransformListValue(themePrism, 'themePrism');
+		});
 	}
 
 	setPrismMarkdown(): void {

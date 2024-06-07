@@ -82,7 +82,8 @@
 				title="Login"
 				aria-label="Login"
 				[routerLink]="resetForm.enabled ? '/login' : null"
-				[ngClass]="{ 'btn-outline': resetForm.enabled, 'btn-disabled': resetForm.disabled }"
+				[class.btn-outline]="resetForm.enabled"
+				[class.btn-disabled]="resetForm.disabled"
 			>
 				Login
 			</a>

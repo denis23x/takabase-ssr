@@ -227,7 +227,8 @@
 				title="Login"
 				aria-label="Login"
 				[routerLink]="registrationForm.enabled ? '/login' : null"
-				[ngClass]="{ 'btn-outline': registrationForm.enabled, 'btn-disabled': registrationForm.disabled }"
+				[class.btn-outline]="registrationForm.enabled"
+				[class.btn-disabled]="registrationForm.disabled"
 			>
 				Login
 			</a>

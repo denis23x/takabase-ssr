@@ -61,11 +61,11 @@ export class PasswordService {
 	onReset(passwordResetUpdateDto: PasswordResetUpdateDto): Observable<void> {
 		const auth: Auth = this.firebaseService.getAuth();
 
-		// prettier-ignore
 		return from(verifyPasswordResetCode(auth, passwordResetUpdateDto.code)).pipe(
 			switchMap(() => {
 				return from(confirmPasswordReset(auth, passwordResetUpdateDto.code, passwordResetUpdateDto.password)).pipe(
-			    catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)));
+					catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
+				);
 			}),
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);

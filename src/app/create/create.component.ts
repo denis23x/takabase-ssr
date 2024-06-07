@@ -3,24 +3,18 @@
 import {
 	Component,
 	computed,
-	ElementRef,
 	inject,
 	OnDestroy,
 	OnInit,
+	signal,
 	Signal,
-	ViewChild
+	ViewChild,
+	WritableSignal
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subscription, switchMap } from 'rxjs';
 import { filter, map, startWith, tap } from 'rxjs/operators';
-import {
-	AbstractControl,
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { InputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
@@ -118,11 +112,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly aiService: AIService = inject(AIService);
 
-	// prettier-ignore
 	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
-	@ViewChild('appMarkdownComponent') appMarkdownComponent: MarkdownComponent | undefined;
-
-	@ViewChild('postFormImageDialog') postFormImageDialog: ElementRef<HTMLDialogElement> | undefined;
 
 	category: Category | undefined;
 	categorySkeletonToggle: boolean = true;
@@ -158,20 +148,17 @@ export class CreateComponent implements OnInit, OnDestroy {
 	postFormRequest$: Subscription | undefined;
 	postFormIsPristine: boolean = false;
 	postFormIsPristine$: Subscription | undefined;
-
-	postFormImageSkeletonToggle: boolean = false;
 	postFormImageRequest$: Subscription | undefined;
+	postFormImageIsSubmitted: WritableSignal<boolean> = signal(false);
 
 	postFormTextareaPlaceholderModifierKey: Signal<string> = computed(() => {
 		return this.platformService.getOSModifierKey();
 	});
 	postFormTextareaPlaceholderToggle: boolean = true;
-	postFormTextareaSkeletonToggle: boolean = false;
+	postFormTextareaIsSubmitted: WritableSignal<boolean> = signal(false);
 	postFormTextareaId: string = 'postFormTextarea';
+	postFormTextareaMonospace: boolean = false;
 	postFormPreviewId: string = 'postFormPreview';
-
-	postMarkdownDialogToggle: boolean = false;
-	postMarkdownMonospace: boolean = false;
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -292,25 +279,23 @@ export class CreateComponent implements OnInit, OnDestroy {
 						// Get postFormIsPristine
 
 						this.postFormIsPristine$?.unsubscribe();
-						this.postFormIsPristine$ = this.postForm.valueChanges
-							.pipe(startWith(this.postForm.value))
-							.subscribe({
-								next: (value: any) => {
-									this.postFormIsPristine = Object.keys(value).every((key: string) => {
-										if (key === 'categoryId') {
-											return value[key] === this.post.category.id;
-										}
+						this.postFormIsPristine$ = this.postForm.valueChanges.pipe(startWith(this.postForm.value)).subscribe({
+							next: (value: any) => {
+								this.postFormIsPristine = Object.keys(value).every((key: string) => {
+									if (key === 'categoryId') {
+										return value[key] === this.post.category.id;
+									}
 
-										if (key === 'categoryName') {
-											return value[key] === this.post.category.name;
-										}
+									if (key === 'categoryName') {
+										return value[key] === this.post.category.name;
+									}
 
-										// @ts-ignore
-										return value[key] === this.post[key];
-									});
-								},
-								error: (error: any) => console.error(error)
-							});
+									// @ts-ignore
+									return value[key] === this.post[key];
+								});
+							},
+							error: (error: any) => console.error(error)
+						});
 					},
 					error: (error: any) => console.error(error)
 				});
@@ -324,8 +309,10 @@ export class CreateComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	/** Extra */
+
 	setAppearance(): void {
-		this.postMarkdownMonospace = !!Number(this.cookiesService.getItem('markdown-monospace'));
+		this.postFormTextareaMonospace = !!Number(this.cookiesService.getItem('markdown-monospace'));
 	}
 
 	setMetaTags(): void {
@@ -344,16 +331,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 		};
 
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
-	}
-
-	onToggleMarkdownDialog(toggle: boolean): void {
-		this.postMarkdownDialogToggle = toggle;
-
-		this.onTogglePostFormStatus(toggle);
-	}
-
-	onToggleMarkdownUpload(toggle: boolean): void {
-		this.postFormTextareaSkeletonToggle = toggle;
 	}
 
 	/** Category */
@@ -401,12 +378,12 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	onUpdateCropperImage(fileUrl: string | null): void {
 		this.postForm.get('image').setValue(fileUrl, { emitEvent: true });
-		this.postFormImageSkeletonToggle = false;
+		this.postFormImageIsSubmitted.set(false);
 	}
 
 	onSubmitCropperImage(file: File): void {
 		this.postForm.get('image').setValue(null, { emitEvent: false });
-		this.postFormImageSkeletonToggle = true;
+		this.postFormImageIsSubmitted.set(true);
 
 		this.postFormImageRequest$?.unsubscribe();
 		this.postFormImageRequest$ = this.fileService
@@ -414,7 +391,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			.pipe(map((fileUrl: string) => this.fileService.getFileUrlClean(fileUrl)))
 			.subscribe({
 				next: (fileUrl: string) => this.onUpdateCropperImage(fileUrl),
-				error: () => (this.postFormImageSkeletonToggle = false)
+				error: () => this.postFormImageIsSubmitted.set(false)
 			});
 	}
 
@@ -439,7 +416,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	onFullscreenHide(view: string): void {
-		// prettier-ignore
 		const viewOpposite: string = view === 'fullscreenMarkdown' ? 'fullscreenRender' : 'fullscreenMarkdown';
 
 		// @ts-ignore
@@ -454,14 +430,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	/** postForm */
 
-	onTogglePostFormStatus(toggle: boolean): void {
-		if (toggle) {
-			this.postForm.disable({ emitEvent: false });
-		} else {
-			this.postForm.enable({ emitEvent: false });
-		}
-	}
-
 	onSubmitPostForm(): void {
 		if (this.helperService.getFormValidation(this.postForm)) {
 			this.postForm.disable();
@@ -472,11 +440,10 @@ export class CreateComponent implements OnInit, OnDestroy {
 				firebaseUid: this.post?.firebaseUid
 			};
 
-			// prettier-ignore
 			const postFormRedirect = (post: Post): void => {
 				this.router
-          .navigate([this.userService.getUserUrl(post.user), 'category', post.category.id, 'post', post.id])
-          .then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
+					.navigate([this.userService.getUserUrl(post.user), 'category', post.category.id, 'post', post.id])
+					.then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
 			};
 
 			const aiModerateTextDto: AIModerateTextDto = {

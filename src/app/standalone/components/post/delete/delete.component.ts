@@ -9,7 +9,9 @@ import {
 	OnDestroy,
 	OnInit,
 	Output,
-	ViewChild
+	signal,
+	ViewChild,
+	WritableSignal
 } from '@angular/core';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
@@ -41,7 +43,6 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	private readonly location: Location = inject(Location);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
-	// prettier-ignore
 	@ViewChild('postDeleteDialogElement') postDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() appPostDeleteSuccess: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -58,7 +59,7 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	post: Post | undefined;
 	postDeleteRequest$: Subscription | undefined;
 	postDeleteDialogToggle: boolean = false;
-	postDeleteIsSubmitted: boolean = false;
+	postDeleteIsSubmitted: WritableSignal<boolean> = signal(false);
 
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();
@@ -114,7 +115,7 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 			}
 		};
 
-		this.postDeleteIsSubmitted = true;
+		this.postDeleteIsSubmitted.set(true);
 
 		const postId: number = this.post.id;
 		const postDeleteDto: PostDeleteDto = {
@@ -133,7 +134,7 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 			.pipe(switchMap(() => from(redirectToBack())))
 			.subscribe({
 				next: () => this.snackbarService.success('Sadly..', 'Post has been deleted'),
-				error: () => (this.postDeleteIsSubmitted = false)
+				error: () => this.postDeleteIsSubmitted.set(false)
 			});
 	}
 }

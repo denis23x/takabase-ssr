@@ -154,7 +154,6 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.categoryList = this.skeletonService.getCategoryList();
 		this.categoryListSkeletonToggle = true;
 
-		// prettier-ignore
 		const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
 
 		if (categoryId) {
@@ -164,7 +163,6 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
-		// prettier-ignore
 		const userName: string = String(this.activatedRoute.snapshot.paramMap.get('userName') || '');
 
 		const userGetAllDto: UserGetAllDto = {
@@ -196,14 +194,12 @@ export class UserComponent implements OnInit, OnDestroy {
 						)
 						.subscribe({
 							next: () => {
-								// prettier-ignore
 								const setMeta = (): void => {
 									const postId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('postId'));
 
-                  // Allow the post to record its tags
+									// Allow the post to record its tags
 
 									if (!postId) {
-
 										/** Apply SEO meta tags */
 
 										this.setMetaTags();
@@ -211,7 +207,6 @@ export class UserComponent implements OnInit, OnDestroy {
 									}
 								};
 
-								// prettier-ignore
 								const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
 
 								if (categoryId) {
@@ -260,7 +255,6 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		// prettier-ignore
 		this.metaService.getMetaImageDownloadURL(this.user.avatar).subscribe({
 			next: (downloadURL: string | null) => {
 				const userName: string = this.userService.getUserUrl(this.user, 1);

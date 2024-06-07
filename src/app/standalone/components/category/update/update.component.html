@@ -1,7 +1,6 @@
 <!-- @format -->
 
 <ng-container>
-	<!-- prettier-ignore-attribute (click) -->
 	<dialog
 		class="modal"
 		#categoryUpdateDialogElement
@@ -83,15 +82,14 @@
 								}
 								<span class="label-text mr-2">Description</span>
 							</div>
-							<!-- prettier-ignore -->
 							<span
-                class="label-text-alt"
-                [class.text-base-content]="categoryUpdateForm.disabled"
-                [class.text-success]="categoryUpdateForm.enabled && !!description.value && description.valid"
-                [class.text-error]="categoryUpdateForm.enabled && !!description.value && description.invalid"
-              >
-                {{ description.value?.length || 0 }}/192
-              </span>
+								class="label-text-alt"
+								[class.text-base-content]="categoryUpdateForm.disabled"
+								[class.text-success]="categoryUpdateForm.enabled && !!description.value && description.valid"
+								[class.text-error]="categoryUpdateForm.enabled && !!description.value && description.invalid"
+							>
+								{{ description.value?.length || 0 }}/192
+							</span>
 						</label>
 						<!-- prettier-ignore -->
 						<div
@@ -115,7 +113,6 @@
 					</fieldset>
 				}
 				<fieldset class="form-control gap-4">
-					<!-- prettier-ignore -->
 					<button
 						class="btn btn-md btn-success"
 						type="submit"
@@ -123,9 +120,9 @@
 						aria-label="Submit"
 						[disabled]="categoryUpdateForm.invalid || categoryUpdateForm.disabled || categoryUpdateFormIsPristine"
 					>
-            @if (categoryUpdateForm.disabled) {
-              <span class="loading loading-spinner"></span>
-            }
+						@if (categoryUpdateForm.disabled) {
+							<span class="loading loading-spinner"></span>
+						}
 						Submit
 					</button>
 				</fieldset>

@@ -3,14 +3,7 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../dropdown/dropdown.component';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	FormsModule,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { merge, Subscription } from 'rxjs';
 import { debounceTime, filter, map } from 'rxjs/operators';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -24,13 +17,7 @@ interface SearchForm {
 @Component({
 	standalone: true,
 	selector: 'app-search-form, [appSearchForm]',
-	imports: [
-		FormsModule,
-		ReactiveFormsModule,
-		InputTrimWhitespaceDirective,
-		DropdownComponent,
-		SvgIconComponent
-	],
+	imports: [FormsModule, ReactiveFormsModule, InputTrimWhitespaceDirective, DropdownComponent, SvgIconComponent],
 	templateUrl: './search-form.component.html'
 })
 export class SearchFormComponent implements OnInit, OnDestroy {
@@ -41,10 +28,7 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 	activatedRouteQueryParams$: Subscription | undefined;
 
 	searchForm: FormGroup = this.formBuilder.group<SearchForm>({
-		query: this.formBuilder.nonNullable.control('', [
-			Validators.minLength(2),
-			Validators.maxLength(24)
-		]),
+		query: this.formBuilder.nonNullable.control('', [Validators.minLength(2), Validators.maxLength(24)]),
 		orderBy: this.formBuilder.nonNullable.control('', [])
 	});
 	searchForm$: Subscription | undefined;
@@ -90,7 +74,6 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
 		[this.activatedRouteQueryParams$, this.searchForm$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 

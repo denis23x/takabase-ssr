@@ -7,7 +7,7 @@
 		>
 			<div class="flex flex-row w-full items-center justify-between gap-4">
 				<div class="flex items-center justify-start gap-4 overflow-auto w-full">
-					<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle || postFormImageSkeletonToggle">
+					<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle || postFormImageIsSubmitted()">
 						@if (postForm.get("image"); as image) {
 							<!-- prettier-ignore -->
 							<figure
@@ -315,14 +315,12 @@
 						class="flex overflow-hidden"
 						appMarkdown
 						appSkeleton
-						#appMarkdownComponent
 						[appSkeletonToggle]="postSkeletonToggle"
 						[appMarkdownTextareaId]="postFormTextareaId"
 						[appMarkdownPreviewId]="postFormPreviewId"
 						[appMarkdownScrollSync]="fullscreenScrollSync"
 						[appMarkdownDisabled]="postForm.disabled"
-						(appMarkdownDialogToggle)="onToggleMarkdownDialog($event)"
-						(appMarkdownUploadToggle)="onToggleMarkdownUpload($event)"
+						(appMarkdownUploadToggle)="postFormTextareaIsSubmitted.set($event)"
 					></div>
 					<div class="flex items-start justify-end gap-4">
 						<button
@@ -429,7 +427,7 @@
 								<div
 									class="textarea-autosize w-full h-full focus-within:outline-0 relative"
 									appSkeleton
-									[appSkeletonToggle]="postSkeletonToggle || postFormTextareaSkeletonToggle"
+									[appSkeletonToggle]="postSkeletonToggle || postFormTextareaIsSubmitted()"
 									[appSkeletonClassListElementRef]="['!border-0']"
 									[ngClass]="{ 'border-base-content/20': postForm.enabled, 'border-transparent': postForm.disabled }"
 									[class.textarea-autosize-success]="markdown.value && markdown.valid"
@@ -448,14 +446,14 @@
 										[rows]="8"
 										[class.max-h-96]="!fullscreenToggle"
 										[class.whitespace-pre]="fullscreenToggle && !fullscreenTextWrapping"
-										[class.font-mono]="postMarkdownMonospace"
+										[class.font-mono]="postFormTextareaMonospace"
 										(focusin)="postFormTextareaPlaceholderToggle = false"
 										(focusout)="postFormTextareaPlaceholderToggle = true"
 									></textarea>
 									@if (postFormTextareaPlaceholderToggle && !markdown.value) {
 										<div
 											class="absolute top-4 left-4 flex flex-col items-start justify-start pointer-events-none gap-2"
-											[class.font-mono]="postMarkdownMonospace"
+											[class.font-mono]="postFormTextareaMonospace"
 										>
 											<span class="text-sm text-base-content/50"> Type post markdown </span>
 											<a
@@ -493,15 +491,14 @@
 			</div>
 			<div class="grid grid-cols-12 gap-4" [class.hidden]="fullscreenToggle">
 				<button
-					class="btn btn-primary btn-md col-span-4 sm:col-span-3"
+					class="btn btn-primary btn-outline btn-md col-span-4 sm:col-span-3"
 					type="button"
 					title="Preview"
 					aria-label="Preview"
 					appSkeleton
 					[appSkeletonToggle]="postSkeletonToggle"
 					[appSkeletonClassListElementRef]="['border-0']"
-					[class.btn-outline]="postForm.valid && postForm.enabled"
-					[disabled]="postForm.disabled"
+					[disabled]="postForm.disabled || appPostPreviewComponent.postPreviewDialogToggle"
 					(click)="appPostPreviewComponent.onTogglePostPreviewDialog(true)"
 				>
 					Preview
@@ -514,26 +511,24 @@
 					appSkeleton
 					[appSkeletonToggle]="postSkeletonToggle"
 					[appSkeletonClassListElementRef]="['border-0']"
-					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine || postFormImageSkeletonToggle"
+					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine || postFormImageIsSubmitted()"
 					(click)="onSubmitPostForm()"
 				>
-					<!-- prettier-ignore -->
-					@if (postForm.disabled && !appCropperComponent.cropperDialogToggle && !appCategoryCreateComponent.categoryCreateDialogToggle && !appPostPreviewComponent.postPreviewDialogToggle && !appPostDeleteComponent.postDeleteDialogToggle && !postMarkdownDialogToggle) {
-            <span class="loading loading-spinner"></span>
-          }
+					@if (postForm.disabled) {
+						<span class="loading loading-spinner"></span>
+					}
 					Submit
 				</button>
 				@if (post) {
 					<button
-						class="btn btn-md btn-error col-span-12"
+						class="btn btn-md btn-error btn-outline col-span-12"
 						type="button"
 						title="Delete"
 						aria-label="Delete"
 						appSkeleton
 						[appSkeletonToggle]="postSkeletonToggle"
 						[appSkeletonClassListElementRef]="['border-0']"
-						[class.btn-outline]="postForm.enabled"
-						[disabled]="postForm.disabled"
+						[disabled]="postForm.disabled || appPostDeleteComponent.postDeleteDialogToggle"
 						(click)="appPostDeleteComponent.onTogglePostDeleteDialog(true)"
 					>
 						Delete
@@ -542,38 +537,21 @@
 			</div>
 		</div>
 	</div>
-	<div
-		appCropper
-		#appCropperComponent
-		(appCropperSubmit)="onSubmitCropperImage($event)"
-		(appCropperToggle)="onTogglePostFormStatus($event)"
-	></div>
+	<div appCropper #appCropperComponent (appCropperSubmit)="onSubmitCropperImage($event)"></div>
 	<div
 		appPostPreview
 		#appPostPreviewComponent
 		[appPostPreviewPost]="postForm.value"
 		[appPostPreviewCategory]="category"
-		(appPostPreviewToggle)="onTogglePostFormStatus($event)"
 	></div>
-	<div
-		appCategoryCreate
-		#appCategoryCreateComponent
-		(appCategoryCreateToggle)="onTogglePostFormStatus($event)"
-		(appCategoryCreateSuccess)="onCreateCategory($event)"
-	></div>
+	<div appCategoryCreate #appCategoryCreateComponent (appCategoryCreateSuccess)="onCreateCategory($event)"></div>
 	<div
 		appCategoryUpdate
 		#appCategoryUpdateComponent
 		[appCategoryUpdateCategory]="category"
 		[appCategoryUpdateCategoryList]="categoryList"
-		(appCategoryUpdateToggle)="onTogglePostFormStatus($event)"
 		(appCategoryUpdateSuccess)="onUpdateCategory($event)"
 	></div>
-	<div
-		appPostDelete
-		#appPostDeleteComponent
-		[appPostDeletePost]="post"
-		(appPostDeleteToggle)="onTogglePostFormStatus($event)"
-	></div>
+	<div appPostDelete #appPostDeleteComponent [appPostDeletePost]="post"></div>
 	<div appShortcuts></div>
 </ng-container>

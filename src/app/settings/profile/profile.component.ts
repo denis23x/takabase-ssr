@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
@@ -80,9 +80,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	});
 	profileFormIsPristine: boolean = false;
 	profileFormIsPristine$: Subscription | undefined;
-
-	profileFormAvatarSkeletonToggle: boolean = false;
 	profileFormAvatarRequest$: Subscription | undefined;
+	profileFormAvatarIsSubmitted: WritableSignal<boolean> = signal(false);
 
 	ngOnInit(): void {
 		/** Apply Data */
@@ -131,7 +130,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	onUpdateCropperAvatar(fileUrl: string | null): void {
 		this.profileForm.get('avatar').setValue(fileUrl, { emitEvent: true });
-		this.profileFormAvatarSkeletonToggle = false;
+		this.profileFormAvatarIsSubmitted.set(false);
 
 		/** Update current user */
 
@@ -143,7 +142,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	onSubmitCropperAvatar(file: File): void {
 		this.profileForm.get('avatar').setValue(null, { emitEvent: false });
-		this.profileFormAvatarSkeletonToggle = true;
+		this.profileFormAvatarIsSubmitted.set(true);
 
 		/** Update current user */
 
@@ -160,19 +159,11 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			.pipe(map((fileUrl: string) => this.fileService.getFileUrlClean(fileUrl)))
 			.subscribe({
 				next: (fileUrl: string) => this.onUpdateCropperAvatar(fileUrl),
-				error: () => (this.profileFormAvatarSkeletonToggle = false)
+				error: () => this.profileFormAvatarIsSubmitted.set(false)
 			});
 	}
 
 	/** profileForm */
-
-	onToggleProfileFormStatus(toggle: boolean): void {
-		if (toggle) {
-			this.profileForm.disable();
-		} else {
-			this.profileForm.enable();
-		}
-	}
 
 	onSubmitProfileForm(): void {
 		if (this.helperService.getFormValidation(this.profileForm)) {

@@ -1,73 +1,67 @@
 /** @format */
 
-import {
-	MarkdownControl,
-	MarkdownTextarea,
-	MarkdownWrapper
-} from '../../../core/models/markdown.model';
+import { MarkdownControl, MarkdownTextarea, MarkdownWrapper } from '../../../core/models/markdown.model';
 
-// prettier-ignore
 export const setWrapper = (value: string, markdownTextarea: MarkdownTextarea, type?: string): string => {
-  const wrapper: MarkdownWrapper = markdownTextarea.wrapper;
+	const wrapper: MarkdownWrapper = markdownTextarea.wrapper;
 
-  if (type === 'block') {
-    let before: string = '';
-    let after: string = '';
+	if (type === 'block') {
+		let before: string = '';
+		let after: string = '';
 
-    /** Before */
+		/** Before */
 
-    if (wrapper.before.space || wrapper.before.character) {
-      // before = '\n\n';
-      before = '\n';
-    }
+		if (wrapper.before.space || wrapper.before.character) {
+			// before = '\n\n';
+			before = '\n';
+		}
 
-    if (wrapper.before.newline) {
-      before = '\n';
-    }
+		if (wrapper.before.newline) {
+			before = '\n';
+		}
 
-    /** After */
+		/** After */
 
-    if (wrapper.after.space || wrapper.after.character) {
-      // after = '\n\n';
-      after = '\n';
-    }
+		if (wrapper.after.space || wrapper.after.character) {
+			// after = '\n\n';
+			after = '\n';
+		}
 
-    if (wrapper.after.newline) {
-      after = '\n';
-    }
+		if (wrapper.after.newline) {
+			after = '\n';
+		}
 
-    /** Both */
+		/** Both */
 
-    if (wrapper.before.character && wrapper.after.newline) {
-      after = '';
-    }
+		if (wrapper.before.character && wrapper.after.newline) {
+			after = '';
+		}
 
-    return before + value + after;
-  }
+		return before + value + after;
+	}
 
-  if (type === 'inline') {
-    let before: string = '';
-    let after: string = '';
+	if (type === 'inline') {
+		let before: string = '';
+		let after: string = '';
 
-    /** Before */
+		/** Before */
 
-    if (wrapper.before.character) {
-      before = ' ';
-    }
+		if (wrapper.before.character) {
+			before = ' ';
+		}
 
-    /** After */
+		/** After */
 
-    if (wrapper.after.character) {
-      after = ' ';
-    }
+		if (wrapper.after.character) {
+			after = ' ';
+		}
 
-    return before + value + after;
-  }
+		return before + value + after;
+	}
 
-  return value;
-}
+	return value;
+};
 
-// prettier-ignore
 export const MarkdownControlHeading = (): MarkdownControl[] => [
 	{
 		key: 'heading-h1',
@@ -82,7 +76,7 @@ export const MarkdownControlHeading = (): MarkdownControl[] => [
 		label: 'Heading 2',
 		classList: ['text-2xl', 'font-bold'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-      return setWrapper('## ' + (markdownTextarea.selection || 'Heading 2'), markdownTextarea, 'block');
+			return setWrapper('## ' + (markdownTextarea.selection || 'Heading 2'), markdownTextarea, 'block');
 		}
 	},
 	{
@@ -90,7 +84,7 @@ export const MarkdownControlHeading = (): MarkdownControl[] => [
 		label: 'Heading 3',
 		classList: ['text-xl', 'font-bold'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-      return setWrapper('### ' + (markdownTextarea.selection || 'Heading 3'), markdownTextarea, 'block');
+			return setWrapper('### ' + (markdownTextarea.selection || 'Heading 3'), markdownTextarea, 'block');
 		}
 	},
 	{
@@ -98,12 +92,11 @@ export const MarkdownControlHeading = (): MarkdownControl[] => [
 		label: 'Heading 4',
 		classList: ['text-base', 'font-bold'],
 		handler: (markdownTextarea: MarkdownTextarea): string => {
-      return setWrapper('#### ' + (markdownTextarea.selection || 'Heading 4'), markdownTextarea, 'block');
+			return setWrapper('#### ' + (markdownTextarea.selection || 'Heading 4'), markdownTextarea, 'block');
 		}
 	}
 ];
 
-// prettier-ignore
 export const MarkdownControlFormatting = (): MarkdownControl[] => [
 	{
 		key: 'formatting-bold',
@@ -139,17 +132,15 @@ export const MarkdownControlFormatting = (): MarkdownControl[] => [
 	}
 ];
 
-// prettier-ignore
 export const MarkdownControlQuote = (): MarkdownControl => ({
-  key: 'quote',
-  label: 'Quote',
-  icon: 'quote',
-  handler: (markdownTextarea: MarkdownTextarea): string => {
-    return setWrapper('> ' + (markdownTextarea.selection || 'Quote'), markdownTextarea, 'block');
-  }
+	key: 'quote',
+	label: 'Quote',
+	icon: 'quote',
+	handler: (markdownTextarea: MarkdownTextarea): string => {
+		return setWrapper('> ' + (markdownTextarea.selection || 'Quote'), markdownTextarea, 'block');
+	}
 });
 
-// prettier-ignore
 export const MarkdownControlList = (): MarkdownControl[] => [
 	{
 		key: 'list-unordered',
@@ -174,7 +165,6 @@ export const MarkdownControlList = (): MarkdownControl[] => [
 	}
 ];
 
-// prettier-ignore
 export const MarkdownControlUrl = (): MarkdownControl[] => [
 	{
 		key: 'url-link',
@@ -202,7 +192,6 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 	}
 ];
 
-// prettier-ignore
 export const MarkdownControlCropper = (): MarkdownControl => ({
 	key: 'cropper',
 	label: 'Cropper',

@@ -215,10 +215,9 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 							this.controlListCode
 						];
 
-						// prettier-ignore
 						const markdownControl: MarkdownControl = markdownControlList.find((control: MarkdownControl) => {
-              return control.key === markdownShortcut.key;
-            });
+							return control.key === markdownShortcut.key;
+						});
 
 						switch (markdownControl.key) {
 							case 'url-link':
@@ -268,17 +267,16 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		const divElement: HTMLDivElement | null = this.document.querySelector('[data-control-table]');
 
 		if (divElement) {
-			// prettier-ignore
 			if (event === 'enter') {
-        const parentElement: DOMRect = (mouseEvent.target as HTMLElement).parentElement.getBoundingClientRect();
-        const targetElement: DOMRect = (mouseEvent.target as HTMLElement).getBoundingClientRect();
+				const parentElement: DOMRect = (mouseEvent.target as HTMLElement).parentElement.getBoundingClientRect();
+				const targetElement: DOMRect = (mouseEvent.target as HTMLElement).getBoundingClientRect();
 
-        const width: string = 'width:' + Math.abs(parentElement.left - targetElement.right) + 'px;';
-        const height: string = 'height:' + Math.abs(parentElement.top - targetElement.bottom) + 'px;';
+				const width: string = 'width:' + Math.abs(parentElement.left - targetElement.right) + 'px;';
+				const height: string = 'height:' + Math.abs(parentElement.top - targetElement.bottom) + 'px;';
 
-        /** Apply styles */
+				/** Apply styles */
 
-        divElement.setAttribute('style', width + height);
+				divElement.setAttribute('style', width + height);
 			}
 
 			if (event === 'leave') {
@@ -356,10 +354,9 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 	setHandlerScrollSync(): void {
 		if (this.platformService.isBrowser()) {
-			// prettier-ignore
 			const getScrollTop = (a: HTMLElement, b: HTMLElement): number => {
-        return Math.round((b.scrollHeight - b.clientHeight) * ((a.scrollTop / (a.scrollHeight - a.clientHeight))))
-      }
+				return Math.round((b.scrollHeight - b.clientHeight) * (a.scrollTop / (a.scrollHeight - a.clientHeight)));
+			};
 
 			this.scrollSync$?.unsubscribe();
 			this.scrollSync$ = merge(fromEvent(this.textarea, 'scroll'), fromEvent(this.preview, 'scroll'))
@@ -433,8 +430,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 		this.markdownService.setRender(this.textarea.value, this.preview);
 
-		// prettier-ignore
-		this.textarea.selectionStart = selectionStart !== selectionEnd ? selectionEnd : selectionStart
+		this.textarea.selectionStart = selectionStart !== selectionEnd ? selectionEnd : selectionStart;
 		this.textarea.selectionEnd = selectionEnd;
 		this.textarea.focus();
 	}

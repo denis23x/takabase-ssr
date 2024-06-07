@@ -103,7 +103,6 @@ export class QrCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
 		[this.QRCodeData$, this.QRCodeOptionsColorScheme$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -117,7 +116,6 @@ export class QrCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	onDownloadQRCode(): void {
 		if (this.platformService.isBrowser()) {
-			// prettier-ignore
 			QRCode.toDataURL(this.QRCodeValue, this.QRCodeOptions, (error: Error, dataURL: string): void => {
 				if (error) {
 					this.snackbarService.error('Error', "Can't download your QR Code");
@@ -137,10 +135,9 @@ export class QrCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 
 			/** Prepare theme colors */
 
-			// prettier-ignore
 			Object.keys(QRCodeOptionsColor).forEach((key: string) => {
-        QRCodeOptionsColor[key] = this.appearanceService.getCSSColor(QRCodeOptionsColor[key], 'hex');
-      });
+				QRCodeOptionsColor[key] = this.appearanceService.getCSSColor(QRCodeOptionsColor[key], 'hex');
+			});
 
 			this.QRCodeOptions.color = QRCodeOptionsColor;
 		}
@@ -151,14 +148,13 @@ export class QrCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 			const QRCodeToCanvas = (): void => {
 				this.setQRCodeOptions();
 
-				// prettier-ignore
 				QRCode.toCanvas(this.QRCodeCanvas.nativeElement, this.QRCodeValue, this.QRCodeOptions, (error: Error): void => {
-          if (error) {
-            this.snackbarService.error('Error', "Can't draw your QR Code");
-          } else {
-            this.QRCodeCanvas.nativeElement.removeAttribute('style');
-          }
-        });
+					if (error) {
+						this.snackbarService.error('Error', "Can't draw your QR Code");
+					} else {
+						this.QRCodeCanvas.nativeElement.removeAttribute('style');
+					}
+				});
 			};
 
 			this.QRCodeOptionsColorScheme$?.unsubscribe();
