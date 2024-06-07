@@ -8,7 +8,7 @@ import { SnackbarService } from '../../../core/services/snackbar.service';
 import { EmailConfirmationUpdateDto } from '../../../core/dto/email/email-confirmation-update.dto';
 import { EmailService } from '../../../core/services/email.service';
 import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
-import { Subscription } from 'rxjs';
+import { from, of, Subscription, switchMap } from 'rxjs';
 import { PlatformService } from '../../../core/services/platform.service';
 import { CurrentUser } from '../../../core/models/current-user.model';
 import { AuthorizationService } from '../../../core/services/authorization.service';
@@ -81,15 +81,29 @@ export class AuthConfirmationEmailComponent implements OnInit, OnDestroy {
 			};
 
 			this.confirmationRequest$?.unsubscribe();
-			this.confirmationRequest$ = this.emailService.onConfirmationUpdate(emailConfirmationUpdateDto).subscribe({
-				next: () => {
-					this.confirmationRequestIsSucceed = true;
-					this.confirmationRequestToggle = false;
+			this.confirmationRequest$ = this.emailService
+				.onConfirmationUpdate(emailConfirmationUpdateDto)
+				.pipe(
+					switchMap(() => this.authorizationService.getPopulate()),
+					switchMap((currentUser: CurrentUser | undefined) => {
+						if (currentUser) {
+							// Update state
 
-					this.snackbarService.success('Great', 'Email successfully confirmed');
-				},
-				error: () => (this.confirmationRequestToggle = false)
-			});
+							return from(currentUser.firebase.reload());
+						}
+
+						return of(null);
+					})
+				)
+				.subscribe({
+					next: () => {
+						this.confirmationRequestIsSucceed = true;
+						this.confirmationRequestToggle = false;
+
+						this.snackbarService.success('Great', 'Email successfully confirmed');
+					},
+					error: () => (this.confirmationRequestToggle = false)
+				});
 		}
 	}
 

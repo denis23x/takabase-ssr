@@ -39,9 +39,7 @@ export class EmailService {
 
 		return from(checkActionCode(auth, emailRecoveryDto.code)).pipe(
 			switchMap((actionCodeInfo: ActionCodeInfo) => {
-				return from(applyActionCode(auth, emailRecoveryDto.code)).pipe(
-					switchMap(() => of(actionCodeInfo))
-				);
+				return from(applyActionCode(auth, emailRecoveryDto.code)).pipe(switchMap(() => of(actionCodeInfo)));
 			}),
 			switchMap((actionCodeInfo: ActionCodeInfo) => {
 				return from(sendPasswordResetEmail(auth, actionCodeInfo.data.email));

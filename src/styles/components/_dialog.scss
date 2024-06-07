@@ -1,81 +1,13 @@
 /* Update default behavior */
 
 .modal {
-  @apply backdrop:backdrop-blur-sm;
+  @apply backdrop-blur-sm backdrop-grayscale;
+
+  &::backdrop {
+    @apply bg-transparent;
+  }
 
   &:not([open]) {
     @apply hidden;
-  }
-}
-
-/* Grayscale */
-
-body:has(dialog[open]) {
-  &:not(dialog[open]) {
-    @apply grayscale;
-  }
-
-  dialog[open]:has(dialog[open]) {
-    @apply grayscale;
-  }
-}
-
-/* Prefers Color Scheme */
-
-html:not([data-theme]) {
-  @media (prefers-color-scheme: dark) {
-    .modal {
-      @apply bg-base-200/75;
-    }
-  }
-
-  @media (prefers-color-scheme: light) {
-    .modal {
-      @apply bg-transparent;
-    }
-  }
-}
-
-/* Background */
-
-html[data-theme="aqua"],
-html[data-theme="black"],
-html[data-theme="business"],
-html[data-theme="coffee"],
-html[data-theme="cyberpunk"],
-html[data-theme="dark"],
-html[data-theme="dim"],
-html[data-theme="dracula"],
-html[data-theme="forest"],
-html[data-theme="halloween"],
-html[data-theme="luxury"],
-html[data-theme="night"],
-html[data-theme="sunset"],
-html[data-theme="synthwave"] {
-  .modal {
-    @apply bg-base-200/75;
-  }
-}
-
-html[data-theme="acid"],
-html[data-theme="autumn"],
-html[data-theme="bumblebee"],
-html[data-theme="cmyk"],
-html[data-theme="corporate"],
-html[data-theme="cupcake"],
-html[data-theme="emerald"],
-html[data-theme="fantasy"],
-html[data-theme="garden"],
-html[data-theme="lemonade"],
-html[data-theme="light"],
-html[data-theme="lofi"],
-html[data-theme="nord"],
-html[data-theme="pastel"],
-html[data-theme="retro"],
-html[data-theme="valentine"],
-html[data-theme="winter"],
-html[data-theme="wireframe"] {
-  .modal {
-    @apply bg-transparent;
   }
 }

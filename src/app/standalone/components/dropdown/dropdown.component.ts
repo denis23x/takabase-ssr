@@ -1,15 +1,6 @@
 /** @format */
 
-import {
-	AfterViewInit,
-	Component,
-	ElementRef,
-	EventEmitter,
-	inject,
-	Input,
-	OnDestroy,
-	Output
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnDestroy, Output } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { CookiesService } from '../../../core/services/cookies.service';
@@ -25,6 +16,7 @@ import {
 	shift,
 	size
 } from '@floating-ui/dom';
+import { HelperService } from '../../../core/services/helper.service';
 
 @Component({
 	standalone: true,
@@ -35,6 +27,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly elementRef: ElementRef = inject(ElementRef);
 	private readonly cookiesService: CookiesService = inject(CookiesService);
+	private readonly helperService: HelperService = inject(HelperService);
 
 	@Output() appDropdownToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -61,6 +54,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 	window$: Subscription | undefined;
 	windowClick$: Subscription | undefined;
 
+	dropdownId: string | undefined;
 	dropdownState: boolean = false;
 	dropdownPlacement: Placement = 'bottom-start';
 	dropdownClose: boolean = true;
@@ -73,6 +67,8 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 	dropdownElementContent: HTMLElement | undefined;
 
 	ngAfterViewInit(): void {
+		this.dropdownId = this.helperService.getNanoId();
+
 		this.dropdownElementTarget = this.elementRef.nativeElement.querySelector('[slot=target]');
 		this.dropdownElementContent = this.elementRef.nativeElement.querySelector('[slot=content]');
 

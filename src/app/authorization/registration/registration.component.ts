@@ -23,6 +23,10 @@ import { AvatarComponent } from '../../standalone/components/avatar/avatar.compo
 import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
+import { Auth, onAuthStateChanged, Unsubscribe } from 'firebase/auth';
+import { User as FirebaseUser } from '@firebase/auth';
+import { FirebaseService } from '../../core/services/firebase.service';
+import { PlatformService } from '../../core/services/platform.service';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -59,7 +63,10 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly aiService: AIService = inject(AIService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly firebaseService: FirebaseService = inject(FirebaseService);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
+	registrationAuthStateChanged$: Unsubscribe | undefined;
 	registrationRequest$: Subscription | undefined;
 	registrationForm: FormGroup = this.formBuilder.group<RegistrationForm>({
 		name: this.formBuilder.nonNullable.control('', [
@@ -82,6 +89,19 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	invitedByUserRequest$: Subscription | undefined;
 
 	ngOnInit(): void {
+		if (this.platformService.isBrowser()) {
+			const auth: Auth = this.firebaseService.getAuth();
+
+			this.registrationAuthStateChanged$?.();
+			this.registrationAuthStateChanged$ = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
+				if (firebaseUser) {
+					this.registrationForm.disable();
+
+					this.snackbarService.success('Success', 'Redirecting, please wait...');
+				}
+			});
+		}
+
 		/** Apply Data */
 
 		this.setResolver();
@@ -93,6 +113,8 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[this.invitedByUserRequest$, this.registrationRequest$].forEach(($: Subscription) => $?.unsubscribe());
+
+		[this.registrationAuthStateChanged$].forEach(($: Unsubscribe) => $?.());
 	}
 
 	setResolver(): void {

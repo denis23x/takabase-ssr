@@ -3,7 +3,10 @@
 <ng-container>
 	<ng-content select="[slot=target]"></ng-content>
 	@if (dropdownBackdrop && dropdownState) {
-		<div class="fixed inset-0 w-full h-full z-20 backdrop-blur-sm cursor-default bg-black/30"></div>
+		<div
+			class="fixed inset-0 w-full h-full z-20 cursor-default backdrop-blur-sm backdrop-grayscale"
+			[id]="'dropdown-' + dropdownId"
+		></div>
 	}
 	<ng-content select="[slot=content]"></ng-content>
 </ng-container>

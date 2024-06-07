@@ -134,6 +134,10 @@
 
   table {
     @apply my-0;
+
+    th, td {
+      @apply text-left;
+    }
   }
 
   pre {

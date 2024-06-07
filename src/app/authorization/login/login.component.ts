@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
 import { SignInDto } from '../../core/dto/authorization/sign-in.dto';
-import { onAuthStateChanged, User as FirebaseUser, Unsubscribe } from 'firebase/auth';
+import { onAuthStateChanged, User as FirebaseUser, Unsubscribe, Auth } from 'firebase/auth';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { PlatformService } from '../../core/services/platform.service';
@@ -67,12 +67,14 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		if (this.platformService.isBrowser()) {
-			// prettier-ignore
-			this.loginAuthStateChanged$ = onAuthStateChanged(this.firebaseService.getAuth(), (firebaseUser: FirebaseUser | null) => {
-				if (firebaseUser) {
-					this.snackbarService.success('Success', 'Redirecting, please wait...');
+			const auth: Auth = this.firebaseService.getAuth();
 
+			this.loginAuthStateChanged$?.();
+			this.loginAuthStateChanged$ = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
+				if (firebaseUser) {
 					this.loginForm.disable();
+
+					this.snackbarService.success('Welcome back', 'Redirecting, please wait...');
 				}
 			});
 		}

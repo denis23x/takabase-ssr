@@ -51,9 +51,6 @@ interface UrlForm {
 	url?: FormControl<string>;
 }
 
-/** https://www.markdownguide.org/basic-syntax/ */
-/** https://markdown-it.github.io/ */
-
 @Component({
 	standalone: true,
 	imports: [
@@ -142,15 +139,26 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 	ngAfterViewInit(): void {
 		if (this.platformService.isBrowser()) {
-			// @ts-ignore
-			this.textarea = this.document.getElementById(this.textareaId);
+			this.textarea = this.document.getElementById(this.textareaId) as HTMLTextAreaElement;
 			this.preview = this.document.getElementById(this.previewId);
 
 			this.textareaInput$?.unsubscribe();
 			this.textareaInput$ = fromEvent(this.textarea, 'input')
 				.pipe(debounceTime(100))
 				.subscribe({
-					next: () => this.markdownService.setRender(this.textarea.value, this.preview),
+					next: () => {
+						const hasValue: boolean = this.textarea.value !== '';
+						const hasPreview: boolean = this.preview.innerHTML !== '';
+
+						this.markdownService.setRender(this.textarea.value, this.preview);
+
+						// Scroll to top when initialize
+
+						if (hasValue && !hasPreview) {
+							this.textarea.scrollTop = 0;
+							this.preview.scrollTop = 0;
+						}
+					},
 					error: (error: any) => console.error(error)
 				});
 
@@ -358,19 +366,28 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				return Math.round((b.scrollHeight - b.clientHeight) * (a.scrollTop / (a.scrollHeight - a.clientHeight)));
 			};
 
+			let scrollSourceId: string;
+			let scrollSourceIdMatch: boolean;
+
 			this.scrollSync$?.unsubscribe();
 			this.scrollSync$ = merge(fromEvent(this.textarea, 'scroll'), fromEvent(this.preview, 'scroll'))
-				.pipe(filter(() => this.scrollSync))
+				.pipe(
+					filter(() => this.scrollSync),
+					map((event: Event) => event.target as HTMLElement)
+				)
 				.subscribe({
-					next: (event: Event) => {
-						const source: any = event.target;
+					next: (htmlElement: HTMLElement) => {
+						scrollSourceIdMatch = scrollSourceId === htmlElement.id;
+						scrollSourceId = htmlElement.id;
 
-						if (source.id === this.textarea.id) {
-							this.preview.scrollTop = getScrollTop(this.textarea, this.preview);
-						}
+						if (scrollSourceIdMatch) {
+							if (scrollSourceId === this.textarea.id) {
+								this.preview.scrollTop = getScrollTop(this.textarea, this.preview);
+							}
 
-						if (source.id === this.preview.id) {
-							this.textarea.scrollTop = getScrollTop(this.preview, this.textarea);
+							if (scrollSourceId === this.preview.id) {
+								this.textarea.scrollTop = getScrollTop(this.preview, this.textarea);
+							}
 						}
 					},
 					error: (error: any) => console.error(error)
@@ -420,19 +437,16 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 	setTextareaValue(value: string): void {
 		const difference: number = value.length - this.textarea.value.length;
+		const scrollTop: number = this.textarea.scrollTop;
 
-		const selectionStart: number = this.textarea.selectionStart + difference;
+		const selectionStart: number = this.textarea.selectionStart;
 		const selectionEnd: number = this.textarea.selectionEnd + difference;
 
 		this.textarea.value = value;
+		this.textarea.dispatchEvent(new Event('input'));
 
-		// Update Markdown directly
-
-		this.markdownService.setRender(this.textarea.value, this.preview);
-
-		this.textarea.selectionStart = selectionStart !== selectionEnd ? selectionEnd : selectionStart;
-		this.textarea.selectionEnd = selectionEnd;
-		this.textarea.focus();
+		this.textarea.setSelectionRange(selectionStart, selectionEnd);
+		this.textarea.scrollTop = scrollTop;
 	}
 
 	/** urlForm */

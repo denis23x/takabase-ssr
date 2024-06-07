@@ -1,20 +1,22 @@
 /* Prefers Color Scheme */
 
 html:not([data-theme]) {
-  @media (prefers-color-scheme: dark) {
-    img {
-      @apply opacity-75;
-    }
-  }
+	@media (prefers-color-scheme: dark) {
+		div[id^="dropdown"],
+		dialog.modal {
+			@apply bg-base-300/50;
+		}
+	}
 
-  @media (prefers-color-scheme: light) {
-    img {
-      @apply opacity-100;
-    }
-  }
+	@media (prefers-color-scheme: light) {
+		div[id^="dropdown"],
+		dialog.modal {
+			@apply bg-base-content/50;
+		}
+	}
 }
 
-/* Image opacity */
+/* Dialog background */
 
 html[data-theme="aqua"],
 html[data-theme="black"],
@@ -30,9 +32,10 @@ html[data-theme="luxury"],
 html[data-theme="night"],
 html[data-theme="sunset"],
 html[data-theme="synthwave"] {
-  img {
-    @apply opacity-75;
-  }
+	div[id^="dropdown"],
+	dialog.modal {
+		@apply bg-base-300/50;
+	}
 }
 
 html[data-theme="acid"],
@@ -53,7 +56,8 @@ html[data-theme="retro"],
 html[data-theme="valentine"],
 html[data-theme="winter"],
 html[data-theme="wireframe"] {
-  img {
-    @apply opacity-100;
-  }
+	div[id^="dropdown"],
+	dialog.modal {
+		@apply bg-base-content/50;
+	}
 }
