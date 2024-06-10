@@ -2,7 +2,7 @@
 
 export interface CategoryGetAllDto {
 	query?: string;
-	userId?: number;
+	userFirebaseUid?: string;
 	userName?: string;
 	page?: number;
 	size?: number;

@@ -2,7 +2,7 @@
 
 export interface PostGetAllDto {
 	query?: string;
-	userId?: number;
+	userFirebaseUid?: string;
 	userName?: string;
 	categoryId?: number;
 	page?: number;

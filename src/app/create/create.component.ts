@@ -234,7 +234,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			const categoryGetAllDto: CategoryGetAllDto = {
 				page: 1,
 				size: 50,
-				userId: this.currentUser.id
+				userFirebaseUid: this.currentUser.firebase.uid
 			};
 
 			this.categoryListRequest$?.unsubscribe();
@@ -252,7 +252,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 			if (postId) {
 				const postGetOneDto: PostGetOneDto = {
-					userId: this.currentUser.id,
+					userFirebaseUid: this.currentUser.firebase.uid,
 					scope: ['category']
 				};
 

@@ -9,6 +9,7 @@ import { AbstractGetAllDto } from '../core/dto/abstract/abstract-get-all.dto';
 import { AuthorizationService } from '../core/services/authorization.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SkeletonService } from '../core/services/skeleton.service';
+import { PlatformService } from '../core/services/platform.service';
 
 @Component({
 	selector: 'app-abstract-search',
@@ -21,6 +22,7 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 	public readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	public readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	public readonly skeletonService: SkeletonService = inject(SkeletonService);
+	public readonly platformService: PlatformService = inject(PlatformService);
 
 	@Input({ transform: numberAttribute })
 	set categoryId(categoryId: number | undefined) {

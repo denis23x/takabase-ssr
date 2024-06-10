@@ -2,7 +2,7 @@
 
 export interface PostGetOneDto {
 	categoryId?: number;
-	userId?: number;
+	userFirebaseUid?: string;
 	userName?: string;
 	scope?: string[];
 }

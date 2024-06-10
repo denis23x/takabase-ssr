@@ -1,7 +1,7 @@
 /** @format */
 
 export interface CategoryGetOneDto {
-	userId?: number;
+	userFirebaseUid?: string;
 	userName?: string;
 	scope?: string[];
 }
