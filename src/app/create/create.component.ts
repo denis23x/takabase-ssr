@@ -234,7 +234,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			const categoryGetAllDto: CategoryGetAllDto = {
 				page: 1,
 				size: 50,
-				userFirebaseUid: this.currentUser.firebase.uid
+				userName: this.currentUser.name
 			};
 
 			this.categoryListRequest$?.unsubscribe();

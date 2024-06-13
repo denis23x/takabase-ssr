@@ -23,10 +23,7 @@ import { AppTitleStrategy } from './core/strategies/title.strategy';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
-		provideHttpClient(
-			withFetch(),
-			withInterceptors([httpAppCheckInterceptor, httpAuthorizationInterceptor])
-		),
+		provideHttpClient(withFetch(), withInterceptors([httpAppCheckInterceptor, httpAuthorizationInterceptor])),
 		provideClientHydration(),
 		provideServiceWorker('ngsw-worker.js', {
 			enabled: environment.pwa,
@@ -71,7 +68,7 @@ export const appConfig: ApplicationConfig = {
 		// 						console.log('Emulate long initialization - completed');
 		//
 		// 						resolve();
-		// 					}, 10000);
+		// 					}, 3000);
 		// 				} else {
 		// 					resolve();
 		// 				}

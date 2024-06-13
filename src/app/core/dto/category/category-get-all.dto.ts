@@ -1,9 +1,8 @@
 /** @format */
 
 export interface CategoryGetAllDto {
-	query?: string;
-	userFirebaseUid?: string;
 	userName?: string;
+	query?: string;
 	page?: number;
 	size?: number;
 	orderBy?: string;

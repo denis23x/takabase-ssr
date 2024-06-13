@@ -14,14 +14,15 @@ import { AbstractSearchComponent } from '../../abstracts/abstract-search.compone
 import { CardUserComponent } from '../../standalone/components/card/user/user.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { UserService } from '../../core/services/user.service';
-import { MetaService } from '../../core/services/meta.service';
-import { Subscription } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
 import { environment } from '../../../environments/environment';
 import { filter, tap } from 'rxjs/operators';
 import { CurrentUser } from '../../core/models/current-user.model';
 import { AuthenticatedComponent } from '../../standalone/components/authenticated/authenticated.component';
+import { SearchIndex } from 'algoliasearch/lite';
+import { SearchOptions, SearchResponse } from '@algolia/client-search';
 
 @Component({
 	standalone: true,
@@ -43,7 +44,6 @@ import { AuthenticatedComponent } from '../../standalone/components/authenticate
 })
 export class SearchUserComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
 	private readonly userService: UserService = inject(UserService);
-	private readonly metaService: MetaService = inject(MetaService);
 
 	userList: User[] = [];
 	userListRequest$: Subscription | undefined;
@@ -114,12 +114,8 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		[
-			this.userListRequest$,
-			this.userGetAllDto$,
-			this.currentUser$,
-			this.currentUserSkeletonToggle$
-		].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.userListRequest$, this.userGetAllDto$, this.currentUser$, this.currentUserSkeletonToggle$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
@@ -160,17 +156,41 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 			this.setSkeleton();
 		}
 
-		this.userListRequest$?.unsubscribe();
-		this.userListRequest$ = this.userService.getAll(this.userGetAllDto).subscribe({
-			next: (userList: User[]) => {
-				this.userList = concat ? this.userList.concat(userList) : userList;
-				this.userListSkeletonToggle = false;
+		if (this.platformService.isBrowser()) {
+			const userIndex: SearchIndex = this.algoliaService.getSearchIndex('user');
+			const userIndexSearch: SearchOptions = {
+				page: this.userGetAllDto.page - 1,
+				hitsPerPage: 20
+			};
 
-				this.abstractListIsHasMore = userList.length === this.userGetAllDto.size;
-				this.abstractListIsLoading$.next(false);
-			},
-			error: (error: any) => console.error(error)
-		});
+			this.userListRequest$?.unsubscribe();
+			this.userListRequest$ = from(userIndex.search(this.userGetAllDto.query, userIndexSearch)).subscribe({
+				next: (searchResponse: SearchResponse) => {
+					const userList: User[] = searchResponse.hits as any[];
+					const userListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages;
+
+					this.userList = concat ? this.userList.concat(userList) : userList;
+					this.userListSkeletonToggle = false;
+
+					this.abstractListIsHasMore = userListIsHasMore && searchResponse.nbPages > 1;
+					this.abstractListIsLoading$.next(false);
+				},
+				error: (error: any) => console.error(error)
+			});
+
+			//! Default searching
+			// this.userListRequest$?.unsubscribe();
+			// this.userListRequest$ = this.userService.getAll(this.userGetAllDto).subscribe({
+			// 	next: (userList: User[]) => {
+			// 		this.userList = concat ? this.userList.concat(userList) : userList;
+			// 		this.userListSkeletonToggle = false;
+			//
+			// 		this.abstractListIsHasMore = userList.length === this.userGetAllDto.size;
+			// 		this.abstractListIsLoading$.next(false);
+			// 	},
+			// 	error: (error: any) => console.error(error)
+			// });
+		}
 	}
 
 	getAbstractListLoadMore(): void {

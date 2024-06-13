@@ -1,10 +1,9 @@
 /** @format */
 
 export interface PostGetAllDto {
-	query?: string;
-	userFirebaseUid?: string;
-	userName?: string;
 	categoryId?: number;
+	userName?: string;
+	query?: string;
 	page?: number;
 	size?: number;
 	orderBy?: string;

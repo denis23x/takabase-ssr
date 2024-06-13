@@ -11,9 +11,10 @@ import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { PostService } from '../../core/services/post.service';
-import { MetaService } from '../../core/services/meta.service';
-import { Subscription } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
+import { SearchOptions, SearchResponse } from '@algolia/client-search';
+import { SearchIndex } from 'algoliasearch/lite';
 
 @Component({
 	standalone: true,
@@ -23,7 +24,6 @@ import { AdComponent } from '../../standalone/components/ad/ad.component';
 })
 export class SearchPostComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
 	private readonly postService: PostService = inject(PostService);
-	private readonly metaService: MetaService = inject(MetaService);
 
 	postList: Post[] = [];
 	postListRequest$: Subscription | undefined;
@@ -99,17 +99,41 @@ export class SearchPostComponent extends AbstractSearchComponent implements OnIn
 			this.setSkeleton();
 		}
 
-		this.postListRequest$?.unsubscribe();
-		this.postListRequest$ = this.postService.getAll(this.postGetAllDto).subscribe({
-			next: (postList: Post[]) => {
-				this.postList = concat ? this.postList.concat(postList) : postList;
-				this.postListSkeletonToggle = false;
+		if (this.platformService.isBrowser()) {
+			const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
+			const postIndexSearch: SearchOptions = {
+				page: this.postGetAllDto.page - 1,
+				hitsPerPage: 20
+			};
 
-				this.abstractListIsHasMore = postList.length === this.postGetAllDto.size;
-				this.abstractListIsLoading$.next(false);
-			},
-			error: (error: any) => console.error(error)
-		});
+			this.postListRequest$?.unsubscribe();
+			this.postListRequest$ = from(postIndex.search(this.postGetAllDto.query, postIndexSearch)).subscribe({
+				next: (searchResponse: SearchResponse) => {
+					const postList: Post[] = searchResponse.hits as any[];
+					const postListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
+
+					this.postList = concat ? this.postList.concat(postList) : postList;
+					this.postListSkeletonToggle = false;
+
+					this.abstractListIsHasMore = postListIsHasMore && searchResponse.nbPages > 1;
+					this.abstractListIsLoading$.next(false);
+				},
+				error: (error: any) => console.error(error)
+			});
+
+			//! Default searching
+			// this.postListRequest$?.unsubscribe();
+			// this.postListRequest$ = this.postService.getAll(this.postGetAllDto).subscribe({
+			// 	next: (postList: Post[]) => {
+			// 		this.postList = concat ? this.postList.concat(postList) : postList;
+			// 		this.postListSkeletonToggle = false;
+			//
+			// 		this.abstractListIsHasMore = postList.length === this.postGetAllDto.size;
+			// 		this.abstractListIsLoading$.next(false);
+			// 	},
+			// 	error: (error: any) => console.error(error)
+			// });
+		}
 	}
 
 	getAbstractListLoadMore(): void {
