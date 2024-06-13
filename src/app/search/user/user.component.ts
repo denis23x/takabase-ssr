@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
@@ -13,7 +13,6 @@ import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 import { AbstractSearchComponent } from '../../abstracts/abstract-search.component';
 import { CardUserComponent } from '../../standalone/components/card/user/user.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
-import { UserService } from '../../core/services/user.service';
 import { from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
@@ -43,8 +42,6 @@ import { SearchOptions, SearchResponse } from '@algolia/client-search';
 	templateUrl: './user.component.html'
 })
 export class SearchUserComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
-	private readonly userService: UserService = inject(UserService);
-
 	userList: User[] = [];
 	userListRequest$: Subscription | undefined;
 	userListSkeletonToggle: boolean = true;

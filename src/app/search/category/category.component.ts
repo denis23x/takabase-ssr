@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -11,7 +11,6 @@ import { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto'
 import { AbstractSearchComponent } from '../../abstracts/abstract-search.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { CardCategoryComponent } from '../../standalone/components/card/category/category.component';
-import { CategoryService } from '../../core/services/category.service';
 import { from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { SearchIndex } from 'algoliasearch/lite';
@@ -32,8 +31,6 @@ import { SearchOptions, SearchResponse } from '@algolia/client-search';
 	templateUrl: './category.component.html'
 })
 export class SearchCategoryComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
-	private readonly categoryService: CategoryService = inject(CategoryService);
-
 	categoryList: Category[] = [];
 	categoryListRequest$: Subscription | undefined;
 	categoryListSkeletonToggle: boolean = true;

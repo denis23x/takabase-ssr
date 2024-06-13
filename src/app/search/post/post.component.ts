@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -10,7 +10,6 @@ import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
-import { PostService } from '../../core/services/post.service';
 import { from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
@@ -23,8 +22,6 @@ import { SearchIndex } from 'algoliasearch/lite';
 	templateUrl: './post.component.html'
 })
 export class SearchPostComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
-	private readonly postService: PostService = inject(PostService);
-
 	postList: Post[] = [];
 	postListRequest$: Subscription | undefined;
 	postListSkeletonToggle: boolean = true;

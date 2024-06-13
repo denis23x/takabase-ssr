@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -8,8 +8,9 @@ import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { AbstractSearchComponent } from '../../abstracts/abstract-search.component';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { Subscription } from 'rxjs';
-import { PostService } from '../../core/services/post.service';
+import { from, Subscription } from 'rxjs';
+import { SearchIndex } from 'algoliasearch/lite';
+import { SearchOptions, SearchResponse } from '@algolia/client-search';
 
 @Component({
 	standalone: true,
@@ -18,8 +19,6 @@ import { PostService } from '../../core/services/post.service';
 	templateUrl: './post.component.html'
 })
 export class UserPostComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
-	private readonly postService: PostService = inject(PostService);
-
 	postList: Post[] = [];
 	postListRequest$: Subscription | undefined;
 	postListSkeletonToggle: boolean = true;
@@ -72,17 +71,41 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 			this.setSkeleton();
 		}
 
-		this.postListRequest$?.unsubscribe();
-		this.postListRequest$ = this.postService.getAll(this.postGetAllDto).subscribe({
-			next: (postList: Post[]) => {
-				this.postList = concat ? this.postList.concat(postList) : postList;
-				this.postListSkeletonToggle = false;
+		if (this.platformService.isBrowser()) {
+			const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
+			const postIndexSearch: SearchOptions = {
+				page: this.postGetAllDto.page - 1,
+				hitsPerPage: 20
+			};
 
-				this.abstractListIsHasMore = postList.length === this.postGetAllDto.size;
-				this.abstractListIsLoading$.next(false);
-			},
-			error: (error: any) => console.error(error)
-		});
+			this.postListRequest$?.unsubscribe();
+			this.postListRequest$ = from(postIndex.search(this.postGetAllDto.query, postIndexSearch)).subscribe({
+				next: (searchResponse: SearchResponse) => {
+					const postList: Post[] = searchResponse.hits as any[];
+					const postListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
+
+					this.postList = concat ? this.postList.concat(postList) : postList;
+					this.postListSkeletonToggle = false;
+
+					this.abstractListIsHasMore = postListIsHasMore && searchResponse.nbPages > 1;
+					this.abstractListIsLoading$.next(false);
+				},
+				error: (error: any) => console.error(error)
+			});
+
+			//! Default searching
+			// this.postListRequest$?.unsubscribe();
+			// this.postListRequest$ = this.postService.getAll(this.postGetAllDto).subscribe({
+			// 	next: (postList: Post[]) => {
+			// 		this.postList = concat ? this.postList.concat(postList) : postList;
+			// 		this.postListSkeletonToggle = false;
+			//
+			// 		this.abstractListIsHasMore = postList.length === this.postGetAllDto.size;
+			// 		this.abstractListIsLoading$.next(false);
+			// 	},
+			// 	error: (error: any) => console.error(error)
+			// });
+		}
 	}
 
 	getAbstractListLoadMore(): void {
