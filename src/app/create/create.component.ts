@@ -229,11 +229,9 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	setResolver(): void {
 		if (this.platformService.isBrowser()) {
-			// Get categoryList
-
 			const categoryGetAllDto: CategoryGetAllDto = {
 				page: 1,
-				size: 50,
+				size: 100,
 				userName: this.currentUser.name
 			};
 

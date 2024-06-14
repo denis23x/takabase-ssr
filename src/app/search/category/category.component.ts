@@ -72,6 +72,8 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 		this.categoryList = this.skeletonService.getCategoryList(['user']);
 		this.categoryListSkeletonToggle = true;
 
+		// Hide load more
+
 		this.abstractListIsHasMore = false;
 	}
 

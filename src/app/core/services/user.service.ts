@@ -1,7 +1,7 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { User } from '../models/user.model';
 import { UserCreateDto } from '../dto/user/user-create.dto';
@@ -9,12 +9,18 @@ import { UserGetAllDto } from '../dto/user/user-get-all.dto';
 import { UserGetOneDto } from '../dto/user/user-get-one.dto';
 import { UserUpdateDto } from '../dto/user/user-update.dto';
 import { UserDeleteDto } from '../dto/user/user-delete.dto';
+import { Post } from '../models/post.model';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class UserService {
 	private readonly apiService: ApiService = inject(ApiService);
+
+	/** Temp subjects for connect UserComponent & UserPostComponent */
+
+	user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
+	userPostList: BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
 
 	/** Utility */
 

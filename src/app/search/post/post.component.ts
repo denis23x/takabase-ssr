@@ -62,6 +62,8 @@ export class SearchPostComponent extends AbstractSearchComponent implements OnIn
 		this.postList = this.skeletonService.getPostList();
 		this.postListSkeletonToggle = true;
 
+		// Hide load more
+
 		this.abstractListIsHasMore = false;
 	}
 

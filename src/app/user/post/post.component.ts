@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -11,6 +11,9 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 import { from, Subscription } from 'rxjs';
 import { SearchIndex } from 'algoliasearch/lite';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
+import { UserService } from '../../core/services/user.service';
+import { User } from '../../core/models/user.model';
+import { filter, tap } from 'rxjs/operators';
 
 @Component({
 	standalone: true,
@@ -19,6 +22,11 @@ import { SearchOptions, SearchResponse } from '@algolia/client-search';
 	templateUrl: './post.component.html'
 })
 export class UserPostComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
+	private readonly userService: UserService = inject(UserService);
+
+	user: User | undefined;
+	user$: Subscription | undefined;
+
 	postList: Post[] = [];
 	postListRequest$: Subscription | undefined;
 	postListSkeletonToggle: boolean = true;
@@ -48,18 +56,29 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		[this.postListRequest$, this.postGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.user$, this.postListRequest$, this.postGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
 		this.postList = this.skeletonService.getPostList();
 		this.postListSkeletonToggle = true;
 
+		// Hide load more
+
 		this.abstractListIsHasMore = false;
 	}
 
 	setResolver(): void {
-		this.getAbstractList();
+		this.user$?.unsubscribe();
+		this.user$ = this.userService.user
+			.pipe(
+				filter((user: User | undefined) => !!user),
+				tap((user: User) => (this.user = user))
+			)
+			.subscribe({
+				next: () => this.getAbstractList(),
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	getAbstractList(): void {
@@ -75,8 +94,8 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 			const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
 			const postIndexFilters: string[] = [];
 
-			if (this.postGetAllDto.userId) {
-				postIndexFilters.push('user.id:' + this.postGetAllDto.userId);
+			if (this.user.id) {
+				postIndexFilters.push('user.id:' + this.user.id);
 			}
 
 			if (this.postGetAllDto.categoryId) {

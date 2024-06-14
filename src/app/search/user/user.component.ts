@@ -119,6 +119,8 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 		this.userList = this.skeletonService.getUserList();
 		this.userListSkeletonToggle = true;
 
+		// Hide load more
+
 		this.abstractListIsHasMore = false;
 	}
 

@@ -1,9 +1,9 @@
 /** @format */
 
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { distinctUntilKeyChanged, Observable, Subscription } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
+import { distinctUntilChanged, distinctUntilKeyChanged, Observable, Subscription } from 'rxjs';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
@@ -104,7 +104,13 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.activatedRouteUrl$ = this.activatedRoute.url
 			.pipe(
 				switchMap(() => this.activatedRoute.params),
-				distinctUntilKeyChanged('userName')
+				distinctUntilChanged((previousParams: Params, currentParams: Params) => {
+					const userName: boolean = previousParams.userName === currentParams.userName;
+					const userId: boolean = previousParams.userId === currentParams.userId;
+
+					return userName && userId;
+				}),
+				tap(() => this.userService.user.next(undefined))
 			)
 			.subscribe({
 				next: () => {
@@ -196,6 +202,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
 					this.categoryList = this.user.categories;
 					this.categoryListSkeletonToggle = false;
+
+					// Trigger UserPostComponent
+
+					this.userService.user.next(this.user);
 
 					// Set category
 
