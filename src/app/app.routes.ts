@@ -9,14 +9,14 @@ export const APP_ROUTES: Route[] = [
 	{
 		path: 'confirmation',
 		title: 'Confirmation',
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./authorization/confirmation/confirmation.component').then(m => m.AuthConfirmationComponent);
 		},
 		children: [
 			{
 				path: 'email',
 				title: 'Email confirmation',
-				loadComponent: () => {
+				loadComponent: async () => {
 					// prettier-ignore
 					return import('./authorization/confirmation/email/email.component').then(m => m.AuthConfirmationEmailComponent);
 				}
@@ -24,7 +24,7 @@ export const APP_ROUTES: Route[] = [
 			{
 				path: 'password',
 				title: 'Set new password',
-				loadComponent: () => {
+				loadComponent: async () => {
 					// prettier-ignore
 					return import('./authorization/confirmation/password/password.component').then(m => m.AuthConfirmationPasswordComponent);
 				}
@@ -32,7 +32,7 @@ export const APP_ROUTES: Route[] = [
 			{
 				path: 'recovery',
 				title: 'Email recovery',
-				loadComponent: () => {
+				loadComponent: async () => {
 					// prettier-ignore
 					return import('./authorization/confirmation/recovery/recovery.component').then(m => m.AuthConfirmationRecoveryComponent);
 				}
@@ -42,7 +42,7 @@ export const APP_ROUTES: Route[] = [
 	{
 		path: 'login',
 		title: 'Login',
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./authorization/login/login.component').then(m => m.AuthLoginComponent);
 		},
 		canMatch: [redirectCurrentUserGuard(false)]
@@ -50,7 +50,7 @@ export const APP_ROUTES: Route[] = [
 	{
 		path: 'registration',
 		title: 'Registration',
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./authorization/registration/registration.component').then(m => m.AuthRegistrationComponent);
 		},
 		canMatch: [redirectCurrentUserGuard(false)]
@@ -58,14 +58,14 @@ export const APP_ROUTES: Route[] = [
 	{
 		path: 'reset',
 		title: 'Reset password',
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./authorization/reset/reset.component').then(m => m.AuthResetComponent);
 		},
 		canMatch: [redirectCurrentUserGuard(false)]
 	},
 	{
 		path: 'terms',
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./terms/terms.component').then(m => m.TermsComponent);
 		},
 		children: [
@@ -77,7 +77,7 @@ export const APP_ROUTES: Route[] = [
 			{
 				path: ':details',
 				title: 'Terms',
-				loadComponent: () => {
+				loadComponent: async () => {
 					return import('./terms/details/details.component').then(m => m.TermsDetailsComponent);
 				}
 			}
@@ -85,7 +85,7 @@ export const APP_ROUTES: Route[] = [
 	},
 	{
 		path: 'help',
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./help/help.component').then(m => m.HelpComponent);
 		},
 		children: [
@@ -97,14 +97,14 @@ export const APP_ROUTES: Route[] = [
 			{
 				path: 'markdown',
 				title: 'Markdown',
-				loadComponent: () => {
+				loadComponent: async () => {
 					return import('./help/markdown/markdown.component').then(m => m.HelpMarkdownComponent);
 				}
 			},
 			{
 				path: ':details',
 				title: 'Help',
-				loadComponent: () => {
+				loadComponent: async () => {
 					return import('./help/details/details.component').then(m => m.HelpDetailsComponent);
 				}
 			}
@@ -113,7 +113,7 @@ export const APP_ROUTES: Route[] = [
 	{
 		path: 'create',
 		title: 'Create post',
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./create/create.component').then(m => m.CreateComponent);
 		},
 		canMatch: [redirectCurrentUserGuard(true)]
@@ -121,14 +121,14 @@ export const APP_ROUTES: Route[] = [
 	{
 		path: 'update/:postId',
 		title: 'Update post',
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./create/create.component').then(m => m.CreateComponent);
 		},
 		canMatch: [redirectCurrentUserGuard(true)]
 	},
 	{
 		path: 'search',
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./search/search.component').then(m => m.SearchComponent);
 		},
 		children: [
@@ -140,13 +140,13 @@ export const APP_ROUTES: Route[] = [
 			{
 				path: 'posts',
 				title: 'Posts search',
-				loadComponent: () => {
+				loadComponent: async () => {
 					return import('./search/post/post.component').then(m => m.SearchPostComponent);
 				},
 				children: [
 					{
 						path: ':postId',
-						loadComponent: () => {
+						loadComponent: async () => {
 							return import('./search/post/details/details.component').then(m => m.SearchPostDetailsComponent);
 						}
 					}
@@ -155,14 +155,14 @@ export const APP_ROUTES: Route[] = [
 			{
 				path: 'categories',
 				title: 'Categories search',
-				loadComponent: () => {
+				loadComponent: async () => {
 					return import('./search/category/category.component').then(m => m.SearchCategoryComponent);
 				}
 			},
 			{
 				path: 'users',
 				title: 'Users search',
-				loadComponent: () => {
+				loadComponent: async () => {
 					return import('./search/user/user.component').then(m => m.SearchUserComponent);
 				}
 			}
@@ -170,7 +170,7 @@ export const APP_ROUTES: Route[] = [
 	},
 	{
 		path: 'settings',
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./settings/settings.component').then(m => m.SettingsComponent);
 		},
 		canMatch: [redirectCurrentUserGuard(true)],
@@ -183,21 +183,21 @@ export const APP_ROUTES: Route[] = [
 			{
 				path: 'account',
 				title: 'Account settings',
-				loadComponent: () => {
+				loadComponent: async () => {
 					return import('./settings/account/account.component').then(m => m.SettingsAccountComponent);
 				}
 			},
 			{
 				path: 'appearance',
 				title: 'Appearance settings',
-				loadComponent: () => {
+				loadComponent: async () => {
 					return import('./settings/appearance/appearance.component').then(m => m.SettingsAppearanceComponent);
 				}
 			},
 			{
 				path: 'profile',
 				title: 'Profile settings',
-				loadComponent: () => {
+				loadComponent: async () => {
 					return import('./settings/profile/profile.component').then(m => m.SettingsProfileComponent);
 				}
 			}
@@ -206,14 +206,14 @@ export const APP_ROUTES: Route[] = [
 	{
 		path: 'loading',
 		title: 'Loading',
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./loader/loading.component').then(m => m.LoadingComponent);
 		},
 		canMatch: [redirectLoadingGuard('browser')]
 	},
 	{
 		path: 'error/:status',
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./error/error.component').then(m => m.ErrorComponent);
 		},
 		canMatch: [redirectLoadingGuard('server')]
@@ -230,24 +230,38 @@ export const APP_ROUTES: Route[] = [
 		},
 		title: 'Home',
 		canMatch: [redirectHomeGuard()],
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./home/home.component').then(m => m.HomeComponent);
 		}
 	},
 	{
 		matcher: (urlSegment: UrlSegment[]): UrlMatchResult | null => {
-			if (urlSegment.length >= 1 && urlSegment[0].path.match(/^@\S+$/gm)) {
-				return {
-					consumed: urlSegment.slice(0, 1),
-					posParams: {
-						userName: new UrlSegment(urlSegment[0].path, {})
-					}
-				};
+			// Check if there is at least one URL segment
+			if (urlSegment.length >= 1) {
+				// Check if the first URL segment matches the pattern for a username (e.g., @username)
+				if (urlSegment[0].path.match(/^@\S+$/gm)) {
+					return {
+						consumed: urlSegment.slice(0, 1),
+						posParams: {
+							userName: new UrlSegment(urlSegment[0].path, {})
+						}
+					};
+				}
+
+				// Check if the first URL segment is 'user'
+				if (urlSegment[0].path === 'user') {
+					return {
+						consumed: urlSegment.slice(0, 2),
+						posParams: {
+							userId: new UrlSegment(urlSegment[1].path, {})
+						}
+					};
+				}
 			}
 
 			return null;
 		},
-		loadComponent: () => {
+		loadComponent: async () => {
 			return import('./user/user.component').then(m => m.UserComponent);
 		},
 		children: [
@@ -306,13 +320,13 @@ export const APP_ROUTES: Route[] = [
 
 					return null;
 				},
-				loadComponent: () => {
+				loadComponent: async () => {
 					return import('./user/post/post.component').then(m => m.UserPostComponent);
 				},
 				children: [
 					{
 						path: 'post/:postId',
-						loadComponent: () => {
+						loadComponent: async () => {
 							return import('./user/post/details/details.component').then(m => m.UserPostDetailsComponent);
 						}
 					}

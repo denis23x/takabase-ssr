@@ -2,8 +2,8 @@
 
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { distinctUntilKeyChanged, Subscription } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { distinctUntilKeyChanged, Observable, Subscription } from 'rxjs';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
@@ -35,6 +35,7 @@ import { UserUrlPipe } from '../standalone/pipes/user-url.pipe';
 import { CopyToClipboardDirective } from '../standalone/directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../core/services/snackbar.service';
 import { PlatformService } from '../core/services/platform.service';
+import { UserGetOneDto } from '../core/dto/user/user-get-one.dto';
 
 @Component({
 	standalone: true,
@@ -163,17 +164,29 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
+		const userId: number = Number(this.activatedRoute.snapshot.paramMap.get('userId'));
 		const userName: string = String(this.activatedRoute.snapshot.paramMap.get('userName') || '');
+		const userRequest$ = (): Observable<User[]> => {
+			if (userId) {
+				const userGetOneDto: UserGetOneDto = {
+					scope: ['categories']
+				};
 
-		const userGetAllDto: UserGetAllDto = {
-			userName: userName.substring(1),
-			scope: ['categories'],
-			page: 1,
-			size: 10
+				return this.userService.getOne(userId, userGetOneDto).pipe(map((user: User) => [user]));
+			} else {
+				const userGetAllDto: UserGetAllDto = {
+					userName: userName.substring(1),
+					scope: ['categories'],
+					page: 1,
+					size: 10
+				};
+
+				return this.userService.getAll(userGetAllDto);
+			}
 		};
 
 		this.userRequest$?.unsubscribe();
-		this.userRequest$ = this.userService.getAll(userGetAllDto).subscribe({
+		this.userRequest$ = userRequest$().subscribe({
 			next: (userList: User[]) => {
 				if (!userList.length) {
 					this.router.navigate(['error', 404]).then(() => console.debug('Route changed'));
