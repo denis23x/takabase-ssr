@@ -35,6 +35,13 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	@Input({ transform: numberAttribute })
+	set userId(userId: number | undefined) {
+		this.setAbstractGetAllDto({
+			userId
+		});
+	}
+
 	@Input()
 	set userName(userName: string | undefined) {
 		this.setAbstractGetAllDto({
