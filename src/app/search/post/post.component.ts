@@ -12,8 +12,8 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
-import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { SearchIndex } from 'algoliasearch/lite';
+import { SearchOptions, SearchResponse } from '@algolia/client-search';
 
 @Component({
 	standalone: true,
@@ -100,7 +100,7 @@ export class SearchPostComponent extends AbstractSearchComponent implements OnIn
 			const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
 			const postIndexSearch: SearchOptions = {
 				page: this.postGetAllDto.page - 1,
-				hitsPerPage: 20
+				hitsPerPage: this.postGetAllDto.size
 			};
 
 			this.postListRequest$?.unsubscribe();

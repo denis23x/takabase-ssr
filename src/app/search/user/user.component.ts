@@ -157,7 +157,7 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 			const userIndex: SearchIndex = this.algoliaService.getSearchIndex('user');
 			const userIndexSearch: SearchOptions = {
 				page: this.userGetAllDto.page - 1,
-				hitsPerPage: 20
+				hitsPerPage: this.userGetAllDto.size
 			};
 
 			this.userListRequest$?.unsubscribe();

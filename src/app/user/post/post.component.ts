@@ -73,9 +73,20 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 
 		if (this.platformService.isBrowser()) {
 			const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
+			const postIndexFilters: string[] = [];
+
+			if (this.postGetAllDto.userName) {
+				postIndexFilters.push('user.name:' + this.postGetAllDto.userName);
+			}
+
+			if (this.postGetAllDto.categoryId) {
+				postIndexFilters.push('category.id:' + this.postGetAllDto.categoryId);
+			}
+
 			const postIndexSearch: SearchOptions = {
 				page: this.postGetAllDto.page - 1,
-				hitsPerPage: 20
+				hitsPerPage: this.postGetAllDto.size,
+				filters: postIndexFilters.join(' AND ')
 			};
 
 			this.postListRequest$?.unsubscribe();

@@ -111,7 +111,7 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 			const categoryIndex: SearchIndex = this.algoliaService.getSearchIndex('category');
 			const categoryIndexSearch: SearchOptions = {
 				page: this.categoryGetAllDto.page - 1,
-				hitsPerPage: 20
+				hitsPerPage: this.categoryGetAllDto.size
 			};
 
 			this.categoryListRequest$?.unsubscribe();
