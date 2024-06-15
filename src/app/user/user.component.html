@@ -111,8 +111,8 @@
 						class="tab"
 						role="tab"
 						appSkeleton
-						[class.tab-active]="!category"
-						[appSkeletonToggle]="categoryListSkeletonToggle && !!category"
+						[class.tab-active]="!categoryListSkeletonToggle && !category"
+						[appSkeletonToggle]="categoryListSkeletonToggle"
 						[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
 						[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
 					>

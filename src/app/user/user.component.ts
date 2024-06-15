@@ -1,9 +1,9 @@
 /** @format */
 
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import { distinctUntilChanged, distinctUntilKeyChanged, Observable, Subscription } from 'rxjs';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { ActivatedRoute, NavigationExtras, Params, Router, RouterModule } from '@angular/router';
+import { distinctUntilChanged, distinctUntilKeyChanged, from, Observable, of, Subscription, throwError } from 'rxjs';
+import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
@@ -36,6 +36,7 @@ import { CopyToClipboardDirective } from '../standalone/directives/app-copy-to-c
 import { SnackbarService } from '../core/services/snackbar.service';
 import { PlatformService } from '../core/services/platform.service';
 import { UserGetOneDto } from '../core/dto/user/user-get-one.dto';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
 	standalone: true,
@@ -110,7 +111,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
 					return userName && userId;
 				}),
-				tap(() => this.userService.user.next(undefined))
+				tap(() => {
+					this.userRequest$?.unsubscribe();
+					this.activatedRouteFirstChildParams$?.unsubscribe();
+				})
 			)
 			.subscribe({
 				next: () => {
@@ -170,51 +174,21 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
-		const userId: number = Number(this.activatedRoute.snapshot.paramMap.get('userId'));
-		const userName: string = String(this.activatedRoute.snapshot.paramMap.get('userName') || '');
-		const userRequest$ = (): Observable<User[]> => {
-			if (userId) {
-				const userGetOneDto: UserGetOneDto = {
-					scope: ['categories']
-				};
-
-				return this.userService.getOne(userId, userGetOneDto).pipe(map((user: User) => [user]));
-			} else {
-				const userGetAllDto: UserGetAllDto = {
-					userName: userName.substring(1),
-					scope: ['categories'],
-					page: 1,
-					size: 10
-				};
-
-				return this.userService.getAll(userGetAllDto);
-			}
-		};
-
-		this.userRequest$?.unsubscribe();
-		this.userRequest$ = userRequest$().subscribe({
-			next: (userList: User[]) => {
-				if (!userList.length) {
-					this.router.navigate(['error', 404]).then(() => console.debug('Route changed'));
-				} else {
-					this.user = userList[0];
+		if (this.platformService.isBrowser()) {
+			this.userRequest$?.unsubscribe();
+			this.userRequest$ = this.getUserRequest().subscribe({
+				next: (user: User) => {
+					this.user = user;
 					this.userSkeletonToggle = false;
 
 					this.categoryList = this.user.categories;
 					this.categoryListSkeletonToggle = false;
 
-					// Trigger UserPostComponent
-
-					this.userService.user.next(this.user);
-
 					// Set category
 
 					this.activatedRouteFirstChildParams$?.unsubscribe();
 					this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params
-						.pipe(
-							switchMap(() => this.activatedRoute.firstChild.params),
-							distinctUntilKeyChanged('categoryId')
-						)
+						.pipe(distinctUntilKeyChanged('categoryId'))
 						.subscribe({
 							next: () => {
 								const setMeta = (): void => {
@@ -255,17 +229,17 @@ export class UserComponent implements OnInit, OnDestroy {
 							},
 							error: (error: any) => console.error(error)
 						});
-				}
-			},
-			error: (error: any) => console.error(error)
-		});
+				},
+				error: (error: any) => console.error(error)
+			});
 
-		/** Toggle SearchForm component */
+			/** Toggle SearchForm component */
 
-		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
-			this.onToggleSearchForm(true);
-		} else {
-			this.onToggleSearchForm(false);
+			if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
+				this.onToggleSearchForm(true);
+			} else {
+				this.onToggleSearchForm(false);
+			}
 		}
 	}
 
@@ -314,6 +288,71 @@ export class UserComponent implements OnInit, OnDestroy {
 			},
 			error: (error: any) => console.error(error)
 		});
+	}
+
+	/** Redirect */
+
+	getUserRequest(): Observable<User | undefined> {
+		const user: User | undefined = this.userService.user.getValue();
+		const userId: number = Number(this.activatedRoute.snapshot.paramMap.get('userId'));
+		const userName: string = String(this.activatedRoute.snapshot.paramMap.get('userName') || '');
+
+		switch (true) {
+			case !!user && (userId === user.id || userName === this.userService.getUserUrl(user, 1)): {
+				return of(user).pipe(tap(() => this.userService.user.next(undefined)));
+			}
+			case !!userId: {
+				const userGetOneDto: UserGetOneDto = {
+					scope: ['categories']
+				};
+
+				return this.userService.getOne(userId, userGetOneDto).pipe(
+					catchError((httpErrorResponse: HttpErrorResponse) => {
+						this.router.navigate(['/error', 404]).then(() => console.debug('Route changed'));
+
+						return throwError(() => httpErrorResponse);
+					}),
+					tap((user: User) => this.userService.user.next(user)),
+					switchMap((user: User) => {
+						const commands: string[] = [this.userService.getUserUrl(user)];
+						const extras: NavigationExtras = {
+							replaceUrl: true
+						};
+
+						const categoryId: string = String(this.activatedRoute.snapshot.paramMap.get('categoryId') || '');
+
+						if (categoryId) {
+							commands.push('category');
+							commands.push(categoryId);
+						}
+
+						return from(this.router.navigate(commands, extras)).pipe(switchMap(() => of(user)));
+					})
+				);
+			}
+			case !!userName: {
+				const userGetAllDto: UserGetAllDto = {
+					userName: userName.substring(1),
+					scope: ['categories'],
+					page: 1,
+					size: 10
+				};
+
+				return this.userService.getAll(userGetAllDto).pipe(
+					map((user: User[]) => user[0]),
+					switchMap((user: User | undefined) => {
+						if (user) {
+							return of(user).pipe(tap((user: User) => this.userService.user.next(user)));
+						} else {
+							return of(this.router.navigate(['/error', 404])).pipe(switchMap(() => of(undefined)));
+						}
+					})
+				);
+			}
+			default: {
+				return of(this.router.navigate(['/error', 404])).pipe(switchMap(() => of(undefined)));
+			}
+		}
 	}
 
 	/** Search */

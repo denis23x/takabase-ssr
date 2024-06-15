@@ -238,22 +238,34 @@ export const APP_ROUTES: Route[] = [
 		matcher: (urlSegment: UrlSegment[]): UrlMatchResult | null => {
 			// Check if there is at least one URL segment
 			if (urlSegment.length >= 1) {
+				// Check if the first URL segment is 'user'
+				if (urlSegment[0].path === 'user') {
+					const userId: string = urlSegment[1]?.path;
+					const categoryId: string = urlSegment[3]?.path;
+					const posParams: any = {};
+
+					if (userId) {
+						posParams.userId = new UrlSegment(userId, null);
+					} else {
+						return null;
+					}
+
+					if (categoryId) {
+						posParams.categoryId = new UrlSegment(categoryId, null);
+					}
+
+					return {
+						consumed: urlSegment.slice(0, 2),
+						posParams
+					};
+				}
+
 				// Check if the first URL segment matches the pattern for a username (e.g., @username)
 				if (urlSegment[0].path.match(/^@\S+$/gm)) {
 					return {
 						consumed: urlSegment.slice(0, 1),
 						posParams: {
 							userName: new UrlSegment(urlSegment[0].path, {})
-						}
-					};
-				}
-
-				// Check if the first URL segment is 'user'
-				if (urlSegment[0].path === 'user') {
-					return {
-						consumed: urlSegment.slice(0, 2),
-						posParams: {
-							userId: new UrlSegment(urlSegment[1].path, {})
 						}
 					};
 				}
