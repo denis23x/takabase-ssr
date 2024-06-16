@@ -1,16 +1,66 @@
+/* https://usbrandcolors.com */
+
+@mixin branding-dark {
+	.logo-algolia {
+		color: #ffffff;
+	}
+	.logo-facebook {
+		color: #ffffff;
+	}
+	.logo-github {
+		color: #ffffff;
+	}
+	.logo-google {}
+	.logo-linkedin {
+		color: #ffffff;
+	}
+	.logo-pinterest {
+		color: #ffffff;
+	}
+	.logo-reddit {}
+	.logo-telegram {
+		color: #2AABEE;
+	}
+	.logo-twitter-x {
+		color: #ffffff;
+	}
+}
+
+@mixin branding-light {
+	.logo-algolia {
+		color: #003dff;
+	}
+	.logo-facebook {
+		color: #0866FF;
+	}
+	.logo-github {
+		color: #1B1F24;
+	}
+	.logo-google {}
+	.logo-linkedin {
+		color: #0A66C2;
+	}
+	.logo-pinterest {
+		color: #E60023;
+	}
+	.logo-reddit {}
+	.logo-telegram {
+		color: #2AABEE;
+	}
+	.logo-twitter-x {
+		color: #333333;
+	}
+}
+
 /* Prefers Color Scheme */
 
 html:not([data-theme]) {
 	@media (prefers-color-scheme: dark) {
-		.logo-algolia {
-			color: #ffffff;
-		}
+		@include branding-dark();
 	}
 
 	@media (prefers-color-scheme: light) {
-		.logo-algolia {
-			color: #003dff;
-		}
+		@include branding-light();
 	}
 }
 
@@ -29,9 +79,7 @@ html[data-theme="luxury"],
 html[data-theme="night"],
 html[data-theme="sunset"],
 html[data-theme="synthwave"] {
-	.logo-algolia {
-		color: #ffffff;
-	}
+	@include branding-dark();
 }
 
 html[data-theme="acid"],
@@ -53,7 +101,5 @@ html[data-theme="retro"],
 html[data-theme="valentine"],
 html[data-theme="winter"],
 html[data-theme="wireframe"] {
-	.logo-algolia {
-		color: #003dff;
-	}
+	@include branding-light();
 }

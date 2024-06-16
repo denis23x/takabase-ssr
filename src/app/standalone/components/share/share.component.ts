@@ -7,10 +7,11 @@ import { Post } from '../../../core/models/post.model';
 import { HelperService } from '../../../core/services/helper.service';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { CopyToClipboardDirective } from '../../directives/app-copy-to-clipboard.directive';
+import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 
 @Component({
 	standalone: true,
-	imports: [SvgIconComponent, SkeletonDirective, CopyToClipboardDirective],
+	imports: [SvgIconComponent, SkeletonDirective, CopyToClipboardDirective, SvgLogoComponent],
 	selector: 'app-share, [appShare]',
 	templateUrl: './share.component.html'
 })
@@ -53,6 +54,7 @@ export class ShareComponent {
 	getShareListParams(shareKey: string): Params | null {
 		const url: URL = this.helperService.getURL();
 
+		/** https://svgporn.com */
 		/** https://sharingbuttons.io/ */
 		/** https://github.com/bradvin/social-share-urls */
 		/** https://www.freeformatter.com/url-parser-query-string-splitter.html */
@@ -108,7 +110,9 @@ export class ShareComponent {
 	}
 
 	setShareList(): void {
-		this.shareList = { ...this.shareListDefault };
+		this.shareList = {
+			...this.shareListDefault
+		};
 
 		Object.keys(this.shareList).forEach((shareKey: string) => {
 			const params: Params | null = this.getShareListParams(shareKey);

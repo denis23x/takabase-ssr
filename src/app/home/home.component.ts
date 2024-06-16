@@ -9,10 +9,11 @@ import { PlatformService } from '../core/services/platform.service';
 import { fromEvent, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthenticatedComponent } from '../standalone/components/authenticated/authenticated.component';
+import { SvgLogoComponent } from '../standalone/components/svg-logo/svg-logo.component';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, SvgIconComponent, AuthenticatedComponent],
+	imports: [RouterModule, SvgIconComponent, AuthenticatedComponent, SvgLogoComponent],
 	selector: 'app-home',
 	templateUrl: './home.component.html'
 })
@@ -164,9 +165,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	onClickPWAInstall(): void {
-		this.appPWAInstallPromt
-			.prompt()
-			.then((event: any) => (this.appPWAAvailable = event.outcome !== 'accepted'));
+		this.appPWAInstallPromt.prompt().then((event: any) => (this.appPWAAvailable = event.outcome !== 'accepted'));
 
 		this.appPWAInstallPromt = null;
 	}

@@ -8,17 +8,22 @@ import { Component, Input } from '@angular/core';
 	templateUrl: './svg-logo.component.html'
 })
 export class SvgLogoComponent {
-	@Input({ required: true })
+	@Input()
+	set appSvgLogoSquare(square: string) {
+		this.square = square;
+	}
+
+	@Input()
 	set appSvgLogoViewBox(viewBox: string) {
 		this.viewBox = viewBox;
 	}
 
-	@Input({ required: true })
+	@Input()
 	set appSvgLogoWidth(width: string) {
 		this.width = width;
 	}
 
-	@Input({ required: true })
+	@Input()
 	set appSvgLogoHeight(height: string) {
 		this.height = height;
 	}
@@ -28,10 +33,11 @@ export class SvgLogoComponent {
 		this.icon = '#' + icon;
 	}
 
-	viewBox: string = '0 0 0 0';
+	square: string | undefined;
+	viewBox: string = '0 0 256 256';
 
-	width: string = '0';
-	height: string = '0';
+	width: string = '48';
+	height: string = '48';
 
 	icon: string | undefined;
 }

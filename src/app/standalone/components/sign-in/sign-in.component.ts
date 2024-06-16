@@ -9,11 +9,12 @@ import { Router } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { Subscription } from 'rxjs';
 import { AuthProvider } from 'firebase/auth';
+import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 
 @Component({
 	standalone: true,
 	selector: 'app-sign-in, [appSignIn]',
-	imports: [CommonModule, SvgIconComponent],
+	imports: [CommonModule, SvgIconComponent, SvgLogoComponent],
 	templateUrl: './sign-in.component.html'
 })
 export class SignInComponent implements OnDestroy {
@@ -39,9 +40,8 @@ export class SignInComponent implements OnDestroy {
 		this.signInWithPopup$?.unsubscribe();
 		this.signInWithPopup$ = this.authorizationService.onSignInWithPopup(authProvider).subscribe({
 			next: (user: User) => {
-				this.router
-					.navigate([this.userService.getUserUrl(user)])
-					.then(() => console.debug('Route changed'));
+				// Redirect to profile
+				this.router.navigate([this.userService.getUserUrl(user)]).then(() => console.debug('Route changed'));
 			},
 			error: (error: any) => console.error(error)
 		});

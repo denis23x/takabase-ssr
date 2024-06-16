@@ -38,11 +38,12 @@ import {
 	EmailAuthCredential,
 	linkWithCredential
 } from 'firebase/auth';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UserPasswordReset } from '../../standalone/components/user/password-reset/password-reset.component';
 import { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
 import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
+import { SvgLogoComponent } from '../../standalone/components/svg-logo/svg-logo.component';
 
 interface EmailAuthProviderForm {
 	email: FormControl<string>;
@@ -77,7 +78,9 @@ interface NewPasswordForm {
 		UserDeleteComponent,
 		WindowComponent,
 		UserPasswordReset,
-		InputShowPassword
+		InputShowPassword,
+		SvgLogoComponent,
+		NgOptimizedImage
 	],
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'
@@ -222,22 +225,34 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			{
 				providerId: 'google.com',
 				providerLabel: 'Google',
-				providerIcon: './assets/icons/socials/google.svg',
+				providerIcon: 'google',
+				providerIconClass: 'logo-google',
+				providerIconWidth: '32',
+				providerIconHeight: '32',
+				providerIconViewBox: '0 0 48 48',
 				providerLink: 'https://google.com',
 				linked: false
 			},
 			{
 				providerId: 'facebook.com',
 				providerLabel: 'Facebook',
-				providerIcon: './assets/icons/socials/facebook.svg',
+				providerIcon: 'facebook',
+				providerIconClass: 'logo-facebook',
+				providerIconWidth: '32',
+				providerIconHeight: '32',
+				providerIconViewBox: '0 0 256 256',
 				providerLink: 'https://facebook.com',
 				linked: false
 			},
 			{
 				providerId: 'github.com',
 				providerLabel: 'Github',
-				providerIcon: './assets/icons/socials/github.svg',
 				providerLink: 'https://github.com',
+				providerIcon: 'github',
+				providerIconClass: 'logo-github',
+				providerIconWidth: '32',
+				providerIconHeight: '32',
+				providerIconViewBox: '0 0 97.6 96',
 				linked: false
 			}
 		];

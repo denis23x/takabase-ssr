@@ -1,54 +1,48 @@
 <!-- @format -->
 
 <ng-container>
-	<ul
-		class="flex items-center justify-start gap-4"
-		[ngClass]="{ 'grayscale cursor-not-allowed': signInDisabled }"
-	>
+	<ul class="flex items-center justify-start gap-4" [ngClass]="{ 'grayscale cursor-not-allowed': signInDisabled }">
 		<li class="block" [ngClass]="{ 'pointer-events-none': signInDisabled }">
 			<button
-				class="block"
+				class="block logo-google"
 				type="button"
 				title="Google"
 				aria-label="Google"
+				appSvgLogo
+				[appSvgLogoViewBox]="'0 0 48 48'"
+				[appSvgLogoIcon]="'google'"
+				[appSvgLogoWidth]="'32'"
+				[appSvgLogoHeight]="'32'"
 				(click)="onSignInWithProvider('google.com')"
-			>
-				<img src="./assets/icons/socials/google.svg" alt="Google" />
-			</button>
+			></button>
 		</li>
 		<li class="block" [ngClass]="{ 'pointer-events-none': signInDisabled }">
 			<button
-				class="block"
+				class="block logo-facebook"
 				type="button"
 				title="Facebook"
 				aria-label="Facebook"
+				appSvgLogo
+				[appSvgLogoViewBox]="'0 0 256 256'"
+				[appSvgLogoIcon]="'facebook'"
+				[appSvgLogoWidth]="'32'"
+				[appSvgLogoHeight]="'32'"
 				(click)="onSignInWithProvider('facebook.com')"
-			>
-				<img src="./assets/icons/socials/facebook.svg" alt="Facebook" />
-			</button>
+			></button>
 		</li>
 		<li class="block" [ngClass]="{ 'pointer-events-none': signInDisabled }">
 			<button
-				class="block"
+				class="block logo-github"
 				type="button"
 				title="Github"
 				aria-label="Github"
+				appSvgLogo
+				[appSvgLogoViewBox]="'0 0 97.6 96'"
+				[appSvgLogoIcon]="'github'"
+				[appSvgLogoWidth]="'32'"
+				[appSvgLogoHeight]="'32'"
 				(click)="onSignInWithProvider('github.com')"
-			>
-				<img src="./assets/icons/socials/github.svg" alt="Github" />
-			</button>
+			></button>
 		</li>
-		<!-- TODO: twitter
-    <li class="block" [ngClass]="{ 'pointer-events-none': signInDisabled }">
-			<button
-				class="block"
-				type="button"
-				title="Twitter"
-				aria-label="Twitter"
-				(click)="onSignInWithProvider('twitter.com')"
-			>
-				<img src="./assets/icons/socials/twitter.svg" alt="Twitter" />
-			</button>
-		</li>	-->
 	</ul>
 </ng-container>

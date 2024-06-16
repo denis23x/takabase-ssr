@@ -14,6 +14,7 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { AuthenticatedComponent } from '../authenticated/authenticated.component';
+import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 
 @Component({
 	standalone: true,
@@ -25,7 +26,8 @@ import { AuthenticatedComponent } from '../authenticated/authenticated.component
 		UserUrlPipe,
 		SkeletonDirective,
 		DropdownComponent,
-		AuthenticatedComponent
+		AuthenticatedComponent,
+		SvgLogoComponent
 	],
 	templateUrl: './header.component.html'
 })
