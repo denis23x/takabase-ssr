@@ -2,30 +2,21 @@
 
 import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
-import { DropdownComponent } from '../dropdown/dropdown.component';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { merge, Subscription } from 'rxjs';
-import { debounceTime, filter, map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { debounceTime, filter } from 'rxjs/operators';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 
 interface SearchForm {
 	query: FormControl<string>;
-	orderBy: FormControl<string>;
 }
 
 @Component({
 	standalone: true,
 	selector: 'app-search-form, [appSearchForm]',
-	imports: [
-		FormsModule,
-		ReactiveFormsModule,
-		InputTrimWhitespaceDirective,
-		DropdownComponent,
-		SvgIconComponent,
-		SvgLogoComponent
-	],
+	imports: [FormsModule, ReactiveFormsModule, InputTrimWhitespaceDirective, SvgIconComponent, SvgLogoComponent],
 	templateUrl: './search-form.component.html'
 })
 export class SearchFormComponent implements OnInit, OnDestroy {
@@ -45,19 +36,16 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 	activatedRouteQueryParams$: Subscription | undefined;
 
 	searchForm: FormGroup = this.formBuilder.group<SearchForm>({
-		query: this.formBuilder.nonNullable.control('', [Validators.minLength(2), Validators.maxLength(24)]),
-		orderBy: this.formBuilder.nonNullable.control('', [])
+		query: this.formBuilder.nonNullable.control('', [Validators.minLength(2), Validators.maxLength(24)])
 	});
 	searchForm$: Subscription | undefined;
-	searchFormOrderByList: string[] = ['newest', 'oldest'];
 
 	ngOnInit(): void {
 		this.activatedRouteQueryParams$?.unsubscribe();
 		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.subscribe({
 			next: (queryParams: Params) => {
 				const value: any = {
-					query: queryParams.query || '',
-					orderBy: queryParams.orderBy || ''
+					query: queryParams.query || ''
 				};
 
 				this.searchForm.setValue(value, { emitEvent: false });
@@ -67,20 +55,18 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 		});
 
 		this.searchForm$?.unsubscribe();
-		this.searchForm$ = merge(
-			// prettier-ignore
-			this.searchForm.get('query').valueChanges.pipe(debounceTime(1000), filter(() => this.searchForm.valid)),
-			this.searchForm.get('orderBy').valueChanges.pipe(debounceTime(100))
-		)
-			.pipe(map(() => this.searchForm.value))
+		this.searchForm$ = this.searchForm.valueChanges
+			.pipe(
+				debounceTime(1000),
+				filter(() => this.searchForm.valid)
+			)
 			.subscribe({
 				next: (value: any) => {
 					this.router
 						.navigate([], {
 							relativeTo: this.activatedRoute,
 							queryParams: {
-								query: value.query || null,
-								orderBy: value.orderBy || null
+								query: value.query || null
 							},
 							replaceUrl: true
 						})

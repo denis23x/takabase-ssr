@@ -2,7 +2,22 @@
 
 <ng-container>
 	<section class="flex flex-col gap-4 md:gap-8">
-		<header class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
+		<header class="rounded-box flex flex-col border border-base-content/20 bg-base-100 p-4 shadow-xl">
+			<label class="label" for="searchFormSearch">
+				<span class="label-text">Lookup</span>
+				<a
+					class="label-text-alt link logo-algolia"
+					href="https://www.algolia.com"
+					rel="noopener noreferrer"
+					target="_blank"
+					appSvgLogo
+					[appSvgLogoViewBox]="'0 0 2196.2 500'"
+					[appSvgLogoIcon]="'algolia'"
+					[appSvgLogoWidth]="'77'"
+					[appSvgLogoHeight]="'19'"
+				>
+				</a>
+			</label>
 			<div class="relative" appSearchForm [appSearchFormDisabled]="abstractListIsLoading"></div>
 		</header>
 		<div class="flex flex-col">

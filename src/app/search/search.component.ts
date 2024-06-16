@@ -6,10 +6,11 @@ import { ScrollPresetDirective } from '../standalone/directives/app-scroll-prese
 import { SearchFormComponent } from '../standalone/components/search-form/search-form.component';
 import { Subscription } from 'rxjs';
 import { AbstractSearchComponent } from '../abstracts/abstract-search.component';
+import { SvgLogoComponent } from '../standalone/components/svg-logo/svg-logo.component';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, ScrollPresetDirective, SearchFormComponent],
+	imports: [RouterModule, ScrollPresetDirective, SearchFormComponent, SvgLogoComponent],
 	selector: 'app-search',
 	templateUrl: './search.component.html'
 })

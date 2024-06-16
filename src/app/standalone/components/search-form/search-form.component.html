@@ -4,21 +4,6 @@
 	<form class="flex items-end justify-between gap-4 w-full" autocomplete="off" [formGroup]="searchForm">
 		@if (searchForm.get("query"); as query) {
 			<fieldset class="form-control flex-1">
-				<label class="label" for="searchFormSearch">
-					<span class="label-text">Lookup</span>
-					<a
-						class="label-text-alt link logo-algolia"
-						href="https://www.algolia.com"
-						rel="noopener noreferrer"
-						target="_blank"
-						appSvgLogo
-						[appSvgLogoViewBox]="'0 0 2196.2 500'"
-						[appSvgLogoIcon]="'algolia'"
-						[appSvgLogoWidth]="'77'"
-						[appSvgLogoHeight]="'19'"
-					>
-					</a>
-				</label>
 				<div class="relative">
 					<input
 						class="input-bordered input input-md w-full"
@@ -53,52 +38,5 @@
 				</div>
 			</fieldset>
 		}
-		<!--
-		@if (searchForm.get("orderBy"); as orderBy) {
-			<fieldset class="form-control">
-				<div class="block" appDropdown [appDropdownPlacement]="'bottom-end'">
-					<div class="indicator" slot="target">
-						@if (orderBy.value) {
-							<span
-								class="indicator-item badge"
-								[class.badge-ghost]="searchForm.disabled"
-								[class.badge-success]="searchForm.enabled"
-							>
-							</span>
-						}
-						<button
-							class="btn-success btn-outline btn-square btn fill-current p-3"
-							type="button"
-							title="Sorting results"
-							aria-label="Sorting results"
-							appSvgIcon
-							slot="target"
-							[disabled]="searchForm.disabled"
-							[appSvgIconIcon]="'filter'"
-							[appSvgIconSquare]="'1.75em'"
-						></button>
-					</div>
-					<div class="menu menu-vertical menu-md p-0" slot="content">
-						<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
-							@for (searchFormOrderBy of searchFormOrderByList; track $index) {
-								<li class="flex w-full">
-									&lt;!&ndash; prettier-ignore &ndash;&gt;
-									<button
-                    class="rounded-btn block w-full truncate text-right first-letter:uppercase"
-                    type="button"
-                    [class.active]="searchFormOrderBy === orderBy.value"
-                    [title]="searchFormOrderBy"
-                    [attr.aria-label]="searchFormOrderBy"
-                    (click)="searchFormOrderBy === orderBy.value ? orderBy.reset() : orderBy.setValue(searchFormOrderBy)"
-                  >
-                    {{ searchFormOrderBy }}
-                  </button>
-								</li>
-							}
-						</ul>
-					</div>
-				</div>
-			</fieldset>
-		}-->
 	</form>
 </ng-container>
