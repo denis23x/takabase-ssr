@@ -17,10 +17,10 @@ import { Post } from '../models/post.model';
 export class UserService {
 	private readonly apiService: ApiService = inject(ApiService);
 
-	/** Temp subjects for connect UserComponent & UserPostComponent */
+	/** User temp subjects for connect UserComponent & UserPostComponent */
 
-	user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
-	userPostList: BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
+	userTemp: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
+	// userPostList: BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
 
 	/** Utility */
 

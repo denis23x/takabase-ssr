@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, Input, numberAttribute, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { CookiesService } from '../core/services/cookies.service';
@@ -27,27 +27,6 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 	public readonly platformService: PlatformService = inject(PlatformService);
 	public readonly algoliaService: AlgoliaService = inject(AlgoliaService);
 	public readonly metaService: MetaService = inject(MetaService);
-
-	@Input({ transform: numberAttribute })
-	set categoryId(categoryId: number | undefined) {
-		this.setAbstractGetAllDto({
-			categoryId
-		});
-	}
-
-	@Input({ transform: numberAttribute })
-	set userId(userId: number | undefined) {
-		this.setAbstractGetAllDto({
-			userId
-		});
-	}
-
-	@Input()
-	set userName(userName: string | undefined) {
-		this.setAbstractGetAllDto({
-			userName: userName ? userName.substring(1) : userName
-		});
-	}
 
 	@Input()
 	set query(query: string | undefined) {

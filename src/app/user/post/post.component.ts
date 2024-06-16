@@ -1,14 +1,14 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Params, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { AbstractSearchComponent } from '../../abstracts/abstract-search.component';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { from, Subscription } from 'rxjs';
+import { distinctUntilChanged, from, Subscription, switchMap } from 'rxjs';
 import { SearchIndex } from 'algoliasearch/lite';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { UserService } from '../../core/services/user.service';
@@ -24,6 +24,8 @@ import { filter, tap } from 'rxjs/operators';
 export class UserPostComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
 	private readonly userService: UserService = inject(UserService);
 
+	activatedRouteParams$: Subscription | undefined;
+
 	user: User | undefined;
 	user$: Subscription | undefined;
 
@@ -37,26 +39,43 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		this.postGetAllDto$?.unsubscribe();
-		this.postGetAllDto$ = this.abstractGetAllDto$.subscribe({
-			next: () => {
-				/** Get abstract DTO */
+		this.activatedRouteParams$?.unsubscribe();
+		this.activatedRouteParams$ = this.activatedRoute.params
+			.pipe(
+				tap(() => this.setSkeleton()),
+				distinctUntilChanged((previousParams: Params, currentParams: Params) => {
+					const userName: boolean = previousParams.userName === currentParams.userName;
+					const categoryId: boolean = previousParams.categoryId === currentParams.categoryId;
 
-				this.postGetAllDto = this.getAbstractGetAllDto();
+					return userName && categoryId;
+				}),
+				switchMap(() => this.userService.userTemp),
+				filter(() => {
+					const user: User = this.userService.userTemp.getValue();
+					const userName: string = String(this.activatedRoute.snapshot.paramMap.get('userName') || '');
 
-				/** Apply Data */
+					return user?.name === userName.substring(1);
+				})
+			)
+			.subscribe({
+				next: () => {
+					/** Apply user data */
 
-				this.setSkeleton();
-				this.setResolver();
-			},
-			error: (error: any) => console.error(error)
-		});
+					this.user = this.userService.userTemp.getValue();
+
+					/** Apply Data */
+
+					this.setSkeleton();
+					this.setResolver();
+				}
+			});
 	}
 
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		[this.user$, this.postListRequest$, this.postGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.user$, this.activatedRouteParams$, this.postListRequest$, this.postGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
@@ -69,16 +88,19 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 	}
 
 	setResolver(): void {
-		this.user$?.unsubscribe();
-		this.user$ = this.userService.user
-			.pipe(
-				filter((user: User | undefined) => !!user),
-				tap((user: User) => (this.user = user))
-			)
-			.subscribe({
-				next: () => this.getAbstractList(),
-				error: (error: any) => console.error(error)
-			});
+		this.postGetAllDto$?.unsubscribe();
+		this.postGetAllDto$ = this.abstractGetAllDto$.subscribe({
+			next: () => {
+				/** Get abstract DTO */
+
+				this.postGetAllDto = this.getAbstractGetAllDto();
+
+				/** Get abstract list */
+
+				this.getAbstractList();
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	getAbstractList(): void {
@@ -94,12 +116,15 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 			const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
 			const postIndexFilters: string[] = [];
 
-			if (this.user.id) {
-				postIndexFilters.push('user.id:' + this.user.id);
+			const userId: string = String(this.user.id);
+			const categoryId: string = String(this.activatedRoute.snapshot.paramMap.get('categoryId') || '');
+
+			if (userId) {
+				postIndexFilters.push('user.id:' + userId);
 			}
 
-			if (this.postGetAllDto.categoryId) {
-				postIndexFilters.push('category.id:' + this.postGetAllDto.categoryId);
+			if (categoryId) {
+				postIndexFilters.push('category.id:' + categoryId);
 			}
 
 			const postIndexSearch: SearchOptions = {
