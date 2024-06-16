@@ -8,6 +8,7 @@ import { merge, Subscription } from 'rxjs';
 import { debounceTime, filter, map } from 'rxjs/operators';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 
 interface SearchForm {
 	query: FormControl<string>;
@@ -17,7 +18,14 @@ interface SearchForm {
 @Component({
 	standalone: true,
 	selector: 'app-search-form, [appSearchForm]',
-	imports: [FormsModule, ReactiveFormsModule, InputTrimWhitespaceDirective, DropdownComponent, SvgIconComponent],
+	imports: [
+		FormsModule,
+		ReactiveFormsModule,
+		InputTrimWhitespaceDirective,
+		DropdownComponent,
+		SvgIconComponent,
+		SvgLogoComponent
+	],
 	templateUrl: './search-form.component.html'
 })
 export class SearchFormComponent implements OnInit, OnDestroy {

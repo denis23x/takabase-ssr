@@ -4,6 +4,21 @@
 	<form class="flex items-end justify-between gap-4 w-full" autocomplete="off" [formGroup]="searchForm">
 		@if (searchForm.get("query"); as query) {
 			<fieldset class="form-control flex-1">
+				<label class="label" for="searchFormSearch">
+					<span class="label-text">Lookup</span>
+					<a
+						class="label-text-alt link logo-algolia"
+						href="https://www.algolia.com"
+						rel="noopener noreferrer"
+						target="_blank"
+						appSvgLogo
+						[appSvgLogoViewBox]="'0 0 2196.2 500'"
+						[appSvgLogoIcon]="'algolia'"
+						[appSvgLogoWidth]="'77'"
+						[appSvgLogoHeight]="'19'"
+					>
+					</a>
+				</label>
 				<div class="relative">
 					<input
 						class="input-bordered input input-md w-full"
@@ -38,6 +53,7 @@
 				</div>
 			</fieldset>
 		}
+		<!--
 		@if (searchForm.get("orderBy"); as orderBy) {
 			<fieldset class="form-control">
 				<div class="block" appDropdown [appDropdownPlacement]="'bottom-end'">
@@ -66,7 +82,7 @@
 						<ul class="flex max-h-76 flex-col overflow-y-auto p-2">
 							@for (searchFormOrderBy of searchFormOrderByList; track $index) {
 								<li class="flex w-full">
-									<!-- prettier-ignore -->
+									&lt;!&ndash; prettier-ignore &ndash;&gt;
 									<button
                     class="rounded-btn block w-full truncate text-right first-letter:uppercase"
                     type="button"
@@ -83,6 +99,6 @@
 					</div>
 				</div>
 			</fieldset>
-		}
+		}-->
 	</form>
 </ng-container>

@@ -11,7 +11,7 @@
     "start:deploy": "node firebase-deploy.js",
     "start:lint": "ng lint",
     "build:prod": "ng run takabase-ssr:build:production",
-    "build:spite": "svg2sprite ./src/assets/icons/bootstrap ./src/assets/icons/sprite.svg --inline --stripAttrs class --stripAttrs fill && node sprite && prettier --write src/index.html --log-level silent",
+    "build:spite": "node sprite",
     "build:sitemap": "node sitemap.js",
     "dist:analyze": "esbuild-visualizer --metadata ./dist/takabase-ssr/stats.json --filename ./dist/takabase-ssr/stats.html --open",
     "dist:start": "node dist/takabase-ssr/server/server.mjs"
