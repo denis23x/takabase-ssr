@@ -81,8 +81,8 @@ export class UserComponent implements OnInit, OnDestroy {
 	user: User | undefined;
 	userRequest$: Subscription | undefined;
 	userTemp: User | undefined;
-	userPostComponent: UserPostComponent | undefined;
 	userSkeletonToggle: boolean = true;
+	userPostComponent: UserPostComponent | undefined;
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -439,9 +439,9 @@ export class UserComponent implements OnInit, OnDestroy {
 			.then(() => console.debug('Route changed'));
 	}
 
-	/** Misc */
+	/** Router outlet */
 
-	onRouterOutletActivate(userPostComponent: UserPostComponent): void {
+	onRouterOutlet(userPostComponent: UserPostComponent | undefined): void {
 		this.userPostComponent = userPostComponent;
 
 		// ExpressionChangedAfterItHasBeenCheckedError (userPostComponent)

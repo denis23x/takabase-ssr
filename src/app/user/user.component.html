@@ -163,7 +163,7 @@
 						appSkeleton
 						[title]="searchFormToggle ? 'Hide' : 'Search'"
 						[attr.aria-label]="searchFormToggle ? 'Hide' : 'Search'"
-						[disabled]="false"
+						[disabled]="userPostComponent?.postListSkeletonToggle"
 						[appSkeletonToggle]="(categorySkeletonToggle || userPostComponent?.postListSkeletonToggle) && !searchFormToggle"
 						[appSkeletonClassListElementRef]="['border-0']"
 						[appSvgIconIcon]="searchFormToggle ? 'x-lg' : 'search'"
@@ -172,7 +172,11 @@
 					></button>
 					@switch (searchFormToggle) {
 						@case (true) {
-							<div class="relative flex items-end justify-between gap-4 w-full" appSearchForm></div>
+							<div
+								class="relative flex items-end justify-between gap-4 w-full"
+								appSearchForm
+								[appSearchFormDisabled]="userPostComponent?.postListSkeletonToggle"
+							></div>
 						}
 						@case (false) {
 							<div class="flex items-center justify-start gap-4 overflow-hidden w-full">
@@ -304,10 +308,7 @@
 					</div>
 				}
 				<div class="block">
-					<router-outlet
-						(activate)="onRouterOutletActivate($event)"
-						(deactivate)="userPostComponent = undefined"
-					></router-outlet>
+					<router-outlet (activate)="onRouterOutlet($event)" (deactivate)="onRouterOutlet(undefined)"></router-outlet>
 				</div>
 			</div>
 		</div>

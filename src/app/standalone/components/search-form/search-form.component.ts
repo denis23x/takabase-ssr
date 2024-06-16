@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -24,6 +24,15 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly router: Router = inject(Router);
+
+	@Input()
+	set appSearchFormDisabled(searchFormDisabled: boolean) {
+		if (searchFormDisabled) {
+			this.searchForm.disable();
+		} else {
+			this.searchForm.enable();
+		}
+	}
 
 	activatedRouteQueryParams$: Subscription | undefined;
 

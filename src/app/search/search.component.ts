@@ -1,9 +1,11 @@
 /** @format */
 
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SearchFormComponent } from '../standalone/components/search-form/search-form.component';
+import { Subscription } from 'rxjs';
+import { AbstractSearchComponent } from '../abstracts/abstract-search.component';
 
 @Component({
 	standalone: true,
@@ -11,4 +13,27 @@ import { SearchFormComponent } from '../standalone/components/search-form/search
 	selector: 'app-search',
 	templateUrl: './search.component.html'
 })
-export class SearchComponent {}
+export class SearchComponent implements OnDestroy {
+	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+	abstractListIsLoading$: Subscription | undefined;
+	abstractListIsLoading: boolean = false;
+
+	ngOnDestroy(): void {
+		[this.abstractListIsLoading$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	onRouterOutlet(abstractListComponent: AbstractSearchComponent | undefined): void {
+		this.abstractListIsLoading$?.unsubscribe();
+		this.abstractListIsLoading$ = abstractListComponent.abstractListIsLoading$.subscribe({
+			next: (abstractListIsLoading: boolean) => {
+				this.abstractListIsLoading = abstractListIsLoading;
+
+				// ExpressionChangedAfterItHasBeenCheckedError (abstractListComponent)
+
+				this.changeDetectorRef.detectChanges();
+			},
+			error: (error: any) => console.error(error)
+		});
+	}
+}
