@@ -36,13 +36,6 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 	}
 
 	@Input()
-	set orderBy(orderBy: string | undefined) {
-		this.setAbstractGetAllDto({
-			orderBy
-		});
-	}
-
-	@Input()
 	set status(status: string | undefined) {
 		if (status) {
 			const queryParams: Params = {

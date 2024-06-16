@@ -25,16 +25,18 @@ export class SearchComponent implements OnDestroy {
 	}
 
 	onRouterOutlet(abstractListComponent: AbstractSearchComponent | undefined): void {
-		this.abstractListIsLoading$?.unsubscribe();
-		this.abstractListIsLoading$ = abstractListComponent.abstractListIsLoading$.subscribe({
-			next: (abstractListIsLoading: boolean) => {
-				this.abstractListIsLoading = abstractListIsLoading;
+		if (abstractListComponent) {
+			this.abstractListIsLoading$?.unsubscribe();
+			this.abstractListIsLoading$ = abstractListComponent.abstractListIsLoading$.subscribe({
+				next: (abstractListIsLoading: boolean) => {
+					this.abstractListIsLoading = abstractListIsLoading;
 
-				// ExpressionChangedAfterItHasBeenCheckedError (abstractListComponent)
+					// ExpressionChangedAfterItHasBeenCheckedError (abstractListComponent)
 
-				this.changeDetectorRef.detectChanges();
-			},
-			error: (error: any) => console.error(error)
-		});
+					this.changeDetectorRef.detectChanges();
+				},
+				error: (error: any) => console.error(error)
+			});
+		}
 	}
 }

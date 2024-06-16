@@ -6,6 +6,5 @@ export interface UserGetAllDto {
 	query?: string;
 	page?: number;
 	size?: number;
-	orderBy?: string;
 	scope?: string[];
 }

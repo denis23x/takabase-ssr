@@ -130,9 +130,19 @@
 						</div>
 					}
 				</div>
-				<p class="alert" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-					<span class="w-full"> {{ post.description || "Description" }} </span>
-				</p>
+				<div
+					class="w-full"
+					appSkeleton
+					[appSkeletonToggle]="postSkeletonToggle"
+					[appSkeletonClassListParent]="['!rounded-box']"
+					[appSkeletonClassList]="['!rounded-box']"
+				>
+					<article
+						class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
+						data-pw="app-user-heading-user-description"
+						[innerHTML]="post.description || 'Description' | markdown | sanitizer: 'html'"
+					></article>
+				</div>
 				<div class="flex flex-wrap items-center justify-between gap-4 w-full">
 					<time
 						class="block text-sm text-base-content/50"

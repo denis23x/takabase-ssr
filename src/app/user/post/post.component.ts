@@ -8,7 +8,7 @@ import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { AbstractSearchComponent } from '../../abstracts/abstract-search.component';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { distinctUntilChanged, from, Subscription, switchMap } from 'rxjs';
+import { distinctUntilKeyChanged, from, Subscription } from 'rxjs';
 import { SearchIndex } from 'algoliasearch/lite';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { UserService } from '../../core/services/user.service';
@@ -39,36 +39,26 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		this.activatedRouteParams$?.unsubscribe();
-		this.activatedRouteParams$ = this.activatedRoute.params
-			.pipe(
-				tap(() => this.setSkeleton()),
-				distinctUntilChanged((previousParams: Params, currentParams: Params) => {
-					const userName: boolean = previousParams.userName === currentParams.userName;
-					const categoryId: boolean = previousParams.categoryId === currentParams.categoryId;
+		this.postList = this.skeletonService.getPostList();
+		this.postListSkeletonToggle = true;
 
-					return userName && categoryId;
-				}),
-				switchMap(() => this.userService.userTemp),
-				filter(() => {
-					const user: User = this.userService.userTemp.getValue();
-					const userName: string = String(this.activatedRoute.snapshot.paramMap.get('userName') || '');
-
-					return user?.name === userName.substring(1);
-				})
-			)
-			.subscribe({
-				next: () => {
-					/** Apply user data */
-
-					this.user = this.userService.userTemp.getValue();
-
-					/** Apply Data */
-
-					this.setSkeleton();
-					this.setResolver();
-				}
-			});
+		this.user$?.unsubscribe();
+		this.user$ = this.userService.userTemp.pipe(tap((user: User) => (this.user = user))).subscribe({
+			next: () => {
+				this.activatedRouteParams$?.unsubscribe();
+				this.activatedRouteParams$ = this.activatedRoute.params
+					.pipe(
+						distinctUntilKeyChanged('categoryId'),
+						tap(() => this.setSkeleton()),
+						filter((params: Params) => !!params.userName && this.user.name === params.userName.substring(1))
+					)
+					.subscribe({
+						next: () => this.setResolver(),
+						error: (error: any) => console.error(error)
+					});
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	ngOnDestroy(): void {

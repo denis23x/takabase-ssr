@@ -7,6 +7,5 @@ export interface PostGetAllDto {
 	query?: string;
 	page?: number;
 	size?: number;
-	orderBy?: string;
 	scope?: string[];
 }

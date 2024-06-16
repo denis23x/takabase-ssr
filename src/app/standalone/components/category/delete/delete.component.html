@@ -75,59 +75,61 @@
 						</div>
 					</fieldset>
 				}
-				@if (categoryPostList.length && categoryList.length > 1) {
-					@if (categoryDeleteForm.get("categoryId"); as categoryId) {
-						<fieldset class="form-control grid">
-							<label class="label">
-								<div class="indicator">
-									<span class="label-text mr-2"> Move posts to category </span>
-									@if (!categoryId.errors) {
-										<span
-											class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
-											[class.badge-ghost]="!categoryId.value"
-											[class.badge-success]="!!categoryId.value && categoryDeleteForm.enabled"
-											[class.opacity-25]="categoryDeleteForm.disabled"
+				@if (categoryPostList && categoryList) {
+					@if (categoryPostList.length && categoryList.length > 1) {
+						@if (categoryDeleteForm.get("categoryId"); as categoryId) {
+							<fieldset class="form-control grid">
+								<label class="label">
+									<div class="indicator">
+										<span class="label-text mr-2"> Move posts to category </span>
+										@if (!categoryId.errors) {
+											<span
+												class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+												[class.badge-ghost]="!categoryId.value"
+												[class.badge-success]="!!categoryId.value && categoryDeleteForm.enabled"
+												[class.opacity-25]="categoryDeleteForm.disabled"
+											>
+												Optional
+											</span>
+										}
+									</div>
+								</label>
+								<div
+									class="menu menu-vertical !rounded-btn !shadow-none menu-md mt-2 p-0"
+									[class.!border-success]="categoryId.value && categoryDeleteForm.enabled"
+								>
+									@if (category; as categoryActive) {
+										<ul
+											class="flex max-h-58 flex-col flex-nowrap overflow-y-auto w-full snap-mandatory snap-y p-2"
+											[class.cursor-not-allowed]="categoryDeleteForm.disabled"
 										>
-											Optional
-										</span>
+											@for (category of categoryList; track category.id) {
+												@if (category.id !== categoryActive.id) {
+													<!-- prettier-ignore -->
+													<li
+                            class="flex w-full snap-start scroll-my-2"
+                            [ngClass]="{ 'disabled pointer-events-none': categoryDeleteForm.disabled }"
+                          >
+                            @if ({ value: categoryId.value === category.id }; as isActive) {
+                              <button
+                                class="rounded-btn block w-full truncate text-left"
+                                type="button"
+                                [ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
+                                [title]="category.name"
+                                [attr.aria-label]="category.name"
+                                (click)="categoryId.patchValue(category.id)"
+                              >
+                                {{ category.name }}
+                              </button>
+                            }
+                          </li>
+												}
+											}
+										</ul>
 									}
 								</div>
-							</label>
-							<div
-								class="menu menu-vertical !rounded-btn !shadow-none menu-md mt-2 p-0"
-								[class.!border-success]="categoryId.value && categoryDeleteForm.enabled"
-							>
-								@if (category; as categoryActive) {
-									<ul
-										class="flex max-h-58 flex-col flex-nowrap overflow-y-auto w-full snap-mandatory snap-y p-2"
-										[class.cursor-not-allowed]="categoryDeleteForm.disabled"
-									>
-										@for (category of categoryList; track category.id) {
-											@if (category.id !== categoryActive.id) {
-												<!-- prettier-ignore -->
-												<li
-                          class="flex w-full snap-start scroll-my-2"
-                          [ngClass]="{ 'disabled pointer-events-none': categoryDeleteForm.disabled }"
-                        >
-                          @if ({ value: categoryId.value === category.id }; as isActive) {
-                            <button
-                              class="rounded-btn block w-full truncate text-left"
-                              type="button"
-                              [ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
-                              [title]="category.name"
-                              [attr.aria-label]="category.name"
-                              (click)="categoryId.patchValue(category.id)"
-                            >
-                              {{ category.name }}
-                            </button>
-                          }
-                        </li>
-											}
-										}
-									</ul>
-								}
-							</div>
-						</fieldset>
+							</fieldset>
+						}
 					}
 				}
 				<fieldset class="form-control">
