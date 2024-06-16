@@ -40,8 +40,6 @@ export class ShareComponent {
 		facebook: 'https://facebook.com/sharer/sharer.php',
 		linkedin: 'https://linkedin.com/shareArticle',
 		pinterest: 'https://pinterest.com/pin/create/button/',
-		reddit: 'https://reddit.com/submit/',
-		telegram: 'https://t.me/share/url',
 		twitter: 'https://twitter.com/intent/tweet'
 	};
 
@@ -80,19 +78,6 @@ export class ShareComponent {
 					url: url.href,
 					media: url.href,
 					description: this.post.name
-				};
-			}
-			case 'reddit': {
-				return {
-					url: url.href,
-					resubmit: true,
-					title: this.post.name
-				};
-			}
-			case 'telegram': {
-				return {
-					url: url.href,
-					text: this.post.name
 				};
 			}
 			case 'twitter': {
