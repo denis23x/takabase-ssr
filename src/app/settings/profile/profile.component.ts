@@ -183,12 +183,14 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			this.currentUserRequest$?.unsubscribe();
 			this.currentUserRequest$ = this.aiService
 				.moderateText(aiModerateTextDto)
-				.pipe(
-					switchMap(() => this.userService.update(this.currentUser.id, userUpdateDto)),
-					switchMap((user: User) => this.authorizationService.setCurrentUser(user))
-				)
+				.pipe(switchMap(() => this.userService.update(this.currentUser.id, userUpdateDto)))
 				.subscribe({
-					next: () => {
+					next: (user: User) => {
+						this.authorizationService.setCurrentUser({
+							...this.currentUser,
+							...user
+						});
+
 						this.snackbarService.success('Success', 'Information has been updated');
 
 						this.profileFormIsPristine = true;

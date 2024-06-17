@@ -227,8 +227,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				providerLabel: 'Google',
 				providerIcon: 'google',
 				providerIconClass: 'logo-google',
-				providerIconWidth: '32',
-				providerIconHeight: '32',
 				providerIconViewBox: '0 0 48 48',
 				providerLink: 'https://google.com',
 				linked: false
@@ -238,8 +236,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				providerLabel: 'Facebook',
 				providerIcon: 'facebook',
 				providerIconClass: 'logo-facebook',
-				providerIconWidth: '32',
-				providerIconHeight: '32',
 				providerIconViewBox: '0 0 256 256',
 				providerLink: 'https://facebook.com',
 				linked: false
@@ -250,8 +246,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				providerLink: 'https://github.com',
 				providerIcon: 'github',
 				providerIconClass: 'logo-github',
-				providerIconWidth: '32',
-				providerIconHeight: '32',
 				providerIconViewBox: '0 0 97.6 96',
 				linked: false
 			}

@@ -8,7 +8,7 @@ import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { AbstractSearchComponent } from '../../abstracts/abstract-search.component';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { distinctUntilKeyChanged, from, Subscription } from 'rxjs';
+import { distinctUntilChanged, from, Subscription } from 'rxjs';
 import { SearchIndex } from 'algoliasearch/lite';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { UserService } from '../../core/services/user.service';
@@ -48,9 +48,14 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 				this.activatedRouteParams$?.unsubscribe();
 				this.activatedRouteParams$ = this.activatedRoute.params
 					.pipe(
+						distinctUntilChanged((previousParams: Params, currentParams: Params) => {
+							const userName: boolean = previousParams.userName === currentParams.userName;
+							const categoryId: boolean = previousParams.categoryId === currentParams.categoryId;
+
+							return userName && categoryId;
+						}),
 						tap(() => this.setSkeleton()),
-						filter((params: Params) => !!params.userName && this.user.name === params.userName.substring(1)),
-						distinctUntilKeyChanged('categoryId')
+						filter((params: Params) => !!params.userName && this.user.name === params.userName.substring(1))
 					)
 					.subscribe({
 						next: () => this.setResolver(),

@@ -13,8 +13,6 @@ export interface CurrentUserProviderData extends Partial<UserInfo> {
 	providerLabel: string;
 	providerIcon: string;
 	providerIconClass?: string;
-	providerIconWidth?: string;
-	providerIconHeight?: string;
 	providerIconViewBox?: string;
 	providerLink: string;
 	linked: boolean;
