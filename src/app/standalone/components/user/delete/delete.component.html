@@ -37,9 +37,7 @@
 								@if (name.touched && !!name.errors && userDeleteForm.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
 								}
-								<span class="label-text mr-2">
-									Please type <strong class="font-bold">{{ currentUser?.name }}</strong> to confirm
-								</span>
+								<span class="label-text mr-2"> Type the name to confirm </span>
 							</div>
 						</label>
 						<div class="relative">
@@ -51,8 +49,8 @@
 								aria-label="Name"
 								enterkeyhint="done"
 								formControlName="name"
-								placeholder="Type your name"
 								appInputTrimWhitespace
+								[placeholder]="currentUser?.name"
 								[class.input-success]="name.dirty && name.valid"
 								[class.input-error]="name.touched && name.invalid"
 							/>
@@ -82,7 +80,7 @@
 								@if (password.touched && !!password.errors && userDeleteForm.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="password"></div>
 								}
-								<span class="label-text mr-2"> Current password </span>
+								<span class="label-text mr-2"> Type your current password </span>
 							</div>
 						</label>
 						<div class="relative">
@@ -94,7 +92,7 @@
 								formControlName="password"
 								autocomplete="new-password"
 								enterkeyhint="done"
-								placeholder="Type your current password"
+								placeholder="Current password"
 								appInputTrimWhitespace
 								#userDeleteFormPasswordElement
 								[type]="'password'"

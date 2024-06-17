@@ -37,9 +37,7 @@
 								@if (name.touched && !!name.errors && categoryDeleteForm.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
 								}
-								<span class="label-text mr-2">
-									Please type <strong class="font-bold">{{ category?.name }}</strong> to confirm
-								</span>
+								<span class="label-text mr-2"> Type the name to confirm </span>
 							</div>
 						</label>
 						<div class="relative">
@@ -51,8 +49,8 @@
 								aria-label="Name"
 								enterkeyhint="done"
 								formControlName="name"
-								placeholder="Type category name"
 								appInputTrimWhitespace
+								[placeholder]="category?.name"
 								[class.input-success]="name.dirty && name.valid"
 								[class.input-error]="name.touched && name.invalid"
 							/>

@@ -16,7 +16,15 @@ import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+	AbstractControl,
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+	ValidatorFn,
+	Validators
+} from '@angular/forms';
 import { CategoryService } from '../../../../core/services/category.service';
 import { Subscription } from 'rxjs';
 import { Post } from '../../../../core/models/post.model';
@@ -116,12 +124,9 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 			this.categoryDeleteDialogElement.nativeElement.showModal();
 
 			const abstractControl: AbstractControl = this.categoryDeleteForm.get('name');
+			const abstractControlValidator: (...args: any) => ValidatorFn = this.helperService.getCustomValidator('match');
 
-			abstractControl.setValidators([
-				Validators.required,
-				Validators.pattern(this.helperService.getRegex('exact', this.category.name))
-			]);
-
+			abstractControl.setValidators([Validators.required, abstractControlValidator(this.category.name)]);
 			abstractControl.updateValueAndValidity();
 		} else {
 			this.categoryDeleteForm.reset();

@@ -12,6 +12,9 @@
 			@case (!!abstractControl.errors.pattern) {
 				Invalid value
 			}
+			@case (!!abstractControl.errors.match) {
+				Invalid value
+			}
 			@case (!!abstractControl.errors.minlength) {
 				Min length {{ abstractControl.errors.minlength["requiredLength"] }} characters
 			}

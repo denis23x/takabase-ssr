@@ -1,7 +1,7 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { PlatformService } from './platform.service';
 import { DOCUMENT } from '@angular/common';
 import { environment } from '../../../environments/environment';
@@ -20,24 +20,39 @@ export class HelperService {
 		return value.replace(/[A-Z]/g, (value: string): string => '-' + value.toLowerCase());
 	}
 
-	getRegex(regExp: string, payload?: any): RegExp {
+	getRegex(regExp: string): RegExp {
 		switch (regExp) {
 			case 'extension':
 				return new RegExp('.[a-z]+$', 'i');
 			case 'no-whitespace':
 				return new RegExp('^\\S*$', 'm');
-			case 'exact':
-				return new RegExp('^' + payload + '$', 'm');
 			case 'password':
 				return new RegExp('^(?=.*[\\d\\W]).{6,48}$', 'm');
 			case 'url':
-				// eslint-disable-next-line no-control-regex
 				return new RegExp('^([a-zA-Z][a-zA-Z0-9+.\\-]{1,31}):([^<>\x00-\x20]*)$', 'm');
 			case 'youtube':
-				// prettier-ignore
 				return new RegExp('^.*((youtu.be\\/)|(v\\/)|(\\/u\\/\\w\\/)|(embed\\/)|(watch\\?))\\??v?=?([^#&?]*).*', 'm');
 			default:
 				throw new Error('Invalid regex specified: ' + regExp);
+		}
+	}
+
+	getCustomValidator(customValidator: string): (...args: any) => ValidatorFn {
+		switch (customValidator) {
+			case 'match':
+				return (value: string): ValidatorFn => {
+					return (control: AbstractControl): ValidationErrors | null => {
+						if (control.value !== value) {
+							return {
+								match: true
+							};
+						}
+
+						return null;
+					};
+				};
+			default:
+				throw new Error('Invalid custom validator specified: ' + customValidator);
 		}
 	}
 

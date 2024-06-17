@@ -6,7 +6,15 @@ import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+	AbstractControl,
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+	ValidatorFn,
+	Validators
+} from '@angular/forms';
 import { of, Subscription, switchMap, throwError } from 'rxjs';
 import { HelperService } from '../../../../core/services/helper.service';
 import { CurrentUser } from '../../../../core/models/current-user.model';
@@ -90,12 +98,9 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 			this.userDeleteDialogElement.nativeElement.showModal();
 
 			const abstractControlName: AbstractControl = this.userDeleteForm.get('name');
+			const abstractControlValidator: (...args: any) => ValidatorFn = this.helperService.getCustomValidator('match');
 
-			abstractControlName.setValidators([
-				Validators.required,
-				Validators.pattern(this.helperService.getRegex('exact', this.currentUser.name))
-			]);
-
+			abstractControlName.setValidators([Validators.required, abstractControlValidator(this.currentUser.name)]);
 			abstractControlName.updateValueAndValidity();
 
 			// prettier-ignore
