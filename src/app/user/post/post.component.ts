@@ -48,9 +48,9 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 				this.activatedRouteParams$?.unsubscribe();
 				this.activatedRouteParams$ = this.activatedRoute.params
 					.pipe(
-						distinctUntilKeyChanged('categoryId'),
 						tap(() => this.setSkeleton()),
-						filter((params: Params) => !!params.userName && this.user.name === params.userName.substring(1))
+						filter((params: Params) => !!params.userName && this.user.name === params.userName.substring(1)),
+						distinctUntilKeyChanged('categoryId')
 					)
 					.subscribe({
 						next: () => this.setResolver(),
