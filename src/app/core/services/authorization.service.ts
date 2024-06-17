@@ -26,6 +26,7 @@ import {
 import { FirebaseError } from 'firebase/app';
 import { UserCreateDto } from '../dto/user/user-create.dto';
 import { SignInDto } from '../dto/authorization/sign-in.dto';
+import { Router } from '@angular/router';
 
 @Injectable({
 	providedIn: 'root'
@@ -35,6 +36,7 @@ export class AuthorizationService {
 	private readonly userService: UserService = inject(UserService);
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
+	private readonly router: Router = inject(Router);
 
 	currentUser: BehaviorSubject<CurrentUser | undefined> = new BehaviorSubject<CurrentUser | undefined>(undefined);
 	currentUserIsPopulated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -150,7 +152,11 @@ export class AuthorizationService {
 
 	onSignOut(): Observable<void> {
 		return from(signOut(this.firebaseService.getAuth())).pipe(
-			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
+			catchError((firebaseError: FirebaseError) => {
+				this.router.navigate(['/error', 500]).then(() => console.debug('Route changed'));
+
+				return this.apiService.setFirebaseError(firebaseError);
+			}),
 			tap(() => this.appearanceService.setSettings(null)),
 			tap(() => this.currentUser.next(undefined))
 		);

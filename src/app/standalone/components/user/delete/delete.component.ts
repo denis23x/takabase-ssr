@@ -15,7 +15,7 @@ import {
 	ValidatorFn,
 	Validators
 } from '@angular/forms';
-import { of, Subscription, switchMap, throwError } from 'rxjs';
+import { Observable, Subscription, switchMap, throwError } from 'rxjs';
 import { HelperService } from '../../../../core/services/helper.service';
 import { CurrentUser } from '../../../../core/models/current-user.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
@@ -29,6 +29,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { UserInfo } from 'firebase/auth';
 import { InputShowPassword } from '../../../directives/app-input-show-password.directive';
+import { PasswordValidateGetDto } from '../../../../core/dto/password/password-validate-get.dto';
+import { PasswordService } from '../../../../core/services/password.service';
 
 interface UserDeleteForm {
 	name: FormControl<string>;
@@ -57,14 +59,16 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 	private readonly location: Location = inject(Location);
 	private readonly userService: UserService = inject(UserService);
 	private readonly router: Router = inject(Router);
+	private readonly passwordService: PasswordService = inject(PasswordService);
 
 	@ViewChild('userDeleteDialogElement') userDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
-	@Output() appUserDeleteSuccess: EventEmitter<User> = new EventEmitter<User>();
+	@Output() appUserDeleteSuccess: EventEmitter<void> = new EventEmitter<void>();
 	@Output() appUserDeleteToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
+	currentUserSignOutRequest$: Subscription | undefined;
 
 	userDeleteForm: FormGroup = this.formBuilder.group<UserDeleteForm>({
 		name: this.formBuilder.nonNullable.control('', [])
@@ -87,7 +91,8 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$, this.userDeleteFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.currentUser$, this.currentUserSignOutRequest$, this.userDeleteFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleUserDeleteDialog(toggle: boolean): void {
@@ -146,31 +151,49 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 				...this.userDeleteForm.value
 			};
 
-			this.userDeleteFormRequest$?.unsubscribe();
-			this.userDeleteFormRequest$ = this.userService
-				.delete(userId, userDeleteDto)
-				.pipe(
-					switchMap((user: User) => {
-						return this.authorizationService.onSignOut().pipe(
-							catchError((httpErrorResponse: HttpErrorResponse) => {
-								this.router.navigate(['/error', httpErrorResponse.status]).then(() => console.debug('Route changed'));
+			const userDeleteRequest$: Observable<User> = this.userService.delete(userId, userDeleteDto).pipe(
+				catchError((httpErrorResponse: HttpErrorResponse) => {
+					this.currentUserSignOutRequest$?.unsubscribe();
+					this.currentUserSignOutRequest$ = this.authorizationService.onSignOut().subscribe({
+						next: () => {
+							this.router.navigateByUrl('/').then(() => {
+								this.snackbarService.warning(null, 'Something goes wrong');
+							});
+						},
+						error: (error: any) => console.error(error)
+					});
 
-								return throwError(() => httpErrorResponse);
-							}),
-							switchMap(() => of(user))
-						);
-					})
-				)
+					return throwError(() => httpErrorResponse);
+				})
+			);
+
+			const userDeleteFormRequest$ = (): Observable<User> => {
+				if (userDeleteDto.password) {
+					const passwordValidateGetDto: PasswordValidateGetDto = {
+						...this.userDeleteForm.value
+					};
+
+					return this.passwordService.onValidate(passwordValidateGetDto).pipe(switchMap(() => userDeleteRequest$));
+				}
+
+				return userDeleteRequest$;
+			};
+
+			/** Request */
+
+			this.userDeleteFormRequest$?.unsubscribe();
+			this.userDeleteFormRequest$ = userDeleteFormRequest$()
+				.pipe(switchMap(() => this.authorizationService.onSignOut()))
 				.subscribe({
-					next: (user: User) => {
-						this.appUserDeleteSuccess.emit(user);
+					next: () => {
+						this.appUserDeleteSuccess.emit();
 
 						this.userDeleteForm.enable();
 
 						this.onToggleUserDeleteDialog(false);
 
 						this.router.navigateByUrl('/').then(() => {
-							this.snackbarService.success('Chao', 'You will not be missed');
+							this.snackbarService.success('Chao', 'You will not be missed <3');
 						});
 					},
 					error: () => this.userDeleteForm.enable()
