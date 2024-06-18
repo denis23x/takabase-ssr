@@ -391,57 +391,6 @@
 					</fieldset>
 				}
 			</div>
-			<div class="flex w-full flex-col rounded-box bg-base-200 p-4">
-				@if (appearanceForm.get("advertisement"); as advertisement) {
-					<fieldset class="form-control">
-						<label class="label gap-4" for="appearanceFormAdvertisement">
-							<span class="label-text"> Enable advertisement </span>
-							<div
-								class="flex"
-								appSkeleton
-								[appSkeletonToggle]="appearanceFormSkeletonToggle"
-								[appSkeletonClassList]="['rounded-full']"
-								[appSkeletonClassListParent]="['bg-base-200']"
-							>
-								<input
-									class="toggle toggle-md"
-									id="appearanceFormAdvertisement"
-									type="checkbox"
-									title="Enable advertisement"
-									aria-label="Enable advertisement"
-									formControlName="advertisement"
-									[class.toggle-success]="advertisement.touched && advertisement.value"
-								/>
-							</div>
-						</label>
-					</fieldset>
-				}
-				<hr class="my-2 w-full border-base-content/20" />
-				@if (appearanceForm.get("themePublic"); as themePublic) {
-					<fieldset class="form-control">
-						<label class="label gap-4" for="appearanceFormThemePublic">
-							<span class="label-text"> Enable theme (for visitors of your profile) </span>
-							<div
-								class="flex"
-								appSkeleton
-								[appSkeletonToggle]="appearanceFormSkeletonToggle"
-								[appSkeletonClassList]="['rounded-full']"
-								[appSkeletonClassListParent]="['bg-base-200']"
-							>
-								<input
-									class="toggle toggle-md"
-									id="appearanceFormThemePublic"
-									type="checkbox"
-									title="Enable theme (for visitors of your profile)"
-									aria-label="Enable theme (for visitors of your profile)"
-									formControlName="advertisement"
-									[class.toggle-success]="themePublic.touched && themePublic.value"
-								/>
-							</div>
-						</label>
-					</fieldset>
-				}
-			</div>
 		</form>
 	</div>
 </ng-container>

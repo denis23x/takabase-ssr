@@ -11,6 +11,7 @@ import { FirebaseService } from './firebase.service';
 import {
 	FacebookAuthProvider,
 	onAuthStateChanged,
+	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	signInWithPopup,
 	signOut,
@@ -21,7 +22,8 @@ import {
 	Unsubscribe,
 	GoogleAuthProvider,
 	AuthProvider,
-	OAuthCredential
+	OAuthCredential,
+	Auth
 } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { UserCreateDto } from '../dto/user/user-create.dto';
@@ -111,12 +113,17 @@ export class AuthorizationService {
 	/** Authorization API */
 
 	onRegistration(userCreateDto: UserCreateDto): Observable<CurrentUser> {
+		const auth: Auth = this.firebaseService.getAuth();
+
 		const signInDto: SignInDto = {
 			email: userCreateDto.email,
 			password: userCreateDto.password
 		};
 
-		return this.userService.create(userCreateDto).pipe(switchMap(() => this.onSignInWithEmailAndPassword(signInDto)));
+		return from(createUserWithEmailAndPassword(auth, signInDto.email, signInDto.password)).pipe(
+			switchMap(() => this.userService.create(userCreateDto)),
+			switchMap(() => this.onSignInWithEmailAndPassword(signInDto))
+		);
 	}
 
 	onProfile(): Observable<CurrentUser> {

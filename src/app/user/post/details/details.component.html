@@ -21,13 +21,14 @@
 				[appPostProsePost]="abstractPost"
 				[appPostProsePostSkeletonToggle]="abstractPostSkeletonToggle"
 			></main>
-			<nav
-				class="flex bg-base-200 overflow-auto p-2"
-				appShare
-				slot="footer"
-				[appSharePost]="abstractPost"
-				[appSharePostSkeletonToggle]="abstractPostSkeletonToggle"
-			></nav>
+			<nav class="flex bg-base-200 overflow-auto p-2" slot="footer">
+				<div
+					class="block"
+					appShare
+					[appSharePost]="abstractPost"
+					[appSharePostSkeletonToggle]="abstractPostSkeletonToggle"
+				></div>
+			</nav>
 		</div>
 	</dialog>
 </ng-container>
