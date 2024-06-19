@@ -52,7 +52,7 @@ export class ApiService {
 				case 'auth/requires-recent-login':
 					return 'Please login again and try again';
 				case 'auth/email-already-in-use':
-					return 'Email address is already in use by an existing user';
+					return 'Email address is already in use';
 				case 'auth/user-not-found':
 					return 'Not found any user account associated with the email address';
 				case 'auth/invalid-credential':

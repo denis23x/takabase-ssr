@@ -3,7 +3,7 @@
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Params, Router, RouterModule } from '@angular/router';
 import { distinctUntilChanged, distinctUntilKeyChanged, from, Observable, of, Subscription, throwError } from 'rxjs';
-import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, switchMap, tap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
@@ -175,74 +175,72 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
-		if (this.platformService.isBrowser()) {
-			this.userRequest$?.unsubscribe();
-			this.userRequest$ = this.getUser().subscribe({
-				next: (user: User) => {
-					this.userService.userTemp.next(user);
+		this.userRequest$?.unsubscribe();
+		this.userRequest$ = this.getUser().subscribe({
+			next: (user: User) => {
+				this.userService.userTemp.next(user);
 
-					this.user = user;
-					this.userSkeletonToggle = false;
+				this.user = user;
+				this.userSkeletonToggle = false;
 
-					this.categoryList = this.user.categories;
-					this.categoryListSkeletonToggle = false;
+				this.categoryList = this.user.categories;
+				this.categoryListSkeletonToggle = false;
 
-					// Set category
+				// Set category
 
-					this.activatedRouteFirstChildParams$?.unsubscribe();
-					this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params
-						.pipe(distinctUntilKeyChanged('categoryId'))
-						.subscribe({
-							next: () => {
-								const setMeta = (): void => {
-									const postId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('postId'));
+				this.activatedRouteFirstChildParams$?.unsubscribe();
+				this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params
+					.pipe(distinctUntilKeyChanged('categoryId'))
+					.subscribe({
+						next: () => {
+							const setMeta = (): void => {
+								const postId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('postId'));
 
-									// Allow the post to record its tags
+								// Allow the post to record its tags
 
-									if (!postId) {
-										/** Apply SEO meta tags */
+								if (!postId) {
+									/** Apply SEO meta tags */
 
-										this.setMetaTags();
-										this.setTitle();
-									}
-								};
-
-								const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
-
-								if (categoryId) {
-									this.category = this.skeletonService.getCategory();
-									this.categorySkeletonToggle = true;
-
-									this.categoryRequest$?.unsubscribe();
-									this.categoryRequest$ = this.categoryService.getOne(categoryId).subscribe({
-										next: (category: Category) => {
-											this.category = category;
-											this.categorySkeletonToggle = false;
-
-											setMeta();
-										},
-										error: (error: any) => console.error(error)
-									});
-								} else {
-									this.category = undefined;
-									this.categorySkeletonToggle = false;
-
-									setMeta();
+									this.setMetaTags();
+									this.setTitle();
 								}
-							},
-							error: (error: any) => console.error(error)
-						});
-				},
-				error: (error: any) => console.error(error)
-			});
+							};
 
-			/** Toggle SearchForm component */
+							const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
 
-			if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
-				this.onToggleSearchForm(true);
-			} else {
-				this.onToggleSearchForm(false);
-			}
+							if (categoryId) {
+								this.category = this.skeletonService.getCategory();
+								this.categorySkeletonToggle = true;
+
+								this.categoryRequest$?.unsubscribe();
+								this.categoryRequest$ = this.categoryService.getOne(categoryId).subscribe({
+									next: (category: Category) => {
+										this.category = category;
+										this.categorySkeletonToggle = false;
+
+										setMeta();
+									},
+									error: (error: any) => console.error(error)
+								});
+							} else {
+								this.category = undefined;
+								this.categorySkeletonToggle = false;
+
+								setMeta();
+							}
+						},
+						error: (error: any) => console.error(error)
+					});
+			},
+			error: (error: any) => console.error(error)
+		});
+
+		/** Toggle SearchForm component */
+
+		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
+			this.onToggleSearchForm(true);
+		} else {
+			this.onToggleSearchForm(false);
 		}
 	}
 

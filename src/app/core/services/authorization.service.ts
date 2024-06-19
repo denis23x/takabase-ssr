@@ -121,6 +121,7 @@ export class AuthorizationService {
 		};
 
 		return from(createUserWithEmailAndPassword(auth, signInDto.email, signInDto.password)).pipe(
+			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
 			switchMap(() => this.userService.create(userCreateDto)),
 			switchMap(() => this.onSignInWithEmailAndPassword(signInDto))
 		);

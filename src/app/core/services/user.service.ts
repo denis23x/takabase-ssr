@@ -1,7 +1,7 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { User } from '../models/user.model';
 import { UserCreateDto } from '../dto/user/user-create.dto';
@@ -18,7 +18,7 @@ export class UserService {
 
 	/** userTemp subject for connect UserComponent & UserPostComponent */
 
-	userTemp: Subject<User> = new Subject<User>();
+	userTemp: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 
 	/** Utility */
 

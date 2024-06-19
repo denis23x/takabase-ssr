@@ -13,7 +13,7 @@ import { MetaService } from '../../core/services/meta.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { SignInComponent } from '../../standalone/components/sign-in/sign-in.component';
-import { Subscription, switchMap } from 'rxjs';
+import { of, Subscription, switchMap, throwError } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
 import { AIService } from '../../core/services/ai.service';
@@ -27,6 +27,7 @@ import { Auth, onAuthStateChanged, Unsubscribe } from 'firebase/auth';
 import { User as FirebaseUser } from '@firebase/auth';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { PlatformService } from '../../core/services/platform.service';
+import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -160,12 +161,33 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 				input: userCreateDto.name
 			};
 
+			const userGetAllDto: UserGetAllDto = {
+				userName: userCreateDto.name,
+				page: 1,
+				size: 10
+			};
+
 			/** Moderate and registration */
 
 			this.registrationRequest$?.unsubscribe();
-			this.registrationRequest$ = this.aiService
-				.moderateText(aiModerateTextDto)
-				.pipe(switchMap(() => this.authorizationService.onRegistration(userCreateDto)))
+			this.registrationRequest$ = this.userService
+				.getAll(userGetAllDto)
+				.pipe(
+					switchMap((userList: User[]) => {
+						if (userList.length) {
+							// prettier-ignore
+							this.snackbarService.error('Nope', 'The name "' + userGetAllDto.userName + '" is already in use');
+
+							return throwError(() => new Error());
+						} else {
+							return of([]);
+						}
+					})
+				)
+				.pipe(
+					switchMap(() => this.aiService.moderateText(aiModerateTextDto)),
+					switchMap(() => this.authorizationService.onRegistration(userCreateDto))
+				)
 				.subscribe({
 					next: (user: User) => {
 						this.router
