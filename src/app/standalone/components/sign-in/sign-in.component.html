@@ -1,27 +1,34 @@
 <!-- @format -->
 
 <ng-container>
-	<ul class="flex items-center justify-start gap-4" [ngClass]="{ 'grayscale cursor-not-allowed': signInDisabled }">
+	<ul
+		class="flex items-center justify-start gap-4 overflow-auto"
+		[ngClass]="{ 'grayscale cursor-not-allowed': signInDisabled }"
+	>
 		<li class="block" [ngClass]="{ 'pointer-events-none': signInDisabled }">
 			<button
-				class="block logo-google"
+				class="flex items-center justify-start gap-3 px-3 rounded-full h-10 logo-google"
 				type="button"
-				title="Google"
-				aria-label="Google"
-				appSvgLogo
-				[appSvgLogoViewBox]="'0 0 48 48'"
-				[appSvgLogoIcon]="'google'"
-				[appSvgLogoWidth]="'32'"
-				[appSvgLogoHeight]="'32'"
+				title="Redirect to Google to continue"
+				aria-label="Redirect to Google to continue"
 				(click)="onSignInWithProvider('google.com')"
-			></button>
+			>
+				<i
+					appSvgLogo
+					[appSvgLogoViewBox]="'0 0 48 48'"
+					[appSvgLogoIcon]="'google'"
+					[appSvgLogoWidth]="'20'"
+					[appSvgLogoHeight]="'20'"
+				></i>
+				<span class="font-roboto text-sm whitespace-nowrap">Continue with Google</span>
+			</button>
 		</li>
-		<li class="block" [ngClass]="{ 'pointer-events-none': signInDisabled }">
+		<li class="hidden" [ngClass]="{ 'pointer-events-none': signInDisabled }">
 			<button
 				class="block logo-facebook"
 				type="button"
-				title="Facebook"
-				aria-label="Facebook"
+				title="Redirect to Facebook to continue"
+				aria-label="Redirect to Facebook to continue"
 				appSvgLogo
 				[appSvgLogoViewBox]="'0 0 256 256'"
 				[appSvgLogoIcon]="'facebook'"
@@ -34,8 +41,8 @@
 			<button
 				class="block logo-github"
 				type="button"
-				title="Github"
-				aria-label="Github"
+				title="Redirect to Github to continue"
+				aria-label="Redirect to Github to continue"
 				appSvgLogo
 				[appSvgLogoViewBox]="'0 0 97.6 96'"
 				[appSvgLogoIcon]="'github'"

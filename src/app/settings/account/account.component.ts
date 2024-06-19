@@ -231,15 +231,15 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				providerLink: 'https://google.com',
 				linked: false
 			},
-			{
-				providerId: 'facebook.com',
-				providerLabel: 'Facebook',
-				providerIcon: 'facebook',
-				providerIconClass: 'logo-facebook',
-				providerIconViewBox: '0 0 256 256',
-				providerLink: 'https://facebook.com',
-				linked: false
-			},
+			// {
+			// 	providerId: 'facebook.com',
+			// 	providerLabel: 'Facebook',
+			// 	providerIcon: 'facebook',
+			// 	providerIconClass: 'logo-facebook',
+			// 	providerIconViewBox: '0 0 256 256',
+			// 	providerLink: 'https://facebook.com',
+			// 	linked: false
+			// },
 			{
 				providerId: 'github.com',
 				providerLabel: 'Github',

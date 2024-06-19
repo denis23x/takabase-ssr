@@ -529,6 +529,7 @@ module.exports = {
     fontFamily: {
       sans: ["Ubuntu", "sans-serif"],
       mono: ["Ubuntu Mono", "monospace"],
+      roboto: ["Roboto", "sans-serif"],
     },
     extend: {
       gridTemplateColumns: {

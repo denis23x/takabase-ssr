@@ -1,5 +1,11 @@
 /* https://usbrandcolors.com */
 
+.logo-google {
+	color: #1F1F1F;
+	background: #F2F2F2;
+	border: 1px solid transparent;
+}
+
 @mixin branding-dark {
 	.logo-algolia {
 		color: #ffffff;
@@ -10,7 +16,6 @@
 	.logo-github {
 		color: #ffffff;
 	}
-	.logo-google {}
 	.logo-linkedin {
 		color: #ffffff;
 	}
@@ -32,7 +37,6 @@
 	.logo-github {
 		color: #1B1F24;
 	}
-	.logo-google {}
 	.logo-linkedin {
 		color: #0A66C2;
 	}
