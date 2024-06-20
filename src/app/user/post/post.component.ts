@@ -8,7 +8,7 @@ import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { AbstractSearchComponent } from '../../abstracts/abstract-search.component';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { distinctUntilChanged, from, Subscription } from 'rxjs';
+import { distinctUntilChanged, distinctUntilKeyChanged, from, Subscription } from 'rxjs';
 import { SearchIndex } from 'algoliasearch/lite';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { UserService } from '../../core/services/user.service';
@@ -45,27 +45,32 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 		this.postListSkeletonToggle = true;
 
 		this.user$?.unsubscribe();
-		this.user$ = this.userService.userTemp.pipe(tap((user: User) => (this.user = user))).subscribe({
-			next: () => {
-				this.activatedRouteParams$?.unsubscribe();
-				this.activatedRouteParams$ = this.activatedRoute.params
-					.pipe(
-						distinctUntilChanged((previousParams: Params, currentParams: Params) => {
-							const userName: boolean = previousParams.userName === currentParams.userName;
-							const categoryId: boolean = previousParams.categoryId === currentParams.categoryId;
+		this.user$ = this.userService.userTemp
+			.pipe(
+				distinctUntilKeyChanged('name'),
+				tap((user: User) => (this.user = user))
+			)
+			.subscribe({
+				next: () => {
+					this.activatedRouteParams$?.unsubscribe();
+					this.activatedRouteParams$ = this.activatedRoute.params
+						.pipe(
+							distinctUntilChanged((previousParams: Params, currentParams: Params) => {
+								const userName: boolean = previousParams.userName === currentParams.userName;
+								const categoryId: boolean = previousParams.categoryId === currentParams.categoryId;
 
-							return userName && categoryId;
-						}),
-						tap(() => this.setSkeleton()),
-						filter((params: Params) => !!params.userName && this.user?.name === params.userName)
-					)
-					.subscribe({
-						next: () => this.setResolver(),
-						error: (error: any) => console.error(error)
-					});
-			},
-			error: (error: any) => console.error(error)
-		});
+								return userName && categoryId;
+							}),
+							tap(() => this.setSkeleton()),
+							filter((params: Params) => !!params.userName && this.user?.name === params.userName)
+						)
+						.subscribe({
+							next: () => this.setResolver(),
+							error: (error: any) => console.error(error)
+						});
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	ngOnDestroy(): void {

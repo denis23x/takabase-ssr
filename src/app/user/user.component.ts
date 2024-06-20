@@ -337,7 +337,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			page: 1,
 			size: 10
 		};
-		console.log(userGetAllDto);
+
 		return this.userService.getAll(userGetAllDto).pipe(
 			switchMap((userList: User[]) => (userList[0] ? of(userList[0]) : throwError(() => new Error()))),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
