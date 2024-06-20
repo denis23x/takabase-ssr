@@ -20,12 +20,6 @@ export class UserService {
 
 	userTemp: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 
-	/** Utility */
-
-	getUserUrl(user: User, substring: number = 0): string {
-		return ('/@' + user.name).substring(substring);
-	}
-
 	/** REST */
 
 	create(userCreateDto: UserCreateDto): Observable<User> {

@@ -173,7 +173,6 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 				.pipe(
 					switchMap((userList: User[]) => {
 						if (userList.length) {
-							// prettier-ignore
 							this.snackbarService.error('Nope', 'The name "' + userGetAllDto.userName + '" is already in use');
 
 							return throwError(() => new Error());
@@ -188,9 +187,7 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 				)
 				.subscribe({
 					next: (user: User) => {
-						this.router
-							.navigate([this.userService.getUserUrl(user)])
-							.then(() => this.snackbarService.success('Success', 'Welcome here'));
+						this.router.navigate(['/', user.name]).then(() => this.snackbarService.success('Success', 'Welcome here'));
 					},
 					error: () => this.registrationForm.enable()
 				});

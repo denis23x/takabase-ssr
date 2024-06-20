@@ -6,7 +6,6 @@ import { Router, RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { HelperService } from '../../core/services/helper.service';
-import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
@@ -47,7 +46,6 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly userService: UserService = inject(UserService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
@@ -122,9 +120,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
 			this.loginRequest$?.unsubscribe();
 			this.loginRequest$ = this.authorizationService.onSignInWithEmailAndPassword(signInDto).subscribe({
-				next: (user: User) => {
-					this.router.navigate([this.userService.getUserUrl(user)]).then(() => console.debug('Route changed'));
-				},
+				next: (user: User) => this.router.navigate(['/', user.name]).then(() => console.debug('Route changed')),
 				error: () => this.loginForm.enable()
 			});
 		}

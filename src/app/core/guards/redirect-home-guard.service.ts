@@ -8,7 +8,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { PlatformService } from '../services/platform.service';
 import { AuthorizationService } from '../services/authorization.service';
 import { CurrentUser } from '../models/current-user.model';
-import { UserService } from '../services/user.service';
 import { CookiesService } from '../services/cookies.service';
 import { environment } from '../../../environments/environment';
 import { DOCUMENT } from '@angular/common';
@@ -17,7 +16,6 @@ export const redirectHomeGuard = (): CanMatchFn => {
 	return (): Observable<boolean | UrlTree> => {
 		const authorizationService: AuthorizationService = inject(AuthorizationService);
 		const platformService: PlatformService = inject(PlatformService);
-		const userService: UserService = inject(UserService);
 		const cookiesService: CookiesService = inject(CookiesService);
 		const router: Router = inject(Router);
 		const document: Document = inject(DOCUMENT);
@@ -37,7 +35,7 @@ export const redirectHomeGuard = (): CanMatchFn => {
 						};
 
 						if (pageRedirectHome()) {
-							return router.createUrlTree([userService.getUserUrl(currentUser)]);
+							return router.createUrlTree(['/', currentUser.name]);
 						}
 					}
 

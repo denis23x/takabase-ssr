@@ -57,7 +57,7 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 							return userName && categoryId;
 						}),
 						tap(() => this.setSkeleton()),
-						filter((params: Params) => !!params.userName && this.user?.name === params.userName.substring(1))
+						filter((params: Params) => !!params.userName && this.user?.name === params.userName)
 					)
 					.subscribe({
 						next: () => this.setResolver(),

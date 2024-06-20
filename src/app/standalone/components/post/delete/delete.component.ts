@@ -17,7 +17,6 @@ import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { Post } from '../../../../core/models/post.model';
 import { PostService } from '../../../../core/services/post.service';
-import { UserService } from '../../../../core/services/user.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurrentUser } from '../../../../core/models/current-user.model';
@@ -35,7 +34,6 @@ import { PostDeleteDto } from '../../../../core/dto/post/post-delete.dto';
 })
 export class PostDeleteComponent implements OnInit, OnDestroy {
 	private readonly router: Router = inject(Router);
-	private readonly userService: UserService = inject(UserService);
 	private readonly postService: PostService = inject(PostService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
@@ -95,10 +93,10 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 		const redirectToBack = (): Promise<boolean> => {
 			switch (true) {
 				case this.location.path().startsWith('/update'): {
-					const postUserUrl: string = this.userService.getUserUrl(this.currentUser);
+					const postUserName: string = this.currentUser.name;
 					const postCategoryId: string = String(this.post.category.id);
 
-					return this.router.navigate([postUserUrl, 'category', postCategoryId], {
+					return this.router.navigate(['/', postUserName, 'category', postCategoryId], {
 						relativeTo: this.activatedRoute,
 						replaceUrl: true
 					});

@@ -95,8 +95,6 @@ export class UserComponent implements OnInit, OnDestroy {
 	categoryList: Category[] = [];
 	categoryListSkeletonToggle: boolean = true;
 
-	platformServiceIsServerSkeletonToggle: boolean = true;
-
 	ngOnInit(): void {
 		this.activatedRouteUrl$?.unsubscribe();
 		this.activatedRouteUrl$ = this.activatedRoute.url
@@ -247,7 +245,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	setMetaTags(): void {
 		this.metaService.getMetaImageDownloadURL(this.user.avatar).subscribe({
 			next: (downloadURL: string | null) => {
-				const userName: string = this.userService.getUserUrl(this.user, 1);
+				const userName: string = this.user.name;
 				const userDescription: string = this.user.description || 'User has not yet added a profile description.';
 
 				const title: string = this.category?.name || userName;
@@ -315,7 +313,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			}),
 			tap((user: User) => (this.userTemp = user)),
 			switchMap((user: User) => {
-				const commands: string[] = [this.userService.getUserUrl(user)];
+				const commands: string[] = ['/', user.name];
 				const extras: NavigationExtras = {
 					replaceUrl: true
 				};

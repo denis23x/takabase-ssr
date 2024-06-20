@@ -8,7 +8,6 @@ import { environment } from '../../../environments/environment';
 import { AuthorizationService } from './authorization.service';
 import { CurrentUser } from '../models/current-user.model';
 import { HelperService } from './helper.service';
-import { UserService } from './user.service';
 import { collection, CollectionReference, addDoc, DocumentReference } from 'firebase/firestore';
 import { FirebaseService } from './firebase.service';
 import { catchError } from 'rxjs/operators';
@@ -21,7 +20,6 @@ import { ApiService } from './api.service';
 export class ReportService {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly userService: UserService = inject(UserService);
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly ngZone: NgZone = inject(NgZone);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
@@ -34,14 +32,15 @@ export class ReportService {
 	// prettier-ignore
 	create(reportCreateDto: ReportCreateDto): Observable<DocumentReference> {
 		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
+		const currentUserName: string = currentUser.name;
 
 		const url: URL = this.helperService.getURL();
-		const urlCurrentUser: string = this.userService.getUserUrl(currentUser);
+		const urlUserName: string = [url.origin, currentUserName].join('/');
 
-		const templateSubject: string = 'New report from user ' + urlCurrentUser.substring(1);
+		const templateSubject: string = 'New report from user ' + currentUserName;
 		const templateHtml: string = `
       <h1>
-        <strong>Reporter:</strong> <a href="${url.origin + urlCurrentUser}" target="_blank"> ${urlCurrentUser.substring(1)} </a>
+        <strong>Reporter:</strong> <a href="${urlUserName}" target="_blank"> ${currentUserName} </a>
       </h1>
       <span>
         <strong>Name:</strong> ${reportCreateDto.name}

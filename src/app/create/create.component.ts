@@ -28,7 +28,6 @@ import { PostService } from '../core/services/post.service';
 import { SnackbarService } from '../core/services/snackbar.service';
 import { AuthorizationService } from '../core/services/authorization.service';
 import { CategoryService } from '../core/services/category.service';
-import { UserService } from '../core/services/user.service';
 import { PostCreateDto } from '../core/dto/post/post-create.dto';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { CookiesService } from '../core/services/cookies.service';
@@ -104,7 +103,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly categoryService: CategoryService = inject(CategoryService);
-	private readonly userService: UserService = inject(UserService);
 	private readonly cookiesService: CookiesService = inject(CookiesService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly fileService: FileService = inject(FileService);
@@ -440,7 +438,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 			const postFormRedirect = (post: Post): void => {
 				this.router
-					.navigate([this.userService.getUserUrl(post.user), 'category', post.category.id, 'post', post.id])
+					.navigate(['/', post.user.name, 'category', post.category.id, 'post', post.id])
 					.then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
 			};
 

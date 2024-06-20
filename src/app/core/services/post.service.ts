@@ -1,9 +1,8 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { lastValueFrom, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { UserService } from './user.service';
 import { PostGetAllDto } from '../dto/post/post-get-all.dto';
 import { Post } from '../models/post.model';
 import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
@@ -19,7 +18,6 @@ import { PostDeleteDto } from '../dto/post/post-delete.dto';
 })
 export class PostService {
 	private readonly apiService: ApiService = inject(ApiService);
-	private readonly userService: UserService = inject(UserService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly titleService: TitleService = inject(TitleService);
 
@@ -44,7 +42,7 @@ export class PostService {
 					['og:type']: 'article',
 					['article:published_time']: post.createdAt,
 					['article:modified_time']: post.updatedAt,
-					['article:author']: this.userService.getUserUrl(post.user, 1),
+					['article:author']: post.user.name,
 					['article:section']: post.category.name,
 					['og:image']: downloadURL,
 					['og:image:alt']: post.name,

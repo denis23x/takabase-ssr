@@ -6,7 +6,6 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { User } from '../../../core/models/user.model';
 import { AuthorizationService } from '../../../core/services/authorization.service';
 import { Router } from '@angular/router';
-import { UserService } from '../../../core/services/user.service';
 import { Subscription } from 'rxjs';
 import { AuthProvider } from 'firebase/auth';
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
@@ -20,7 +19,6 @@ import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 export class SignInComponent implements OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly router: Router = inject(Router);
-	private readonly userService: UserService = inject(UserService);
 
 	@Input()
 	set appSignInDisabled(signInDisabled: boolean) {
@@ -39,10 +37,7 @@ export class SignInComponent implements OnDestroy {
 
 		this.signInWithPopup$?.unsubscribe();
 		this.signInWithPopup$ = this.authorizationService.onSignInWithPopup(authProvider).subscribe({
-			next: (user: User) => {
-				// Redirect to profile
-				this.router.navigate([this.userService.getUserUrl(user)]).then(() => console.debug('Route changed'));
-			},
+			next: (user: User) => this.router.navigate(['/', user.name]).then(() => console.debug('Route changed')),
 			error: (error: any) => console.error(error)
 		});
 	}
