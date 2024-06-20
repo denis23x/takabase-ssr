@@ -98,41 +98,40 @@ export class SearchPostComponent extends AbstractSearchComponent implements OnIn
 			this.setSkeleton();
 		}
 
-		if (this.platformService.isBrowser()) {
-			const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
-			const postIndexSearch: SearchOptions = {
-				page: this.postGetAllDto.page - 1,
-				hitsPerPage: this.postGetAllDto.size
-			};
+		const postQuery: string = this.postGetAllDto.query?.trim();
+		const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
+		const postIndexSearch: SearchOptions = {
+			page: this.postGetAllDto.page - 1,
+			hitsPerPage: this.postGetAllDto.size
+		};
 
-			this.postListRequest$?.unsubscribe();
-			this.postListRequest$ = from(postIndex.search(this.postGetAllDto.query, postIndexSearch)).subscribe({
-				next: (searchResponse: SearchResponse) => {
-					const postList: Post[] = searchResponse.hits as any[];
-					const postListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
+		this.postListRequest$?.unsubscribe();
+		this.postListRequest$ = from(postIndex.search(postQuery, postIndexSearch)).subscribe({
+			next: (searchResponse: SearchResponse) => {
+				const postList: Post[] = searchResponse.hits as any[];
+				const postListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
 
-					this.postList = concat ? this.postList.concat(postList) : postList;
-					this.postListSkeletonToggle = false;
+				this.postList = concat ? this.postList.concat(postList) : postList;
+				this.postListSkeletonToggle = false;
 
-					this.abstractListIsHasMore = postListIsHasMore && searchResponse.nbPages > 1;
-					this.abstractListIsLoading$.next(false);
-				},
-				error: (error: any) => console.error(error)
-			});
+				this.abstractListIsHasMore = postListIsHasMore && searchResponse.nbPages > 1;
+				this.abstractListIsLoading$.next(false);
+			},
+			error: (error: any) => console.error(error)
+		});
 
-			//! Default searching
-			// this.postListRequest$?.unsubscribe();
-			// this.postListRequest$ = this.postService.getAll(this.postGetAllDto).subscribe({
-			// 	next: (postList: Post[]) => {
-			// 		this.postList = concat ? this.postList.concat(postList) : postList;
-			// 		this.postListSkeletonToggle = false;
-			//
-			// 		this.abstractListIsHasMore = postList.length === this.postGetAllDto.size;
-			// 		this.abstractListIsLoading$.next(false);
-			// 	},
-			// 	error: (error: any) => console.error(error)
-			// });
-		}
+		//! Default searching
+		// this.postListRequest$?.unsubscribe();
+		// this.postListRequest$ = this.postService.getAll(this.postGetAllDto).subscribe({
+		// 	next: (postList: Post[]) => {
+		// 		this.postList = concat ? this.postList.concat(postList) : postList;
+		// 		this.postListSkeletonToggle = false;
+		//
+		// 		this.abstractListIsHasMore = postList.length === this.postGetAllDto.size;
+		// 		this.abstractListIsLoading$.next(false);
+		// 	},
+		// 	error: (error: any) => console.error(error)
+		// });
 	}
 
 	getAbstractListLoadMore(): void {

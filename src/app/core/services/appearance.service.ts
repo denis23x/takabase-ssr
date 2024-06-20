@@ -106,14 +106,6 @@ export class AppearanceService {
 		this.setThemePrism(appearance?.themePrism || null);
 	}
 
-	setLoader(toggle: boolean): void {
-		if (toggle) {
-			// TODO: Do something ..
-		} else {
-			this.document.querySelector('[data-loader]')?.remove();
-		}
-	}
-
 	setTheme(theme: string | null): void {
 		if (theme && theme !== 'auto') {
 			this.document.documentElement.setAttribute('data-theme', theme);

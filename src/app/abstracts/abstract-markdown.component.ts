@@ -51,34 +51,32 @@ export abstract class AbstractMarkdownComponent implements OnInit, OnDestroy {
 	setResolver(): void {
 		const details: string = String(this.activatedRoute.snapshot.paramMap.get('details') || '');
 
-		if (this.platformService.isBrowser()) {
-			this.abstractProse$?.unsubscribe();
-			this.abstractProse$ = this.httpClient
-				.get(this.getAbstractProseUrl(details), {
-					responseType: 'text'
+		this.abstractProse$?.unsubscribe();
+		this.abstractProse$ = this.httpClient
+			.get(this.getAbstractProseUrl(details), {
+				responseType: 'text'
+			})
+			.pipe(
+				map((prose: string) => {
+					const modifierKey: string = this.platformService.getOSModifierKey();
+					const keyboardCharacter: string = this.platformService.getOSKeyboardCharacter(modifierKey);
+					const proseUpdated: string = prose.replaceAll('modifierKey', keyboardCharacter);
+
+					return proseUpdated;
+				}),
+				catchError((httpErrorResponse: HttpErrorResponse) => {
+					this.router.navigate(['/error', httpErrorResponse.status]).then(() => console.debug('Route changed'));
+
+					return throwError(() => httpErrorResponse);
 				})
-				.pipe(
-					map((prose: string) => {
-						const modifierKey: string = this.platformService.getOSModifierKey();
-						const keyboardCharacter: string = this.platformService.getOSKeyboardCharacter(modifierKey);
-						const proseUpdated: string = prose.replaceAll('modifierKey', keyboardCharacter);
-
-						return proseUpdated;
-					}),
-					catchError((httpErrorResponse: HttpErrorResponse) => {
-						this.router.navigate(['/error', httpErrorResponse.status]).then(() => console.debug('Route changed'));
-
-						return throwError(() => httpErrorResponse);
-					})
-				)
-				.subscribe({
-					next: (prose: string) => {
-						this.abstractProse = prose;
-						this.abstractProseSkeleton = false;
-					},
-					error: (error: any) => console.error(error)
-				});
-		}
+			)
+			.subscribe({
+				next: (prose: string) => {
+					this.abstractProse = prose;
+					this.abstractProseSkeleton = false;
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	abstract getAbstractProseUrl(markdown: string): string;

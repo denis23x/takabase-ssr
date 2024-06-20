@@ -1,15 +1,5 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="relative" appSnackbar></div>
-	<!-- prettier-ignore -->
-	<section class="relative z-10 mx-auto grid min-h-screen w-full max-w-5xl grid-flow-row auto-rows-max grid-cols-1 grid-rows-none gap-4 p-4 md:gap-8 md:p-8">
-		<header appHeader></header>
-		<div class="block">
-			<router-outlet></router-outlet>
-		</div>
-	</section>
-	<div class="relative" appScrollToTop></div>
-	<div class="relative" appReport></div>
-	<div class="relative" appCookies></div>
+	<router-outlet></router-outlet>
 </ng-container>

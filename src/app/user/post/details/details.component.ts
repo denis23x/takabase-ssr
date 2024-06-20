@@ -23,9 +23,9 @@ export class UserPostDetailsComponent extends AbstractPostDetailsComponent imple
 	}
 
 	setResolver(): void {
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 		const categoryId: number = Number(this.activatedRoute.parent.snapshot.paramMap.get('categoryId'));
 
+		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 		const postGetOneDto: PostGetOneDto = {
 			categoryId,
 			scope: ['user', 'category']

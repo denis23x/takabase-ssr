@@ -92,7 +92,7 @@
 				<div
 					class="w-full"
 					appSkeleton
-					[appSkeletonToggle]="userSkeletonToggle || platformServiceIsServerSkeletonToggle"
+					[appSkeletonToggle]="userSkeletonToggle"
 					[appSkeletonClassListParent]="['!rounded-box']"
 					[appSkeletonClassList]="['!rounded-box']"
 				>
@@ -297,7 +297,7 @@
 					<div
 						class="block"
 						appSkeleton
-						[appSkeletonToggle]="categorySkeletonToggle || platformServiceIsServerSkeletonToggle"
+						[appSkeletonToggle]="categorySkeletonToggle"
 						[appSkeletonClassListParent]="['!rounded-box']"
 						[appSkeletonClassList]="['!rounded-box']"
 					>

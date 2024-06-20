@@ -24,7 +24,6 @@ export class SearchPostDetailsComponent extends AbstractPostDetailsComponent imp
 
 	setResolver(): void {
 		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-
 		const postGetOneDto: PostGetOneDto = {
 			scope: ['user', 'category']
 		};

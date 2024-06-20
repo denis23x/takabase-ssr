@@ -155,41 +155,40 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 			this.setSkeleton();
 		}
 
-		if (this.platformService.isBrowser()) {
-			const userIndex: SearchIndex = this.algoliaService.getSearchIndex('user');
-			const userIndexSearch: SearchOptions = {
-				page: this.userGetAllDto.page - 1,
-				hitsPerPage: this.userGetAllDto.size
-			};
+		const userQuery: string = this.userGetAllDto.query?.trim();
+		const userIndex: SearchIndex = this.algoliaService.getSearchIndex('user');
+		const userIndexSearch: SearchOptions = {
+			page: this.userGetAllDto.page - 1,
+			hitsPerPage: this.userGetAllDto.size
+		};
 
-			this.userListRequest$?.unsubscribe();
-			this.userListRequest$ = from(userIndex.search(this.userGetAllDto.query, userIndexSearch)).subscribe({
-				next: (searchResponse: SearchResponse) => {
-					const userList: User[] = searchResponse.hits as any[];
-					const userListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages;
+		this.userListRequest$?.unsubscribe();
+		this.userListRequest$ = from(userIndex.search(userQuery, userIndexSearch)).subscribe({
+			next: (searchResponse: SearchResponse) => {
+				const userList: User[] = searchResponse.hits as any[];
+				const userListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages;
 
-					this.userList = concat ? this.userList.concat(userList) : userList;
-					this.userListSkeletonToggle = false;
+				this.userList = concat ? this.userList.concat(userList) : userList;
+				this.userListSkeletonToggle = false;
 
-					this.abstractListIsHasMore = userListIsHasMore && searchResponse.nbPages > 1;
-					this.abstractListIsLoading$.next(false);
-				},
-				error: (error: any) => console.error(error)
-			});
+				this.abstractListIsHasMore = userListIsHasMore && searchResponse.nbPages > 1;
+				this.abstractListIsLoading$.next(false);
+			},
+			error: (error: any) => console.error(error)
+		});
 
-			//! Default searching
-			// this.userListRequest$?.unsubscribe();
-			// this.userListRequest$ = this.userService.getAll(this.userGetAllDto).subscribe({
-			// 	next: (userList: User[]) => {
-			// 		this.userList = concat ? this.userList.concat(userList) : userList;
-			// 		this.userListSkeletonToggle = false;
-			//
-			// 		this.abstractListIsHasMore = userList.length === this.userGetAllDto.size;
-			// 		this.abstractListIsLoading$.next(false);
-			// 	},
-			// 	error: (error: any) => console.error(error)
-			// });
-		}
+		//! Default searching
+		// this.userListRequest$?.unsubscribe();
+		// this.userListRequest$ = this.userService.getAll(this.userGetAllDto).subscribe({
+		// 	next: (userList: User[]) => {
+		// 		this.userList = concat ? this.userList.concat(userList) : userList;
+		// 		this.userListSkeletonToggle = false;
+		//
+		// 		this.abstractListIsHasMore = userList.length === this.userGetAllDto.size;
+		// 		this.abstractListIsLoading$.next(false);
+		// 	},
+		// 	error: (error: any) => console.error(error)
+		// });
 	}
 
 	getAbstractListLoadMore(): void {

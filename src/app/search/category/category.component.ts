@@ -108,42 +108,40 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 			this.setSkeleton();
 		}
 
-		// prettier-ignore
-		if (this.platformService.isBrowser()) {
-			const categoryIndex: SearchIndex = this.algoliaService.getSearchIndex('category');
-			const categoryIndexSearch: SearchOptions = {
-				page: this.categoryGetAllDto.page - 1,
-				hitsPerPage: this.categoryGetAllDto.size
-			};
+		const categoryQuery: string = this.categoryGetAllDto.query?.trim();
+		const categoryIndex: SearchIndex = this.algoliaService.getSearchIndex('category');
+		const categoryIndexSearch: SearchOptions = {
+			page: this.categoryGetAllDto.page - 1,
+			hitsPerPage: this.categoryGetAllDto.size
+		};
 
-			this.categoryListRequest$?.unsubscribe();
-			this.categoryListRequest$ = from(categoryIndex.search(this.categoryGetAllDto.query, categoryIndexSearch)).subscribe({
-				next: (searchResponse: SearchResponse) => {
-					const categoryList: Category[] = searchResponse.hits as any[];
-					const categoryListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
+		this.categoryListRequest$?.unsubscribe();
+		this.categoryListRequest$ = from(categoryIndex.search(categoryQuery, categoryIndexSearch)).subscribe({
+			next: (searchResponse: SearchResponse) => {
+				const categoryList: Category[] = searchResponse.hits as any[];
+				const categoryListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
 
-					this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
-					this.categoryListSkeletonToggle = false;
+				this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
+				this.categoryListSkeletonToggle = false;
 
-					this.abstractListIsHasMore = categoryListIsHasMore && searchResponse.nbPages > 1;
-					this.abstractListIsLoading$.next(false);
-				},
-				error: (error: any) => console.error(error)
-			});
+				this.abstractListIsHasMore = categoryListIsHasMore && searchResponse.nbPages > 1;
+				this.abstractListIsLoading$.next(false);
+			},
+			error: (error: any) => console.error(error)
+		});
 
-			//! Default searching
-			// this.categoryListRequest$?.unsubscribe();
-			// this.categoryListRequest$ = this.categoryService.getAll(this.categoryGetAllDto).subscribe({
-			// 	next: (categoryList: Category[]) => {
-			// 		this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
-			// 		this.categoryListSkeletonToggle = false;
-			//
-			// 		this.abstractListIsHasMore = categoryList.length === this.categoryGetAllDto.size;
-			// 		this.abstractListIsLoading$.next(false);
-			// 	},
-			// 	error: (error: any) => console.error(error)
-			// });
-		}
+		//! Default searching
+		// this.categoryListRequest$?.unsubscribe();
+		// this.categoryListRequest$ = this.categoryService.getAll(this.categoryGetAllDto).subscribe({
+		// 	next: (categoryList: Category[]) => {
+		// 		this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
+		// 		this.categoryListSkeletonToggle = false;
+		//
+		// 		this.abstractListIsHasMore = categoryList.length === this.categoryGetAllDto.size;
+		// 		this.abstractListIsLoading$.next(false);
+		// 	},
+		// 	error: (error: any) => console.error(error)
+		// });
 	}
 
 	getAbstractListLoadMore(): void {

@@ -67,7 +67,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 	onLogout(): void {
 		const path: string = this.location.path();
-		const pathRestrictedList: string[] = ['/settings', '/create', '/edit'];
+		const pathRestrictedList: string[] = ['/settings', '/create', '/update'];
 
 		this.currentUserSignOutRequest$?.unsubscribe();
 		this.currentUserSignOutRequest$ = this.authorizationService.onSignOut().subscribe({

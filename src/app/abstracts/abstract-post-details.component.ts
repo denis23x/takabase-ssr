@@ -58,9 +58,7 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 			.getOne(postId, postGetOneDto)
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
-					this.router
-						.navigate(['/error', httpErrorResponse.status])
-						.then(() => console.debug('Route changed'));
+					this.router.navigate(['/error', httpErrorResponse.status]).then(() => console.debug('Route changed'));
 
 					return throwError(() => httpErrorResponse);
 				})
