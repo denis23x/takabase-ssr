@@ -2,7 +2,7 @@
 
 <ng-container>
 	<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4">
-		@for (post of postList; track post.id; let i = $index) {
+		@for (post of postList; track i; let i = $index) {
 			<li
 				class="block"
 				appCardPost
@@ -23,9 +23,7 @@
 					[appSvgIconSquare]="'3em'"
 				></i>
 				<div class="text-center">
-					<p class="text-xl font-bold text-base-content">
-						Posts <span class="text-error"> not found </span>
-					</p>
+					<p class="text-xl font-bold text-base-content">Posts <span class="text-error"> not found </span></p>
 					<a
 						class="link text-sm"
 						title="Create your own post"

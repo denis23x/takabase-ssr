@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, TransferState } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { CookiesService } from '../core/services/cookies.service';
@@ -11,6 +11,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { AlgoliaService } from '../core/services/algolia.service';
 import { MetaService } from '../core/services/meta.service';
+import { PlatformService } from '../core/services/platform.service';
 
 @Component({
 	selector: 'app-abstract-search',
@@ -25,6 +26,8 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 	public readonly skeletonService: SkeletonService = inject(SkeletonService);
 	public readonly algoliaService: AlgoliaService = inject(AlgoliaService);
 	public readonly metaService: MetaService = inject(MetaService);
+	public readonly platformService: PlatformService = inject(PlatformService);
+	public readonly transferState: TransferState = inject(TransferState);
 
 	@Input()
 	set query(query: string | undefined) {

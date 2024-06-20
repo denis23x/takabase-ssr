@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, makeStateKey, StateKey } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -14,6 +14,9 @@ import { from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { SearchIndex } from 'algoliasearch/lite';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
+import { tap } from 'rxjs/operators';
+
+const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
 
 @Component({
 	standalone: true,
@@ -33,23 +36,29 @@ export class SearchPostComponent extends AbstractSearchComponent implements OnIn
 		super.ngOnInit();
 
 		this.postGetAllDto$?.unsubscribe();
-		this.postGetAllDto$ = this.abstractGetAllDto$.subscribe({
-			next: () => {
-				/** Get abstract DTO */
+		this.postGetAllDto$ = this.abstractGetAllDto$
+			.pipe(tap(() => (this.postGetAllDto = this.getAbstractGetAllDto())))
+			.subscribe({
+				next: () => {
+					if (this.transferState.hasKey(searchResponseKey)) {
+						this.setSearchResponse(this.transferState.get(searchResponseKey, null));
 
-				this.postGetAllDto = this.getAbstractGetAllDto();
+						if (this.platformService.isBrowser()) {
+							this.transferState.remove(searchResponseKey);
+						}
+					} else {
+						/** Apply Data */
 
-				/** Apply Data */
+						this.setSkeleton();
+						this.setResolver();
 
-				this.setSkeleton();
-				this.setResolver();
+						/** Apply SEO meta tags */
 
-				/** Apply SEO meta tags */
-
-				this.setMetaTags();
-			},
-			error: (error: any) => console.error(error)
-		});
+						this.setMetaTags();
+					}
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	ngOnDestroy(): void {
@@ -69,6 +78,17 @@ export class SearchPostComponent extends AbstractSearchComponent implements OnIn
 
 	setResolver(): void {
 		this.getAbstractList();
+	}
+
+	setSearchResponse(searchResponse: SearchResponse): void {
+		const postList: Post[] = searchResponse.hits as any[];
+		const postListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
+
+		this.postList = this.postGetAllDto.page > 1 ? this.postList.concat(postList) : postList;
+		this.postListSkeletonToggle = false;
+
+		this.abstractListIsHasMore = postListIsHasMore && searchResponse.nbPages > 1;
+		this.abstractListIsLoading$.next(false);
 	}
 
 	setMetaTags(): void {
@@ -92,11 +112,7 @@ export class SearchPostComponent extends AbstractSearchComponent implements OnIn
 	getAbstractList(): void {
 		this.abstractListIsLoading$.next(true);
 
-		const concat: boolean = this.postGetAllDto.page !== 1;
-
-		if (!concat) {
-			this.setSkeleton();
-		}
+		/** Algolia */
 
 		const postQuery: string = this.postGetAllDto.query?.trim();
 		const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
@@ -108,30 +124,14 @@ export class SearchPostComponent extends AbstractSearchComponent implements OnIn
 		this.postListRequest$?.unsubscribe();
 		this.postListRequest$ = from(postIndex.search(postQuery, postIndexSearch)).subscribe({
 			next: (searchResponse: SearchResponse) => {
-				const postList: Post[] = searchResponse.hits as any[];
-				const postListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
+				this.setSearchResponse(searchResponse);
 
-				this.postList = concat ? this.postList.concat(postList) : postList;
-				this.postListSkeletonToggle = false;
-
-				this.abstractListIsHasMore = postListIsHasMore && searchResponse.nbPages > 1;
-				this.abstractListIsLoading$.next(false);
+				if (this.platformService.isServer()) {
+					this.transferState.set(searchResponseKey, searchResponse);
+				}
 			},
 			error: (error: any) => console.error(error)
 		});
-
-		//! Default searching
-		// this.postListRequest$?.unsubscribe();
-		// this.postListRequest$ = this.postService.getAll(this.postGetAllDto).subscribe({
-		// 	next: (postList: Post[]) => {
-		// 		this.postList = concat ? this.postList.concat(postList) : postList;
-		// 		this.postListSkeletonToggle = false;
-		//
-		// 		this.abstractListIsHasMore = postList.length === this.postGetAllDto.size;
-		// 		this.abstractListIsLoading$.next(false);
-		// 	},
-		// 	error: (error: any) => console.error(error)
-		// });
 	}
 
 	getAbstractListLoadMore(): void {

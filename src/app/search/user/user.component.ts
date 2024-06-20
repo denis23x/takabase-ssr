@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, makeStateKey, OnDestroy, OnInit, StateKey } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
@@ -22,6 +22,8 @@ import { CurrentUser } from '../../core/models/current-user.model';
 import { AuthenticatedComponent } from '../../standalone/components/authenticated/authenticated.component';
 import { SearchIndex } from 'algoliasearch/lite';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
+
+const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
 
 @Component({
 	standalone: true,
@@ -60,23 +62,29 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 		super.ngOnInit();
 
 		this.userGetAllDto$?.unsubscribe();
-		this.userGetAllDto$ = this.abstractGetAllDto$.subscribe({
-			next: () => {
-				/** Get abstract DTO */
+		this.userGetAllDto$ = this.abstractGetAllDto$
+			.pipe(tap(() => (this.userGetAllDto = this.getAbstractGetAllDto())))
+			.subscribe({
+				next: () => {
+					if (this.transferState.hasKey(searchResponseKey)) {
+						this.setSearchResponse(this.transferState.get(searchResponseKey, null));
 
-				this.userGetAllDto = this.getAbstractGetAllDto();
+						if (this.platformService.isBrowser()) {
+							this.transferState.remove(searchResponseKey);
+						}
+					} else {
+						/** Apply Data */
 
-				/** Apply Data */
+						this.setSkeleton();
+						this.setResolver();
 
-				this.setSkeleton();
-				this.setResolver();
+						/** Apply SEO meta tags */
 
-				/** Apply SEO meta tags */
-
-				this.setMetaTags();
-			},
-			error: (error: any) => console.error(error)
-		});
+						this.setMetaTags();
+					}
+				},
+				error: (error: any) => console.error(error)
+			});
 
 		/** Make invite link */
 
@@ -128,6 +136,17 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 		this.getAbstractList();
 	}
 
+	setSearchResponse(searchResponse: SearchResponse): void {
+		const userList: User[] = searchResponse.hits as any[];
+		const userListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages;
+
+		this.userList = this.userGetAllDto.page > 1 ? this.userList.concat(userList) : userList;
+		this.userListSkeletonToggle = false;
+
+		this.abstractListIsHasMore = userListIsHasMore && searchResponse.nbPages > 1;
+		this.abstractListIsLoading$.next(false);
+	}
+
 	setMetaTags(): void {
 		const title: string = 'Search users';
 		const description: string = "Use the search to find what you're looking for";
@@ -149,11 +168,7 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 	getAbstractList(): void {
 		this.abstractListIsLoading$.next(true);
 
-		const concat: boolean = this.userGetAllDto.page !== 1;
-
-		if (!concat) {
-			this.setSkeleton();
-		}
+		/** Algolia */
 
 		const userQuery: string = this.userGetAllDto.query?.trim();
 		const userIndex: SearchIndex = this.algoliaService.getSearchIndex('user');
@@ -165,30 +180,14 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 		this.userListRequest$?.unsubscribe();
 		this.userListRequest$ = from(userIndex.search(userQuery, userIndexSearch)).subscribe({
 			next: (searchResponse: SearchResponse) => {
-				const userList: User[] = searchResponse.hits as any[];
-				const userListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages;
+				this.setSearchResponse(searchResponse);
 
-				this.userList = concat ? this.userList.concat(userList) : userList;
-				this.userListSkeletonToggle = false;
-
-				this.abstractListIsHasMore = userListIsHasMore && searchResponse.nbPages > 1;
-				this.abstractListIsLoading$.next(false);
+				if (this.platformService.isServer()) {
+					this.transferState.set(searchResponseKey, searchResponse);
+				}
 			},
 			error: (error: any) => console.error(error)
 		});
-
-		//! Default searching
-		// this.userListRequest$?.unsubscribe();
-		// this.userListRequest$ = this.userService.getAll(this.userGetAllDto).subscribe({
-		// 	next: (userList: User[]) => {
-		// 		this.userList = concat ? this.userList.concat(userList) : userList;
-		// 		this.userListSkeletonToggle = false;
-		//
-		// 		this.abstractListIsHasMore = userList.length === this.userGetAllDto.size;
-		// 		this.abstractListIsLoading$.next(false);
-		// 	},
-		// 	error: (error: any) => console.error(error)
-		// });
 	}
 
 	getAbstractListLoadMore(): void {

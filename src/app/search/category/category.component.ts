@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, makeStateKey, OnDestroy, OnInit, StateKey } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -15,6 +15,9 @@ import { from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { SearchIndex } from 'algoliasearch/lite';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
+import { tap } from 'rxjs/operators';
+
+const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
 
 @Component({
 	standalone: true,
@@ -42,24 +45,34 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 		super.ngOnInit();
 
 		this.categoryGetAllDto$?.unsubscribe();
-		this.categoryGetAllDto$ = this.abstractGetAllDto$.subscribe({
-			next: () => {
-				/** Get abstract DTO */
+		this.categoryGetAllDto$ = this.abstractGetAllDto$
+			.pipe(
+				tap(() => {
+					this.categoryGetAllDto = this.getAbstractGetAllDto();
+					this.categoryGetAllDto.scope = ['user'];
+				})
+			)
+			.subscribe({
+				next: () => {
+					if (this.transferState.hasKey(searchResponseKey)) {
+						this.setSearchResponse(this.transferState.get(searchResponseKey, null));
 
-				this.categoryGetAllDto = this.getAbstractGetAllDto();
-				this.categoryGetAllDto.scope = ['user'];
+						if (this.platformService.isBrowser()) {
+							this.transferState.remove(searchResponseKey);
+						}
+					} else {
+						/** Apply Data */
 
-				/** Apply Data */
+						this.setSkeleton();
+						this.setResolver();
 
-				this.setSkeleton();
-				this.setResolver();
+						/** Apply SEO meta tags */
 
-				/** Apply SEO meta tags */
-
-				this.setMetaTags();
-			},
-			error: (error: any) => console.error(error)
-		});
+						this.setMetaTags();
+					}
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	ngOnDestroy(): void {
@@ -79,6 +92,17 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 
 	setResolver(): void {
 		this.getAbstractList();
+	}
+
+	setSearchResponse(searchResponse: SearchResponse): void {
+		const categoryList: Category[] = searchResponse.hits as any[];
+		const categoryListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
+
+		this.categoryList = this.categoryGetAllDto.page > 1 ? this.categoryList.concat(categoryList) : categoryList;
+		this.categoryListSkeletonToggle = false;
+
+		this.abstractListIsHasMore = categoryListIsHasMore && searchResponse.nbPages > 1;
+		this.abstractListIsLoading$.next(false);
 	}
 
 	setMetaTags(): void {
@@ -102,11 +126,7 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 	getAbstractList(): void {
 		this.abstractListIsLoading$.next(true);
 
-		const concat: boolean = this.categoryGetAllDto.page !== 1;
-
-		if (!concat) {
-			this.setSkeleton();
-		}
+		/** Algolia */
 
 		const categoryQuery: string = this.categoryGetAllDto.query?.trim();
 		const categoryIndex: SearchIndex = this.algoliaService.getSearchIndex('category');
@@ -118,30 +138,14 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 		this.categoryListRequest$?.unsubscribe();
 		this.categoryListRequest$ = from(categoryIndex.search(categoryQuery, categoryIndexSearch)).subscribe({
 			next: (searchResponse: SearchResponse) => {
-				const categoryList: Category[] = searchResponse.hits as any[];
-				const categoryListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
+				this.setSearchResponse(searchResponse);
 
-				this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
-				this.categoryListSkeletonToggle = false;
-
-				this.abstractListIsHasMore = categoryListIsHasMore && searchResponse.nbPages > 1;
-				this.abstractListIsLoading$.next(false);
+				if (this.platformService.isServer()) {
+					this.transferState.set(searchResponseKey, searchResponse);
+				}
 			},
 			error: (error: any) => console.error(error)
 		});
-
-		//! Default searching
-		// this.categoryListRequest$?.unsubscribe();
-		// this.categoryListRequest$ = this.categoryService.getAll(this.categoryGetAllDto).subscribe({
-		// 	next: (categoryList: Category[]) => {
-		// 		this.categoryList = concat ? this.categoryList.concat(categoryList) : categoryList;
-		// 		this.categoryListSkeletonToggle = false;
-		//
-		// 		this.abstractListIsHasMore = categoryList.length === this.categoryGetAllDto.size;
-		// 		this.abstractListIsLoading$.next(false);
-		// 	},
-		// 	error: (error: any) => console.error(error)
-		// });
 	}
 
 	getAbstractListLoadMore(): void {

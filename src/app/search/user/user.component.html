@@ -2,7 +2,7 @@
 
 <ng-container>
 	<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-		@for (user of userList; track user.id; let i = $index) {
+		@for (user of userList; track i; let i = $index) {
 			<li class="block" appCardUser [appCardUserUser]="user" [appCardUserSkeletonToggle]="userListSkeletonToggle"></li>
 			@if (i === 10 || i === 20 || i === 30) {
 				<li class="block" appAd></li>
