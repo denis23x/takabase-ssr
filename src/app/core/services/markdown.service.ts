@@ -105,8 +105,9 @@ export class MarkdownService {
 			.use(plainText)
 			.use(smartArrows)
 			.use(tasks, this.getMarkdownITasksConfig())
-			.use(video)
-			.use(mermaid, this.getMarkdownItMermaidConfig());
+			.use(video);
+		// TODO: remake mermaid
+		// .use(mermaid, this.getMarkdownItMermaidConfig());
 
 		this.markdownIt.renderer.rules.image = this.setMarkdownItRule('image');
 		this.markdownIt.renderer.rules.video = this.setMarkdownItRule('video');

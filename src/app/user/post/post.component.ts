@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, makeStateKey, OnDestroy, OnInit, StateKey } from '@angular/core';
 import { Params, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -14,6 +14,8 @@ import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { UserService } from '../../core/services/user.service';
 import { User } from '../../core/models/user.model';
 import { filter, tap } from 'rxjs/operators';
+
+const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
 
 @Component({
 	standalone: true,
@@ -84,29 +86,41 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 
 	setResolver(): void {
 		this.postGetAllDto$?.unsubscribe();
-		this.postGetAllDto$ = this.abstractGetAllDto$.subscribe({
-			next: () => {
-				/** Get abstract DTO */
+		this.postGetAllDto$ = this.abstractGetAllDto$
+			.pipe(tap(() => (this.postGetAllDto = this.getAbstractGetAllDto())))
+			.subscribe({
+				next: () => {
+					if (this.transferState.hasKey(searchResponseKey)) {
+						this.setSearchResponse(this.transferState.get(searchResponseKey, null));
 
-				this.postGetAllDto = this.getAbstractGetAllDto();
+						if (this.platformService.isBrowser()) {
+							this.transferState.remove(searchResponseKey);
+						}
+					} else {
+						this.getAbstractList();
+					}
+				},
+				error: (error: any) => console.error(error)
+			});
+	}
 
-				/** Get abstract list */
+	setSearchResponse(searchResponse: SearchResponse): void {
+		const postList: Post[] = searchResponse.hits as any[];
+		const postListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
 
-				this.getAbstractList();
-			},
-			error: (error: any) => console.error(error)
-		});
+		this.postList = this.postGetAllDto.page > 1 ? this.postList.concat(postList) : postList;
+		this.postListSkeletonToggle = false;
+
+		this.abstractListIsHasMore = postListIsHasMore && searchResponse.nbPages > 1;
+		this.abstractListIsLoading$.next(false);
 	}
 
 	getAbstractList(): void {
 		this.abstractListIsLoading$.next(true);
 
-		const concat: boolean = this.postGetAllDto.page !== 1;
+		/** Algolia */
 
-		if (!concat) {
-			this.setSkeleton();
-		}
-
+		const postQuery: string = this.postGetAllDto.query?.trim();
 		const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
 		const postIndexFilters: string[] = [];
 
@@ -128,32 +142,16 @@ export class UserPostComponent extends AbstractSearchComponent implements OnInit
 		};
 
 		this.postListRequest$?.unsubscribe();
-		this.postListRequest$ = from(postIndex.search(this.postGetAllDto.query, postIndexSearch)).subscribe({
+		this.postListRequest$ = from(postIndex.search(postQuery, postIndexSearch)).subscribe({
 			next: (searchResponse: SearchResponse) => {
-				const postList: Post[] = searchResponse.hits as any[];
-				const postListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
+				this.setSearchResponse(searchResponse);
 
-				this.postList = concat ? this.postList.concat(postList) : postList;
-				this.postListSkeletonToggle = false;
-
-				this.abstractListIsHasMore = postListIsHasMore && searchResponse.nbPages > 1;
-				this.abstractListIsLoading$.next(false);
+				if (this.platformService.isServer()) {
+					this.transferState.set(searchResponseKey, searchResponse);
+				}
 			},
 			error: (error: any) => console.error(error)
 		});
-
-		//! Default searching
-		// this.postListRequest$?.unsubscribe();
-		// this.postListRequest$ = this.postService.getAll(this.postGetAllDto).subscribe({
-		// 	next: (postList: Post[]) => {
-		// 		this.postList = concat ? this.postList.concat(postList) : postList;
-		// 		this.postListSkeletonToggle = false;
-		//
-		// 		this.abstractListIsHasMore = postList.length === this.postGetAllDto.size;
-		// 		this.abstractListIsLoading$.next(false);
-		// 	},
-		// 	error: (error: any) => console.error(error)
-		// });
 	}
 
 	getAbstractListLoadMore(): void {

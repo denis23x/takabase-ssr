@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /error
 Disallow: /create
 Disallow: /update/*
 Disallow: /settings/*
