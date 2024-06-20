@@ -9,7 +9,7 @@
 					<a
 						class="avatar"
 						target="_blank"
-						[routerLink]="[invitedByUser | userUrl]"
+						[routerLink]="['/', invitedByUser.name]"
 						[title]="invitedByUser.name"
 						[attr.aria-label]="invitedByUser.name"
 					>
@@ -23,7 +23,7 @@
 						<a
 							class="truncate text-xl leading-6 font-bold text-base-content max-w-full link"
 							target="_blank"
-							[routerLink]="[invitedByUser | userUrl]"
+							[routerLink]="['/', invitedByUser.name]"
 							[title]="invitedByUser.name"
 							[attr.aria-label]="invitedByUser.name"
 						>

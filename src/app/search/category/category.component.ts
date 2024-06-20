@@ -4,7 +4,6 @@ import { Component, makeStateKey, OnDestroy, OnInit, StateKey } from '@angular/c
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { Category } from '../../core/models/category.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto';
@@ -21,15 +20,7 @@ const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>
 
 @Component({
 	standalone: true,
-	imports: [
-		CommonModule,
-		RouterModule,
-		UserUrlPipe,
-		SvgIconComponent,
-		SkeletonDirective,
-		CardCategoryComponent,
-		AdComponent
-	],
+	imports: [CommonModule, RouterModule, SvgIconComponent, SkeletonDirective, CardCategoryComponent, AdComponent],
 	selector: 'app-search-category',
 	templateUrl: './category.component.html'
 })

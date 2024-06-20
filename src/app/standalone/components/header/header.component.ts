@@ -5,7 +5,6 @@ import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { AvatarComponent } from '../avatar/avatar.component';
-import { UserUrlPipe } from '../../pipes/user-url.pipe';
 import { AuthorizationService } from '../../../core/services/authorization.service';
 import { filter } from 'rxjs/operators';
 import { CurrentUser } from '../../../core/models/current-user.model';
@@ -23,7 +22,6 @@ import { Location } from '@angular/common';
 		RouterModule,
 		SvgIconComponent,
 		AvatarComponent,
-		UserUrlPipe,
 		SkeletonDirective,
 		DropdownComponent,
 		AuthenticatedComponent,

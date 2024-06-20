@@ -329,5 +329,5 @@
 		[appCategoryDeleteCategoryPostList]="userPostComponent?.postList"
 		(appCategoryDeleteSuccess)="onDeleteCategory($event)"
 	></div>
-	<div appQRCode #appQrCodeComponent [appQRCodeData]="user | userUrl: 1" [appQRCodeOrigin]="true"></div>
+	<div appQRCode #appQrCodeComponent [appQRCodeData]="user.name" [appQRCodeOrigin]="true"></div>
 </ng-container>

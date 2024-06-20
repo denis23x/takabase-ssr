@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MarkdownPipe } from '../../../pipes/markdown.pipe';
-import { UserUrlPipe } from '../../../pipes/user-url.pipe';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { Post } from '../../../../core/models/post.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
@@ -29,7 +28,6 @@ import { AppCheckPipe } from '../../../pipes/app-check.pipe';
 	imports: [
 		RouterModule,
 		MarkdownPipe,
-		UserUrlPipe,
 		DayjsPipe,
 		NgOptimizedImage,
 		SanitizerPipe,

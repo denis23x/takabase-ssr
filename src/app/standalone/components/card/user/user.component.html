@@ -6,7 +6,7 @@
 			class="avatar aspect-square rounded-btn overflow-hidden"
 			appSkeleton
 			[appSkeletonToggle]="userSkeletonToggle"
-			[routerLink]="[user | userUrl]"
+			[routerLink]="['/', user.name]"
 			[title]="user.name"
 			[attr.aria-label]="user.name"
 		>
@@ -21,7 +21,7 @@
 				class="link w-full truncate text-xl font-bold"
 				appSkeleton
 				[appSkeletonToggle]="userSkeletonToggle"
-				[routerLink]="[user | userUrl]"
+				[routerLink]="['/', user.name]"
 				[title]="user.name"
 				[attr.aria-label]="user.name"
 			>

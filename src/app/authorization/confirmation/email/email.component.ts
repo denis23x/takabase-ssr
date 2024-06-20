@@ -12,14 +12,13 @@ import { from, of, Subscription, switchMap } from 'rxjs';
 import { PlatformService } from '../../../core/services/platform.service';
 import { CurrentUser } from '../../../core/models/current-user.model';
 import { AuthorizationService } from '../../../core/services/authorization.service';
-import { UserUrlPipe } from '../../../standalone/pipes/user-url.pipe';
 import { filter } from 'rxjs/operators';
 import { SkeletonDirective } from '../../../standalone/directives/app-skeleton.directive';
 import { AuthenticatedComponent } from '../../../standalone/components/authenticated/authenticated.component';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, SvgIconComponent, UserUrlPipe, SkeletonDirective, AuthenticatedComponent],
+	imports: [RouterModule, SvgIconComponent, SkeletonDirective, AuthenticatedComponent],
 	selector: 'app-authorization-confirmation-email',
 	templateUrl: './email.component.html'
 })

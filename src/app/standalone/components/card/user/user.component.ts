@@ -2,7 +2,6 @@
 
 import { Component, Input } from '@angular/core';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
-import { UserUrlPipe } from '../../../pipes/user-url.pipe';
 import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../../avatar/avatar.component';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
@@ -10,7 +9,7 @@ import { User } from '../../../../core/models/user.model';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, SkeletonDirective, UserUrlPipe, AvatarComponent, DayjsPipe],
+	imports: [RouterModule, SkeletonDirective, AvatarComponent, DayjsPipe],
 	selector: 'app-card-user, [appCardUser]',
 	templateUrl: './user.component.html'
 })

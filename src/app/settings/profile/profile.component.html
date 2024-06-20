@@ -129,7 +129,7 @@
 			<p class="alert" data-pw="app-settings-profile-alert-change-name" role="alert">
 				<i class="fill-current text-info" appSvgIcon [appSvgIconIcon]="'info-circle'" [appSvgIconSquare]="'1.5em'"></i>
 				<!-- prettier-ignore -->
-				<span class="block"> The name change will make the user profile <strong class="inline font-bold"> {{ currentUser | userUrl: 1 }} </strong> no longer accessible via a direct link or QR code that was previously published </span>
+				<span class="block"> The name change will make the user profile <a class="inline font-bold link" target="_blank" [href]="currentUserUrl" [title]="currentUser.name" [attr.aria-label]="currentUser.name"> {{ currentUserUrl }} </a> no longer accessible via a direct link or QR code that was previously published </span>
 			</p>
 			@if (profileForm.get("description"); as description) {
 				<fieldset class="form-control">

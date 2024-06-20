@@ -250,8 +250,8 @@ export const APP_ROUTES: Route[] = [
 							};
 						}
 
-						// Check if the first URL segment matches the pattern for a username (e.g., @username)
-						if (urlSegment[0].path.match(/^@\S+$/gm)) {
+						// Check if the first URL segment matches the pattern for a username (e.g., denis23x)
+						if (urlSegment[0].path.match(/(?![0-9]+$).*/i)) {
 							return {
 								consumed: urlSegment.slice(0, 1),
 								posParams: {

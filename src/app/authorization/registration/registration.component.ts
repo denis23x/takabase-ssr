@@ -20,7 +20,6 @@ import { AIService } from '../../core/services/ai.service';
 import { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
 import { UserCreateDto } from '../../core/dto/user/user-create.dto';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
-import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
 import { Auth, onAuthStateChanged, Unsubscribe } from 'firebase/auth';
@@ -47,7 +46,6 @@ interface RegistrationForm {
 		SignInComponent,
 		BadgeErrorComponent,
 		AvatarComponent,
-		UserUrlPipe,
 		DayjsPipe,
 		InputShowPassword
 	],

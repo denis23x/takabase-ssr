@@ -36,7 +36,7 @@
 								appSkeleton
 								[target]="postPreview ? '_blank' : '_self'"
 								[appSkeletonToggle]="postSkeletonToggle"
-								[routerLink]="[post.user | userUrl, 'category', post.category?.id]"
+								[routerLink]="['/', post.user.name, 'category', post.category?.id]"
 								[title]="post.category?.name || 'Category'"
 								[attr.aria-label]="post.category?.name || 'Category'"
 							>

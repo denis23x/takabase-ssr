@@ -31,7 +31,6 @@ import { MetaService } from '../core/services/meta.service';
 import { ReportService } from '../core/services/report.service';
 import { SearchFormComponent } from '../standalone/components/search-form/search-form.component';
 import { QrCodeComponent } from '../standalone/components/qr-code/qr-code.component';
-import { UserUrlPipe } from '../standalone/pipes/user-url.pipe';
 import { CopyToClipboardDirective } from '../standalone/directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../core/services/snackbar.service';
 import { UserGetOneDto } from '../core/dto/user/user-get-one.dto';
@@ -54,7 +53,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 		CategoryCreateComponent,
 		SearchFormComponent,
 		QrCodeComponent,
-		UserUrlPipe,
 		CopyToClipboardDirective
 	],
 	selector: 'app-user',
@@ -297,7 +295,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			if (this.userTemp) {
 				return of(this.userTemp).pipe(tap(() => (this.userTemp = undefined)));
 			} else {
-				return this.getUserGetAll(userName.substring(1));
+				return this.getUserGetAll(userName);
 			}
 		} else {
 			return of(undefined);
@@ -341,7 +339,7 @@ export class UserComponent implements OnInit, OnDestroy {
 			page: 1,
 			size: 10
 		};
-
+		console.log(userGetAllDto);
 		return this.userService.getAll(userGetAllDto).pipe(
 			switchMap((userList: User[]) => (userList[0] ? of(userList[0]) : throwError(() => new Error()))),
 			catchError((httpErrorResponse: HttpErrorResponse) => {

@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
@@ -32,7 +31,6 @@ const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>
 		RouterModule,
 		AvatarComponent,
 		SvgIconComponent,
-		UserUrlPipe,
 		DayjsPipe,
 		CardUserComponent,
 		SkeletonDirective,

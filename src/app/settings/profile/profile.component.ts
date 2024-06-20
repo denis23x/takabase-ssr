@@ -11,7 +11,6 @@ import { AvatarComponent } from '../../standalone/components/avatar/avatar.compo
 import { CropperComponent } from '../../standalone/components/cropper/cropper.component';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
-import { UserUrlPipe } from '../../standalone/pipes/user-url.pipe';
 import { HelperService } from '../../core/services/helper.service';
 import { UserService } from '../../core/services/user.service';
 import { AuthorizationService } from '../../core/services/authorization.service';
@@ -44,7 +43,6 @@ interface ProfileForm {
 		AvatarComponent,
 		CropperComponent,
 		DayjsPipe,
-		UserUrlPipe,
 		InputTrimWhitespaceDirective,
 		TextareaAutosizeDirective,
 		DropdownComponent,
@@ -67,6 +65,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 	currentUserRequest$: Subscription | undefined;
+	currentUserUrl: string | undefined;
 
 	profileForm: FormGroup = this.formBuilder.group<ProfileForm>({
 		avatar: this.formBuilder.control(null, []),
@@ -120,6 +119,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 								},
 								error: (error: any) => console.error(error)
 							});
+
+						/** Make currentUserUrl */
+
+						this.currentUserUrl = [this.helperService.getURL().origin, this.currentUser.name].join('/');
 					},
 					error: (error: any) => console.error(error)
 				});

@@ -16,4 +16,4 @@ Please note that while utilizing integrated plugins, seamless compatibility with
 - [markdown-it-smartarrows](https://www.npmjs.com/package/markdown-it-smartarrows)
 - [markdown-it-tasks](https://www.npmjs.com/package/markdown-it-tasks)
 - [markdown-it-video](https://www.npmjs.com/package/markdown-it-video)
-- [markdown-it-mermaid](@agoose77/markdown-it-mermaid)
+- [markdown-it-mermaid](https://www.npmjs.com/package/@agoose77/markdown-it-mermaid)
