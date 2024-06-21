@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { WindowComponent } from '../../../standalone/components/window/window.component';
 import { ShareComponent } from '../../../standalone/components/share/share.component';
 import { PostProseComponent } from '../../../standalone/components/post/prose/prose.component';
-import { AbstractPostDetailsComponent } from '../../../abstracts/abstract-post-details.component';
+import { AbstractPostComponent } from '../../../abstracts/abstract-post.component';
 import { PostGetOneDto } from '../../../core/dto/post/post-get-one.dto';
 
 @Component({
@@ -13,7 +13,7 @@ import { PostGetOneDto } from '../../../core/dto/post/post-get-one.dto';
 	selector: 'app-search-post-details',
 	templateUrl: './details.component.html'
 })
-export class SearchPostDetailsComponent extends AbstractPostDetailsComponent implements OnInit {
+export class SearchPostDetailsComponent extends AbstractPostComponent implements OnInit {
 	ngOnInit(): void {
 		super.ngOnInit();
 

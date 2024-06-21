@@ -10,6 +10,7 @@ import { fromEvent, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthenticatedComponent } from '../standalone/components/authenticated/authenticated.component';
 import { SvgLogoComponent } from '../standalone/components/svg-logo/svg-logo.component';
+import { TitleService } from '../core/services/title.service';
 
 @Component({
 	standalone: true,
@@ -19,6 +20,7 @@ import { SvgLogoComponent } from '../standalone/components/svg-logo/svg-logo.com
 })
 export class HomeComponent implements OnInit, OnDestroy {
 	private readonly metaService: MetaService = inject(MetaService);
+	private readonly titleService: TitleService = inject(TitleService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 
 	// prettier-ignore
@@ -110,6 +112,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
+		this.setTitle();
 
 		// if (this.platformService.isBrowser()) {
 		// 	// @ts-ignore
@@ -140,6 +143,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 		// Set default
 
 		this.onClickNav(this.appFeatureList[0]);
+	}
+
+	setTitle(): void {
+		this.titleService.setTitle('Home');
 	}
 
 	setMetaTags(): void {

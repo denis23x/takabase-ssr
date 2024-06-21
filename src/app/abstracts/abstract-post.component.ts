@@ -12,10 +12,10 @@ import { Subscription, throwError } from 'rxjs';
 import { PlatformService } from '../core/services/platform.service';
 
 @Component({
-	selector: 'app-abstract-post-details',
+	selector: 'app-abstract-post',
 	template: ''
 })
-export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy {
+export abstract class AbstractPostComponent implements OnInit, OnDestroy {
 	public readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	public readonly router: Router = inject(Router);
 	public readonly postService: PostService = inject(PostService);
@@ -44,12 +44,15 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 	}
 
 	setAbstractSkeleton(): void {
+		this.abstractPost = this.skeletonService.getPost(['category', 'user']);
+		this.abstractPostSkeletonToggle = true;
+
 		/** Avoid SSR issue NotYetImplemented */
 
 		if (this.platformService.isBrowser()) {
-			this.abstractPost = this.skeletonService.getPost(['category', 'user']);
-			this.abstractPostSkeletonToggle = true;
 			this.abstractPostProseDialog.nativeElement.showModal();
+		} else {
+			this.abstractPostProseDialog.nativeElement.classList.add('modal-open');
 		}
 	}
 

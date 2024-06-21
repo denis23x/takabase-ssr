@@ -217,7 +217,6 @@ export const APP_ROUTES: Route[] = [
 
 					return null;
 				},
-				title: 'Home',
 				// canMatch: [redirectHomeGuard()],
 				loadComponent: async () => {
 					return import('./home/home.component').then(m => m.HomeComponent);
@@ -228,7 +227,7 @@ export const APP_ROUTES: Route[] = [
 					// Check if there is at least one URL segment
 					if (urlSegment.length >= 1) {
 						const userName: string = urlSegment[0].path;
-						const userNameForbiddenList: string[] = ['error'];
+						const userNameForbiddenList: string[] = ['error', 'settings', 'create', 'update', 'loading'];
 
 						// Check if the first URL segment matches the pattern for a username (e.g., denis23x)
 						if (userName.match(/(?![0-9]+$).*/i)) {
@@ -279,7 +278,7 @@ export const APP_ROUTES: Route[] = [
 					{
 						path: 'post/:postId',
 						loadComponent: async () => {
-							return import('./user/post/details/details.component').then(m => m.UserPostDetailsComponent);
+							return import('./user/post/post.component').then(m => m.UserPostComponent);
 						}
 					}
 				]
