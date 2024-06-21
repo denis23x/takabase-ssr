@@ -204,12 +204,8 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.categoryList = this.skeletonService.getCategoryList();
 		this.categoryListSkeletonToggle = true;
 
-		const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
-
-		if (categoryId) {
-			this.category = this.skeletonService.getCategory();
-			this.categorySkeletonToggle = true;
-		}
+		this.category = this.skeletonService.getCategory();
+		this.categorySkeletonToggle = true;
 
 		this.postList = this.skeletonService.getPostList();
 		this.postListSkeletonToggle = true;
@@ -246,7 +242,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
 					this.activatedRouteParamsCategoryId$?.unsubscribe();
 					this.activatedRouteParamsCategoryId$ = this.activatedRoute.params
-						.pipe(distinctUntilKeyChanged('categoryId'))
+						.pipe(
+							distinctUntilKeyChanged('categoryId'),
+							filter(() => userName === this.user.name)
+						)
 						.subscribe({
 							next: () => {
 								/** Set Category */
