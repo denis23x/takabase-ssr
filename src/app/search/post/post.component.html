@@ -36,14 +36,14 @@
 			</li>
 		}
 	</ul>
-	@if (abstractListPageScrollInfinite === false && abstractListIsHasMore) {
+	@if (abstractListIsHasMore && !abstractListPageScrollInfinite) {
 		<button
 			class="btn-success btn-md btn mt-4 w-full"
 			type="button"
-			title="Load more"
-			aria-label="Load more"
+			title="Load more posts"
+			aria-label="Load more posts"
 			[disabled]="abstractListIsLoading$ | async"
-			(click)="getAbstractListLoadMore()"
+			(click)="getAbstractList(true)"
 		>
 			@if (abstractListIsLoading$ | async) {
 				<span class="loading loading-spinner"></span>

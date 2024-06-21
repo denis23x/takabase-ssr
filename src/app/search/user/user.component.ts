@@ -163,7 +163,7 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	getAbstractList(): void {
+	getAbstractList(abstractListLoadMore: boolean = false): void {
 		this.abstractListIsLoading$.next(true);
 
 		/** Algolia */
@@ -171,7 +171,7 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 		const userQuery: string = this.userGetAllDto.query?.trim();
 		const userIndex: SearchIndex = this.algoliaService.getSearchIndex('user');
 		const userIndexSearch: SearchOptions = {
-			page: this.userGetAllDto.page - 1,
+			page: (() => (abstractListLoadMore ? this.userGetAllDto.page++ : (this.userGetAllDto.page = 0)))(),
 			hitsPerPage: this.userGetAllDto.size
 		};
 
@@ -186,11 +186,5 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 			},
 			error: (error: any) => console.error(error)
 		});
-	}
-
-	getAbstractListLoadMore(): void {
-		this.userGetAllDto.page++;
-
-		this.getAbstractList();
 	}
 }

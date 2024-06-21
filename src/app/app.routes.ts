@@ -9,7 +9,6 @@ import { redirectLoadingGuard } from './core/guards/redirect-loading-guard.servi
 export const APP_ROUTES: Route[] = [
 	{
 		path: '',
-		title: 'Outlet',
 		loadComponent: async () => {
 			return import('./outlet/outlet.component').then(m => m.OutletComponent);
 		},

@@ -109,7 +109,7 @@ export class SearchPostComponent extends AbstractSearchComponent implements OnIn
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	getAbstractList(): void {
+	getAbstractList(abstractListLoadMore: boolean = false): void {
 		this.abstractListIsLoading$.next(true);
 
 		/** Algolia */
@@ -117,7 +117,7 @@ export class SearchPostComponent extends AbstractSearchComponent implements OnIn
 		const postQuery: string = this.postGetAllDto.query?.trim();
 		const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
 		const postIndexSearch: SearchOptions = {
-			page: this.postGetAllDto.page - 1,
+			page: (() => (abstractListLoadMore ? this.postGetAllDto.page++ : (this.postGetAllDto.page = 0)))(),
 			hitsPerPage: this.postGetAllDto.size
 		};
 
@@ -132,11 +132,5 @@ export class SearchPostComponent extends AbstractSearchComponent implements OnIn
 			},
 			error: (error: any) => console.error(error)
 		});
-	}
-
-	getAbstractListLoadMore(): void {
-		this.postGetAllDto.page++;
-
-		this.getAbstractList();
 	}
 }

@@ -335,21 +335,21 @@
 							</li>
 						}
 					</ul>
-					<!--					@if (abstractListPageScrollInfinite === false && abstractListIsHasMore) {
+					@if (postListIsHasMore && !postListPageScrollInfinite) {
 						<button
 							class="btn-md btn-success btn mt-4 w-full"
 							type="button"
-							title="Load more"
-							aria-label="Load more"
-							[disabled]="abstractListIsLoading$ | async"
-							(click)="getAbstractListLoadMore()"
+							title="Load more posts"
+							aria-label="Load more posts"
+							[disabled]="postListIsLoading()"
+							(click)="getPostList(true)"
 						>
-							@if (abstractListIsLoading$ | async) {
+							@if (postListIsLoading()) {
 								<span class="loading loading-spinner"></span>
 							}
 							Load more
 						</button>
-					}-->
+					}
 				</div>
 			</div>
 		</div>

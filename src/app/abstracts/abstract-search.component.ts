@@ -7,7 +7,7 @@ import { CookiesService } from '../core/services/cookies.service';
 import { AppearanceService } from '../core/services/appearance.service';
 import { AbstractGetAllDto } from '../core/dto/abstract/abstract-get-all.dto';
 import { AuthorizationService } from '../core/services/authorization.service';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { AlgoliaService } from '../core/services/algolia.service';
 import { MetaService } from '../core/services/meta.service';
@@ -36,25 +36,6 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	@Input()
-	set status(status: string | undefined) {
-		if (status) {
-			const queryParams: Params = {
-				...this.activatedRoute.snapshot.queryParams,
-				status: null
-			};
-
-			this.router
-				.navigate([], {
-					queryParams,
-					queryParamsHandling: 'merge',
-					relativeTo: this.activatedRoute,
-					replaceUrl: true
-				})
-				.then(() => this.setAbstractGetAllDto(this.getAbstractGetAllDto()));
-		}
-	}
-
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
 	abstractGetAllDto$: BehaviorSubject<AbstractGetAllDto> = new BehaviorSubject<AbstractGetAllDto>({});
@@ -68,18 +49,8 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 	abstractListPageScrollInfinite$: Subscription | undefined;
 
 	ngOnInit(): void {
-		/** Apply appearance settings */
+		/** Apply abstract appearance settings */
 
-		this.setAbstractAppearance();
-	}
-
-	ngOnDestroy(): void {
-		[this.abstractListPageScrollInfinite$].forEach(($: Subscription) => $?.unsubscribe());
-
-		[this.abstractListIsLoading$, this.abstractGetAllDto$].forEach(($: BehaviorSubject<any>) => $?.complete());
-	}
-
-	setAbstractAppearance(): void {
 		this.abstractListPageScrollInfinite = !!Number(this.cookiesService.getItem('page-scroll-infinite'));
 
 		if (this.abstractListPageScrollInfinite) {
@@ -88,10 +59,16 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 				.setPageScrollInfinite()
 				.pipe(filter(() => this.abstractListIsHasMore && !this.abstractListIsLoading$.getValue()))
 				.subscribe({
-					next: () => this.getAbstractListLoadMore(),
+					next: () => this.getAbstractList(true),
 					error: (error: any) => console.error(error)
 				});
 		}
+	}
+
+	ngOnDestroy(): void {
+		[this.abstractListPageScrollInfinite$].forEach(($: Subscription) => $?.unsubscribe());
+
+		[this.abstractListIsLoading$, this.abstractGetAllDto$].forEach(($: BehaviorSubject<any>) => $?.complete());
 	}
 
 	setAbstractGetAllDto(getAllDtoParams: Partial<AbstractGetAllDto>): void {
@@ -113,7 +90,5 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 		return Object.fromEntries(getAllDtoFiltered);
 	}
 
-	abstract getAbstractList(): void;
-
-	abstract getAbstractListLoadMore(): void;
+	abstract getAbstractList(abstractListLoadMore: boolean): void;
 }

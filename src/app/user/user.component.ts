@@ -1,6 +1,18 @@
 /** @format */
 
-import { Component, inject, makeStateKey, OnDestroy, OnInit, StateKey, TransferState } from '@angular/core';
+import {
+	Component,
+	inject,
+	Input,
+	makeStateKey,
+	numberAttribute,
+	OnDestroy,
+	OnInit,
+	signal,
+	StateKey,
+	TransferState,
+	WritableSignal
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, of, Subscription, throwError } from 'rxjs';
 import { catchError, filter, switchMap } from 'rxjs/operators';
@@ -39,6 +51,9 @@ import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { PlatformService } from '../core/services/platform.service';
 import { AlgoliaService } from '../core/services/algolia.service';
 import { AuthorizationService } from '../core/services/authorization.service';
+import { CookiesService } from '../core/services/cookies.service';
+import { AppearanceService } from '../core/services/appearance.service';
+import { PostGetAllDto } from '../core/dto/post/post-get-all.dto';
 
 const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
 
@@ -78,8 +93,27 @@ export class UserComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly algoliaService: AlgoliaService = inject(AlgoliaService);
+	private readonly cookiesService: CookiesService = inject(CookiesService);
+	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly router: Router = inject(Router);
+
+	@Input({ transform: numberAttribute })
+	set deleteId(deleteId: number | undefined) {
+		if (deleteId) {
+			this.router
+				.navigate([], {
+					queryParams: {
+						...this.activatedRoute.snapshot.queryParams,
+						deleteId: null
+					},
+					queryParamsHandling: 'merge',
+					relativeTo: this.activatedRoute,
+					replaceUrl: true
+				})
+				.then(() => (this.postList = this.postList.filter((post: Post) => post.id !== deleteId)));
+		}
+	}
 
 	activatedRouteParamsUserName$: Subscription | undefined;
 	activatedRouteParamsCategoryId$: Subscription | undefined;
@@ -108,6 +142,13 @@ export class UserComponent implements OnInit, OnDestroy {
 	postListRequest$: Subscription | undefined;
 	postListSkeletonToggle: boolean = true;
 	postListIsHasMore: boolean = false;
+	postListIsLoading: WritableSignal<boolean> = signal(false);
+	postListPageScrollInfinite: boolean = false;
+	postListPageScrollInfinite$: Subscription | undefined;
+	postListGetAllDto: PostGetAllDto = {
+		page: 0,
+		size: 20
+	};
 
 	ngOnInit(): void {
 		this.activatedRouteParamsUserName$?.unsubscribe();
@@ -136,6 +177,10 @@ export class UserComponent implements OnInit, OnDestroy {
 				next: () => (this.currentUserSkeletonToggle = false),
 				error: (error: any) => console.error(error)
 			});
+
+		/** Apply appearance settings */
+
+		this.setAppearance();
 	}
 
 	ngOnDestroy(): void {
@@ -147,7 +192,8 @@ export class UserComponent implements OnInit, OnDestroy {
 			this.currentUserSkeletonToggle$,
 			this.userRequest$,
 			this.categoryRequest$,
-			this.postListRequest$
+			this.postListRequest$,
+			this.postListPageScrollInfinite$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -306,6 +352,21 @@ export class UserComponent implements OnInit, OnDestroy {
 		});
 	}
 
+	setAppearance(): void {
+		this.postListPageScrollInfinite = !!Number(this.cookiesService.getItem('page-scroll-infinite'));
+
+		if (this.postListPageScrollInfinite) {
+			this.postListPageScrollInfinite$?.unsubscribe();
+			this.postListPageScrollInfinite$ = this.appearanceService
+				.setPageScrollInfinite()
+				.pipe(filter(() => this.postListIsHasMore && !this.postListIsLoading()))
+				.subscribe({
+					next: () => this.getPostList(true),
+					error: (error: any) => console.error(error)
+				});
+		}
+	}
+
 	/** Search */
 
 	onToggleSearchForm(toggle: boolean): void {
@@ -383,7 +444,11 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	/** PostList */
 
-	getPostList(): void {
+	getPostList(postListLoadMore: boolean = false): void {
+		this.postListIsLoading.set(true);
+
+		/** Algolia */
+
 		const postQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
 		const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
 		const postIndexFilters: string[] = [];
@@ -400,8 +465,8 @@ export class UserComponent implements OnInit, OnDestroy {
 		}
 
 		const postIndexSearch: SearchOptions = {
-			page: 0,
-			hitsPerPage: 20,
+			page: (() => (postListLoadMore ? this.postListGetAllDto.page++ : (this.postListGetAllDto.page = 0)))(),
+			hitsPerPage: this.postListGetAllDto.size,
 			filters: postIndexFilters.join(' AND ')
 		};
 
@@ -418,19 +483,13 @@ export class UserComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	getPostListLoadMore(): void {
-		// this.postGetAllDto.page++;
-
-		this.getPostList();
-	}
-
 	setPostListSearchResponse(searchResponse: SearchResponse): void {
 		const postList: Post[] = searchResponse.hits as any[];
 		const postListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
 
-		// this.postList = this.postGetAllDto.page > 1 ? this.postList.concat(postList) : postList;
-		this.postList = postList;
+		this.postList = this.postListGetAllDto.page > 1 ? this.postList.concat(postList) : postList;
 		this.postListSkeletonToggle = false;
 		this.postListIsHasMore = postListIsHasMore && searchResponse.nbPages > 1;
+		this.postListIsLoading.set(false);
 	}
 }

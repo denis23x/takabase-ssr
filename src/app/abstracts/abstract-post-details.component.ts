@@ -10,7 +10,6 @@ import { catchError } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subscription, throwError } from 'rxjs';
 import { PlatformService } from '../core/services/platform.service';
-import { Location } from '@angular/common';
 
 @Component({
 	selector: 'app-abstract-post-details',
@@ -22,7 +21,6 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 	public readonly postService: PostService = inject(PostService);
 	public readonly skeletonService: SkeletonService = inject(SkeletonService);
 	public readonly platformService: PlatformService = inject(PlatformService);
-	public readonly location: Location = inject(Location);
 
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
@@ -88,7 +86,12 @@ export abstract class AbstractPostDetailsComponent implements OnInit, OnDestroy 
 			this.postService.removePostTitle();
 
 			if (redirect) {
-				this.location.back();
+				this.router
+					.navigate(['.'], {
+						relativeTo: this.activatedRoute.parent,
+						queryParamsHandling: 'preserve'
+					})
+					.then(() => console.debug('Route changed'));
 			}
 		}
 	}

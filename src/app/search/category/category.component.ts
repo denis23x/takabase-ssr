@@ -114,7 +114,7 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	getAbstractList(): void {
+	getAbstractList(abstractListLoadMore: boolean = false): void {
 		this.abstractListIsLoading$.next(true);
 
 		/** Algolia */
@@ -122,7 +122,7 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 		const categoryQuery: string = this.categoryGetAllDto.query?.trim();
 		const categoryIndex: SearchIndex = this.algoliaService.getSearchIndex('category');
 		const categoryIndexSearch: SearchOptions = {
-			page: this.categoryGetAllDto.page - 1,
+			page: (() => (abstractListLoadMore ? this.categoryGetAllDto.page++ : (this.categoryGetAllDto.page = 0)))(),
 			hitsPerPage: this.categoryGetAllDto.size
 		};
 
@@ -137,11 +137,5 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 			},
 			error: (error: any) => console.error(error)
 		});
-	}
-
-	getAbstractListLoadMore(): void {
-		this.categoryGetAllDto.page++;
-
-		this.getAbstractList();
 	}
 }
