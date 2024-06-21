@@ -9,7 +9,7 @@
 				class="link text-xl truncate font-bold leading-6 text-base-content max-w-full"
 				appSkeleton
 				[appSkeletonToggle]="categorySkeletonToggle"
-				[routerLink]="['/user', category.user.id, 'category', category.id]"
+				[routerLink]="['/', category.user.name, 'category', category.id]"
 				[title]="category.name"
 				[attr.aria-label]="category.name"
 			>

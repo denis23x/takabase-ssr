@@ -1,29 +1,26 @@
 /** @format */
 
-import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Params, Router, RouterModule } from '@angular/router';
-import { distinctUntilChanged, distinctUntilKeyChanged, from, Observable, of, Subscription, throwError } from 'rxjs';
-import { catchError, filter, switchMap, tap } from 'rxjs/operators';
+import { Component, inject, makeStateKey, OnDestroy, OnInit, StateKey, TransferState } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { distinctUntilKeyChanged, from, of, Subscription, throwError } from 'rxjs';
+import { catchError, filter, switchMap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { DayjsPipe } from '../standalone/pipes/dayjs.pipe';
 import { User } from '../core/models/user.model';
 import { Category } from '../core/models/category.model';
-import { AuthorizationService } from '../core/services/authorization.service';
 import { UserService } from '../core/services/user.service';
 import { MarkdownPipe } from '../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../standalone/pipes/sanitizer.pipe';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
 import { CurrentUser } from '../core/models/current-user.model';
-import { UserPostComponent } from './post/post.component';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
 import { CategoryDeleteComponent } from '../standalone/components/category/delete/delete.component';
 import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
-import { CategoryService } from '../core/services/category.service';
 import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
 import { TitleService } from '../core/services/title.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
@@ -33,13 +30,23 @@ import { SearchFormComponent } from '../standalone/components/search-form/search
 import { QrCodeComponent } from '../standalone/components/qr-code/qr-code.component';
 import { CopyToClipboardDirective } from '../standalone/directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../core/services/snackbar.service';
-import { UserGetOneDto } from '../core/dto/user/user-get-one.dto';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { CardPostComponent } from '../standalone/components/card/post/post.component';
+import { Post } from '../core/models/post.model';
+import { SearchIndex } from 'algoliasearch/lite';
+import { SearchOptions, SearchResponse } from '@algolia/client-search';
+import { PlatformService } from '../core/services/platform.service';
+import { AlgoliaService } from '../core/services/algolia.service';
+import { AuthorizationService } from '../core/services/authorization.service';
+
+const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
 
 @Component({
 	standalone: true,
 	imports: [
 		RouterModule,
+		CommonModule,
 		AvatarComponent,
 		DayjsPipe,
 		ScrollPresetDirective,
@@ -53,38 +60,40 @@ import { HttpErrorResponse } from '@angular/common/http';
 		CategoryCreateComponent,
 		SearchFormComponent,
 		QrCodeComponent,
-		CopyToClipboardDirective
+		CopyToClipboardDirective,
+		AsyncPipe,
+		CardPostComponent
 	],
 	selector: 'app-user',
 	templateUrl: './user.component.html'
 })
 export class UserComponent implements OnInit, OnDestroy {
-	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	private readonly router: Router = inject(Router);
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly userService: UserService = inject(UserService);
 	private readonly titleService: TitleService = inject(TitleService);
-	private readonly metaService: MetaService = inject(MetaService);
 	private readonly reportService: ReportService = inject(ReportService);
-	private readonly categoryService: CategoryService = inject(CategoryService);
-	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
-	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+	private readonly skeletonService: SkeletonService = inject(SkeletonService);
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly transferState: TransferState = inject(TransferState);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly algoliaService: AlgoliaService = inject(AlgoliaService);
+	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly router: Router = inject(Router);
 
-	activatedRouteUrl$: Subscription | undefined;
-	activatedRouteFirstChildParams$: Subscription | undefined;
-
-	user: User | undefined;
-	userRequest$: Subscription | undefined;
-	userTemp: User | undefined;
-	userSkeletonToggle: boolean = true;
-	userPostComponent: UserPostComponent | undefined;
+	activatedRouteParamsUserName$: Subscription | undefined;
+	activatedRouteParamsCategoryId$: Subscription | undefined;
+	activatedRouteQueryParams$: Subscription | undefined;
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
 	currentUserSkeletonToggle: boolean = true;
 	currentUserSkeletonToggle$: Subscription | undefined;
+
+	user: User | undefined;
+	userRequest$: Subscription | undefined;
+	userSkeletonToggle: boolean = true;
 
 	searchFormToggle: boolean = false;
 
@@ -95,22 +104,15 @@ export class UserComponent implements OnInit, OnDestroy {
 	categoryList: Category[] = [];
 	categoryListSkeletonToggle: boolean = true;
 
-	ngOnInit(): void {
-		this.activatedRouteUrl$?.unsubscribe();
-		this.activatedRouteUrl$ = this.activatedRoute.url
-			.pipe(
-				switchMap(() => this.activatedRoute.params),
-				distinctUntilChanged((previousParams: Params, currentParams: Params) => {
-					const userName: boolean = previousParams.userName === currentParams.userName;
-					const userId: boolean = previousParams.userId === currentParams.userId;
+	postList: Post[] = [];
+	postListRequest$: Subscription | undefined;
+	postListSkeletonToggle: boolean = true;
+	postListIsHasMore: boolean = false;
 
-					return userName && userId;
-				}),
-				tap(() => {
-					this.userRequest$?.unsubscribe();
-					this.activatedRouteFirstChildParams$?.unsubscribe();
-				})
-			)
+	ngOnInit(): void {
+		this.activatedRouteParamsUserName$?.unsubscribe();
+		this.activatedRouteParamsUserName$ = this.activatedRoute.params
+			.pipe(distinctUntilKeyChanged('userName'))
 			.subscribe({
 				next: () => {
 					/** Apply Data */
@@ -120,8 +122,6 @@ export class UserComponent implements OnInit, OnDestroy {
 				},
 				error: (error: any) => console.error(error)
 			});
-
-		/** Current User */
 
 		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
@@ -140,12 +140,14 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[
-			this.activatedRouteUrl$,
-			this.activatedRouteFirstChildParams$,
+			this.activatedRouteParamsUserName$,
+			this.activatedRouteParamsCategoryId$,
+			this.activatedRouteQueryParams$,
+			this.currentUser$,
+			this.currentUserSkeletonToggle$,
 			this.userRequest$,
 			this.categoryRequest$,
-			this.currentUser$,
-			this.currentUserSkeletonToggle$
+			this.postListRequest$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -156,74 +158,97 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.categoryList = this.skeletonService.getCategoryList();
 		this.categoryListSkeletonToggle = true;
 
-		const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
+		const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
 
 		if (categoryId) {
 			this.category = this.skeletonService.getCategory();
 			this.categorySkeletonToggle = true;
 		}
+
+		this.postList = this.skeletonService.getPostList();
+		this.postListSkeletonToggle = true;
+		this.postListIsHasMore = false;
 	}
 
 	setResolver(): void {
+		const userName: string = String(this.activatedRoute.snapshot.paramMap.get('userName') || '');
+		const userGetAllDto: UserGetAllDto = {
+			userName,
+			scope: ['categories'],
+			page: 1,
+			size: 10
+		};
+
 		this.userRequest$?.unsubscribe();
-		this.userRequest$ = this.getUser().subscribe({
-			next: (user: User) => {
-				this.userService.userTemp.next(user);
+		this.userRequest$ = this.userService
+			.getAll(userGetAllDto)
+			.pipe(
+				switchMap((userList: User[]) => (userList[0] ? of(userList[0]) : throwError(() => new Error()))),
+				catchError((httpErrorResponse: HttpErrorResponse) => {
+					this.router.navigate(['/error', 404]).then(() => console.debug('Route changed'));
 
-				this.user = user;
-				this.userSkeletonToggle = false;
+					return throwError(() => httpErrorResponse);
+				})
+			)
+			.subscribe({
+				next: (user: User) => {
+					this.user = user;
+					this.userSkeletonToggle = false;
 
-				this.categoryList = this.user.categories;
-				this.categoryListSkeletonToggle = false;
+					this.categoryList = this.user.categories;
+					this.categoryListSkeletonToggle = false;
 
-				// Set category
+					this.activatedRouteParamsCategoryId$?.unsubscribe();
+					this.activatedRouteParamsCategoryId$ = this.activatedRoute.params
+						.pipe(distinctUntilKeyChanged('categoryId'))
+						.subscribe({
+							next: () => {
+								/** Set Category */
 
-				this.activatedRouteFirstChildParams$?.unsubscribe();
-				this.activatedRouteFirstChildParams$ = this.activatedRoute.firstChild.params
-					.pipe(distinctUntilKeyChanged('categoryId'))
-					.subscribe({
-						next: () => {
-							const setMeta = (): void => {
-								const postId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('postId'));
+								const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
 
-								// Allow the post to record its tags
-
-								if (!postId) {
-									/** Apply SEO meta tags */
-
-									this.setMetaTags();
-									this.setTitle();
+								if (categoryId) {
+									this.category = this.user.categories.find((category: Category) => category.id === categoryId);
+									this.categorySkeletonToggle = false;
+								} else {
+									this.category = undefined;
+									this.categorySkeletonToggle = false;
 								}
-							};
 
-							const categoryId: number = Number(this.activatedRoute.firstChild.snapshot.paramMap.get('categoryId'));
+								/** Apply SEO meta tags */
 
-							if (categoryId) {
-								this.category = this.skeletonService.getCategory();
-								this.categorySkeletonToggle = true;
+								this.setMetaTags();
+								this.setTitle();
 
-								this.categoryRequest$?.unsubscribe();
-								this.categoryRequest$ = this.categoryService.getOne(categoryId).subscribe({
-									next: (category: Category) => {
-										this.category = category;
-										this.categorySkeletonToggle = false;
+								/** Set PostList */
 
-										setMeta();
-									},
-									error: (error: any) => console.error(error)
-								});
-							} else {
-								this.category = undefined;
-								this.categorySkeletonToggle = false;
+								this.activatedRouteQueryParams$?.unsubscribe();
+								this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
+									.pipe(distinctUntilKeyChanged('query'))
+									.subscribe({
+										next: () => {
+											this.postList = this.skeletonService.getPostList();
+											this.postListSkeletonToggle = true;
+											this.postListIsHasMore = false;
 
-								setMeta();
-							}
-						},
-						error: (error: any) => console.error(error)
-					});
-			},
-			error: (error: any) => console.error(error)
-		});
+											if (this.transferState.hasKey(searchResponseKey)) {
+												this.setPostListSearchResponse(this.transferState.get(searchResponseKey, null));
+
+												if (this.platformService.isBrowser()) {
+													this.transferState.remove(searchResponseKey);
+												}
+											} else {
+												this.getPostList();
+											}
+										},
+										error: (error: any) => console.error(error)
+									});
+							},
+							error: (error: any) => console.error(error)
+						});
+				},
+				error: (error: any) => console.error(error)
+			});
 
 		/** Toggle SearchForm component */
 
@@ -246,7 +271,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.metaService.getMetaImageDownloadURL(this.user.avatar).subscribe({
 			next: (downloadURL: string | null) => {
 				const userName: string = this.user.name;
-				const userDescription: string = this.user.description || 'User has not yet added a profile description.';
+				const userDescription: string = this.user.description || 'User has not yet added a profile description';
 
 				const title: string = this.category?.name || userName;
 				const description: string = this.category?.description || userDescription;
@@ -281,73 +306,6 @@ export class UserComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	/** Redirect */
-
-	getUser(): Observable<User | undefined> {
-		const userId: number = Number(this.activatedRoute.snapshot.paramMap.get('userId'));
-		const userName: string = String(this.activatedRoute.snapshot.paramMap.get('userName') || '');
-
-		if (userId) {
-			return this.getUserGetOne(userId);
-		} else if (userName) {
-			if (this.userTemp) {
-				return of(this.userTemp).pipe(tap(() => (this.userTemp = undefined)));
-			} else {
-				return this.getUserGetAll(userName);
-			}
-		} else {
-			return of(undefined);
-		}
-	}
-
-	getUserGetOne(userId: number): Observable<User> {
-		const userGetOneDto: UserGetOneDto = {
-			scope: ['categories']
-		};
-
-		return this.userService.getOne(userId, userGetOneDto).pipe(
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				this.router.navigate(['/error', 404]).then(() => console.debug('Route changed'));
-
-				return throwError(() => httpErrorResponse);
-			}),
-			tap((user: User) => (this.userTemp = user)),
-			switchMap((user: User) => {
-				const commands: string[] = ['/', user.name];
-				const extras: NavigationExtras = {
-					replaceUrl: true
-				};
-
-				const categoryId: string = String(this.activatedRoute.snapshot.paramMap.get('categoryId') || '');
-
-				if (categoryId) {
-					commands.push('category');
-					commands.push(categoryId);
-				}
-
-				return from(this.router.navigate(commands, extras)).pipe(switchMap(() => of(user)));
-			})
-		);
-	}
-
-	getUserGetAll(userName: string): Observable<User> {
-		const userGetAllDto: UserGetAllDto = {
-			userName: userName,
-			scope: ['categories'],
-			page: 1,
-			size: 10
-		};
-
-		return this.userService.getAll(userGetAllDto).pipe(
-			switchMap((userList: User[]) => (userList[0] ? of(userList[0]) : throwError(() => new Error()))),
-			catchError((httpErrorResponse: HttpErrorResponse) => {
-				this.router.navigate(['/error', 404]).then(() => console.debug('Route changed'));
-
-				return throwError(() => httpErrorResponse);
-			})
-		);
-	}
-
 	/** Search */
 
 	onToggleSearchForm(toggle: boolean): void {
@@ -364,10 +322,6 @@ export class UserComponent implements OnInit, OnDestroy {
 				})
 				.then(() => console.debug('Route changed'));
 		}
-
-		// ExpressionChangedAfterItHasBeenCheckedError (searchFormToggle)
-
-		this.changeDetectorRef.detectChanges();
 	}
 
 	/** Report */
@@ -427,13 +381,56 @@ export class UserComponent implements OnInit, OnDestroy {
 			.then(() => console.debug('Route changed'));
 	}
 
-	/** Router outlet */
+	/** PostList */
 
-	onRouterOutlet(userPostComponent: UserPostComponent | undefined): void {
-		this.userPostComponent = userPostComponent;
+	getPostList(): void {
+		const postQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
+		const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
+		const postIndexFilters: string[] = [];
 
-		// ExpressionChangedAfterItHasBeenCheckedError (userPostComponent)
+		const userName: string = String(this.activatedRoute.snapshot.paramMap.get('userName') || '');
+		const categoryId: string = String(this.activatedRoute.snapshot.paramMap.get('categoryId') || '');
 
-		this.changeDetectorRef.detectChanges();
+		if (userName) {
+			postIndexFilters.push('user.name:' + userName);
+		}
+
+		if (categoryId) {
+			postIndexFilters.push('category.id:' + categoryId);
+		}
+
+		const postIndexSearch: SearchOptions = {
+			page: 0,
+			hitsPerPage: 20,
+			filters: postIndexFilters.join(' AND ')
+		};
+
+		this.postListRequest$?.unsubscribe();
+		this.postListRequest$ = from(postIndex.search(postQuery, postIndexSearch)).subscribe({
+			next: (searchResponse: SearchResponse) => {
+				this.setPostListSearchResponse(searchResponse);
+
+				if (this.platformService.isServer()) {
+					this.transferState.set(searchResponseKey, searchResponse);
+				}
+			},
+			error: (error: any) => console.error(error)
+		});
+	}
+
+	getPostListLoadMore(): void {
+		// this.postGetAllDto.page++;
+
+		this.getPostList();
+	}
+
+	setPostListSearchResponse(searchResponse: SearchResponse): void {
+		const postList: Post[] = searchResponse.hits as any[];
+		const postListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
+
+		// this.postList = this.postGetAllDto.page > 1 ? this.postList.concat(postList) : postList;
+		this.postList = postList;
+		this.postListSkeletonToggle = false;
+		this.postListIsHasMore = postListIsHasMore && searchResponse.nbPages > 1;
 	}
 }

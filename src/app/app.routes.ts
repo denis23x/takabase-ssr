@@ -228,36 +228,46 @@ export const APP_ROUTES: Route[] = [
 				matcher: (urlSegment: UrlSegment[]): UrlMatchResult | null => {
 					// Check if there is at least one URL segment
 					if (urlSegment.length >= 1) {
-						// Check if the first URL segment is 'user'
-						if (urlSegment[0].path === 'user') {
-							const userId: string = urlSegment[1]?.path;
-							const categoryId: string = urlSegment[3]?.path;
-							const posParams: any = {};
-
-							if (userId) {
-								posParams.userId = new UrlSegment(userId, null);
-							} else {
-								return null;
-							}
-
-							if (categoryId) {
-								posParams.categoryId = new UrlSegment(categoryId, null);
-							}
-
-							return {
-								consumed: urlSegment.slice(0, 2),
-								posParams
-							};
-						}
+						const userName: string = urlSegment[0].path;
+						const userNameForbiddenList: string[] = ['error'];
 
 						// Check if the first URL segment matches the pattern for a username (e.g., denis23x)
-						if (urlSegment[0].path.match(/(?![0-9]+$).*/i)) {
-							return {
-								consumed: urlSegment.slice(0, 1),
-								posParams: {
-									userName: new UrlSegment(urlSegment[0].path, {})
+						if (userName.match(/(?![0-9]+$).*/i)) {
+							if (userNameForbiddenList.every((userNameForbidden: string) => userNameForbidden !== userName)) {
+								const getId = (path: string): string | undefined => urlSegment[1]?.path === path ? urlSegment[2]?.path : undefined;
+
+								const postId: string | undefined = getId('post');
+								const categoryId: string | undefined = getId('category');
+
+								switch (true) {
+									case !!postId: {
+										return {
+											consumed: urlSegment.slice(0, 1),
+											posParams: {
+												userName: new UrlSegment(userName, null),
+												postId: new UrlSegment(postId, null)
+											}
+										};
+									}
+									case !!categoryId: {
+										return {
+											consumed: urlSegment.slice(0, 3),
+											posParams: {
+												userName: new UrlSegment(userName, null),
+												categoryId: new UrlSegment(categoryId, null)
+											}
+										};
+									}
+									default: {
+										return {
+											consumed: urlSegment.slice(0, 1),
+											posParams: {
+												userName: new UrlSegment(userName, null)
+											}
+										};
+									}
 								}
-							};
+							}
 						}
 					}
 
@@ -268,71 +278,10 @@ export const APP_ROUTES: Route[] = [
 				},
 				children: [
 					{
-						path: 'post',
-						redirectTo: '',
-						pathMatch: 'full'
-					},
-					{
-						path: 'category',
-						redirectTo: '',
-						pathMatch: 'full'
-					},
-					{
-						path: 'category/:categoryId/post',
-						redirectTo: 'category/:categoryId',
-						pathMatch: 'full'
-					},
-					{
-						matcher: (urlSegment: UrlSegment[]) => {
-							if (urlSegment.length === 0) {
-								return {
-									consumed: urlSegment
-								};
-							}
-
-							if (urlSegment.length === 2) {
-								if (urlSegment[0].path === 'post') {
-									return {
-										consumed: [],
-										posParams: {
-											postId: new UrlSegment(urlSegment[1].path, {})
-										}
-									};
-								}
-
-								if (urlSegment[0].path === 'category') {
-									return {
-										consumed: urlSegment.slice(0),
-										posParams: {
-											categoryId: new UrlSegment(urlSegment[1].path, {})
-										}
-									};
-								}
-							}
-
-							if (urlSegment.length === 4 && urlSegment[0].path === 'category' && urlSegment[2].path === 'post') {
-								return {
-									consumed: urlSegment.slice(0, 2),
-									posParams: {
-										categoryId: new UrlSegment(urlSegment[1].path, {}),
-										postId: new UrlSegment(urlSegment[3].path, {})
-									}
-								};
-							}
-
-							return null;
-						},
+						path: 'post/:postId',
 						loadComponent: async () => {
-							return import('./user/post/post.component').then(m => m.UserPostComponent);
-						},
-						children: [
-							{
-								path: 'post/:postId',
-								loadComponent: async () => {
-									return import('./user/post/details/details.component').then(m => m.UserPostDetailsComponent);
-								}
-							}
-						]
+							return import('./user/post/details/details.component').then(m => m.UserPostDetailsComponent);
+						}
 					}
 				]
 			}

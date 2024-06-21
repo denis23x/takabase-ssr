@@ -60,9 +60,9 @@ export class ApiService {
 				case 'auth/invalid-email':
 					return 'The email address is not a valid email address';
 				case 'auth/missing-email':
-					return 'Missing credentials. Please provide the email to proceed.';
+					return 'Missing credentials. Please provide the email to proceed';
 				case 'auth/missing-password':
-					return 'Missing credentials. Please provide the password to proceed.';
+					return 'Missing credentials. Please provide the password to proceed';
 				case 'auth/cannot-delete-own-user-account':
 					return 'You cannot delete your own user account';
 				case 'auth/account-exists-with-different-credential':
