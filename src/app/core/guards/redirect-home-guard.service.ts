@@ -46,7 +46,7 @@ export const redirectHomeGuard = (): CanMatchFn => {
 				})
 			);
 		} else {
-			return of(router.createUrlTree(['/loading']));
+			return of(true);
 		}
 	};
 };

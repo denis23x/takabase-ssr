@@ -20,7 +20,7 @@ export const redirectCurrentUserGuard = (currentUserState: boolean): CanMatchFn 
 				map((currentUser: CurrentUser | undefined) => {
 					if (!!currentUser !== currentUserState) {
 						if (currentUser) {
-							return router.createUrlTree(['/error', 404]);
+							return router.createUrlTree(['/', currentUser.name]);
 						} else {
 							return router.createUrlTree(['/login']);
 						}
@@ -33,7 +33,7 @@ export const redirectCurrentUserGuard = (currentUserState: boolean): CanMatchFn 
 				})
 			);
 		} else {
-			return of(router.createUrlTree(['/loading']));
+			return of(true);
 		}
 	};
 };

@@ -27,7 +27,7 @@ export class ApiService {
 		/** https://github.com/firebase/firebase-js-sdk/blob/master/packages/firestore/src/util/error.ts */
 		/** https://firebase.google.com/docs/storage/web/handle-errors */
 
-		console.error(firebaseError.code);
+		console.error('Firebase: ' + firebaseError.code);
 
 		/** STORAGE && FIRESTORE && AUTH */
 
@@ -85,7 +85,7 @@ export class ApiService {
 	setHttpErrorResponse(httpErrorResponse: HttpErrorResponse): Observable<never> {
 		/** https://github.com/denis23x/takabase-dd */
 
-		console.error(httpErrorResponse.error.code);
+		console.error('HTTP:', httpErrorResponse);
 
 		/** FASTIFY */
 

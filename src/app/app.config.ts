@@ -16,7 +16,7 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { httpAppCheckInterceptor } from './core/interceptors/http.app-check.interceptor';
 import { httpAuthorizationInterceptor } from './core/interceptors/http.authorization.interceptor';
-import { provideClientHydration } from '@angular/platform-browser';
+import { provideClientHydration, withHttpTransferCacheOptions } from '@angular/platform-browser';
 import { FirebaseService } from './core/services/firebase.service';
 import { PlatformService } from './core/services/platform.service';
 import { AppTitleStrategy } from './core/strategies/title.strategy';
@@ -24,7 +24,11 @@ import { AppTitleStrategy } from './core/strategies/title.strategy';
 export const appConfig: ApplicationConfig = {
 	providers: [
 		provideHttpClient(withFetch(), withInterceptors([httpAppCheckInterceptor, httpAuthorizationInterceptor])),
-		provideClientHydration(),
+		provideClientHydration(
+			withHttpTransferCacheOptions({
+				includePostRequests: false
+			})
+		),
 		provideServiceWorker('ngsw-worker.js', {
 			enabled: environment.pwa,
 			registrationStrategy: 'registerWhenStable:30000'

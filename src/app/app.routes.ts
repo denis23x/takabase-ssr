@@ -49,7 +49,7 @@ export const APP_ROUTES: Route[] = [
 				loadComponent: async () => {
 					return import('./authorization/login/login.component').then(m => m.AuthLoginComponent);
 				},
-				// canMatch: [redirectCurrentUserGuard(false)]
+				canMatch: [redirectCurrentUserGuard(false)]
 			},
 			{
 				path: 'registration',
@@ -57,7 +57,7 @@ export const APP_ROUTES: Route[] = [
 				loadComponent: async () => {
 					return import('./authorization/registration/registration.component').then(m => m.AuthRegistrationComponent);
 				},
-				// canMatch: [redirectCurrentUserGuard(false)]
+				canMatch: [redirectCurrentUserGuard(false)]
 			},
 			{
 				path: 'reset',
@@ -65,7 +65,7 @@ export const APP_ROUTES: Route[] = [
 				loadComponent: async () => {
 					return import('./authorization/reset/reset.component').then(m => m.AuthResetComponent);
 				},
-				// canMatch: [redirectCurrentUserGuard(false)]
+				canMatch: [redirectCurrentUserGuard(false)]
 			},
 			{
 				path: 'terms',
@@ -209,29 +209,28 @@ export const APP_ROUTES: Route[] = [
 			},
 			{
 				matcher: (urlSegment: UrlSegment[]): UrlMatchResult | null => {
-					if (urlSegment.length === 0) {
-						return {
-							consumed: urlSegment
-						};
-					}
-
-					return null;
-				},
-				// canMatch: [redirectHomeGuard()],
-				loadComponent: async () => {
-					return import('./home/home.component').then(m => m.HomeComponent);
-				}
-			},
-			{
-				matcher: (urlSegment: UrlSegment[]): UrlMatchResult | null => {
 					// Check if there is at least one URL segment
-					if (urlSegment.length >= 1) {
+					if (urlSegment.length !== 0) {
 						const userName: string = urlSegment[0].path;
-						const userNameForbiddenList: string[] = ['error', 'settings', 'create', 'update', 'loading'];
+						const userNameForbiddenList: string[] = [
+							'error',
+							'settings',
+							'create',
+							'update',
+							'loading',
+							'search',
+							'profile',
+							'confirmation',
+							'login',
+							'registration',
+							'reset',
+							'terms',
+							'help'
+						];
 
 						// Check if the first URL segment matches the pattern for a username (e.g., denis23x)
-						if (userName.match(/(?![0-9]+$).*/i)) {
-							if (userNameForbiddenList.every((userNameForbidden: string) => userNameForbidden !== userName)) {
+						if (userNameForbiddenList.every((userNameForbidden: string) => userName !== userNameForbidden)) {
+							if (userName.match(/(?![0-9]+$).*/i)) {
 								const getId = (path: string): string | undefined => urlSegment[1]?.path === path ? urlSegment[2]?.path : undefined;
 
 								const postId: string | undefined = getId('post');
@@ -282,7 +281,22 @@ export const APP_ROUTES: Route[] = [
 						}
 					}
 				]
-			}
+			},
+			{
+				matcher: (urlSegment: UrlSegment[]): UrlMatchResult | null => {
+					if (urlSegment.length === 0) {
+						return {
+							consumed: urlSegment
+						};
+					}
+
+					return null;
+				},
+				canMatch: [redirectHomeGuard()],
+				loadComponent: async () => {
+					return import('./home/home.component').then(m => m.HomeComponent);
+				}
+			},
 		]
 	},
 	{

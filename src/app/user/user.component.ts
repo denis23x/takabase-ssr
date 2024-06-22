@@ -14,8 +14,8 @@ import {
 	WritableSignal
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { distinctUntilKeyChanged, from, of, Subscription, throwError } from 'rxjs';
-import { catchError, filter, switchMap } from 'rxjs/operators';
+import { distinctUntilKeyChanged, from, Subscription, throwError } from 'rxjs';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
@@ -227,7 +227,16 @@ export class UserComponent implements OnInit, OnDestroy {
 		this.userRequest$ = this.userService
 			.getAll(userGetAllDto)
 			.pipe(
-				switchMap((userList: User[]) => (userList[0] ? of(userList[0]) : throwError(() => new Error()))),
+				map((userList: User[]) => {
+					if (userList[0]) {
+						return userList[0];
+					}
+
+					throw new HttpErrorResponse({
+						status: 404,
+						statusText: 'Not Found'
+					});
+				}),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(
 						switchMap(() => throwError(() => httpErrorResponse))
