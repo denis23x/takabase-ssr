@@ -41,7 +41,8 @@
               "canvas-renderer",
               "undici",
               "@grpc/grpc-js",
-              "@grpc/proto-loader"
+              "@grpc/proto-loader",
+              "algoliasearch/lite"
             ],
             "outputPath": "dist/takabase-ssr",
             "index": "src/index.html",

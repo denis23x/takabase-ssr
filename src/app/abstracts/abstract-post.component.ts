@@ -6,10 +6,11 @@ import { Post } from '../core/models/post.model';
 import { PostService } from '../core/services/post.service';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Subscription, throwError } from 'rxjs';
+import { from, Subscription, throwError } from 'rxjs';
 import { PlatformService } from '../core/services/platform.service';
+import { HelperService } from '../core/services/helper.service';
 
 @Component({
 	selector: 'app-abstract-post',
@@ -21,6 +22,7 @@ export abstract class AbstractPostComponent implements OnInit, OnDestroy {
 	public readonly postService: PostService = inject(PostService);
 	public readonly skeletonService: SkeletonService = inject(SkeletonService);
 	public readonly platformService: PlatformService = inject(PlatformService);
+	public readonly helperService: HelperService = inject(HelperService);
 
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
@@ -61,9 +63,9 @@ export abstract class AbstractPostComponent implements OnInit, OnDestroy {
 			.getOne(postId, postGetOneDto)
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
-					this.router.navigate(['/error', httpErrorResponse.status]).then(() => console.debug('Route changed'));
-
-					return throwError(() => httpErrorResponse);
+					return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(
+						switchMap(() => throwError(() => httpErrorResponse))
+					);
 				})
 			)
 			.subscribe({
@@ -94,7 +96,9 @@ export abstract class AbstractPostComponent implements OnInit, OnDestroy {
 						relativeTo: this.activatedRoute.parent,
 						queryParamsHandling: 'preserve'
 					})
-					.then(() => console.debug('Route changed'));
+					.catch((error: any) => {
+						this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+					});
 			}
 		}
 	}

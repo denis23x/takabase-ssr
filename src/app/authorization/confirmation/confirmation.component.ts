@@ -4,6 +4,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
+import { HelperService } from '../../core/services/helper.service';
 
 @Component({
 	standalone: true,
@@ -14,6 +15,7 @@ export class AuthConfirmationComponent implements OnInit {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly router: Router = inject(Router);
 	private readonly metaService: MetaService = inject(MetaService);
+	private readonly helperService: HelperService = inject(HelperService);
 
 	ngOnInit(): void {
 		/** Apply Data */
@@ -34,7 +36,9 @@ export class AuthConfirmationComponent implements OnInit {
 					queryParamsHandling: 'preserve',
 					relativeTo: this.activatedRoute
 				})
-				.then(() => console.debug('Route changed'));
+				.catch((error: any) => {
+					this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+				});
 		};
 
 		switch (mode) {
@@ -52,7 +56,9 @@ export class AuthConfirmationComponent implements OnInit {
 
 				break;
 			default:
-				this.router.navigate(['error', 404]).then(() => console.debug('Route changed'));
+				this.router.navigate(['error', 404]).catch((error: any) => {
+					this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+				});
 
 				break;
 		}

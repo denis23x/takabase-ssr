@@ -54,6 +54,7 @@ import { AuthorizationService } from '../core/services/authorization.service';
 import { CookiesService } from '../core/services/cookies.service';
 import { AppearanceService } from '../core/services/appearance.service';
 import { PostGetAllDto } from '../core/dto/post/post-get-all.dto';
+import { HelperService } from '../core/services/helper.service';
 
 const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
 
@@ -97,6 +98,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly router: Router = inject(Router);
+	private readonly helperService: HelperService = inject(HelperService);
 
 	@Input({ transform: numberAttribute })
 	set deleteId(deleteId: number | undefined) {
@@ -227,9 +229,9 @@ export class UserComponent implements OnInit, OnDestroy {
 			.pipe(
 				switchMap((userList: User[]) => (userList[0] ? of(userList[0]) : throwError(() => new Error()))),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
-					this.router.navigate(['/error', 404]).then(() => console.debug('Route changed'));
-
-					return throwError(() => httpErrorResponse);
+					return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(
+						switchMap(() => throwError(() => httpErrorResponse))
+					);
 				})
 			)
 			.subscribe({
@@ -380,7 +382,9 @@ export class UserComponent implements OnInit, OnDestroy {
 					queryParams: null,
 					replaceUrl: true
 				})
-				.then(() => console.debug('Route changed'));
+				.catch((error: any) => {
+					this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+				});
 		}
 	}
 
@@ -407,7 +411,9 @@ export class UserComponent implements OnInit, OnDestroy {
 				queryParamsHandling: 'merge',
 				relativeTo: this.activatedRoute
 			})
-			.then(() => console.debug('Route changed'));
+			.catch((error: any) => {
+				this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+			});
 	}
 
 	onUpdateCategory(categoryUpdate: Category): void {
@@ -438,7 +444,9 @@ export class UserComponent implements OnInit, OnDestroy {
 				queryParamsHandling: 'merge',
 				relativeTo: this.activatedRoute
 			})
-			.then(() => console.debug('Route changed'));
+			.catch((error: any) => {
+				this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+			});
 	}
 
 	/** PostList */

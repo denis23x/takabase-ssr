@@ -3,8 +3,8 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, filter, map } from 'rxjs/operators';
-import { Subscription, throwError } from 'rxjs';
+import { catchError, filter, map, switchMap } from 'rxjs/operators';
+import { from, Subscription, throwError } from 'rxjs';
 import { PlatformService } from '../core/services/platform.service';
 
 @Component({
@@ -65,9 +65,9 @@ export abstract class AbstractMarkdownComponent implements OnInit, OnDestroy {
 					return proseUpdated;
 				}),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
-					this.router.navigate(['/error', httpErrorResponse.status]).then(() => console.debug('Route changed'));
-
-					return throwError(() => httpErrorResponse);
+					return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(
+						switchMap(() => throwError(() => httpErrorResponse))
+					);
 				})
 			)
 			.subscribe({

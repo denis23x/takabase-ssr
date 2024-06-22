@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthProvider } from 'firebase/auth';
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
+import { HelperService } from '../../../core/services/helper.service';
 
 @Component({
 	standalone: true,
@@ -19,6 +20,7 @@ import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 export class SignInComponent implements OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly router: Router = inject(Router);
+	private readonly helperService: HelperService = inject(HelperService);
 
 	@Input()
 	set appSignInDisabled(signInDisabled: boolean) {
@@ -37,7 +39,11 @@ export class SignInComponent implements OnDestroy {
 
 		this.signInWithPopup$?.unsubscribe();
 		this.signInWithPopup$ = this.authorizationService.onSignInWithPopup(authProvider).subscribe({
-			next: (user: User) => this.router.navigate(['/', user.name]).then(() => console.debug('Route changed')),
+			next: (user: User) => {
+				this.router.navigate(['/', user.name]).catch((error: any) => {
+					this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+				});
+			},
 			error: (error: any) => console.error(error)
 		});
 	}

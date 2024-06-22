@@ -6,6 +6,7 @@ import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.com
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { TitleService } from '../core/services/title.service';
+import { HelperService } from '../core/services/helper.service';
 
 @Component({
 	standalone: true,
@@ -17,6 +18,7 @@ export class ErrorComponent implements OnInit {
 	private readonly router: Router = inject(Router);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly titleService: TitleService = inject(TitleService);
+	private readonly helperService: HelperService = inject(HelperService);
 
 	statusCode: number | undefined;
 	statusCodeMap: number[][] = [
@@ -28,13 +30,7 @@ export class ErrorComponent implements OnInit {
 	];
 
 	message: string | undefined;
-	messageMap: string[] = [
-		'Information message',
-		'Success',
-		'Redirect',
-		'Client error',
-		'Server error'
-	];
+	messageMap: string[] = ['Information message', 'Success', 'Redirect', 'Client error', 'Server error'];
 
 	ngOnInit(): void {
 		/** Apply Data */
@@ -52,7 +48,9 @@ export class ErrorComponent implements OnInit {
 		const message: string = this.getMessageMap(statusCode);
 
 		if (!statusCode || !message) {
-			this.router.navigate([[], 520]).then(() => console.debug('Route changed'));
+			this.router.navigate(['/error', 520]).catch((error: any) => {
+				this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+			});
 		}
 
 		this.statusCode = statusCode;

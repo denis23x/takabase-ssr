@@ -7,6 +7,7 @@ import { DOCUMENT } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { customAlphabet } from 'nanoid';
 import { alphanumeric } from 'nanoid-dictionary';
+import { Navigation } from '@angular/router';
 
 @Injectable({
 	providedIn: 'root'
@@ -93,5 +94,12 @@ export class HelperService {
 
 	getURL(): URL {
 		return new URL(this.document.URL, environment.appUrl);
+	}
+
+	getNavigationError(navigation: Navigation, error: any): void {
+		const navigationCurrent: string = navigation.finalUrl.toString();
+		const navigationPrevious: string = navigation.previousNavigation.finalUrl.toString();
+
+		console.error('Error: ' + navigationPrevious + ' → ' + navigationCurrent, error);
 	}
 }

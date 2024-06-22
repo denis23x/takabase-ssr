@@ -2,7 +2,7 @@
 
 import { inject } from '@angular/core';
 import { CanMatchFn, Router, UrlTree } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
+import { from, Observable, of, switchMap, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PlatformService } from '../services/platform.service';
@@ -42,9 +42,7 @@ export const redirectHomeGuard = (): CanMatchFn => {
 					return true;
 				}),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
-					router.navigate(['/error', 400]).then(() => console.debug('Route changed'));
-
-					return throwError(() => httpErrorResponse);
+					return from(router.navigate(['/error', 400])).pipe(switchMap(() => throwError(() => httpErrorResponse)));
 				})
 			);
 		} else {

@@ -62,10 +62,10 @@ export const appConfig: ApplicationConfig = {
 		// 		return () => {
 		// 			return new Promise<void>(resolve => {
 		// 				if (platformService.isBrowser()) {
-		// 					console.log('Emulate long initialization - started');
+		// 					console.warn('Emulate long initialization - started');
 		//
 		// 					setTimeout(() => {
-		// 						console.log('Emulate long initialization - completed');
+		// 						console.warn('Emulate long initialization - completed');
 		//
 		// 						resolve();
 		// 					}, 3000);

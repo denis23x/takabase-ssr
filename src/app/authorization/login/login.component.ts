@@ -120,7 +120,11 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
 			this.loginRequest$?.unsubscribe();
 			this.loginRequest$ = this.authorizationService.onSignInWithEmailAndPassword(signInDto).subscribe({
-				next: (user: User) => this.router.navigate(['/', user.name]).then(() => console.debug('Route changed')),
+				next: (user: User) => {
+					this.router.navigate(['/', user.name]).catch((error: any) => {
+						this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+					});
+				},
 				error: () => this.loginForm.enable()
 			});
 		}

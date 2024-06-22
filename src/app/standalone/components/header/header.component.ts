@@ -14,6 +14,7 @@ import { SnackbarService } from '../../../core/services/snackbar.service';
 import { AuthenticatedComponent } from '../authenticated/authenticated.component';
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 import { Location } from '@angular/common';
+import { HelperService } from '../../../core/services/helper.service';
 
 @Component({
 	standalone: true,
@@ -34,6 +35,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	private readonly router: Router = inject(Router);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly location: Location = inject(Location);
+	private readonly helperService: HelperService = inject(HelperService);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -71,7 +73,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this.currentUserSignOutRequest$ = this.authorizationService.onSignOut().subscribe({
 			next: () => {
 				if (pathRestrictedList.some((pathRestricted: string) => path.startsWith(pathRestricted))) {
-					this.router.navigateByUrl('/').then(() => console.debug('Route changed'));
+					this.router.navigateByUrl('/').catch((error: any) => {
+						this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+					});
 
 					this.snackbarService.success(null, 'Bye bye');
 				} else {

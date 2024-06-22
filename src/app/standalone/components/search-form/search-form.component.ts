@@ -8,6 +8,7 @@ import { debounceTime, filter } from 'rxjs/operators';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
+import { HelperService } from '../../../core/services/helper.service';
 
 interface SearchForm {
 	query: FormControl<string>;
@@ -23,6 +24,7 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly router: Router = inject(Router);
+	private readonly helperService: HelperService = inject(HelperService);
 
 	@Input()
 	set appSearchFormDisabled(searchFormDisabled: boolean) {
@@ -70,7 +72,9 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 							},
 							replaceUrl: true
 						})
-						.then(() => console.debug('Route changed'));
+						.catch((error: any) => {
+							this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+						});
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -90,6 +94,8 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 				queryParamsHandling: 'merge',
 				replaceUrl: true
 			})
-			.then(() => console.debug('Route changed'));
+			.catch((error: any) => {
+				this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+			});
 	}
 }

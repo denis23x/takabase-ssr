@@ -161,9 +161,9 @@ export class AuthorizationService {
 	onSignOut(): Observable<void> {
 		return from(signOut(this.firebaseService.getAuth())).pipe(
 			catchError((firebaseError: FirebaseError) => {
-				this.router.navigate(['/error', 500]).then(() => console.debug('Route changed'));
-
-				return this.apiService.setFirebaseError(firebaseError);
+				return from(this.router.navigate(['/error', 500])).pipe(
+					switchMap(() => this.apiService.setFirebaseError(firebaseError))
+				);
 			}),
 			tap(() => this.appearanceService.setSettings(null)),
 			tap(() => this.currentUser.next(undefined))
