@@ -50,7 +50,7 @@ export const APP_ROUTES: Route[] = [
 				loadComponent: async () => {
 					return import('./authorization/login/login.component').then(m => m.AuthLoginComponent);
 				},
-				canMatch: [redirectCurrentUserGuard(false)]
+				// canMatch: [redirectCurrentUserGuard(false)]
 			},
 			{
 				path: 'registration',
@@ -58,7 +58,7 @@ export const APP_ROUTES: Route[] = [
 				loadComponent: async () => {
 					return import('./authorization/registration/registration.component').then(m => m.AuthRegistrationComponent);
 				},
-				canMatch: [redirectCurrentUserGuard(false)]
+				// canMatch: [redirectCurrentUserGuard(false)]
 			},
 			{
 				path: 'reset',
@@ -66,7 +66,7 @@ export const APP_ROUTES: Route[] = [
 				loadComponent: async () => {
 					return import('./authorization/reset/reset.component').then(m => m.AuthResetComponent);
 				},
-				canMatch: [redirectCurrentUserGuard(false)]
+				// canMatch: [redirectCurrentUserGuard(false)]
 			},
 			{
 				path: 'terms',
@@ -121,7 +121,7 @@ export const APP_ROUTES: Route[] = [
 				loadComponent: async () => {
 					return import('./create/create.component').then(m => m.CreateComponent);
 				},
-				canMatch: [redirectCurrentUserGuard(true)]
+				canMatch: [redirectCurrentUserGuard()]
 			},
 			{
 				path: 'update/:postId',
@@ -129,7 +129,7 @@ export const APP_ROUTES: Route[] = [
 				loadComponent: async () => {
 					return import('./create/create.component').then(m => m.CreateComponent);
 				},
-				canMatch: [redirectCurrentUserGuard(true)]
+				canMatch: [redirectCurrentUserGuard()]
 			},
 			{
 				path: 'search',
@@ -179,7 +179,7 @@ export const APP_ROUTES: Route[] = [
 				loadComponent: async () => {
 					return import('./settings/settings.component').then(m => m.SettingsComponent);
 				},
-				canMatch: [redirectCurrentUserGuard(true)],
+				canMatch: [redirectCurrentUserGuard()],
 				children: [
 					{
 						path: '',

@@ -397,6 +397,35 @@ export const environment = {
 			'abnf',
 			'abap'
 		]
+	},
+	remoteConfig: {
+		forbiddenUsername: [
+			'error',
+			'settings',
+			'create',
+			'update',
+			'loading',
+			'search',
+			'profile',
+			'confirmation',
+			'login',
+			'registration',
+			'reset',
+			'terms',
+			'help'
+		],
+		appearance: {
+			dropdownBackdrop: false,
+			language: 'en-US',
+			markdownMonospace: true,
+			pageRedirectHome: false,
+			pageScrollToTop: false,
+			pageScrollInfinite: false,
+			theme: 'auto',
+			themeBackground: 'cosy-creatures',
+			themePrism: 'auto',
+			windowButtonPosition: 'left'
+		}
 	}
 };
 

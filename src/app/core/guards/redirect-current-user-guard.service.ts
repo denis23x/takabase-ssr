@@ -9,7 +9,7 @@ import { PlatformService } from '../services/platform.service';
 import { AuthorizationService } from '../services/authorization.service';
 import { CurrentUser } from '../models/current-user.model';
 
-export const redirectCurrentUserGuard = (currentUserState: boolean): CanMatchFn => {
+export const redirectCurrentUserGuard = (): CanMatchFn => {
 	return (): Observable<boolean | UrlTree> => {
 		const authorizationService: AuthorizationService = inject(AuthorizationService);
 		const platformService: PlatformService = inject(PlatformService);
@@ -17,23 +17,13 @@ export const redirectCurrentUserGuard = (currentUserState: boolean): CanMatchFn 
 
 		if (platformService.isBrowser()) {
 			return authorizationService.getPopulate().pipe(
-				map((currentUser: CurrentUser | undefined) => {
-					if (!!currentUser !== currentUserState) {
-						if (currentUser) {
-							return router.createUrlTree(['/', currentUser.name]);
-						} else {
-							return router.createUrlTree(['/login']);
-						}
-					}
-
-					return true;
-				}),
+				map((currentUser: CurrentUser | undefined) => !!currentUser || router.createUrlTree(['/login'])),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					return from(router.navigate(['/error', 400])).pipe(switchMap(() => throwError(() => httpErrorResponse)));
 				})
 			);
 		} else {
-			return of(true);
+			return of(router.createUrlTree(['/loading']));
 		}
 	};
 };

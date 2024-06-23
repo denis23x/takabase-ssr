@@ -1,26 +1,26 @@
 /** @format */
 
-import { inject, Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { initializeApp, FirebaseApp } from 'firebase/app';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider, AppCheck } from 'firebase/app-check';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 import { getStorage, FirebaseStorage } from 'firebase/storage';
+import { getRemoteConfig, RemoteConfig } from 'firebase/remote-config';
+
+/** https://firebase.google.com/docs/web/setup#add-sdk-and-initialize */
 
 @Injectable({
 	providedIn: 'root'
 })
 export class FirebaseService {
-	private readonly ngZone: NgZone = inject(NgZone);
-
-	/** https://firebase.google.com/docs/web/setup#add-sdk-and-initialize */
-
 	app: FirebaseApp | undefined;
 	appCheck: AppCheck | undefined;
 	auth: Auth | undefined;
 	firestore: Firestore | undefined;
 	storage: FirebaseStorage | undefined;
+	remoteConfig: RemoteConfig | undefined;
 
 	/** APP */
 
@@ -35,11 +35,9 @@ export class FirebaseService {
 	/** APP CHECK */
 
 	initializeAppCheck(): void {
-		return this.ngZone.runOutsideAngular(() => {
-			this.appCheck = initializeAppCheck(this.getApp(), {
-				provider: new ReCaptchaEnterpriseProvider(environment.appCheck),
-				isTokenAutoRefreshEnabled: true
-			});
+		this.appCheck = initializeAppCheck(this.getApp(), {
+			provider: new ReCaptchaEnterpriseProvider(environment.appCheck),
+			isTokenAutoRefreshEnabled: true
 		});
 	}
 
@@ -50,11 +48,8 @@ export class FirebaseService {
 	/** AUTH */
 
 	initializeAuth(): void {
-		this.ngZone.runOutsideAngular(() => {
-			this.auth = getAuth(this.getApp());
-
-			this.auth.useDeviceLanguage();
-		});
+		this.auth = getAuth(this.getApp());
+		this.auth.useDeviceLanguage();
 	}
 
 	getAuth(): Auth {
@@ -79,5 +74,20 @@ export class FirebaseService {
 
 	getStorage(): FirebaseStorage {
 		return this.storage;
+	}
+
+	/** REMOTE CONFIG */
+
+	initializeRemoteConfig(): void {
+		this.remoteConfig = getRemoteConfig(this.getApp());
+		this.remoteConfig.settings.minimumFetchIntervalMillis = 43200000;
+		this.remoteConfig.defaultConfig = {
+			appearance: JSON.stringify(environment.remoteConfig.appearance),
+			forbiddenUsername: JSON.stringify(environment.remoteConfig.forbiddenUsername)
+		};
+	}
+
+	getRemoteConfig(): RemoteConfig {
+		return this.remoteConfig;
 	}
 }

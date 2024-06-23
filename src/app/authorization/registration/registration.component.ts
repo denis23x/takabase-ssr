@@ -1,7 +1,15 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+	AbstractControl,
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+	ValidatorFn,
+	Validators
+} from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AuthorizationService } from '../../core/services/authorization.service';
@@ -27,6 +35,7 @@ import { User as FirebaseUser } from '@firebase/auth';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
+import { getValue, Value } from 'firebase/remote-config';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -88,6 +97,12 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	invitedByUserRequest$: Subscription | undefined;
 
 	ngOnInit(): void {
+		/** Set not allowed values */
+
+		this.onUpdateRegistrationForm();
+
+		/** Listen Auth State Changed */
+
 		if (this.platformService.isBrowser()) {
 			const auth: Auth = this.firebaseService.getAuth();
 
@@ -144,6 +159,19 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 		};
 
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
+	}
+
+	onUpdateRegistrationForm(): void {
+		if (this.platformService.isBrowser()) {
+			const value: Value = getValue(this.firebaseService.getRemoteConfig(), 'forbiddenUsername');
+			const valueForbiddenUsername: string[] = JSON.parse(value.asString());
+
+			const abstractControl: AbstractControl = this.registrationForm.get('name');
+			const abstractControlValidator: (...args: any) => ValidatorFn = this.helperService.getCustomValidator('not');
+
+			abstractControl.addValidators([abstractControlValidator(valueForbiddenUsername)]);
+			abstractControl.updateValueAndValidity();
+		}
 	}
 
 	onSubmitRegistrationForm(): void {

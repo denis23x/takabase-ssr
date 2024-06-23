@@ -52,6 +52,18 @@ export class HelperService {
 						return null;
 					};
 				};
+			case 'not':
+				return (value: string[]): ValidatorFn => {
+					return (control: AbstractControl): ValidationErrors | null => {
+						if (value.indexOf(control.value) !== -1) {
+							return {
+								not: true
+							};
+						}
+
+						return null;
+					};
+				};
 			default:
 				throw new Error('Invalid custom validator specified: ' + customValidator);
 		}

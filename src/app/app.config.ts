@@ -1,6 +1,6 @@
 /** @format */
 
-import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, NgZone } from '@angular/core';
 import {
 	PreloadAllModules,
 	provideRouter,
@@ -20,6 +20,7 @@ import { provideClientHydration, withHttpTransferCacheOptions } from '@angular/p
 import { FirebaseService } from './core/services/firebase.service';
 import { PlatformService } from './core/services/platform.service';
 import { AppTitleStrategy } from './core/strategies/title.strategy';
+import { fetchAndActivate } from 'firebase/remote-config';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -45,19 +46,28 @@ export const appConfig: ApplicationConfig = {
 		),
 		{
 			provide: APP_INITIALIZER,
-			useFactory: (platformService: PlatformService, firebaseService: FirebaseService) => {
+			useFactory: (platformService: PlatformService, firebaseService: FirebaseService, ngZone: NgZone) => {
 				return () => {
-					if (platformService.isBrowser()) {
-						firebaseService.initializeApp();
-						firebaseService.initializeAppCheck();
-						firebaseService.initializeAuth();
-						firebaseService.initializeFirestore();
-						firebaseService.initializeStorage();
-					}
+					ngZone.runOutsideAngular(() => {
+						if (platformService.isBrowser()) {
+							firebaseService.initializeApp();
+							firebaseService.initializeAppCheck();
+							firebaseService.initializeAuth();
+							firebaseService.initializeFirestore();
+							firebaseService.initializeStorage();
+							firebaseService.initializeRemoteConfig();
+
+							/** REMOTE CONFIG */
+
+							fetchAndActivate(firebaseService.getRemoteConfig())
+								.then((response: boolean) => console.warn('Remote config ' + response))
+								.catch((error: any) => console.error(error));
+						}
+					});
 				};
 			},
 			multi: true,
-			deps: [PlatformService, FirebaseService]
+			deps: [PlatformService, FirebaseService, NgZone]
 		},
 		// TODO: For debug SSR issues
 		// {

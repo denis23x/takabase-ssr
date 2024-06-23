@@ -1,7 +1,15 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+	AbstractControl,
+	FormBuilder,
+	FormControl,
+	FormGroup,
+	ReactiveFormsModule,
+	ValidatorFn,
+	Validators
+} from '@angular/forms';
 import { filter, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -26,6 +34,8 @@ import { FileService } from '../../core/services/file.service';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../../core/services/ai.service';
+import { FirebaseService } from '../../core/services/firebase.service';
+import { getValue, Value } from 'firebase/remote-config';
 
 interface ProfileForm {
 	avatar: FormControl<string | null>;
@@ -61,6 +71,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly fileService: FileService = inject(FileService);
 	private readonly aiService: AIService = inject(AIService);
+	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -83,6 +94,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	profileFormAvatarIsSubmitted: WritableSignal<boolean> = signal(false);
 
 	ngOnInit(): void {
+		/** Set not allowed values */
+
+		this.onUpdateProfileForm();
+
 		/** Apply Data */
 
 		this.setResolver();
@@ -167,6 +182,19 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	}
 
 	/** profileForm */
+
+	onUpdateProfileForm(): void {
+		if (this.platformService.isBrowser()) {
+			const value: Value = getValue(this.firebaseService.getRemoteConfig(), 'forbiddenUsername');
+			const valueForbiddenUsername: string[] = JSON.parse(value.asString());
+
+			const abstractControl: AbstractControl = this.profileForm.get('name');
+			const abstractControlValidator: (...args: any) => ValidatorFn = this.helperService.getCustomValidator('not');
+
+			abstractControl.addValidators([abstractControlValidator(valueForbiddenUsername)]);
+			abstractControl.updateValueAndValidity();
+		}
+	}
 
 	onSubmitProfileForm(): void {
 		if (this.helperService.getFormValidation(this.profileForm)) {

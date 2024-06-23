@@ -9,11 +9,14 @@
 			@case (!!abstractControl.errors.email) {
 				Email must be a real email address
 			}
+			@case (!!abstractControl.errors.not) {
+				Not allowed
+			}
 			@case (!!abstractControl.errors.pattern) {
 				Invalid value
 			}
 			@case (!!abstractControl.errors.match) {
-				Invalid value
+				Not match
 			}
 			@case (!!abstractControl.errors.minlength) {
 				Min length {{ abstractControl.errors.minlength["requiredLength"] }} characters

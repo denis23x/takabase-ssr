@@ -39,7 +39,7 @@ export class OutletComponent implements OnInit, OnDestroy {
 					switchMap((currentUser: CurrentUser) => this.appearanceService.getAppearance(currentUser.firebase.uid))
 				)
 				.subscribe({
-					next: () => console.debug('User populated'),
+					next: () => console.warn('User populated'),
 					error: (error: any) => console.error(error)
 				});
 		}

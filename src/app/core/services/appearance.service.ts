@@ -16,13 +16,14 @@ import {
 	collection,
 	CollectionReference,
 	doc,
-	updateDoc,
-	getDoc,
 	DocumentReference,
-	DocumentSnapshot
+	DocumentSnapshot,
+	getDoc,
+	updateDoc
 } from 'firebase/firestore';
 import { FirebaseError } from 'firebase/app';
 import { ApiService } from './api.service';
+import { getValue, Value } from 'firebase/remote-config';
 
 @Injectable({
 	providedIn: 'root'
@@ -70,21 +71,12 @@ export class AppearanceService {
 	}
 
 	setSettings(appearance: Appearance | null): void {
-		const settingsList: string[] = [
-			'dropdownBackdrop',
-			'language',
-			'markdownMonospace',
-			'pageRedirectHome',
-			'pageScrollToTop',
-			'pageScrollInfinite',
-			'theme',
-			'themeBackground',
-			'themePrism',
-			'windowButtonPosition'
-		];
+		const value: Value = getValue(this.firebaseService.getRemoteConfig(), 'appearance');
+		const valueAppearance: Appearance = JSON.parse(value.asString());
+		const valueKeyList: string[] = Object.keys(valueAppearance);
 
 		if (appearance) {
-			settingsList.forEach((key: string) => {
+			valueKeyList.forEach((key: string) => {
 				// @ts-ignore
 				const value: any = appearance[key];
 
@@ -94,7 +86,7 @@ export class AppearanceService {
 				this.cookiesService.setItem(cookieKey, cookieValue);
 			});
 		} else {
-			settingsList.forEach((key: string) => {
+			valueKeyList.forEach((key: string) => {
 				this.cookiesService.removeItem(this.helperService.setCamelCaseToDashCase(key));
 			});
 		}
@@ -218,18 +210,7 @@ export class AppearanceService {
 	/** Firestore */
 
 	getAppearanceDefault(): Appearance {
-		return {
-			dropdownBackdrop: false,
-			language: 'en-US',
-			markdownMonospace: true,
-			pageRedirectHome: false,
-			pageScrollToTop: false,
-			pageScrollInfinite: false,
-			theme: 'auto',
-			themeBackground: 'cosy-creatures',
-			themePrism: 'auto',
-			windowButtonPosition: 'left'
-		};
+		return JSON.parse(getValue(this.firebaseService.getRemoteConfig(), 'appearance').asString());
 	}
 
 	getAppearance(firebaseUid: string): Observable<Appearance> {

@@ -10,7 +10,7 @@ export class TitleService {
 	private readonly title: Title = inject(Title);
 
 	titlePostfix: string = 'Takabase';
-	titlePostfixDelimiter: string = ' | ';
+	titlePostfixDelimiter: string = ' - ';
 
 	setTitle(title: string): void {
 		this.title.setTitle(this.getTitleFormatted(title));
