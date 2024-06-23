@@ -7,6 +7,9 @@ import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { TitleService } from '../core/services/title.service';
 import { HelperService } from '../core/services/helper.service';
+import { REQUEST, RESPONSE } from '../core/tokens/express.tokens';
+import { PlatformService } from '../core/services/platform.service';
+import { Response, Request } from 'express';
 
 @Component({
 	standalone: true,
@@ -19,6 +22,9 @@ export class ErrorComponent implements OnInit {
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly titleService: TitleService = inject(TitleService);
 	private readonly helperService: HelperService = inject(HelperService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly response: Response | null = inject(RESPONSE, { optional: true });
+	private readonly request: Request | null = inject(REQUEST, { optional: true });
 
 	statusCode: number | undefined;
 	statusCodeMap: number[][] = [
@@ -33,6 +39,14 @@ export class ErrorComponent implements OnInit {
 	messageMap: string[] = ['Information message', 'Success', 'Redirect', 'Client error', 'Server error'];
 
 	ngOnInit(): void {
+		/** Status response SEO correction */
+
+		if (this.platformService.isServer()) {
+			if (this.response) {
+				this.response.status(Number(this.activatedRoute.snapshot.paramMap.get('status')));
+			}
+		}
+
 		/** Apply Data */
 
 		this.setResolver();

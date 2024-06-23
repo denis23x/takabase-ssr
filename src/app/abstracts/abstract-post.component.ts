@@ -11,6 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { from, Subscription, throwError } from 'rxjs';
 import { PlatformService } from '../core/services/platform.service';
 import { HelperService } from '../core/services/helper.service';
+import { ApiService } from '../core/services/api.service';
 
 @Component({
 	selector: 'app-abstract-post',
@@ -23,6 +24,7 @@ export abstract class AbstractPostComponent implements OnInit, OnDestroy {
 	public readonly skeletonService: SkeletonService = inject(SkeletonService);
 	public readonly platformService: PlatformService = inject(PlatformService);
 	public readonly helperService: HelperService = inject(HelperService);
+	public readonly apiService: ApiService = inject(ApiService);
 
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
@@ -63,6 +65,14 @@ export abstract class AbstractPostComponent implements OnInit, OnDestroy {
 			.getOne(postId, postGetOneDto)
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
+					/** Set Transfer State */
+
+					if (this.platformService.isServer()) {
+						this.apiService.setHttpErrorResponseKey(httpErrorResponse);
+					}
+
+					/** Redirect */
+
 					return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(
 						switchMap(() => throwError(() => httpErrorResponse))
 					);

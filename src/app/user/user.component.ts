@@ -55,6 +55,7 @@ import { CookiesService } from '../core/services/cookies.service';
 import { AppearanceService } from '../core/services/appearance.service';
 import { PostGetAllDto } from '../core/dto/post/post-get-all.dto';
 import { HelperService } from '../core/services/helper.service';
+import { ApiService } from '../core/services/api.service';
 
 const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
 
@@ -99,6 +100,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly router: Router = inject(Router);
 	private readonly helperService: HelperService = inject(HelperService);
+	private readonly apiService: ApiService = inject(ApiService);
 
 	@Input({ transform: numberAttribute })
 	set deleteId(deleteId: number | undefined) {
@@ -238,6 +240,14 @@ export class UserComponent implements OnInit, OnDestroy {
 					});
 				}),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
+					/** Set Transfer State */
+
+					if (this.platformService.isServer()) {
+						this.apiService.setHttpErrorResponseKey(httpErrorResponse);
+					}
+
+					/** Redirect */
+
 					return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(
 						switchMap(() => throwError(() => httpErrorResponse))
 					);

@@ -1,6 +1,6 @@
 /** @format */
 
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, makeStateKey, StateKey, TransferState } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -8,18 +8,36 @@ import { catchError, map } from 'rxjs/operators';
 import { SnackbarService } from './snackbar.service';
 import { FirebaseError } from 'firebase/app';
 
+// prettier-ignore
+const httpErrorResponseKey: StateKey<HttpErrorResponse | undefined> = makeStateKey<HttpErrorResponse | undefined>('httpErrorResponse');
+
 @Injectable({
 	providedIn: 'root'
 })
 export class ApiService {
 	private readonly httpClient: HttpClient = inject(HttpClient);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly transferState: TransferState = inject(TransferState);
 
 	setUrl(url: string): string {
 		return environment.apiUrl + url;
 	}
 
-	/** ERROR */
+	/** TRANSFER STATE */
+
+	getHttpErrorResponseKey(): HttpErrorResponse {
+		return this.transferState.get(httpErrorResponseKey, undefined);
+	}
+
+	setHttpErrorResponseKey(data: any): void {
+		this.transferState.set(httpErrorResponseKey, data);
+	}
+
+	removeHttpErrorResponseKey(): void {
+		this.transferState.remove(httpErrorResponseKey);
+	}
+
+	/** ERRORS */
 
 	setFirebaseError(firebaseError: FirebaseError): Observable<never> {
 		/** https://firebase.google.com/docs/auth/admin/errors */
@@ -120,7 +138,7 @@ export class ApiService {
 		return throwError(() => httpErrorResponse);
 	}
 
-	/** REST */
+	/** CRUD */
 
 	get(url: string, params?: any, options?: any): Observable<any> {
 		return this.httpClient.get(this.setUrl(url), { ...options, params }).pipe(

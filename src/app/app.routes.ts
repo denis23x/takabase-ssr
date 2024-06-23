@@ -3,6 +3,7 @@
 import { Route, UrlMatchResult, UrlSegment } from '@angular/router';
 import { redirectCurrentUserGuard } from './core/guards/redirect-current-user-guard.service';
 import { redirectHomeGuard } from './core/guards/redirect-home-guard.service';
+import { redirectHttpErrorGuard } from './core/guards/redirect-http-error-guard.service';
 import { redirectLoadingGuard } from './core/guards/redirect-loading-guard.service';
 
 // prettier-ignore
@@ -150,6 +151,7 @@ export const APP_ROUTES: Route[] = [
 						children: [
 							{
 								path: ':postId',
+								canActivate: [redirectHttpErrorGuard()],
 								loadComponent: async () => {
 									return import('./search/post/details/details.component').then(m => m.SearchPostDetailsComponent);
 								}
@@ -270,12 +272,14 @@ export const APP_ROUTES: Route[] = [
 
 					return null;
 				},
+				canActivate: [redirectHttpErrorGuard()],
 				loadComponent: async () => {
 					return import('./user/user.component').then(m => m.UserComponent);
 				},
 				children: [
 					{
 						path: 'post/:postId',
+						canActivate: [redirectHttpErrorGuard()],
 						loadComponent: async () => {
 							return import('./user/post/post.component').then(m => m.UserPostComponent);
 						}
@@ -309,7 +313,7 @@ export const APP_ROUTES: Route[] = [
 		path: 'loading',
 		title: 'Loading',
 		loadComponent: async () => {
-			return import('./loader/loading.component').then(m => m.LoadingComponent);
+			return import('./loading/loading.component').then(m => m.LoadingComponent);
 		},
 		canMatch: [redirectLoadingGuard('browser')]
 	},
