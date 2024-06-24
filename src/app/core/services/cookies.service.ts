@@ -12,20 +12,23 @@ export class CookiesService {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly platformService: PlatformService = inject(PlatformService);
 
-	getItem(key: string): string | undefined {
-		if (this.platformService.isBrowser()) {
-			const result: any = {};
+	getItem(key: string, cookie: string = ''): string | undefined {
+		const result: any = {};
+		const get = (): string => {
+			if (this.platformService.isBrowser()) {
+				return cookie || this.document.cookie;
+			} else {
+				return cookie;
+			}
+		};
 
-			this.document.cookie.split(';').forEach((cookie: string) => {
-				const [key, value]: string[] = cookie.split('=');
+		get()
+			.split(';')
+			.map((chunk: string) => chunk.trim())
+			.map((chunk: string) => chunk.split('='))
+			.forEach(([key, value]: string[]) => (result[key] = value));
 
-				result[key.trim()] = value;
-			});
-
-			return result[key];
-		}
-
-		return undefined;
+		return result[key];
 	}
 
 	setItem(key: string, value: string, options?: any): void {

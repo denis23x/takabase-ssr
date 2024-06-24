@@ -9,6 +9,7 @@ import { PlatformService } from '../services/platform.service';
 import { AuthorizationService } from '../services/authorization.service';
 import { CurrentUser } from '../models/current-user.model';
 import { Request } from 'express';
+import { CookiesService } from '../services/cookies.service';
 import { REQUEST } from '../tokens/express.tokens';
 
 export const redirectAuthGuard = (): CanMatchFn => {
@@ -16,6 +17,7 @@ export const redirectAuthGuard = (): CanMatchFn => {
 		const authorizationService: AuthorizationService = inject(AuthorizationService);
 		const platformService: PlatformService = inject(PlatformService);
 		const router: Router = inject(Router);
+		const cookiesService: CookiesService = inject(CookiesService);
 		const request: Request | null = inject(REQUEST, { optional: true });
 
 		if (platformService.isBrowser()) {
@@ -28,10 +30,7 @@ export const redirectAuthGuard = (): CanMatchFn => {
 		} else {
 			//! Works only in production build
 			if (request) {
-				const cookie: string = request.headers.cookie;
-				const regExpMatchArray: RegExpMatchArray = cookie.match(/user-authed=(\d+)/gi);
-
-				if (regExpMatchArray && Number(regExpMatchArray[1])) {
+				if (cookiesService.getItem('user-authed', request.headers.cookie)) {
 					return of(router.createUrlTree(['/loading']));
 				}
 			}

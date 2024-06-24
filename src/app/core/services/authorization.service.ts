@@ -69,11 +69,10 @@ export class AuthorizationService {
 					switchMap((firebaseUser: FirebaseUser | null) => {
 						if (firebaseUser) {
 							return this.onProfile().pipe(
-								tap(() => this.cookiesService.setItem('user-authed', String(new Date().getTime()))),
-								switchMap((user: Partial<CurrentUser>) => {
+								switchMap((currentUser: CurrentUser) => {
 									return this.setCurrentUser({
 										firebase: firebaseUser,
-										...user
+										...currentUser
 									});
 								})
 							);
@@ -163,14 +162,14 @@ export class AuthorizationService {
 
 	onSignOut(): Observable<void> {
 		return from(signOut(this.firebaseService.getAuth())).pipe(
-			tap(() => this.cookiesService.removeItem('user-authed')),
 			catchError((firebaseError: FirebaseError) => {
 				return from(this.router.navigate(['/error', 500])).pipe(
 					switchMap(() => this.apiService.setFirebaseError(firebaseError))
 				);
 			}),
 			tap(() => this.appearanceService.setSettings(null)),
-			tap(() => this.currentUser.next(undefined))
+			tap(() => this.currentUser.next(undefined)),
+			tap(() => this.cookiesService.removeItem('user-authed'))
 		);
 	}
 
@@ -233,6 +232,8 @@ export class AuthorizationService {
 			...user
 		});
 
-		return this.currentUser.asObservable();
+		return this.currentUser
+			.asObservable()
+			.pipe(tap((currentUser: CurrentUser) => this.cookiesService.setItem('user-authed', currentUser.name)));
 	}
 }

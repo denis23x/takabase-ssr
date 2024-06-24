@@ -9,6 +9,21 @@ import bootstrap from './src/main.server';
 import compression from 'compression';
 import { REQUEST, RESPONSE } from './src/app/core/tokens/express.tokens';
 
+// Function to get the value of a specific cookie
+function getCookie(cookieString: string, cookieName: string) {
+	const cookies = cookieString.split('; ');
+
+	for (const cookie of cookies) {
+		const [name, value] = cookie.split('=');
+
+		if (name === cookieName) {
+			return value;
+		}
+	}
+
+	return null;
+}
+
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
 	const server = express();
@@ -50,11 +65,24 @@ export function app(): express.Express {
 	server.get('*', (req, res, next) => {
 		const { protocol, originalUrl, baseUrl, headers } = req;
 
+		let redirectUrl = undefined;
+
+		//! Works only in production build
+		if (originalUrl === '/') {
+			const cookie = req.headers.cookie;
+			const cookiePageRedirectHome = getCookie(cookie, 'page-redirect-home');
+			const cookieUserAuthed = getCookie(cookie, 'user-authed');
+
+			if (!!Number(cookiePageRedirectHome) && cookieUserAuthed) {
+				redirectUrl = '/' + cookieUserAuthed;
+			}
+		}
+
 		commonEngine
 			.render({
 				bootstrap,
 				documentFilePath: indexHtml,
-				url: `${protocol}://${headers.host}${originalUrl}`,
+				url: `${protocol}://${headers.host}${redirectUrl || originalUrl}`,
 				publicPath: browserDistFolder,
 				providers: [
 					{
