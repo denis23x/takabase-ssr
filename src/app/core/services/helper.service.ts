@@ -55,7 +55,7 @@ export class HelperService {
 			case 'not':
 				return (value: string[]): ValidatorFn => {
 					return (control: AbstractControl): ValidationErrors | null => {
-						if (value.indexOf(control.value) !== -1) {
+						if (value.indexOf(control.value.trim().toLowerCase()) !== -1) {
 							return {
 								not: true
 							};

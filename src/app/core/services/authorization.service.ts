@@ -29,6 +29,7 @@ import { FirebaseError } from 'firebase/app';
 import { UserCreateDto } from '../dto/user/user-create.dto';
 import { SignInDto } from '../dto/authorization/sign-in.dto';
 import { Router } from '@angular/router';
+import { CookiesService } from './cookies.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -39,6 +40,7 @@ export class AuthorizationService {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 	private readonly router: Router = inject(Router);
+	private readonly cookiesService: CookiesService = inject(CookiesService);
 
 	currentUser: BehaviorSubject<CurrentUser | undefined> = new BehaviorSubject<CurrentUser | undefined>(undefined);
 	currentUserIsPopulated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -67,6 +69,7 @@ export class AuthorizationService {
 					switchMap((firebaseUser: FirebaseUser | null) => {
 						if (firebaseUser) {
 							return this.onProfile().pipe(
+								tap(() => this.cookiesService.setItem('user-authed', String(new Date().getTime()))),
 								switchMap((user: Partial<CurrentUser>) => {
 									return this.setCurrentUser({
 										firebase: firebaseUser,
@@ -160,6 +163,7 @@ export class AuthorizationService {
 
 	onSignOut(): Observable<void> {
 		return from(signOut(this.firebaseService.getAuth())).pipe(
+			tap(() => this.cookiesService.removeItem('user-authed')),
 			catchError((firebaseError: FirebaseError) => {
 				return from(this.router.navigate(['/error', 500])).pipe(
 					switchMap(() => this.apiService.setFirebaseError(firebaseError))

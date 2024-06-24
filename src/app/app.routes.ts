@@ -1,10 +1,12 @@
 /** @format */
 
 import { Route, UrlMatchResult, UrlSegment } from '@angular/router';
+import { redirectAuthGuard } from './core/guards/redirect-auth-guard.service';
 import { redirectCurrentUserGuard } from './core/guards/redirect-current-user-guard.service';
 import { redirectHomeGuard } from './core/guards/redirect-home-guard.service';
 import { redirectHttpErrorGuard } from './core/guards/redirect-http-error-guard.service';
 import { redirectLoadingGuard } from './core/guards/redirect-loading-guard.service';
+import { environment } from '../environments/environment';
 
 // prettier-ignore
 export const APP_ROUTES: Route[] = [
@@ -47,26 +49,26 @@ export const APP_ROUTES: Route[] = [
 			{
 				path: 'login',
 				title: 'Login',
+				canMatch: [redirectAuthGuard()],
 				loadComponent: async () => {
 					return import('./authorization/login/login.component').then(m => m.AuthLoginComponent);
-				},
-				// canMatch: [redirectCurrentUserGuard(false)]
+				}
 			},
 			{
 				path: 'registration',
 				title: 'Registration',
+				canMatch: [redirectAuthGuard()],
 				loadComponent: async () => {
 					return import('./authorization/registration/registration.component').then(m => m.AuthRegistrationComponent);
-				},
-				// canMatch: [redirectCurrentUserGuard(false)]
+				}
 			},
 			{
 				path: 'reset',
 				title: 'Reset password',
+				canMatch: [redirectAuthGuard()],
 				loadComponent: async () => {
 					return import('./authorization/reset/reset.component').then(m => m.AuthResetComponent);
-				},
-				// canMatch: [redirectCurrentUserGuard(false)]
+				}
 			},
 			{
 				path: 'terms',
@@ -118,18 +120,18 @@ export const APP_ROUTES: Route[] = [
 			{
 				path: 'create',
 				title: 'Create post',
+				canMatch: [redirectCurrentUserGuard()],
 				loadComponent: async () => {
 					return import('./create/create.component').then(m => m.CreateComponent);
-				},
-				canMatch: [redirectCurrentUserGuard()]
+				}
 			},
 			{
 				path: 'update/:postId',
 				title: 'Update post',
+				canMatch: [redirectCurrentUserGuard()],
 				loadComponent: async () => {
 					return import('./create/create.component').then(m => m.CreateComponent);
-				},
-				canMatch: [redirectCurrentUserGuard()]
+				}
 			},
 			{
 				path: 'search',
@@ -176,10 +178,10 @@ export const APP_ROUTES: Route[] = [
 			},
 			{
 				path: 'settings',
+				canMatch: [redirectCurrentUserGuard()],
 				loadComponent: async () => {
 					return import('./settings/settings.component').then(m => m.SettingsComponent);
 				},
-				canMatch: [redirectCurrentUserGuard()],
 				children: [
 					{
 						path: '',
@@ -214,21 +216,7 @@ export const APP_ROUTES: Route[] = [
 					// Check if there is at least one URL segment
 					if (urlSegment.length !== 0) {
 						const userName: string = urlSegment[0].path;
-						const userNameForbiddenList: string[] = [
-							'error',
-							'settings',
-							'create',
-							'update',
-							'loading',
-							'search',
-							'profile',
-							'confirmation',
-							'login',
-							'registration',
-							'reset',
-							'terms',
-							'help'
-						];
+						const userNameForbiddenList: string[] = environment.remoteConfig.forbiddenUsername;
 
 						// Check if the first URL segment matches the pattern for a username (e.g., denis23x)
 						if (userNameForbiddenList.every((userNameForbidden: string) => userName !== userNameForbidden)) {
@@ -312,10 +300,10 @@ export const APP_ROUTES: Route[] = [
 	{
 		path: 'loading',
 		title: 'Loading',
+		canMatch: [redirectLoadingGuard()],
 		loadComponent: async () => {
 			return import('./loading/loading.component').then(m => m.LoadingComponent);
-		},
-		canMatch: [redirectLoadingGuard('browser')]
+		}
 	},
 	{
 		path: '**',

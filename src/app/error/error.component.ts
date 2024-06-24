@@ -7,9 +7,9 @@ import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { TitleService } from '../core/services/title.service';
 import { HelperService } from '../core/services/helper.service';
-import { REQUEST, RESPONSE } from '../core/tokens/express.tokens';
+import { RESPONSE } from '../core/tokens/express.tokens';
 import { PlatformService } from '../core/services/platform.service';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 
 @Component({
 	standalone: true,
@@ -24,7 +24,6 @@ export class ErrorComponent implements OnInit {
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly response: Response | null = inject(RESPONSE, { optional: true });
-	private readonly request: Request | null = inject(REQUEST, { optional: true });
 
 	statusCode: number | undefined;
 	statusCodeMap: number[][] = [
@@ -42,6 +41,7 @@ export class ErrorComponent implements OnInit {
 		/** Status response SEO correction */
 
 		if (this.platformService.isServer()) {
+			//! Works only in production build
 			if (this.response) {
 				this.response.status(Number(this.activatedRoute.snapshot.paramMap.get('status')));
 			}
@@ -62,7 +62,7 @@ export class ErrorComponent implements OnInit {
 		const message: string = this.getMessageMap(statusCode);
 
 		if (!statusCode || !message) {
-			this.router.navigate(['/error', 520]).catch((error: any) => {
+			this.router.navigate(['/error', 500]).catch((error: any) => {
 				this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
 			});
 		}

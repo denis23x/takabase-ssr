@@ -1,4 +1,6 @@
 /error/500
 /error/404
+/error/403
+/error/401
 /error/400
 /loader

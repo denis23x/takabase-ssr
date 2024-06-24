@@ -8,22 +8,35 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { PlatformService } from '../services/platform.service';
 import { AuthorizationService } from '../services/authorization.service';
 import { CurrentUser } from '../models/current-user.model';
+import { Request } from 'express';
+import { REQUEST } from '../tokens/express.tokens';
 
-export const redirectCurrentUserGuard = (): CanMatchFn => {
+export const redirectAuthGuard = (): CanMatchFn => {
 	return (): Observable<boolean | UrlTree> => {
 		const authorizationService: AuthorizationService = inject(AuthorizationService);
 		const platformService: PlatformService = inject(PlatformService);
 		const router: Router = inject(Router);
+		const request: Request | null = inject(REQUEST, { optional: true });
 
 		if (platformService.isBrowser()) {
 			return authorizationService.getPopulate().pipe(
-				map((currentUser: CurrentUser | undefined) => !!currentUser || router.createUrlTree(['/login'])),
+				map((currentUser: CurrentUser | undefined) => !currentUser || router.createUrlTree(['/', currentUser.name])),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
-					return from(router.navigate(['/error', 401])).pipe(switchMap(() => throwError(() => httpErrorResponse)));
+					return from(router.navigate(['/error', 500])).pipe(switchMap(() => throwError(() => httpErrorResponse)));
 				})
 			);
+		} else {
+			//! Works only in production build
+			if (request) {
+				const cookie: string = request.headers.cookie;
+				const regExpMatchArray: RegExpMatchArray = cookie.match(/user-authed=(\d+)/gi);
+
+				if (regExpMatchArray && Number(regExpMatchArray[1])) {
+					return of(router.createUrlTree(['/loading']));
+				}
+			}
 		}
 
-		return of(router.createUrlTree(['/loading']));
+		return of(true);
 	};
 };
