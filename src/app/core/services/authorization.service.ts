@@ -30,6 +30,7 @@ import { UserCreateDto } from '../dto/user/user-create.dto';
 import { SignInDto } from '../dto/authorization/sign-in.dto';
 import { Router } from '@angular/router';
 import { CookiesService } from './cookies.service';
+import { HelperService } from './helper.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -41,6 +42,7 @@ export class AuthorizationService {
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 	private readonly router: Router = inject(Router);
 	private readonly cookiesService: CookiesService = inject(CookiesService);
+	private readonly helperService: HelperService = inject(HelperService);
 
 	currentUser: BehaviorSubject<CurrentUser | undefined> = new BehaviorSubject<CurrentUser | undefined>(undefined);
 	currentUserIsPopulated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -90,8 +92,8 @@ export class AuthorizationService {
 		const getObservable = (): Observable<UserCredential> => {
 			const pendingCredential: OAuthCredential | undefined = this.currentUserPendingOAuthCredential;
 
+			// prettier-ignore
 			if (!!pendingCredential) {
-				// prettier-ignore
 				return from(linkWithCredential(userCredential.user, pendingCredential)).pipe(tap(() => (this.currentUserPendingOAuthCredential = undefined)));
 			} else {
 				return of(userCredential);
@@ -99,10 +101,8 @@ export class AuthorizationService {
 		};
 
 		return getObservable().pipe(
+			switchMap(() => this.appearanceService.getAppearance(userCredential.user.uid)),
 			switchMap(() => this.onProfile()),
-			switchMap((user: Partial<CurrentUser>) => {
-				return this.appearanceService.getAppearance(userCredential.user.uid).pipe(switchMap(() => of(user)));
-			}),
 			switchMap((user: Partial<CurrentUser>) => {
 				return this.setCurrentUser({
 					firebase: userCredential.user,
@@ -169,7 +169,7 @@ export class AuthorizationService {
 			}),
 			tap(() => this.appearanceService.setSettings(null)),
 			tap(() => this.currentUser.next(undefined)),
-			tap(() => this.cookiesService.removeItem('user-authed'))
+			tap(() => this.cookiesService.removeItem('__session'))
 		);
 	}
 
@@ -232,8 +232,10 @@ export class AuthorizationService {
 			...user
 		});
 
-		return this.currentUser
-			.asObservable()
-			.pipe(tap((currentUser: CurrentUser) => this.cookiesService.setItem('user-authed', currentUser.name)));
+		this.helperService.upsertSessionCookie({
+			userAuthed: user.name
+		});
+
+		return this.currentUser.asObservable();
 	}
 }

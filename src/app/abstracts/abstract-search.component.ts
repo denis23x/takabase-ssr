@@ -56,7 +56,7 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 		if (this.abstractListPageScrollInfinite) {
 			this.abstractListPageScrollInfinite$?.unsubscribe();
 			this.abstractListPageScrollInfinite$ = this.appearanceService
-				.setPageScrollInfinite()
+				.getPageScrollInfinite()
 				.pipe(filter(() => this.abstractListIsHasMore && !this.abstractListIsLoading$.getValue()))
 				.subscribe({
 					next: () => this.getAbstractList(true),

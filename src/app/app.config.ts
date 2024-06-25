@@ -60,7 +60,7 @@ export const appConfig: ApplicationConfig = {
 							/** REMOTE CONFIG */
 
 							fetchAndActivate(firebaseService.getRemoteConfig())
-								.then((response: boolean) => console.warn('Remote config ' + response))
+								.then((response: boolean) => console.debug('Remote config ' + response))
 								.catch((error: any) => console.error(error));
 						}
 					});

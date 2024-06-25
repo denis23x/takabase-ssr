@@ -70,11 +70,14 @@ export function app(): express.Express {
 		//! Works only in production build
 		if (originalUrl === '/') {
 			const cookie = req.headers.cookie;
-			const cookiePageRedirectHome = getCookie(cookie, 'page-redirect-home');
-			const cookieUserAuthed = getCookie(cookie, 'user-authed');
+			const session = getCookie(cookie || '', '__session');
 
-			if (!!Number(cookiePageRedirectHome) && cookieUserAuthed) {
-				redirectUrl = '/' + cookieUserAuthed;
+			if (cookie && session) {
+				const { pageRedirectHome, userAuthed } = JSON.parse(atob(session));
+
+				if (!!Number(pageRedirectHome) && userAuthed) {
+					redirectUrl = '/' + userAuthed;
+				}
 			}
 		}
 

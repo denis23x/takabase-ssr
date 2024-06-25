@@ -120,7 +120,7 @@ export class QrCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 				if (error) {
 					this.snackbarService.error('Error', "Can't download your QR Code");
 				} else {
-					this.helperService.getDownload(dataURL, this.QRCodeValue.split('/').pop());
+					this.helperService.setDownload(dataURL, this.QRCodeValue.split('/').pop());
 				}
 			});
 		}

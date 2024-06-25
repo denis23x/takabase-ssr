@@ -74,7 +74,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			next: () => {
 				if (pathRestrictedList.some((pathRestricted: string) => path.startsWith(pathRestricted))) {
 					this.router.navigateByUrl('/').catch((error: any) => {
-						this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+						this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
 					});
 
 					this.snackbarService.success(null, 'Bye bye');

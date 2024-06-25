@@ -30,7 +30,7 @@ export const redirectAuthGuard = (): CanMatchFn => {
 		} else {
 			//! Works only in production build
 			if (request) {
-				if (cookiesService.getItem('user-authed', request.headers.cookie)) {
+				if (cookiesService.getItem('__session', request.headers.cookie)) {
 					return of(router.createUrlTree(['/loading']));
 				}
 			}

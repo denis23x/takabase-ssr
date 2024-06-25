@@ -63,7 +63,7 @@ export class ErrorComponent implements OnInit {
 
 		if (!statusCode || !message) {
 			this.router.navigate(['/error', 500]).catch((error: any) => {
-				this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+				this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
 			});
 		}
 

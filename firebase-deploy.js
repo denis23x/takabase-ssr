@@ -3,11 +3,11 @@ const spawn = require('child_process').spawn;
 
 const projectList = {
   ['takabase-dev']: {
-    url: 'https://takabase-dev-api.web.app'
+    url: 'https://takabase-dev.web.app'
   },
   ['takabase-prod']: {
-    url: 'https://takabase-prod-api.web.app'
-  },
+    url: 'https://takabase-prod.web.app'
+  }
 };
 
 (async () => {
@@ -19,7 +19,7 @@ const projectList = {
       return {
         title: key,
         value: key,
-        description: projectList[key].url,
+        description: projectList[key].url
       }
     }),
     initial: 0
@@ -33,7 +33,7 @@ const projectList = {
       {
         title: 'Deploy function',
         value: 'function',
-        description: projectList[project.project].url,
+        description: projectList[project.project].url
       }
     ],
     initial: 0
@@ -50,11 +50,11 @@ const projectList = {
     const command = [`firebase use ${project.project}`];
 
     if (project.project === 'takabase-dev') {
-      command.unshift('export FIREBASE_FRAMEWORKS_BUILD_TARGET=\'development\'')
+      command.unshift('export FIREBASE_FRAMEWORKS_BUILD_TARGET=\'development\'');
     }
 
     if (project.project === 'takabase-prod') {
-      command.unshift('export FIREBASE_FRAMEWORKS_BUILD_TARGET=\'production\'')
+      command.unshift('export FIREBASE_FRAMEWORKS_BUILD_TARGET=\'production\'');
     }
 
     if (action.action === 'function') {

@@ -36,9 +36,7 @@ export class AuthConfirmationComponent implements OnInit {
 					queryParamsHandling: 'preserve',
 					relativeTo: this.activatedRoute
 				})
-				.catch((error: any) => {
-					this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
-				});
+				.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
 		};
 
 		switch (mode) {
@@ -57,7 +55,7 @@ export class AuthConfirmationComponent implements OnInit {
 				break;
 			default:
 				this.router.navigate(['error', 404]).catch((error: any) => {
-					this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+					this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
 				});
 
 				break;

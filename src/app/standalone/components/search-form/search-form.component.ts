@@ -72,9 +72,7 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 							},
 							replaceUrl: true
 						})
-						.catch((error: any) => {
-							this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
-						});
+						.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -94,8 +92,6 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 				queryParamsHandling: 'merge',
 				replaceUrl: true
 			})
-			.catch((error: any) => {
-				this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
-			});
+			.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
 	}
 }

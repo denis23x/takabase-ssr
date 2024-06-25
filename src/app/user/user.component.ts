@@ -378,7 +378,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		if (this.postListPageScrollInfinite) {
 			this.postListPageScrollInfinite$?.unsubscribe();
 			this.postListPageScrollInfinite$ = this.appearanceService
-				.setPageScrollInfinite()
+				.getPageScrollInfinite()
 				.pipe(filter(() => this.postListIsHasMore && !this.postListIsLoading()))
 				.subscribe({
 					next: () => this.getPostList(true),
@@ -401,9 +401,7 @@ export class UserComponent implements OnInit, OnDestroy {
 					queryParams: null,
 					replaceUrl: true
 				})
-				.catch((error: any) => {
-					this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
-				});
+				.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
 		}
 	}
 
@@ -430,9 +428,7 @@ export class UserComponent implements OnInit, OnDestroy {
 				queryParamsHandling: 'merge',
 				relativeTo: this.activatedRoute
 			})
-			.catch((error: any) => {
-				this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
-			});
+			.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
 	}
 
 	onUpdateCategory(categoryUpdate: Category): void {
@@ -463,9 +459,7 @@ export class UserComponent implements OnInit, OnDestroy {
 				queryParamsHandling: 'merge',
 				relativeTo: this.activatedRoute
 			})
-			.catch((error: any) => {
-				this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
-			});
+			.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
 	}
 
 	/** PostList */

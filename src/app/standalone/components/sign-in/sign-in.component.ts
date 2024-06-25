@@ -41,7 +41,7 @@ export class SignInComponent implements OnDestroy {
 		this.signInWithPopup$ = this.authorizationService.onSignInWithPopup(authProvider).subscribe({
 			next: (user: User) => {
 				this.router.navigate(['/', user.name]).catch((error: any) => {
-					this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
+					this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
 				});
 			},
 			error: (error: any) => console.error(error)

@@ -233,12 +233,6 @@
           },
           "defaultConfiguration": "localhost"
         },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "buildTarget": "takabase-ssr:build"
-          }
-        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {

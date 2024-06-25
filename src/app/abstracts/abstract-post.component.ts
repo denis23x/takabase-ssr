@@ -106,9 +106,7 @@ export abstract class AbstractPostComponent implements OnInit, OnDestroy {
 						relativeTo: this.activatedRoute.parent,
 						queryParamsHandling: 'preserve'
 					})
-					.catch((error: any) => {
-						this.helperService.getNavigationError(this.router.lastSuccessfulNavigation, error);
-					});
+					.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
 			}
 		}
 	}

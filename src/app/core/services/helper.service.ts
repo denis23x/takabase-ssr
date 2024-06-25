@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
 import { customAlphabet } from 'nanoid';
 import { alphanumeric } from 'nanoid-dictionary';
 import { Navigation } from '@angular/router';
+import { CookiesService } from './cookies.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,8 +16,22 @@ import { Navigation } from '@angular/router';
 export class HelperService {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly cookiesService: CookiesService = inject(CookiesService);
 
-	setCamelCaseToDashCase(value: string): string {
+	upsertSessionCookie(cookie: Record<string, any>): void {
+		const cookieString: string | undefined = this.cookiesService.getItem('__session');
+		const cookieObject: any = JSON.parse(atob(cookieString || '') || '{}');
+		const cookieUpsert: any = {
+			...cookieObject,
+			...cookie
+		};
+
+		/** https://firebase.google.com/docs/hosting/manage-cache */
+
+		this.cookiesService.setItem('__session', btoa(JSON.stringify(cookieUpsert)));
+	}
+
+	getCamelCaseToDashCase(value: string): string {
 		// eslint-disable-next-line @typescript-eslint/no-shadow
 		return value.replace(/[A-Z]/g, (value: string): string => '-' + value.toLowerCase());
 	}
@@ -89,7 +104,7 @@ export class HelperService {
 		return (Math.random() + 1).toString(36).substring(2);
 	}
 
-	getDownload(url: string, filename: string): void {
+	setDownload(url: string, filename: string): void {
 		if (this.platformService.isBrowser()) {
 			const HTMLElement: HTMLAnchorElement = this.document.createElement('a');
 
@@ -108,7 +123,7 @@ export class HelperService {
 		return new URL(this.document.URL, environment.appUrl);
 	}
 
-	getNavigationError(navigation: Navigation, error: any): void {
+	setNavigationError(navigation: Navigation, error: any): void {
 		const navigationCurrent: string = navigation.finalUrl.toString();
 		const navigationPrevious: string = navigation.previousNavigation.finalUrl.toString();
 

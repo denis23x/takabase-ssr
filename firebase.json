@@ -1,6 +1,10 @@
 {
   "hosting": [
     {
+      "predeploy": [
+        "rm .firebase/takabase-dev/functions/dist/takabase-ssr/browser/index.html",
+        "rm .firebase/takabase-dev/hosting/index.html"
+      ],
       "target": "takabase-dev",
       "source": ".",
       "ignore": [

@@ -80,14 +80,14 @@ export class AppearanceService {
 				// @ts-ignore
 				const value: any = appearance[key];
 
-				const cookieKey: string = this.helperService.setCamelCaseToDashCase(key);
+				const cookieKey: string = this.helperService.getCamelCaseToDashCase(key);
 				const cookieValue: any = typeof value === 'boolean' ? String(+value) : value;
 
 				this.cookiesService.setItem(cookieKey, cookieValue);
 			});
 		} else {
 			valueKeyList.forEach((key: string) => {
-				this.cookiesService.removeItem(this.helperService.setCamelCaseToDashCase(key));
+				this.cookiesService.removeItem(this.helperService.getCamelCaseToDashCase(key));
 			});
 		}
 
@@ -96,6 +96,8 @@ export class AppearanceService {
 		this.setTheme(appearance?.theme || null);
 		this.setThemeBackground(appearance?.themeBackground || null);
 		this.setThemePrism(appearance?.themePrism || null);
+
+		this.setPageRedirectHome(appearance?.pageRedirectHome || null);
 	}
 
 	setTheme(theme: string | null): void {
@@ -189,7 +191,13 @@ export class AppearanceService {
 		}
 	}
 
-	setPageScrollInfinite(): Observable<boolean> {
+	setPageRedirectHome(pageRedirectHome: boolean | null): void {
+		this.helperService.upsertSessionCookie({
+			pageRedirectHome: String(+pageRedirectHome)
+		});
+	}
+
+	getPageScrollInfinite(): Observable<boolean> {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
