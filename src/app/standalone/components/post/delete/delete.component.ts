@@ -93,10 +93,10 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 		const redirectToBack = (): Promise<boolean> => {
 			switch (true) {
 				case this.location.path().startsWith('/update'): {
-					const postUserName: string = this.currentUser.name;
+					const postUsername: string = this.currentUser.name;
 					const postCategoryId: string = String(this.post.category.id);
 
-					return this.router.navigate(['/', postUserName, 'category', postCategoryId], {
+					return this.router.navigate(['/', postUsername, 'category', postCategoryId], {
 						relativeTo: this.activatedRoute,
 						replaceUrl: true
 					});

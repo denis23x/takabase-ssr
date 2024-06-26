@@ -119,7 +119,7 @@ export class UserComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	activatedRouteParamsUserName$: Subscription | undefined;
+	activatedRouteParamsUsername$: Subscription | undefined;
 	activatedRouteParamsCategoryId$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
 
@@ -155,9 +155,9 @@ export class UserComponent implements OnInit, OnDestroy {
 	};
 
 	ngOnInit(): void {
-		this.activatedRouteParamsUserName$?.unsubscribe();
-		this.activatedRouteParamsUserName$ = this.activatedRoute.params
-			.pipe(distinctUntilKeyChanged('userName'))
+		this.activatedRouteParamsUsername$?.unsubscribe();
+		this.activatedRouteParamsUsername$ = this.activatedRoute.params
+			.pipe(distinctUntilKeyChanged('username'))
 			.subscribe({
 				next: () => {
 					/** Apply Data */
@@ -189,7 +189,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[
-			this.activatedRouteParamsUserName$,
+			this.activatedRouteParamsUsername$,
 			this.activatedRouteParamsCategoryId$,
 			this.activatedRouteQueryParams$,
 			this.currentUser$,
@@ -217,9 +217,9 @@ export class UserComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
-		const userName: string = String(this.activatedRoute.snapshot.paramMap.get('userName') || '');
+		const username: string = String(this.activatedRoute.snapshot.paramMap.get('username') || '');
 		const userGetAllDto: UserGetAllDto = {
-			userName,
+			username,
 			scope: ['categories'],
 			page: 1,
 			size: 10
@@ -265,7 +265,7 @@ export class UserComponent implements OnInit, OnDestroy {
 					this.activatedRouteParamsCategoryId$ = this.activatedRoute.params
 						.pipe(
 							distinctUntilKeyChanged('categoryId'),
-							filter(() => userName === this.user.name)
+							filter(() => username === this.user.name)
 						)
 						.subscribe({
 							next: () => {
@@ -336,10 +336,10 @@ export class UserComponent implements OnInit, OnDestroy {
 	setMetaTags(): void {
 		this.metaService.getMetaImageDownloadURL(this.user.avatar).subscribe({
 			next: (downloadURL: string | null) => {
-				const userName: string = this.user.name;
+				const username: string = this.user.name;
 				const userDescription: string = this.user.description || 'User has not yet added a profile description';
 
-				const title: string = this.category?.name || userName;
+				const title: string = this.category?.name || username;
 				const description: string = this.category?.description || userDescription;
 
 				/** Set meta (SSR SEO trick) */
@@ -348,7 +348,7 @@ export class UserComponent implements OnInit, OnDestroy {
 					['og:title']: title,
 					['og:description']: description,
 					['og:image']: downloadURL,
-					['og:image:alt']: userName,
+					['og:image:alt']: username,
 					['og:image:type']: 'image/png'
 				};
 
@@ -356,14 +356,14 @@ export class UserComponent implements OnInit, OnDestroy {
 					metaOpenGraph['og:type'] = 'website';
 				} else {
 					metaOpenGraph['og:type'] = 'profile';
-					metaOpenGraph['profile:username'] = userName;
+					metaOpenGraph['profile:username'] = username;
 				}
 
 				const metaTwitter: MetaTwitter = {
 					['twitter:title']: title,
 					['twitter:description']: description,
 					['twitter:image']: downloadURL,
-					['twitter:image:alt']: userName
+					['twitter:image:alt']: username
 				};
 
 				this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
@@ -473,11 +473,11 @@ export class UserComponent implements OnInit, OnDestroy {
 		const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
 		const postIndexFilters: string[] = [];
 
-		const userName: string = String(this.activatedRoute.snapshot.paramMap.get('userName') || '');
+		const username: string = String(this.activatedRoute.snapshot.paramMap.get('username') || '');
 		const categoryId: string = String(this.activatedRoute.snapshot.paramMap.get('categoryId') || '');
 
-		if (userName) {
-			postIndexFilters.push('user.name:' + userName);
+		if (username) {
+			postIndexFilters.push('user.name:' + username);
 		}
 
 		if (categoryId) {

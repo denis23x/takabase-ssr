@@ -215,12 +215,12 @@ export const APP_ROUTES: Route[] = [
 				matcher: (urlSegment: UrlSegment[]): UrlMatchResult | null => {
 					// Check if there is at least one URL segment
 					if (urlSegment.length !== 0) {
-						const userName: string = urlSegment[0].path;
-						const userNameForbiddenList: string[] = environment.remoteConfig.forbiddenUsername;
+						const username: string = urlSegment[0].path;
+						const usernameForbiddenList: string[] = environment.remoteConfig.forbiddenUsername;
 
 						// Check if the first URL segment matches the pattern for a username (e.g., denis23x)
-						if (userNameForbiddenList.every((userNameForbidden: string) => userName !== userNameForbidden)) {
-							if (userName.match(/(?![0-9]+$).*/i)) {
+						if (usernameForbiddenList.every((usernameForbidden: string) => username !== usernameForbidden)) {
+							if (username.match(/(?![0-9]+$).*/i)) {
 								const getId = (path: string): string | undefined => urlSegment[1]?.path === path ? urlSegment[2]?.path : undefined;
 
 								const postId: string | undefined = getId('post');
@@ -231,7 +231,7 @@ export const APP_ROUTES: Route[] = [
 										return {
 											consumed: urlSegment.slice(0, 1),
 											posParams: {
-												userName: new UrlSegment(userName, null),
+												username: new UrlSegment(username, null),
 												postId: new UrlSegment(postId, null)
 											}
 										};
@@ -240,7 +240,7 @@ export const APP_ROUTES: Route[] = [
 										return {
 											consumed: urlSegment.slice(0, 3),
 											posParams: {
-												userName: new UrlSegment(userName, null),
+												username: new UrlSegment(username, null),
 												categoryId: new UrlSegment(categoryId, null)
 											}
 										};
@@ -249,7 +249,7 @@ export const APP_ROUTES: Route[] = [
 										return {
 											consumed: urlSegment.slice(0, 1),
 											posParams: {
-												userName: new UrlSegment(userName, null)
+												username: new UrlSegment(username, null)
 											}
 										};
 									}

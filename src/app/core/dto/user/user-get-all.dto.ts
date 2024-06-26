@@ -2,7 +2,7 @@
 
 export interface UserGetAllDto {
 	userId?: number;
-	userName?: string;
+	username?: string;
 	query?: string;
 	page?: number;
 	size?: number;

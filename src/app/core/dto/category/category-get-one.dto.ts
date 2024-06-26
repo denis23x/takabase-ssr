@@ -2,6 +2,6 @@
 
 export interface CategoryGetOneDto {
 	userFirebaseUid?: string;
-	userName?: string;
+	username?: string;
 	scope?: string[];
 }

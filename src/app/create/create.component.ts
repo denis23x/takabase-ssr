@@ -230,7 +230,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			const categoryGetAllDto: CategoryGetAllDto = {
 				page: 1,
 				size: 100,
-				userName: this.currentUser.name
+				username: this.currentUser.name
 			};
 
 			this.categoryListRequest$?.unsubscribe();

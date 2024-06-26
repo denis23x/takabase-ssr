@@ -32,15 +32,15 @@ export class ReportService {
 	// prettier-ignore
 	create(reportCreateDto: ReportCreateDto): Observable<DocumentReference> {
 		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
-		const currentUserName: string = currentUser.name;
+		const currentUsername: string = currentUser.name;
 
 		const url: URL = this.helperService.getURL();
-		const urlUserName: string = [url.origin, currentUserName].join('/');
+		const urlUsername: string = [url.origin, currentUsername].join('/');
 
-		const templateSubject: string = 'New report from user ' + currentUserName;
+		const templateSubject: string = 'New report from user ' + currentUsername;
 		const templateHtml: string = `
       <h1>
-        <strong>Reporter:</strong> <a href="${urlUserName}" target="_blank"> ${currentUserName} </a>
+        <strong>Reporter:</strong> <a href="${urlUsername}" target="_blank"> ${currentUsername} </a>
       </h1>
       <span>
         <strong>Name:</strong> ${reportCreateDto.name}

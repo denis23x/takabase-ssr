@@ -2,7 +2,7 @@
 
 export interface CategoryGetAllDto {
 	userId?: number;
-	userName?: string;
+	username?: string;
 	query?: string;
 	page?: number;
 	size?: number;

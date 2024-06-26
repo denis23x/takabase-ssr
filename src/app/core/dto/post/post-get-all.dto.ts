@@ -2,7 +2,7 @@
 
 export interface PostGetAllDto {
 	userId?: number;
-	userName?: string;
+	username?: string;
 	categoryId?: number;
 	query?: string;
 	page?: number;

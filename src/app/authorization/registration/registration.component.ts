@@ -188,7 +188,7 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 			};
 
 			const userGetAllDto: UserGetAllDto = {
-				userName: userCreateDto.name,
+				username: userCreateDto.name,
 				page: 1,
 				size: 10
 			};
@@ -201,7 +201,7 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 				.pipe(
 					switchMap((userList: User[]) => {
 						if (userList.length) {
-							this.snackbarService.error('Nope', 'The name "' + userGetAllDto.userName + '" is already in use');
+							this.snackbarService.error('Nope', 'The name "' + userGetAllDto.username + '" is already in use');
 
 							return throwError(() => new Error());
 						} else {
