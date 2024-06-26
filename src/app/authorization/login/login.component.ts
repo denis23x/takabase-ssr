@@ -6,7 +6,6 @@ import { Router, RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { HelperService } from '../../core/services/helper.service';
-import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
@@ -15,11 +14,12 @@ import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
 import { SignInDto } from '../../core/dto/authorization/sign-in.dto';
-import { onAuthStateChanged, User as FirebaseUser, Unsubscribe, Auth } from 'firebase/auth';
-import { FirebaseService } from '../../core/services/firebase.service';
+import { User as FirebaseUser } from 'firebase/auth';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
+import { filter } from 'rxjs/operators';
+import { CurrentUser } from '../../core/models/current-user.model';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -47,11 +47,13 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly metaService: MetaService = inject(MetaService);
-	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 
-	loginAuthStateChanged$: Unsubscribe | undefined;
+	currentUser: CurrentUser | undefined;
+	currentUser$: Subscription | undefined;
+
+	loginAuthStateChanged$: Subscription | undefined;
 	loginRequest$: Subscription | undefined;
 	loginForm: FormGroup = this.formBuilder.group<LoginForm>({
 		email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
@@ -65,16 +67,35 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		if (this.platformService.isBrowser()) {
-			const auth: Auth = this.firebaseService.getAuth();
+			this.loginAuthStateChanged$?.unsubscribe();
+			this.loginAuthStateChanged$ = this.authorizationService
+				.getAuthState()
+				.pipe(filter((firebaseUser: FirebaseUser | null) => !!firebaseUser))
+				.subscribe({
+					next: () => {
+						this.snackbarService.success('Welcome back', 'Redirecting, please wait...');
 
-			this.loginAuthStateChanged$?.();
-			this.loginAuthStateChanged$ = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
-				if (firebaseUser) {
-					this.loginForm.disable();
+						/** Disable form for interact */
 
-					this.snackbarService.success('Welcome back', 'Redirecting, please wait...');
-				}
-			});
+						this.loginForm.disable();
+
+						/** Get user and redirect */
+
+						this.currentUser$?.unsubscribe();
+						this.currentUser$ = this.authorizationService
+							.getCurrentUser()
+							.pipe(filter((currentUser: CurrentUser | undefined) => !!currentUser))
+							.subscribe({
+								next: (currentUser: CurrentUser | undefined) => {
+									this.router.navigate(['/', currentUser.name]).catch((error: any) => {
+										this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
+									});
+								},
+								error: (error: any) => console.error(error)
+							});
+					},
+					error: () => this.loginForm.enable()
+				});
 		}
 
 		/** Apply Data */
@@ -87,9 +108,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.loginRequest$].forEach(($: Subscription) => $?.unsubscribe());
-
-		[this.loginAuthStateChanged$].forEach(($: Unsubscribe) => $?.());
+		[this.currentUser$, this.loginAuthStateChanged$, this.loginRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setMetaTags(): void {
@@ -120,11 +139,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
 			this.loginRequest$?.unsubscribe();
 			this.loginRequest$ = this.authorizationService.onSignInWithEmailAndPassword(signInDto).subscribe({
-				next: (user: User) => {
-					this.router.navigate(['/', user.name]).catch((error: any) => {
-						this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
-					});
-				},
+				next: () => console.debug('Signed in with email and password'),
 				error: () => this.loginForm.enable()
 			});
 		}

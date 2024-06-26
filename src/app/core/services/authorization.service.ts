@@ -1,7 +1,7 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, from, Observable, of } from 'rxjs';
+import { BehaviorSubject, from, Observable, Observer, of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { UserService } from './user.service';
@@ -19,7 +19,6 @@ import {
 	User as FirebaseUser,
 	UserCredential,
 	GithubAuthProvider,
-	Unsubscribe,
 	GoogleAuthProvider,
 	AuthProvider,
 	OAuthCredential,
@@ -55,19 +54,7 @@ export class AuthorizationService {
 					return of(currentUser);
 				}
 
-				const getAuthState = (): Promise<FirebaseUser | null> => {
-					return new Promise(resolve => {
-						// prettier-ignore
-						const authStateChanged$: Unsubscribe = onAuthStateChanged(this.firebaseService.getAuth(),  (firebaseUser: FirebaseUser | null) => {
-							resolve(firebaseUser);
-
-							// Unsubscribe
-							authStateChanged$?.();
-						});
-					});
-				};
-
-				return from(getAuthState()).pipe(
+				return this.getAuthState().pipe(
 					switchMap((firebaseUser: FirebaseUser | null) => {
 						if (firebaseUser) {
 							return this.onProfile().pipe(
@@ -216,6 +203,17 @@ export class AuthorizationService {
 				throw new Error('Invalid providerId specified: ' + providerId);
 			}
 		}
+	}
+
+	getAuthState(): Observable<FirebaseUser | null> {
+		return new Observable<FirebaseUser | null>((observer: Observer<FirebaseUser | null>) => {
+			onAuthStateChanged(
+				this.firebaseService.getAuth(),
+				(firebaseUser: FirebaseUser | null) => observer.next(firebaseUser),
+				(error: any) => observer.error(error),
+				() => observer.complete()
+			);
+		});
 	}
 
 	/** Current User */

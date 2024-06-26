@@ -30,12 +30,13 @@ import { UserCreateDto } from '../../core/dto/user/user-create.dto';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
-import { Auth, onAuthStateChanged, Unsubscribe } from 'firebase/auth';
 import { User as FirebaseUser } from '@firebase/auth';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 import { getValue, Value } from 'firebase/remote-config';
+import { filter } from 'rxjs/operators';
+import { CurrentUser } from '../../core/models/current-user.model';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -74,7 +75,10 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 
-	registrationAuthStateChanged$: Unsubscribe | undefined;
+	currentUser: CurrentUser | undefined;
+	currentUser$: Subscription | undefined;
+
+	registrationAuthStateChanged$: Subscription | undefined;
 	registrationRequest$: Subscription | undefined;
 	registrationForm: FormGroup = this.formBuilder.group<RegistrationForm>({
 		name: this.formBuilder.nonNullable.control('', [
@@ -105,16 +109,37 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 		/** Listen Auth State Changed */
 
 		if (this.platformService.isBrowser()) {
-			const auth: Auth = this.firebaseService.getAuth();
+			this.registrationAuthStateChanged$?.unsubscribe();
+			this.registrationAuthStateChanged$ = this.authorizationService
+				.getAuthState()
+				.pipe(filter((firebaseUser: FirebaseUser | null) => !!firebaseUser))
+				.subscribe({
+					next: () => {
+						this.snackbarService.success('Success', 'Redirecting, please wait...', {
+							duration: 8000
+						});
 
-			this.registrationAuthStateChanged$?.();
-			this.registrationAuthStateChanged$ = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
-				if (firebaseUser) {
-					this.registrationForm.disable();
+						/** Disable form for interact */
 
-					this.snackbarService.success('Success', 'Redirecting, please wait...');
-				}
-			});
+						this.registrationForm.disable();
+
+						/** Get user and redirect */
+
+						this.currentUser$?.unsubscribe();
+						this.currentUser$ = this.authorizationService
+							.getCurrentUser()
+							.pipe(filter((currentUser: CurrentUser | undefined) => !!currentUser))
+							.subscribe({
+								next: (currentUser: CurrentUser | undefined) => {
+									this.router.navigate(['/', currentUser.name]).catch((error: any) => {
+										this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
+									});
+								},
+								error: (error: any) => console.error(error)
+							});
+					},
+					error: () => this.registrationForm.enable()
+				});
 		}
 
 		/** Apply Data */
@@ -127,9 +152,12 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.invitedByUserRequest$, this.registrationRequest$].forEach(($: Subscription) => $?.unsubscribe());
-
-		[this.registrationAuthStateChanged$].forEach(($: Unsubscribe) => $?.());
+		[
+			this.currentUser$,
+			this.invitedByUserRequest$,
+			this.registrationAuthStateChanged$,
+			this.registrationRequest$
+		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setResolver(): void {
@@ -197,9 +225,10 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 			/** Moderate and registration */
 
 			this.registrationRequest$?.unsubscribe();
-			this.registrationRequest$ = this.userService
-				.getAll(userGetAllDto)
+			this.registrationRequest$ = this.aiService
+				.moderateText(aiModerateTextDto)
 				.pipe(
+					switchMap(() => this.userService.getAll(userGetAllDto)),
 					switchMap((userList: User[]) => {
 						if (userList.length) {
 							this.snackbarService.error('Nope', 'The name "' + userGetAllDto.username + '" is already in use');
@@ -208,16 +237,11 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 						} else {
 							return of([]);
 						}
-					})
-				)
-				.pipe(
-					switchMap(() => this.aiService.moderateText(aiModerateTextDto)),
+					}),
 					switchMap(() => this.authorizationService.onRegistration(userCreateDto))
 				)
 				.subscribe({
-					next: (user: User) => {
-						this.router.navigate(['/', user.name]).then(() => this.snackbarService.success('Success', 'Welcome here'));
-					},
+					next: () => console.debug('Signed up with email and password'),
 					error: () => this.registrationForm.enable()
 				});
 		}
