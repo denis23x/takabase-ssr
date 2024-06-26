@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, OnDestroy, OnInit, makeStateKey, StateKey } from '@angular/core';
+import { Component, OnDestroy, OnInit, makeStateKey, StateKey, Input, numberAttribute } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -25,6 +25,23 @@ const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>
 	templateUrl: './post.component.html'
 })
 export class SearchPostComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
+	@Input({ transform: numberAttribute })
+	set deleteId(deleteId: number | undefined) {
+		if (deleteId) {
+			this.router
+				.navigate([], {
+					queryParams: {
+						...this.activatedRoute.snapshot.queryParams,
+						deleteId: null
+					},
+					queryParamsHandling: 'merge',
+					relativeTo: this.activatedRoute,
+					replaceUrl: true
+				})
+				.then(() => (this.postList = this.postList.filter((post: Post) => post.id !== deleteId)));
+		}
+	}
+
 	postList: Post[] = [];
 	postListRequest$: Subscription | undefined;
 	postListSkeletonToggle: boolean = true;
