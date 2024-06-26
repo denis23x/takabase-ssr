@@ -84,6 +84,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			Validators.required,
 			Validators.minLength(4),
 			Validators.maxLength(32),
+			Validators.pattern(this.helperService.getRegex('username')),
 			Validators.pattern(this.helperService.getRegex('no-whitespace'))
 		]),
 		description: this.formBuilder.control(null, [Validators.minLength(16), Validators.maxLength(192)])

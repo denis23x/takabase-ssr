@@ -42,8 +42,10 @@ export class HelperService {
 				return new RegExp('.[a-z]+$', 'i');
 			case 'no-whitespace':
 				return new RegExp('^\\S*$', 'm');
+			case 'username':
+				return new RegExp('^\\w[\\w\\d]*$', 'm');
 			case 'password':
-				return new RegExp('^(?=.*[\\d\\W]).{6,48}$', 'm');
+				return new RegExp('^(?=.*[\\d!@#$%^&*]).+$', 'm');
 			case 'url':
 				return new RegExp('^([a-zA-Z][a-zA-Z0-9+.\\-]{1,31}):([^<>\x00-\x20]*)$', 'm');
 			case 'youtube':

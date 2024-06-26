@@ -113,24 +113,17 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 				return userInfo.providerId === 'password';
 			});
 
-			// Remove control if already exists
-			this.userDeleteForm.removeControl('password');
-
 			if (passwordProvider) {
+				// Remove control if already exists
+				this.userDeleteForm.removeControl('password');
+
 				// prettier-ignore
 				this.userDeleteForm.addControl('password', this.formBuilder.nonNullable.control('', [
-					Validators.required,
-					Validators.pattern(this.helperService.getRegex('password'))
-				]));
-
-				const abstractControlPassword: AbstractControl = this.userDeleteForm.get('password');
-
-				abstractControlPassword.setValidators([
 					Validators.required,
 					Validators.minLength(6),
 					Validators.maxLength(48),
 					Validators.pattern(this.helperService.getRegex('password'))
-				]);
+				]));
 
 				abstractControlName.updateValueAndValidity();
 			}
