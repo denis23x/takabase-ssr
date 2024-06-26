@@ -13,7 +13,6 @@ import plainText from 'markdown-it-plain-text';
 import smartArrows from 'markdown-it-smartarrows';
 import tasks from 'markdown-it-tasks';
 import video from 'markdown-it-video';
-import mermaid from '@agoose77/markdown-it-mermaid';
 import morphdom from 'morphdom';
 import Prism from 'prismjs';
 import 'prismjs/plugins/autolinker/prism-autolinker.min.js';
@@ -29,6 +28,7 @@ import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { HelperService } from './helper.service';
 import { AppearanceService } from './appearance.service';
+import { mermaid } from './markdown';
 
 @Injectable({
 	providedIn: 'root'
@@ -105,9 +105,8 @@ export class MarkdownService {
 			.use(plainText)
 			.use(smartArrows)
 			.use(tasks, this.getMarkdownITasksConfig())
-			.use(video);
-		// TODO: remake mermaid
-		// .use(mermaid, this.getMarkdownItMermaidConfig());
+			.use(video)
+			.use(mermaid, this.getMarkdownItMermaidConfig(), this.platformService.isBrowser());
 
 		this.markdownIt.renderer.rules.image = this.setMarkdownItRule('image');
 		this.markdownIt.renderer.rules.video = this.setMarkdownItRule('video');

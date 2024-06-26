@@ -38,9 +38,7 @@
       @apply w-full;
     }
 
-    /* Mermaid */
-
-    &[src^="data:image/svg+xml"] {
+    &[id^="mermaid"] {
       @apply object-center opacity-100 p-4 md:p-8;
 
       max-width: initial !important;

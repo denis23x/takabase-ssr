@@ -20,6 +20,10 @@
       }
     },
     {
+      "predeploy": [
+        "rm .firebase/takabase-prod/functions/dist/takabase-ssr/browser/index.html",
+        "rm .firebase/takabase-prod/hosting/index.html"
+      ],
       "target": "takabase-prod",
       "source": ".",
       "ignore": [
