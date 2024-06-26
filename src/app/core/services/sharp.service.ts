@@ -1,7 +1,7 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { from, Observable, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
 import { catchError, map } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -22,6 +22,18 @@ export class SharpService {
 		return environment.sharp.url + url;
 	}
 
+	getError(httpErrorResponse: HttpErrorResponse): Observable<HttpErrorResponse> {
+		return from(new Response(httpErrorResponse.error).json()).pipe(
+			map((error: any) => {
+				return new HttpErrorResponse({
+					error,
+					status: 400,
+					statusText: error.error
+				});
+			})
+		);
+	}
+
 	/** Sharp function */
 
 	getFetch(sharpFetchDto: SharpFetchDto): Observable<File> {
@@ -35,7 +47,9 @@ export class SharpService {
 			.pipe(
 				map((blob: Blob) => this.fileService.getFileFromBlob(blob)),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
-					return this.apiService.setHttpErrorResponse(httpErrorResponse);
+					return this.getError(httpErrorResponse).pipe(
+						switchMap((httpError: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpError))
+					);
 				})
 			);
 	}
@@ -63,7 +77,9 @@ export class SharpService {
 			.pipe(
 				map((blob: Blob) => this.fileService.getFileFromBlob(blob)),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
-					return this.apiService.setHttpErrorResponse(httpErrorResponse);
+					return this.getError(httpErrorResponse).pipe(
+						switchMap((httpError: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpError))
+					);
 				})
 			);
 	}
