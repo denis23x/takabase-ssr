@@ -186,7 +186,7 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 						this.onToggleUserDeleteDialog(false);
 
 						this.router.navigateByUrl('/').then(() => {
-							this.snackbarService.success('Chao', 'You will not be missed <3');
+							this.snackbarService.success('Ciao', 'You will not be missed <3');
 						});
 					},
 					error: () => this.userDeleteForm.enable()

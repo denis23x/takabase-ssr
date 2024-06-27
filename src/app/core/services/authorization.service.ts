@@ -2,7 +2,7 @@
 
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable, Observer, of } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { UserService } from './user.service';
 import { CurrentUser } from '../models/current-user.model';
@@ -87,9 +87,10 @@ export class AuthorizationService {
 			}
 		};
 
+		// prettier-ignore
 		return getObservable().pipe(
-			switchMap(() => this.appearanceService.getAppearance(userCredential.user.uid)),
 			switchMap(() => this.onProfile()),
+			switchMap((user: Partial<CurrentUser>) => this.appearanceService.getAppearance(userCredential.user.uid).pipe(map(() => user))),
 			switchMap((user: Partial<CurrentUser>) => {
 				return this.setCurrentUser({
 					firebase: userCredential.user,
