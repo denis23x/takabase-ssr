@@ -4,3 +4,4 @@
 /error/401
 /error/400
 /loader
+/pwa

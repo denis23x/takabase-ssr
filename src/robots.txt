@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /pwa
 Disallow: /error
 Disallow: /create
 Disallow: /update/*

@@ -396,6 +396,7 @@ export const environment = {
 	},
 	remoteConfig: {
 		forbiddenUsername: [
+			'pwa',
 			'error',
 			'settings',
 			'create',

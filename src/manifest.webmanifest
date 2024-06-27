@@ -1,65 +1,130 @@
 {
+  "id": "takabase.com",
   "name": "Takabase PWA Application",
+  "description": "Stay up to date with the latest posts and insights from Takabase",
+  "categories": [
+    "developer",
+    "education",
+    "entertainment",
+    "graphics",
+    "multimedia",
+    "navigation",
+    "network",
+    "personalization",
+    "productivity",
+    "reference",
+    "social",
+    "utilities"
+  ],
   "short_name": "Takabase",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
+  "display_override": [
+    "fullscreen",
+    "minimal-ui"
+  ],
   "display": "standalone",
-  "scope": "./",
-  "start_url": "./?page-redirect-home=1",
+  "orientation": "portrait",
+  "launch_handler": {
+      "client_mode": [
+        "focus-existing",
+        "auto"
+      ]
+  },
+  "scope": "/",
+  "start_url": "/pwa",
+  "lang": "en",
+  "screenshots": [
+    {
+      "src": "assets/images/screenshots/screenshot-1.png",
+      "sizes": "652x1412",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Use the advanced search to find what everything you're looking for"
+    },
+    {
+      "src": "assets/images/screenshots/screenshot-2.png",
+      "sizes": "652x1412",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Personalize your profile with a picture and bio and other info"
+    },
+    {
+      "src": "assets/images/screenshots/screenshot-3.png",
+      "sizes": "652x1412",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Easily navigate through posts with an intuitive and clean design"
+    },
+    {
+      "src": "assets/images/screenshots/screenshot-4.png",
+      "sizes": "652x1412",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Create and share materials effortlessly with built-in Markdown"
+    },
+    {
+      "src": "assets/images/screenshots/screenshot-5.png",
+      "sizes": "652x1412",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Personalize experience with various theming and customization options"
+    }
+  ],
   "icons": [
     {
       "src": "assets/icons/favicon/android/android-icon-72x72.png",
       "sizes": "72x72",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/favicon/android/android-icon-96x96.png",
       "sizes": "96x96",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/favicon/android/android-icon-128x128.png",
       "sizes": "128x128",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/favicon/android/android-icon-144x144.png",
       "sizes": "144x144",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/favicon/android/android-icon-152x152.png",
       "sizes": "152x152",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/favicon/android/android-icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/favicon/android/android-icon-256x256.png",
       "sizes": "256x256",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/favicon/android/android-icon-384x384.png",
       "sizes": "384x384",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "assets/icons/favicon/android/android-icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     }
   ]
 }

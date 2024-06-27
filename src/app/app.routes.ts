@@ -306,6 +306,13 @@ export const APP_ROUTES: Route[] = [
 		}
 	},
 	{
+		path: 'pwa',
+		title: 'Loading',
+		loadComponent: async () => {
+			return import('./pwa/pwa.component').then(m => m.PwaComponent);
+		}
+	},
+	{
 		path: '**',
 		pathMatch: 'full',
 		redirectTo: '/error/404'

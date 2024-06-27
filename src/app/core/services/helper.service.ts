@@ -43,7 +43,7 @@ export class HelperService {
 			case 'no-whitespace':
 				return new RegExp('^\\S*$', 'm');
 			case 'username':
-				return new RegExp('^\\w[\\w\\d]*$', 'm');
+				return new RegExp('^\\w[\\w\\d\\-]*$', 'm');
 			case 'password':
 				return new RegExp('^(?=.*[\\d!@#$%^&*]).+$', 'm');
 			case 'url':
