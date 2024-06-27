@@ -13,7 +13,8 @@ import { ScrollToTopComponent } from '../standalone/components/scroll-to-top/scr
 import { ReportComponent } from '../standalone/components/report/report.component';
 import { PlatformService } from '../core/services/platform.service';
 import { CookiesComponent } from '../standalone/components/cookies/cookies.component';
-import { version } from '../../version/version';
+import { version } from '../../versions/version';
+import { environment } from '../../environments/environment';
 
 @Component({
 	standalone: true,
@@ -46,7 +47,9 @@ export class OutletComponent implements OnInit, OnDestroy {
 
 			/** Show version */
 
-			Object.values(version).forEach((value: string) => console.debug(value));
+			if (environment.production) {
+				Object.values(version).forEach((value: string) => console.debug(value));
+			}
 		}
 	}
 

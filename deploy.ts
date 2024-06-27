@@ -64,12 +64,7 @@ const projectList: any = {
 			}
 		`;
 
-		fs.writeFileSync('./src/version/version.new.ts', version);
-
-		spawnSync('prettier --write src/version/version.new.ts --log-level silent', {
-			shell: true,
-			stdio: 'inherit'
-		});
+		fs.writeFileSync('./src/versions/version.new.ts', version);
 
 		//! Make deploy
 
