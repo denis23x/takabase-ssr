@@ -7,6 +7,7 @@ import { Post } from '../../../core/models/post.model';
 import { HelperService } from '../../../core/services/helper.service';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
+import { PlatformService } from '../../../core/services/platform.service';
 
 @Component({
 	standalone: true,
@@ -16,11 +17,21 @@ import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 })
 export class ShareComponent {
 	private readonly helperService: HelperService = inject(HelperService);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
 	@Input({ required: true })
 	set appSharePost(post: Post | undefined) {
 		if (post) {
 			this.post = post;
+
+			const shareData: ShareData = {
+				title: this.post.name,
+				text: this.post.description,
+				url: this.helperService.getURL().toString()
+			};
+
+			this.shareDataCanShare = this.getShareNative(shareData);
+			this.shareData = this.shareDataCanShare ? shareData : undefined;
 
 			this.setShareList();
 		}
@@ -33,6 +44,9 @@ export class ShareComponent {
 
 	post: Post | undefined;
 	postSkeletonToggle: boolean = true;
+
+	shareData: ShareData | undefined;
+	shareDataCanShare: boolean = false;
 
 	shareList: Record<string, string> = {};
 	shareListDefault: Record<string, string> = {
@@ -104,5 +118,22 @@ export class ShareComponent {
 
 			this.shareList[shareKey] = [this.shareList[shareKey], encodedURI].join('?');
 		});
+	}
+
+	getShareNative(shareData: ShareData): boolean {
+		if (this.platformService.isBrowser()) {
+			return navigator.canShare(shareData);
+		} else {
+			return false;
+		}
+	}
+
+	setShareNative(): void {
+		if (this.platformService.isBrowser()) {
+			navigator
+				.share(this.shareData)
+				.then(() => console.debug('Shared through native share'))
+				.catch((error: any) => console.error(error));
+		}
 	}
 }

@@ -2,6 +2,24 @@
 
 <ng-container>
 	<ul class="flex items-center justify-start gap-4">
+		@if (shareDataCanShare) {
+			<li class="block">
+				<button
+					class="flex items-center justify-center w-10 h-10 fill-current"
+					type="button"
+					title="Share"
+					aria-label="Share"
+					appSkeleton
+					appSvgIcon
+					[appSkeletonToggle]="postSkeletonToggle"
+					[appSkeletonClassList]="['rounded-full']"
+					[appSkeletonClassListParent]="['bg-base-200']"
+					[appSvgIconIcon]="'share'"
+					[appSvgIconSquare]="'1.25em'"
+					(click)="setShareNative()"
+				></button>
+			</li>
+		}
 		<li class="block">
 			<a
 				class="flex items-center justify-center logo-facebook w-10 h-10"

@@ -3,16 +3,13 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
-import { filter, map, switchMap } from 'rxjs/operators';
-import { User as FirebaseUser } from '@firebase/auth';
+import { switchMap } from 'rxjs/operators';
 import { CurrentUser } from '../core/models/current-user.model';
 import { AuthorizationService } from '../core/services/authorization.service';
 import { PlatformService } from '../core/services/platform.service';
-import { Subscription } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { HelperService } from '../core/services/helper.service';
 import { AppearanceService } from '../core/services/appearance.service';
-import { SnackbarService } from '../core/services/snackbar.service';
 
 @Component({
 	standalone: true,
@@ -23,43 +20,29 @@ export class PwaComponent implements OnInit, OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly router: Router = inject(Router);
-	private readonly helperService: HelperService = inject(HelperService);
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
-	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
-	currentUserAuthStateChanged$: Subscription | undefined;
 
 	ngOnInit(): void {
-		// prettier-ignore
 		if (this.platformService.isBrowser()) {
-			this.currentUserAuthStateChanged$?.unsubscribe();
-			this.currentUserAuthStateChanged$ = this.authorizationService
-				.getAuthState()
-				.pipe(filter((firebaseUser: FirebaseUser | null) => !!firebaseUser))
+			this.currentUser$?.unsubscribe();
+			this.currentUser$ = this.authorizationService
+				.getPopulate()
+				.pipe(
+					switchMap((currentUser: CurrentUser | undefined) => {
+						if (currentUser) {
+							return this.appearanceService
+								.getAppearance(currentUser.firebase.uid)
+								.pipe(switchMap(() => from(this.router.navigate(['/', currentUser.name]))));
+						} else {
+							return from(this.router.navigate(['/login']));
+						}
+					})
+				)
 				.subscribe({
-					next: () => {
-						this.snackbarService.success("What's up", 'Loading, please wait...');
-
-						/** Get user and redirect */
-
-						this.currentUser$?.unsubscribe();
-						this.currentUser$ = this.authorizationService
-							.getPopulate()
-							.pipe(
-								filter((currentUser: CurrentUser | undefined) => !!currentUser),
-								switchMap((currentUser: CurrentUser) => this.appearanceService.getAppearance(currentUser.firebase.uid).pipe(map(() => currentUser)))
-							)
-							.subscribe({
-								next: (currentUser: CurrentUser) => {
-									this.router.navigate(['/', currentUser.name]).catch((error: any) => {
-										this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
-									});
-								},
-								error: (error: any) => console.error(error)
-							});
-					},
+					next: () => console.debug('User populated'),
 					error: (error: any) => console.error(error)
 				});
 		}
@@ -74,7 +57,7 @@ export class PwaComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$, this.currentUserAuthStateChanged$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setMetaTags(): void {

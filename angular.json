@@ -152,6 +152,10 @@
               {
                 "input": "ngsw.js",
                 "inject": false
+              },
+              {
+                "input": "splash.js",
+                "inject": true
               }
             ],
             "server": "src/main.server.ts",
@@ -184,8 +188,8 @@
                   "with": "src/environments/environment.prod.ts"
                 },
                 {
-                  "replace": "src/version/version.ts",
-                  "with": "src/version/version.new.ts"
+                  "replace": "src/versions/version.ts",
+                  "with": "src/versions/version.new.ts"
                 }
               ],
               "outputHashing": "all",
@@ -210,8 +214,8 @@
                   "with": "src/environments/environment.dev.ts"
                 },
                 {
-                  "replace": "src/version/version.ts",
-                  "with": "src/version/version.new.ts"
+                  "replace": "src/versions/version.ts",
+                  "with": "src/versions/version.new.ts"
                 }
               ],
               "outputHashing": "all",
