@@ -13,6 +13,7 @@ import { ScrollToTopComponent } from '../standalone/components/scroll-to-top/scr
 import { ReportComponent } from '../standalone/components/report/report.component';
 import { PlatformService } from '../core/services/platform.service';
 import { CookiesComponent } from '../standalone/components/cookies/cookies.component';
+import { version } from '../../version/version';
 
 @Component({
 	standalone: true,
@@ -42,6 +43,10 @@ export class OutletComponent implements OnInit, OnDestroy {
 					next: () => console.debug('User populated'),
 					error: (error: any) => console.error(error)
 				});
+
+			/** Show version */
+
+			Object.values(version).forEach((value: string) => console.debug(value));
 		}
 	}
 

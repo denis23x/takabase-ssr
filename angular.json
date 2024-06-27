@@ -182,6 +182,10 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/version/version.ts",
+                  "with": "src/version/version.new.ts"
                 }
               ],
               "outputHashing": "all",
@@ -204,6 +208,10 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.dev.ts"
+                },
+                {
+                  "replace": "src/version/version.ts",
+                  "with": "src/version/version.new.ts"
                 }
               ],
               "outputHashing": "all",
