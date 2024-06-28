@@ -17,7 +17,7 @@
     "utilities"
   ],
   "short_name": "Takabase",
-  "theme_color": "#1976d2",
+  "theme_color": "#FFC61A",
   "background_color": "#fafafa",
   "display_override": [
     "fullscreen",
@@ -41,46 +41,96 @@
   "lang": "en",
   "screenshots": [
     {
-      "src": "assets/images/screenshots/ios/screenshot-1.png",
-      "sizes": "652x1412",
+      "src": "assets/images/screenshots/android/android-screenshot-1.png",
+      "sizes": "621x1344",
       "type": "image/png",
       "form_factor": "narrow",
+      "platform":"android",
       "label": "Use the advanced search to find what everything you're looking for"
     },
     {
-      "src": "assets/images/screenshots/ios/screenshot-2.png",
-      "sizes": "652x1412",
+      "src": "assets/images/screenshots/android/android-screenshot-2.png",
+      "sizes": "621x1344",
       "type": "image/png",
       "form_factor": "narrow",
+      "platform": "android",
       "label": "Personalize your profile with a picture and bio and other info"
     },
     {
-      "src": "assets/images/screenshots/ios/screenshot-3.png",
-      "sizes": "652x1412",
+      "src": "assets/images/screenshots/android/android-screenshot-3.png",
+      "sizes": "621x1344",
       "type": "image/png",
       "form_factor": "narrow",
+      "platform": "android",
       "label": "Easily navigate through posts with an intuitive and clean design"
     },
     {
-      "src": "assets/images/screenshots/ios/screenshot-4.png",
-      "sizes": "652x1412",
+      "src": "assets/images/screenshots/android/android-screenshot-4.png",
+      "sizes": "621x1344",
       "type": "image/png",
       "form_factor": "narrow",
+      "platform": "android",
       "label": "Create and share materials effortlessly with built-in Markdown"
     },
     {
-      "src": "assets/images/screenshots/ios/screenshot-5.png",
-      "sizes": "652x1412",
+      "src": "assets/images/screenshots/ios/ios-screenshot-1.png",
+      "sizes": "621x1344",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Personalize experience with various theming and customization options"
+      "platform":"ios",
+      "label": "Use the advanced search to find what everything you're looking for"
     },
     {
-      "src": "assets/images/screenshots/safari/screenshot-1.png",
-      "sizes": "1214x758",
+      "src": "assets/images/screenshots/ios/ios-screenshot-2.png",
+      "sizes": "621x1344",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "platform": "ios",
+      "label": "Personalize your profile with a picture and bio and other info"
+    },
+    {
+      "src": "assets/images/screenshots/ios/ios-screenshot-3.png",
+      "sizes": "621x1344",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "platform": "ios",
+      "label": "Easily navigate through posts with an intuitive and clean design"
+    },
+    {
+      "src": "assets/images/screenshots/ios/ios-screenshot-4.png",
+      "sizes": "621x1344",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "platform": "ios",
+      "label": "Create and share materials effortlessly with built-in Markdown"
+    },
+    {
+      "src": "assets/images/screenshots/safari/safari-screenshot-1.png",
+      "sizes": "1440x810",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Stay up to date with Takabase"
+      "label": "Use the advanced search to find what everything you're looking for"
+    },
+    {
+      "src": "assets/images/screenshots/safari/safari-screenshot-2.png",
+      "sizes": "1440x810",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Personalize your profile with a picture and bio and other info"
+    },
+    {
+      "src": "assets/images/screenshots/safari/safari-screenshot-3.png",
+      "sizes": "1440x810",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Easily navigate through posts with an intuitive and clean design"
+    },
+    {
+      "src": "assets/images/screenshots/safari/safari-screenshot-4.png",
+      "sizes": "1440x810",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Create and share materials effortlessly with built-in Markdown"
     }
   ],
   "icons": [
@@ -147,20 +197,20 @@
       "url": "/pwa",
       "icons": [
         {
-          "src": "assets/icons/favicon/android/android-icon-192x192.png",
-          "sizes": "192x192"
+          "src": "assets/icons/favicon/android/android-icon-256x256.png",
+          "sizes": "256x256"
         }
       ]
     },
     {
-      "name": "Create Post",
+      "name": "Create",
       "short_name": "New Post",
       "description": "Create and share your thoughts with a new post on the platform",
       "url": "/create",
       "icons": [
         {
-          "src": "assets/icons/favicon/android/android-icon-192x192.png",
-          "sizes": "192x192"
+          "src": "assets/icons/favicon/android/android-icon-256x256.png",
+          "sizes": "256x256"
         }
       ]
     },
@@ -171,8 +221,8 @@
       "url": "/settings",
       "icons": [
         {
-          "src": "assets/icons/favicon/android/android-icon-192x192.png",
-          "sizes": "192x192"
+          "src": "assets/icons/favicon/android/android-icon-256x256.png",
+          "sizes": "256x256"
         }
       ]
     },
@@ -183,20 +233,20 @@
       "url": "/help",
       "icons": [
         {
-          "src": "assets/icons/favicon/android/android-icon-192x192.png",
-          "sizes": "192x192"
+          "src": "assets/icons/favicon/android/android-icon-256x256.png",
+          "sizes": "256x256"
         }
       ]
     }
   ],
   "share_target": {
-    "action": "/create/",
+    "action": "/create",
     "method": "GET",
     "enctype": "application/x-www-form-urlencoded",
     "params": {
       "title": "title",
-      "description": "description",
-      "text": "text"
+      "text": "text",
+      "url": "url"
     }
   }
 }
