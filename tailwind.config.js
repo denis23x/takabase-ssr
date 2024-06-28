@@ -552,6 +552,9 @@ module.exports = {
         ["touch"]: {
           raw: "(hover: none) and (pointer: coarse)",
         },
+        ["pwa"]: {
+          raw: "(display-mode: standalone)"
+        },
       },
     },
   },

@@ -41,35 +41,31 @@
   "lang": "en",
   "screenshots": [
     {
-      "src": "assets/images/screenshots/android/android-screenshot-1.png",
-      "sizes": "621x1344",
+      "src": "assets/images/screenshots/safari/safari-screenshot-1.png",
+      "sizes": "1440x810",
       "type": "image/png",
-      "form_factor": "narrow",
-      "platform":"android",
+      "form_factor": "wide",
       "label": "Use the advanced search to find what everything you're looking for"
     },
     {
-      "src": "assets/images/screenshots/android/android-screenshot-2.png",
-      "sizes": "621x1344",
+      "src": "assets/images/screenshots/safari/safari-screenshot-2.png",
+      "sizes": "1440x810",
       "type": "image/png",
-      "form_factor": "narrow",
-      "platform": "android",
+      "form_factor": "wide",
       "label": "Personalize your profile with a picture and bio and other info"
     },
     {
-      "src": "assets/images/screenshots/android/android-screenshot-3.png",
-      "sizes": "621x1344",
+      "src": "assets/images/screenshots/safari/safari-screenshot-3.png",
+      "sizes": "1440x810",
       "type": "image/png",
-      "form_factor": "narrow",
-      "platform": "android",
+      "form_factor": "wide",
       "label": "Easily navigate through posts with an intuitive and clean design"
     },
     {
-      "src": "assets/images/screenshots/android/android-screenshot-4.png",
-      "sizes": "621x1344",
+      "src": "assets/images/screenshots/safari/safari-screenshot-4.png",
+      "sizes": "1440x810",
       "type": "image/png",
-      "form_factor": "narrow",
-      "platform": "android",
+      "form_factor": "wide",
       "label": "Create and share materials effortlessly with built-in Markdown"
     },
     {
@@ -102,34 +98,6 @@
       "type": "image/png",
       "form_factor": "narrow",
       "platform": "ios",
-      "label": "Create and share materials effortlessly with built-in Markdown"
-    },
-    {
-      "src": "assets/images/screenshots/safari/safari-screenshot-1.png",
-      "sizes": "1440x810",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Use the advanced search to find what everything you're looking for"
-    },
-    {
-      "src": "assets/images/screenshots/safari/safari-screenshot-2.png",
-      "sizes": "1440x810",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Personalize your profile with a picture and bio and other info"
-    },
-    {
-      "src": "assets/images/screenshots/safari/safari-screenshot-3.png",
-      "sizes": "1440x810",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Easily navigate through posts with an intuitive and clean design"
-    },
-    {
-      "src": "assets/images/screenshots/safari/safari-screenshot-4.png",
-      "sizes": "1440x810",
-      "type": "image/png",
-      "form_factor": "wide",
       "label": "Create and share materials effortlessly with built-in Markdown"
     }
   ],
