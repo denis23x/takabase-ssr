@@ -35,15 +35,27 @@ iconImage.onload = function () {
   const iconSizeh = iconImage.height / (3 / pixelRatio);
 
   canvas.width = deviceWidth * pixelRatio;
+  canvas.height = deviceHeight * pixelRatio;
+
+  canvas2.width = canvas.height;
   canvas2.height = canvas.width;
 
-  canvas.height = deviceHeight * pixelRatio;
-  canvas2.width = canvas.height;
+  // Border radius
+  // const rounded = (12.5 / 100) * Math.min(...[canvas.width, canvas.height]);
+  // const rounded2 = (12.5 / 100) * Math.min(...[canvas2.width, canvas2.height]);
+
+  // ctx.beginPath();
+  // ctx.roundRect(0, 0, canvas.width, canvas.height, rounded);
+  // ctx.clip();
+
+  // ctx2.beginPath();
+  // ctx2.roundRect(0, 0, canvas2.width, canvas2.height, rounded2);
+  // ctx2.clip();
 
   ctx.fillStyle = color;
-  ctx2.fillStyle = color;
-
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx2.fillStyle = color;
   ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
 
   // Calculate the position to center the icon
