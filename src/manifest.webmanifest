@@ -28,6 +28,7 @@
   "related_applications": [],
   "display": "standalone",
   "orientation": "portrait",
+  "handle_links": "preferred",
   "launch_handler": {
       "client_mode": [
         "focus-existing",
