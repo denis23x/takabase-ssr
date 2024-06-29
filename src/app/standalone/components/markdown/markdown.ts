@@ -132,15 +132,6 @@ export const MarkdownControlFormatting = (): MarkdownControl[] => [
 	}
 ];
 
-export const MarkdownControlQuote = (): MarkdownControl => ({
-	key: 'quote',
-	label: 'Quote',
-	icon: 'quote',
-	handler: (markdownTextarea: MarkdownTextarea): string => {
-		return setWrapper('> ' + (markdownTextarea.selection || 'Quote'), markdownTextarea, 'block');
-	}
-});
-
 export const MarkdownControlList = (): MarkdownControl[] => [
 	{
 		key: 'list-unordered',
@@ -165,6 +156,15 @@ export const MarkdownControlList = (): MarkdownControl[] => [
 	}
 ];
 
+export const MarkdownControlQuote = (): MarkdownControl => ({
+	key: 'quote',
+	label: 'Quote',
+	icon: 'quote',
+	handler: (markdownTextarea: MarkdownTextarea): string => {
+		return setWrapper('> ' + (markdownTextarea.selection || 'Quote'), markdownTextarea, 'block');
+	}
+});
+
 export const MarkdownControlUrl = (): MarkdownControl[] => [
 	{
 		key: 'url-link',
@@ -172,14 +172,6 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 		icon: 'link-45deg',
 		handler: (markdownTextarea: MarkdownTextarea, formGroupValue: any): string => {
 			return setWrapper(`[${formGroupValue.title}](${formGroupValue.url})`, markdownTextarea, 'inline');
-		}
-	},
-	{
-		key: 'url-image',
-		label: 'Image',
-		icon: 'image',
-		handler: (markdownTextarea: MarkdownTextarea, formGroupValue: any): string => {
-			return setWrapper(`![${formGroupValue.title}](${formGroupValue.url})`, markdownTextarea, 'block');
 		}
 	},
 	{
@@ -194,8 +186,8 @@ export const MarkdownControlUrl = (): MarkdownControl[] => [
 
 export const MarkdownControlCropper = (): MarkdownControl => ({
 	key: 'cropper',
-	label: 'Cropper',
-	icon: 'crop',
+	label: 'Image',
+	icon: 'image',
 	handler: (markdownTextarea: MarkdownTextarea, formGroupValue: any): string => {
 		return setWrapper(`![${formGroupValue.title}](${formGroupValue.url})`, markdownTextarea, 'block');
 	}

@@ -41,79 +41,54 @@ export class ShortcutsComponent implements OnInit, OnDestroy {
 			shortcut: ['modifier', 'u']
 		},
 		{
-			key: 'hr',
-			label: 'Horizontal line',
-			shortcut: ['modifier', 'f']
-		},
-		{
 			key: 'heading-h1',
 			label: 'Heading 1',
-			shortcut: ['alt', 'shift', '1']
+			shortcut: ['shift', '1']
 		},
 		{
 			key: 'heading-h2',
 			label: 'Heading 2',
-			shortcut: ['alt', 'shift', '2']
+			shortcut: ['shift', '2']
 		},
 		{
 			key: 'heading-h3',
 			label: 'Heading 3',
-			shortcut: ['alt', 'shift', '3']
+			shortcut: ['shift', '3']
 		},
 		{
 			key: 'heading-h4',
 			label: 'Heading 4',
-			shortcut: ['alt', 'shift', '4']
+			shortcut: ['shift', '4']
 		},
 		{
 			key: 'url-link',
 			label: 'Hyperlink dialog',
-			shortcut: ['modifier', 'shift', '1']
-		},
-		{
-			key: 'url-image',
-			label: 'Image dialog',
-			shortcut: ['modifier', 'shift', '2']
+			shortcut: ['shift', 'alt', '1']
 		},
 		{
 			key: 'url-youtube',
 			label: 'Youtube dialog',
-			shortcut: ['modifier', 'shift', '3']
+			shortcut: ['shift', 'alt', '2']
 		},
 		{
 			key: 'cropper',
 			label: 'Cropper dialog',
-			shortcut: ['modifier', 'shift', '4']
+			shortcut: ['shift', 'alt', '3']
 		},
 		{
 			key: 'quote',
 			label: 'Quote',
-			shortcut: ['modifier', 'shift', '5']
+			shortcut: ['shift', 'alt', '4']
 		},
 		{
 			key: 'spoiler',
 			label: 'Spoiler',
-			shortcut: ['modifier', 'shift', '6']
-		},
-		{
-			key: 'list-unordered',
-			label: 'Ordered list',
-			shortcut: ['modifier', 'shift', '7']
-		},
-		{
-			key: 'list-ordered',
-			label: 'Unordered list',
-			shortcut: ['modifier', 'shift', '8']
-		},
-		{
-			key: 'list-checkbox',
-			label: 'Checkbox list',
-			shortcut: ['modifier', 'shift', '9']
+			shortcut: ['shift', 'alt', '5']
 		},
 		{
 			key: 'code',
 			label: 'Code',
-			shortcut: ['modifier', 'shift', '0']
+			shortcut: ['shift', 'alt', '6']
 		}
 	];
 

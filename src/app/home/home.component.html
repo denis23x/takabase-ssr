@@ -39,21 +39,11 @@
 				>
 					Markdown
 				</a>
-				@if (appPWAAvailable) {
-					<button
-						class="btn btn-outline btn-warning btn-md"
-						type="button"
-						title="Progressive Web Application"
-						aria-label="Progressive Web Application"
-						(click)="onClickPWAInstall()"
-					>
-						PWA
-					</button>
-				}
+				<div class="block" appPWA></div>
 				<a
 					class="btn btn-outline btn-error btn-md flex-1"
 					title="Work In Progress"
-					aria-label="WIP"
+					aria-label="Work In Progress"
 					[routerLink]="'/help/about'"
 				>
 					WIP
@@ -106,13 +96,5 @@
 				</ul>
 			</section>
 		</main>
-		<!--<ins
-			class="adsbygoogle"
-			data-ad-client="ca-pub-1190910282815923"
-			data-ad-slot="2019537911"
-			data-ad-format="auto"
-			data-full-width-responsive="true"
-			style="display: block"
-		></ins>-->
 	</section>
 </ng-container>

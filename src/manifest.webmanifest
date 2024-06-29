@@ -1,6 +1,7 @@
 {
   "id": "takabase",
   "name": "Takabase PWA Application",
+  "short_name": "Takabase",
   "description": "Stay up to date with the latest posts and insights from Takabase",
   "categories": [
     "developer",
@@ -16,9 +17,10 @@
     "social",
     "utilities"
   ],
-  "short_name": "Takabase",
   "theme_color": "#FFC61A",
   "background_color": "#fafafa",
+  "orientation": "portrait",
+  "display": "standalone",
   "display_override": [
     "fullscreen",
     "minimal-ui",
@@ -26,8 +28,6 @@
   ],
   "prefer_related_applications": false,
   "related_applications": [],
-  "display": "standalone",
-  "orientation": "portrait",
   "handle_links": "preferred",
   "launch_handler": {
       "client_mode": [

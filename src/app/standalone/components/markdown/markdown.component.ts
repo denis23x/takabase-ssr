@@ -229,7 +229,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 						switch (markdownControl.key) {
 							case 'url-link':
-							case 'url-image':
 							case 'url-youtube': {
 								this.onToggleUrlForm(true, markdownControl);
 
@@ -471,15 +470,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 					this.urlForm$ = abstractControlUrl.valueChanges
 						.pipe(filter(() => abstractControlTitle.untouched))
 						.subscribe((value: string) => abstractControlTitle.setValue(value));
-
-					break;
-				}
-				case 'url-image': {
-					this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', []));
-					this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [
-						Validators.required,
-						Validators.pattern(this.helperService.getRegex('url'))
-					]));
 
 					break;
 				}

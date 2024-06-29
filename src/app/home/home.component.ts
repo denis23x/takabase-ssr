@@ -1,27 +1,24 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
-import { PlatformService } from '../core/services/platform.service';
-import { fromEvent, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { AuthenticatedComponent } from '../standalone/components/authenticated/authenticated.component';
 import { SvgLogoComponent } from '../standalone/components/svg-logo/svg-logo.component';
 import { TitleService } from '../core/services/title.service';
+import { PWAComponent } from '../standalone/components/pwa/pwa.component';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, SvgIconComponent, AuthenticatedComponent, SvgLogoComponent],
+	imports: [RouterModule, SvgIconComponent, AuthenticatedComponent, SvgLogoComponent, PWAComponent],
 	selector: 'app-home',
 	templateUrl: './home.component.html'
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly titleService: TitleService = inject(TitleService);
-	private readonly platformService: PlatformService = inject(PlatformService);
 
 	// prettier-ignore
 	appFeatureList: any[] = [
@@ -100,10 +97,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 	];
 	appFeatureActive: any;
 
-	appPWAAvailable: boolean = false;
-	appPWAInstallPromt: any = null;
-	appPWAInstallPromt$: Subscription | undefined;
-
 	ngOnInit(): void {
 		/** Apply Data */
 
@@ -113,34 +106,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 		this.setMetaTags();
 		this.setTitle();
-
-		// if (this.platformService.isBrowser()) {
-		// 	// @ts-ignore
-		// 	(adsbygoogle = window.adsbygoogle || []).push({});
-		// }
-	}
-
-	ngOnDestroy(): void {
-		[this.appPWAInstallPromt$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setResolver(): void {
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			this.appPWAInstallPromt$?.unsubscribe();
-			this.appPWAInstallPromt$ = fromEvent(window, 'beforeinstallprompt')
-				.pipe(tap((event: Event) => event.preventDefault()))
-				.subscribe({
-					next: (event: Event) => {
-						this.appPWAAvailable = true;
-						this.appPWAInstallPromt = event;
-					},
-					error: (error: any) => console.error(error)
-				});
-		}
-
-		// Set default
+		// Set default page
 
 		this.onClickNav(this.appFeatureList[0]);
 	}
@@ -169,11 +138,5 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	onClickNav(appFeature: any): void {
 		this.appFeatureActive = appFeature;
-	}
-
-	onClickPWAInstall(): void {
-		this.appPWAInstallPromt.prompt().then((event: any) => (this.appPWAAvailable = event.outcome !== 'accepted'));
-
-		this.appPWAInstallPromt = null;
 	}
 }

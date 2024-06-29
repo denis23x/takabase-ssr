@@ -1,0 +1,52 @@
+<!-- @format -->
+
+<ng-container>
+	<button
+		class="btn btn-outline btn-warning btn-md"
+		type="button"
+		title="Progressive Web Application"
+		aria-label="Progressive Web Application"
+		[disabled]="pwaAvailable && !pwaInstallPrompt"
+		(click)="onClick()"
+	>
+		@if (pwaAvailable && !pwaInstallPrompt) {
+			<span class="loading loading-spinner"></span>
+		}
+		PWA
+	</button>
+	<dialog
+		class="modal"
+		#pwaDialogElement
+		(keydown.escape)="$event.preventDefault(); onToggleDialog(false)"
+		(click)="$event.target === $event.currentTarget ? onToggleDialog(false) : $event"
+	>
+		<div
+			class="flex items-center justify-center w-full max-w-sm"
+			appWindow
+			[appWindowTitle]="'PWA'"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onToggleDialog(false)"
+		>
+			<div class="flex flex-col gap-4 p-4" slot="content">
+				<div class="flex items-center justify-start gap-4 bg-base-200 p-4 rounded-box">
+					<i appSvgLogo [appSvgLogoIcon]="'takabase'" [appSvgLogoSquare]="'48'"></i>
+					<p class="flex flex-col items-start justify-start">
+						<span class="text-base font-bold">Takabase</span>
+						<a class="link" href="https://takabase.com" target="_blank">https://takabase.com</a>
+					</p>
+				</div>
+				<!-- prettier-ignore -->
+				<ol class="list-inside list-decimal flex flex-col items-start justify-start gap-2">
+					<li class="marker:font-bold">Tap on <i class="inline-block fill-current align-middle px-2" appSvgIcon [appSvgIconIcon]="'box-arrow-up'" [appSvgIconSquare]="'1.25em'"></i> in the browser menu</li>
+					<li class="marker:font-bold">Scroll down and select
+            <strong class="inline font-bold">
+              <ng-container *appDevice="'desktop'">Add to Dock</ng-container>
+              <ng-container *appDevice="'mobile'">Add to home screen</ng-container>
+            </strong>
+          </li>
+					<li class="marker:font-bold">Look for the <i class="inline-block align-middle px-2" appSvgLogo [appSvgLogoIcon]="'takabase'" [appSvgLogoSquare]="'24'"></i> icon on your home screen</li>
+				</ol>
+			</div>
+		</div>
+	</dialog>
+</ng-container>
