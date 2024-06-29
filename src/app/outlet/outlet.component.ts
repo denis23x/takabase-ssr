@@ -3,9 +3,9 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { AppearanceService } from '../core/services/appearance.service';
 import { AuthorizationService } from '../core/services/authorization.service';
-import { filter, first, switchMap } from 'rxjs/operators';
+import { filter, first, switchMap, tap } from 'rxjs/operators';
 import { CurrentUser } from '../core/models/current-user.model';
-import { Subscription } from 'rxjs';
+import { fromEvent, Subscription } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { SnackbarComponent } from '../standalone/components/snackbar/snackbar.component';
 import { HeaderComponent } from '../standalone/components/header/header.component';
@@ -15,6 +15,7 @@ import { PlatformService } from '../core/services/platform.service';
 import { CookiesComponent } from '../standalone/components/cookies/cookies.component';
 import { version } from '../../versions/version';
 import { environment } from '../../environments/environment';
+import { PWAService } from '../core/services/pwa.service';
 
 @Component({
 	standalone: true,
@@ -26,12 +27,19 @@ export class OutletComponent implements OnInit, OnDestroy {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly pwaService: PWAService = inject(PWAService);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
+	beforeInstallPrompt$: Subscription | undefined;
+
 	ngOnInit(): void {
 		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
+			/** Populate user */
+
 			this.currentUser$?.unsubscribe();
 			this.currentUser$ = this.authorizationService
 				.getPopulate()
@@ -45,15 +53,25 @@ export class OutletComponent implements OnInit, OnDestroy {
 					error: (error: any) => console.error(error)
 				});
 
+			/** Set PWA listener */
+
+			this.beforeInstallPrompt$?.unsubscribe();
+			this.beforeInstallPrompt$ = fromEvent(window, 'beforeinstallprompt')
+				.pipe(tap((event: Event) => event.preventDefault()))
+				.subscribe({
+					next: (event: Event) => this.pwaService.pwaPrompt$.next(event),
+					error: (error: any) => console.error(error)
+				});
+
 			/** Show version */
 
 			if (environment.production) {
-				Object.values(version).forEach((value: string) => console.debug(value));
+				console.debug(Object.values(version).join(' - '));
 			}
 		}
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$, this.beforeInstallPrompt$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 }

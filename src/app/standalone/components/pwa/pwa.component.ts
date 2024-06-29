@@ -3,11 +3,11 @@
 import { Component, ElementRef, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { WindowComponent } from '../window/window.component';
-import { fromEvent, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { PlatformService } from '../../../core/services/platform.service';
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 import { DeviceDirective } from '../../directives/app-device.directive';
+import { PWAService } from '../../../core/services/pwa.service';
 
 @Component({
 	standalone: true,
@@ -17,6 +17,7 @@ import { DeviceDirective } from '../../directives/app-device.directive';
 })
 export class PWAComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly pwaService: PWAService = inject(PWAService);
 
 	@ViewChild('pwaDialogElement') pwaDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
@@ -39,12 +40,10 @@ export class PWAComponent implements OnInit, OnDestroy {
 			/** Prompt */
 
 			this.pwaInstallPrompt$?.unsubscribe();
-			this.pwaInstallPrompt$ = fromEvent(window, 'beforeinstallprompt')
-				.pipe(tap((event: Event) => event.preventDefault()))
-				.subscribe({
-					next: (event: Event) => (this.pwaInstallPrompt = event),
-					error: (error: any) => console.error(error)
-				});
+			this.pwaInstallPrompt$ = this.pwaService.pwaPrompt$.subscribe({
+				next: (event: Event) => (this.pwaInstallPrompt = event),
+				error: (error: any) => console.error(error)
+			});
 		}
 	}
 
