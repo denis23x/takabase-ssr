@@ -11,6 +11,7 @@ import {
 	signal,
 	StateKey,
 	TransferState,
+	ViewChild,
 	WritableSignal
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -101,6 +102,11 @@ export class UserComponent implements OnInit, OnDestroy {
 	private readonly router: Router = inject(Router);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly apiService: ApiService = inject(ApiService);
+
+	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
+	@ViewChild('appCategoryUpdateComponent') appCategoryUpdateComponent: CategoryUpdateComponent | undefined;
+	@ViewChild('appCategoryDeleteComponent') appCategoryDeleteComponent: CategoryDeleteComponent | undefined;
+	@ViewChild('appQrCodeComponent') appQrCodeComponent: QrCodeComponent | undefined;
 
 	@Input({ transform: numberAttribute })
 	set deleteId(deleteId: number | undefined) {

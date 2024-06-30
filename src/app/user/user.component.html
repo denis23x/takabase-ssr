@@ -64,7 +64,8 @@
 								type="button"
 								title="QR Code"
 								aria-label="QR Code"
-								(click)="appQrCodeComponent.onToggleQRCodeDialog(true)"
+								#appQrCodeComponentToggle
+								(click)="appQrCodeComponent?.onToggleQRCodeDialog(true)"
 							>
 								QR Code
 							</button>
@@ -244,7 +245,7 @@
                             type="button"
                             title="Create"
                             aria-label="Create"
-                            (click)="appCategoryCreateComponent.onToggleCategoryCreateDialog(true)"
+                            (click)="appCategoryCreateComponent?.onToggleCategoryCreateDialog(true)"
                           >
                             Create
                           </button>
@@ -256,7 +257,7 @@
                               type="button"
                               title="Update"
                               aria-label="Update"
-                              (click)="appCategoryUpdateComponent.onToggleCategoryUpdateDialog(true)"
+                              (click)="appCategoryUpdateComponent?.onToggleCategoryUpdateDialog(true)"
                             >
                               Update
                             </button>
@@ -267,7 +268,7 @@
                               type="button"
                               title="Delete"
                               aria-label="Delete"
-                              (click)="appCategoryDeleteComponent.onToggleCategoryDeleteDialog(true)"
+                              (click)="appCategoryDeleteComponent?.onToggleCategoryDeleteDialog(true)"
                             >
                               Delete
                             </button>
@@ -357,21 +358,27 @@
 	<div class="block">
 		<router-outlet></router-outlet>
 	</div>
-	<div appCategoryCreate #appCategoryCreateComponent (appCategoryCreateSuccess)="onCreateCategory($event)"></div>
-	<div
-		appCategoryUpdate
-		#appCategoryUpdateComponent
-		[appCategoryUpdateCategory]="category"
-		[appCategoryUpdateCategoryList]="categoryList"
-		(appCategoryUpdateSuccess)="onUpdateCategory($event)"
-	></div>
-	<div
-		appCategoryDelete
-		#appCategoryDeleteComponent
-		[appCategoryDeleteCategory]="category"
-		[appCategoryDeleteCategoryList]="categoryList"
-		[appCategoryDeleteCategoryPostList]="postList"
-		(appCategoryDeleteSuccess)="onDeleteCategory($event)"
-	></div>
-	<div appQRCode #appQrCodeComponent [appQRCodeData]="user.name" [appQRCodeOrigin]="true"></div>
+	@defer (when currentUser?.id === user.id; prefetch on idle) {
+		<div appCategoryCreate #appCategoryCreateComponent (appCategoryCreateSuccess)="onCreateCategory($event)"></div>
+	}
+	@defer (when category; prefetch on idle) {
+		<div
+			appCategoryUpdate
+			#appCategoryUpdateComponent
+			[appCategoryUpdateCategory]="category"
+			[appCategoryUpdateCategoryList]="categoryList"
+			(appCategoryUpdateSuccess)="onUpdateCategory($event)"
+		></div>
+		<div
+			appCategoryDelete
+			#appCategoryDeleteComponent
+			[appCategoryDeleteCategory]="category"
+			[appCategoryDeleteCategoryList]="categoryList"
+			[appCategoryDeleteCategoryPostList]="postList"
+			(appCategoryDeleteSuccess)="onDeleteCategory($event)"
+		></div>
+	}
+	@defer (on interaction(appQrCodeComponentToggle); prefetch on idle) {
+		<div appQRCode #appQrCodeComponent [appQRCodeData]="user.name" [appQRCodeOrigin]="true"></div>
+	}
 </ng-container>

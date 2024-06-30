@@ -110,7 +110,11 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly aiService: AIService = inject(AIService);
 
+	@ViewChild('appCropperComponent') appCropperComponent: CropperComponent | undefined;
 	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
+	@ViewChild('appCategoryUpdateComponent') appCategoryUpdateComponent: CategoryUpdateComponent | undefined;
+	@ViewChild('appPostPreviewComponent') appPostPreviewComponent: PostPreviewComponent | undefined;
+	@ViewChild('appPostDeleteComponent') appPostDeleteComponent: PostDeleteComponent | undefined;
 
 	category: Category | undefined;
 	categorySkeletonToggle: boolean = true;

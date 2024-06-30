@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -49,6 +49,9 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly reportService: ReportService = inject(ReportService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+
+	@ViewChild('appPostDeleteComponent') appPostDeleteComponent: PostDeleteComponent | undefined;
+	@ViewChild('appQrCodeComponent') appQrCodeComponent: QrCodeComponent | undefined;
 
 	@Input({ required: true })
 	set appPostProsePost(post: Post) {

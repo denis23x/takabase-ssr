@@ -80,7 +80,7 @@
 										type="button"
 										title="QR Code"
 										aria-label="QR Code"
-										(click)="appQrCodeComponent.onToggleQRCodeDialog(true)"
+										(click)="appQrCodeComponent?.onToggleQRCodeDialog(true)"
 									>
 										QR Code
 									</button>
@@ -106,7 +106,7 @@
 												type="button"
 												title="Delete"
 												aria-label="Delete"
-												(click)="appPostDeleteComponent.onTogglePostDeleteDialog(true)"
+												(click)="appPostDeleteComponent?.onTogglePostDeleteDialog(true)"
 											>
 												Delete
 											</button>
@@ -171,7 +171,11 @@
 				<footer class="block w-full gap-4" appAd></footer>
 			}
 		</section>
-		<div appPostDelete #appPostDeleteComponent [appPostDeletePost]="post"></div>
-		<div appQRCode #appQrCodeComponent [appQRCodeData]="postShareUrl" [appQRCodeOrigin]="false"></div>
+		@defer (when postPreview === false && currentUser?.id === post.user.id; prefetch on idle) {
+			<div appPostDelete #appPostDeleteComponent [appPostDeletePost]="post"></div>
+		}
+		@defer (when postPreview === false; prefetch on idle) {
+			<div appQRCode #appQrCodeComponent [appQRCodeData]="postShareUrl" [appQRCodeOrigin]="false"></div>
+		}
 	}
 </ng-container>

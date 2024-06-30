@@ -150,12 +150,13 @@
                 "bundleName": "autosize"
               },
               {
-                "input": "ngsw.js",
-                "inject": false
+                "input": "splash.js",
+                "inject": true,
+                "bundleName": "splash"
               },
               {
-                "input": "splash.js",
-                "inject": true
+                "input": "ngsw.js",
+                "inject": false
               }
             ],
             "server": "src/main.server.ts",
