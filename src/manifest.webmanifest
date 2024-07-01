@@ -17,8 +17,8 @@
     "social",
     "utilities"
   ],
-  "theme_color": "#FFC61A",
-  "background_color": "#fafafa",
+  "theme_color": "#F2F2F2",
+  "background_color": "#FFC61A",
   "orientation": "portrait",
   "display": "standalone",
   "display_override": [

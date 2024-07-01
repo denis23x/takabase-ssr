@@ -17,17 +17,6 @@
 				</figure>
 			</div>
 			<nav class="flex flex-wrap items-center justify-start gap-4">
-				<div class="block empty:hidden" appAuthenticated>
-					<a
-						class="btn btn-outline btn-success btn-md"
-						title="Registration"
-						aria-label="Registration"
-						slot="public"
-						[routerLink]="'/registration'"
-					>
-						Registration
-					</a>
-				</div>
 				<a class="btn btn-outline btn-info btn-md" title="Search" aria-label="Search" [routerLink]="'/search'">
 					Search
 				</a>
@@ -39,7 +28,15 @@
 				>
 					Markdown
 				</a>
-				<div class="block" appPWA></div>
+				<button
+					class="btn btn-outline btn-warning btn-md"
+					type="button"
+					title="Progressive Web Application"
+					aria-label="Progressive Web Application"
+					(click)="appPWAComponent?.onClick()"
+				>
+					PWA
+				</button>
 				<a
 					class="btn btn-outline btn-error btn-md flex-1"
 					title="Work In Progress"
@@ -69,7 +66,7 @@
 					<nav class="join">
 						@for (appFeature of appFeatureList; track appFeature.id) {
 							<button
-								class="join-item btn btn-sm sm:btn-md"
+								class="join-item btn btn-sm"
 								[class.btn-active]="appFeature.id === appFeatureActive.id"
 								(click)="onClickNav(appFeature)"
 							>
@@ -97,4 +94,7 @@
 			</section>
 		</main>
 	</section>
+	@defer (on idle; prefetch on timer(1s)) {
+		<div appPWA #appPWAComponent></div>
+	}
 </ng-container>

@@ -8,6 +8,7 @@ import { PlatformService } from '../../../core/services/platform.service';
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 import { DeviceDirective } from '../../directives/app-device.directive';
 import { PWAService } from '../../../core/services/pwa.service';
+import { HelperService } from '../../../core/services/helper.service';
 
 @Component({
 	standalone: true,
@@ -17,6 +18,7 @@ import { PWAService } from '../../../core/services/pwa.service';
 })
 export class PWAComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly helperService: HelperService = inject(HelperService);
 	private readonly pwaService: PWAService = inject(PWAService);
 
 	@ViewChild('pwaDialogElement') pwaDialogElement: ElementRef<HTMLDialogElement> | undefined;
@@ -72,9 +74,19 @@ export class PWAComponent implements OnInit, OnDestroy {
 	}
 
 	onInstall(): void {
-		this.pwaInstallPrompt.prompt().then((event: any) => {
-			this.pwaAvailable = event.outcome !== 'accepted';
-			this.pwaInstallPrompt = null;
-		});
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
+			if (this.pwaInstallPrompt) {
+				this.pwaInstallPrompt.prompt().then((event: any) => {
+					this.pwaAvailable = event.outcome !== 'accepted';
+					this.pwaInstallPrompt = null;
+				});
+			} else {
+				const url: URL = this.helperService.getURL();
+
+				window.location.href = url.href;
+			}
+		}
 	}
 }

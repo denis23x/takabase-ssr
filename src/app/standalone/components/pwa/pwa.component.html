@@ -1,19 +1,6 @@
 <!-- @format -->
 
 <ng-container>
-	<button
-		class="btn btn-outline btn-warning btn-md"
-		type="button"
-		title="Progressive Web Application"
-		aria-label="Progressive Web Application"
-		[disabled]="pwaAvailable && !pwaInstallPrompt"
-		(click)="onClick()"
-	>
-		@if (pwaAvailable && !pwaInstallPrompt) {
-			<span class="loading loading-spinner"></span>
-		}
-		PWA
-	</button>
 	<dialog
 		class="modal"
 		#pwaDialogElement

@@ -1,24 +1,25 @@
 /** @format */
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
-import { AuthenticatedComponent } from '../standalone/components/authenticated/authenticated.component';
 import { SvgLogoComponent } from '../standalone/components/svg-logo/svg-logo.component';
 import { TitleService } from '../core/services/title.service';
 import { PWAComponent } from '../standalone/components/pwa/pwa.component';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, SvgIconComponent, AuthenticatedComponent, SvgLogoComponent, PWAComponent],
+	imports: [RouterModule, SvgIconComponent, SvgLogoComponent, PWAComponent],
 	selector: 'app-home',
 	templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly titleService: TitleService = inject(TitleService);
+
+	@ViewChild('appPWAComponent') appPWAComponent: PWAComponent | undefined;
 
 	// prettier-ignore
 	appFeatureList: any[] = [
