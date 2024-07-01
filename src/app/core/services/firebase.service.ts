@@ -8,6 +8,7 @@ import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 import { getStorage, FirebaseStorage } from 'firebase/storage';
 import { getRemoteConfig, RemoteConfig } from 'firebase/remote-config';
+import { getAnalytics, Analytics } from 'firebase/analytics';
 
 /** https://firebase.google.com/docs/web/setup#add-sdk-and-initialize */
 
@@ -21,6 +22,7 @@ export class FirebaseService {
 	firestore: Firestore | undefined;
 	storage: FirebaseStorage | undefined;
 	remoteConfig: RemoteConfig | undefined;
+	analytics: Analytics | undefined;
 
 	/** APP */
 
@@ -89,5 +91,15 @@ export class FirebaseService {
 
 	getRemoteConfig(): RemoteConfig {
 		return this.remoteConfig;
+	}
+
+	/** ANALYTICS */
+
+	initializeAnalytics(): void {
+		this.analytics = getAnalytics(this.getApp());
+	}
+
+	getAnalytics(): Analytics {
+		return this.analytics;
 	}
 }

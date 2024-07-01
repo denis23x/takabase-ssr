@@ -20,30 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "allowedCommonJsDependencies": [
-              "prismjs",
-              "dompurify",
-              "qrcode",
-              "nanoid-dictionary",
-              "markdown-it",
-              "markdown-it-attrs",
-              "markdown-it-bracketed-spans",
-              "markdown-it-collapsible",
-              "markdown-it-emoji",
-              "markdown-it-link-attributes",
-              "markdown-it-mark",
-              "markdown-it-multimd-table",
-              "markdown-it-plain-text",
-              "markdown-it-smartarrows",
-              "markdown-it-tasks",
-              "markdown-it-video",
-              "compression",
-              "canvas-renderer",
-              "undici",
-              "@grpc/grpc-js",
-              "@grpc/proto-loader",
-              "algoliasearch/lite"
-            ],
+            "allowedCommonJsDependencies": ["*"],
             "outputPath": "dist/takabase-ssr",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -52,6 +29,7 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "aot": true,
             "assets": [
               "src/ads.txt",
               "src/browserconfig.xml",
@@ -65,7 +43,9 @@
                 "input": "src/assets",
                 "ignore": [
                   "**/icons/bootstrap",
-                  "**/icons/sprite.svg"
+                  "**/icons/logo",
+                  "**/icons/sprite-bootstrap.svg",
+                  "**/icons/sprite-logo.svg"
                 ],
                 "output": "/assets"
               }
@@ -167,7 +147,8 @@
               "discoverRoutes": false,
               "routesFile": "prerender.txt"
             },
-            "serviceWorker": "ngsw-config.json"
+            "serviceWorker": "ngsw-config.json",
+            "optimization": true
           },
           "configurations": {
             "production": {
@@ -194,7 +175,9 @@
                 }
               ],
               "outputHashing": "all",
-              "statsJson": true
+              "statsJson": true,
+              "namedChunks": false,
+              "sourceMap": false
             },
             "development": {
               "budgets": [
@@ -220,13 +203,17 @@
                 }
               ],
               "outputHashing": "all",
-              "statsJson": true
+              "statsJson": true,
+              "namedChunks": true,
+              "sourceMap": true
             },
             "localhost": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "outputHashing": "all",
+              "statsJson": false,
+              "namedChunks": true,
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "development"

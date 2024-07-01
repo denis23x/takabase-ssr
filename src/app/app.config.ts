@@ -56,6 +56,7 @@ export const appConfig: ApplicationConfig = {
 							firebaseService.initializeFirestore();
 							firebaseService.initializeStorage();
 							firebaseService.initializeRemoteConfig();
+							firebaseService.initializeAnalytics();
 
 							/** REMOTE CONFIG */
 

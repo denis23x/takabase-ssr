@@ -30,7 +30,7 @@ import { UserCreateDto } from '../../core/dto/user/user-create.dto';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
-import { User as FirebaseUser } from '@firebase/auth';
+import { User as FirebaseUser } from 'firebase/auth';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
