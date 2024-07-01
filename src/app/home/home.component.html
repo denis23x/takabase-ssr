@@ -5,7 +5,9 @@
 		<header
 			class="rounded-box flex flex-col items-stretch justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
-			<h1 class="text-4xl text-base-content font-semibold">The easiest post platform</h1>
+			<div class="relative sm:divider sm:divider-start">
+				<h1 class="text-3xl text-base-content font-semibold">The easiest post platform</h1>
+			</div>
 			<div class="flex items-start justify-start gap-4">
 				<p class="text-base text-base-content/50">
 					Takabase is designed to provide you with an easy-to-use, lightweight app that is highly customizable to your
@@ -17,11 +19,19 @@
 				</figure>
 			</div>
 			<nav class="flex flex-wrap items-center justify-start gap-4">
-				<a class="btn btn-outline btn-info btn-md" title="Search" aria-label="Search" [routerLink]="'/search'">
+				<a
+					class="btn btn-outline btn-success btn-md flex-1"
+					title="Registration"
+					aria-label="Registration"
+					[routerLink]="'/registration'"
+				>
+					Registration
+				</a>
+				<a class="btn btn-outline btn-info btn-md flex-1" title="Search" aria-label="Search" [routerLink]="'/search'">
 					Search
 				</a>
 				<a
-					class="btn btn-outline btn-primary btn-md"
+					class="btn btn-outline btn-primary btn-md flex-1"
 					title="Markdown guide"
 					aria-label="Markdown guide"
 					[routerLink]="'/help/markdown'"
@@ -29,7 +39,7 @@
 					Markdown
 				</a>
 				<button
-					class="btn btn-outline btn-warning btn-md"
+					class="btn btn-outline btn-warning btn-md flex-1"
 					type="button"
 					title="Progressive Web Application"
 					aria-label="Progressive Web Application"
