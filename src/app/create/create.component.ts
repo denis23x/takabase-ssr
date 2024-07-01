@@ -190,6 +190,10 @@ export class CreateComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
+		/** Apply Share Target */
+
+		this.setShareTarget();
+
 		/** Apply appearance settings */
 
 		this.setAppearance();
@@ -272,10 +276,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 						});
 						this.postForm.markAllAsTouched();
 
-						// Force dispatch input event for re-render markdown in preview element
-
-						this.document.getElementById(this.postFormTextareaId).dispatchEvent(new Event('input'));
-
 						// Get postFormIsPristine
 
 						this.postFormIsPristine$?.unsubscribe();
@@ -331,6 +331,36 @@ export class CreateComponent implements OnInit, OnDestroy {
 		};
 
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
+	}
+
+	/** Share Target */
+
+	setShareTarget(): void {
+		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+
+		// Set only if there is no post update
+
+		if (!postId) {
+			Object.keys(this.activatedRoute.snapshot.queryParams).forEach((key: string) => {
+				const value: string = String(this.activatedRoute.snapshot.queryParamMap.get(key));
+				const valueParamsMap: any = {
+					['title']: 'name',
+					['text']: 'markdown',
+					['url']: 'markdown'
+				};
+
+				const abstractControl: AbstractControl | null = this.postForm.get(valueParamsMap[key]);
+
+				if (abstractControl) {
+					if (key !== 'url') {
+						abstractControl.setValue(value);
+						abstractControl.markAsTouched();
+					} else {
+						abstractControl.patchValue(value + '\n\n' + abstractControl.value);
+					}
+				}
+			});
+		}
 	}
 
 	/** Category */
@@ -413,6 +443,10 @@ export class CreateComponent implements OnInit, OnDestroy {
 			this.fullscreenRender = false;
 			this.fullscreenClassList = ['border', 'border-base-content/20', 'rounded-box', 'shadow-xl'];
 		}
+
+		// Force dispatch input event for re-render markdown in preview element
+
+		this.document.getElementById(this.postFormTextareaId)?.dispatchEvent(new Event('input'));
 	}
 
 	onFullscreenHide(view: string): void {
