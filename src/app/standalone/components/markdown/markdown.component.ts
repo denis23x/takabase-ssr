@@ -106,6 +106,16 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		this.previewId = previewId;
 	}
 
+	@Input({ required: true })
+	set appMarkdownFullscreenId(fullscreenId: string) {
+		this.fullscreenId = fullscreenId;
+	}
+
+	@Input({ required: true })
+	set appMarkdownFullscreenToggle(fullscreenToggle: boolean) {
+		this.fullscreenToggle = fullscreenToggle;
+	}
+
 	controlListHeading: MarkdownControl[] = MarkdownControlHeading();
 	controlListFormatting: MarkdownControl[] = MarkdownControlFormatting();
 	controlListList: MarkdownControl[] = MarkdownControlList();
@@ -132,6 +142,12 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 	previewId: string | undefined;
 	preview: HTMLElement | undefined;
+
+	fullscreenId: string | undefined;
+	fullscreenToggle: boolean = false;
+	fullscreenTextareaFocus$: Subscription | undefined;
+	fullscreenTextareaBlur$: Subscription | undefined;
+	fullscreenTextareaHeight: string | undefined;
 
 	urlForm: FormGroup = this.formBuilder.group<UrlForm>({});
 	urlForm$: Subscription | undefined;
@@ -253,9 +269,13 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				});
 		}
 
+		/** Extra handlers */
+
 		this.setHandlerEmojiMart();
 
 		this.setHandlerScrollSync();
+
+		this.setHandlerFullscreen();
 	}
 
 	ngOnDestroy(): void {
@@ -266,7 +286,9 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.textareaShortcuts$,
 			this.scrollSync$,
 			this.urlForm$,
-			this.controlListEmojiMartColorScheme$
+			this.controlListEmojiMartColorScheme$,
+			this.fullscreenTextareaFocus$,
+			this.fullscreenTextareaBlur$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -392,6 +414,35 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
+	setHandlerFullscreen(): void {
+		const fullscreenElement: HTMLElement = this.document.getElementById(this.fullscreenId);
+
+		this.fullscreenTextareaFocus$?.unsubscribe();
+		this.fullscreenTextareaFocus$ = fromEvent(this.textarea, 'focus')
+			.pipe(filter(() => this.fullscreenToggle && this.platformService.isMobile()))
+			.subscribe({
+				next: () => {
+					if (!this.fullscreenTextareaHeight) {
+						const fullscreenDOMRect: DOMRect = this.textarea.getBoundingClientRect();
+						const fullscreenTextareaHeight: number = fullscreenDOMRect.height + fullscreenDOMRect.top * 2;
+
+						this.fullscreenTextareaHeight = fullscreenTextareaHeight + 'px';
+					}
+
+					fullscreenElement.style.height = this.fullscreenTextareaHeight;
+				},
+				error: (error: any) => console.error(error)
+			});
+
+		this.fullscreenTextareaBlur$?.unsubscribe();
+		this.fullscreenTextareaBlur$ = fromEvent(this.textarea, 'blur')
+			.pipe(filter(() => this.fullscreenToggle && this.platformService.isMobile()))
+			.subscribe({
+				next: () => fullscreenElement.style.removeProperty('height'),
+				error: (error: any) => console.error(error)
+			});
+	}
+
 	/** Textarea */
 
 	getTextareaMarkdown(textareaElement: HTMLTextAreaElement): MarkdownTextarea {
@@ -442,6 +493,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		this.textarea.value = value;
 		this.textarea.dispatchEvent(new Event('input'));
 
+		this.textarea.focus();
 		this.textarea.setSelectionRange(selectionStart, selectionEnd);
 		this.textarea.scrollTop = scrollTop;
 	}

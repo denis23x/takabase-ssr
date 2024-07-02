@@ -161,6 +161,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	postFormTextareaId: string = 'postFormTextarea';
 	postFormTextareaMonospace: boolean = false;
 	postFormPreviewId: string = 'postFormPreview';
+	postFormFullscreenId: string = 'postFormFullscreen';
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -430,12 +431,13 @@ export class CreateComponent implements OnInit, OnDestroy {
 	onFullscreen(toggle: boolean): void {
 		this.fullscreenToggle = toggle;
 
+		// prettier-ignore
 		if (this.fullscreenToggle) {
 			this.fullscreenScrollSync = true;
 			this.fullscreenTextWrapping = true;
 			this.fullscreenMarkdown = true;
 			this.fullscreenRender = true;
-			this.fullscreenClassList = ['fixed', 'top-0', 'left-0', '!m-0', 'w-full', 'h-full'];
+			this.fullscreenClassList = ['fixed', 'top-0', 'left-0', '!m-0', 'w-full', 'h-full', 'transition-all', 'duration-300'];
 		} else {
 			this.fullscreenScrollSync = false;
 			this.fullscreenTextWrapping = false;

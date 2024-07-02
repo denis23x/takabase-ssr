@@ -10,7 +10,12 @@
 			[ngClass]="{ 'pointer-events-none bg-base-200': controlListDisabled }"
 		>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
-				<div class="flex p-0" appDropdown [appDropdownActiveClassList]="['bg-base-content/10']">
+				<div
+					class="flex p-0"
+					appDropdown
+					[appDropdownActiveClassList]="['bg-base-content/10']"
+					(appDropdownToggle)="textarea.focus()"
+				>
 					<button
 						class="fill-current p-3"
 						type="button"
@@ -42,7 +47,12 @@
 				</div>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
-				<div class="flex p-0" appDropdown [appDropdownActiveClassList]="['bg-base-content/10']">
+				<div
+					class="flex p-0"
+					appDropdown
+					[appDropdownActiveClassList]="['bg-base-content/10']"
+					(appDropdownToggle)="textarea.focus()"
+				>
 					<button
 						class="fill-current p-3"
 						type="button"
@@ -74,7 +84,12 @@
 				</div>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
-				<div class="flex p-0" appDropdown [appDropdownActiveClassList]="['bg-base-content/10']">
+				<div
+					class="flex p-0"
+					appDropdown
+					[appDropdownActiveClassList]="['bg-base-content/10']"
+					(appDropdownToggle)="textarea.focus()"
+				>
 					<button
 						class="fill-current p-3"
 						type="button"
@@ -163,7 +178,12 @@
 				</div>
 			</li>
 			<li class="inline-block" [class.disabled]="controlListDisabled">
-				<div class="flex p-0" appDropdown [appDropdownActiveClassList]="['bg-base-content/10']">
+				<div
+					class="flex p-0"
+					appDropdown
+					[appDropdownActiveClassList]="['bg-base-content/10']"
+					(appDropdownToggle)="textarea.focus()"
+				>
 					<button
 						class="fill-current p-3"
 						type="button"

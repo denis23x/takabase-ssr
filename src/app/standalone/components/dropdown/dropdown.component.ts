@@ -125,7 +125,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 
 		this.appDropdownToggle.emit(this.dropdownState);
 
-		this.onStateUpdate();
+		/** Auto update */
 
 		this.dropdownAutoUpdate = autoUpdate(
 			this.dropdownElementTarget,
@@ -141,6 +141,8 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 		this.elementRef.nativeElement.classList.remove(...this.dropdownActiveClassList);
 
 		this.appDropdownToggle.emit(this.dropdownState);
+
+		/** Auto update */
 
 		this.dropdownAutoUpdate();
 	}
@@ -171,6 +173,8 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 					left: computePositionReturn.x + 'px',
 					top: computePositionReturn.y + 'px'
 				});
+
+				// When dropdownElementTarget goes outside of overflow
 
 				if (computePositionReturn.middlewareData.hide) {
 					if (computePositionReturn.middlewareData.hide.referenceHidden) {
