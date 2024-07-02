@@ -12,6 +12,9 @@ import {
 	ViewChild
 } from '@angular/core';
 import {
+	getWrapper,
+	getSelectionEnd,
+	getSelectionStart,
 	MarkdownControlCode,
 	MarkdownControlCropper,
 	MarkdownControlEmojiMart,
@@ -36,8 +39,7 @@ import {
 	MarkdownControl,
 	MarkdownShortcut,
 	MarkdownTextarea,
-	MarkdownWrapper,
-	MarkdownWrapperPayload
+	MarkdownWrapper
 } from '../../../core/models/markdown.model';
 import { MarkdownService } from '../../../core/services/markdown.service';
 import { PlatformService } from '../../../core/services/platform.service';
@@ -364,7 +366,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 						handler: () => event.shortcodes
 					};
 
-					this.setTextareaValue(this.getTextareaValue(markdownControl));
+					this.setTextareaValue(this.getTextareaValue(markdownControl), false);
 				},
 				maxFrequentRows: 3,
 				perLine: 8,
@@ -446,19 +448,13 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	/** Textarea */
 
 	getTextareaMarkdown(textareaElement: HTMLTextAreaElement): MarkdownTextarea {
-		const { selectionStart, selectionEnd, value }: Record<string, any> = textareaElement;
-
-		const getWrapperPayload = (payload: string): MarkdownWrapperPayload => {
-			return {
-				space: !!payload.length && payload === ' ',
-				newline: !!payload.length && payload === '\n',
-				character: !!payload.length && payload !== ' ' && payload !== '\n'
-			};
-		};
+		const value: string = textareaElement.value;
+		const selectionStart: number = textareaElement.selectionStart;
+		const selectionEnd: number = textareaElement.selectionEnd;
 
 		const wrapper: MarkdownWrapper = {
-			before: getWrapperPayload(value.substring(0, selectionStart).slice(-1)),
-			after: getWrapperPayload(value.substring(selectionEnd, value.length).slice(0, 1))
+			before: getWrapper(value.substring(0, selectionStart).slice(-1)),
+			after: getWrapper(value.substring(selectionEnd, value.length).slice(0, 1))
 		};
 
 		return {
@@ -478,23 +474,30 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 		const before: string = markdownTextarea.value.substring(0, selectionStart);
 		const after: string = markdownTextarea.value.substring(selectionEnd);
-		const value: string = markdownControl.handler(markdownTextarea, params);
+		const value: string = markdownControl.handler(markdownTextarea, markdownControl.type, params);
 
-		return before + value + after;
+		if (markdownControl.type === 'block') {
+			const beforeTrimmed: string = before.endsWith(' ') ? before.trimEnd() : before;
+			const afterTrimmed: string = after.startsWith(' ') ? after.trimStart() : after;
+
+			return beforeTrimmed + value + afterTrimmed;
+		} else {
+			return before + value + after;
+		}
 	}
 
-	setTextareaValue(value: string): void {
+	setTextareaValue(value: string, setSelectionRange: boolean = true): void {
 		const difference: number = value.length - this.textarea.value.length;
 		const scrollTop: number = this.textarea.scrollTop;
 
-		const selectionStart: number = this.textarea.selectionStart;
-		const selectionEnd: number = this.textarea.selectionEnd + difference;
+		const selectionStart: number = getSelectionStart(value, this.textarea.selectionStart);
+		const selectionEnd: number = getSelectionEnd(value, this.textarea.selectionEnd + difference);
 
 		this.textarea.value = value;
 		this.textarea.dispatchEvent(new Event('input'));
 
 		this.textarea.focus();
-		this.textarea.setSelectionRange(selectionStart, selectionEnd);
+		this.textarea.setSelectionRange(setSelectionRange ? selectionStart : selectionEnd, selectionEnd);
 		this.textarea.scrollTop = scrollTop;
 	}
 

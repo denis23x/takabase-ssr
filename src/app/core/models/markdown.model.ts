@@ -1,11 +1,12 @@
 /** @format */
 
 export interface MarkdownControl {
+	type: string;
 	key: string;
 	label: string;
 	classList?: string[];
 	icon?: string;
-	handler(markdownTextarea: MarkdownTextarea | null, payload?: any): string;
+	handler(markdownTextarea: MarkdownTextarea | null, type: string, params?: any): string;
 }
 
 export interface MarkdownTextarea {
