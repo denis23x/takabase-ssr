@@ -64,12 +64,13 @@
 							<ul class="menu menu-vertical menu-md" slot="content">
 								@switch (true) {
 									@case (currentUser?.id === category?.user?.id) {
+										<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Category</li>
 										<li class="flex w-full snap-start scroll-my-2">
 											<button
 												class="rounded-btn block w-full truncate text-right"
 												type="button"
-												title="Create"
-												aria-label="Create"
+												title="Create new category"
+												aria-label="Create new category"
 												(click)="appCategoryCreateComponent?.onToggleCategoryCreateDialog(true)"
 											>
 												Create
@@ -79,8 +80,8 @@
 											<button
 												class="rounded-btn block w-full truncate text-right"
 												type="button"
-												title="Update"
-												aria-label="Update"
+												title="Update category"
+												aria-label="Update category"
 												(click)="appCategoryUpdateComponent?.onToggleCategoryUpdateDialog(true)"
 											>
 												Update
@@ -90,12 +91,26 @@
 											<button
 												class="rounded-btn block w-full truncate text-right"
 												type="button"
-												title="Delete"
-												aria-label="Delete"
+												title="Delete category"
+												aria-label="Delete category"
 												(click)="appCategoryDeleteComponent?.onToggleCategoryDeleteDialog(true)"
 											>
 												Delete
 											</button>
+										</li>
+										<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Post</li>
+										<li class="flex w-full snap-start scroll-my-2">
+											<a
+												class="rounded-btn block w-full truncate text-right"
+												type="button"
+												title="Create new post"
+												aria-label="Create new post"
+												[routerLink]="['/create']"
+												[queryParams]="{ categoryId: category?.id }"
+												[queryParamsHandling]="'merge'"
+											>
+												Create
+											</a>
 										</li>
 									}
 									@case (currentUser?.id !== category?.user?.id) {
@@ -190,14 +205,12 @@
 			appCategoryUpdate
 			#appCategoryUpdateComponent
 			[appCategoryUpdateCategory]="category"
-			[appCategoryUpdateCategoryList]="categoryList"
 			(appCategoryUpdateSuccess)="onUpdateCategory($event)"
 		></div>
 		<div
 			appCategoryDelete
 			#appCategoryDeleteComponent
 			[appCategoryDeleteCategory]="category"
-			[appCategoryDeleteCategoryList]="categoryList"
 			[appCategoryDeleteCategoryPostList]="postList"
 			(appCategoryDeleteSuccess)="onDeleteCategory($event)"
 		></div>

@@ -38,7 +38,11 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 
 	/** https://unicorn-utterances.com/posts/angular-extend-class */
 
-	abstractGetAllDto$: BehaviorSubject<AbstractGetAllDto> = new BehaviorSubject<AbstractGetAllDto>({});
+	abstractGetAllDto$: BehaviorSubject<AbstractGetAllDto> = new BehaviorSubject<AbstractGetAllDto>({
+		page: 1,
+		size: 20
+	});
+
 	abstractGetAllDtoPageDefault: number = 1;
 	abstractGetAllDtoSizeDefault: number = 20;
 
@@ -87,7 +91,7 @@ export abstract class AbstractSearchComponent implements OnInit, OnDestroy {
 		const getAllDtoEntries: any[] = Object.entries(getAllDto);
 		const getAllDtoFiltered: any[] = getAllDtoEntries.filter(([, value]: [string, any]) => !!value);
 
-		return Object.fromEntries(getAllDtoFiltered);
+		return Object.fromEntries(getAllDtoFiltered) as AbstractGetAllDto;
 	}
 
 	abstract getAbstractList(abstractListLoadMore: boolean): void;

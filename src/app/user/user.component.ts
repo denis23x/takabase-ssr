@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Navigation, Router, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription, throwError } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
@@ -26,7 +26,7 @@ import { QrCodeComponent } from '../standalone/components/qr-code/qr-code.compon
 import { CopyToClipboardDirective } from '../standalone/directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../core/services/snackbar.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { PlatformService } from '../core/services/platform.service';
 import { AuthorizationService } from '../core/services/authorization.service';
 import { ApiService } from '../core/services/api.service';
@@ -62,6 +62,7 @@ export class UserComponent implements OnInit, OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly router: Router = inject(Router);
 	private readonly apiService: ApiService = inject(ApiService);
+	private readonly location: Location = inject(Location);
 
 	@ViewChild('appQrCodeComponent') appQrCodeComponent: QrCodeComponent | undefined;
 
@@ -112,6 +113,12 @@ export class UserComponent implements OnInit, OnDestroy {
 				next: () => (this.currentUserSkeletonToggle = false),
 				error: (error: any) => console.error(error)
 			});
+
+		/** State handler */
+
+		if (this.platformService.isBrowser()) {
+			this.location.onUrlChange(() => this.onHandleState());
+		}
 	}
 
 	ngOnDestroy(): void {
@@ -255,6 +262,35 @@ export class UserComponent implements OnInit, OnDestroy {
 			},
 			error: (error: any) => console.error(error)
 		});
+	}
+
+	/** State */
+
+	onHandleState(): void {
+		const navigation: Navigation = this.router.getCurrentNavigation();
+
+		// Check state for detect and react to category and post CRUD
+		// prettier-ignore
+		if (navigation?.extras && navigation?.extras?.state) {
+			if (navigation.extras.state.object === 'category') {
+				const categoryState: Category = navigation.extras.state.data;
+
+				if (navigation.extras.state.action === 'create') {
+					this.categoryList.unshift(categoryState);
+					this.category = categoryState;
+				}
+
+				if (navigation.extras.state.action === 'update') {
+					this.categoryList = this.categoryList.map((category: Category) => category.id === categoryState.id ? categoryState : category);
+					this.category = categoryState;
+				}
+
+				if (navigation.extras.state.action === 'delete') {
+					this.categoryList = this.categoryList.filter((category: Category) => category.id !== categoryState.id);
+					this.category = undefined;
+				}
+			}
+		}
 	}
 
 	/** Report */

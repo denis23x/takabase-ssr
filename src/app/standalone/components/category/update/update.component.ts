@@ -67,13 +67,7 @@ export class CategoryUpdateComponent implements OnInit, OnDestroy {
 		this.category = category;
 	}
 
-	@Input()
-	set appCategoryUpdateCategoryList(categoryList: Category[]) {
-		this.categoryList = categoryList;
-	}
-
 	category: Category | undefined;
-	categoryList: Category[] = [];
 
 	categoryUpdateForm: FormGroup = this.formBuilder.group<CategoryUpdateForm>({
 		name: this.formBuilder.nonNullable.control('', [

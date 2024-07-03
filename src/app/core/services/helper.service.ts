@@ -127,7 +127,7 @@ export class HelperService {
 
 	setNavigationError(navigation: Navigation, error: any): void {
 		const navigationCurrent: string = navigation.finalUrl.toString();
-		const navigationPrevious: string = navigation.previousNavigation.finalUrl.toString();
+		const navigationPrevious: string | undefined = navigation.previousNavigation?.finalUrl.toString();
 
 		console.error('Error: ' + navigationPrevious + ' → ' + navigationCurrent, error);
 	}

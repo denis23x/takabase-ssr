@@ -26,7 +26,7 @@ import {
 	Validators
 } from '@angular/forms';
 import { CategoryService } from '../../../../core/services/category.service';
-import { Subscription } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { Post } from '../../../../core/models/post.model';
 import { CategoryDeleteDto } from '../../../../core/dto/category/category-delete.dto';
 import { Category } from '../../../../core/models/category.model';
@@ -35,6 +35,8 @@ import { CurrentUser } from '../../../../core/models/current-user.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { PlatformService } from '../../../../core/services/platform.service';
+import { filter, map, tap } from 'rxjs/operators';
+import { CategoryGetAllDto } from '../../../../core/dto/category/category-get-all.dto';
 
 interface CategoryDeleteForm {
 	name: FormControl<string>;
@@ -75,11 +77,6 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	@Input()
-	set appCategoryDeleteCategoryList(categoryList: Category[]) {
-		this.categoryList = categoryList;
-	}
-
-	@Input()
 	set appCategoryDeleteCategoryPostList(categoryPostList: Post[]) {
 		this.categoryPostList = categoryPostList;
 	}
@@ -100,10 +97,27 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
-			error: (error: any) => console.error(error)
-		});
+		this.currentUser$ = this.authorizationService
+			.getCurrentUser()
+			.pipe(
+				filter((currentUser: CurrentUser | undefined) => !!currentUser),
+				switchMap((currentUser: CurrentUser) => {
+					const categoryGetAllDto: CategoryGetAllDto = {
+						username: currentUser.name,
+						page: 1,
+						size: 50
+					};
+
+					return this.categoryService.getAll(categoryGetAllDto).pipe(
+						tap((categoryList: Category[]) => (this.categoryList = categoryList)),
+						map(() => currentUser)
+					);
+				})
+			)
+			.subscribe({
+				next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
+				error: (error: any) => console.error(error)
+			});
 
 		/** Extra toggle close when url change */
 

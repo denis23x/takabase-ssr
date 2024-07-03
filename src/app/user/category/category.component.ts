@@ -14,7 +14,7 @@ import {
 	ViewChild,
 	WritableSignal
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription, switchMap } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
@@ -279,30 +279,55 @@ export class UserCategoryComponent implements OnInit, OnDestroy {
 	/** Category */
 
 	onCreateCategory(category: Category): void {
+		const navigationExtras: NavigationExtras = {
+			relativeTo: this.activatedRoute.parent,
+			state: {
+				object: 'category',
+				action: 'create',
+				data: category
+			}
+		};
+
 		this.router
-			.navigate(['./category', this.category.id], {
-				queryParamsHandling: 'merge',
-				relativeTo: this.activatedRoute
-			})
+			.navigate(['.', 'category', category.id], navigationExtras)
 			.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
 	}
 
 	onUpdateCategory(category: Category): void {
-		this.category = category;
+		const navigationExtras: NavigationExtras = {
+			relativeTo: this.activatedRoute.parent,
+			state: {
+				object: 'category',
+				action: 'update',
+				data: category
+			}
+		};
+
+		this.router.navigate(['.', 'category', category.id], navigationExtras).then(() => {
+			this.category = {
+				...this.category,
+				...category
+			};
+		});
 	}
 
 	onDeleteCategory(categoryDeleteDto: CategoryDeleteDto): void {
-		const categoryDeleteRedirect: string[] = ['.'];
+		const navigationCommands: string[] = ['.'];
+		const navigationExtras: NavigationExtras = {
+			relativeTo: this.activatedRoute.parent,
+			state: {
+				object: 'category',
+				action: 'delete',
+				data: categoryDeleteDto
+			}
+		};
 
 		if (categoryDeleteDto.categoryId) {
-			categoryDeleteRedirect.push('category', String(categoryDeleteDto.categoryId));
+			navigationCommands.push('category', String(categoryDeleteDto.categoryId));
 		}
 
 		this.router
-			.navigate(categoryDeleteRedirect, {
-				queryParamsHandling: 'merge',
-				relativeTo: this.activatedRoute
-			})
+			.navigate(navigationCommands, navigationExtras)
 			.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
 	}
 

@@ -5,7 +5,7 @@ export interface PostGetAllDto {
 	username?: string;
 	categoryId?: number;
 	query?: string;
-	page?: number;
-	size?: number;
+	page: number;
+	size: number;
 	scope?: string[];
 }
