@@ -122,7 +122,7 @@ export class ShareComponent {
 
 	getShareNative(shareData: ShareData): boolean {
 		if (this.platformService.isBrowser()) {
-			return navigator.canShare(shareData);
+			return navigator.share && navigator.canShare(shareData);
 		} else {
 			return false;
 		}

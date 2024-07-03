@@ -108,11 +108,12 @@
 		<div class="flex flex-col">
 			<nav class="block px-4">
 				<ul class="tabs tabs-lifted tabs-lg" role="tablist">
+					<!-- prettier-ignore -->
 					<li
 						class="tab"
 						role="tab"
 						appSkeleton
-						[class.tab-active]="!categoryListSkeletonToggle && !category"
+						[class.tab-active]="!categoryListSkeletonToggle && !category && !routerLinkActivePassword.isActive && !routerLinkActivePrivate.isActive"
 						[appSkeletonToggle]="categoryListSkeletonToggle"
 						[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
 						[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
@@ -125,6 +126,53 @@
 							[queryParamsHandling]="'merge'"
 						>
 							All
+						</a>
+					</li>
+					<li
+						class="tab"
+						role="tab"
+						appSkeleton
+						[class.tab-active]="!categoryListSkeletonToggle && routerLinkActivePassword.isActive"
+						[appSkeletonToggle]="categoryListSkeletonToggle"
+						[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
+						[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
+					>
+						<a
+							class="block fill-current text-base-content px-2"
+							title="Private"
+							aria-label="Private"
+							appSvgIcon
+							routerLinkActive
+							#routerLinkActivePassword="routerLinkActive"
+							[routerLink]="['/', user.name, 'password']"
+							[routerLinkActive]="''"
+							[queryParamsHandling]="'merge'"
+							[appSvgIconIcon]="'shield-lock'"
+							[appSvgIconSquare]="'1.25em'"
+						>
+						</a>
+					</li>
+					<li
+						class="tab"
+						role="tab"
+						appSkeleton
+						[class.tab-active]="!categoryListSkeletonToggle && routerLinkActivePrivate.isActive"
+						[appSkeletonToggle]="categoryListSkeletonToggle"
+						[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
+						[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
+					>
+						<a
+							class="block fill-current text-base-content px-2"
+							title="Private"
+							aria-label="Private"
+							appSvgIcon
+							routerLinkActive
+							#routerLinkActivePrivate="routerLinkActive"
+							[routerLink]="['/', user.name, 'private']"
+							[queryParamsHandling]="'merge'"
+							[appSvgIconIcon]="'incognito'"
+							[appSvgIconSquare]="'1.25em'"
+						>
 						</a>
 					</li>
 					@for (category of categoryList; track category.id) {
@@ -154,230 +202,11 @@
 					}
 				</ul>
 			</nav>
-			<div class="rounded-box border border-base-content/20 bg-base-100 p-4 flex flex-col gap-4 shadow-xl">
-				<div class="flex w-full items-center justify-between gap-4">
-					<!-- prettier-ignore -->
-					<button
-						class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
-						type="button"
-						appSvgIcon
-						appSkeleton
-						[title]="searchFormToggle ? 'Hide' : 'Search'"
-						[attr.aria-label]="searchFormToggle ? 'Hide' : 'Search'"
-						[disabled]="postListSkeletonToggle"
-						[appSkeletonToggle]="(categorySkeletonToggle || postListSkeletonToggle) && !searchFormToggle"
-						[appSkeletonClassListElementRef]="['border-0']"
-						[appSvgIconIcon]="searchFormToggle ? 'x-lg' : 'search'"
-						[appSvgIconSquare]="'1.5em'"
-						(click)="onToggleSearchForm(!searchFormToggle)"
-					></button>
-					@switch (searchFormToggle) {
-						@case (true) {
-							<div
-								class="relative flex items-end justify-between gap-4 w-full"
-								appSearchForm
-								[appSearchFormDisabled]="postListSkeletonToggle"
-							></div>
-						}
-						@case (false) {
-							<div class="flex items-center justify-start gap-4 overflow-hidden w-full">
-								<div class="flex flex-col gap-2 items-start overflow-hidden w-full">
-									@switch (true) {
-										@case (!!category === true) {
-											<h2
-												class="block truncate text-xl leading-6 font-bold text-base-content max-w-full"
-												appSkeleton
-												[appSkeletonToggle]="categorySkeletonToggle"
-											>
-												{{ category.name }}
-											</h2>
-											<time
-												class="text-sm text-base-content/50 leading-4 truncate max-w-full"
-												appSkeleton
-												[appSkeletonToggle]="categorySkeletonToggle"
-												[attr.datetime]="category.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
-											>
-												Updated {{ category.updatedAt | dayjs: "fromX" }}
-											</time>
-										}
-										@case (!!category === false) {
-											<h2
-												class="block truncate text-xl leading-6 font-bold text-base-content max-w-full"
-												appSkeleton
-												[appSkeletonToggle]="postListSkeletonToggle"
-											>
-												All posts
-											</h2>
-											<span
-												class="text-sm text-base-content/50 leading-4 truncate max-w-full"
-												appSkeleton
-												[appSkeletonToggle]="postListSkeletonToggle"
-											>
-												Everything written by {{ user.name }}
-											</span>
-										}
-									}
-								</div>
-								<!-- prettier-ignore -->
-								<div
-                  class="flex p-0"
-                  appDropdown
-                  appSkeleton
-                  [appSkeletonToggle]="categorySkeletonToggle || currentUserSkeletonToggle || postListSkeletonToggle"
-                  [appDropdownPlacement]="'bottom-end'"
-                >
-                  <button
-                    class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
-                    type="button"
-                    title="Category menu"
-                    aria-label="Category menu"
-                    appSvgIcon
-                    slot="target"
-                    [appSvgIconIcon]="'three-dots-vertical'"
-                    [appSvgIconSquare]="'1.5em'"
-                  ></button>
-                  <ul class="menu menu-vertical menu-md" slot="content">
-                    @switch (true) {
-                      @case (currentUser?.id === user.id) {
-                        <li class="flex w-full snap-start scroll-my-2">
-                          <button
-                            class="rounded-btn block w-full truncate text-right"
-                            type="button"
-                            title="Create"
-                            aria-label="Create"
-                            (click)="appCategoryCreateComponent?.onToggleCategoryCreateDialog(true)"
-                          >
-                            Create
-                          </button>
-                        </li>
-                        @if (category) {
-                          <li class="flex w-full snap-start scroll-my-2">
-                            <button
-                              class="rounded-btn block w-full truncate text-right"
-                              type="button"
-                              title="Update"
-                              aria-label="Update"
-                              (click)="appCategoryUpdateComponent?.onToggleCategoryUpdateDialog(true)"
-                            >
-                              Update
-                            </button>
-                          </li>
-                          <li class="flex w-full snap-start scroll-my-2">
-                            <button
-                              class="rounded-btn block w-full truncate text-right"
-                              type="button"
-                              title="Delete"
-                              aria-label="Delete"
-                              (click)="appCategoryDeleteComponent?.onToggleCategoryDeleteDialog(true)"
-                            >
-                              Delete
-                            </button>
-                          </li>
-                        }
-                      }
-                      @case (currentUser?.id !== user.id) {
-                        <li class="flex w-full snap-start scroll-my-2">
-                          <button
-                            class="rounded-btn block w-full truncate text-right"
-                            type="button"
-                            title="Work In Progress"
-                            aria-label="Work In Progress"
-                          >
-                            WIP
-                          </button>
-                        </li>
-                      }
-                    }
-                  </ul>
-                </div>
-							</div>
-						}
-					}
-				</div>
-				@if (category && category.description) {
-					<div
-						class="block"
-						appSkeleton
-						[appSkeletonToggle]="categorySkeletonToggle"
-						[appSkeletonClassListParent]="['!rounded-box']"
-						[appSkeletonClassList]="['!rounded-box']"
-					>
-						<article
-							class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
-							[innerHTML]="category.description | markdown | sanitizer: 'html'"
-						></article>
-					</div>
-				}
-				<div class="block">
-					<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4">
-						@for (post of postList; track i; let i = $index) {
-							<li
-								class="block"
-								appCardPost
-								[ngClass]="post.image ? 'row-span-6' : 'row-span-3'"
-								[appCardPostPost]="post"
-								[appCardPostSkeletonToggle]="postListSkeletonToggle"
-								[appPostUrl]="'./post'"
-							></li>
-						} @empty {
-							<li class="col-span-2 sm:col-span-3 md:col-span-4 flex flex-col items-center gap-4">
-								<i
-									class="fill-current text-base-content"
-									appSvgIcon
-									[appSvgIconIcon]="'exclamation-circle'"
-									[appSvgIconSquare]="'3em'"
-								></i>
-								<div class="text-center">
-									<p class="text-xl font-bold text-base-content">Posts <span class="text-error">not found</span></p>
-									<a class="link text-sm" title="Create post" aria-label="Create post" [routerLink]="['/create']">
-										Create post
-									</a>
-								</div>
-							</li>
-						}
-					</ul>
-					@if (postListIsHasMore && !postListPageScrollInfinite) {
-						<button
-							class="btn-md btn-success btn mt-4 w-full"
-							type="button"
-							title="Load more posts"
-							aria-label="Load more posts"
-							[disabled]="postListIsLoading()"
-							(click)="getPostList(true)"
-						>
-							@if (postListIsLoading()) {
-								<span class="loading loading-spinner"></span>
-							}
-							Load more
-						</button>
-					}
-				</div>
+			<div class="block">
+				<router-outlet></router-outlet>
 			</div>
 		</div>
 	</section>
-	<div class="block">
-		<router-outlet></router-outlet>
-	</div>
-	@defer (when currentUser?.id === user.id; prefetch on idle) {
-		<div appCategoryCreate #appCategoryCreateComponent (appCategoryCreateSuccess)="onCreateCategory($event)"></div>
-	}
-	@defer (when category; prefetch on idle) {
-		<div
-			appCategoryUpdate
-			#appCategoryUpdateComponent
-			[appCategoryUpdateCategory]="category"
-			[appCategoryUpdateCategoryList]="categoryList"
-			(appCategoryUpdateSuccess)="onUpdateCategory($event)"
-		></div>
-		<div
-			appCategoryDelete
-			#appCategoryDeleteComponent
-			[appCategoryDeleteCategory]="category"
-			[appCategoryDeleteCategoryList]="categoryList"
-			[appCategoryDeleteCategoryPostList]="postList"
-			(appCategoryDeleteSuccess)="onDeleteCategory($event)"
-		></div>
-	}
 	@defer (on interaction(appQrCodeComponentToggle); prefetch on idle) {
 		<div appQRCode #appQrCodeComponent [appQRCodeData]="user.name" [appQRCodeOrigin]="true"></div>
 	}

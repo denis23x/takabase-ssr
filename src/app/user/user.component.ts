@@ -1,19 +1,6 @@
 /** @format */
 
-import {
-	Component,
-	inject,
-	Input,
-	makeStateKey,
-	numberAttribute,
-	OnDestroy,
-	OnInit,
-	signal,
-	StateKey,
-	TransferState,
-	ViewChild,
-	WritableSignal
-} from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription, throwError } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
@@ -31,34 +18,18 @@ import { CurrentUser } from '../core/models/current-user.model';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
-import { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
-import { CategoryDeleteComponent } from '../standalone/components/category/delete/delete.component';
-import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
-import { CategoryDeleteDto } from '../core/dto/category/category-delete.dto';
 import { TitleService } from '../core/services/title.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 import { ReportService } from '../core/services/report.service';
-import { SearchFormComponent } from '../standalone/components/search-form/search-form.component';
 import { QrCodeComponent } from '../standalone/components/qr-code/qr-code.component';
 import { CopyToClipboardDirective } from '../standalone/directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../core/services/snackbar.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { CardPostComponent } from '../standalone/components/card/post/post.component';
-import { Post } from '../core/models/post.model';
-import { SearchIndex } from 'algoliasearch/lite';
-import { SearchOptions, SearchResponse } from '@algolia/client-search';
+import { CommonModule } from '@angular/common';
 import { PlatformService } from '../core/services/platform.service';
-import { AlgoliaService } from '../core/services/algolia.service';
 import { AuthorizationService } from '../core/services/authorization.service';
-import { CookiesService } from '../core/services/cookies.service';
-import { AppearanceService } from '../core/services/appearance.service';
-import { PostGetAllDto } from '../core/dto/post/post-get-all.dto';
-import { HelperService } from '../core/services/helper.service';
 import { ApiService } from '../core/services/api.service';
-
-const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
 
 @Component({
 	standalone: true,
@@ -73,14 +44,8 @@ const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>
 		SanitizerPipe,
 		DropdownComponent,
 		SkeletonDirective,
-		CategoryUpdateComponent,
-		CategoryDeleteComponent,
-		CategoryCreateComponent,
-		SearchFormComponent,
 		QrCodeComponent,
-		CopyToClipboardDirective,
-		AsyncPipe,
-		CardPostComponent
+		CopyToClipboardDirective
 	],
 	selector: 'app-user',
 	templateUrl: './user.component.html'
@@ -92,42 +57,16 @@ export class UserComponent implements OnInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	private readonly transferState: TransferState = inject(TransferState);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly metaService: MetaService = inject(MetaService);
-	private readonly algoliaService: AlgoliaService = inject(AlgoliaService);
-	private readonly cookiesService: CookiesService = inject(CookiesService);
-	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly router: Router = inject(Router);
-	private readonly helperService: HelperService = inject(HelperService);
 	private readonly apiService: ApiService = inject(ApiService);
 
-	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
-	@ViewChild('appCategoryUpdateComponent') appCategoryUpdateComponent: CategoryUpdateComponent | undefined;
-	@ViewChild('appCategoryDeleteComponent') appCategoryDeleteComponent: CategoryDeleteComponent | undefined;
 	@ViewChild('appQrCodeComponent') appQrCodeComponent: QrCodeComponent | undefined;
-
-	@Input({ transform: numberAttribute })
-	set deleteId(deleteId: number | undefined) {
-		if (deleteId) {
-			this.router
-				.navigate([], {
-					queryParams: {
-						...this.activatedRoute.snapshot.queryParams,
-						deleteId: null
-					},
-					queryParamsHandling: 'merge',
-					relativeTo: this.activatedRoute,
-					replaceUrl: true
-				})
-				.then(() => (this.postList = this.postList.filter((post: Post) => post.id !== deleteId)));
-		}
-	}
 
 	activatedRouteParamsUsername$: Subscription | undefined;
 	activatedRouteParamsCategoryId$: Subscription | undefined;
-	activatedRouteQueryParams$: Subscription | undefined;
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -139,26 +78,12 @@ export class UserComponent implements OnInit, OnDestroy {
 	userRequest$: Subscription | undefined;
 	userSkeletonToggle: boolean = true;
 
-	searchFormToggle: boolean = false;
-
 	category: Category | undefined;
 	categoryRequest$: Subscription | undefined;
 	categorySkeletonToggle: boolean = true;
 
 	categoryList: Category[] = [];
 	categoryListSkeletonToggle: boolean = true;
-
-	postList: Post[] = [];
-	postListRequest$: Subscription | undefined;
-	postListSkeletonToggle: boolean = true;
-	postListIsHasMore: boolean = false;
-	postListIsLoading: WritableSignal<boolean> = signal(false);
-	postListPageScrollInfinite: boolean = false;
-	postListPageScrollInfinite$: Subscription | undefined;
-	postListGetAllDto: PostGetAllDto = {
-		page: 0,
-		size: 20
-	};
 
 	ngOnInit(): void {
 		this.activatedRouteParamsUsername$?.unsubscribe();
@@ -187,23 +112,16 @@ export class UserComponent implements OnInit, OnDestroy {
 				next: () => (this.currentUserSkeletonToggle = false),
 				error: (error: any) => console.error(error)
 			});
-
-		/** Apply appearance settings */
-
-		this.setAppearance();
 	}
 
 	ngOnDestroy(): void {
 		[
 			this.activatedRouteParamsUsername$,
 			this.activatedRouteParamsCategoryId$,
-			this.activatedRouteQueryParams$,
 			this.currentUser$,
 			this.currentUserSkeletonToggle$,
 			this.userRequest$,
-			this.categoryRequest$,
-			this.postListRequest$,
-			this.postListPageScrollInfinite$
+			this.categoryRequest$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -216,10 +134,6 @@ export class UserComponent implements OnInit, OnDestroy {
 
 		this.category = this.skeletonService.getCategory();
 		this.categorySkeletonToggle = true;
-
-		this.postList = this.skeletonService.getPostList();
-		this.postListSkeletonToggle = true;
-		this.postListIsHasMore = false;
 	}
 
 	setResolver(): void {
@@ -271,14 +185,11 @@ export class UserComponent implements OnInit, OnDestroy {
 					this.activatedRouteParamsCategoryId$ = this.activatedRoute.params
 						.pipe(
 							distinctUntilKeyChanged('categoryId'),
-							filter(() => username === this.user.name)
+							filter(() => username === this.user.name),
+							map(() => Number(this.activatedRoute.snapshot.paramMap.get('categoryId')))
 						)
 						.subscribe({
-							next: () => {
-								/** Set Category */
-
-								const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
-
+							next: (categoryId: number) => {
 								if (categoryId) {
 									this.category = this.user.categories.find((category: Category) => category.id === categoryId);
 									this.categorySkeletonToggle = false;
@@ -291,44 +202,12 @@ export class UserComponent implements OnInit, OnDestroy {
 
 								this.setMetaTags();
 								this.setTitle();
-
-								/** Set PostList */
-
-								this.activatedRouteQueryParams$?.unsubscribe();
-								this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
-									.pipe(distinctUntilKeyChanged('query'))
-									.subscribe({
-										next: () => {
-											this.postList = this.skeletonService.getPostList();
-											this.postListSkeletonToggle = true;
-											this.postListIsHasMore = false;
-
-											if (this.transferState.hasKey(searchResponseKey)) {
-												this.setPostListSearchResponse(this.transferState.get(searchResponseKey, null));
-
-												if (this.platformService.isBrowser()) {
-													this.transferState.remove(searchResponseKey);
-												}
-											} else {
-												this.getPostList();
-											}
-										},
-										error: (error: any) => console.error(error)
-									});
 							},
 							error: (error: any) => console.error(error)
 						});
 				},
 				error: (error: any) => console.error(error)
 			});
-
-		/** Toggle SearchForm component */
-
-		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
-			this.onToggleSearchForm(true);
-		} else {
-			this.onToggleSearchForm(false);
-		}
 	}
 
 	setTitle(): void {
@@ -378,39 +257,6 @@ export class UserComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	setAppearance(): void {
-		this.postListPageScrollInfinite = !!Number(this.cookiesService.getItem('page-scroll-infinite'));
-
-		if (this.postListPageScrollInfinite) {
-			this.postListPageScrollInfinite$?.unsubscribe();
-			this.postListPageScrollInfinite$ = this.appearanceService
-				.getPageScrollInfinite()
-				.pipe(filter(() => this.postListIsHasMore && !this.postListIsLoading()))
-				.subscribe({
-					next: () => this.getPostList(true),
-					error: (error: any) => console.error(error)
-				});
-		}
-	}
-
-	/** Search */
-
-	onToggleSearchForm(toggle: boolean): void {
-		if (toggle) {
-			this.searchFormToggle = true;
-		} else {
-			this.searchFormToggle = false;
-
-			this.router
-				.navigate([], {
-					relativeTo: this.activatedRoute,
-					queryParams: null,
-					replaceUrl: true
-				})
-				.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
-		}
-	}
-
 	/** Report */
 
 	onToggleReportDialog(toggle: boolean): void {
@@ -420,102 +266,5 @@ export class UserComponent implements OnInit, OnDestroy {
 		} else {
 			this.snackbarService.warning('Nope', 'Log in before reporting');
 		}
-	}
-
-	/** Category */
-
-	onCreateCategory(categoryCreate: Category): void {
-		this.categoryList.unshift(categoryCreate);
-
-		this.category = categoryCreate;
-
-		this.router
-			.navigate(['./category', this.category.id], {
-				queryParamsHandling: 'merge',
-				relativeTo: this.activatedRoute
-			})
-			.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
-	}
-
-	onUpdateCategory(categoryUpdate: Category): void {
-		this.categoryList = this.categoryList.map((category: Category) => {
-			return category.id === categoryUpdate.id ? categoryUpdate : category;
-		});
-
-		this.category = categoryUpdate;
-	}
-
-	onDeleteCategory(categoryDelete: Category & CategoryDeleteDto): void {
-		this.categoryList = this.categoryList.filter((category: Category) => {
-			return category.id !== categoryDelete.id;
-		});
-
-		this.category = undefined;
-
-		// Redirect
-
-		const categoryDeleteRedirect: string[] = ['.'];
-
-		if (categoryDelete.categoryId) {
-			categoryDeleteRedirect.push('category', String(categoryDelete.categoryId));
-		}
-
-		this.router
-			.navigate(categoryDeleteRedirect, {
-				queryParamsHandling: 'merge',
-				relativeTo: this.activatedRoute
-			})
-			.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
-	}
-
-	/** PostList */
-
-	getPostList(postListLoadMore: boolean = false): void {
-		this.postListIsLoading.set(true);
-
-		/** Algolia */
-
-		const postQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
-		const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
-		const postIndexFilters: string[] = [];
-
-		const username: string = String(this.activatedRoute.snapshot.paramMap.get('username') || '');
-		const categoryId: string = String(this.activatedRoute.snapshot.paramMap.get('categoryId') || '');
-
-		if (username) {
-			postIndexFilters.push('user.name:' + username);
-		}
-
-		if (categoryId) {
-			postIndexFilters.push('category.id:' + categoryId);
-		}
-
-		const postIndexSearch: SearchOptions = {
-			page: (() => (postListLoadMore ? this.postListGetAllDto.page++ : (this.postListGetAllDto.page = 0)))(),
-			hitsPerPage: this.postListGetAllDto.size,
-			filters: postIndexFilters.join(' AND ')
-		};
-
-		this.postListRequest$?.unsubscribe();
-		this.postListRequest$ = from(postIndex.search(postQuery, postIndexSearch)).subscribe({
-			next: (searchResponse: SearchResponse) => {
-				this.setPostListSearchResponse(searchResponse);
-
-				if (this.platformService.isServer()) {
-					this.transferState.set(searchResponseKey, searchResponse);
-				}
-			},
-			error: (error: any) => console.error(error)
-		});
-	}
-
-	setPostListSearchResponse(searchResponse: SearchResponse): void {
-		const postList: Post[] = searchResponse.hits as any[];
-		const postListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
-
-		this.postList = this.postListGetAllDto.page > 1 ? this.postList.concat(postList) : postList;
-		this.postListSkeletonToggle = false;
-		this.postListIsHasMore = postListIsHasMore && searchResponse.nbPages > 1;
-		this.postListIsLoading.set(false);
 	}
 }

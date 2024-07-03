@@ -221,37 +221,113 @@ export const APP_ROUTES: Route[] = [
 						// Check if the first URL segment matches the pattern for a username (e.g., denis23x)
 						if (usernameForbiddenList.every((usernameForbidden: string) => username !== usernameForbidden)) {
 							if (username.match(/(?![0-9]+$).*/i)) {
-								const getId = (path: string): string | undefined => urlSegment[1]?.path === path ? urlSegment[2]?.path : undefined;
+								const isAll = (): boolean => urlSegment.length === 1;
+								const isAllDetails = (): boolean => urlSegment.length === 3 && urlSegment[1].path === 'post';
 
-								const postId: string | undefined = getId('post');
-								const categoryId: string | undefined = getId('category');
+								const isCategory = (): boolean => urlSegment.length === 3 && urlSegment[1].path === 'category';
+								const isCategoryDetails = (): boolean => urlSegment.length === 5 && urlSegment[3].path === 'post';
+
+								const isPassword = (): boolean => urlSegment.length === 2;
+								const isPasswordDetails = (): boolean => urlSegment.length === 4 && urlSegment[1].path === 'password';
+
+								const isPrivate = (): boolean => urlSegment.length === 2;
+								const isPrivateDetails = (): boolean => urlSegment.length === 4 && urlSegment[1].path === 'private';
+
+								/** Params */
+
+								const categoryId = (): string | undefined => urlSegment[2].path;
+								const postId = (): string | undefined => {
+									if (isAllDetails()) {
+										return urlSegment[2].path
+									}
+
+									if (isCategoryDetails()) {
+										return urlSegment[4].path;
+									}
+
+									if (isPasswordDetails()) {
+										return urlSegment[3].path
+									}
+
+									if (isPrivateDetails()) {
+										return urlSegment[3].path
+									}
+
+									return undefined;
+								};
+
+								/** Switch */
 
 								switch (true) {
-									case !!postId: {
+									case isAll(): {
 										return {
 											consumed: urlSegment.slice(0, 1),
 											posParams: {
 												username: new UrlSegment(username, null),
-												postId: new UrlSegment(postId, null)
 											}
 										};
 									}
-									case !!categoryId: {
-										return {
-											consumed: urlSegment.slice(0, 3),
-											posParams: {
-												username: new UrlSegment(username, null),
-												categoryId: new UrlSegment(categoryId, null)
-											}
-										};
-									}
-									default: {
+									case isAllDetails(): {
 										return {
 											consumed: urlSegment.slice(0, 1),
 											posParams: {
-												username: new UrlSegment(username, null)
+												username: new UrlSegment(username, null),
+												postId: new UrlSegment(postId(), null),
 											}
 										};
+									}
+									case isCategory(): {
+										return {
+											consumed: urlSegment.slice(0, 1),
+											posParams: {
+												username: new UrlSegment(username, null),
+												categoryId: new UrlSegment(categoryId(), null),
+											}
+										}
+									}
+									case isCategoryDetails(): {
+										return {
+											consumed: urlSegment.slice(0, 1),
+											posParams: {
+												username: new UrlSegment(username, null),
+												categoryId: new UrlSegment(categoryId(), null),
+												postId: new UrlSegment(postId(), null),
+											}
+										}
+									}
+									case isPassword(): {
+										return {
+											consumed: urlSegment.slice(0, 1),
+											posParams: {
+												username: new UrlSegment(username, null),
+											}
+										}
+									}
+									case isPasswordDetails(): {
+										return {
+											consumed: urlSegment.slice(0, 1),
+											posParams: {
+												username: new UrlSegment(username, null),
+												postId: new UrlSegment(postId(), null),
+											}
+										}
+									}
+									case isPrivate(): {
+										return {
+											consumed: urlSegment.slice(0, 1),
+											posParams: {
+												username: new UrlSegment(username, null),
+											}
+										}
+									}
+									case isPrivateDetails(): {
+										return {
+											consumed: urlSegment.slice(0, 1),
+											posParams: {
+												username: new UrlSegment(username, null),
+												postId: new UrlSegment(postId(), null),
+											}
+										}
 									}
 								}
 							}
@@ -266,11 +342,64 @@ export const APP_ROUTES: Route[] = [
 				},
 				children: [
 					{
-						path: 'post/:postId',
-						canActivate: [redirectHttpErrorGuard()],
+						path: '',
 						loadComponent: async () => {
-							return import('./user/post/post.component').then(m => m.UserPostComponent);
-						}
+							return import('./user/all/all.component').then(m => m.UserAllComponent);
+						},
+						children: [
+							{
+								path: 'post/:postId',
+								canActivate: [redirectHttpErrorGuard()],
+								loadComponent: async () => {
+									return import('./user/all/details/details.component').then(m => m.UserAllDetailsComponent);
+								}
+							}
+						]
+					},
+					{
+						path: 'password',
+						loadComponent: async () => {
+							return import('./user/password/password.component').then(m => m.UserPasswordComponent);
+						},
+						children: [
+							{
+								path: 'post/:postId',
+								canActivate: [redirectHttpErrorGuard()],
+								loadComponent: async () => {
+									return import('./user/password/details/details.component').then(m => m.UserPasswordDetailsComponent);
+								}
+							}
+						]
+					},
+					{
+						path: 'private',
+						loadComponent: async () => {
+							return import('./user/private/private.component').then(m => m.UserPrivateComponent);
+						},
+						children: [
+							{
+								path: 'post/:postId',
+								canActivate: [redirectHttpErrorGuard()],
+								loadComponent: async () => {
+									return import('./user/private/details/details.component').then(m => m.UserPrivateDetailsComponent);
+								}
+							}
+						]
+					},
+					{
+						path: 'category/:categoryId',
+						loadComponent: async () => {
+							return import('./user/category/category.component').then(m => m.UserCategoryComponent);
+						},
+						children: [
+							{
+								path: 'post/:postId',
+								canActivate: [redirectHttpErrorGuard()],
+								loadComponent: async () => {
+									return import('./user/category/details/details.component').then(m => m.UserCategoryDetailsComponent);
+								}
+							}
+						]
 					}
 				]
 			},
