@@ -6,6 +6,8 @@ import { redirectCurrentUserGuard } from './core/guards/redirect-current-user-gu
 import { redirectHomeGuard } from './core/guards/redirect-home-guard.service';
 import { redirectHttpErrorGuard } from './core/guards/redirect-http-error-guard.service';
 import { redirectLoadingGuard } from './core/guards/redirect-loading-guard.service';
+import { redirectPasswordGuard } from './core/guards/redirect-password-guard.service';
+import { redirectPrivateGuard } from './core/guards/redirect-private-guard.service';
 import { environment } from '../environments/environment';
 
 // prettier-ignore
@@ -358,6 +360,7 @@ export const APP_ROUTES: Route[] = [
 					},
 					{
 						path: 'password',
+						canActivate: [redirectPasswordGuard()],
 						loadComponent: async () => {
 							return import('./user/password/password.component').then(m => m.UserPasswordComponent);
 						},
@@ -373,6 +376,7 @@ export const APP_ROUTES: Route[] = [
 					},
 					{
 						path: 'private',
+						canActivate: [redirectPrivateGuard()],
 						loadComponent: async () => {
 							return import('./user/private/private.component').then(m => m.UserPrivateComponent);
 						},

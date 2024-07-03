@@ -1,13 +1,13 @@
 /** @format */
 
 import { inject } from '@angular/core';
-import { CanMatchFn, Router, UrlTree } from '@angular/router';
+import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { PlatformService } from '../services/platform.service';
 import { ApiService } from '../services/api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
-export const redirectHttpErrorGuard = (): CanMatchFn => {
+export const redirectHttpErrorGuard = (): CanActivateFn => {
 	return (): Observable<boolean | UrlTree> => {
 		const apiService: ApiService = inject(ApiService);
 		const platformService: PlatformService = inject(PlatformService);

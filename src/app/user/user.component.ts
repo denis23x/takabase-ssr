@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Navigation, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Navigation, Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription, throwError } from 'rxjs';
 import { catchError, filter, map, switchMap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
@@ -63,6 +63,9 @@ export class UserComponent implements OnInit, OnDestroy {
 	private readonly router: Router = inject(Router);
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly location: Location = inject(Location);
+
+	@ViewChild('routerLinkActivePassword') routerLinkActivePassword: RouterLinkActive | undefined;
+	@ViewChild('routerLinkActivePrivate') routerLinkActivePrivate: RouterLinkActive | undefined;
 
 	@ViewChild('appQrCodeComponent') appQrCodeComponent: QrCodeComponent | undefined;
 

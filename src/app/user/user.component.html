@@ -113,7 +113,7 @@
 						class="tab"
 						role="tab"
 						appSkeleton
-						[class.tab-active]="!categoryListSkeletonToggle && !category && !routerLinkActivePassword.isActive && !routerLinkActivePrivate.isActive"
+						[class.tab-active]="!categoryListSkeletonToggle && !category && !routerLinkActivePassword?.isActive && !routerLinkActivePrivate?.isActive"
 						[appSkeletonToggle]="categoryListSkeletonToggle"
 						[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
 						[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
@@ -128,53 +128,55 @@
 							All
 						</a>
 					</li>
-					<li
-						class="tab"
-						role="tab"
-						appSkeleton
-						[class.tab-active]="!categoryListSkeletonToggle && routerLinkActivePassword.isActive"
-						[appSkeletonToggle]="categoryListSkeletonToggle"
-						[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
-						[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
-					>
-						<a
-							class="block fill-current text-base-content px-2"
-							title="Private"
-							aria-label="Private"
-							appSvgIcon
-							routerLinkActive
-							#routerLinkActivePassword="routerLinkActive"
-							[routerLink]="['/', user.name, 'password']"
-							[routerLinkActive]="''"
-							[queryParamsHandling]="'merge'"
-							[appSvgIconIcon]="'shield-lock'"
-							[appSvgIconSquare]="'1.25em'"
+					@if (currentUser?.id === user.id) {
+						<li
+							class="tab"
+							role="tab"
+							appSkeleton
+							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActivePassword.isActive"
+							[appSkeletonToggle]="categoryListSkeletonToggle"
+							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
+							[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
 						>
-						</a>
-					</li>
-					<li
-						class="tab"
-						role="tab"
-						appSkeleton
-						[class.tab-active]="!categoryListSkeletonToggle && routerLinkActivePrivate.isActive"
-						[appSkeletonToggle]="categoryListSkeletonToggle"
-						[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
-						[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
-					>
-						<a
-							class="block fill-current text-base-content px-2"
-							title="Private"
-							aria-label="Private"
-							appSvgIcon
-							routerLinkActive
-							#routerLinkActivePrivate="routerLinkActive"
-							[routerLink]="['/', user.name, 'private']"
-							[queryParamsHandling]="'merge'"
-							[appSvgIconIcon]="'incognito'"
-							[appSvgIconSquare]="'1.25em'"
+							<a
+								class="block fill-current text-base-content px-2"
+								title="Private"
+								aria-label="Private"
+								appSvgIcon
+								routerLinkActive
+								#routerLinkActivePassword="routerLinkActive"
+								[routerLink]="['/', user.name, 'password']"
+								[routerLinkActive]="''"
+								[queryParamsHandling]="'merge'"
+								[appSvgIconIcon]="'shield-lock'"
+								[appSvgIconSquare]="'1.25em'"
+							>
+							</a>
+						</li>
+						<li
+							class="tab"
+							role="tab"
+							appSkeleton
+							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActivePrivate.isActive"
+							[appSkeletonToggle]="categoryListSkeletonToggle"
+							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
+							[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
 						>
-						</a>
-					</li>
+							<a
+								class="block fill-current text-base-content px-2"
+								title="Private"
+								aria-label="Private"
+								appSvgIcon
+								routerLinkActive
+								#routerLinkActivePrivate="routerLinkActive"
+								[routerLink]="['/', user.name, 'private']"
+								[queryParamsHandling]="'merge'"
+								[appSvgIconIcon]="'incognito'"
+								[appSvgIconSquare]="'1.25em'"
+							>
+							</a>
+						</li>
+					}
 					@for (category of categoryList; track category.id) {
 						<li
 							class="tab"
