@@ -1,9 +1,9 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Navigation, Router, RouterLinkActive, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription, throwError } from 'rxjs';
-import { catchError, filter, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
@@ -14,7 +14,6 @@ import { UserService } from '../core/services/user.service';
 import { MarkdownPipe } from '../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../standalone/pipes/sanitizer.pipe';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
-import { CurrentUser } from '../core/models/current-user.model';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
@@ -26,10 +25,13 @@ import { QrCodeComponent } from '../standalone/components/qr-code/qr-code.compon
 import { CopyToClipboardDirective } from '../standalone/directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../core/services/snackbar.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { PlatformService } from '../core/services/platform.service';
-import { AuthorizationService } from '../core/services/authorization.service';
 import { ApiService } from '../core/services/api.service';
+import { CategoryService } from '../core/services/category.service';
+import { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
+import { UserStore } from './user.store';
+import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
 
 @Component({
 	standalone: true,
@@ -50,7 +52,7 @@ import { ApiService } from '../core/services/api.service';
 	selector: 'app-user',
 	templateUrl: './user.component.html'
 })
-export class UserComponent implements OnInit, OnDestroy {
+export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly userService: UserService = inject(UserService);
 	private readonly titleService: TitleService = inject(TitleService);
 	private readonly reportService: ReportService = inject(ReportService);
@@ -59,10 +61,10 @@ export class UserComponent implements OnInit, OnDestroy {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly metaService: MetaService = inject(MetaService);
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly router: Router = inject(Router);
 	private readonly apiService: ApiService = inject(ApiService);
-	private readonly location: Location = inject(Location);
+	private readonly categoryService: CategoryService = inject(CategoryService);
+	private readonly userStore: UserStore = inject(UserStore);
 
 	@ViewChild('routerLinkActivePassword') routerLinkActivePassword: RouterLinkActive | undefined;
 	@ViewChild('routerLinkActivePrivate') routerLinkActivePrivate: RouterLinkActive | undefined;
@@ -71,25 +73,22 @@ export class UserComponent implements OnInit, OnDestroy {
 
 	activatedRouteParamsUsername$: Subscription | undefined;
 	activatedRouteParamsCategoryId$: Subscription | undefined;
-
-	currentUser: CurrentUser | undefined;
-	currentUser$: Subscription | undefined;
-
-	currentUserSkeletonToggle: boolean = true;
-	currentUserSkeletonToggle$: Subscription | undefined;
+	activatedRouteParamsCategoryId: number;
 
 	user: User | undefined;
 	userRequest$: Subscription | undefined;
 	userSkeletonToggle: boolean = true;
 
 	category: Category | undefined;
-	categoryRequest$: Subscription | undefined;
 	categorySkeletonToggle: boolean = true;
 
 	categoryList: Category[] = [];
+	categoryListRequest$: Subscription | undefined;
 	categoryListSkeletonToggle: boolean = true;
 
 	ngOnInit(): void {
+		super.ngOnInit();
+
 		this.activatedRouteParamsUsername$?.unsubscribe();
 		this.activatedRouteParamsUsername$ = this.activatedRoute.params
 			.pipe(distinctUntilKeyChanged('username'))
@@ -102,55 +101,31 @@ export class UserComponent implements OnInit, OnDestroy {
 				},
 				error: (error: any) => console.error(error)
 			});
-
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
-			error: (error: any) => console.error(error)
-		});
-
-		this.currentUserSkeletonToggle$?.unsubscribe();
-		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
-			.pipe(filter((currentUserIsPopulated: boolean) => currentUserIsPopulated))
-			.subscribe({
-				next: () => (this.currentUserSkeletonToggle = false),
-				error: (error: any) => console.error(error)
-			});
-
-		/** State handler */
-
-		if (this.platformService.isBrowser()) {
-			this.location.onUrlChange(() => this.onHandleState());
-		}
 	}
 
 	ngOnDestroy(): void {
+		super.ngOnDestroy();
+
 		[
 			this.activatedRouteParamsUsername$,
 			this.activatedRouteParamsCategoryId$,
-			this.currentUser$,
-			this.currentUserSkeletonToggle$,
 			this.userRequest$,
-			this.categoryRequest$
+			this.categoryListRequest$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
-		this.user = this.skeletonService.getUser(['categories']);
+		this.user = this.skeletonService.getUser();
 		this.userSkeletonToggle = true;
 
 		this.categoryList = this.skeletonService.getCategoryList();
 		this.categoryListSkeletonToggle = true;
-
-		this.category = this.skeletonService.getCategory();
-		this.categorySkeletonToggle = true;
 	}
 
 	setResolver(): void {
 		const username: string = String(this.activatedRoute.snapshot.paramMap.get('username') || '');
 		const userGetAllDto: UserGetAllDto = {
 			username,
-			scope: ['categories'],
 			page: 1,
 			size: 10
 		};
@@ -181,37 +156,57 @@ export class UserComponent implements OnInit, OnDestroy {
 					return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(
 						switchMap(() => throwError(() => httpErrorResponse))
 					);
-				})
+				}),
+				tap((user: User) => this.userStore.setUser(user))
 			)
 			.subscribe({
 				next: (user: User) => {
 					this.user = user;
 					this.userSkeletonToggle = false;
 
-					this.categoryList = this.user.categories;
-					this.categoryListSkeletonToggle = false;
+					/** Set CategoryList */
 
-					this.activatedRouteParamsCategoryId$?.unsubscribe();
-					this.activatedRouteParamsCategoryId$ = this.activatedRoute.params
+					const categoryGetAllDto: CategoryGetAllDto = {
+						username,
+						page: 1,
+						size: 50
+					};
+
+					this.categoryListRequest$?.unsubscribe();
+					this.categoryListRequest$ = this.categoryService
+						.getAll(categoryGetAllDto)
 						.pipe(
-							distinctUntilKeyChanged('categoryId'),
-							filter(() => username === this.user.name),
-							map(() => Number(this.activatedRoute.snapshot.paramMap.get('categoryId')))
+							tap((categoryList: Category[]) => this.userStore.setCategoryList(categoryList)),
+							switchMap(() => this.userStore.getCategoryList())
 						)
 						.subscribe({
-							next: (categoryId: number) => {
-								if (categoryId) {
-									this.category = this.user.categories.find((category: Category) => category.id === categoryId);
-									this.categorySkeletonToggle = false;
-								} else {
-									this.category = undefined;
-									this.categorySkeletonToggle = false;
-								}
+							next: (categoryList: Category[]) => {
+								this.categoryList = categoryList;
+								this.categoryListSkeletonToggle = false;
 
-								/** Apply SEO meta tags */
+								/** Set Category */
 
-								this.setMetaTags();
-								this.setTitle();
+								this.activatedRouteParamsCategoryId$?.unsubscribe();
+								this.activatedRouteParamsCategoryId$ = this.activatedRoute.params
+									.pipe(
+										distinctUntilKeyChanged('categoryId'),
+										map(() => Number(this.activatedRoute.snapshot.paramMap.get('categoryId'))),
+										tap((categoryId: number) => (this.activatedRouteParamsCategoryId = categoryId)),
+										map((categoryId: number) => categoryList.find((category: Category) => category.id === categoryId)),
+										tap((category: Category | undefined) => this.userStore.setCategory(category))
+									)
+									.subscribe({
+										next: (category: Category | undefined) => {
+											this.category = category;
+											this.categorySkeletonToggle = false;
+
+											/** Apply SEO meta tags */
+
+											this.setMetaTags();
+											this.setTitle();
+										},
+										error: (error: any) => console.error(error)
+									});
 							},
 							error: (error: any) => console.error(error)
 						});
@@ -265,35 +260,6 @@ export class UserComponent implements OnInit, OnDestroy {
 			},
 			error: (error: any) => console.error(error)
 		});
-	}
-
-	/** State */
-
-	onHandleState(): void {
-		const navigation: Navigation = this.router.getCurrentNavigation();
-
-		// Check state for detect and react to category and post CRUD
-		// prettier-ignore
-		if (navigation?.extras && navigation?.extras?.state) {
-			if (navigation.extras.state.object === 'category') {
-				const categoryState: Category = navigation.extras.state.data;
-
-				if (navigation.extras.state.action === 'create') {
-					this.categoryList.unshift(categoryState);
-					this.category = categoryState;
-				}
-
-				if (navigation.extras.state.action === 'update') {
-					this.categoryList = this.categoryList.map((category: Category) => category.id === categoryState.id ? categoryState : category);
-					this.category = categoryState;
-				}
-
-				if (navigation.extras.state.action === 'delete') {
-					this.categoryList = this.categoryList.filter((category: Category) => category.id !== categoryState.id);
-					this.category = undefined;
-				}
-			}
-		}
 	}
 
 	/** Report */

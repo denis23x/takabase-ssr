@@ -23,11 +23,8 @@ export class UserAllDetailsComponent extends AbstractPostComponent implements On
 	}
 
 	setResolver(): void {
-		const categoryId: number = Number(this.activatedRoute.parent.snapshot.paramMap.get('categoryId'));
-
 		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 		const postGetOneDto: PostGetOneDto = {
-			categoryId,
 			scope: ['user', 'category']
 		};
 

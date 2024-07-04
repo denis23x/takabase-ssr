@@ -267,10 +267,10 @@ export class UserCategoryComponent extends CU(IS(class {})) implements OnInit, O
 	}
 
 	onDeleteCategory(categoryDeleteDto: CategoryDeleteDto): void {
+		const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
 		const categoryList: Category[] = this.userStore.categoryList.getValue();
 
-		// prettier-ignore
-		this.userStore.setCategoryList(categoryList.filter((category: Category) => category.id !== categoryDeleteDto.categoryId));
+		this.userStore.setCategoryList(categoryList.filter((category: Category) => category.id !== categoryId));
 		this.userStore.setCategory(categoryList.find((category: Category) => category.id === categoryDeleteDto.categoryId));
 
 		// Navigate

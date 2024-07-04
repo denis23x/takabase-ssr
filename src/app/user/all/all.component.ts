@@ -8,14 +8,12 @@ import {
 	numberAttribute,
 	OnDestroy,
 	OnInit,
-	signal,
 	StateKey,
-	TransferState,
-	WritableSignal
+	TransferState
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -31,10 +29,9 @@ import { SearchIndex } from 'algoliasearch/lite';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { PlatformService } from '../../core/services/platform.service';
 import { AlgoliaService } from '../../core/services/algolia.service';
-import { CookiesService } from '../../core/services/cookies.service';
-import { AppearanceService } from '../../core/services/appearance.service';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { HelperService } from '../../core/services/helper.service';
+import { InfiniteScrollMixin as IS } from '../../core/mixins/infinite-scroll.mixin';
 
 const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
 
@@ -55,14 +52,12 @@ const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>
 	selector: 'app-user-all',
 	templateUrl: './all.component.html'
 })
-export class UserAllComponent implements OnInit, OnDestroy {
+export class UserAllComponent extends IS(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly transferState: TransferState = inject(TransferState);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly algoliaService: AlgoliaService = inject(AlgoliaService);
-	private readonly cookiesService: CookiesService = inject(CookiesService);
-	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly router: Router = inject(Router);
 	private readonly helperService: HelperService = inject(HelperService);
 
@@ -83,48 +78,38 @@ export class UserAllComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	activatedRouteParamsUsername$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
 
 	postList: Post[] = [];
 	postListRequest$: Subscription | undefined;
 	postListSkeletonToggle: boolean = true;
 	postListSearchFormToggle: boolean = false;
-	postListIsHasMore: boolean = false;
-	postListIsLoading: WritableSignal<boolean> = signal(false);
-	postListPageScrollInfinite: boolean = false;
-	postListPageScrollInfinite$: Subscription | undefined;
 	postListGetAllDto: PostGetAllDto = {
 		page: 0,
 		size: 20
 	};
 
 	ngOnInit(): void {
-		this.activatedRouteParamsUsername$?.unsubscribe();
-		this.activatedRouteParamsUsername$ = this.activatedRoute.params
-			.pipe(distinctUntilKeyChanged('username'))
-			.subscribe({
-				next: () => {
-					/** Apply Data */
+		super.ngOnInit();
 
-					this.setSkeleton();
-					this.setResolver();
-				},
-				error: (error: any) => console.error(error)
-			});
+		/** Apply Data */
 
-		/** Apply appearance settings */
+		this.setSkeleton();
+		this.setResolver();
 
-		this.setAppearance();
+		/** Toggle SearchForm component */
+
+		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
+			this.onToggleSearchForm(true);
+		} else {
+			this.onToggleSearchForm(false);
+		}
 	}
 
 	ngOnDestroy(): void {
-		[
-			this.activatedRouteParamsUsername$,
-			this.activatedRouteQueryParams$,
-			this.postListRequest$,
-			this.postListPageScrollInfinite$
-		].forEach(($: Subscription) => $?.unsubscribe());
+		super.ngOnDestroy();
+
+		[this.activatedRouteQueryParams$, this.postListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
@@ -154,29 +139,6 @@ export class UserAllComponent implements OnInit, OnDestroy {
 				},
 				error: (error: any) => console.error(error)
 			});
-
-		/** Toggle SearchForm component */
-
-		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
-			this.onToggleSearchForm(true);
-		} else {
-			this.onToggleSearchForm(false);
-		}
-	}
-
-	setAppearance(): void {
-		this.postListPageScrollInfinite = !!Number(this.cookiesService.getItem('page-scroll-infinite'));
-
-		if (this.postListPageScrollInfinite) {
-			this.postListPageScrollInfinite$?.unsubscribe();
-			this.postListPageScrollInfinite$ = this.appearanceService
-				.getPageScrollInfinite()
-				.pipe(filter(() => this.postListIsHasMore && !this.postListIsLoading()))
-				.subscribe({
-					next: () => this.getPostList(true),
-					error: (error: any) => console.error(error)
-				});
-		}
 	}
 
 	/** Search */
