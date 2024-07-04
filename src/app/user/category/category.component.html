@@ -31,14 +31,14 @@
 							<h2
 								class="block truncate text-xl leading-6 font-bold text-base-content max-w-full"
 								appSkeleton
-								[appSkeletonToggle]="categorySkeletonToggle"
+								[appSkeletonToggle]="categorySkeletonToggle || postListSkeletonToggle"
 							>
 								{{ category?.name }}
 							</h2>
 							<time
 								class="text-sm text-base-content/50 leading-4 truncate max-w-full"
 								appSkeleton
-								[appSkeletonToggle]="categorySkeletonToggle"
+								[appSkeletonToggle]="categorySkeletonToggle || postListSkeletonToggle"
 								[attr.datetime]="category?.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
 							>
 								Updated {{ category?.updatedAt | dayjs: "fromX" }}
@@ -63,7 +63,7 @@
 							></button>
 							<ul class="menu menu-vertical menu-md" slot="content">
 								@switch (true) {
-									@case (currentUser?.id === category?.user?.id) {
+									@case (currentUser?.id === user?.id) {
 										<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Category</li>
 										<li class="flex w-full snap-start scroll-my-2">
 											<button
@@ -98,22 +98,8 @@
 												Delete
 											</button>
 										</li>
-										<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Post</li>
-										<li class="flex w-full snap-start scroll-my-2">
-											<a
-												class="rounded-btn block w-full truncate text-right"
-												type="button"
-												title="Create new post"
-												aria-label="Create new post"
-												[routerLink]="['/create']"
-												[queryParams]="{ categoryId: category?.id }"
-												[queryParamsHandling]="'merge'"
-											>
-												Create
-											</a>
-										</li>
 									}
-									@case (currentUser?.id !== category?.user?.id) {
+									@case (currentUser?.id !== user?.id) {
 										<li class="flex w-full snap-start scroll-my-2">
 											<button
 												class="rounded-btn block w-full truncate text-right"
@@ -136,7 +122,7 @@
 			<div
 				class="block"
 				appSkeleton
-				[appSkeletonToggle]="categorySkeletonToggle"
+				[appSkeletonToggle]="categorySkeletonToggle || postListSkeletonToggle"
 				[appSkeletonClassListParent]="['!rounded-box']"
 				[appSkeletonClassList]="['!rounded-box']"
 			>
@@ -195,7 +181,7 @@
 		<router-outlet></router-outlet>
 	</div>
 	<!-- prettier-ignore -->
-	@defer (when currentUser?.id === category?.user?.id; prefetch on idle) {
+	@defer (when currentUser?.id === user?.id; prefetch on idle) {
 		<div
       appCategoryCreate
       #appCategoryCreateComponent

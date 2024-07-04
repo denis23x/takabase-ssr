@@ -26,17 +26,14 @@ import {
 	Validators
 } from '@angular/forms';
 import { CategoryService } from '../../../../core/services/category.service';
-import { Subscription, switchMap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Post } from '../../../../core/models/post.model';
 import { CategoryDeleteDto } from '../../../../core/dto/category/category-delete.dto';
 import { Category } from '../../../../core/models/category.model';
 import { HelperService } from '../../../../core/services/helper.service';
-import { CurrentUser } from '../../../../core/models/current-user.model';
-import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { PlatformService } from '../../../../core/services/platform.service';
-import { filter, map, tap } from 'rxjs/operators';
-import { CategoryGetAllDto } from '../../../../core/dto/category/category-get-all.dto';
+import { UserStore } from '../../../../user/user.store';
 
 interface CategoryDeleteForm {
 	name: FormControl<string>;
@@ -61,9 +58,9 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly location: Location = inject(Location);
+	private readonly userStore: UserStore = inject(UserStore);
 
 	@ViewChild('categoryDeleteDialogElement') categoryDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
@@ -81,11 +78,9 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 		this.categoryPostList = categoryPostList;
 	}
 
-	currentUser: CurrentUser | undefined;
-	currentUser$: Subscription | undefined;
-
 	category: Category | undefined;
 	categoryList: Category[] = [];
+	categoryList$: Subscription | undefined;
 	categoryPostList: Post[] = [];
 
 	categoryDeleteForm: FormGroup = this.formBuilder.group<CategoryDeleteForm>({
@@ -96,28 +91,11 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	categoryDeleteDialogToggle: boolean = false;
 
 	ngOnInit(): void {
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService
-			.getCurrentUser()
-			.pipe(
-				filter((currentUser: CurrentUser | undefined) => !!currentUser),
-				switchMap((currentUser: CurrentUser) => {
-					const categoryGetAllDto: CategoryGetAllDto = {
-						username: currentUser.name,
-						page: 1,
-						size: 50
-					};
-
-					return this.categoryService.getAll(categoryGetAllDto).pipe(
-						tap((categoryList: Category[]) => (this.categoryList = categoryList)),
-						map(() => currentUser)
-					);
-				})
-			)
-			.subscribe({
-				next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
-				error: (error: any) => console.error(error)
-			});
+		this.categoryList$?.unsubscribe();
+		this.categoryList$ = this.userStore.getCategoryList().subscribe({
+			next: (categoryList: Category[]) => (this.categoryList = categoryList),
+			error: (error: any) => console.error(error)
+		});
 
 		/** Extra toggle close when url change */
 
@@ -127,7 +105,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$, this.categoryDeleteFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.categoryList$, this.categoryDeleteFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleCategoryDeleteDialog(toggle: boolean): void {

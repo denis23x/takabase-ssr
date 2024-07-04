@@ -109,25 +109,29 @@
 			<nav class="block px-4">
 				<ul class="tabs tabs-lifted tabs-lg" role="tablist">
 					<!-- prettier-ignore -->
-					<li
-						class="tab"
-						role="tab"
-						appSkeleton
-						[class.tab-active]="!categoryListSkeletonToggle && !category && !routerLinkActivePassword?.isActive && !routerLinkActivePrivate?.isActive"
-						[appSkeletonToggle]="categoryListSkeletonToggle"
-						[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
-						[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
-					>
-						<a
-							class="block whitespace-nowrap px-4"
-							title="All posts"
-							aria-label="All posts"
-							[routerLink]="['/', user.name]"
-							[queryParamsHandling]="'merge'"
-						>
-							All
-						</a>
-					</li>
+					@if ({ isActive: !activatedRouteParamsCategoryId && !routerLinkActivePassword?.isActive && !routerLinkActivePrivate?.isActive }; as routerLinkActiveAll) {
+            <li
+              class="tab"
+              role="tab"
+              appSkeleton
+              [class.tab-active]="!categoryListSkeletonToggle && routerLinkActiveAll.isActive"
+              [appSkeletonToggle]="categoryListSkeletonToggle"
+              [appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
+              [appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
+            >
+              <a
+                class="block whitespace-nowrap px-4"
+                title="All posts"
+                aria-label="All posts"
+                appScrollPreset
+                [appScrollPresetActive]="!categoryListSkeletonToggle && routerLinkActiveAll.isActive"
+                [routerLink]="['/', user.name]"
+                [queryParamsHandling]="'merge'"
+              >
+                All
+              </a>
+            </li>
+          }
 					@if (currentUser?.id === user.id) {
 						<li
 							class="tab"
@@ -140,13 +144,14 @@
 						>
 							<a
 								class="block fill-current text-base-content px-2"
-								title="Private"
-								aria-label="Private"
+								title="Password protected posts"
+								aria-label="Password protected posts"
 								appSvgIcon
+								appScrollPreset
 								routerLinkActive
 								#routerLinkActivePassword="routerLinkActive"
+								[appScrollPresetActive]="routerLinkActivePassword.isActive"
 								[routerLink]="['/', user.name, 'password']"
-								[routerLinkActive]="''"
 								[queryParamsHandling]="'merge'"
 								[appSvgIconIcon]="'shield-lock'"
 								[appSvgIconSquare]="'1.25em'"
@@ -164,11 +169,13 @@
 						>
 							<a
 								class="block fill-current text-base-content px-2"
-								title="Private"
-								aria-label="Private"
+								title="Private posts"
+								aria-label="Private posts"
 								appSvgIcon
+								appScrollPreset
 								routerLinkActive
 								#routerLinkActivePrivate="routerLinkActive"
+								[appScrollPresetActive]="routerLinkActivePrivate.isActive"
 								[routerLink]="['/', user.name, 'private']"
 								[queryParamsHandling]="'merge'"
 								[appSvgIconIcon]="'incognito'"
@@ -182,7 +189,7 @@
 							class="tab"
 							role="tab"
 							appSkeleton
-							[class.tab-active]="routerLinkActive.isActive && category"
+							[class.tab-active]="routerLinkActiveCategory.isActive && category"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
 							[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
@@ -190,11 +197,11 @@
 							<a
 								class="flex h-full items-center justify-center whitespace-nowrap px-4"
 								appScrollPreset
-								#routerLinkActive="routerLinkActive"
-								[appScrollPresetActive]="routerLinkActive.isActive"
+								routerLinkActive
+								#routerLinkActiveCategory="routerLinkActive"
+								[appScrollPresetActive]="routerLinkActiveCategory.isActive"
 								[routerLink]="['/', user.name, 'category', category.id]"
 								[queryParamsHandling]="'merge'"
-								[routerLinkActive]="''"
 								[title]="category.name"
 								[attr.aria-label]="category.name"
 							>
