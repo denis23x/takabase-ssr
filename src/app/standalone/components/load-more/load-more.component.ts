@@ -52,23 +52,21 @@ export class LoadMoreComponent implements OnInit, OnDestroy {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
-			if (!this.searchResponseIsOnePage) {
-				if (!!Number(this.cookiesService.getItem('page-scroll-infinite'))) {
-					this.windowScrollPageInfinite = true;
+			if (!!Number(this.cookiesService.getItem('page-scroll-infinite'))) {
+				this.windowScrollPageInfinite = true;
 
-					this.windowScroll$?.unsubscribe();
-					this.windowScroll$ = fromEvent(window, 'scroll')
-						.pipe(
-							map(() => window.innerHeight + Math.round(window.scrollY)),
-							filter((scrollY: number) => Math.abs(scrollY - this.document.body.offsetHeight) <= 96 + 64),
-							filter(() => !this.searchResponseIsEndPage && !this.searchResponseIsLoading),
-							debounceTime(300)
-						)
-						.subscribe({
-							next: () => this.onLoadMore(),
-							error: (error: any) => console.error(error)
-						});
-				}
+				this.windowScroll$?.unsubscribe();
+				this.windowScroll$ = fromEvent(window, 'scroll')
+					.pipe(
+						map(() => window.innerHeight + Math.round(window.scrollY)),
+						filter((scrollY: number) => Math.abs(scrollY - this.document.body.offsetHeight) <= 96 + 64),
+						filter(() => !this.searchResponseIsEndPage && !this.searchResponseIsLoading),
+						debounceTime(300)
+					)
+					.subscribe({
+						next: () => this.onLoadMore(),
+						error: (error: any) => console.error(error)
+					});
 			}
 		}
 	}

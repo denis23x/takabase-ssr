@@ -3,6 +3,7 @@
 import { Directive, HostListener, inject, Input } from '@angular/core';
 import { PlatformService } from '../../core/services/platform.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
+import { HelperService } from '../../core/services/helper.service';
 
 @Directive({
 	standalone: true,
@@ -11,28 +12,29 @@ import { SnackbarService } from '../../core/services/snackbar.service';
 export class CopyToClipboardDirective {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly helperService: HelperService = inject(HelperService);
 
 	@Input()
-	set appCopyToClipboardValue(copyToClipboardValue: string) {
-		this.copyToClipboardValue = copyToClipboardValue;
+	set appCopyToClipboardValue(clipboardValue: string) {
+		this.clipboardValue = clipboardValue;
 	}
 
 	@Input()
-	set appCopyToClipboardMessage(copyToClipboardMessage: string) {
-		this.copyToClipboardMessage = copyToClipboardMessage;
+	set appCopyToClipboardMessage(clipboardMessage: string) {
+		this.clipboardMessage = clipboardMessage;
 	}
 
-	copyToClipboardValue: string | undefined;
-	copyToClipboardMessage: string = 'URL has been copied';
+	clipboardValue: string | undefined;
+	clipboardMessage: string = 'Link has been copied';
 
 	@HostListener('click', ['$event']) onClick(): void {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 
-			window.navigator.clipboard
-				.writeText(this.copyToClipboardValue || window.location.href)
-				.then(() => this.snackbarService.success('Easy', this.copyToClipboardMessage))
-				.catch(() => this.snackbarService.error('Error', 'Failed to copy'));
+			this.helperService.getNavigatorClipboard(this.clipboardValue || window.location.href).subscribe({
+				next: () => this.snackbarService.success('Easy', this.clipboardMessage),
+				error: (error: any) => console.error(error)
+			});
 		}
 	}
 }

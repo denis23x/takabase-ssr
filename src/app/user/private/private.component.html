@@ -80,13 +80,15 @@
 					}
 				</ul>
 				@defer (on idle; prefetch on timer(1s)) {
-					<div
-						class="block empty:hidden"
-						appLoadMore
-						[appLoadMoreSearchResponseIsLoading]="postListIsLoading"
-						[appLoadMoreSearchResponse]="postListSearchResponse"
-						(appLoadMoreToggle)="getPostList(true)"
-					></div>
+					@if (!postListSkeletonToggle) {
+						<div
+							class="block empty:hidden"
+							appLoadMore
+							[appLoadMoreSearchResponseIsLoading]="postListIsLoading"
+							[appLoadMoreSearchResponse]="postListSearchResponse"
+							(appLoadMoreToggle)="getPostList(true)"
+						></div>
+					}
 				}
 			} @else {
 				<div class="flex flex-col items-center gap-4">
@@ -97,9 +99,9 @@
 						[appSvgIconSquare]="'3em'"
 					></i>
 					<div class="text-center">
-						<p class="text-xl font-bold text-base-content">Posts <span class="text-error">not found</span></p>
-						<a class="link text-sm" title="Create post" aria-label="Create post" [routerLink]="['/create']">
-							Create post
+						<p class="text-xl font-bold text-base-content">Posts <span class="text-error"> not found </span></p>
+						<a class="link text-sm" title="Create new post" aria-label="Create post" [routerLink]="['/create']">
+							Create new post
 						</a>
 					</div>
 				</div>

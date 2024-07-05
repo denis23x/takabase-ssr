@@ -1,99 +1,98 @@
 /** @format */
 
-import { Component, makeStateKey, OnDestroy, OnInit, StateKey } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, inject, makeStateKey, OnDestroy, OnInit, StateKey, TransferState } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { Category } from '../../core/models/category.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto';
-import { AbstractSearchComponent } from '../../abstracts/abstract-search.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { CardCategoryComponent } from '../../standalone/components/card/category/category.component';
-import { from, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilKeyChanged, from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { SearchIndex } from 'algoliasearch/lite';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
-import { tap } from 'rxjs/operators';
+import { LoadMoreComponent } from '../../standalone/components/load-more/load-more.component';
+import { SkeletonService } from '../../core/services/skeleton.service';
+import { MetaService } from '../../core/services/meta.service';
+import { AlgoliaService } from '../../core/services/algolia.service';
+import { PlatformService } from '../../core/services/platform.service';
 
-const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
+const searchResponseKey: StateKey<SearchResponse<Category>> = makeStateKey<SearchResponse<Category>>('searchResponse');
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, SvgIconComponent, SkeletonDirective, CardCategoryComponent, AdComponent],
+	imports: [
+		CommonModule,
+		RouterModule,
+		SvgIconComponent,
+		SkeletonDirective,
+		CardCategoryComponent,
+		AdComponent,
+		LoadMoreComponent
+	],
 	selector: 'app-search-category',
 	templateUrl: './category.component.html'
 })
-export class SearchCategoryComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
+export class SearchCategoryComponent implements OnInit, OnDestroy {
+	public readonly skeletonService: SkeletonService = inject(SkeletonService);
+	public readonly metaService: MetaService = inject(MetaService);
+	public readonly router: Router = inject(Router);
+	public readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	public readonly algoliaService: AlgoliaService = inject(AlgoliaService);
+	public readonly platformService: PlatformService = inject(PlatformService);
+	public readonly transferState: TransferState = inject(TransferState);
+
+	activatedRouteQueryParams$: Subscription | undefined;
+
 	categoryList: Category[] = [];
 	categoryListRequest$: Subscription | undefined;
 	categoryListSkeletonToggle: boolean = true;
+	categoryGetAllDto: CategoryGetAllDto = {
+		page: 0,
+		size: 20
+	};
 
-	categoryGetAllDto: CategoryGetAllDto | undefined;
-	categoryGetAllDto$: Subscription | undefined;
+	categoryListSearchResponse: Omit<SearchResponse<Category>, 'hits'> | undefined;
+	categoryListIsLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	ngOnInit(): void {
-		super.ngOnInit();
+		this.activatedRouteQueryParams$?.unsubscribe();
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.pipe(distinctUntilKeyChanged('query')).subscribe({
+			next: () => {
+				if (this.transferState.hasKey(searchResponseKey)) {
+					this.setCategoryListSearchResponse(this.transferState.get(searchResponseKey, null));
 
-		this.categoryGetAllDto$?.unsubscribe();
-		this.categoryGetAllDto$ = this.abstractGetAllDto$
-			.pipe(
-				tap(() => {
-					this.categoryGetAllDto = this.getAbstractGetAllDto();
-					this.categoryGetAllDto.scope = ['user'];
-				})
-			)
-			.subscribe({
-				next: () => {
-					if (this.transferState.hasKey(searchResponseKey)) {
-						this.setSearchResponse(this.transferState.get(searchResponseKey, null));
-
-						if (this.platformService.isBrowser()) {
-							this.transferState.remove(searchResponseKey);
-						}
-					} else {
-						/** Apply Data */
-
-						this.setSkeleton();
-						this.setResolver();
-
-						/** Apply SEO meta tags */
-
-						this.setMetaTags();
+					if (this.platformService.isBrowser()) {
+						this.transferState.remove(searchResponseKey);
 					}
-				},
-				error: (error: any) => console.error(error)
-			});
+				} else {
+					/** Apply Data */
+
+					this.setSkeleton();
+					this.setResolver();
+				}
+			},
+			error: (error: any) => console.error(error)
+		});
+
+		/** Apply SEO meta tags */
+
+		this.setMetaTags();
 	}
 
 	ngOnDestroy(): void {
-		super.ngOnDestroy();
-
-		[this.categoryListRequest$, this.categoryGetAllDto$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.activatedRouteQueryParams$, this.categoryListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
 		this.categoryList = this.skeletonService.getCategoryList(['user']);
 		this.categoryListSkeletonToggle = true;
-
-		// Hide load more
-
-		this.abstractListIsHasMore = false;
 	}
 
 	setResolver(): void {
-		this.getAbstractList();
-	}
-
-	setSearchResponse(searchResponse: SearchResponse): void {
-		const categoryList: Category[] = searchResponse.hits as any[];
-		const categoryListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
-
-		this.categoryList = this.categoryGetAllDto.page > 1 ? this.categoryList.concat(categoryList) : categoryList;
-		this.categoryListSkeletonToggle = false;
-
-		this.abstractListIsHasMore = categoryListIsHasMore && searchResponse.nbPages > 1;
-		this.abstractListIsLoading$.next(false);
+		this.getCategoryList();
 	}
 
 	setMetaTags(): void {
@@ -114,22 +113,24 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	getAbstractList(abstractListLoadMore: boolean = false): void {
-		this.abstractListIsLoading$.next(true);
+	/** CategoryList */
+
+	getCategoryList(categoryListLoadMore: boolean = false): void {
+		this.categoryListIsLoading$.next(true);
 
 		/** Algolia */
 
-		const categoryQuery: string = this.categoryGetAllDto.query?.trim();
+		const categoryQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
 		const categoryIndex: SearchIndex = this.algoliaService.getSearchIndex('category');
 		const categoryIndexSearch: SearchOptions = {
-			page: (() => (abstractListLoadMore ? this.categoryGetAllDto.page++ : (this.categoryGetAllDto.page = 0)))(),
+			page: (() => (this.categoryGetAllDto.page = categoryListLoadMore ? this.categoryGetAllDto.page + 1 : 0))(),
 			hitsPerPage: this.categoryGetAllDto.size
 		};
 
 		this.categoryListRequest$?.unsubscribe();
 		this.categoryListRequest$ = from(categoryIndex.search(categoryQuery, categoryIndexSearch)).subscribe({
-			next: (searchResponse: SearchResponse) => {
-				this.setSearchResponse(searchResponse);
+			next: (searchResponse: SearchResponse<any>) => {
+				this.setCategoryListSearchResponse(searchResponse);
 
 				if (this.platformService.isServer()) {
 					this.transferState.set(searchResponseKey, searchResponse);
@@ -137,5 +138,16 @@ export class SearchCategoryComponent extends AbstractSearchComponent implements 
 			},
 			error: (error: any) => console.error(error)
 		});
+	}
+
+	setCategoryListSearchResponse(searchResponse: SearchResponse<Category> | null): void {
+		const { hits: categoryList, ...categoryListSearchResponse }: any = searchResponse;
+
+		// Set
+
+		this.categoryList = searchResponse.page > 0 ? this.categoryList.concat(categoryList) : categoryList;
+		this.categoryListSearchResponse = categoryListSearchResponse;
+		this.categoryListSkeletonToggle = false;
+		this.categoryListIsLoading$.next(false);
 	}
 }

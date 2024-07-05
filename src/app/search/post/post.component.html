@@ -1,21 +1,36 @@
 <!-- @format -->
 
 <ng-container>
-	<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4">
-		@for (post of postList; track i; let i = $index) {
-			<li
-				class="block"
-				appCardPost
-				[ngClass]="post.image ? 'row-span-6' : 'row-span-3'"
-				[appCardPostPost]="post"
-				[appCardPostSkeletonToggle]="postListSkeletonToggle"
-				[appPostUrl]="'./'"
-			></li>
-			@if (i === 10 || i === 20 || i === 30) {
-				<li class="block row-span-6" appAd></li>
+	<div class="flex flex-col w-full gap-4">
+		@if (postList.length) {
+			<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4">
+				@for (post of postList; track i; let i = $index) {
+					<li
+						class="block"
+						appCardPost
+						[ngClass]="post.image ? 'row-span-6' : 'row-span-3'"
+						[appCardPostPost]="post"
+						[appCardPostSkeletonToggle]="postListSkeletonToggle"
+						[appPostUrl]="'./'"
+					></li>
+					@if (i === 10 || i === 20 || i === 30) {
+						<li class="block row-span-6" appAd></li>
+					}
+				}
+			</ul>
+			@defer (on idle; prefetch on timer(1s)) {
+				@if (!postListSkeletonToggle) {
+					<div
+						class="block empty:hidden"
+						appLoadMore
+						[appLoadMoreSearchResponseIsLoading]="postListIsLoading$ | async"
+						[appLoadMoreSearchResponse]="postListSearchResponse"
+						(appLoadMoreToggle)="getPostList(true)"
+					></div>
+				}
 			}
-		} @empty {
-			<li class="col-span-2 sm:col-span-3 md:col-span-4 flex flex-col items-center gap-4">
+		} @else {
+			<div class="flex flex-col items-center gap-4">
 				<i
 					class="fill-current text-base-content"
 					appSvgIcon
@@ -24,33 +39,13 @@
 				></i>
 				<div class="text-center">
 					<p class="text-xl font-bold text-base-content">Posts <span class="text-error"> not found </span></p>
-					<a
-						class="link text-sm"
-						title="Create your own post"
-						aria-label="Create your own post"
-						[routerLink]="['/create']"
-					>
-						Create your own post
+					<a class="link text-sm" title="Create new post" aria-label="Create new post" [routerLink]="['/create']">
+						Create new post
 					</a>
 				</div>
-			</li>
+			</div>
 		}
-	</ul>
-	@if (abstractListIsHasMore && !abstractListPageScrollInfinite) {
-		<button
-			class="btn-success btn-md btn mt-4 w-full"
-			type="button"
-			title="Load more posts"
-			aria-label="Load more posts"
-			[disabled]="abstractListIsLoading$ | async"
-			(click)="getAbstractList(true)"
-		>
-			@if (abstractListIsLoading$ | async) {
-				<span class="loading loading-spinner"></span>
-			}
-			Load more
-		</button>
-	}
+	</div>
 	<div class="block">
 		<router-outlet></router-outlet>
 	</div>

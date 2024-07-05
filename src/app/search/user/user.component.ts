@@ -1,7 +1,7 @@
 /** @format */
 
-import { Component, makeStateKey, OnDestroy, OnInit, StateKey } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, inject, makeStateKey, OnDestroy, OnInit, StateKey, TransferState } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -9,20 +9,23 @@ import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { User } from '../../core/models/user.model';
 import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
-import { AbstractSearchComponent } from '../../abstracts/abstract-search.component';
 import { CardUserComponent } from '../../standalone/components/card/user/user.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
-import { from, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilKeyChanged, from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
-import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
-import { environment } from '../../../environments/environment';
-import { filter, tap } from 'rxjs/operators';
-import { CurrentUser } from '../../core/models/current-user.model';
 import { AuthenticatedComponent } from '../../standalone/components/authenticated/authenticated.component';
 import { SearchIndex } from 'algoliasearch/lite';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
+import { LoadMoreComponent } from '../../standalone/components/load-more/load-more.component';
+import { SkeletonService } from '../../core/services/skeleton.service';
+import { MetaService } from '../../core/services/meta.service';
+import { AlgoliaService } from '../../core/services/algolia.service';
+import { PlatformService } from '../../core/services/platform.service';
+import { CurrentUserMixin } from '../../core/mixins/current-user.mixin';
+import { HelperService } from '../../core/services/helper.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
 
-const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
+const searchResponseKey: StateKey<SearchResponse<User>> = makeStateKey<SearchResponse<User>>('searchResponse');
 
 @Component({
 	standalone: true,
@@ -35,114 +38,76 @@ const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>
 		CardUserComponent,
 		SkeletonDirective,
 		AdComponent,
-		CopyToClipboardDirective,
-		AuthenticatedComponent
+		AuthenticatedComponent,
+		LoadMoreComponent
 	],
 	selector: 'app-search-user',
 	templateUrl: './user.component.html'
 })
-export class SearchUserComponent extends AbstractSearchComponent implements OnInit, OnDestroy {
+export class SearchUserComponent extends CurrentUserMixin(class {}) implements OnInit, OnDestroy {
+	public readonly skeletonService: SkeletonService = inject(SkeletonService);
+	public readonly metaService: MetaService = inject(MetaService);
+	public readonly router: Router = inject(Router);
+	public readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	public readonly algoliaService: AlgoliaService = inject(AlgoliaService);
+	public readonly platformService: PlatformService = inject(PlatformService);
+	public readonly transferState: TransferState = inject(TransferState);
+	public readonly helperService: HelperService = inject(HelperService);
+	public readonly snackbarService: SnackbarService = inject(SnackbarService);
+
+	activatedRouteQueryParams$: Subscription | undefined;
+
 	userList: User[] = [];
-	userListRequest$: Subscription | undefined;
 	userListSkeletonToggle: boolean = true;
+	userListRequest$: Subscription | undefined;
+	userGetAllDto: UserGetAllDto = {
+		page: 0,
+		size: 20
+	};
 
-	userGetAllDto: UserGetAllDto | undefined;
-	userGetAllDto$: Subscription | undefined;
-
-	currentUserInviteURL: string | undefined;
-	currentUser: CurrentUser | undefined;
-	currentUser$: Subscription | undefined;
-
-	currentUserSkeletonToggle: boolean = true;
-	currentUserSkeletonToggle$: Subscription | undefined;
+	userListSearchResponse: Omit<SearchResponse<User>, 'hits'> | undefined;
+	userListIsLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		this.userGetAllDto$?.unsubscribe();
-		this.userGetAllDto$ = this.abstractGetAllDto$
-			.pipe(tap(() => (this.userGetAllDto = this.getAbstractGetAllDto())))
-			.subscribe({
-				next: () => {
-					if (this.transferState.hasKey(searchResponseKey)) {
-						this.setSearchResponse(this.transferState.get(searchResponseKey, null));
+		this.activatedRouteQueryParams$?.unsubscribe();
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.pipe(distinctUntilKeyChanged('query')).subscribe({
+			next: () => {
+				if (this.transferState.hasKey(searchResponseKey)) {
+					this.setUserListSearchResponse(this.transferState.get(searchResponseKey, null));
 
-						if (this.platformService.isBrowser()) {
-							this.transferState.remove(searchResponseKey);
-						}
-					} else {
-						/** Apply Data */
-
-						this.setSkeleton();
-						this.setResolver();
-
-						/** Apply SEO meta tags */
-
-						this.setMetaTags();
+					if (this.platformService.isBrowser()) {
+						this.transferState.remove(searchResponseKey);
 					}
-				},
-				error: (error: any) => console.error(error)
-			});
+				} else {
+					/** Apply Data */
 
-		/** Make invite link */
+					this.setSkeleton();
+					this.setResolver();
+				}
+			},
+			error: (error: any) => console.error(error)
+		});
 
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService
-			.getCurrentUser()
-			.pipe(
-				filter((currentUser: CurrentUser | undefined) => !!currentUser),
-				tap((currentUser: CurrentUser) => (this.currentUser = currentUser))
-			)
-			.subscribe({
-				next: () => {
-					const inviteURL: URL = new URL(environment.appUrl);
+		/** Apply SEO meta tags */
 
-					inviteURL.pathname = 'registration';
-					inviteURL.searchParams.append('invitedBy', String(this.currentUser.id));
-
-					this.currentUserInviteURL = inviteURL.toString();
-				},
-				error: (error: any) => console.error(error)
-			});
-
-		this.currentUserSkeletonToggle$?.unsubscribe();
-		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
-			.pipe(filter((currentUserIsPopulated: boolean) => currentUserIsPopulated))
-			.subscribe({
-				next: () => (this.currentUserSkeletonToggle = false),
-				error: (error: any) => console.error(error)
-			});
+		this.setMetaTags();
 	}
 
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		// prettier-ignore
-		[this.userListRequest$, this.userGetAllDto$, this.currentUser$, this.currentUserSkeletonToggle$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.activatedRouteQueryParams$, this.userListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
 		this.userList = this.skeletonService.getUserList();
 		this.userListSkeletonToggle = true;
-
-		// Hide load more
-
-		this.abstractListIsHasMore = false;
 	}
 
 	setResolver(): void {
-		this.getAbstractList();
-	}
-
-	setSearchResponse(searchResponse: SearchResponse): void {
-		const userList: User[] = searchResponse.hits as any[];
-		const userListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages;
-
-		this.userList = this.userGetAllDto.page > 1 ? this.userList.concat(userList) : userList;
-		this.userListSkeletonToggle = false;
-
-		this.abstractListIsHasMore = userListIsHasMore && searchResponse.nbPages > 1;
-		this.abstractListIsLoading$.next(false);
+		this.getUserList();
 	}
 
 	setMetaTags(): void {
@@ -163,22 +128,42 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	getAbstractList(abstractListLoadMore: boolean = false): void {
-		this.abstractListIsLoading$.next(true);
+	getInviteURL(): void {
+		const url: URL = this.helperService.getURL();
+
+		// Clear search params
+
+		for (const key of url.searchParams.keys()) {
+			url.searchParams.delete(key);
+		}
+
+		url.pathname = 'registration';
+		url.searchParams.set('invited', String(this.currentUser.id));
+
+		this.helperService.getNavigatorClipboard(url.toString()).subscribe({
+			next: () => this.snackbarService.success('Easy', 'Invite link has been copied'),
+			error: (error: any) => console.error(error)
+		});
+	}
+
+	/** UserList */
+
+	getUserList(userListLoadMore: boolean = false): void {
+		this.userListIsLoading$.next(true);
 
 		/** Algolia */
 
-		const userQuery: string = this.userGetAllDto.query?.trim();
+		const userQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
 		const userIndex: SearchIndex = this.algoliaService.getSearchIndex('user');
 		const userIndexSearch: SearchOptions = {
-			page: (() => (abstractListLoadMore ? this.userGetAllDto.page++ : (this.userGetAllDto.page = 0)))(),
+			page: (() => (this.userGetAllDto.page = userListLoadMore ? this.userGetAllDto.page + 1 : 0))(),
 			hitsPerPage: this.userGetAllDto.size
 		};
 
 		this.userListRequest$?.unsubscribe();
 		this.userListRequest$ = from(userIndex.search(userQuery, userIndexSearch)).subscribe({
-			next: (searchResponse: SearchResponse) => {
-				this.setSearchResponse(searchResponse);
+			next: (searchResponse: SearchResponse<any>) => {
+				this.setUserListSearchResponse(searchResponse);
 
 				if (this.platformService.isServer()) {
 					this.transferState.set(searchResponseKey, searchResponse);
@@ -186,5 +171,16 @@ export class SearchUserComponent extends AbstractSearchComponent implements OnIn
 			},
 			error: (error: any) => console.error(error)
 		});
+	}
+
+	setUserListSearchResponse(searchResponse: SearchResponse<User> | null): void {
+		const { hits: userList, ...userListSearchResponse }: any = searchResponse;
+
+		// Set
+
+		this.userList = searchResponse.page > 0 ? this.userList.concat(userList) : userList;
+		this.userListSearchResponse = userListSearchResponse;
+		this.userListSkeletonToggle = false;
+		this.userListIsLoading$.next(false);
 	}
 }

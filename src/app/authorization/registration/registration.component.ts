@@ -161,11 +161,11 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
-		const invitedById: number = Number(this.activatedRoute.snapshot.queryParamMap.get('invitedBy') || '');
+		const invitedId: number = Number(this.activatedRoute.snapshot.queryParamMap.get('invited') || '');
 
-		if (invitedById) {
+		if (invitedId) {
 			this.invitedByUserRequest$?.unsubscribe();
-			this.invitedByUserRequest$ = this.userService.getOne(invitedById).subscribe({
+			this.invitedByUserRequest$ = this.userService.getOne(invitedId).subscribe({
 				next: (user: User) => (this.invitedByUser = user),
 				error: (error: any) => console.error(error)
 			});

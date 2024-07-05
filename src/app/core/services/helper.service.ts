@@ -9,6 +9,7 @@ import { customAlphabet } from 'nanoid';
 import { alphanumeric } from 'nanoid-dictionary';
 import { Navigation } from '@angular/router';
 import { CookiesService } from './cookies.service';
+import { from, Observable, of } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -119,6 +120,14 @@ export class HelperService {
 
 			this.document.body.removeChild(HTMLElement);
 		}
+	}
+
+	getNavigatorClipboard(value: string): Observable<void> {
+		if (this.platformService.isBrowser()) {
+			return from(this.platformService.getWindow().navigator.clipboard.writeText(value));
+		}
+
+		return of();
 	}
 
 	getURL(): URL {

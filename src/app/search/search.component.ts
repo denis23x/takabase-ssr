@@ -4,8 +4,7 @@ import { ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SearchFormComponent } from '../standalone/components/search-form/search-form.component';
-import { Subscription } from 'rxjs';
-import { AbstractSearchComponent } from '../abstracts/abstract-search.component';
+import { Observable, Subscription } from 'rxjs';
 import { SvgLogoComponent } from '../standalone/components/svg-logo/svg-logo.component';
 
 @Component({
@@ -17,19 +16,32 @@ import { SvgLogoComponent } from '../standalone/components/svg-logo/svg-logo.com
 export class SearchComponent implements OnDestroy {
 	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-	abstractListIsLoading$: Subscription | undefined;
-	abstractListIsLoading: boolean = false;
+	searchListIsLoading: boolean = false;
+	searchListIsLoading$: Subscription | undefined;
 
 	ngOnDestroy(): void {
-		[this.abstractListIsLoading$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.searchListIsLoading$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	onRouterOutlet(abstractListComponent: AbstractSearchComponent | undefined): void {
-		if (abstractListComponent) {
-			this.abstractListIsLoading$?.unsubscribe();
-			this.abstractListIsLoading$ = abstractListComponent.abstractListIsLoading$.subscribe({
-				next: (abstractListIsLoading: boolean) => {
-					this.abstractListIsLoading = abstractListIsLoading;
+	onRouterOutlet(searchListComponent: any | undefined): void {
+		if (searchListComponent) {
+			const searchListIsLoading$ = (): Observable<boolean> => {
+				const searchListIsLoadingList: (Observable<boolean> | undefined)[] = [
+					searchListComponent.postListIsLoading$,
+					searchListComponent.categoryListIsLoading$,
+					searchListComponent.userListIsLoading$
+				];
+
+				// prettier-ignore
+				return searchListIsLoadingList.find((searchListIsLoading: Observable<boolean> | undefined) => !!searchListIsLoading);
+			};
+
+			/** Catch searchListIsLoading$ */
+
+			this.searchListIsLoading$?.unsubscribe();
+			this.searchListIsLoading$ = searchListIsLoading$().subscribe({
+				next: (searchListIsLoading: boolean) => {
+					this.searchListIsLoading = searchListIsLoading;
 
 					// ExpressionChangedAfterItHasBeenCheckedError (abstractListComponent)
 
