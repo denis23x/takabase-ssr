@@ -17,7 +17,8 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
-import { InfiniteScrollMixin as IS } from '../../core/mixins/infinite-scroll.mixin';
+import { LoadMoreComponent } from '../../standalone/components/load-more/load-more.component';
+import { SearchResponse } from '@algolia/client-search';
 
 @Component({
 	standalone: true,
@@ -33,12 +34,13 @@ import { InfiniteScrollMixin as IS } from '../../core/mixins/infinite-scroll.mix
 		SkeletonDirective,
 		CopyToClipboardDirective,
 		AsyncPipe,
-		CardPostComponent
+		CardPostComponent,
+		LoadMoreComponent
 	],
 	selector: 'app-user-password',
 	templateUrl: './password.component.html'
 })
-export class UserPasswordComponent extends CU(IS(class {})) implements OnInit, OnDestroy {
+export class UserPasswordComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly router: Router = inject(Router);
@@ -60,48 +62,37 @@ export class UserPasswordComponent extends CU(IS(class {})) implements OnInit, O
 		}
 	}
 
-	activatedRouteParamsUsername$: Subscription | undefined;
-
 	postList: Post[] = [];
-	postListRequest$: Subscription | undefined;
 	postListSkeletonToggle: boolean = true;
+	postListIsLoading: boolean = false;
+	postListRequest$: Subscription | undefined;
 	postListGetAllDto: PostGetAllDto = {
 		page: 0,
 		size: 20
 	};
 
+	postListSearchFormToggle: boolean = false;
+	postListSearchResponse: Omit<SearchResponse<Post>, 'hits'> | undefined;
+
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		this.activatedRouteParamsUsername$?.unsubscribe();
-		this.activatedRouteParamsUsername$ = this.activatedRoute.params
-			.pipe(distinctUntilKeyChanged('username'))
-			.subscribe({
-				next: () => {
-					/** Apply Data */
+		/** Apply Data */
 
-					this.setSkeleton();
-					this.setResolver();
-				},
-				error: (error: any) => console.error(error)
-			});
+		this.setSkeleton();
+		this.setResolver();
 	}
 
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		[
-			this.activatedRouteParamsUsername$,
-			this.currentUser$,
-			this.currentUserSkeletonToggle$,
-			this.postListRequest$
-		].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.currentUser$, this.currentUserSkeletonToggle$, this.postListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
 		this.postList = this.skeletonService.getPostList();
 		this.postListSkeletonToggle = true;
-		this.postListIsHasMore = false;
 	}
 
 	setResolver(): void {
@@ -113,7 +104,5 @@ export class UserPasswordComponent extends CU(IS(class {})) implements OnInit, O
 	getPostList(postListLoadMore: boolean = false): void {
 		this.postList = [];
 		this.postListSkeletonToggle = false;
-		this.postListIsHasMore = false;
-		this.postListIsLoading.set(false);
 	}
 }

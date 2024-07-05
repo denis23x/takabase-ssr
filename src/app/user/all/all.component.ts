@@ -31,9 +31,9 @@ import { PlatformService } from '../../core/services/platform.service';
 import { AlgoliaService } from '../../core/services/algolia.service';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { HelperService } from '../../core/services/helper.service';
-import { InfiniteScrollMixin as IS } from '../../core/mixins/infinite-scroll.mixin';
+import { LoadMoreComponent } from '../../standalone/components/load-more/load-more.component';
 
-const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
+const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 
 @Component({
 	standalone: true,
@@ -47,12 +47,13 @@ const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>
 		SkeletonDirective,
 		SearchFormComponent,
 		CopyToClipboardDirective,
-		CardPostComponent
+		CardPostComponent,
+		LoadMoreComponent
 	],
 	selector: 'app-user-all',
 	templateUrl: './all.component.html'
 })
-export class UserAllComponent extends IS(class {}) implements OnInit, OnDestroy {
+export class UserAllComponent implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly transferState: TransferState = inject(TransferState);
@@ -81,17 +82,18 @@ export class UserAllComponent extends IS(class {}) implements OnInit, OnDestroy 
 	activatedRouteQueryParams$: Subscription | undefined;
 
 	postList: Post[] = [];
-	postListRequest$: Subscription | undefined;
 	postListSkeletonToggle: boolean = true;
-	postListSearchFormToggle: boolean = false;
+	postListIsLoading: boolean = false;
+	postListRequest$: Subscription | undefined;
 	postListGetAllDto: PostGetAllDto = {
 		page: 0,
 		size: 20
 	};
 
-	ngOnInit(): void {
-		super.ngOnInit();
+	postListSearchFormToggle: boolean = false;
+	postListSearchResponse: Omit<SearchResponse<Post>, 'hits'> | undefined;
 
+	ngOnInit(): void {
 		/** Apply Data */
 
 		this.setSkeleton();
@@ -107,15 +109,12 @@ export class UserAllComponent extends IS(class {}) implements OnInit, OnDestroy 
 	}
 
 	ngOnDestroy(): void {
-		super.ngOnDestroy();
-
 		[this.activatedRouteQueryParams$, this.postListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
 		this.postList = this.skeletonService.getPostList();
 		this.postListSkeletonToggle = true;
-		this.postListIsHasMore = false;
 	}
 
 	setResolver(): void {
@@ -162,7 +161,7 @@ export class UserAllComponent extends IS(class {}) implements OnInit, OnDestroy 
 	/** PostList */
 
 	getPostList(postListLoadMore: boolean = false): void {
-		this.postListIsLoading.set(true);
+		this.postListIsLoading = true;
 
 		/** Params */
 
@@ -181,7 +180,7 @@ export class UserAllComponent extends IS(class {}) implements OnInit, OnDestroy 
 
 		this.postListRequest$?.unsubscribe();
 		this.postListRequest$ = from(postIndex.search(postQuery, postIndexSearch)).subscribe({
-			next: (searchResponse: SearchResponse) => {
+			next: (searchResponse: SearchResponse<any>) => {
 				this.setPostListSearchResponse(searchResponse);
 
 				if (this.platformService.isServer()) {
@@ -192,13 +191,14 @@ export class UserAllComponent extends IS(class {}) implements OnInit, OnDestroy 
 		});
 	}
 
-	setPostListSearchResponse(searchResponse: SearchResponse): void {
-		const postList: Post[] = searchResponse.hits as any[];
-		const postListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
+	setPostListSearchResponse(searchResponse: SearchResponse<Post> | null): void {
+		const { hits: postList, ...postListSearchResponse }: any = searchResponse;
 
-		this.postList = this.postListGetAllDto.page >= 1 ? this.postList.concat(postList) : postList;
+		// Set
+
+		this.postList = searchResponse.page > 0 ? this.postList.concat(postList) : postList;
+		this.postListSearchResponse = postListSearchResponse;
 		this.postListSkeletonToggle = false;
-		this.postListIsHasMore = postListIsHasMore && searchResponse.nbPages > 1;
-		this.postListIsLoading.set(false);
+		this.postListIsLoading = false;
 	}
 }

@@ -43,9 +43,9 @@ import { HelperService } from '../../core/services/helper.service';
 import { UserStore } from '../user.store';
 import { User } from '../../core/models/user.model';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
-import { InfiniteScrollMixin as IS } from '../../core/mixins/infinite-scroll.mixin';
+import { LoadMoreComponent } from '../../standalone/components/load-more/load-more.component';
 
-const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>('searchResponse');
+const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 
 @Component({
 	standalone: true,
@@ -66,12 +66,13 @@ const searchResponseKey: StateKey<SearchResponse> = makeStateKey<SearchResponse>
 		SearchFormComponent,
 		CopyToClipboardDirective,
 		AsyncPipe,
-		CardPostComponent
+		CardPostComponent,
+		LoadMoreComponent
 	],
 	selector: 'app-user-category',
 	templateUrl: './category.component.html'
 })
-export class UserCategoryComponent extends CU(IS(class {})) implements OnInit, OnDestroy {
+export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly transferState: TransferState = inject(TransferState);
@@ -114,13 +115,16 @@ export class UserCategoryComponent extends CU(IS(class {})) implements OnInit, O
 	categorySkeletonToggle: boolean = true;
 
 	postList: Post[] = [];
-	postListRequest$: Subscription | undefined;
 	postListSkeletonToggle: boolean = true;
-	postListSearchFormToggle: boolean = false;
+	postListIsLoading: boolean = false;
+	postListRequest$: Subscription | undefined;
 	postListGetAllDto: PostGetAllDto = {
 		page: 0,
 		size: 20
 	};
+
+	postListSearchFormToggle: boolean = false;
+	postListSearchResponse: Omit<SearchResponse<Post>, 'hits'> | undefined;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -177,7 +181,6 @@ export class UserCategoryComponent extends CU(IS(class {})) implements OnInit, O
 
 		this.postList = this.skeletonService.getPostList();
 		this.postListSkeletonToggle = true;
-		this.postListIsHasMore = false;
 	}
 
 	setResolver(): void {
@@ -292,7 +295,7 @@ export class UserCategoryComponent extends CU(IS(class {})) implements OnInit, O
 	/** PostList */
 
 	getPostList(postListLoadMore: boolean = false): void {
-		this.postListIsLoading.set(true);
+		this.postListIsLoading = true;
 
 		/** Params */
 
@@ -316,7 +319,7 @@ export class UserCategoryComponent extends CU(IS(class {})) implements OnInit, O
 
 		this.postListRequest$?.unsubscribe();
 		this.postListRequest$ = from(postIndex.search(postQuery, postIndexSearch)).subscribe({
-			next: (searchResponse: SearchResponse) => {
+			next: (searchResponse: SearchResponse<any>) => {
 				this.setPostListSearchResponse(searchResponse);
 
 				if (this.platformService.isServer()) {
@@ -327,13 +330,14 @@ export class UserCategoryComponent extends CU(IS(class {})) implements OnInit, O
 		});
 	}
 
-	setPostListSearchResponse(searchResponse: SearchResponse): void {
-		const postList: Post[] = searchResponse.hits as any[];
-		const postListIsHasMore: boolean = searchResponse.page !== searchResponse.nbPages - 1;
+	setPostListSearchResponse(searchResponse: SearchResponse<Post> | null): void {
+		const { hits: postList, ...postListSearchResponse }: any = searchResponse;
 
-		this.postList = this.postListGetAllDto.page >= 1 ? this.postList.concat(postList) : postList;
+		// Set
+
+		this.postList = searchResponse.page > 0 ? this.postList.concat(postList) : postList;
+		this.postListSearchResponse = postListSearchResponse;
 		this.postListSkeletonToggle = false;
-		this.postListIsHasMore = postListIsHasMore && searchResponse.nbPages > 1;
-		this.postListIsLoading.set(false);
+		this.postListIsLoading = false;
 	}
 }
