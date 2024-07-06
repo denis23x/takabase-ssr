@@ -17,16 +17,14 @@
 					}
 				}
 			</ul>
-			@defer (on idle; prefetch on timer(1s)) {
-				@if (!categoryListSkeletonToggle) {
-					<div
-						class="block empty:hidden"
-						appListLoadMore
-						[appListLoadMoreIsLoading]="categoryListIsLoading$ | async"
-						[appListLoadMoreSearchResponse]="categoryListSearchResponse"
-						(appLoadMoreToggle)="getCategoryList(true)"
-					></div>
-				}
+			@if (!categoryListSkeletonToggle) {
+				<div
+					class="block empty:hidden"
+					appListLoadMore
+					[appListLoadMoreIsLoading]="categoryListIsLoading$ | async"
+					[appListLoadMoreSearchResponse]="categoryListSearchResponse"
+					(appLoadMoreToggle)="getCategoryList(true)"
+				></div>
 			}
 		} @else {
 			<div class="block" appListMock [appListMockTemplate]="'search-category-not-found'"></div>

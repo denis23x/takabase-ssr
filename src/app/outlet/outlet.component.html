@@ -8,7 +8,7 @@
 			<router-outlet></router-outlet>
 		</div>
 	</section>
-	@defer (on idle; prefetch on timer(1s)) {
+	@defer (on timer(1s)) {
 		<div class="relative" appSnackbar></div>
 		<div class="relative" appScrollToTop></div>
 		<div class="relative" appReport></div>

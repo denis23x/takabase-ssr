@@ -16,16 +16,14 @@
 					}
 				}
 			</ul>
-			@defer (on idle; prefetch on timer(1s)) {
-				@if (!userListSkeletonToggle) {
-					<div
-						class="block empty:hidden"
-						appListLoadMore
-						[appListLoadMoreIsLoading]="userListIsLoading$ | async"
-						[appListLoadMoreSearchResponse]="userListSearchResponse"
-						(appLoadMoreToggle)="getUserList(true)"
-					></div>
-				}
+			@if (!userListSkeletonToggle) {
+				<div
+					class="block empty:hidden"
+					appListLoadMore
+					[appListLoadMoreIsLoading]="userListIsLoading$ | async"
+					[appListLoadMoreSearchResponse]="userListSearchResponse"
+					(appLoadMoreToggle)="getUserList(true)"
+				></div>
 			}
 		} @else {
 			<div class="block" appListMock [appListMockTemplate]="'search-user-not-found'"></div>

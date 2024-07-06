@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
 	private readonly titleService: TitleService = inject(TitleService);
 
 	@ViewChild('appPWAComponent') appPWAComponent: PWAComponent | undefined;
+	@ViewChild('appPWAComponentToggle') appPWAComponentToggle: ElementRef<HTMLButtonElement> | undefined;
 
 	// prettier-ignore
 	appFeatureList: any[] = [

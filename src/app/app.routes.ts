@@ -223,16 +223,16 @@ export const APP_ROUTES: Route[] = [
 						// Check if the first URL segment matches the pattern for a username (e.g., denis23x)
 						if (usernameForbiddenList.every((usernameForbidden: string) => username !== usernameForbidden)) {
 							if (username.match(/(?![0-9]+$).*/i)) {
-								const isAll = (): boolean => urlSegment.length === 1;
+								const isAll = (): boolean => urlSegment.length === 1 || urlSegment.length === 2;
 								const isAllDetails = (): boolean => urlSegment.length === 3 && urlSegment[1].path === 'post';
 
-								const isCategory = (): boolean => urlSegment.length === 3 && urlSegment[1].path === 'category';
+								const isCategory = (): boolean => (urlSegment.length === 3 && urlSegment[1].path === 'category') || urlSegment.length === 4;
 								const isCategoryDetails = (): boolean => urlSegment.length === 5 && urlSegment[3].path === 'post';
 
-								const isPassword = (): boolean => urlSegment.length === 2;
+								const isPassword = (): boolean => urlSegment.length === 2 || urlSegment.length === 3;
 								const isPasswordDetails = (): boolean => urlSegment.length === 4 && urlSegment[1].path === 'password';
 
-								const isPrivate = (): boolean => urlSegment.length === 2;
+								const isPrivate = (): boolean => urlSegment.length === 2 || urlSegment.length === 3;
 								const isPrivateDetails = (): boolean => urlSegment.length === 4 && urlSegment[1].path === 'private';
 
 								/** Params */
@@ -350,6 +350,16 @@ export const APP_ROUTES: Route[] = [
 						},
 						children: [
 							{
+								path: 'post',
+								redirectTo: '',
+								pathMatch: 'full'
+							},
+							{
+								path: 'category',
+								redirectTo: '',
+								pathMatch: 'full'
+							},
+							{
 								path: 'post/:postId',
 								canActivate: [redirectHttpErrorGuard()],
 								loadComponent: async () => {
@@ -365,6 +375,11 @@ export const APP_ROUTES: Route[] = [
 							return import('./user/password/password.component').then(m => m.UserPasswordComponent);
 						},
 						children: [
+							{
+								path: 'post',
+								redirectTo: '',
+								pathMatch: 'full'
+							},
 							{
 								path: 'post/:postId',
 								canActivate: [redirectHttpErrorGuard()],
@@ -382,6 +397,11 @@ export const APP_ROUTES: Route[] = [
 						},
 						children: [
 							{
+								path: 'post',
+								redirectTo: '',
+								pathMatch: 'full'
+							},
+							{
 								path: 'post/:postId',
 								canActivate: [redirectHttpErrorGuard()],
 								loadComponent: async () => {
@@ -396,6 +416,11 @@ export const APP_ROUTES: Route[] = [
 							return import('./user/category/category.component').then(m => m.UserCategoryComponent);
 						},
 						children: [
+							{
+								path: 'post',
+								redirectTo: '',
+								pathMatch: 'full'
+							},
 							{
 								path: 'post/:postId',
 								canActivate: [redirectHttpErrorGuard()],

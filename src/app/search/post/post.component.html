@@ -18,16 +18,14 @@
 					}
 				}
 			</ul>
-			@defer (on idle; prefetch on timer(1s)) {
-				@if (!postListSkeletonToggle) {
-					<div
-						class="block empty:hidden"
-						appListLoadMore
-						[appListLoadMoreIsLoading]="postListIsLoading$ | async"
-						[appListLoadMoreSearchResponse]="postListSearchResponse"
-						(appLoadMoreToggle)="getPostList(true)"
-					></div>
-				}
+			@if (!postListSkeletonToggle) {
+				<div
+					class="block empty:hidden"
+					appListLoadMore
+					[appListLoadMoreIsLoading]="postListIsLoading$ | async"
+					[appListLoadMoreSearchResponse]="postListSearchResponse"
+					(appLoadMoreToggle)="getPostList(true)"
+				></div>
 			}
 		} @else {
 			<div class="block" appListMock [appListMockTemplate]="'search-post-not-found'"></div>

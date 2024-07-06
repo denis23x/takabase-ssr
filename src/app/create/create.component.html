@@ -541,8 +541,9 @@
 			</div>
 		</div>
 	</div>
-	@defer (on idle; prefetch on timer(1s)) {
+	@defer (on timer(1s)) {
 		<div appCropper #appCropperComponent (appCropperSubmit)="onSubmitCropperImage($event)"></div>
+		<div appShortcuts></div>
 	}
 	@defer (on interaction(appCategoryCreateComponentToggle); prefetch on idle) {
 		<div appCategoryCreate #appCategoryCreateComponent (appCategoryCreateSuccess)="onCreateCategory($event)"></div>
@@ -565,8 +566,5 @@
 	}
 	@defer (when post; prefetch on idle) {
 		<div appPostDelete #appPostDeleteComponent [appPostDeletePost]="post"></div>
-	}
-	@defer (on idle; prefetch on timer(1s)) {
-		<div appShortcuts></div>
 	}
 </ng-container>

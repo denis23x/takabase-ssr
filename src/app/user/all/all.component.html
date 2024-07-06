@@ -91,16 +91,14 @@
 						></li>
 					}
 				</ul>
-				@defer (on idle; prefetch on timer(1s)) {
-					@if (!postListSkeletonToggle) {
-						<div
-							class="block empty:hidden"
-							appListLoadMore
-							[appListLoadMoreIsLoading]="postListIsLoading"
-							[appListLoadMoreSearchResponse]="postListSearchResponse"
-							(appLoadMoreToggle)="getPostList(true)"
-						></div>
-					}
+				@if (!postListSkeletonToggle) {
+					<div
+						class="block empty:hidden"
+						appListLoadMore
+						[appListLoadMoreIsLoading]="postListIsLoading"
+						[appListLoadMoreSearchResponse]="postListSearchResponse"
+						(appLoadMoreToggle)="getPostList(true)"
+					></div>
 				}
 			} @else {
 				<div class="block" appListMock [appListMockTemplate]="'user-all-not-found'"></div>
