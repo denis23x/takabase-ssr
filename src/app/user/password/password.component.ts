@@ -2,7 +2,7 @@
 
 import { Component, inject, Input, numberAttribute, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { distinctUntilKeyChanged, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -17,8 +17,9 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
-import { LoadMoreComponent } from '../../standalone/components/load-more/load-more.component';
+import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { SearchResponse } from '@algolia/client-search';
+import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 
 @Component({
 	standalone: true,
@@ -35,7 +36,8 @@ import { SearchResponse } from '@algolia/client-search';
 		CopyToClipboardDirective,
 		AsyncPipe,
 		CardPostComponent,
-		LoadMoreComponent
+		ListLoadMoreComponent,
+		ListMockComponent
 	],
 	selector: 'app-user-password',
 	templateUrl: './password.component.html'

@@ -13,11 +13,12 @@ import { BehaviorSubject, distinctUntilKeyChanged, from, Subscription } from 'rx
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { SearchIndex } from 'algoliasearch/lite';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
-import { LoadMoreComponent } from '../../standalone/components/load-more/load-more.component';
+import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { MetaService } from '../../core/services/meta.service';
 import { AlgoliaService } from '../../core/services/algolia.service';
 import { PlatformService } from '../../core/services/platform.service';
+import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 
 const searchResponseKey: StateKey<SearchResponse<Category>> = makeStateKey<SearchResponse<Category>>('searchResponse');
 
@@ -30,7 +31,8 @@ const searchResponseKey: StateKey<SearchResponse<Category>> = makeStateKey<Searc
 		SkeletonDirective,
 		CardCategoryComponent,
 		AdComponent,
-		LoadMoreComponent
+		ListLoadMoreComponent,
+		ListMockComponent
 	],
 	selector: 'app-search-category',
 	templateUrl: './category.component.html'

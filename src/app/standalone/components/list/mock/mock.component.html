@@ -1,0 +1,146 @@
+<!-- @format -->
+
+<ng-container>
+	<div class="flex flex-col items-center gap-2">
+		@switch (template) {
+			@case ("search-post-not-found") {
+				<i
+					class="fill-current text-base-content"
+					appSvgIcon
+					[appSvgIconIcon]="'exclamation-circle'"
+					[appSvgIconSquare]="'2em'"
+				></i>
+				<div class="text-center">
+					<p class="text-lg font-bold text-base-content">Posts <span class="text-error"> not found </span></p>
+					<a class="link text-sm" title="Create new post" aria-label="Create new post" [routerLink]="['/create']">
+						Create new post
+					</a>
+				</div>
+			}
+			@case ("search-category-not-found") {
+				<i
+					class="fill-current text-base-content"
+					appSvgIcon
+					[appSvgIconIcon]="'exclamation-circle'"
+					[appSvgIconSquare]="'2em'"
+				></i>
+				<div class="text-center">
+					<p class="text-lg font-bold text-base-content">Categories <span class="text-error"> not found </span></p>
+					<a
+						class="link text-sm"
+						title="Create new category"
+						aria-label="Create new category"
+						[routerLink]="['/create']"
+					>
+						Create new category
+					</a>
+				</div>
+			}
+			@case ("search-user-not-found") {
+				<i
+					class="fill-current text-base-content"
+					appSvgIcon
+					[appSvgIconIcon]="'exclamation-circle'"
+					[appSvgIconSquare]="'2em'"
+				></i>
+				<div class="text-center">
+					<p class="text-lg font-bold text-base-content">Users <span class="text-error"> not found </span></p>
+					<div class="block" appAuthenticated appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
+						<a
+							class="link text-sm"
+							title="Create account"
+							aria-label="Create account"
+							slot="public"
+							[routerLink]="['/registration']"
+						>
+							Create account
+						</a>
+						<span class="text-sm" slot="private">
+							Can't find somebody?
+							<button class="link" type="button" title="Copy" aria-label="Copy" (click)="getInviteURL()">
+								Copy invite
+							</button>
+						</span>
+					</div>
+				</div>
+			}
+			@case ("user-all-not-found") {
+				<i
+					class="fill-current text-base-content"
+					appSvgIcon
+					[appSvgIconIcon]="'exclamation-circle'"
+					[appSvgIconSquare]="'2em'"
+				></i>
+				<div class="text-center">
+					<p class="text-lg font-bold text-base-content">Posts <span class="text-error"> not found </span></p>
+					<a class="link text-sm" title="Create new post" aria-label="Create new post" [routerLink]="['/create']">
+						Create new post
+					</a>
+				</div>
+			}
+			@case ("user-password-not-found") {
+				<i
+					class="fill-current text-base-content"
+					appSvgIcon
+					[appSvgIconIcon]="'exclamation-circle'"
+					[appSvgIconSquare]="'2em'"
+				></i>
+				<div class="text-center">
+					<p class="text-lg font-bold text-base-content">Posts <span class="text-error"> not found </span></p>
+					<a class="link text-sm" title="Create new post" aria-label="Create new post" [routerLink]="['/create']">
+						Create new post
+					</a>
+				</div>
+			}
+			@case ("user-private-not-found") {
+				<i
+					class="fill-current text-base-content"
+					appSvgIcon
+					[appSvgIconIcon]="'exclamation-circle'"
+					[appSvgIconSquare]="'2em'"
+				></i>
+				<div class="text-center">
+					<p class="text-lg font-bold text-base-content">Posts <span class="text-error"> not found </span></p>
+					<a class="link text-sm" title="Create new post" aria-label="Create new post" [routerLink]="['/create']">
+						Create new post
+					</a>
+				</div>
+			}
+			@case ("user-category-not-found") {
+				<i
+					class="fill-current text-base-content"
+					appSvgIcon
+					[appSvgIconIcon]="'exclamation-circle'"
+					[appSvgIconSquare]="'2em'"
+				></i>
+				<div class="text-center">
+					<p class="text-lg font-bold text-base-content">Posts <span class="text-error"> not found </span></p>
+					<a
+						class="link text-sm"
+						title="Create new post"
+						aria-label="Create new post"
+						[routerLink]="['/create']"
+						[queryParams]="{ categoryId }"
+						[queryParamsHandling]="''"
+					>
+						Create new post
+					</a>
+				</div>
+			}
+			@case ("load-more-is-end-page") {
+				<i
+					class="fill-current text-base-content"
+					appSvgIcon
+					[appSvgIconIcon]="'check-circle'"
+					[appSvgIconSquare]="'2em'"
+				></i>
+				<div class="text-center">
+					<p class="text-lg font-bold text-base-content"><span class="text-success">Nothing more </span> to load</p>
+					<a class="link text-sm" title="Create new post" aria-label="Create new post" [routerLink]="['/create']">
+						Create new post
+					</a>
+				</div>
+			}
+		}
+	</div>
+</ng-container>

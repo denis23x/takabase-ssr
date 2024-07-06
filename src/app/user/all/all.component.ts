@@ -31,7 +31,8 @@ import { PlatformService } from '../../core/services/platform.service';
 import { AlgoliaService } from '../../core/services/algolia.service';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { HelperService } from '../../core/services/helper.service';
-import { LoadMoreComponent } from '../../standalone/components/load-more/load-more.component';
+import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
+import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 
 const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 
@@ -48,7 +49,8 @@ const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchRes
 		SearchFormComponent,
 		CopyToClipboardDirective,
 		CardPostComponent,
-		LoadMoreComponent
+		ListLoadMoreComponent,
+		ListMockComponent
 	],
 	selector: 'app-user-all',
 	templateUrl: './all.component.html'
@@ -79,6 +81,7 @@ export class UserAllComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	activatedRouteParamsUsername$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
 
 	postList: Post[] = [];
@@ -94,10 +97,18 @@ export class UserAllComponent implements OnInit, OnDestroy {
 	postListSearchResponse: Omit<SearchResponse<Post>, 'hits'> | undefined;
 
 	ngOnInit(): void {
-		/** Apply Data */
+		this.activatedRouteParamsUsername$?.unsubscribe();
+		this.activatedRouteParamsUsername$ = this.activatedRoute.params
+			.pipe(distinctUntilKeyChanged('username'))
+			.subscribe({
+				next: () => {
+					/** Apply Data */
 
-		this.setSkeleton();
-		this.setResolver();
+					this.setSkeleton();
+					this.setResolver();
+				},
+				error: (error: any) => console.error(error)
+			});
 
 		/** Toggle SearchForm component */
 
@@ -109,7 +120,8 @@ export class UserAllComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteQueryParams$, this.postListRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.activatedRouteParamsUsername$, this.activatedRouteQueryParams$, this.postListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {

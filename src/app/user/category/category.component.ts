@@ -43,7 +43,8 @@ import { HelperService } from '../../core/services/helper.service';
 import { UserStore } from '../user.store';
 import { User } from '../../core/models/user.model';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
-import { LoadMoreComponent } from '../../standalone/components/load-more/load-more.component';
+import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
+import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 
 const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 
@@ -67,7 +68,8 @@ const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchRes
 		CopyToClipboardDirective,
 		AsyncPipe,
 		CardPostComponent,
-		LoadMoreComponent
+		ListLoadMoreComponent,
+		ListMockComponent
 	],
 	selector: 'app-user-category',
 	templateUrl: './category.component.html'

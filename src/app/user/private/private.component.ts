@@ -17,8 +17,9 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
-import { LoadMoreComponent } from '../../standalone/components/load-more/load-more.component';
+import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { SearchResponse } from '@algolia/client-search';
+import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 
 @Component({
 	standalone: true,
@@ -35,7 +36,8 @@ import { SearchResponse } from '@algolia/client-search';
 		CopyToClipboardDirective,
 		AsyncPipe,
 		CardPostComponent,
-		LoadMoreComponent
+		ListLoadMoreComponent,
+		ListMockComponent
 	],
 	selector: 'app-user-private',
 	templateUrl: './private.component.html'

@@ -16,14 +16,12 @@ import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { AuthenticatedComponent } from '../../standalone/components/authenticated/authenticated.component';
 import { SearchIndex } from 'algoliasearch/lite';
 import { SearchOptions, SearchResponse } from '@algolia/client-search';
-import { LoadMoreComponent } from '../../standalone/components/load-more/load-more.component';
+import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { MetaService } from '../../core/services/meta.service';
 import { AlgoliaService } from '../../core/services/algolia.service';
 import { PlatformService } from '../../core/services/platform.service';
-import { CurrentUserMixin } from '../../core/mixins/current-user.mixin';
-import { HelperService } from '../../core/services/helper.service';
-import { SnackbarService } from '../../core/services/snackbar.service';
+import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 
 const searchResponseKey: StateKey<SearchResponse<User>> = makeStateKey<SearchResponse<User>>('searchResponse');
 
@@ -39,12 +37,13 @@ const searchResponseKey: StateKey<SearchResponse<User>> = makeStateKey<SearchRes
 		SkeletonDirective,
 		AdComponent,
 		AuthenticatedComponent,
-		LoadMoreComponent
+		ListLoadMoreComponent,
+		ListMockComponent
 	],
 	selector: 'app-search-user',
 	templateUrl: './user.component.html'
 })
-export class SearchUserComponent extends CurrentUserMixin(class {}) implements OnInit, OnDestroy {
+export class SearchUserComponent implements OnInit, OnDestroy {
 	public readonly skeletonService: SkeletonService = inject(SkeletonService);
 	public readonly metaService: MetaService = inject(MetaService);
 	public readonly router: Router = inject(Router);
@@ -52,8 +51,6 @@ export class SearchUserComponent extends CurrentUserMixin(class {}) implements O
 	public readonly algoliaService: AlgoliaService = inject(AlgoliaService);
 	public readonly platformService: PlatformService = inject(PlatformService);
 	public readonly transferState: TransferState = inject(TransferState);
-	public readonly helperService: HelperService = inject(HelperService);
-	public readonly snackbarService: SnackbarService = inject(SnackbarService);
 
 	activatedRouteQueryParams$: Subscription | undefined;
 
@@ -69,8 +66,6 @@ export class SearchUserComponent extends CurrentUserMixin(class {}) implements O
 	userListIsLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	ngOnInit(): void {
-		super.ngOnInit();
-
 		this.activatedRouteQueryParams$?.unsubscribe();
 		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.pipe(distinctUntilKeyChanged('query')).subscribe({
 			next: () => {
@@ -96,8 +91,6 @@ export class SearchUserComponent extends CurrentUserMixin(class {}) implements O
 	}
 
 	ngOnDestroy(): void {
-		super.ngOnDestroy();
-
 		[this.activatedRouteQueryParams$, this.userListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -126,24 +119,6 @@ export class SearchUserComponent extends CurrentUserMixin(class {}) implements O
 		};
 
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
-	}
-
-	getInviteURL(): void {
-		const url: URL = this.helperService.getURL();
-
-		// Clear search params
-
-		for (const key of url.searchParams.keys()) {
-			url.searchParams.delete(key);
-		}
-
-		url.pathname = 'registration';
-		url.searchParams.set('invited', String(this.currentUser.id));
-
-		this.helperService.getNavigatorClipboard(url.toString()).subscribe({
-			next: () => this.snackbarService.success('Easy', 'Invite link has been copied'),
-			error: (error: any) => console.error(error)
-		});
 	}
 
 	/** UserList */

@@ -65,7 +65,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex flex-col w-full gap-4">
+		<div class="grid gap-4">
 			@if (postList.length) {
 				<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4">
 					@for (post of postList; track i; let i = $index) {
@@ -83,28 +83,15 @@
 					@if (!postListSkeletonToggle) {
 						<div
 							class="block empty:hidden"
-							appLoadMore
-							[appLoadMoreSearchResponseIsLoading]="postListIsLoading"
-							[appLoadMoreSearchResponse]="postListSearchResponse"
+							appListLoadMore
+							[appListLoadMoreIsLoading]="postListIsLoading"
+							[appListLoadMoreSearchResponse]="postListSearchResponse"
 							(appLoadMoreToggle)="getPostList(true)"
 						></div>
 					}
 				}
 			} @else {
-				<div class="flex flex-col items-center gap-4">
-					<i
-						class="fill-current text-base-content"
-						appSvgIcon
-						[appSvgIconIcon]="'exclamation-circle'"
-						[appSvgIconSquare]="'3em'"
-					></i>
-					<div class="text-center">
-						<p class="text-xl font-bold text-base-content">Posts <span class="text-error"> not found </span></p>
-						<a class="link text-sm" title="Create new post" aria-label="Create new post" [routerLink]="['/create']">
-							Create new post
-						</a>
-					</div>
-				</div>
+				<div class="block" appListMock [appListMockTemplate]="'user-private-not-found'"></div>
 			}
 		</div>
 	</div>

@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="flex flex-col w-full gap-4">
+	<div class="grid gap-4">
 		@if (userList.length) {
 			<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
 				@for (user of userList; track i; let i = $index) {
@@ -20,42 +20,15 @@
 				@if (!userListSkeletonToggle) {
 					<div
 						class="block empty:hidden"
-						appLoadMore
-						[appLoadMoreSearchResponseIsLoading]="userListIsLoading$ | async"
-						[appLoadMoreSearchResponse]="userListSearchResponse"
+						appListLoadMore
+						[appListLoadMoreIsLoading]="userListIsLoading$ | async"
+						[appListLoadMoreSearchResponse]="userListSearchResponse"
 						(appLoadMoreToggle)="getUserList(true)"
 					></div>
 				}
 			}
 		} @else {
-			<div class="flex flex-col items-center gap-4">
-				<i
-					class="fill-current text-base-content"
-					appSvgIcon
-					[appSvgIconIcon]="'exclamation-circle'"
-					[appSvgIconSquare]="'3em'"
-				></i>
-				<div class="text-center">
-					<p class="text-xl font-bold text-base-content">Users <span class="text-error">not found</span></p>
-					<div class="block" appAuthenticated appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
-						<a
-							class="link text-sm"
-							title="Create account"
-							aria-label="Create account"
-							slot="public"
-							[routerLink]="['/registration']"
-						>
-							Create account
-						</a>
-						<span class="text-sm" slot="private">
-							Can't find somebody?
-							<button class="link" type="button" title="Copy" aria-label="Copy" (click)="getInviteURL()">
-								Copy invite
-							</button>
-						</span>
-					</div>
-				</div>
-			</div>
+			<div class="block" appListMock [appListMockTemplate]="'search-user-not-found'"></div>
 		}
 	</div>
 	<div class="block">

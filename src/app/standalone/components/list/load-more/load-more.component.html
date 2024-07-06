@@ -15,10 +15,10 @@
 						type="button"
 						title="Load more"
 						aria-label="Load more"
-						[disabled]="searchResponseIsLoading"
+						[disabled]="isLoading"
 						(click)="onLoadMore()"
 					>
-						@if (searchResponseIsLoading) {
+						@if (isLoading) {
 							<span class="loading loading-spinner"></span>
 						}
 						Load more
@@ -26,20 +26,7 @@
 				}
 			}
 		} @else {
-			<div class="flex flex-col items-center gap-4">
-				<i
-					class="fill-current text-base-content"
-					appSvgIcon
-					[appSvgIconIcon]="'check-circle'"
-					[appSvgIconSquare]="'3em'"
-				></i>
-				<div class="text-center">
-					<p class="text-xl font-bold text-base-content"><span class="text-success">Nothing more</span> to load</p>
-					<a class="link text-sm" title="Create new post" aria-label="Create new post" [routerLink]="['/create']">
-						Create new post
-					</a>
-				</div>
-			</div>
+			<div class="block" appListMock [appListMockTemplate]="'load-more-is-end-page'"></div>
 		}
 	}
 </ng-container>
