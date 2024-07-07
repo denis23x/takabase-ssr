@@ -12,6 +12,7 @@ import { PostUpdateDto } from '../dto/post/post-update.dto';
 import { MetaService } from './meta.service';
 import { TitleService } from './title.service';
 import { PostDeleteDto } from '../dto/post/post-delete.dto';
+import { Navigation, Router } from '@angular/router';
 
 @Injectable({
 	providedIn: 'root'
@@ -20,11 +21,28 @@ export class PostService {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly titleService: TitleService = inject(TitleService);
+	private readonly router: Router = inject(Router);
 
 	backupPostMetaOpenGraph: MetaOpenGraph;
 	backupPostMetaTwitter: MetaTwitter;
 
 	backupPostTitle: string;
+
+	/** SPA helper */
+
+	removePost(postList: Post[]): Post[] {
+		const navigation: Navigation = this.router.getCurrentNavigation();
+
+		if (navigation.extras) {
+			if (navigation.extras.state) {
+				if (navigation.extras.state.action === 'post-delete') {
+					return postList.filter((post: Post) => post.id !== navigation.extras.state.data.id);
+				}
+			}
+		}
+
+		return postList;
+	}
 
 	/** SEO Meta tags */
 

@@ -1,18 +1,8 @@
 /** @format */
 
-import {
-	Component,
-	OnDestroy,
-	OnInit,
-	makeStateKey,
-	StateKey,
-	Input,
-	numberAttribute,
-	inject,
-	TransferState
-} from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit, makeStateKey, StateKey, inject, TransferState } from '@angular/core';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { CommonModule, Location } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
@@ -29,6 +19,7 @@ import { MetaService } from '../../core/services/meta.service';
 import { AlgoliaService } from '../../core/services/algolia.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
+import { PostService } from '../../core/services/post.service';
 
 const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 
@@ -48,30 +39,14 @@ const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchRes
 	templateUrl: './post.component.html'
 })
 export class SearchPostComponent implements OnInit, OnDestroy {
-	public readonly skeletonService: SkeletonService = inject(SkeletonService);
-	public readonly metaService: MetaService = inject(MetaService);
-	public readonly router: Router = inject(Router);
-	public readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	public readonly algoliaService: AlgoliaService = inject(AlgoliaService);
-	public readonly platformService: PlatformService = inject(PlatformService);
-	public readonly transferState: TransferState = inject(TransferState);
-
-	@Input({ transform: numberAttribute })
-	set deleteId(deleteId: number | undefined) {
-		if (deleteId) {
-			this.router
-				.navigate([], {
-					queryParams: {
-						...this.activatedRoute.snapshot.queryParams,
-						deleteId: null
-					},
-					queryParamsHandling: 'merge',
-					relativeTo: this.activatedRoute,
-					replaceUrl: true
-				})
-				.then(() => (this.postList = this.postList.filter((post: Post) => post.id !== deleteId)));
-		}
-	}
+	private readonly skeletonService: SkeletonService = inject(SkeletonService);
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly algoliaService: AlgoliaService = inject(AlgoliaService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly transferState: TransferState = inject(TransferState);
+	private readonly postService: PostService = inject(PostService);
+	private readonly location: Location = inject(Location);
 
 	activatedRouteQueryParams$: Subscription | undefined;
 
@@ -105,6 +80,10 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 			},
 			error: (error: any) => console.error(error)
 		});
+
+		/** Post delete SPA handler */
+
+		this.location.onUrlChange(() => (this.postList = this.postService.removePost(this.postList)));
 
 		/** Apply SEO meta tags */
 

@@ -1,17 +1,6 @@
 /** @format */
 
-import {
-	Component,
-	inject,
-	Input,
-	makeStateKey,
-	numberAttribute,
-	OnDestroy,
-	OnInit,
-	StateKey,
-	TransferState,
-	ViewChild
-} from '@angular/core';
+import { Component, inject, makeStateKey, OnDestroy, OnInit, StateKey, TransferState, ViewChild } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription, switchMap } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -31,7 +20,7 @@ import { CategoryCreateComponent } from '../../standalone/components/category/cr
 import { CategoryDeleteDto } from '../../core/dto/category/category-delete.dto';
 import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule, Location } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 import { Post } from '../../core/models/post.model';
 import { SearchIndex } from 'algoliasearch/lite';
@@ -45,6 +34,7 @@ import { User } from '../../core/models/user.model';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
+import { PostService } from '../../core/services/post.service';
 
 const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 
@@ -83,27 +73,12 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 	private readonly router: Router = inject(Router);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly userStore: UserStore = inject(UserStore);
+	private readonly postService: PostService = inject(PostService);
+	private readonly location: Location = inject(Location);
 
 	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
 	@ViewChild('appCategoryUpdateComponent') appCategoryUpdateComponent: CategoryUpdateComponent | undefined;
 	@ViewChild('appCategoryDeleteComponent') appCategoryDeleteComponent: CategoryDeleteComponent | undefined;
-
-	@Input({ transform: numberAttribute })
-	set deleteId(deleteId: number | undefined) {
-		if (deleteId) {
-			this.router
-				.navigate([], {
-					queryParams: {
-						...this.activatedRoute.snapshot.queryParams,
-						deleteId: null
-					},
-					queryParamsHandling: 'merge',
-					relativeTo: this.activatedRoute,
-					replaceUrl: true
-				})
-				.then(() => (this.postList = this.postList.filter((post: Post) => post.id !== deleteId)));
-		}
-	}
 
 	activatedRouteParamsUsername$: Subscription | undefined;
 	activatedRouteParamsCategoryId$: Subscription | undefined;
@@ -155,6 +130,10 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 				},
 				error: (error: any) => console.error(error)
 			});
+
+		/** Post delete SPA handler */
+
+		this.location.onUrlChange(() => (this.postList = this.postService.removePost(this.postList)));
 
 		/** Toggle SearchForm component */
 

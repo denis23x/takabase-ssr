@@ -103,13 +103,13 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 				}
 				default: {
 					return this.router.navigate(['.'], {
-						queryParams: {
-							...this.activatedRoute.parent.snapshot.queryParams,
-							deleteId: this.post.id
-						},
 						queryParamsHandling: 'merge',
 						relativeTo: this.activatedRoute.parent,
-						replaceUrl: true
+						replaceUrl: true,
+						state: {
+							action: 'post-delete',
+							data: this.post
+						}
 					});
 				}
 			}

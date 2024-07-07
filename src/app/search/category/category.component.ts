@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, inject, makeStateKey, OnDestroy, OnInit, StateKey, TransferState } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { Category } from '../../core/models/category.model';
@@ -38,13 +38,12 @@ const searchResponseKey: StateKey<SearchResponse<Category>> = makeStateKey<Searc
 	templateUrl: './category.component.html'
 })
 export class SearchCategoryComponent implements OnInit, OnDestroy {
-	public readonly skeletonService: SkeletonService = inject(SkeletonService);
-	public readonly metaService: MetaService = inject(MetaService);
-	public readonly router: Router = inject(Router);
-	public readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	public readonly algoliaService: AlgoliaService = inject(AlgoliaService);
-	public readonly platformService: PlatformService = inject(PlatformService);
-	public readonly transferState: TransferState = inject(TransferState);
+	private readonly skeletonService: SkeletonService = inject(SkeletonService);
+	private readonly metaService: MetaService = inject(MetaService);
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly algoliaService: AlgoliaService = inject(AlgoliaService);
+	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly transferState: TransferState = inject(TransferState);
 
 	activatedRouteQueryParams$: Subscription | undefined;
 

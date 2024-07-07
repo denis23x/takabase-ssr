@@ -1,16 +1,6 @@
 /** @format */
 
-import {
-	Component,
-	inject,
-	Input,
-	makeStateKey,
-	numberAttribute,
-	OnDestroy,
-	OnInit,
-	StateKey,
-	TransferState
-} from '@angular/core';
+import { Component, inject, makeStateKey, OnDestroy, OnInit, StateKey, TransferState } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -22,7 +12,7 @@ import { SkeletonService } from '../../core/services/skeleton.service';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 import { Post } from '../../core/models/post.model';
 import { SearchIndex } from 'algoliasearch/lite';
@@ -33,6 +23,7 @@ import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { HelperService } from '../../core/services/helper.service';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
+import { PostService } from '../../core/services/post.service';
 
 const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 
@@ -63,23 +54,8 @@ export class UserAllComponent implements OnInit, OnDestroy {
 	private readonly algoliaService: AlgoliaService = inject(AlgoliaService);
 	private readonly router: Router = inject(Router);
 	private readonly helperService: HelperService = inject(HelperService);
-
-	@Input({ transform: numberAttribute })
-	set deleteId(deleteId: number | undefined) {
-		if (deleteId) {
-			this.router
-				.navigate([], {
-					queryParams: {
-						...this.activatedRoute.snapshot.queryParams,
-						deleteId: null
-					},
-					queryParamsHandling: 'merge',
-					relativeTo: this.activatedRoute,
-					replaceUrl: true
-				})
-				.then(() => (this.postList = this.postList.filter((post: Post) => post.id !== deleteId)));
-		}
-	}
+	private readonly postService: PostService = inject(PostService);
+	private readonly location: Location = inject(Location);
 
 	activatedRouteParamsUsername$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
@@ -109,6 +85,10 @@ export class UserAllComponent implements OnInit, OnDestroy {
 				},
 				error: (error: any) => console.error(error)
 			});
+
+		/** Post delete SPA handler */
+
+		this.location.onUrlChange(() => (this.postList = this.postService.removePost(this.postList)));
 
 		/** Toggle SearchForm component */
 
