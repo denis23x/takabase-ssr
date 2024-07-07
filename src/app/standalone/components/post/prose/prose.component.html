@@ -63,12 +63,13 @@
 								[appSvgIconSquare]="'1.5em'"
 							></button>
 							<ul class="menu menu-vertical menu-md" slot="content">
+								<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Share</li>
 								<li class="flex w-full snap-start scroll-my-2">
 									<button
 										class="rounded-btn block w-full truncate text-right"
 										type="button"
-										title="Copy link"
-										aria-label="Copy link"
+										title="Copy share link"
+										aria-label="Copy share link"
 										appCopyToClipboard
 									>
 										Copy link
@@ -78,23 +79,21 @@
 									<button
 										class="rounded-btn block w-full truncate text-right"
 										type="button"
-										title="QR Code"
-										aria-label="QR Code"
+										title="Show QR Code"
+										aria-label="Show QR Code"
 										(click)="appQrCodeComponent?.onToggleQRCodeDialog(true)"
 									>
 										QR Code
 									</button>
 								</li>
-								<li class="flex w-full snap-start scroll-my-2 menu-title">
-									<hr class="my-0 border-base-content/20" />
-								</li>
+								<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Post</li>
 								@switch (true) {
 									@case (currentUser?.id === post.user.id) {
 										<li class="flex w-full snap-start scroll-my-2">
 											<a
 												class="rounded-btn block w-full truncate text-right"
-												title="Update"
-												aria-label="Update"
+												[title]="'Update: ' + post.name"
+												[attr.aria-label]="'Update: ' + post.name"
 												[routerLink]="['/update', post.id]"
 											>
 												Update
@@ -104,8 +103,8 @@
 											<button
 												class="rounded-btn block w-full truncate text-right"
 												type="button"
-												title="Delete"
-												aria-label="Delete"
+												[title]="'Delete: ' + post.name"
+												[attr.aria-label]="'Delete: ' + post.name"
 												(click)="appPostDeleteComponent?.onTogglePostDeleteDialog(true)"
 											>
 												Delete
@@ -117,8 +116,8 @@
 											<button
 												class="rounded-btn block w-full truncate text-right"
 												type="button"
-												title="Report"
-												aria-label="Report"
+												title="Report post"
+												aria-label="Report post"
 												(click)="onToggleReportDialog(true)"
 											>
 												Report

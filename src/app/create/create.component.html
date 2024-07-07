@@ -73,17 +73,18 @@
 						[appSvgIconIcon]="'three-dots-vertical'"
 						[appSvgIconSquare]="'1.5em'"
 					></button>
-					<ul class="menu menu-vertical menu-md" slot="content">
-						@if (postForm.get("image"); as image) {
+					@if (postForm.get("image"); as image) {
+						<ul class="menu menu-vertical menu-md" slot="content">
+							<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Image</li>
 							<li class="flex w-full snap-start scroll-my-2">
 								<button
 									class="rounded-btn block w-full truncate text-right"
 									type="button"
-									[title]="(image.value ? 'Update' : 'Set') + ' image'"
-									[attr.aria-label]="(image.value ? 'Update' : 'Set') + ' image'"
+									[title]="(image.value ? 'Update' : 'Upload') + ' image'"
+									[attr.aria-label]="(image.value ? 'Update' : 'Upload') + ' image'"
 									(click)="appCropperComponent.onToggleCropper(true)"
 								>
-									{{ image.value ? "Update" : "Set image" }}
+									{{ image.value ? "Update" : "Upload" }}
 								</button>
 							</li>
 							@if (image.value) {
@@ -91,16 +92,16 @@
 									<button
 										class="rounded-btn block w-full truncate text-right"
 										type="button"
-										title="Delete"
-										aria-label="Delete"
+										title="Delete image"
+										aria-label="Delete image"
 										(click)="onUpdateCropperImage(null)"
 									>
 										Delete
 									</button>
 								</li>
 							}
-						}
-					</ul>
+						</ul>
+					}
 				</div>
 			</div>
 			<hr class="w-full border-base-content/20" />
@@ -232,6 +233,7 @@
 							[appSvgIconSquare]="'1.5em'"
 						></button>
 						<ul class="menu menu-vertical menu-md" slot="content">
+							<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Category</li>
 							<li class="flex w-full snap-start scroll-my-2">
 								<button
 									class="rounded-btn block w-full truncate text-right"
@@ -354,6 +356,7 @@
 									[appSvgIconSquare]="'1.5em'"
 								></button>
 								<ul class="menu menu-vertical menu-md" slot="content">
+									<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Fullscreen</li>
 									<li class="flex w-full snap-start scroll-my-2">
 										<label class="label cursor-pointer justify-end gap-4">
 											<span class="label-text">Scroll Sync</span>

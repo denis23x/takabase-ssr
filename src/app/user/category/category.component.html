@@ -44,76 +44,62 @@
 								Updated {{ category?.updatedAt | dayjs: "fromX" }}
 							</time>
 						</div>
-						<div
-							class="flex p-0"
-							appDropdown
-							appSkeleton
-							[appSkeletonToggle]="categorySkeletonToggle || currentUserSkeletonToggle || postListSkeletonToggle"
-							[appDropdownPlacement]="'bottom-end'"
-						>
-							<button
-								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
-								type="button"
-								title="Category menu"
-								aria-label="Category menu"
-								appSvgIcon
-								slot="target"
-								[appSvgIconIcon]="'three-dots-vertical'"
-								[appSvgIconSquare]="'1.5em'"
-							></button>
-							<ul class="menu menu-vertical menu-md" slot="content">
-								@switch (true) {
-									@case (currentUser?.id === user?.id) {
-										<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Category</li>
-										<li class="flex w-full snap-start scroll-my-2">
-											<button
-												class="rounded-btn block w-full truncate text-right"
-												type="button"
-												title="Create new category"
-												aria-label="Create new category"
-												(click)="appCategoryCreateComponent?.onToggleCategoryCreateDialog(true)"
-											>
-												Create
-											</button>
-										</li>
-										<li class="flex w-full snap-start scroll-my-2">
-											<button
-												class="rounded-btn block w-full truncate text-right"
-												type="button"
-												title="Update category"
-												aria-label="Update category"
-												(click)="appCategoryUpdateComponent?.onToggleCategoryUpdateDialog(true)"
-											>
-												Update
-											</button>
-										</li>
-										<li class="flex w-full snap-start scroll-my-2">
-											<button
-												class="rounded-btn block w-full truncate text-right"
-												type="button"
-												title="Delete category"
-												aria-label="Delete category"
-												(click)="appCategoryDeleteComponent?.onToggleCategoryDeleteDialog(true)"
-											>
-												Delete
-											</button>
-										</li>
-									}
-									@case (currentUser?.id !== user?.id) {
-										<li class="flex w-full snap-start scroll-my-2">
-											<button
-												class="rounded-btn block w-full truncate text-right"
-												type="button"
-												title="Work In Progress"
-												aria-label="Work In Progress"
-											>
-												WIP
-											</button>
-										</li>
-									}
-								}
-							</ul>
-						</div>
+						@if (currentUser?.id === user?.id) {
+							<div
+								class="flex p-0"
+								appDropdown
+								appSkeleton
+								[appSkeletonToggle]="categorySkeletonToggle || currentUserSkeletonToggle || postListSkeletonToggle"
+								[appDropdownPlacement]="'bottom-end'"
+							>
+								<button
+									class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
+									type="button"
+									title="Category menu"
+									aria-label="Category menu"
+									appSvgIcon
+									slot="target"
+									[appSvgIconIcon]="'three-dots-vertical'"
+									[appSvgIconSquare]="'1.5em'"
+								></button>
+								<ul class="menu menu-vertical menu-md" slot="content">
+									<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Category</li>
+									<li class="flex w-full snap-start scroll-my-2">
+										<button
+											class="rounded-btn block w-full truncate text-right"
+											type="button"
+											title="Create new category"
+											aria-label="Create new category"
+											(click)="appCategoryCreateComponent?.onToggleCategoryCreateDialog(true)"
+										>
+											Create
+										</button>
+									</li>
+									<li class="flex w-full snap-start scroll-my-2">
+										<button
+											class="rounded-btn block w-full truncate text-right"
+											type="button"
+											[title]="'Update: ' + category.name"
+											[attr.aria-label]="'Update: ' + category.name"
+											(click)="appCategoryUpdateComponent?.onToggleCategoryUpdateDialog(true)"
+										>
+											Update
+										</button>
+									</li>
+									<li class="flex w-full snap-start scroll-my-2">
+										<button
+											class="rounded-btn block w-full truncate text-right"
+											type="button"
+											[title]="'Delete: ' + category.name"
+											[attr.aria-label]="'Delete: ' + category.name"
+											(click)="appCategoryDeleteComponent?.onToggleCategoryDeleteDialog(true)"
+										>
+											Delete
+										</button>
+									</li>
+								</ul>
+							</div>
+						}
 					</div>
 				}
 			}

@@ -50,18 +50,19 @@
 						[appSvgIconIcon]="'three-dots-vertical'"
 						[appSvgIconSquare]="'1.5em'"
 					></button>
-					<ul class="menu menu-vertical menu-md" slot="content">
-						@if (profileForm.get("avatar"); as avatar) {
+					@if (profileForm.get("avatar"); as avatar) {
+						<ul class="menu menu-vertical menu-md" slot="content">
+							<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Avatar</li>
 							<li class="flex w-full snap-start scroll-my-2">
 								<button
 									class="rounded-btn block w-full truncate text-right"
 									data-pw="app-settings-profile-button-show-cropper-modal"
 									type="button"
-									[title]="(avatar.value ? 'Update' : 'Set') + ' avatar'"
-									[attr.aria-label]="(avatar.value ? 'Update' : 'Set') + ' avatar'"
+									[title]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
+									[attr.aria-label]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
 									(click)="appCropperComponent.onToggleCropper(true)"
 								>
-									{{ avatar.value ? "Update" : "Set avatar" }}
+									{{ avatar.value ? "Update" : "Upload" }}
 								</button>
 							</li>
 							@if (avatar.value) {
@@ -69,16 +70,16 @@
 									<button
 										class="rounded-btn block w-full truncate text-right"
 										type="button"
-										title="Delete"
-										aria-label="Delete"
+										title="Delete avatar"
+										aria-label="Delete avatar"
 										(click)="onUpdateCropperAvatar(null)"
 									>
 										Delete
 									</button>
 								</li>
 							}
-						}
-					</ul>
+						</ul>
+					}
 				</div>
 			</div>
 			<hr class="w-full border-base-content/20" />
