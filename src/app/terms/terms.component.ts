@@ -18,22 +18,27 @@ export class TermsComponent implements OnInit {
 
 	termsNavigationList: any[] = [
 		{
+			id: 1,
 			path: 'cookie-policy',
 			name: 'Cookie Policy'
 		},
 		{
+			id: 2,
 			path: 'privacy-policy',
 			name: 'Privacy Policy'
 		},
 		// {
+		//  id: 3,
 		// 	path: 'refund-policy',
 		// 	name: 'Refund Policy'
 		// },
 		{
+			id: 4,
 			path: 'terms-of-service',
 			name: 'Terms of Service'
 		},
 		{
+			id: 5,
 			path: 'user-data-deletion',
 			name: 'User data deletion'
 		}

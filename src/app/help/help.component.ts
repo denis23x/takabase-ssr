@@ -19,26 +19,32 @@ export class HelpComponent implements OnInit {
 
 	helpNavigationList: any[] = [
 		{
+			id: 1,
 			path: 'about',
 			name: 'About'
 		},
 		{
+			id: 2,
 			path: 'markdown',
 			name: 'Markdown'
 		},
 		{
+			id: 3,
 			path: 'code-highlight',
 			name: 'Code highlight'
 		},
 		{
+			id: 4,
 			path: 'diagrams',
 			name: 'Diagrams'
 		},
 		{
+			id: 5,
 			path: 'safe-list',
 			name: 'Safe list'
 		},
 		{
+			id: 6,
 			path: 'compatibility',
 			name: 'Compatibility'
 		}
