@@ -357,9 +357,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			const emojiMartPicker: any = new window.EmojiMart.Picker({
 				/** https://github.com/rickstaa/github-emoji-picker */
 
-				data: async () => {
-					return fetch('/assets/emoji/github_emojis.json').then((response: Response) => response.json());
-				},
+				data: async () => fetch('/assets/json/emojis.json').then((response: Response) => response.json()),
 				onEmojiSelect: (event: any) => {
 					const markdownControl: MarkdownControl = {
 						...this.controlListEmojiMart,

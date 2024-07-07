@@ -19,6 +19,7 @@ import { MetaService } from '../../core/services/meta.service';
 import { AlgoliaService } from '../../core/services/algolia.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
+import { CookiesService } from '../../core/services/cookies.service';
 
 const searchResponseKey: StateKey<SearchResponse<Category>> = makeStateKey<SearchResponse<Category>>('searchResponse');
 
@@ -44,6 +45,7 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
 	private readonly algoliaService: AlgoliaService = inject(AlgoliaService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly transferState: TransferState = inject(TransferState);
+	private readonly cookiesService: CookiesService = inject(CookiesService);
 
 	activatedRouteQueryParams$: Subscription | undefined;
 
@@ -77,6 +79,10 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
 			},
 			error: (error: any) => console.error(error)
 		});
+
+		/** Set cookie for soft redirect */
+
+		this.cookiesService.setItem('pageRedirectSearch', 'categories');
 
 		/** Apply SEO meta tags */
 

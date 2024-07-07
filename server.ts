@@ -2,12 +2,11 @@
 
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine } from '@angular/ssr';
-import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
-import bootstrap from './src/main.server';
-import compression from 'compression';
 import { REQUEST, RESPONSE } from './src/app/core/tokens/express.tokens';
+import express from 'express';
+import bootstrap from './src/main.server';
 
 // Function to get the value of a specific cookie
 function getCookie(cookieString: string, cookieName: string) {
@@ -36,30 +35,10 @@ export function app(): express.Express {
 	server.set('view engine', 'html');
 	server.set('views', browserDistFolder);
 
-	// Compress all HTTP responses
-	server.use(
-		compression({
-			level: 9,
-			filter: (req, res) => {
-				if (req.headers['x-no-compression']) {
-					return false;
-				}
-
-				return compression.filter(req, res);
-			}
-		})
-	);
-
-	// Example Express Rest API endpoints
-	// server.get('/api/**', (req, res) => { });
-
-	// Serve static files from /browser
-	server.get(
-		'*.*',
-		express.static(browserDistFolder, {
-			maxAge: '1y'
-		})
-	);
+	// prettier-ignore
+	server.get('*.*', express.static(browserDistFolder, {
+		maxAge: '1y'
+	}));
 
 	// All regular routes use the Angular engine
 	server.get('*', (req, res, next) => {

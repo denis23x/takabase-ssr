@@ -5,6 +5,8 @@ import { Post } from '../models/post.model';
 import { Category } from '../models/category.model';
 import { User } from '../models/user.model';
 import { HelperService } from './helper.service';
+import { numbers } from 'nanoid-dictionary';
+import { customAlphabet } from 'nanoid';
 
 @Injectable({
 	providedIn: 'root'
@@ -14,7 +16,7 @@ export class SkeletonService {
 
 	getCategory(scope: string[] = []): Category {
 		return {
-			id: 0,
+			id: Number(customAlphabet(numbers, 8)()),
 			name: 'Jewelery',
 			description: 'Dicta celebrer bis.',
 			user: scope.includes('user') ? this.getUser() : undefined,
@@ -27,7 +29,7 @@ export class SkeletonService {
 	getCategoryList(scope: string[] = []): Category[] {
 		return [
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Jewelery',
 				description: 'Dicta celebrer bis.',
 				user: scope.includes('user') ? this.getUser() : undefined,
@@ -36,7 +38,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.663Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Tools',
 				description: 'Antepono deduco sonitus amplus vesper.',
 				user: scope.includes('user') ? this.getUser() : undefined,
@@ -45,7 +47,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.663Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Baby',
 				description: 'Timidus temeritas degero cresco complectus carus cursus ascit.',
 				user: scope.includes('user') ? this.getUser() : undefined,
@@ -54,7 +56,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.663Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Computers',
 				description: 'Vobis vulgaris curvo apparatus cuppedia capitulus.',
 				user: scope.includes('user') ? this.getUser() : undefined,
@@ -63,7 +65,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.663Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Health',
 				description: null,
 				user: scope.includes('user') ? this.getUser() : undefined,
@@ -76,7 +78,7 @@ export class SkeletonService {
 
 	getPost(scope: string[] = []): Post {
 		return {
-			id: 0,
+			id: Number(customAlphabet(numbers, 8)()),
 			name: 'Paint it Black',
 			firebaseUid: this.helperService.getNanoId(4),
 			description: 'Synagoga absconditus depereo cedo.',
@@ -92,7 +94,7 @@ export class SkeletonService {
 	getPostList(scope: string[] = []): Post[] {
 		return [
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Paint it Black',
 				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Synagoga absconditus depereo cedo id ulterius culpo adsum spectaculum umbra.',
@@ -103,7 +105,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'You make Me Wanna',
 				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Terminatio optio claustrum.',
@@ -114,7 +116,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Jailhouse Rock',
 				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Compono adduco demitto curatio tabgo ipsum demo sto ubi.',
@@ -125,7 +127,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Can You Feel the Love Tonight',
 				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Recusandae texo pauci terga compono.',
@@ -136,7 +138,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Make it With You',
 				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Adversus stips allatus paulatim.',
@@ -147,7 +149,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Morning Train (Nine to Five)',
 				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Super tardus approbo vorago vulgus angustus creta tremo subito approbo.',
@@ -158,7 +160,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Be My Baby',
 				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Taceo vulgo confugo derideo.',
@@ -169,7 +171,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'White Christmas',
 				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Turpis nesciunt tendo ago urbanus.',
@@ -180,7 +182,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Wichita Lineman',
 				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Speciosus casso eligendi facilis amiculum.',
@@ -191,7 +193,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.955Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Get Down Tonight',
 				firebaseUid: this.helperService.getNanoId(4),
 				description: 'Sonitus pax tabernus turba viriliter agnitio nulla arca.',
@@ -206,7 +208,7 @@ export class SkeletonService {
 
 	getUser(scope: string[] = []): User {
 		return {
-			id: 0,
+			id: Number(customAlphabet(numbers, 8)()),
 			name: 'Kayley75',
 			description: 'Quidem volutabrum.',
 			avatar: null,
@@ -220,7 +222,7 @@ export class SkeletonService {
 	getUserList(scope: string[] = []): User[] {
 		return [
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Denis.23x',
 				description: null,
 				avatar: null,
@@ -230,7 +232,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-16T13:47:47.360Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Duncan.Doyle35',
 				description: null,
 				avatar: null,
@@ -240,7 +242,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Tiara.Harvey',
 				description: null,
 				avatar: null,
@@ -250,7 +252,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Alessia_Rath',
 				description: null,
 				avatar: null,
@@ -260,7 +262,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Lambert_Wyman17',
 				description: null,
 				avatar: null,
@@ -270,7 +272,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Scot_Shields7',
 				description: null,
 				avatar: null,
@@ -280,7 +282,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Eino35',
 				description: null,
 				avatar: null,
@@ -290,7 +292,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Kayley75',
 				description: null,
 				avatar: null,
@@ -300,7 +302,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Lacey_OConner',
 				description: null,
 				avatar: null,
@@ -310,7 +312,7 @@ export class SkeletonService {
 				updatedAt: '2023-10-15T12:55:54.635Z'
 			},
 			{
-				id: 0,
+				id: Number(customAlphabet(numbers, 8)()),
 				name: 'Sarai88',
 				description: null,
 				avatar: null,

@@ -91,7 +91,7 @@
 					{{ appFeatureActive.description }}
 				</p>
 				<ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-					@for (appFeatureActive of $any(appFeatureActive.list); track $index) {
+					@for (appFeatureActive of $any(appFeatureActive.list); track appFeatureActive.id) {
 						<li class="flex flex-col items-start justify-start gap-4 col-span-1">
 							<span class="text-base sm:text-xl font-semibold text-base-content">
 								{{ appFeatureActive.title }}

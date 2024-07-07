@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "title": "Headings",
+    "description": "To create a heading, add number signs <code>#</code> in front of a word or phrase. The number of number signs you use should correspond to the heading level. For example, to create a heading level three <code>&lt;h3&gt;</code>, use three number signs <code>e.g., ### My Header</code>",
+    "markdown": "# Heading 1\n\n## Heading 2\n\n### Heading 3\n\n#### Heading 4"
+  },
+  {
+    "id": 2,
+    "title": "Emphasis",
+    "description": "You can add emphasis by making text bold or italic. To italicize text, add one asterisk or underscore before and after a word or phrase. To italicize the middle of a word for emphasis, add one asterisk without spaces around the letters.",
+    "markdown": "**Bold**\n\n~~Strikethrough~~\n\n*Italic*\n\n==Mark==\n\nLorem ipsum dolor sit amet, ***consectetur*** adipiscing elit, sed do eiusmod tempor ~~incididunt ut labore et dolore~~ magna aliqua."
+  },
+  {
+    "id": 3,
+    "title": "Lists",
+    "description": "You can organize items into ordered and unordered lists. To create an ordered list, add line items with numbers followed by periods. The numbers don’t have to be in numerical order, but the list should start with the number one. To create an unordered list, add dashes <code>-</code>, asterisks <code>*</code>, or plus signs <code>+</code> in front of line items. Indent one or more items to create a nested list.",
+    "markdown": "1. Ordered list\n    1. Ordered list\n    2. Ordered list\n        1. Ordered list\n2. Ordered list\n\n---\n\n- Unordered list\n    - Unordered list\n    - Unordered list\n        - Unordered list\n- Unordered list"
+  },
+  {
+    "id": 4,
+    "title": "Links",
+    "description": "To create a link, enclose the link text in brackets <code>e.g., [Takabase]</code> and then follow it immediately with the URL in parentheses <code>e.g., (https://takabase.com)</code>. You can optionally add a title for a link. This will appear as a tooltip when the user hovers over the link. To add a title, enclose it in quotation marks after the URL.",
+    "markdown": "My favorite app is [Takabase](https://takabase.com \"The best app\")"
+  },
+  {
+    "id": 5,
+    "title": "Blockquotes",
+    "description": "To create a blockquote, add a <code>></code> in front of a paragraph. Blockquotes can be nested. Add a <code>>></code> in front of the paragraph you want to nest.",
+    "markdown": "> Dorothy followed her through many of the beautiful rooms in her castle\n\n---\n\n> Dorothy followed her through many of the beautiful rooms in her castle\n>> The Witch bade her clean the pots and kettles and sweep the floor and keep the fire fed with wood"
+  },
+  {
+    "id": 6,
+    "title": "Code",
+    "description": "To denote a word or phrase as code, enclose it in backticks <code>`</code>.  The Markdown syntax allows you to create fenced code blocks. You should use three backticks <code>```</code> on the lines before and after the code block. <a class=\"not-prose link\" href=\"help/code-highlight\" target=\"_self\">Read here</a> for more information.",
+    "markdown": "`<inline-code/>`\n\n``` typescript\n// TODO: remake\nconst name: string = 'Takabase';\n```"
+  },
+  {
+    "id": 7,
+    "title": "Diagrams",
+    "description": "To create and modify diagrams dynamically you can use syntax of <a class=\"link\" href=\"https://mermaid.js.org\" target=\"_blank\">Mermaid.js</a> JavaScript based diagramming and charting tool. For more detailed information about it, please <a class=\"not-prose link\" href=\"help/diagrams\" target=\"_self\">read here</a>",
+    "markdown": "``` mermaid\ngraph LR\n  A[Square Rect] -- Link text --> B((Circle))\n  A --> C(Round Rect)\n  B --> D{Rhombus}\n  C --> D\n```"
+  },
+  {
+    "id": 8,
+    "title": "Images",
+    "description": "To add an image, add an exclamation mark <code>!</code>, followed by alt text in brackets, and the path or URL to the image asset in parentheses. You can optionally add a title in quotation marks after the path or URL.",
+    "markdown": "![Takabase](/assets/images/placeholder-image-meta.png \"Image\")"
+  },
+  {
+    "id": 9,
+    "title": "Advanced",
+    "description": "Add classes, identifiers and attributes to your markdown with <code>{.class .class2 attr=value}</code> curly brackets. Feel free to show your imagination and use the large set of CSS classes available <a class=\"not-prose link\" href=\"help/safe-list\" target=\"_self\">here</a>",
+    "markdown": "![Takabase](/assets/images/placeholder-image-meta.png \"Image\"){.mask .mask-heart width=100}\n\n[Takabase App](https://takabase.com){.link .link-info}\n\nBadge Primary{.badge .badge-primary}\n\n[Secondary]{.btn .btn-secondary .btn-outline}\n\n- Register{.step .step-primary}\n- Choose plan{.step .step-primary}\n- Purchase{.step}\n{.steps .steps-vertical .not-prose .p-0}"
+  }
+]

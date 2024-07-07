@@ -20,6 +20,7 @@ import { AlgoliaService } from '../../core/services/algolia.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { PostService } from '../../core/services/post.service';
+import { CookiesService } from '../../core/services/cookies.service';
 
 const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 
@@ -47,6 +48,7 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 	private readonly transferState: TransferState = inject(TransferState);
 	private readonly postService: PostService = inject(PostService);
 	private readonly location: Location = inject(Location);
+	private readonly cookiesService: CookiesService = inject(CookiesService);
 
 	activatedRouteQueryParams$: Subscription | undefined;
 
@@ -80,6 +82,10 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 			},
 			error: (error: any) => console.error(error)
 		});
+
+		/** Set cookie for soft redirect */
+
+		this.cookiesService.setItem('pageRedirectSearch', 'posts');
 
 		/** Post delete SPA handler */
 
