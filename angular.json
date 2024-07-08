@@ -18,7 +18,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular/build:application",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "allowedCommonJsDependencies": ["*"],
             "outputPath": "dist/takabase-ssr",
@@ -219,7 +219,7 @@
           "defaultConfiguration": "development"
         },
         "serve": {
-          "builder": "@angular/build:dev-server",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "takabase-ssr:build:production"
@@ -240,20 +240,6 @@
               "src/**/*.ts",
               "src/**/*.html"
             ]
-          }
-        },
-        "deploy": {
-          "builder": "@angular/fire:deploy",
-          "options": {
-            "version": 2
-          },
-          "configurations": {
-            "production": {
-              "buildTarget": "takabase-ssr:build:production"
-            },
-            "development": {
-              "buildTarget": "takabase-ssr:build:development"
-            }
           }
         }
       }

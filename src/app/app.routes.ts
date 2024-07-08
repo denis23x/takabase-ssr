@@ -9,8 +9,6 @@ import { redirectLoadingGuard } from './core/guards/redirect-loading-guard.servi
 import { redirectPasswordGuard } from './core/guards/redirect-password-guard.service';
 import { redirectPrivateGuard } from './core/guards/redirect-private-guard.service';
 import { environment } from '../environments/environment';
-import { CookiesService } from './core/services/cookies.service';
-import { inject } from '@angular/core';
 
 // prettier-ignore
 export const APP_ROUTES: Route[] = [
@@ -146,12 +144,7 @@ export const APP_ROUTES: Route[] = [
 					{
 						path: '',
 						pathMatch: 'full',
-						redirectTo: () => {
-							const cookiesService: CookiesService = inject(CookiesService);
-							const cookiesSearchRedirect: string = cookiesService.getItem("pageRedirectSearch");
-
-							return cookiesSearchRedirect || 'posts';
-						}
+						redirectTo: 'posts'
 					},
 					{
 						path: 'posts',
