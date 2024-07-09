@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -72,6 +72,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	private readonly fileService: FileService = inject(FileService);
 	private readonly aiService: AIService = inject(AIService);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
+
+	@ViewChild('appCropperComponent') appCropperComponent: CropperComponent | undefined;
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;

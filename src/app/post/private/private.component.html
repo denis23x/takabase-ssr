@@ -1,0 +1,15 @@
+<!-- @format -->
+
+<ng-container>
+	<div class="flex flex-col gap-4">
+		<main
+			class="w-full h-full flex flex-col"
+			appPostProse
+			[appPostProsePost]="post"
+			[appPostProsePostSkeletonToggle]="postSkeletonToggle"
+		></main>
+		<nav class="flex overflow-auto">
+			<div class="block" appShare [appSharePost]="post" [appSharePostSkeletonToggle]="postSkeletonToggle"></div>
+		</nav>
+	</div>
+</ng-container>

@@ -19,7 +19,7 @@
                 appAvatar
                 [ngClass]="{ 'cursor-not-allowed border border-transparent opacity-50 grayscale bg-base-200': profileForm.disabled, 'cursor-pointer': profileForm.enabled, 'border border-success': avatar.value }"
                 [appAvatarUser]="currentUser"
-                (click)="appCropperComponent.onToggleCropper(true)"
+                (click)="appCropperComponent?.onToggleCropper(true)"
               ></figure>
 						}
 					</div>
@@ -60,7 +60,7 @@
 									type="button"
 									[title]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
 									[attr.aria-label]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
-									(click)="appCropperComponent.onToggleCropper(true)"
+									(click)="appCropperComponent?.onToggleCropper(true)"
 								>
 									{{ avatar.value ? "Update" : "Upload" }}
 								</button>
@@ -199,5 +199,7 @@
 			</fieldset>
 		</form>
 	</div>
-	<div appCropper #appCropperComponent (appCropperSubmit)="onSubmitCropperAvatar($event)"></div>
+	@defer (on timer(1s)) {
+		<div appCropper #appCropperComponent (appCropperSubmit)="onSubmitCropperAvatar($event)"></div>
+	}
 </ng-container>

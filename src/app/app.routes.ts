@@ -158,16 +158,7 @@ export const APP_ROUTES: Route[] = [
 						title: 'Posts search',
 						loadComponent: async () => {
 							return import('./search/post/post.component').then(m => m.SearchPostComponent);
-						},
-						children: [
-							{
-								path: ':postId',
-								canActivate: [redirectHttpErrorGuard()],
-								loadComponent: async () => {
-									return import('./search/post/details/details.component').then(m => m.SearchPostDetailsComponent);
-								}
-							}
-						]
+						}
 					},
 					{
 						path: 'categories',
@@ -216,6 +207,50 @@ export const APP_ROUTES: Route[] = [
 						title: 'Profile settings',
 						loadComponent: async () => {
 							return import('./settings/profile/profile.component').then(m => m.SettingsProfileComponent);
+						}
+					}
+				]
+			},
+			{
+				path: 'post',
+				loadComponent: async () => {
+					return import('./post/post.component').then(m => m.PostComponent);
+				},
+				children: [
+					{
+						path: 'password',
+						pathMatch: 'full',
+						redirectTo: '/error/404'
+					},
+					{
+						path: 'password/:postId',
+						canActivate: [redirectHttpErrorGuard()],
+						loadComponent: async () => {
+							return import('./post/password/password.component').then(m => m.PostPasswordComponent);
+						}
+					},
+					{
+						path: 'private',
+						pathMatch: 'full',
+						redirectTo: '/error/404'
+					},
+					{
+						path: 'private/:postId',
+						canActivate: [redirectHttpErrorGuard()],
+						loadComponent: async () => {
+							return import('./post/private/private.component').then(m => m.PostPrivateComponent);
+						}
+					},
+					{
+						path: '',
+						pathMatch: 'full',
+						redirectTo: '/error/404'
+					},
+					{
+						path: ':postId',
+						canActivate: [redirectHttpErrorGuard()],
+						loadComponent: async () => {
+							return import('./post/all/all.component').then(m => m.PostAllComponent);
 						}
 					}
 				]
@@ -365,13 +400,6 @@ export const APP_ROUTES: Route[] = [
 								path: 'category',
 								redirectTo: '',
 								pathMatch: 'full'
-							},
-							{
-								path: 'post/:postId',
-								canActivate: [redirectHttpErrorGuard()],
-								loadComponent: async () => {
-									return import('./user/all/details/details.component').then(m => m.UserAllDetailsComponent);
-								}
 							}
 						]
 					},
@@ -386,13 +414,6 @@ export const APP_ROUTES: Route[] = [
 								path: 'post',
 								redirectTo: '',
 								pathMatch: 'full'
-							},
-							{
-								path: 'post/:postId',
-								canActivate: [redirectHttpErrorGuard()],
-								loadComponent: async () => {
-									return import('./user/password/details/details.component').then(m => m.UserPasswordDetailsComponent);
-								}
 							}
 						]
 					},
@@ -407,13 +428,6 @@ export const APP_ROUTES: Route[] = [
 								path: 'post',
 								redirectTo: '',
 								pathMatch: 'full'
-							},
-							{
-								path: 'post/:postId',
-								canActivate: [redirectHttpErrorGuard()],
-								loadComponent: async () => {
-									return import('./user/private/details/details.component').then(m => m.UserPrivateDetailsComponent);
-								}
 							}
 						]
 					},
@@ -427,13 +441,6 @@ export const APP_ROUTES: Route[] = [
 								path: 'post',
 								redirectTo: '',
 								pathMatch: 'full'
-							},
-							{
-								path: 'post/:postId',
-								canActivate: [redirectHttpErrorGuard()],
-								loadComponent: async () => {
-									return import('./user/category/details/details.component').then(m => m.UserCategoryDetailsComponent);
-								}
 							}
 						]
 					}

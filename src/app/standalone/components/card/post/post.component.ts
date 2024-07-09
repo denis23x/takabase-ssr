@@ -25,12 +25,6 @@ export class CardPostComponent {
 		this.postSkeletonToggle = postSkeletonToggle;
 	}
 
-	@Input()
-	set appPostUrl(postUrl: string) {
-		this.postUrl = postUrl;
-	}
-
 	post: Post | undefined;
 	postSkeletonToggle: boolean = true;
-	postUrl: string = '';
 }

@@ -31,14 +31,10 @@ export class PostService {
 	/** SPA helper */
 
 	removePost(postList: Post[]): Post[] {
-		const navigation: Navigation = this.router.getCurrentNavigation();
+		const navigation: Navigation | null = this.router.getCurrentNavigation();
 
-		if (navigation.extras) {
-			if (navigation.extras.state) {
-				if (navigation.extras.state.action === 'post-delete') {
-					return postList.filter((post: Post) => post.id !== navigation.extras.state.data.id);
-				}
-			}
+		if (navigation?.extras?.state?.action === 'post-delete') {
+			return postList.filter((post: Post) => post.id !== navigation.extras.state.data.id);
 		}
 
 		return postList;
