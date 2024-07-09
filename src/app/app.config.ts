@@ -27,6 +27,7 @@ export const appConfig: ApplicationConfig = {
 		provideHttpClient(withFetch(), withInterceptors([httpAppCheckInterceptor, httpAuthorizationInterceptor])),
 		provideClientHydration(
 			withHttpTransferCacheOptions({
+				includeRequestsWithAuthHeaders: false,
 				includePostRequests: false
 			})
 		),
