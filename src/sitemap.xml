@@ -2,297 +2,192 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://takabase.com/</loc>
-    <lastmod>2024-06-21T15:56:30+01:00</lastmod>
+    <lastmod>2024-07-09T14:11:58+01:00</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://takabase.com/login</loc>
-    <lastmod>2024-06-21T15:56:30+01:00</lastmod>
+    <lastmod>2024-07-09T14:11:58+01:00</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://takabase.com/registration</loc>
-    <lastmod>2024-06-21T15:56:30+01:00</lastmod>
+    <lastmod>2024-07-09T14:11:58+01:00</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://takabase.com/search</loc>
-    <lastmod>2024-06-21T15:56:30+01:00</lastmod>
+    <lastmod>2024-07-09T14:11:58+01:00</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://takabase.com/help/markdown</loc>
-    <lastmod>2024-06-21T15:56:30+01:00</lastmod>
+    <lastmod>2024-07-09T14:11:58+01:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://takabase.com/help/about</loc>
-    <lastmod>2024-06-21T15:56:30+01:00</lastmod>
+    <lastmod>2024-07-09T14:11:58+01:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://takabase.com/reset</loc>
-    <lastmod>2024-06-21T15:56:31+01:00</lastmod>
+    <lastmod>2024-07-09T14:11:59+01:00</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://takabase.com/terms/terms-of-service</loc>
-    <lastmod>2024-06-21T15:56:31+01:00</lastmod>
+    <lastmod>2024-07-09T14:11:59+01:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://takabase.com/terms/cookie-policy</loc>
-    <lastmod>2024-06-21T15:56:31+01:00</lastmod>
+    <lastmod>2024-07-09T14:11:59+01:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://takabase.com/search/posts</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://takabase.com/search/categories</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://takabase.com/search/users</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/search/posts/240002</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
-    <priority>0.6</priority>
+    <loc>https://takabase.com/post/240002</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/search/posts/240001</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
-    <priority>0.6</priority>
+    <loc>https://takabase.com/post/300001</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/search/posts/120001</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
-    <priority>0.6</priority>
+    <loc>https://takabase.com/post/270001</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/search/posts/150001</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
-    <priority>0.6</priority>
+    <loc>https://takabase.com/post/240001</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/search/posts/210002</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
-    <priority>0.6</priority>
+    <loc>https://takabase.com/post/120001</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/search/posts/210001</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
-    <priority>0.6</priority>
+    <loc>https://takabase.com/post/150001</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/search/posts/180001</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
-    <priority>0.6</priority>
+    <loc>https://takabase.com/post/210002</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/search/posts/30002</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
-    <priority>0.6</priority>
+    <loc>https://takabase.com/post/210001</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/search/posts/90001</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
-    <priority>0.6</priority>
+    <loc>https://takabase.com/post/180001</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/search/posts/30001</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
-    <priority>0.6</priority>
+    <loc>https://takabase.com/post/30002</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/search/posts/60001</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
-    <priority>0.6</priority>
+    <loc>https://takabase.com/post/90001</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/search/posts/30003</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
-    <priority>0.6</priority>
+    <loc>https://takabase.com/post/30001</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://takabase.com/post/60001</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://takabase.com/post/30003</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://takabase.com/help/code-highlight</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://takabase.com/help/diagrams</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://takabase.com/help/safe-list</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://takabase.com/help/compatibility</loc>
-    <lastmod>2024-06-21T15:56:36+01:00</lastmod>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://takabase.com/terms/privacy-policy</loc>
-    <lastmod>2024-06-21T15:56:38+01:00</lastmod>
+    <lastmod>2024-07-09T14:12:05+01:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://takabase.com/terms/user-data-deletion</loc>
-    <lastmod>2024-06-21T15:56:38+01:00</lastmod>
+    <lastmod>2024-07-09T14:12:05+01:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://takabase.com/Tipa</loc>
-    <lastmod>2024-06-21T15:56:42+01:00</lastmod>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x</loc>
-    <lastmod>2024-06-21T15:56:42+01:00</lastmod>
-    <priority>1.0</priority>
+    <loc>https://takabase.com/Tipa/category/90001</loc>
+    <lastmod>2024-07-09T14:12:08+01:00</lastmod>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://takabase.com/denis23x/category/30001</loc>
-    <lastmod>2024-06-21T15:56:42+01:00</lastmod>
+    <lastmod>2024-07-09T14:12:08+01:00</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://takabase.com/denis23x/category/1</loc>
-    <lastmod>2024-06-21T15:56:42+01:00</lastmod>
+    <lastmod>2024-07-09T14:12:08+01:00</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://takabase.com/denis23x/category/60001</loc>
-    <lastmod>2024-06-21T15:56:42+01:00</lastmod>
+    <lastmod>2024-07-09T14:12:08+01:00</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://takabase.com/denis23x/post/240002</loc>
-    <lastmod>2024-06-21T15:57:01+01:00</lastmod>
-    <priority>0.6</priority>
+    <loc>https://takabase.com/Tipa</loc>
+    <lastmod>2024-07-09T14:12:09+01:00</lastmod>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://takabase.com/denis23x/post/240001</loc>
-    <lastmod>2024-06-21T15:57:01+01:00</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/post/120001</loc>
-    <lastmod>2024-06-21T15:57:01+01:00</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/post/150001</loc>
-    <lastmod>2024-06-21T15:57:01+01:00</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/post/210002</loc>
-    <lastmod>2024-06-21T15:57:01+01:00</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/post/210001</loc>
-    <lastmod>2024-06-21T15:57:01+01:00</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/post/180001</loc>
-    <lastmod>2024-06-21T15:57:01+01:00</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/post/30002</loc>
-    <lastmod>2024-06-21T15:57:01+01:00</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/post/90001</loc>
-    <lastmod>2024-06-21T15:57:01+01:00</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/post/30001</loc>
-    <lastmod>2024-06-21T15:57:01+01:00</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/post/60001</loc>
-    <lastmod>2024-06-21T15:57:01+01:00</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/post/30003</loc>
-    <lastmod>2024-06-21T15:57:01+01:00</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/category/1/post/180001</loc>
-    <lastmod>2024-06-21T15:57:02+01:00</lastmod>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/category/1/post/60001</loc>
-    <lastmod>2024-06-21T15:57:02+01:00</lastmod>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/category/1/post/30003</loc>
-    <lastmod>2024-06-21T15:57:02+01:00</lastmod>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/category/30001/post/240002</loc>
-    <lastmod>2024-06-21T15:57:03+01:00</lastmod>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/category/30001/post/240001</loc>
-    <lastmod>2024-06-21T15:57:03+01:00</lastmod>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/category/30001/post/210002</loc>
-    <lastmod>2024-06-21T15:57:03+01:00</lastmod>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/category/30001/post/210001</loc>
-    <lastmod>2024-06-21T15:57:03+01:00</lastmod>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/category/30001/post/30002</loc>
-    <lastmod>2024-06-21T15:57:03+01:00</lastmod>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/category/30001/post/90001</loc>
-    <lastmod>2024-06-21T15:57:03+01:00</lastmod>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/category/30001/post/30001</loc>
-    <lastmod>2024-06-21T15:57:03+01:00</lastmod>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/category/60001/post/120001</loc>
-    <lastmod>2024-06-21T15:57:03+01:00</lastmod>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://takabase.com/denis23x/category/60001/post/150001</loc>
-    <lastmod>2024-06-21T15:57:03+01:00</lastmod>
-    <priority>0.2</priority>
+    <loc>https://takabase.com/denis23x</loc>
+    <lastmod>2024-07-09T14:12:09+01:00</lastmod>
+    <priority>1.0</priority>
   </url>
 </urlset>

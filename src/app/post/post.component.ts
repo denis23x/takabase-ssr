@@ -1,10 +1,9 @@
 /** @format */
 
-import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Post } from '../core/models/post.model';
 import { CommonModule } from '@angular/common';
-import * as console from 'node:console';
 import { Subscription } from 'rxjs';
 import { PostStore } from './post.store';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
