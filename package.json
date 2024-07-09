@@ -8,7 +8,6 @@
   "scripts": {
     "start:dev": "ng run takabase-ssr:serve:localhost",
     "start:deploy": "npx tsx deploy.ts",
-    "start:deploy11": "firebase use takabase-dev && export FIREBASE_FRAMEWORKS_BUILD_TARGET='development' && firebase deploy --only functions,hosting:takabase-dev",
     "start:lint": "ng lint",
     "build:prod": "ng run takabase-ssr:build:production",
     "build:spite": "npx tsx sprite.ts",
@@ -62,7 +61,6 @@
     "qrcode": "^1.5.3",
     "rxjs": "~7.8.1",
     "tslib": "^2.6.2",
-    "tsx": "^4.16.2",
     "zone.js": "~0.14.6"
   },
   "devDependencies": {
