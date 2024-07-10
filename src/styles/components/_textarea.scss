@@ -1,7 +1,7 @@
 /* https://css-tricks.com/the-cleanest-trick-for-autogrowing-textareas/ */
 
 .textarea-autosize {
-  @apply flex border rounded-btn overflow-hidden;
+  @apply flex border rounded-btn text-base-content overflow-hidden;
 
   &.textarea-autosize-success {
     @apply border-success;

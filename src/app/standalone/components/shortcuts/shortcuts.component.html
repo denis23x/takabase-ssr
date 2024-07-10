@@ -18,7 +18,7 @@
 				<ul class="flex flex-col w-full">
 					@for (shortcut of shortcutsList; track shortcut.key; let shortcutLast = $last) {
 						<li class="flex items-center justify-between">
-							<p class="text-sm">{{ shortcut.label }}</p>
+							<p class="text-sm text-base-content">{{ shortcut.label }}</p>
 							<div class="flex items-center justify-start gap-2">
 								@for (key of shortcut.shortcut; track $index; let keyLast = $last) {
 									<kbd class="kbd kbd-sm uppercase"> {{ key }} </kbd>

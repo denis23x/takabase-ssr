@@ -78,9 +78,6 @@ export class PostPrivateComponent implements OnInit {
 				next: (post: Post) => {
 					this.post = post;
 					this.postSkeletonToggle = false;
-
-					this.postService.setPostMetaTags(this.post);
-					this.postService.setPostTitle(this.post.name);
 				},
 				error: (error: any) => console.error(error)
 			});

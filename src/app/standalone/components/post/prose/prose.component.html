@@ -32,7 +32,7 @@
 								{{ post.name || "Name" }}
 							</h2>
 							<a
-								class="link text-sm leading-4 truncate max-w-full"
+								class="link text-sm text-base-content leading-4 truncate max-w-full"
 								appSkeleton
 								[target]="postPreview ? '_blank' : '_self'"
 								[appSkeletonToggle]="postSkeletonToggle"
@@ -53,7 +53,7 @@
 							[appDropdownPlacement]="'bottom-end'"
 						>
 							<button
-								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
+								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
 								type="button"
 								title="Post menu"
 								aria-label="Post menu"
@@ -152,7 +152,7 @@
 						Published {{ post.createdAt | dayjs: "fromX" }}
 					</time>
 					@if (post?.markdown) {
-						<span class="block text-sm" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+						<span class="block text-sm text-base-content" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 							Time to read: {{ post?.markdown | markdown: "time-to-read" }} min.
 						</span>
 					}

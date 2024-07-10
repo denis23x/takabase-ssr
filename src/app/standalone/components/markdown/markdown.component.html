@@ -31,7 +31,7 @@
 						@for (control of controlListHeading; track control.key) {
 							<li class="flex w-full">
 								<button
-									class="w-full whitespace-nowrap text-base-content"
+									class="w-full whitespace-nowrap"
 									type="button"
 									[title]="'Set ' + control.label"
 									[attr.aria-label]="'Set ' + control.label"
@@ -68,7 +68,7 @@
 						@for (control of controlListFormatting; track control.key) {
 							<li class="flex w-full">
 								<button
-									class="w-full whitespace-nowrap text-base-content"
+									class="w-full whitespace-nowrap"
 									type="button"
 									[title]="'Apply ' + control.label.toLowerCase() + ' formatting'"
 									[attr.aria-label]="'Apply ' + control.label.toLowerCase() + ' formatting'"
@@ -105,7 +105,7 @@
 						@for (control of controlListList; track control.key) {
 							<li class="flex w-full">
 								<button
-									class="w-full whitespace-nowrap text-base-content"
+									class="w-full whitespace-nowrap"
 									type="button"
 									[title]="'Add ' + control.label.toLowerCase() + ' list'"
 									[attr.aria-label]="'Add ' + control.label.toLowerCase() + ' list'"

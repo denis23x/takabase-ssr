@@ -232,8 +232,6 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 				const title: string = this.category?.name || username;
 				const description: string = this.category?.description || userDescription;
 
-				/** Set meta (SSR SEO trick) */
-
 				const metaOpenGraph: Partial<MetaOpenGraph> = {
 					['og:title']: title,
 					['og:description']: description,

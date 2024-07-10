@@ -2,7 +2,7 @@
 
 .menu {
   &.menu-horizontal {
-    @apply overflow-x-auto overflow-y-hidden;
+    @apply overflow-x-auto overflow-y-hidden text-base-content;
 
     li {
       div[appDropdown],
@@ -17,6 +17,6 @@
   }
 
   &.menu-vertical {
-    @apply overflow-hidden rounded-box border border-base-content/20 bg-base-100 shadow before:hidden;
+    @apply overflow-hidden text-base-content rounded-box border border-base-content/20 bg-base-100 shadow before:hidden;
   }
 }
