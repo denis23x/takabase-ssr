@@ -1,37 +1,72 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="flex flex-col gap-4 rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl">
-		<div class="breadcrumbs text-base text-base-content p-0">
-			@if (post) {
-				<ul>
-					<li>
-						<a class="flex items-center justify-start gap-2" [routerLink]="['/']">
-							<i class="block" appSvgIcon [appSvgIconIcon]="'house'" [appSvgIconSquare]="'1.25em'"> </i>
-							<span>Home</span>
+	<section class="flex flex-col gap-4 rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl">
+		<header class="block">
+			<nav class="breadcrumbs text-base text-base-content p-0">
+				<ul class="flex items-center justify-start">
+					<li class="block">
+						<a class="flex items-center justify-start gap-2 text-base-content" [routerLink]="['/']">
+							<i
+								class="block fill-current"
+								appSvgIcon
+								[class.hidden]="postSkeletonToggle"
+								[appSvgIconIcon]="'house'"
+								[appSvgIconSquare]="'1.25em'"
+							>
+							</i>
+							<span
+								class="hidden sm:block link link-hover text-sm"
+								appSkeleton
+								[appSkeletonToggle]="postSkeletonToggle"
+							>
+								Home
+							</span>
 						</a>
 					</li>
-					<li>
-						<a class="flex items-center justify-start gap-2" [routerLink]="['/', post.user.name]">
-							<i class="block" appSvgIcon [appSvgIconIcon]="'person'" [appSvgIconSquare]="'1.25em'"> </i>
-							<span>{{ post.user.name }}</span>
+					<li class="block">
+						<a class="flex items-center justify-start gap-2 text-base-content" [routerLink]="['/', post.user.name]">
+							<i
+								class="block fill-current"
+								appSvgIcon
+								[class.hidden]="postSkeletonToggle"
+								[appSvgIconIcon]="'person'"
+								[appSvgIconSquare]="'1.25em'"
+							>
+							</i>
+							<span
+								class="hidden sm:block link link-hover text-sm"
+								appSkeleton
+								[appSkeletonToggle]="postSkeletonToggle"
+							>
+								{{ post.user.name }}
+							</span>
 						</a>
 					</li>
-					<li>
+					<li class="block">
 						<a
-							class="flex items-center justify-start gap-2"
+							class="flex items-center justify-start gap-2 text-base-content"
 							[routerLink]="['/', post.user.name, 'category', post.category.id]"
 						>
-							<i class="block" appSvgIcon [appSvgIconIcon]="'folder'" [appSvgIconSquare]="'1.25em'"> </i>
-							<span>{{ post.category.name }}</span>
+							<i
+								class="block fill-current"
+								appSvgIcon
+								[class.hidden]="postSkeletonToggle"
+								[appSvgIconIcon]="'folder'"
+								[appSvgIconSquare]="'1.25em'"
+							>
+							</i>
+							<span class="block link link-hover text-sm" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+								{{ post.category.name }}
+							</span>
 						</a>
 					</li>
 				</ul>
-			}
-		</div>
+			</nav>
+		</header>
 		<hr class="border-t border-base-content/20" />
 		<div class="block">
 			<router-outlet></router-outlet>
 		</div>
-	</div>
+	</section>
 </ng-container>

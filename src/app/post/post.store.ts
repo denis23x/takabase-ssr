@@ -19,6 +19,17 @@ export class PostStore {
 	readonly post: BehaviorSubject<Post | undefined> = new BehaviorSubject<Post | undefined>(undefined);
 	readonly postList: BehaviorSubject<Post[]> = new BehaviorSubject<Post[]>([]);
 
+	reset(): void {
+		this.setUser(undefined);
+		this.setUserList([]);
+
+		this.setCategory(undefined);
+		this.setCategoryList([]);
+
+		this.setPost(undefined);
+		this.setPostList([]);
+	}
+
 	// User
 
 	getUser(): Observable<User | undefined> {

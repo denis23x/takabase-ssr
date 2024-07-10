@@ -112,6 +112,10 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 			this.userRequest$,
 			this.categoryListRequest$
 		].forEach(($: Subscription) => $?.unsubscribe());
+
+		// Reset store
+
+		this.userStore.reset();
 	}
 
 	setSkeleton(): void {

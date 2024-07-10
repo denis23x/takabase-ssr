@@ -11,23 +11,46 @@ import { TitleService } from '../core/services/title.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 import { filter } from 'rxjs/operators';
+import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
+import { SkeletonService } from '../core/services/skeleton.service';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, CommonModule, SvgIconComponent],
+	imports: [RouterModule, CommonModule, SvgIconComponent, SkeletonDirective],
 	selector: 'app-post',
 	templateUrl: './post.component.html'
 })
 export class PostComponent implements OnInit, OnDestroy {
-	private readonly postStore: PostStore = inject(PostStore);
 	private readonly titleService: TitleService = inject(TitleService);
 	private readonly metaService: MetaService = inject(MetaService);
+	private readonly skeletonService: SkeletonService = inject(SkeletonService);
+	private readonly postStore: PostStore = inject(PostStore);
 
 	post: Post | undefined;
 	post$: Subscription | undefined;
 	postSkeletonToggle: boolean = true;
 
 	ngOnInit(): void {
+		/** Apply Data */
+
+		this.setSkeleton();
+		this.setResolver();
+	}
+
+	ngOnDestroy(): void {
+		[this.post$].forEach(($: Subscription) => $?.unsubscribe());
+
+		// Reset store
+
+		this.postStore.reset();
+	}
+
+	setSkeleton(): void {
+		this.post = this.skeletonService.getPost(['user', 'category']);
+		this.postSkeletonToggle = true;
+	}
+
+	setResolver(): void {
 		this.post$ = this.postStore
 			.getPost()
 			.pipe(filter((post: Post | undefined) => !!post))
@@ -43,10 +66,6 @@ export class PostComponent implements OnInit, OnDestroy {
 				},
 				error: (error: any) => console.error(error)
 			});
-	}
-
-	ngOnDestroy(): void {
-		[this.post$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setTitle(): void {
