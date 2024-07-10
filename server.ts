@@ -7,6 +7,7 @@ import { dirname, join, resolve } from 'node:path';
 import { REQUEST, RESPONSE } from './src/app/core/tokens/express.tokens';
 import express from 'express';
 import bootstrap from './src/main.server';
+import expressStaticGzip from 'express-static-gzip';
 
 // Function to get the value of a specific cookie
 function getCookie(cookieString: string, cookieName: string) {
@@ -36,8 +37,11 @@ export function app(): express.Express {
 	server.set('views', browserDistFolder);
 
 	// prettier-ignore
-	server.get('*.*', express.static(browserDistFolder, {
-		maxAge: '1y'
+	server.get('*.*', expressStaticGzip(browserDistFolder, {
+		enableBrotli: true,
+		serveStatic: {
+			maxAge: '1y'
+		}
 	}));
 
 	// All regular routes use the Angular engine
@@ -63,6 +67,7 @@ export function app(): express.Express {
 		commonEngine
 			.render({
 				bootstrap,
+				inlineCriticalCss: true,
 				documentFilePath: indexHtml,
 				url: `${protocol}://${headers.host}${redirectUrl || originalUrl}`,
 				publicPath: browserDistFolder,

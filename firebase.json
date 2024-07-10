@@ -3,7 +3,9 @@
     {
       "predeploy": [
         "rm .firebase/takabase-dev/functions/dist/takabase-ssr/browser/index.html",
-        "rm .firebase/takabase-dev/hosting/index.html"
+        "rm .firebase/takabase-dev/hosting/index.html",
+        "bread-compressor -a brotli,gzip '.firebase/takabase-dev/functions/dist/takabase-ssr/browser/**/*.{js,css}'",
+        "bread-compressor -a brotli,gzip '.firebase/takabase-dev/hosting/**/*.{js,css}'"
       ],
       "target": "takabase-dev",
       "source": ".",
@@ -22,7 +24,9 @@
     {
       "predeploy": [
         "rm .firebase/takabase-prod/functions/dist/takabase-ssr/browser/index.html",
-        "rm .firebase/takabase-prod/hosting/index.html"
+        "rm .firebase/takabase-prod/hosting/index.html",
+        "bread-compressor -a brotli,gzip '.firebase/takabase-prod/functions/dist/takabase-ssr/browser/**/*.{js,css}'",
+        "bread-compressor -a brotli,gzip '.firebase/takabase-prod/hosting/**/*.{js,css}'"
       ],
       "target": "takabase-prod",
       "source": ".",
