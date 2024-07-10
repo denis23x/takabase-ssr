@@ -2,7 +2,7 @@
 
 import { Component, OnDestroy, OnInit, makeStateKey, StateKey, inject, TransferState } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
@@ -19,7 +19,6 @@ import { MetaService } from '../../core/services/meta.service';
 import { AlgoliaService } from '../../core/services/algolia.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
-import { PostService } from '../../core/services/post.service';
 import { CookiesService } from '../../core/services/cookies.service';
 
 const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
@@ -46,8 +45,6 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 	private readonly algoliaService: AlgoliaService = inject(AlgoliaService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly transferState: TransferState = inject(TransferState);
-	private readonly postService: PostService = inject(PostService);
-	private readonly location: Location = inject(Location);
 	private readonly cookiesService: CookiesService = inject(CookiesService);
 
 	activatedRouteQueryParams$: Subscription | undefined;
@@ -86,10 +83,6 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 		/** Set cookie for soft redirect */
 
 		this.cookiesService.setItem('pageRedirectSearch', 'posts');
-
-		/** Post delete SPA handler */
-
-		this.location.onUrlChange(() => (this.postList = this.postService.removePost(this.postList)));
 
 		/** Apply SEO meta tags */
 

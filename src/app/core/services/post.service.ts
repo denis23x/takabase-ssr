@@ -9,26 +9,12 @@ import { PostCreateDto } from '../dto/post/post-create.dto';
 import { PostGetOneDto } from '../dto/post/post-get-one.dto';
 import { PostUpdateDto } from '../dto/post/post-update.dto';
 import { PostDeleteDto } from '../dto/post/post-delete.dto';
-import { Navigation, Router } from '@angular/router';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class PostService {
 	private readonly apiService: ApiService = inject(ApiService);
-	private readonly router: Router = inject(Router);
-
-	/** SPA helper */
-
-	removePost(postList: Post[]): Post[] {
-		const navigation: Navigation | null = this.router.getCurrentNavigation();
-
-		if (navigation?.extras?.state?.action === 'post-delete') {
-			return postList.filter((post: Post) => post.id !== navigation.extras.state.data.id);
-		}
-
-		return postList;
-	}
 
 	/** REST */
 

@@ -478,7 +478,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 			const postFormRedirect = (post: Post): void => {
 				this.router
-					.navigate(['/', post.user.name, 'category', post.category.id, 'post', post.id])
+					.navigate(['/', post.user.name, 'category', post.category.id])
 					.then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
 			};
 

@@ -18,9 +18,9 @@ import { WindowComponent } from '../../window/window.component';
 import { Post } from '../../../../core/models/post.model';
 import { PostService } from '../../../../core/services/post.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { CurrentUser } from '../../../../core/models/current-user.model';
-import { from, Subscription, switchMap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { Location } from '@angular/common';
@@ -39,7 +39,6 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly location: Location = inject(Location);
-	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
 	@ViewChild('postDeleteDialogElement') postDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
@@ -90,31 +89,6 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitPostDelete(): void {
-		const redirectToBack = (): Promise<boolean> => {
-			switch (true) {
-				case this.location.path().startsWith('/update'): {
-					const postUsername: string = this.currentUser.name;
-					const postCategoryId: string = String(this.post.category.id);
-
-					return this.router.navigate(['/', postUsername, 'category', postCategoryId], {
-						relativeTo: this.activatedRoute,
-						replaceUrl: true
-					});
-				}
-				default: {
-					return this.router.navigate(['.'], {
-						queryParamsHandling: 'merge',
-						relativeTo: this.activatedRoute.parent,
-						replaceUrl: true,
-						state: {
-							action: 'post-delete',
-							data: this.post
-						}
-					});
-				}
-			}
-		};
-
 		this.postDeleteIsSubmitted.set(true);
 
 		const postId: number = this.post.id;
@@ -129,12 +103,13 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 		}
 
 		this.postDeleteRequest$?.unsubscribe();
-		this.postDeleteRequest$ = this.postService
-			.delete(postId, postDeleteDto)
-			.pipe(switchMap(() => from(redirectToBack())))
-			.subscribe({
-				next: () => this.snackbarService.success('Sadly..', 'Post has been deleted'),
-				error: () => this.postDeleteIsSubmitted.set(false)
-			});
+		this.postDeleteRequest$ = this.postService.delete(postId, postDeleteDto).subscribe({
+			next: () => {
+				this.router
+					.navigate(['/', this.post.user.name, 'category', this.post.category.id])
+					.then(() => this.snackbarService.success('Sadly..', 'Post has been deleted'));
+			},
+			error: () => this.postDeleteIsSubmitted.set(false)
+		});
 	}
 }

@@ -12,7 +12,7 @@ import { DropdownComponent } from '../../standalone/components/dropdown/dropdown
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
-import { AsyncPipe, CommonModule, Location } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 import { Post } from '../../core/models/post.model';
 import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
@@ -20,7 +20,6 @@ import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { SearchResponse } from '@algolia/client-search';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
-import { PostService } from '../../core/services/post.service';
 
 @Component({
 	standalone: true,
@@ -45,8 +44,6 @@ import { PostService } from '../../core/services/post.service';
 })
 export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
-	private readonly postService: PostService = inject(PostService);
-	private readonly location: Location = inject(Location);
 
 	postList: Post[] = [];
 	postListSkeletonToggle: boolean = true;
@@ -62,10 +59,6 @@ export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDest
 
 	ngOnInit(): void {
 		super.ngOnInit();
-
-		/** Post delete SPA handler */
-
-		this.location.onUrlChange(() => (this.postList = this.postService.removePost(this.postList)));
 
 		/** Apply Data */
 

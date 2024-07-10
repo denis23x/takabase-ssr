@@ -55,25 +55,25 @@
 						</p>
 					</div>
 				</div>
-				<div
-					class="flex items-center justify-end"
-					appDropdown
-					appSkeleton
-					[appSkeletonToggle]="postSkeletonToggle"
-					[appDropdownPlacement]="'bottom-end'"
-				>
-					<button
-						class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
-						type="button"
-						title="Image menu"
-						aria-label="Image menu"
-						appSvgIcon
-						slot="target"
-						[disabled]="postForm.disabled"
-						[appSvgIconIcon]="'three-dots-vertical'"
-						[appSvgIconSquare]="'1.5em'"
-					></button>
-					@if (postForm.get("image"); as image) {
+				@if (postForm.get("image"); as image) {
+					<div
+						class="flex items-center justify-end"
+						appDropdown
+						appSkeleton
+						[appSkeletonToggle]="postSkeletonToggle"
+						[appDropdownPlacement]="'bottom-end'"
+					>
+						<button
+							class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
+							type="button"
+							title="Image menu"
+							aria-label="Image menu"
+							appSvgIcon
+							slot="target"
+							[disabled]="postForm.disabled"
+							[appSvgIconIcon]="'three-dots-vertical'"
+							[appSvgIconSquare]="'1.5em'"
+						></button>
 						<ul class="menu menu-vertical menu-md" slot="content">
 							<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Image</li>
 							<li class="flex w-full snap-start scroll-my-2">
@@ -101,8 +101,8 @@
 								</li>
 							}
 						</ul>
-					}
-				</div>
+					</div>
+				}
 			</div>
 			<hr class="w-full border-base-content/20" />
 			<form class="grid flex-1 grid-cols-12 gap-x-4 gap-y-2" autocomplete="off" [formGroup]="postForm">

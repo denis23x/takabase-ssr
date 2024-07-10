@@ -10,6 +10,7 @@ import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.com
 import { TitleService } from '../core/services/title.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
 	standalone: true,
@@ -27,18 +28,21 @@ export class PostComponent implements OnInit, OnDestroy {
 	postSkeletonToggle: boolean = true;
 
 	ngOnInit(): void {
-		this.post$ = this.postStore.getPost().subscribe({
-			next: (post: Post) => {
-				this.post = post;
-				this.postSkeletonToggle = false;
+		this.post$ = this.postStore
+			.getPost()
+			.pipe(filter((post: Post | undefined) => !!post))
+			.subscribe({
+				next: (post: Post) => {
+					this.post = post;
+					this.postSkeletonToggle = false;
 
-				/** Apply SEO meta tags */
+					/** Apply SEO meta tags */
 
-				this.setMetaTags();
-				this.setTitle();
-			},
-			error: (error: any) => console.error(error)
-		});
+					this.setMetaTags();
+					this.setTitle();
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	ngOnDestroy(): void {
