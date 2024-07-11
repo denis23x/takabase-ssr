@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthenticatedComponent } from '../../authenticated/authenticated.component';
@@ -13,7 +13,8 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
 	standalone: true,
 	selector: 'app-list-mock, [appListMock]',
 	imports: [RouterModule, SvgIconComponent, AuthenticatedComponent, SkeletonDirective],
-	templateUrl: './mock.component.html'
+	templateUrl: './mock.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListMockComponent extends CurrentUserMixin(class {}) implements OnInit, OnDestroy {
 	public readonly helperService: HelperService = inject(HelperService);

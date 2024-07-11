@@ -1,6 +1,7 @@
 /** @format */
 
 import {
+	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
 	EventEmitter,
@@ -30,7 +31,8 @@ import { PostDeleteDto } from '../../../../core/dto/post/post-delete.dto';
 	standalone: true,
 	imports: [SvgIconComponent, WindowComponent],
 	selector: 'app-post-delete, [appPostDelete]',
-	templateUrl: './delete.component.html'
+	templateUrl: './delete.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostDeleteComponent implements OnInit, OnDestroy {
 	private readonly router: Router = inject(Router);

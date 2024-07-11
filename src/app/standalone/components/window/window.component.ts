@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { CommonModule } from '@angular/common';
 import { CookiesService } from '../../../core/services/cookies.service';
@@ -10,7 +10,8 @@ import { SnackbarComponent } from '../snackbar/snackbar.component';
 	standalone: true,
 	imports: [CommonModule, SvgIconComponent, SnackbarComponent],
 	selector: 'app-window, [appWindow]',
-	templateUrl: 'window.component.html'
+	templateUrl: 'window.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WindowComponent implements OnInit {
 	private readonly cookiesService: CookiesService = inject(CookiesService);

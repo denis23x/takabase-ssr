@@ -1,6 +1,7 @@
 /** @format */
 
 import {
+	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
 	EventEmitter,
@@ -39,7 +40,8 @@ import { PlatformService } from '../../../../core/services/platform.service';
 		BadgeErrorComponent
 	],
 	selector: 'app-user-password-reset, [appUserPasswordReset]',
-	templateUrl: './password-reset.component.html'
+	templateUrl: './password-reset.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserPasswordResetComponent implements OnInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);

@@ -2,6 +2,7 @@
 
 import {
 	AfterViewInit,
+	ChangeDetectionStrategy,
 	ChangeDetectorRef,
 	Component,
 	ElementRef,
@@ -25,7 +26,8 @@ import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 	standalone: true,
 	imports: [WindowComponent],
 	selector: 'app-qr-code, [appQRCode]',
-	templateUrl: './qr-code.component.html'
+	templateUrl: './qr-code.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);

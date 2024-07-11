@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
@@ -12,7 +12,8 @@ import { AppCheckPipe } from '../../../pipes/app-check.pipe';
 	standalone: true,
 	imports: [RouterModule, DayjsPipe, NgOptimizedImage, SkeletonDirective, AppCheckPipe, AsyncPipe],
 	selector: 'app-card-post, [appCardPost]',
-	templateUrl: './post.component.html'
+	templateUrl: './post.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardPostComponent {
 	@Input({ required: true })

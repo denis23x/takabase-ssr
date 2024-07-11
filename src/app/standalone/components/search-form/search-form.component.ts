@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -18,7 +18,8 @@ interface SearchForm {
 	standalone: true,
 	selector: 'app-search-form, [appSearchForm]',
 	imports: [FormsModule, ReactiveFormsModule, InputTrimWhitespaceDirective, SvgIconComponent, SvgLogoComponent],
-	templateUrl: './search-form.component.html'
+	templateUrl: './search-form.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchFormComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);

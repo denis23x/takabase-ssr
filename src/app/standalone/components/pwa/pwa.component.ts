@@ -1,6 +1,16 @@
 /** @format */
 
-import { Component, ElementRef, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	EventEmitter,
+	inject,
+	OnDestroy,
+	OnInit,
+	Output,
+	ViewChild
+} from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { WindowComponent } from '../window/window.component';
 import { Subscription } from 'rxjs';
@@ -14,7 +24,8 @@ import { HelperService } from '../../../core/services/helper.service';
 	standalone: true,
 	imports: [SvgIconComponent, WindowComponent, SvgLogoComponent, DeviceDirective],
 	selector: 'app-pwa, [appPWA]',
-	templateUrl: './pwa.component.html'
+	templateUrl: './pwa.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PWAComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);

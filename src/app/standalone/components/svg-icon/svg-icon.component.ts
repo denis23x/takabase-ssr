@@ -1,11 +1,12 @@
 /** @format */
 
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
 	standalone: true,
 	selector: 'app-svg-icon, [appSvgIcon]',
-	templateUrl: './svg-icon.component.html'
+	templateUrl: './svg-icon.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SvgIconComponent {
 	@Input()

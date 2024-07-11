@@ -1,6 +1,15 @@
 /** @format */
 
-import { Component, ElementRef, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	inject,
+	Input,
+	OnDestroy,
+	OnInit,
+	ViewChild
+} from '@angular/core';
 import { CommonModule, Location, NgOptimizedImage } from '@angular/common';
 import { WindowComponent } from '../window/window.component';
 import { Subscription } from 'rxjs';
@@ -45,7 +54,8 @@ interface ReportForm {
 		AppCheckPipe
 	],
 	selector: 'app-report, [appReport]',
-	templateUrl: './report.component.html'
+	templateUrl: './report.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReportComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);

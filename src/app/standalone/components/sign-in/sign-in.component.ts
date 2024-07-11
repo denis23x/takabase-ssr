@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { AuthorizationService } from '../../../core/services/authorization.service';
@@ -12,7 +12,8 @@ import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 	standalone: true,
 	selector: 'app-sign-in, [appSignIn]',
 	imports: [CommonModule, SvgIconComponent, SvgLogoComponent],
-	templateUrl: './sign-in.component.html'
+	templateUrl: './sign-in.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignInComponent implements OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);

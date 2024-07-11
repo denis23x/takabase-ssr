@@ -1,6 +1,15 @@
 /** @format */
 
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	EventEmitter,
+	inject,
+	Input,
+	OnDestroy,
+	OnInit,
+	Output
+} from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime, filter, map } from 'rxjs/operators';
 import { CookiesService } from '../../../../core/services/cookies.service';
@@ -18,7 +27,8 @@ import { ListMockComponent } from '../mock/mock.component';
 	standalone: true,
 	selector: 'app-list-load-more, [appListLoadMore]',
 	imports: [RouterModule, SvgIconComponent, ListMockComponent],
-	templateUrl: './load-more.component.html'
+	templateUrl: './load-more.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListLoadMoreComponent implements OnInit, OnDestroy {
 	private readonly cookiesService: CookiesService = inject(CookiesService);

@@ -1,6 +1,16 @@
 /** @format */
 
-import { Component, ElementRef, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ElementRef,
+	EventEmitter,
+	inject,
+	OnDestroy,
+	OnInit,
+	Output,
+	ViewChild
+} from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
@@ -35,7 +45,8 @@ interface CategoryForm {
 		BadgeErrorComponent
 	],
 	selector: 'app-category-create, [appCategoryCreate]',
-	templateUrl: './create.component.html'
+	templateUrl: './create.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryCreateComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);

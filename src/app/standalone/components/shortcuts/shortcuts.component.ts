@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { WindowComponent } from '../window/window.component';
 import { PlatformService } from '../../../core/services/platform.service';
 import { MarkdownShortcut } from '../../../core/models/markdown.model';
@@ -11,7 +11,8 @@ import hotkeys from 'hotkeys-js';
 	standalone: true,
 	imports: [WindowComponent],
 	selector: 'app-shortcuts, [appShortcuts]',
-	templateUrl: './shortcuts.component.html'
+	templateUrl: './shortcuts.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShortcutsComponent implements OnInit, OnDestroy {
 	private readonly markdownService: MarkdownService = inject(MarkdownService);

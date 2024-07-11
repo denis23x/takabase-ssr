@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 
@@ -8,7 +8,8 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 	standalone: true,
 	selector: 'app-ad, [appAd]',
 	imports: [RouterModule, SvgIconComponent],
-	templateUrl: './ad.component.html'
+	templateUrl: './ad.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdComponent {
 	@Input()

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { Params } from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { Post } from '../../../core/models/post.model';
@@ -13,7 +13,8 @@ import { PlatformService } from '../../../core/services/platform.service';
 	standalone: true,
 	imports: [SvgIconComponent, SkeletonDirective, SvgLogoComponent],
 	selector: 'app-share, [appShare]',
-	templateUrl: './share.component.html'
+	templateUrl: './share.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShareComponent {
 	private readonly helperService: HelperService = inject(HelperService);

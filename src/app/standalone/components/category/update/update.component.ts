@@ -1,6 +1,7 @@
 /** @format */
 
 import {
+	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
 	EventEmitter,
@@ -46,7 +47,8 @@ interface CategoryUpdateForm {
 		BadgeErrorComponent
 	],
 	selector: 'app-category-update, [appCategoryUpdate]',
-	templateUrl: './update.component.html'
+	templateUrl: './update.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryUpdateComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);

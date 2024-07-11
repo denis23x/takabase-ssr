@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ElementRef, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, Input } from '@angular/core';
 import { toSvg } from 'jdenticon';
 import { User } from '../../../core/models/user.model';
 import { DOCUMENT } from '@angular/common';
@@ -12,7 +12,8 @@ import { HelperService } from '../../../core/services/helper.service';
 	standalone: true,
 	selector: 'app-avatar, [appAvatar]',
 	templateUrl: './avatar.component.html',
-	providers: [AppCheckPipe]
+	providers: [AppCheckPipe],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AvatarComponent {
 	private readonly document: Document = inject(DOCUMENT);

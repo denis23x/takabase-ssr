@@ -1,6 +1,17 @@
 /** @format */
 
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnDestroy, Output } from '@angular/core';
+import {
+	AfterViewInit,
+	ChangeDetectionStrategy,
+	ChangeDetectorRef,
+	Component,
+	ElementRef,
+	EventEmitter,
+	inject,
+	Input,
+	OnDestroy,
+	Output
+} from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import { CookiesService } from '../../../core/services/cookies.service';
@@ -21,13 +32,15 @@ import { HelperService } from '../../../core/services/helper.service';
 @Component({
 	standalone: true,
 	selector: 'app-dropdown, [appDropdown]',
-	templateUrl: './dropdown.component.html'
+	templateUrl: './dropdown.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DropdownComponent implements AfterViewInit, OnDestroy {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly elementRef: ElementRef = inject(ElementRef);
 	private readonly cookiesService: CookiesService = inject(CookiesService);
 	private readonly helperService: HelperService = inject(HelperService);
+	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
 	@Output() appDropdownToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -107,6 +120,10 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 						}
 					}
 				}
+
+				// Update view
+
+				this.changeDetectorRef.detectChanges();
 			},
 			error: (error: any) => console.error(error)
 		});
