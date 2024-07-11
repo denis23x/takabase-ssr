@@ -10,7 +10,6 @@ import {
 	signal,
 	Signal,
 	Type,
-	ViewChild,
 	ViewContainerRef,
 	WritableSignal
 } from '@angular/core';
@@ -22,7 +21,6 @@ import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { InputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
-import { CropperComponent } from '../standalone/components/cropper/cropper.component';
 import { MarkdownComponent } from '../standalone/components/markdown/markdown.component';
 import { Category } from '../core/models/category.model';
 import { Post } from '../core/models/post.model';
@@ -56,6 +54,7 @@ import { AppCheckPipe } from '../standalone/pipes/app-check.pipe';
 
 // Types for lazy loading
 
+import type { CropperComponent } from '../standalone/components/cropper/cropper.component';
 import type { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import type { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
 import type { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
@@ -80,7 +79,6 @@ interface PostForm {
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
 		DropdownComponent,
-		CropperComponent,
 		MarkdownComponent,
 		NgOptimizedImage,
 		ScrollPresetDirective,
@@ -112,8 +110,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly aiService: AIService = inject(AIService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
-
-	@ViewChild('appCropperComponent') appCropperComponent: CropperComponent | undefined;
 
 	category: Category | undefined;
 	categorySkeletonToggle: boolean = true;
@@ -174,6 +170,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	// Lazy loading
 
+	appCropperComponent: ComponentRef<CropperComponent>;
 	appCategoryCreateComponent: ComponentRef<CategoryCreateComponent>;
 	appCategoryUpdateComponent: ComponentRef<CategoryUpdateComponent>;
 	appPostPreviewComponent: ComponentRef<PostPreviewComponent>;
@@ -381,7 +378,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			}
 		} else {
 			if (toggle) {
-				this.onToggleCategoryCreateDialog().then(() => alert('AAA'));
+				this.onToggleCategoryCreateDialog().then(() => console.debug('Lazy load Category Create dialog'));
 			}
 		}
 	}
@@ -518,6 +515,27 @@ export class CreateComponent implements OnInit, OnDestroy {
 	}
 
 	/** Lazy */
+
+	async onToggleCropper(): Promise<void> {
+		if (!this.appCropperComponent) {
+			// prettier-ignore
+			const cropperComponent: Type<CropperComponent> = await import('../standalone/components/cropper/cropper.component').then(m => {
+				return m.CropperComponent;
+			});
+
+			this.appCropperComponent = this.viewContainerRef.createComponent(cropperComponent);
+			this.appCropperComponent.instance.appCropperSubmit.subscribe({
+				next: (file: File) => this.onSubmitCropperImage(file),
+				error: (error: any) => console.error(error)
+			});
+
+			// Self-call
+			await this.onToggleCropper();
+		}
+
+		this.appCropperComponent.changeDetectorRef.detectChanges();
+		this.appCropperComponent.instance.onToggleCropper(true);
+	}
 
 	async onToggleCategoryCreateDialog(): Promise<void> {
 		if (!this.appCategoryCreateComponent) {

@@ -281,12 +281,12 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 
 				this.appReportComponent = this.viewContainerRef.createComponent(reportComponent);
 				this.appReportComponent.setInput('appReportUser', this.user);
-				this.appReportComponent.changeDetectorRef.detectChanges();
 
 				// Self-call
 				await this.onToggleReportDialog();
 			}
 
+			this.appReportComponent.changeDetectorRef.detectChanges();
 			this.appReportComponent.instance.onToggleReportDialog(true);
 		} else {
 			this.snackbarService.warning('Nope', 'Log in before reporting');
@@ -303,12 +303,12 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 			this.appQRCodeComponent = this.viewContainerRef.createComponent(qrCodeComponent);
 			this.appQRCodeComponent.setInput('appQRCodeData', this.user.name);
 			this.appQRCodeComponent.setInput('appQRCodeOrigin', true);
-			this.appQRCodeComponent.changeDetectorRef.detectChanges();
 
 			// Self-call
 			await this.onToggleQRCodeDialog();
 		}
 
+		this.appQRCodeComponent.changeDetectorRef.detectChanges();
 		this.appQRCodeComponent.instance.onToggleQRCodeDialog(true);
 	}
 }

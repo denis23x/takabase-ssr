@@ -1,6 +1,16 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
+import {
+	Component,
+	ComponentRef,
+	inject,
+	OnDestroy,
+	OnInit,
+	signal,
+	Type,
+	ViewContainerRef,
+	WritableSignal
+} from '@angular/core';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -16,7 +26,6 @@ import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
-import { CropperComponent } from '../../standalone/components/cropper/cropper.component';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { HelperService } from '../../core/services/helper.service';
@@ -37,6 +46,10 @@ import { AIService } from '../../core/services/ai.service';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { getValue, Value } from 'firebase/remote-config';
 
+// Types for lazy loading
+
+import type { CropperComponent } from '../../standalone/components/cropper/cropper.component';
+
 interface ProfileForm {
 	avatar: FormControl<string | null>;
 	name: FormControl<string>;
@@ -51,7 +64,6 @@ interface ProfileForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		AvatarComponent,
-		CropperComponent,
 		DayjsPipe,
 		InputTrimWhitespaceDirective,
 		TextareaAutosizeDirective,
@@ -72,8 +84,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	private readonly fileService: FileService = inject(FileService);
 	private readonly aiService: AIService = inject(AIService);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
-
-	@ViewChild('appCropperComponent') appCropperComponent: CropperComponent | undefined;
+	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -95,6 +106,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	profileFormIsPristine$: Subscription | undefined;
 	profileFormAvatarRequest$: Subscription | undefined;
 	profileFormAvatarIsSubmitted: WritableSignal<boolean> = signal(false);
+
+	// Lazy loading
+
+	appCropperComponent: ComponentRef<CropperComponent>;
 
 	ngOnInit(): void {
 		/** Set not allowed values */
@@ -233,5 +248,28 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 					error: () => this.profileForm.enable()
 				});
 		}
+	}
+
+	/** Lazy */
+
+	async onToggleCropper(): Promise<void> {
+		if (!this.appCropperComponent) {
+			// prettier-ignore
+			const cropperComponent: Type<CropperComponent> = await import('../../standalone/components/cropper/cropper.component').then(m => {
+				return m.CropperComponent;
+			});
+
+			this.appCropperComponent = this.viewContainerRef.createComponent(cropperComponent);
+			this.appCropperComponent.instance.appCropperSubmit.subscribe({
+				next: (file: File) => this.onSubmitCropperAvatar(file),
+				error: (error: any) => console.error(error)
+			});
+
+			// Self-call
+			await this.onToggleCropper();
+		}
+
+		this.appCropperComponent.changeDetectorRef.detectChanges();
+		this.appCropperComponent.instance.onToggleCropper(true);
 	}
 }
