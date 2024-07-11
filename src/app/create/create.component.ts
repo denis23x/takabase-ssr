@@ -2,13 +2,16 @@
 
 import {
 	Component,
+	ComponentRef,
 	computed,
 	inject,
 	OnDestroy,
 	OnInit,
 	signal,
 	Signal,
+	Type,
 	ViewChild,
+	ViewContainerRef,
 	WritableSignal
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -39,13 +42,9 @@ import { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
 import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
-import { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
-import { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
-import { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
 import { PlatformService } from '../core/services/platform.service';
 import { FileService } from '../core/services/file.service';
 import { PostUpdateDto } from '../core/dto/post/post-update.dto';
-import { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
 import { BadgeErrorComponent } from '../standalone/components/badge-error/badge-error.component';
 import { ShortcutsComponent } from '../standalone/components/shortcuts/shortcuts.component';
 import { KbdPipe } from '../standalone/pipes/kbd.pipe';
@@ -54,6 +53,13 @@ import { DeviceDirective } from '../standalone/directives/app-device.directive';
 import { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../core/services/ai.service';
 import { AppCheckPipe } from '../standalone/pipes/app-check.pipe';
+
+// Types for lazy loading
+
+import type { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
+import type { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
+import type { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
+import type { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -80,10 +86,6 @@ interface PostForm {
 		ScrollPresetDirective,
 		TextareaAutosizeDirective,
 		SkeletonDirective,
-		PostDeleteComponent,
-		CategoryCreateComponent,
-		CategoryUpdateComponent,
-		PostPreviewComponent,
 		BadgeErrorComponent,
 		ShortcutsComponent,
 		KbdPipe,
@@ -109,12 +111,9 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly aiService: AIService = inject(AIService);
+	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
 	@ViewChild('appCropperComponent') appCropperComponent: CropperComponent | undefined;
-	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
-	@ViewChild('appCategoryUpdateComponent') appCategoryUpdateComponent: CategoryUpdateComponent | undefined;
-	@ViewChild('appPostPreviewComponent') appPostPreviewComponent: PostPreviewComponent | undefined;
-	@ViewChild('appPostDeleteComponent') appPostDeleteComponent: PostDeleteComponent | undefined;
 
 	category: Category | undefined;
 	categorySkeletonToggle: boolean = true;
@@ -172,6 +171,13 @@ export class CreateComponent implements OnInit, OnDestroy {
 	fullscreenTextWrapping: boolean = false;
 	fullscreenMarkdown: boolean = false;
 	fullscreenRender: boolean = false;
+
+	// Lazy loading
+
+	appCategoryCreateComponent: ComponentRef<CategoryCreateComponent>;
+	appCategoryUpdateComponent: ComponentRef<CategoryUpdateComponent>;
+	appPostPreviewComponent: ComponentRef<PostPreviewComponent>;
+	appPostDeleteComponent: ComponentRef<PostDeleteComponent>;
 
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();
@@ -375,7 +381,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			}
 		} else {
 			if (toggle) {
-				this.appCategoryCreateComponent.onToggleCategoryCreateDialog(true);
+				this.onToggleCategoryCreateDialog().then(() => alert('AAA'));
 			}
 		}
 	}
@@ -509,5 +515,87 @@ export class CreateComponent implements OnInit, OnDestroy {
 					});
 			}
 		}
+	}
+
+	/** Lazy */
+
+	async onToggleCategoryCreateDialog(): Promise<void> {
+		if (!this.appCategoryCreateComponent) {
+			// prettier-ignore
+			const categoryCreateComponent: Type<CategoryCreateComponent> = await import('../standalone/components/category/create/create.component').then(m => {
+				return m.CategoryCreateComponent;
+			});
+
+			this.appCategoryCreateComponent = this.viewContainerRef.createComponent(categoryCreateComponent);
+			this.appCategoryCreateComponent.instance.appCategoryCreateSuccess.subscribe({
+				next: (category: Category) => this.onCreateCategory(category),
+				error: (error: any) => console.error(error)
+			});
+
+			// Self-call
+			await this.onToggleCategoryCreateDialog();
+		}
+
+		this.appCategoryCreateComponent.changeDetectorRef.detectChanges();
+		this.appCategoryCreateComponent.instance.onToggleCategoryCreateDialog(true);
+	}
+
+	async onToggleCategoryUpdateDialog(): Promise<void> {
+		if (!this.appCategoryUpdateComponent) {
+			// prettier-ignore
+			const categoryUpdateComponent: Type<CategoryUpdateComponent> = await import('../standalone/components/category/update/update.component').then(m => {
+				return m.CategoryUpdateComponent;
+			});
+
+			this.appCategoryUpdateComponent = this.viewContainerRef.createComponent(categoryUpdateComponent);
+			this.appCategoryUpdateComponent.setInput('appCategoryUpdateCategory', this.category);
+			this.appCategoryUpdateComponent.instance.appCategoryUpdateSuccess.subscribe({
+				next: (category: Category) => this.onUpdateCategory(category),
+				error: (error: any) => console.error(error)
+			});
+
+			// Self-call
+			await this.onToggleCategoryUpdateDialog();
+		}
+
+		this.appCategoryUpdateComponent.changeDetectorRef.detectChanges();
+		this.appCategoryUpdateComponent.instance.onToggleCategoryUpdateDialog(true);
+	}
+
+	async onTogglePostPreviewDialog(): Promise<void> {
+		if (!this.appPostPreviewComponent) {
+			// prettier-ignore
+			const postPreviewComponent: Type<PostPreviewComponent> = await import('../standalone/components/post/preview/preview.component').then(m => {
+				return m.PostPreviewComponent;
+			});
+
+			this.appPostPreviewComponent = this.viewContainerRef.createComponent(postPreviewComponent);
+			this.appPostPreviewComponent.setInput('appPostPreviewPost', this.postForm.value);
+			this.appPostPreviewComponent.setInput('appPostPreviewCategory', this.category);
+
+			// Self-call
+			await this.onTogglePostPreviewDialog();
+		}
+
+		this.appPostPreviewComponent.changeDetectorRef.detectChanges();
+		this.appPostPreviewComponent.instance.onTogglePostPreviewDialog(true);
+	}
+
+	async onTogglePostDeleteDialog(): Promise<void> {
+		if (!this.appPostDeleteComponent) {
+			// prettier-ignore
+			const postDeleteComponent: Type<PostDeleteComponent> = await import('../standalone/components/post/delete/delete.component').then(m => {
+				return m.PostDeleteComponent;
+			});
+
+			this.appPostDeleteComponent = this.viewContainerRef.createComponent(postDeleteComponent);
+			this.appPostDeleteComponent.setInput('appPostDeletePost', this.post);
+
+			// Self-call
+			await this.onTogglePostDeleteDialog();
+		}
+
+		this.appPostDeleteComponent.changeDetectorRef.detectChanges();
+		this.appPostDeleteComponent.instance.onTogglePostDeleteDialog(true);
 	}
 }

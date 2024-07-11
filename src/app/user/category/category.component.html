@@ -70,7 +70,7 @@
 											type="button"
 											title="Create new category"
 											aria-label="Create new category"
-											(click)="appCategoryCreateComponent?.onToggleCategoryCreateDialog(true)"
+											(click)="onToggleCategoryCreateDialog()"
 										>
 											Create
 										</button>
@@ -81,7 +81,7 @@
 											type="button"
 											[title]="'Update: ' + category.name"
 											[attr.aria-label]="'Update: ' + category.name"
-											(click)="appCategoryUpdateComponent?.onToggleCategoryUpdateDialog(true)"
+											(click)="onToggleCategoryUpdateDialog()"
 										>
 											Update
 										</button>
@@ -92,7 +92,7 @@
 											type="button"
 											[title]="'Delete: ' + category.name"
 											[attr.aria-label]="'Delete: ' + category.name"
-											(click)="appCategoryDeleteComponent?.onToggleCategoryDeleteDialog(true)"
+											(click)="onToggleCategoryDeleteDialog()"
 										>
 											Delete
 										</button>
@@ -148,25 +148,4 @@
 	<div class="block">
 		<router-outlet></router-outlet>
 	</div>
-	<!-- prettier-ignore -->
-	@defer (when currentUser?.id === user?.id; prefetch on idle) {
-		<div
-      appCategoryCreate
-      #appCategoryCreateComponent
-      (appCategoryCreateSuccess)="onCreateCategory($event)">
-    </div>
-		<div
-			appCategoryUpdate
-			#appCategoryUpdateComponent
-			[appCategoryUpdateCategory]="category"
-			(appCategoryUpdateSuccess)="onUpdateCategory($event)"
-		></div>
-		<div
-			appCategoryDelete
-			#appCategoryDeleteComponent
-			[appCategoryDeleteCategory]="category"
-			[appCategoryDeleteCategoryPostList]="postList"
-			(appCategoryDeleteSuccess)="onDeleteCategory($event)"
-		></div>
-	}
 </ng-container>

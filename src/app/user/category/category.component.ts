@@ -1,6 +1,17 @@
 /** @format */
 
-import { Component, inject, makeStateKey, OnDestroy, OnInit, StateKey, TransferState, ViewChild } from '@angular/core';
+import {
+	Component,
+	ComponentRef,
+	inject,
+	makeStateKey,
+	OnDestroy,
+	OnInit,
+	StateKey,
+	TransferState,
+	Type,
+	ViewContainerRef
+} from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription, switchMap } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -14,9 +25,6 @@ import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
-import { CategoryUpdateComponent } from '../../standalone/components/category/update/update.component';
-import { CategoryDeleteComponent } from '../../standalone/components/category/delete/delete.component';
-import { CategoryCreateComponent } from '../../standalone/components/category/create/create.component';
 import { CategoryDeleteDto } from '../../core/dto/category/category-delete.dto';
 import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
@@ -35,6 +43,12 @@ import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 
+// Types for lazy loading
+
+import type { CategoryCreateComponent } from '../../standalone/components/category/create/create.component';
+import type { CategoryUpdateComponent } from '../../standalone/components/category/update/update.component';
+import type { CategoryDeleteComponent } from '../../standalone/components/category/delete/delete.component';
+
 const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 
 @Component({
@@ -50,9 +64,6 @@ const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchRes
 		SanitizerPipe,
 		DropdownComponent,
 		SkeletonDirective,
-		CategoryUpdateComponent,
-		CategoryDeleteComponent,
-		CategoryCreateComponent,
 		SearchFormComponent,
 		CopyToClipboardDirective,
 		AsyncPipe,
@@ -72,10 +83,7 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 	private readonly router: Router = inject(Router);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly userStore: UserStore = inject(UserStore);
-
-	@ViewChild('appCategoryCreateComponent') appCategoryCreateComponent: CategoryCreateComponent | undefined;
-	@ViewChild('appCategoryUpdateComponent') appCategoryUpdateComponent: CategoryUpdateComponent | undefined;
-	@ViewChild('appCategoryDeleteComponent') appCategoryDeleteComponent: CategoryDeleteComponent | undefined;
+	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
 	activatedRouteParamsUsername$: Subscription | undefined;
 	activatedRouteParamsCategoryId$: Subscription | undefined;
@@ -99,6 +107,12 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 
 	postListSearchFormToggle: boolean = false;
 	postListSearchResponse: Omit<SearchResponse<Post>, 'hits'> | undefined;
+
+	// Lazy loading
+
+	appCategoryCreateComponent: ComponentRef<CategoryCreateComponent>;
+	appCategoryUpdateComponent: ComponentRef<CategoryUpdateComponent>;
+	appCategoryDeleteComponent: ComponentRef<CategoryDeleteComponent>;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -313,5 +327,73 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 		this.postListSearchResponse = postListSearchResponse;
 		this.postListSkeletonToggle = false;
 		this.postListIsLoading = false;
+	}
+
+	/** Lazy */
+
+	async onToggleCategoryCreateDialog(): Promise<void> {
+		if (!this.appCategoryCreateComponent) {
+			// prettier-ignore
+			const categoryCreateComponent: Type<CategoryCreateComponent> = await import('../../standalone/components/category/create/create.component').then(m => {
+				return m.CategoryCreateComponent;
+			});
+
+			this.appCategoryCreateComponent = this.viewContainerRef.createComponent(categoryCreateComponent);
+			this.appCategoryCreateComponent.instance.appCategoryCreateSuccess.subscribe({
+				next: (category: Category) => this.onCreateCategory(category),
+				error: (error: any) => console.error(error)
+			});
+
+			// Self-call
+			await this.onToggleCategoryCreateDialog();
+		}
+
+		this.appCategoryCreateComponent.changeDetectorRef.detectChanges();
+		this.appCategoryCreateComponent.instance.onToggleCategoryCreateDialog(true);
+	}
+
+	async onToggleCategoryUpdateDialog(): Promise<void> {
+		if (!this.appCategoryUpdateComponent) {
+			// prettier-ignore
+			const categoryUpdateComponent: Type<CategoryUpdateComponent> = await import('../../standalone/components/category/update/update.component').then(m => {
+				return m.CategoryUpdateComponent;
+			});
+
+			this.appCategoryUpdateComponent = this.viewContainerRef.createComponent(categoryUpdateComponent);
+			this.appCategoryUpdateComponent.setInput('appCategoryUpdateCategory', this.category);
+			this.appCategoryUpdateComponent.instance.appCategoryUpdateSuccess.subscribe({
+				next: (category: Category) => this.onUpdateCategory(category),
+				error: (error: any) => console.error(error)
+			});
+
+			// Self-call
+			await this.onToggleCategoryUpdateDialog();
+		}
+
+		this.appCategoryUpdateComponent.changeDetectorRef.detectChanges();
+		this.appCategoryUpdateComponent.instance.onToggleCategoryUpdateDialog(true);
+	}
+
+	async onToggleCategoryDeleteDialog(): Promise<void> {
+		if (!this.appCategoryDeleteComponent) {
+			// prettier-ignore
+			const categoryDeleteComponent: Type<CategoryDeleteComponent> = await import('../../standalone/components/category/delete/delete.component').then(m => {
+				return m.CategoryDeleteComponent;
+			});
+
+			this.appCategoryDeleteComponent = this.viewContainerRef.createComponent(categoryDeleteComponent);
+			this.appCategoryDeleteComponent.setInput('appCategoryDeleteCategory', this.category);
+			this.appCategoryDeleteComponent.setInput('appCategoryDeleteCategoryPostList', this.postList);
+			this.appCategoryDeleteComponent.instance.appCategoryDeleteSuccess.subscribe({
+				next: (categoryDeleteDto: CategoryDeleteDto) => this.onDeleteCategory(categoryDeleteDto),
+				error: (error: any) => console.error(error)
+			});
+
+			// Self-call
+			await this.onToggleCategoryDeleteDialog();
+		}
+
+		this.appCategoryDeleteComponent.changeDetectorRef.detectChanges();
+		this.appCategoryDeleteComponent.instance.onToggleCategoryDeleteDialog(true);
 	}
 }

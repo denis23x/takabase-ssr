@@ -240,8 +240,7 @@
 									type="button"
 									title="Create new category"
 									aria-label="Create new category"
-									#appCategoryCreateComponentToggle
-									(click)="appCategoryCreateComponent.onToggleCategoryCreateDialog(true)"
+									(click)="onToggleCategoryCreateDialog()"
 								>
 									Create
 								</button>
@@ -253,7 +252,7 @@
 										type="button"
 										title="Update category"
 										aria-label="Update category"
-										(click)="appCategoryUpdateComponent.onToggleCategoryUpdateDialog(true)"
+										(click)="onToggleCategoryUpdateDialog()"
 									>
 										Update
 									</button>
@@ -506,11 +505,10 @@
 					title="Preview"
 					aria-label="Preview"
 					appSkeleton
-					#appPostPreviewComponentToggle
 					[appSkeletonToggle]="postSkeletonToggle"
 					[appSkeletonClassListElementRef]="['border-0']"
-					[disabled]="postForm.disabled || !!appPostPreviewComponent?.postPreviewDialogToggle"
-					(click)="appPostPreviewComponent?.onTogglePostPreviewDialog(true)"
+					[disabled]="postForm.disabled"
+					(click)="onTogglePostPreviewDialog()"
 				>
 					Preview
 				</button>
@@ -539,8 +537,8 @@
 						appSkeleton
 						[appSkeletonToggle]="postSkeletonToggle"
 						[appSkeletonClassListElementRef]="['border-0']"
-						[disabled]="postForm.disabled || !!appPostDeleteComponent?.postDeleteDialogToggle"
-						(click)="appPostDeleteComponent?.onTogglePostDeleteDialog(true)"
+						[disabled]="postForm.disabled"
+						(click)="onTogglePostDeleteDialog()"
 					>
 						Delete
 					</button>
@@ -551,27 +549,5 @@
 	@defer (on timer(1s)) {
 		<div appCropper #appCropperComponent (appCropperSubmit)="onSubmitCropperImage($event)"></div>
 		<div appShortcuts></div>
-	}
-	@defer (on interaction(appCategoryCreateComponentToggle); prefetch on idle) {
-		<div appCategoryCreate #appCategoryCreateComponent (appCategoryCreateSuccess)="onCreateCategory($event)"></div>
-	}
-	@defer (when category; prefetch on idle) {
-		<div
-			appCategoryUpdate
-			#appCategoryUpdateComponent
-			[appCategoryUpdateCategory]="category"
-			(appCategoryUpdateSuccess)="onUpdateCategory($event)"
-		></div>
-	}
-	@defer (on interaction(appPostPreviewComponentToggle); prefetch on idle) {
-		<div
-			appPostPreview
-			#appPostPreviewComponent
-			[appPostPreviewPost]="postForm.value"
-			[appPostPreviewCategory]="category"
-		></div>
-	}
-	@defer (when post; prefetch on idle) {
-		<div appPostDelete #appPostDeleteComponent [appPostDeletePost]="post"></div>
 	}
 </ng-container>
