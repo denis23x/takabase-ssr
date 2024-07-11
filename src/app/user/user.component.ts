@@ -269,7 +269,7 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 		});
 	}
 
-	/** Lazy */
+	/** LAZY */
 
 	async onToggleReportDialog(): Promise<void> {
 		if (this.currentUser) {

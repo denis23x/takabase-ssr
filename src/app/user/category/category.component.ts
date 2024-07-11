@@ -331,7 +331,7 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 		this.postListIsLoading = false;
 	}
 
-	/** Lazy */
+	/** LAZY */
 
 	async onToggleCategoryCreateDialog(): Promise<void> {
 		if (!this.appCategoryCreateComponent) {

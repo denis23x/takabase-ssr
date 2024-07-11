@@ -252,7 +252,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	/** Lazy */
+	/** LAZY */
 
 	async onToggleCropperDialog(): Promise<void> {
 		if (!this.appCropperComponent) {

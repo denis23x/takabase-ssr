@@ -41,7 +41,7 @@ import { PlatformService } from '../../../../core/services/platform.service';
 	selector: 'app-user-password-reset, [appUserPasswordReset]',
 	templateUrl: './password-reset.component.html'
 })
-export class UserPasswordReset implements OnInit, OnDestroy {
+export class UserPasswordResetComponent implements OnInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly router: Router = inject(Router);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);

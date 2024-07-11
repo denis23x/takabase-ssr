@@ -43,8 +43,7 @@
 					type="button"
 					title="Progressive Web Application"
 					aria-label="Progressive Web Application"
-					#appPWAComponentToggle
-					(click)="appPWAComponent?.onClick()"
+					(click)="onTogglePWADialog()"
 				>
 					PWA
 				</button>
@@ -105,7 +104,4 @@
 			</section>
 		</main>
 	</section>
-	@defer (on interaction(appPWAComponentToggle); prefetch on timer(1s)) {
-		<div appPWA #appPWAComponent></div>
-	}
 </ng-container>

@@ -209,7 +209,7 @@
 															title="Reset password"
 															aria-label="Reset password"
 															[disabled]="password.disabled"
-															(click)="appUserPasswordResetComponent.onToggleUserPasswordResetDialog(true)"
+															(click)="onToggleUserPasswordResetDialog()"
 														>
 															Forgot password?
 														</button>
@@ -627,14 +627,11 @@
 					type="button"
 					title="Delete account"
 					aria-label="Delete account"
-					[disabled]="appUserDeleteComponent.userDeleteDialogToggle"
-					(click)="appUserDeleteComponent.onToggleUserDeleteDialog(true)"
+					(click)="onToggleUserDeleteDialog()"
 				>
 					Delete account
 				</button>
 			</fieldset>
 		</div>
 	</div>
-	<div appUserPasswordReset #appUserPasswordResetComponent></div>
-	<div appUserDelete #appUserDeleteComponent></div>
 </ng-container>

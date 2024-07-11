@@ -1,6 +1,18 @@
 /** @format */
 
-import { Component, computed, inject, OnDestroy, OnInit, signal, Signal, WritableSignal } from '@angular/core';
+import {
+	Component,
+	ComponentRef,
+	computed,
+	inject,
+	OnDestroy,
+	OnInit,
+	signal,
+	Signal,
+	Type,
+	ViewContainerRef,
+	WritableSignal
+} from '@angular/core';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -25,7 +37,6 @@ import { AuthorizationService } from '../../core/services/authorization.service'
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { PlatformService } from '../../core/services/platform.service';
 import { filter } from 'rxjs/operators';
-import { UserDeleteComponent } from '../../standalone/components/user/delete/delete.component';
 import { WindowComponent } from '../../standalone/components/window/window.component';
 import {
 	UserInfo,
@@ -40,10 +51,16 @@ import {
 } from 'firebase/auth';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { UserPasswordReset } from '../../standalone/components/user/password-reset/password-reset.component';
 import { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
 import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
 import { SvgLogoComponent } from '../../standalone/components/svg-logo/svg-logo.component';
+
+// Types for lazy loading
+
+import type { UserPasswordResetComponent } from '../../standalone/components/user/password-reset/password-reset.component';
+import type { UserDeleteComponent } from '../../standalone/components/user/delete/delete.component';
+
+// Form interfaces
 
 interface EmailAuthProviderForm {
 	email: FormControl<string>;
@@ -75,9 +92,7 @@ interface NewPasswordForm {
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
 		BadgeErrorComponent,
-		UserDeleteComponent,
 		WindowComponent,
-		UserPasswordReset,
 		InputShowPassword,
 		SvgLogoComponent,
 		NgOptimizedImage
@@ -94,6 +109,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	private readonly passwordService: PasswordService = inject(PasswordService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly router: Router = inject(Router);
+	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
 	formIsDisabled: Signal<boolean> = computed(() => {
 		const isSubmittedSuspect: boolean[] = [
@@ -164,6 +180,11 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 	currentUserLogoutRevokeRequest$: Subscription | undefined;
 	currentUserLogoutRevokeRequestIsSubmitted: WritableSignal<boolean> = signal(false);
+
+	// Lazy loading
+
+	appUserPasswordResetComponent: ComponentRef<UserPasswordResetComponent>;
+	appUserDeleteComponent: ComponentRef<UserDeleteComponent>;
 
 	ngOnInit(): void {
 		/** Apply Data */
@@ -449,5 +470,41 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			},
 			error: () => this.currentUserLogoutRevokeRequestIsSubmitted.set(false)
 		});
+	}
+
+	/** LAZY */
+
+	async onToggleUserPasswordResetDialog(): Promise<void> {
+		if (!this.appUserPasswordResetComponent) {
+			// prettier-ignore
+			const userPasswordResetComponent: Type<UserPasswordResetComponent> = await import('../../standalone/components/user/password-reset/password-reset.component').then(m => {
+				return m.UserPasswordResetComponent;
+			});
+
+			this.appUserPasswordResetComponent = this.viewContainerRef.createComponent(userPasswordResetComponent);
+
+			// Self-call
+			await this.onToggleUserPasswordResetDialog();
+		}
+
+		this.appUserPasswordResetComponent.changeDetectorRef.detectChanges();
+		this.appUserPasswordResetComponent.instance.onToggleUserPasswordResetDialog(true);
+	}
+
+	async onToggleUserDeleteDialog(): Promise<void> {
+		if (!this.appUserDeleteComponent) {
+			// prettier-ignore
+			const userDeleteComponent: Type<UserDeleteComponent> = await import('../../standalone/components/user/delete/delete.component').then(m => {
+				return m.UserDeleteComponent;
+			});
+
+			this.appUserDeleteComponent = this.viewContainerRef.createComponent(userDeleteComponent);
+
+			// Self-call
+			await this.onToggleUserDeleteDialog();
+		}
+
+		this.appUserDeleteComponent.changeDetectorRef.detectChanges();
+		this.appUserDeleteComponent.instance.onToggleUserDeleteDialog(true);
 	}
 }

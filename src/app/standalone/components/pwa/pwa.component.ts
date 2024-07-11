@@ -26,8 +26,8 @@ export class PWAComponent implements OnInit, OnDestroy {
 	@Output() appPWASuccess: EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() appPWAToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	pwaToggle: boolean = false;
 	pwaAvailable: boolean = false;
+	pwaDialogToggle: boolean = false;
 
 	pwaInstallPrompt: any = null;
 	pwaInstallPrompt$: Subscription | undefined;
@@ -53,16 +53,8 @@ export class PWAComponent implements OnInit, OnDestroy {
 		[this.pwaInstallPrompt$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	onClick(): void {
-		if (this.pwaAvailable) {
-			this.onInstall();
-		} else {
-			this.onToggleDialog(true);
-		}
-	}
-
-	onToggleDialog(toggle: boolean): void {
-		this.pwaToggle = toggle;
+	onTogglePWADialog(toggle: boolean): void {
+		this.pwaDialogToggle = toggle;
 
 		if (toggle) {
 			this.pwaDialogElement.nativeElement.showModal();
@@ -71,6 +63,14 @@ export class PWAComponent implements OnInit, OnDestroy {
 		}
 
 		this.appPWAToggle.emit(toggle);
+	}
+
+	onClick(): void {
+		if (this.pwaAvailable) {
+			this.onInstall();
+		} else {
+			this.onTogglePWADialog(true);
+		}
 	}
 
 	onInstall(): void {

@@ -110,7 +110,7 @@ export class PostProseComponent implements OnInit, OnDestroy {
 		[this.currentUser$, this.currentUserSkeletonToggle$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	/** Lazy */
+	/** LAZY */
 
 	async onToggleReportDialog(): Promise<void> {
 		if (this.currentUser) {
