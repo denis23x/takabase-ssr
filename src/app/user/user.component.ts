@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ComponentRef, inject, OnDestroy, OnInit, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -20,8 +20,6 @@ import { SkeletonDirective } from '../standalone/directives/app-skeleton.directi
 import { TitleService } from '../core/services/title.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
-import { ReportService } from '../core/services/report.service';
-import { QrCodeComponent } from '../standalone/components/qr-code/qr-code.component';
 import { CopyToClipboardDirective } from '../standalone/directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../core/services/snackbar.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -32,6 +30,11 @@ import { CategoryService } from '../core/services/category.service';
 import { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
 import { UserStore } from './user.store';
 import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
+
+// Types for lazy loading
+
+import type { QRCodeComponent } from '../standalone/components/qr-code/qr-code.component';
+import type { ReportComponent } from '../standalone/components/report/report.component';
 
 @Component({
 	standalone: true,
@@ -46,7 +49,6 @@ import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
 		SanitizerPipe,
 		DropdownComponent,
 		SkeletonDirective,
-		QrCodeComponent,
 		CopyToClipboardDirective
 	],
 	selector: 'app-user',
@@ -55,7 +57,6 @@ import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
 export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly userService: UserService = inject(UserService);
 	private readonly titleService: TitleService = inject(TitleService);
-	private readonly reportService: ReportService = inject(ReportService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
@@ -65,11 +66,10 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly userStore: UserStore = inject(UserStore);
+	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
 	@ViewChild('routerLinkActivePassword') routerLinkActivePassword: RouterLinkActive | undefined;
 	@ViewChild('routerLinkActivePrivate') routerLinkActivePrivate: RouterLinkActive | undefined;
-
-	@ViewChild('appQrCodeComponent') appQrCodeComponent: QrCodeComponent | undefined;
 
 	activatedRouteParamsUsername$: Subscription | undefined;
 	activatedRouteParamsCategoryId$: Subscription | undefined;
@@ -85,6 +85,11 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	categoryList: Category[] = [];
 	categoryListRequest$: Subscription | undefined;
 	categoryListSkeletonToggle: boolean = true;
+
+	// Lazy loading
+
+	appQRCodeComponent: ComponentRef<QRCodeComponent>;
+	appReportComponent: ComponentRef<ReportComponent>;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -264,14 +269,46 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 		});
 	}
 
-	/** Report */
+	/** Lazy */
 
-	onToggleReportDialog(toggle: boolean): void {
+	async onToggleReportDialog(): Promise<void> {
 		if (this.currentUser) {
-			this.reportService.reportSubject$.next({ user: this.user });
-			this.reportService.reportDialogToggle$.next(toggle);
+			if (!this.appReportComponent) {
+				// prettier-ignore
+				const reportComponent: Type<ReportComponent> = await import('../standalone/components/report/report.component').then(m => {
+					return m.ReportComponent;
+				});
+
+				this.appReportComponent = this.viewContainerRef.createComponent(reportComponent);
+				this.appReportComponent.setInput('appReportUser', this.user);
+				this.appReportComponent.changeDetectorRef.detectChanges();
+
+				// Self-call
+				await this.onToggleReportDialog();
+			}
+
+			this.appReportComponent.instance.onToggleReportDialog(true);
 		} else {
 			this.snackbarService.warning('Nope', 'Log in before reporting');
 		}
+	}
+
+	async onToggleQRCodeDialog(): Promise<void> {
+		if (!this.appQRCodeComponent) {
+			// prettier-ignore
+			const qrCodeComponent: Type<QRCodeComponent> = await import('../standalone/components/qr-code/qr-code.component').then(m => {
+				return m.QRCodeComponent;
+			});
+
+			this.appQRCodeComponent = this.viewContainerRef.createComponent(qrCodeComponent);
+			this.appQRCodeComponent.setInput('appQRCodeData', this.user.name);
+			this.appQRCodeComponent.setInput('appQRCodeOrigin', true);
+			this.appQRCodeComponent.changeDetectorRef.detectChanges();
+
+			// Self-call
+			await this.onToggleQRCodeDialog();
+		}
+
+		this.appQRCodeComponent.instance.onToggleQRCodeDialog(true);
 	}
 }

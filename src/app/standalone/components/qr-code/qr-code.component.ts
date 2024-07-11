@@ -27,7 +27,7 @@ import QRCode, { QRCodeRenderersOptions } from 'qrcode';
 	selector: 'app-qr-code, [appQRCode]',
 	templateUrl: './qr-code.component.html'
 })
-export class QrCodeComponent implements OnInit, AfterViewInit, OnDestroy {
+export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);

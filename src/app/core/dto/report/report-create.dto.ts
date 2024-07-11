@@ -1,8 +1,10 @@
 /** @format */
-import { ReportSubject } from '../../models/report.model';
+
+import { User } from '../../models/user.model';
+import { Post } from '../../models/post.model';
 
 export interface ReportCreateDto {
 	name: string;
 	description: string;
-	subject: ReportSubject;
+	subject: User | Post;
 }

@@ -65,8 +65,7 @@
 								type="button"
 								title="Show QR Code"
 								aria-label="Show QR Code"
-								#appQrCodeComponentToggle
-								(click)="appQrCodeComponent?.onToggleQRCodeDialog(true)"
+								(click)="onToggleQRCodeDialog()"
 							>
 								QR Code
 							</button>
@@ -77,9 +76,9 @@
 								<button
 									class="rounded-btn block w-full truncate text-right"
 									type="button"
-									title="Report user"
-									aria-label="Report user"
-									(click)="onToggleReportDialog(true)"
+									[title]="'Report: ' + user.name"
+									[attr.aria-label]="'Report: ' + user.name"
+									(click)="onToggleReportDialog()"
 								>
 									Report
 								</button>
@@ -213,7 +212,4 @@
 			</div>
 		</div>
 	</section>
-	@defer (on interaction(appQrCodeComponentToggle); prefetch on idle) {
-		<div appQRCode #appQrCodeComponent [appQRCodeData]="user.name" [appQRCodeOrigin]="true"></div>
-	}
 </ng-container>

@@ -1,8 +1,7 @@
 /** @format */
 
 import { inject, Injectable, NgZone } from '@angular/core';
-import { from, Observable, Subject } from 'rxjs';
-import { ReportSubject } from '../models/report.model';
+import { from, Observable } from 'rxjs';
 import { ReportCreateDto } from '../dto/report/report-create.dto';
 import { environment } from '../../../environments/environment';
 import { AuthorizationService } from './authorization.service';
@@ -24,12 +23,6 @@ export class ReportService {
 	private readonly ngZone: NgZone = inject(NgZone);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 
-	reportSubject$: Subject<ReportSubject> = new Subject<ReportSubject>();
-	reportDialogToggle$: Subject<boolean> = new Subject<boolean>();
-
-	/** Firestore */
-
-	// prettier-ignore
 	create(reportCreateDto: ReportCreateDto): Observable<DocumentReference> {
 		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
 		const currentUsername: string = currentUser.name;
@@ -58,6 +51,7 @@ export class ReportService {
 		return this.ngZone.runOutsideAngular(() => {
 			const mailerCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/mailer');
 
+			// prettier-ignore
 			return from(addDoc(mailerCollection, {
 				to: environment.mailer.to,
 				bcc: environment.mailer.bcc,

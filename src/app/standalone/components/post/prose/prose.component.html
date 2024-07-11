@@ -81,7 +81,7 @@
 										type="button"
 										title="Show QR Code"
 										aria-label="Show QR Code"
-										(click)="appQrCodeComponent?.onToggleQRCodeDialog(true)"
+										(click)="onToggleQRCodeDialog()"
 									>
 										QR Code
 									</button>
@@ -105,7 +105,7 @@
 												type="button"
 												[title]="'Delete: ' + post.name"
 												[attr.aria-label]="'Delete: ' + post.name"
-												(click)="appPostDeleteComponent?.onTogglePostDeleteDialog(true)"
+												(click)="onTogglePostDeleteDialog()"
 											>
 												Delete
 											</button>
@@ -116,9 +116,9 @@
 											<button
 												class="rounded-btn block w-full truncate text-right"
 												type="button"
-												title="Report post"
-												aria-label="Report post"
-												(click)="onToggleReportDialog(true)"
+												[title]="'Report: ' + post.name"
+												[attr.aria-label]="'Report: ' + post.name"
+												(click)="onToggleReportDialog()"
 											>
 												Report
 											</button>
@@ -170,11 +170,5 @@
 				<footer class="block w-full gap-4" appAd></footer>
 			}
 		</section>
-		@defer (when postPreview === false && currentUser?.id === post.user.id; prefetch on idle) {
-			<div appPostDelete #appPostDeleteComponent [appPostDeletePost]="post"></div>
-		}
-		@defer (when postPreview === false; prefetch on idle) {
-			<div appQRCode #appQrCodeComponent [appQRCodeData]="postShareUrl" [appQRCodeOrigin]="false"></div>
-		}
 	}
 </ng-container>

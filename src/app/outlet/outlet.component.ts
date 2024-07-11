@@ -10,7 +10,6 @@ import { RouterModule } from '@angular/router';
 import { SnackbarComponent } from '../standalone/components/snackbar/snackbar.component';
 import { HeaderComponent } from '../standalone/components/header/header.component';
 import { ScrollToTopComponent } from '../standalone/components/scroll-to-top/scroll-to-top.component';
-import { ReportComponent } from '../standalone/components/report/report.component';
 import { PlatformService } from '../core/services/platform.service';
 import { CookiesComponent } from '../standalone/components/cookies/cookies.component';
 import { version } from '../../versions/version';
@@ -19,7 +18,7 @@ import { PWAService } from '../core/services/pwa.service';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, SnackbarComponent, HeaderComponent, ScrollToTopComponent, ReportComponent, CookiesComponent],
+	imports: [RouterModule, SnackbarComponent, HeaderComponent, ScrollToTopComponent, CookiesComponent],
 	selector: 'app-outlet',
 	templateUrl: './outlet.component.html'
 })

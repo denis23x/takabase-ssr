@@ -1,8 +1,8 @@
 /** @format */
 
-import { Component, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ComponentRef, inject, Input, OnDestroy, OnInit, Type, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AsyncPipe, NgOptimizedImage } from '@angular/common';
+import { AsyncPipe, NgComponentOutlet, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MarkdownPipe } from '../../../pipes/markdown.pipe';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
@@ -14,14 +14,17 @@ import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../../dropdown/dropdown.component';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { filter } from 'rxjs/operators';
-import { PostDeleteComponent } from '../delete/delete.component';
 import { PlatformService } from '../../../../core/services/platform.service';
-import { QrCodeComponent } from '../../qr-code/qr-code.component';
-import { ReportService } from '../../../../core/services/report.service';
 import { AdComponent } from '../../ad/ad.component';
 import { CopyToClipboardDirective } from '../../../directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { AppCheckPipe } from '../../../pipes/app-check.pipe';
+
+// Types for lazy loading
+
+import type { QRCodeComponent } from '../../qr-code/qr-code.component';
+import type { PostDeleteComponent } from '../delete/delete.component';
+import type { ReportComponent } from '../../report/report.component';
 
 @Component({
 	standalone: true,
@@ -34,12 +37,11 @@ import { AppCheckPipe } from '../../../pipes/app-check.pipe';
 		SkeletonDirective,
 		DropdownComponent,
 		SvgIconComponent,
-		PostDeleteComponent,
-		QrCodeComponent,
 		AdComponent,
 		CopyToClipboardDirective,
 		AppCheckPipe,
-		AsyncPipe
+		AsyncPipe,
+		NgComponentOutlet
 	],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
@@ -47,11 +49,8 @@ import { AppCheckPipe } from '../../../pipes/app-check.pipe';
 export class PostProseComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
-	private readonly reportService: ReportService = inject(ReportService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
-
-	@ViewChild('appPostDeleteComponent') appPostDeleteComponent: PostDeleteComponent | undefined;
-	@ViewChild('appQrCodeComponent') appQrCodeComponent: QrCodeComponent | undefined;
+	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
 	@Input({ required: true })
 	set appPostProsePost(post: Post) {
@@ -79,6 +78,12 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	postShareUrl: string | undefined;
 	postSkeletonToggle: boolean = true;
 
+	// Lazy loading
+
+	appPostDeleteComponent: ComponentRef<PostDeleteComponent>;
+	appQRCodeComponent: ComponentRef<QRCodeComponent>;
+	appReportComponent: ComponentRef<ReportComponent>;
+
 	ngOnInit(): void {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
@@ -105,12 +110,61 @@ export class PostProseComponent implements OnInit, OnDestroy {
 		[this.currentUser$, this.currentUserSkeletonToggle$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	onToggleReportDialog(toggle: boolean): void {
+	/** Lazy */
+
+	async onToggleReportDialog(): Promise<void> {
 		if (this.currentUser) {
-			this.reportService.reportSubject$.next({ post: this.post });
-			this.reportService.reportDialogToggle$.next(toggle);
+			if (!this.appReportComponent) {
+				const reportComponent: Type<ReportComponent> = await import('../../report/report.component').then(m => {
+					return m.ReportComponent;
+				});
+
+				this.appReportComponent = this.viewContainerRef.createComponent(reportComponent);
+				this.appReportComponent.setInput('appReportPost', this.post);
+				this.appReportComponent.changeDetectorRef.detectChanges();
+
+				// Self-call
+				await this.onToggleReportDialog();
+			}
+
+			this.appReportComponent.instance.onToggleReportDialog(true);
 		} else {
 			this.snackbarService.warning('Nope', 'Log in before reporting');
 		}
+	}
+
+	async onToggleQRCodeDialog(): Promise<void> {
+		if (!this.appQRCodeComponent) {
+			const qrCodeComponent: Type<QRCodeComponent> = await import('../../qr-code/qr-code.component').then(m => {
+				return m.QRCodeComponent;
+			});
+
+			this.appQRCodeComponent = this.viewContainerRef.createComponent(qrCodeComponent);
+			this.appQRCodeComponent.setInput('appQRCodeData', this.postShareUrl);
+			this.appQRCodeComponent.setInput('appQRCodeOrigin', false);
+			this.appQRCodeComponent.changeDetectorRef.detectChanges();
+
+			// Self-call
+			await this.onToggleQRCodeDialog();
+		}
+
+		this.appQRCodeComponent.instance.onToggleQRCodeDialog(true);
+	}
+
+	async onTogglePostDeleteDialog(): Promise<void> {
+		if (!this.appPostDeleteComponent) {
+			const postDeleteComponent: Type<PostDeleteComponent> = await import('../delete/delete.component').then(m => {
+				return m.PostDeleteComponent;
+			});
+
+			this.appPostDeleteComponent = this.viewContainerRef.createComponent(postDeleteComponent);
+			this.appPostDeleteComponent.setInput('appPostDeletePost', this.post);
+			this.appPostDeleteComponent.changeDetectorRef.detectChanges();
+
+			// Self-call
+			await this.onTogglePostDeleteDialog();
+		}
+
+		this.appPostDeleteComponent.instance.onTogglePostDeleteDialog(true);
 	}
 }
