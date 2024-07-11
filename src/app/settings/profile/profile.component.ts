@@ -50,6 +50,8 @@ import { getValue, Value } from 'firebase/remote-config';
 
 import type { CropperComponent } from '../../standalone/components/cropper/cropper.component';
 
+// Form interfaces
+
 interface ProfileForm {
 	avatar: FormControl<string | null>;
 	name: FormControl<string>;
@@ -252,7 +254,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	/** Lazy */
 
-	async onToggleCropper(): Promise<void> {
+	async onToggleCropperDialog(): Promise<void> {
 		if (!this.appCropperComponent) {
 			// prettier-ignore
 			const cropperComponent: Type<CropperComponent> = await import('../../standalone/components/cropper/cropper.component').then(m => {
@@ -266,10 +268,10 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			});
 
 			// Self-call
-			await this.onToggleCropper();
+			await this.onToggleCropperDialog();
 		}
 
 		this.appCropperComponent.changeDetectorRef.detectChanges();
-		this.appCropperComponent.instance.onToggleCropper(true);
+		this.appCropperComponent.instance.onToggleCropperDialog(true);
 	}
 }

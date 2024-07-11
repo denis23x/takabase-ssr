@@ -4,15 +4,15 @@
 	<dialog
 		class="modal"
 		#cropperDialogElement
-		(keydown.escape)="$event.preventDefault(); onToggleCropper(false)"
-		(click)="$event.target === $event.currentTarget ? onToggleCropper(false) : $event"
+		(keydown.escape)="$event.preventDefault(); onToggleCropperDialog(false)"
+		(click)="$event.target === $event.currentTarget ? onToggleCropperDialog(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-md"
 			appWindow
 			[appWindowTitle]="'Cropper'"
 			[appWindowButtons]="['close']"
-			(appWindowClose)="onToggleCropper(false)"
+			(appWindowClose)="onToggleCropperDialog(false)"
 		>
 			<div
 				class="flex flex-col p-4"

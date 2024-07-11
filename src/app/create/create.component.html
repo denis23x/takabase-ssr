@@ -13,7 +13,7 @@
 							<figure
                 class="block rounded-btn relative border border-base-content/20 h-12 w-12 overflow-hidden transition"
                 [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-300': postForm.disabled, 'cursor-pointer': postForm.enabled, 'border-success': image.value }"
-                (click)="postForm.enabled ? onToggleCropper() : false"
+                (click)="postForm.enabled ? onToggleCropperDialog() : false"
               >
                 @switch (true) {
                   @case (!!image.value === true) {
@@ -82,7 +82,7 @@
 									type="button"
 									[title]="(image.value ? 'Update' : 'Upload') + ' image'"
 									[attr.aria-label]="(image.value ? 'Update' : 'Upload') + ' image'"
-									(click)="onToggleCropper()"
+									(click)="onToggleCropperDialog()"
 								>
 									{{ image.value ? "Update" : "Upload" }}
 								</button>

@@ -186,7 +186,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 					tap((clipboardEvent: ClipboardEventInit) => this.onGetFileFromClipboard(clipboardEvent))
 				)
 			).subscribe({
-				next: () => this.onToggleCropper(true, true),
+				next: () => this.onToggleCropperDialog(true, true),
 				error: (error: any) => console.error(error)
 			});
 
@@ -407,6 +407,25 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	/** EVENTS */
 
+	onToggleCropperDialog(toggle: boolean, markdownItToggle: boolean = false): void {
+		this.markdownItToggle = markdownItToggle;
+
+		this.cropperAspectRatioActive = this.markdownItToggle ? null : 1;
+		this.cropperDialogToggle = toggle;
+
+		if (toggle) {
+			this.cropperDialogElement.nativeElement.showModal();
+		} else {
+			this.cropperDialogElement.nativeElement.close();
+
+			/** Full reset */
+
+			this.onResetCropper();
+		}
+
+		this.appCropperToggle.emit(toggle);
+	}
+
 	onResetCropper(): void {
 		/** Transformations reset */
 
@@ -426,25 +445,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		this.cropperImageForm.reset();
 		this.cropperImageForm.enable();
-	}
-
-	onToggleCropper(toggle: boolean, markdownItToggle: boolean = false): void {
-		this.markdownItToggle = markdownItToggle;
-
-		this.cropperAspectRatioActive = this.markdownItToggle ? null : 1;
-		this.cropperDialogToggle = toggle;
-
-		if (toggle) {
-			this.cropperDialogElement.nativeElement.showModal();
-		} else {
-			this.cropperDialogElement.nativeElement.close();
-
-			/** Full reset */
-
-			this.onResetCropper();
-		}
-
-		this.appCropperToggle.emit(toggle);
 	}
 
 	onSubmitCropper(): void {
@@ -483,7 +483,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 				})
 			)
 			.subscribe({
-				next: () => this.onToggleCropper(false),
+				next: () => this.onToggleCropperDialog(false),
 				error: () => this.cropperImageForm.enable()
 			});
 	}

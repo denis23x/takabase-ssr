@@ -60,6 +60,8 @@ import type { CategoryUpdateComponent } from '../standalone/components/category/
 import type { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
 import type { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
 
+// Form interfaces
+
 interface PostForm {
 	name: FormControl<string>;
 	image: FormControl<string | null>;
@@ -516,7 +518,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	/** Lazy */
 
-	async onToggleCropper(): Promise<void> {
+	async onToggleCropperDialog(): Promise<void> {
 		if (!this.appCropperComponent) {
 			// prettier-ignore
 			const cropperComponent: Type<CropperComponent> = await import('../standalone/components/cropper/cropper.component').then(m => {
@@ -530,11 +532,11 @@ export class CreateComponent implements OnInit, OnDestroy {
 			});
 
 			// Self-call
-			await this.onToggleCropper();
+			await this.onToggleCropperDialog();
 		}
 
 		this.appCropperComponent.changeDetectorRef.detectChanges();
-		this.appCropperComponent.instance.onToggleCropper(true);
+		this.appCropperComponent.instance.onToggleCropperDialog(true);
 	}
 
 	async onToggleCategoryCreateDialog(): Promise<void> {

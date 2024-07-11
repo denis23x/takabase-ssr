@@ -19,7 +19,7 @@
                 appAvatar
                 [ngClass]="{ 'cursor-not-allowed border border-transparent opacity-50 grayscale bg-base-200': profileForm.disabled, 'cursor-pointer': profileForm.enabled, 'border border-success': avatar.value }"
                 [appAvatarUser]="currentUser"
-                (click)="onToggleCropper()"
+                (click)="onToggleCropperDialog()"
               ></figure>
 						}
 					</div>
@@ -60,7 +60,7 @@
 									type="button"
 									[title]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
 									[attr.aria-label]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
-									(click)="onToggleCropper()"
+									(click)="onToggleCropperDialog()"
 								>
 									{{ avatar.value ? "Update" : "Upload" }}
 								</button>
