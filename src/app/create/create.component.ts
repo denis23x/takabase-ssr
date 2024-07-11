@@ -437,7 +437,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 			this.fullscreenTextWrapping = true;
 			this.fullscreenMarkdown = true;
 			this.fullscreenRender = true;
-			this.fullscreenClassList = ['fixed', 'top-0', 'left-0', '!m-0', 'w-full', 'h-full', 'transition-all', 'duration-300'];
+			this.fullscreenClassList = ['fixed', 'top-0', 'left-0', '!m-0', 'w-full', 'h-full'];
 		} else {
 			this.fullscreenScrollSync = false;
 			this.fullscreenTextWrapping = false;

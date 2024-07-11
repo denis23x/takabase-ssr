@@ -6,11 +6,16 @@
 			<nav class="breadcrumbs text-base text-base-content p-0">
 				<ul class="flex items-center justify-start">
 					<li class="block">
-						<a class="flex items-center justify-start gap-2 text-base-content" [routerLink]="['/']">
+						<a
+							class="flex items-center justify-start gap-2 text-base-content"
+							[routerLink]="['/']"
+							[title]="'Home'"
+							[attr.aria-label]="'Home'"
+						>
 							<i
 								class="block fill-current"
 								appSvgIcon
-								[class.hidden]="postSkeletonToggle"
+								[class.sm:hidden]="postSkeletonToggle"
 								[appSvgIconIcon]="'house'"
 								[appSvgIconSquare]="'1.25em'"
 							>
@@ -25,11 +30,16 @@
 						</a>
 					</li>
 					<li class="block">
-						<a class="flex items-center justify-start gap-2 text-base-content" [routerLink]="['/', post.user.name]">
+						<a
+							class="flex items-center justify-start gap-2 text-base-content"
+							[routerLink]="['/', post.user.name]"
+							[title]="'Go to ' + post.user.name"
+							[attr.aria-label]="'Go to ' + post.user.name"
+						>
 							<i
 								class="block fill-current"
 								appSvgIcon
-								[class.hidden]="postSkeletonToggle"
+								[class.sm:hidden]="postSkeletonToggle"
 								[appSvgIconIcon]="'person'"
 								[appSvgIconSquare]="'1.25em'"
 							>
@@ -47,11 +57,13 @@
 						<a
 							class="flex items-center justify-start gap-2 text-base-content"
 							[routerLink]="['/', post.user.name, 'category', post.category.id]"
+							[title]="'Go to ' + post.category.name"
+							[attr.aria-label]="'Go to ' + post.category.name"
 						>
 							<i
 								class="block fill-current"
 								appSvgIcon
-								[class.hidden]="postSkeletonToggle"
+								[class.sm:hidden]="postSkeletonToggle"
 								[appSvgIconIcon]="'folder'"
 								[appSvgIconSquare]="'1.25em'"
 							>

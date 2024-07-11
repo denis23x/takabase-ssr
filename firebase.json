@@ -1,11 +1,24 @@
 {
   "hosting": [
     {
+      "headers": [
+        {
+          "source": "**/*.@(js|css|jpg|jpeg|gif|png|webp|svg)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000"
+            }
+          ]
+        }
+      ],
       "predeploy": [
         "rm .firebase/takabase-dev/functions/dist/takabase-ssr/browser/index.html",
         "rm .firebase/takabase-dev/hosting/index.html",
         "bread-compressor -a brotli,gzip '.firebase/takabase-dev/functions/dist/takabase-ssr/browser/**/*.{js,css}'",
-        "bread-compressor -a brotli,gzip '.firebase/takabase-dev/hosting/**/*.{js,css}'"
+        "bread-compressor -a brotli,gzip '.firebase/takabase-dev/hosting/**/*.{js,css}'",
+        "html-minifier-terser --input-dir .firebase/takabase-dev/functions/dist/takabase-ssr/browser --output-dir .firebase/takabase-dev/functions/dist/takabase-ssr/browser --file-ext html --preserve-line-breaks --remove-comments --minify-js",
+        "html-minifier-terser --input-dir .firebase/takabase-dev/hosting --output-dir .firebase/takabase-dev/hosting --file-ext html --preserve-line-breaks --remove-comments --minify-js"
       ],
       "target": "takabase-dev",
       "source": ".",
@@ -22,11 +35,24 @@
       }
     },
     {
+      "headers": [
+        {
+          "source": "**/*.@(js|css|jpg|jpeg|gif|png|webp|svg)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000"
+            }
+          ]
+        }
+      ],
       "predeploy": [
         "rm .firebase/takabase-prod/functions/dist/takabase-ssr/browser/index.html",
         "rm .firebase/takabase-prod/hosting/index.html",
         "bread-compressor -a brotli,gzip '.firebase/takabase-prod/functions/dist/takabase-ssr/browser/**/*.{js,css}'",
-        "bread-compressor -a brotli,gzip '.firebase/takabase-prod/hosting/**/*.{js,css}'"
+        "bread-compressor -a brotli,gzip '.firebase/takabase-prod/hosting/**/*.{js,css}'",
+        "html-minifier-terser --input-dir .firebase/takabase-prod/functions/dist/takabase-ssr/browser --output-dir .firebase/takabase-prod/functions/dist/takabase-ssr/browser --file-ext html --preserve-line-breaks --remove-comments --minify-js",
+        "html-minifier-terser --input-dir .firebase/takabase-prod/hosting --output-dir .firebase/takabase-prod/hosting --file-ext html --preserve-line-breaks --remove-comments --minify-js"
       ],
       "target": "takabase-prod",
       "source": ".",
