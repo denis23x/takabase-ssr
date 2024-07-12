@@ -1,14 +1,15 @@
 /** @format */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import { initializeAppCheck, ReCaptchaEnterpriseProvider, AppCheck } from 'firebase/app-check';
+import { initializeAppCheck, AppCheck } from 'firebase/app-check';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 import { getStorage, FirebaseStorage } from 'firebase/storage';
 import { getRemoteConfig, RemoteConfig } from 'firebase/remote-config';
 import { getAnalytics, Analytics } from 'firebase/analytics';
+import { AppCheckCustomProvider } from '../appCheckCustomProvider.service';
 
 /** https://firebase.google.com/docs/web/setup#add-sdk-and-initialize */
 
@@ -16,6 +17,8 @@ import { getAnalytics, Analytics } from 'firebase/analytics';
 	providedIn: 'root'
 })
 export class FirebaseService {
+	private readonly appCheckCustomProvider: AppCheckCustomProvider = inject(AppCheckCustomProvider);
+
 	app: FirebaseApp | undefined;
 	appCheck: AppCheck | undefined;
 	auth: Auth | undefined;
@@ -38,7 +41,7 @@ export class FirebaseService {
 
 	initializeAppCheck(): void {
 		this.appCheck = initializeAppCheck(this.getApp(), {
-			provider: new ReCaptchaEnterpriseProvider(environment.appCheck),
+			provider: this.appCheckCustomProvider.getProvider(),
 			isTokenAutoRefreshEnabled: true
 		});
 	}

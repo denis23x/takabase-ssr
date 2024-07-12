@@ -73,7 +73,6 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 
 	activatedRouteParamsUsername$: Subscription | undefined;
 	activatedRouteParamsCategoryId$: Subscription | undefined;
-	activatedRouteParamsCategoryId: number;
 
 	user: User | undefined;
 	userRequest$: Subscription | undefined;
@@ -200,7 +199,6 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 									.pipe(
 										distinctUntilKeyChanged('categoryId'),
 										map(() => Number(this.activatedRoute.snapshot.paramMap.get('categoryId'))),
-										tap((categoryId: number) => (this.activatedRouteParamsCategoryId = categoryId)),
 										map((categoryId: number) => categoryList.find((category: Category) => category.id === categoryId)),
 										tap((category: Category | undefined) => this.userStore.setCategory(category))
 									)
