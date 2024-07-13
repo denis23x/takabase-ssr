@@ -3,13 +3,14 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import { initializeAppCheck, AppCheck } from 'firebase/app-check';
+import { initializeAppCheck, AppCheck, CustomProvider, AppCheckToken } from 'firebase/app-check';
 import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 import { getStorage, FirebaseStorage } from 'firebase/storage';
 import { getRemoteConfig, RemoteConfig } from 'firebase/remote-config';
 import { getAnalytics, Analytics } from 'firebase/analytics';
-import { AppCheckCustomProvider } from '../appCheckCustomProvider.service';
+import { AppCheckDto } from '../dto/authorization/app-check.dto';
+import { ApiService } from './api.service';
 
 /** https://firebase.google.com/docs/web/setup#add-sdk-and-initialize */
 
@@ -17,7 +18,7 @@ import { AppCheckCustomProvider } from '../appCheckCustomProvider.service';
 	providedIn: 'root'
 })
 export class FirebaseService {
-	private readonly appCheckCustomProvider: AppCheckCustomProvider = inject(AppCheckCustomProvider);
+	private readonly apiService: ApiService = inject(ApiService);
 
 	app: FirebaseApp | undefined;
 	appCheck: AppCheck | undefined;
@@ -39,9 +40,31 @@ export class FirebaseService {
 
 	/** APP CHECK */
 
+	getCustomProvider(): CustomProvider {
+		return new CustomProvider({
+			getToken: () => {
+				return new Promise((resolve, reject) => {
+					const appCheckDto: AppCheckDto = {
+						appId: environment.firebase.appId
+					};
+
+					this.apiService.post('/v1/authorization/app-check', appCheckDto).subscribe({
+						next: (appCheckToken: AppCheckToken) => {
+							resolve({
+								...appCheckToken,
+								expireTimeMillis: appCheckToken.expireTimeMillis * 1000
+							});
+						},
+						error: (error: any) => console.error(error)
+					});
+				});
+			}
+		});
+	}
+
 	initializeAppCheck(): void {
 		this.appCheck = initializeAppCheck(this.getApp(), {
-			provider: this.appCheckCustomProvider.getProvider(),
+			provider: this.getCustomProvider(),
 			isTokenAutoRefreshEnabled: true
 		});
 	}

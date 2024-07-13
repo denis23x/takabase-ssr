@@ -351,31 +351,33 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 			setThemeColor();
 
-			/** Init Emoji Mart */
+			/** https://github.com/rickstaa/github-emoji-picker */
 
-			// @ts-ignore
-			const emojiMartPicker: any = new window.EmojiMart.Picker({
-				/** https://github.com/rickstaa/github-emoji-picker */
+			import('emoji-mart/dist/browser')
+				.then(() => {
+					// @ts-ignore
+					const emojiMartPicker: any = new window.EmojiMart.Picker({
+						data: async () => fetch('/assets/json/emojis.json').then((response: Response) => response.json()),
+						onEmojiSelect: (event: any) => {
+							const markdownControl: MarkdownControl = {
+								...this.controlListEmojiMart,
+								handler: () => event.shortcodes
+							};
 
-				data: async () => fetch('/assets/json/emojis.json').then((response: Response) => response.json()),
-				onEmojiSelect: (event: any) => {
-					const markdownControl: MarkdownControl = {
-						...this.controlListEmojiMart,
-						handler: () => event.shortcodes
-					};
+							this.setTextareaValue(this.getTextareaValue(markdownControl), false);
+						},
+						maxFrequentRows: 3,
+						perLine: 8,
+						set: 'native',
+						locale: 'en',
+						navPosition: 'top',
+						skinTonePosition: 'preview',
+						previewPosition: 'bottom'
+					});
 
-					this.setTextareaValue(this.getTextareaValue(markdownControl), false);
-				},
-				maxFrequentRows: 3,
-				perLine: 8,
-				set: 'native',
-				locale: 'en',
-				navPosition: 'top',
-				skinTonePosition: 'preview',
-				previewPosition: 'bottom'
-			});
-
-			this.document.getElementById('emojiMartPicker').appendChild(emojiMartPicker);
+					this.document.getElementById('emojiMartPicker').appendChild(emojiMartPicker);
+				})
+				.catch((error: any) => console.error(error));
 		}
 	}
 

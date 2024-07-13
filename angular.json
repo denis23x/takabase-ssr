@@ -120,16 +120,6 @@
             ],
             "scripts": [
               {
-                "input": "node_modules/emoji-mart/dist/browser.js",
-                "inject": true,
-                "bundleName": "emoji-mart"
-              },
-              {
-                "input": "node_modules/autosize/dist/autosize.min.js",
-                "inject": true,
-                "bundleName": "autosize"
-              },
-              {
                 "input": "splash.js",
                 "inject": true,
                 "bundleName": "splash"
