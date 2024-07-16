@@ -139,7 +139,7 @@
 					<article
 						class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
 						data-pw="app-user-heading-user-description"
-						[innerHTML]="post.description || 'Description' | markdown | sanitizer: 'html'"
+						[innerHTML]="post.description || 'Description' | markdown | async | sanitizer: 'html'"
 					></article>
 				</div>
 				<div class="flex flex-wrap items-center justify-between gap-4 w-full">
@@ -163,7 +163,7 @@
 				class="prose w-full max-w-full flex-1"
 				appSkeleton
 				[appSkeletonToggle]="postSkeletonToggle"
-				[innerHTML]="post?.markdown || 'Markdown' | markdown | sanitizer: 'html'"
+				[innerHTML]="post?.markdown || 'Markdown' | markdown | async | sanitizer: 'html'"
 			></article>
 			@if (!postPreview && !postSkeletonToggle) {
 				<hr class="my-0 w-full border-base-content/20" />

@@ -37,13 +37,6 @@
     &:not([width]):not([height]) {
       @apply w-full;
     }
-
-    &[id^="mermaid"] {
-      @apply object-center opacity-100 p-4 md:p-8;
-
-      max-width: initial !important;
-      max-height: initial !important;
-    }
   }
 
   /* https://stackoverflow.com/questions/5379752/css-style-external-links */
@@ -78,6 +71,14 @@
         @apply hidden;
       }
     }
+  }
+
+  pre.mermaid {
+    @apply bg-base-200 p-4 md:p-8
+  }
+
+  pre {
+    @apply text-sm #{!important};
   }
 
   code:not(pre code) {
@@ -140,10 +141,6 @@
     th, td {
       @apply text-left;
     }
-  }
-
-  pre {
-    @apply text-sm #{!important};
   }
 
   details {

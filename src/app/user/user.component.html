@@ -98,7 +98,7 @@
 					<article
 						class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
 						data-pw="app-user-heading-user-description"
-						[innerHTML]="user.description | markdown | sanitizer: 'html'"
+						[innerHTML]="user.description | markdown | async | sanitizer: 'html'"
 					></article>
 				</div>
 			}

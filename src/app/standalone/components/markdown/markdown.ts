@@ -169,13 +169,13 @@ export const MarkdownControlFormatting = (): MarkdownControl[] => [
 	},
 	{
 		type: 'inline',
-		key: 'formatting-mark',
-		label: 'Mark',
-		classList: ['bg-error text-error-content p-1 !rounded'],
+		key: 'formatting-underline',
+		label: 'Underline',
+		classList: ['underline'],
 		handler: (markdownTextarea: MarkdownTextarea, type: string): string => {
-			const origin: string = markdownTextarea.selection || 'Marked text';
+			const origin: string = markdownTextarea.selection || 'Underline text';
 
-			return setWrapper(`==${origin}==`, markdownTextarea, type);
+			return setWrapper(`++${origin}++`, markdownTextarea, type);
 		}
 	}
 ];

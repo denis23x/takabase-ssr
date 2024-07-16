@@ -227,7 +227,6 @@ export const environment = {
 			'mongodb',
 			'mizar',
 			'metafont',
-			'mermaid',
 			'mel',
 			'maxscript',
 			'matlab',

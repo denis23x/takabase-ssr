@@ -19,6 +19,7 @@ import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 import { HttpClient } from '@angular/common/http';
 import { PlatformService } from '../../core/services/platform.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
+import { CommonModule } from '@angular/common';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
@@ -36,6 +37,7 @@ interface AppearanceForm {
 @Component({
 	standalone: true,
 	imports: [
+		CommonModule,
 		RouterModule,
 		ReactiveFormsModule,
 		DropdownComponent,

@@ -114,7 +114,7 @@
 			>
 				<article
 					class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
-					[innerHTML]="category?.description | markdown | sanitizer: 'html'"
+					[innerHTML]="category?.description | markdown | async | sanitizer: 'html'"
 				></article>
 			</div>
 		}
