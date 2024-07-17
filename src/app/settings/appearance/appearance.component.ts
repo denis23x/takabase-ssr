@@ -14,7 +14,7 @@ import { CurrentUser } from '../../core/models/current-user.model';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { MarkdownLazyPipe } from '../../standalone/pipes/markdown-lazy.pipe';
+import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 import { HttpClient } from '@angular/common/http';
 import { PlatformService } from '../../core/services/platform.service';
@@ -44,7 +44,7 @@ interface AppearanceForm {
 		ScrollPresetDirective,
 		SkeletonDirective,
 		SvgIconComponent,
-		MarkdownLazyPipe,
+		MarkdownPipe,
 		SanitizerPipe
 	],
 	selector: 'app-settings-appearance',

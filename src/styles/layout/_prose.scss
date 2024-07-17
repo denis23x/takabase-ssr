@@ -84,23 +84,15 @@
   }
 
   pre.mermaid {
-    @apply flex items-center justify-center text-transparent bg-base-200 p-4;
+    @apply bg-base-200 text-base-content p-4;
 
-    &:not([id^='mermaid']) {
-      @include shared-styles-pseudo-loader();
+    svg {
+      @apply mx-auto;
     }
   }
 
   pre:not(.mermaid) {
     @apply text-sm #{!important};
-
-    &:not([id^='prism']) {
-      @include shared-styles-pseudo-loader();
-
-      code {
-        @apply invisible;
-      }
-    }
   }
 
   code:not(pre code) {

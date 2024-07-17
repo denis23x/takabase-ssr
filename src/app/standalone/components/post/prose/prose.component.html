@@ -136,11 +136,9 @@
 					[appSkeletonClassListParent]="['!rounded-box']"
 					[appSkeletonClassList]="['!rounded-box']"
 				>
-					<article
-						class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
-						data-pw="app-user-heading-user-description"
-						[innerHTML]="post.description || 'Description' | markdown | async | sanitizer: 'html'"
-					></article>
+					<p class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4">
+						{{ post.description }}
+					</p>
 				</div>
 				<div class="flex flex-wrap items-center justify-between gap-4 w-full">
 					<time
@@ -151,20 +149,26 @@
 					>
 						Published {{ post.createdAt | dayjs: "fromX" }}
 					</time>
-					@if (post?.markdown) {
+					@if (post.markdown) {
 						<span class="block text-sm text-base-content" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-							Time to read: {{ post?.markdown | markdown: "time-to-read" }} min.
+							Time to read: ??? min.
 						</span>
 					}
 				</div>
 			</header>
 			<hr class="my-0 w-full border-base-content/20" />
-			<article
-				class="prose w-full max-w-full flex-1"
+			<div
+				class="w-full"
 				appSkeleton
 				[appSkeletonToggle]="postSkeletonToggle"
-				[innerHTML]="post?.markdown || 'Markdown' | markdown | async | sanitizer: 'html'"
-			></article>
+				[appSkeletonClassListParent]="['!rounded-box']"
+				[appSkeletonClassList]="['!rounded-box']"
+			>
+				<article
+					class="prose w-full max-w-full flex-1"
+					[innerHTML]="post.markdown || 'Markdown' | markdown | sanitizer: 'html'"
+				></article>
+			</div>
 			@if (!postPreview && !postSkeletonToggle) {
 				<hr class="my-0 w-full border-base-content/20" />
 				<footer class="block w-full gap-4" appAd></footer>

@@ -234,7 +234,7 @@
 				<div class="flex w-full flex-col items-start gap-4">
 					<article
 						class="prose max-w-none overflow-auto w-full"
-						[innerHTML]="appearanceThemePrismMarkdown | markdownLazy | async | sanitizer: 'html'"
+						[innerHTML]="appearanceThemePrismMarkdown | markdown | sanitizer: 'html'"
 					></article>
 				</div>
 			}

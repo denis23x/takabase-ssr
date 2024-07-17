@@ -4,10 +4,10 @@ import { Component, ComponentRef, inject, Input, OnDestroy, OnInit, Type, ViewCo
 import { Subscription } from 'rxjs';
 import { AsyncPipe, NgComponentOutlet, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MarkdownPipe } from '../../../pipes/markdown.pipe';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { Post } from '../../../../core/models/post.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
+import { MarkdownPipe } from '../../../pipes/markdown.pipe';
 import { SanitizerPipe } from '../../../pipes/sanitizer.pipe';
 import { CurrentUser } from '../../../../core/models/current-user.model';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
@@ -30,9 +30,9 @@ import type { ReportComponent } from '../../report/report.component';
 	standalone: true,
 	imports: [
 		RouterModule,
-		MarkdownPipe,
 		DayjsPipe,
 		NgOptimizedImage,
+		MarkdownPipe,
 		SanitizerPipe,
 		SkeletonDirective,
 		DropdownComponent,
