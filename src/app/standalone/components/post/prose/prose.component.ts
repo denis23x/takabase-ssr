@@ -14,11 +14,11 @@ import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../../dropdown/dropdown.component';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { filter } from 'rxjs/operators';
-import { PlatformService } from '../../../../core/services/platform.service';
 import { AdComponent } from '../../ad/ad.component';
 import { CopyToClipboardDirective } from '../../../directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { AppCheckPipe } from '../../../pipes/app-check.pipe';
+import { HelperService } from '../../../../core/services/helper.service';
 
 // Types for lazy loading
 
@@ -47,9 +47,9 @@ import type { ReportComponent } from '../../report/report.component';
 	templateUrl: './prose.component.html'
 })
 export class PostProseComponent implements OnInit, OnDestroy {
-	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly helperService: HelperService = inject(HelperService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
 	@Input({ required: true })
@@ -85,12 +85,6 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	appReportComponent: ComponentRef<ReportComponent>;
 
 	ngOnInit(): void {
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			this.postShareUrl = window.location.origin + window.location.pathname;
-		}
-
 		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
 			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
@@ -104,6 +98,9 @@ export class PostProseComponent implements OnInit, OnDestroy {
 				next: () => (this.currentUserSkeletonToggle = false),
 				error: (error: any) => console.error(error)
 			});
+
+		// Get current url
+		this.postShareUrl = this.helperService.getURL().toString();
 	}
 
 	ngOnDestroy(): void {

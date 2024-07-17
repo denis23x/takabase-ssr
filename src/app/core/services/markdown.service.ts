@@ -1,44 +1,29 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import MarkdownIt, { Token, Renderer } from 'markdown-it';
-import attrs from 'markdown-it-attrs';
-import bracketedSpans from 'markdown-it-bracketed-spans';
-import collapsible from 'markdown-it-collapsible';
-import { full as emoji } from 'markdown-it-emoji';
-import linkAttributes from 'markdown-it-link-attributes';
-import mark from 'markdown-it-mark';
-import multiMdTable from 'markdown-it-multimd-table';
-import plainText from 'markdown-it-plain-text';
-import smartArrows from 'markdown-it-smartarrows';
-import tasks from 'markdown-it-tasks';
-import video from 'markdown-it-video';
+import MarkdownIt, { Token } from 'markdown-it';
 import morphdom from 'morphdom';
-import Prism from 'prismjs';
-import 'prismjs/plugins/autolinker/prism-autolinker.min.js';
-import 'prismjs/plugins/autoloader/prism-autoloader.min.js';
-import 'prismjs/plugins/line-numbers/prism-line-numbers.min.js';
-import 'prismjs/plugins/match-braces/prism-match-braces.min.js';
-import { environment } from '../../../environments/environment';
-import { DOCUMENT } from '@angular/common';
-import { PlatformService } from './platform.service';
 import { Subject } from 'rxjs';
-import { MarkdownShortcut } from '../models/markdown.model';
+import { MarkdownItPlugins, MarkdownShortcut } from '../models/markdown.model';
+import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
+import { AppearanceService } from './appearance.service';
+import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { HelperService } from './helper.service';
-import { AppearanceService } from './appearance.service';
-import { mermaid } from './markdown';
+import attrs from 'markdown-it-attrs';
+import bracketedSpans from 'markdown-it-bracketed-spans';
+import ins from 'markdown-it-ins';
+import linkAttributes from 'markdown-it-link-attributes';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class MarkdownService {
+	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly document: Document = inject(DOCUMENT);
-	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly httpClient: HttpClient = inject(HttpClient);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 
 	markdownItClipboard: Subject<ClipboardEventInit> = new Subject<ClipboardEventInit>();
 	markdownItShortcut: Subject<MarkdownShortcut | null> = new Subject<MarkdownShortcut | null>();
@@ -57,70 +42,155 @@ export class MarkdownService {
 
 		this.setMarkdownItPrism();
 
-		/** Set markdown-it */
+			if (key === 'tasks') {
+				markdownItModules.push(import('markdown-it-tasks'));
+			}
 
-		this.markdownIt = new MarkdownIt({
+			if (key === 'video') {
+				markdownItModules.push(import('markdown-it-video'));
+			}
+		});
+
+		/** Lazy load */
+
+		const markdownItModulesLoaded: any[] = await Promise.all(markdownItModules);
+
+		/** Markdown instance */
+
+		const markdownIt: MarkdownIt = new MarkdownIt({
 			html: false,
 			xhtmlOut: false,
 			linkify: true,
 			breaks: true,
 			typographer: true,
 			quotes: '“”‘’',
-			highlight: (value: string, language: string): string => {
-				if (this.platformService.isBrowser()) {
-					// Not affecting hydration
-
-					setTimeout(() => Prism.highlightAll());
-
-					// prettier-ignore
-					const prismTemplate = (templateValue: string, templateLanguage: string): string => {
-            const getValue = (): string => {
-              if (templateLanguage === 'markup') {
-                return templateValue.replace(/</g, '&lt;').replace(/>/g, '&gt;')
-              }
-
-              return templateValue;
-            }
-
-            return `<pre class="line-numbers language-${language}" data-language="${language}"><code class="language-${language} match-braces rainbow-braces">${getValue()}</code></pre>`;
-          };
-
-					if (!!language && environment.prism.grammars.includes(language.toLowerCase())) {
-						return prismTemplate(value, language);
-					}
-
-					return prismTemplate(this.markdownIt.utils.escapeHtml(value), 'plain');
+			highlight: (value: string, language: string) => {
+				if (language === 'mermaid') {
+					return `<pre class="mermaid">${value}</pre>`;
+				} else {
+					return `<pre class="language-${language} line-numbers"><code class="language-${language} match-braces rainbow-braces">${value}</code></pre>`;
 				}
-
-				return value;
 			}
 		})
-			.use(attrs, this.getMarkdownItAttrsConfig())
+			.use(attrs, {
+				allowedAttributes: ['class', 'style', 'width', 'height']
+			})
 			.use(bracketedSpans)
-			.use(collapsible)
-			.use(emoji)
-			.use(linkAttributes, this.getMarkdownItLinkAttributesConfig())
-			.use(mark)
-			.use(multiMdTable, this.getMarkdownItMultiMdTableConfig())
-			.use(plainText)
-			.use(smartArrows)
-			.use(tasks, this.getMarkdownITasksConfig())
-			.use(video)
-			.use(mermaid, this.getMarkdownItMermaidConfig(), this.platformService.isBrowser());
+			.use(ins)
+			.use(linkAttributes, [
+				{
+					matcher(href: string) {
+						return href.match(/^https?:\/\//);
+					},
+					attrs: {
+						target: '_blank',
+						rel: 'ugc noopener noreferrer'
+					}
+				}
+			]);
 
-		this.markdownIt.renderer.rules.image = this.setMarkdownItRule('image');
-		this.markdownIt.renderer.rules.video = this.setMarkdownItRule('video');
-		this.markdownIt.renderer.rules.table_open = this.setMarkdownItRule('tableOpen');
-		this.markdownIt.renderer.rules.table_close = this.setMarkdownItRule('tableClose');
-		this.markdownIt.renderer.rules.collapsible_open = this.setMarkdownItRule('collapsibleOpen');
-		this.markdownIt.renderer.rules.collapsible_summary = this.setMarkdownItRule('collapsibleSummary');
-		this.markdownIt.renderer.rules.collapsible_close = this.setMarkdownItRule('collapsibleClose');
+		/** Lazy load apply */
 
-		return this.markdownIt;
-	}
+		Object.keys(markdownItPluginsFiltered).forEach((key: string, i: number) => {
+			if (key === 'prism') {
+				markdownIt.use(markdownItModulesLoaded[i].default);
+			}
 
-	setMarkdownItRule(rule: string): Renderer.RenderRule {
-		const ruleImage: Renderer.RenderRule = (tokenList: Token[], idx: number): string => {
+			if (key === 'mermaid') {
+				/** https://mermaid.js.org/config/theming.html#customizing-themes-with-themevariables */
+
+				markdownIt.use(markdownItModulesLoaded[i].default, {
+					theme: 'base',
+					themeVariables: {
+						darkMode: false,
+						background: this.appearanceService.getCSSColor('--b1', 'hex'),
+						primaryColor: this.appearanceService.getCSSColor('--b1', 'hex'),
+						primaryTextColor: this.appearanceService.getCSSColor('--bc', 'hex'),
+						primaryBorderColor: this.appearanceService.getCSSColor('--p', 'hex'),
+						secondaryColor: this.appearanceService.getCSSColor('--b1', 'hex'),
+						secondaryTextColor: this.appearanceService.getCSSColor('--bc', 'hex'),
+						secondaryBorderColor: this.appearanceService.getCSSColor('--s', 'hex'),
+						lineColor: this.appearanceService.getCSSColor('--bc', 'hex'),
+						textColor: this.appearanceService.getCSSColor('--bc', 'hex'),
+						pie1: this.appearanceService.getCSSColor('--p', 'hex'),
+						pie2: this.appearanceService.getCSSColor('--s', 'hex'),
+						pie3: this.appearanceService.getCSSColor('--t', 'hex'),
+						pie4: this.appearanceService.getCSSColor('--a', 'hex'),
+						pie5: this.appearanceService.getCSSColor('--wa', 'hex'),
+						pie6: this.appearanceService.getCSSColor('--er', 'hex')
+					}
+				});
+			}
+
+			if (key === 'collapsible') {
+				markdownIt.use(markdownItModulesLoaded[i].default);
+
+				/** Update rules */
+
+				markdownIt.renderer.rules.collapsible_open = (): string => {
+					return '<details class="collapse collapse-arrow bg-base-200 border border-base-content/20">';
+				};
+
+				markdownIt.renderer.rules.collapsible_summary = (tokenList: Token[], idx: number): string => {
+					return `<summary class="collapse-title text-xl font-medium">${tokenList[idx].content}</summary><div class="collapse-content">`;
+				};
+
+				markdownIt.renderer.rules.collapsible_close = (): string => {
+					return '</div></details>';
+				};
+			}
+
+			if (key === 'emoji') {
+				markdownIt.use(markdownItModulesLoaded[i].full);
+			}
+
+			if (key === 'smartArrows') {
+				markdownIt.use(markdownItModulesLoaded[i].default);
+			}
+
+			if (key === 'tasks') {
+				// markdownIt.use(markdownItModulesLoaded[i].default, {
+				// 	enabled: true,
+				// 	label: true,
+				// 	labelAfter: false,
+				// 	itemClass: 'form-control',
+				// 	inputClass: 'checkbox checkbox-success mr-4',
+				// 	labelClass: 'label cursor-pointer'
+				// });
+			}
+
+			if (key === 'video') {
+				markdownIt.use(markdownItModulesLoaded[i].default);
+
+				/** Update rules */
+
+				markdownIt.renderer.rules.video = (tokenList: Token[], idx: number): string => {
+					const iframeSrc: string = 'https://www.youtube-nocookie.com/embed/';
+					const iframeElement: HTMLIFrameElement = this.document.createElement('iframe');
+
+					const token: Token = tokenList[idx];
+
+					// @ts-ignore
+					iframeElement.loading = 'lazy';
+
+					// @ts-ignore
+					iframeElement.src = iframeSrc + token.videoID;
+					iframeElement.width = String(640);
+					iframeElement.height = String(390);
+					iframeElement.title = 'YouTube video player';
+
+					// prettier-ignore
+					iframeElement.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+					iframeElement.allowFullscreen = true;
+
+					return iframeElement.outerHTML;
+				};
+			}
+		});
+
+		/** Update default rules */
+
+		markdownIt.renderer.rules.image = (tokenList: Token[], idx: number): string => {
 			const imageElement: HTMLImageElement = this.document.createElement('img');
 
 			const token: Token = tokenList[idx];
@@ -183,29 +253,7 @@ export class MarkdownService {
 			return imageElement.outerHTML;
 		};
 
-		const ruleVideo: Renderer.RenderRule = (tokenList: Token[], idx: number): string => {
-			const iframeSrc: string = 'https://www.youtube-nocookie.com/embed/';
-			const iframeElement: HTMLIFrameElement = this.document.createElement('iframe');
-
-			const token: Token = tokenList[idx];
-
-			// @ts-ignore
-			iframeElement.loading = 'lazy';
-
-			// @ts-ignore
-			iframeElement.src = iframeSrc + token.videoID;
-			iframeElement.width = String(640);
-			iframeElement.height = String(390);
-			iframeElement.title = 'YouTube video player';
-
-			// prettier-ignore
-			iframeElement.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-			iframeElement.allowFullscreen = true;
-
-			return iframeElement.outerHTML;
-		};
-
-		const ruleTableOpen: Renderer.RenderRule = (tokenList: Token[], idx: number): string => {
+		markdownIt.renderer.rules.table_open = (tokenList: Token[], idx: number): string => {
 			const tableElement: HTMLTableElement = this.document.createElement('table');
 
 			const token: Token = tokenList[idx];
@@ -224,41 +272,11 @@ export class MarkdownService {
 			return `<div class="overflow-auto my-4">${tableElement.outerHTML.replace('</table>', '')}`;
 		};
 
-		const ruleTableClose: Renderer.RenderRule = (): string => {
+		markdownIt.renderer.rules.table_close = (): string => {
 			return `</table></div>`;
 		};
 
-		const ruleCollapsibleOpen: Renderer.RenderRule = (): string => {
-			return '<details class="collapse collapse-arrow bg-base-200 border border-base-content/20">';
-		};
-
-		const ruleCollapsibleSummary: Renderer.RenderRule = (tokenList: Token[], idx: number): string => {
-			// prettier-ignore
-			return `<summary class="collapse-title text-xl font-medium">${tokenList[idx].content}</summary><div class="collapse-content">`;
-		};
-
-		const ruleCollapsibleClose: Renderer.RenderRule = (): string => {
-			return '</div></details>';
-		};
-
-		const ruleMap: any = {
-			image: ruleImage,
-			video: ruleVideo,
-			tableOpen: ruleTableOpen,
-			tableClose: ruleTableClose,
-			collapsibleOpen: ruleCollapsibleOpen,
-			collapsibleSummary: ruleCollapsibleSummary,
-			collapsibleClose: ruleCollapsibleClose
-		};
-
-		return ruleMap[rule];
-	}
-
-	setMarkdownItPrism(): void {
-		if (this.platformService.isBrowser()) {
-			Prism.manual = true;
-			Prism.plugins.autoloader.languages_path = '/assets/grammars/';
-		}
+		return markdownIt;
 	}
 
 	getMarkdownItAttrsConfig(): any {
@@ -325,8 +343,10 @@ export class MarkdownService {
 
 		/** Set markdown-it render */
 
-		cloneElement.innerHTML = this.getMarkdownIt().render(value);
+		this.getMarkdownIt(value).then((markdownIt: MarkdownIt) => {
+			cloneElement.innerHTML = markdownIt.render(value);
 
-		morphdom(element, cloneElement);
+			morphdom(element, cloneElement);
+		});
 	}
 }

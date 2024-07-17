@@ -1,6 +1,4 @@
-/* Remove unnecessary margin from first and last element */
-
-@mixin shared-styles-first-and-last() {
+@mixin shared-styles-nested-margin() {
   & > * {
     &:first-child {
       @apply mt-0 #{!important};
@@ -9,6 +7,18 @@
     &:last-child {
       @apply mb-0 #{!important};
     }
+  }
+}
+
+@mixin shared-styles-pseudo-loader() {
+  @apply relative rounded-btn pointer-events-none;
+
+  &:before {
+    @apply content-[''] bg-base-100 absolute inset-0;
+  }
+
+  &:after {
+    @apply content-[''] bg-base-300 animate-pulse absolute inset-0;
   }
 }
 
@@ -74,11 +84,23 @@
   }
 
   pre.mermaid {
-    @apply bg-base-200 p-4 md:p-8
+    @apply flex items-center justify-center text-transparent bg-base-200 p-4;
+
+    &:not([id^='mermaid']) {
+      @include shared-styles-pseudo-loader();
+    }
   }
 
-  pre {
+  pre:not(.mermaid) {
     @apply text-sm #{!important};
+
+    &:not([id^='prism']) {
+      @include shared-styles-pseudo-loader();
+
+      code {
+        @apply invisible;
+      }
+    }
   }
 
   code:not(pre code) {
@@ -149,7 +171,7 @@
     .collapse-content {
       @apply bg-base-100 p-4;
 
-      @include shared-styles-first-and-last();
+      @include shared-styles-nested-margin();
     }
 
     details {
@@ -159,5 +181,5 @@
     }
   }
 
-  @include shared-styles-first-and-last();
+  @include shared-styles-nested-margin();
 }
