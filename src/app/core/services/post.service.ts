@@ -3,12 +3,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { PostGetAllDto } from '../dto/post/post-get-all.dto';
-import { Post } from '../models/post.model';
-import { PostCreateDto } from '../dto/post/post-create.dto';
-import { PostGetOneDto } from '../dto/post/post-get-one.dto';
-import { PostUpdateDto } from '../dto/post/post-update.dto';
-import { PostDeleteDto } from '../dto/post/post-delete.dto';
+import type { Post } from '../models/post.model';
+import type { PostGetAllDto } from '../dto/post/post-get-all.dto';
+import type { PostCreateDto } from '../dto/post/post-create.dto';
+import type { PostGetOneDto } from '../dto/post/post-get-one.dto';
+import type { PostUpdateDto } from '../dto/post/post-update.dto';
+import type { PostDeleteDto } from '../dto/post/post-delete.dto';
 
 @Injectable()
 export class PostService {

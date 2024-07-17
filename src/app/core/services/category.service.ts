@@ -3,12 +3,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { CategoryCreateDto } from '../dto/category/category-create.dto';
-import { CategoryGetAllDto } from '../dto/category/category-get-all.dto';
-import { Category } from '../models/category.model';
-import { CategoryUpdateDto } from '../dto/category/category-update.dto';
-import { CategoryDeleteDto } from '../dto/category/category-delete.dto';
-import { CategoryGetOneDto } from '../dto/category/category-get-one.dto';
+import type { Category } from '../models/category.model';
+import type { CategoryCreateDto } from '../dto/category/category-create.dto';
+import type { CategoryGetAllDto } from '../dto/category/category-get-all.dto';
+import type { CategoryUpdateDto } from '../dto/category/category-update.dto';
+import type { CategoryDeleteDto } from '../dto/category/category-delete.dto';
+import type { CategoryGetOneDto } from '../dto/category/category-get-one.dto';
 
 @Injectable()
 export class CategoryService {

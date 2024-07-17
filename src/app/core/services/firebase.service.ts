@@ -9,8 +9,8 @@ import { getFirestore, Firestore } from 'firebase/firestore';
 import { getStorage, FirebaseStorage } from 'firebase/storage';
 import { getRemoteConfig, RemoteConfig } from 'firebase/remote-config';
 import { getAnalytics, Analytics } from 'firebase/analytics';
-import { AppCheckDto } from '../dto/authorization/app-check.dto';
 import { ApiService } from './api.service';
+import type { AppCheckDto } from '../dto/authorization/app-check.dto';
 
 /** https://firebase.google.com/docs/web/setup#add-sdk-and-initialize */
 

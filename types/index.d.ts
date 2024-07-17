@@ -16,3 +16,7 @@ declare module 'emoji-mart/dist/browser';
 // Autosize
 
 declare module 'autosize/dist/autosize.min';
+
+// Magiclorem
+
+declare module 'magiclorem';

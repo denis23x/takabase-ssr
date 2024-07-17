@@ -1,12 +1,13 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { Post } from '../models/post.model';
-import { Category } from '../models/category.model';
-import { User } from '../models/user.model';
 import { HelperService } from './helper.service';
 import { numbers } from 'nanoid-dictionary';
 import { customAlphabet } from 'nanoid';
+import { LoremIpsum } from 'lorem-ipsum';
+import type { User } from '../models/user.model';
+import type { Post } from '../models/post.model';
+import type { Category } from '../models/category.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -14,313 +15,72 @@ import { customAlphabet } from 'nanoid';
 export class SkeletonService {
 	private readonly helperService: HelperService = inject(HelperService);
 
+	loremIpsum: LoremIpsum = new LoremIpsum({
+		sentencesPerParagraph: {
+			max: 8,
+			min: 4
+		},
+		wordsPerSentence: {
+			max: 16,
+			min: 4
+		}
+	});
+
 	getCategory(scope: string[] = []): Category {
 		return {
 			id: Number(customAlphabet(numbers, 8)()),
-			name: 'Jewelery',
-			description: 'Dicta celebrer bis.',
+			name: this.loremIpsum.generateWords(2),
+			description: this.loremIpsum.generateSentences(1),
 			user: scope.includes('user') ? this.getUser() : undefined,
 			posts: scope.includes('posts') ? this.getPostList() : [],
-			createdAt: '2023-10-15T12:55:54.663Z',
-			updatedAt: '2023-10-15T12:55:54.663Z'
+			createdAt: new Date().toISOString(),
+			updatedAt: new Date().toISOString()
 		};
 	}
 
 	getCategoryList(scope: string[] = []): Category[] {
-		return [
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Jewelery',
-				description: 'Dicta celebrer bis.',
-				user: scope.includes('user') ? this.getUser() : undefined,
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.663Z',
-				updatedAt: '2023-10-15T12:55:54.663Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Tools',
-				description: 'Antepono deduco sonitus amplus vesper.',
-				user: scope.includes('user') ? this.getUser() : undefined,
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.663Z',
-				updatedAt: '2023-10-15T12:55:54.663Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Baby',
-				description: 'Timidus temeritas degero cresco complectus carus cursus ascit.',
-				user: scope.includes('user') ? this.getUser() : undefined,
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.663Z',
-				updatedAt: '2023-10-15T12:55:54.663Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Computers',
-				description: 'Vobis vulgaris curvo apparatus cuppedia capitulus.',
-				user: scope.includes('user') ? this.getUser() : undefined,
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.663Z',
-				updatedAt: '2023-10-15T12:55:54.663Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Health',
-				description: null,
-				user: scope.includes('user') ? this.getUser() : undefined,
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.663Z',
-				updatedAt: '2023-10-15T12:55:54.663Z'
-			}
-		];
+		return Array(10)
+			.fill(1)
+			.map(() => this.getCategory(scope));
 	}
 
 	getPost(scope: string[] = []): Post {
 		return {
 			id: Number(customAlphabet(numbers, 8)()),
-			name: 'Paint it Black',
+			name: this.loremIpsum.generateWords(2),
 			firebaseUid: this.helperService.getNanoId(4),
-			description: 'Synagoga absconditus depereo cedo.',
-			image: null,
+			description: this.loremIpsum.generateSentences(1),
+			image: +customAlphabet('01', 1)() ? './assets/images/placeholder-image.svg' : null,
 			category: scope.includes('category') ? this.getCategory() : undefined,
 			user: scope.includes('user') ? this.getUser() : undefined,
-			markdown: 'Quidem volutabrum artificiose blanditiis aeneus corrupti voluntarius comprehendo.',
-			createdAt: '2023-10-15T12:55:54.955Z',
-			updatedAt: '2023-10-15T12:55:54.955Z'
+			markdown: this.loremIpsum.generateSentences(5),
+			createdAt: new Date().toISOString(),
+			updatedAt: new Date().toISOString()
 		};
 	}
 
 	getPostList(scope: string[] = []): Post[] {
-		return [
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Paint it Black',
-				firebaseUid: this.helperService.getNanoId(4),
-				description: 'Synagoga absconditus depereo cedo id ulterius culpo adsum spectaculum umbra.',
-				image: null,
-				category: scope.includes('category') ? this.getCategory() : undefined,
-				user: scope.includes('user') ? this.getUser() : undefined,
-				createdAt: '2023-10-15T12:55:54.955Z',
-				updatedAt: '2023-10-15T12:55:54.955Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'You make Me Wanna',
-				firebaseUid: this.helperService.getNanoId(4),
-				description: 'Terminatio optio claustrum.',
-				image: null,
-				category: scope.includes('category') ? this.getCategory() : undefined,
-				user: scope.includes('user') ? this.getUser() : undefined,
-				createdAt: '2023-10-15T12:55:54.955Z',
-				updatedAt: '2023-10-15T12:55:54.955Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Jailhouse Rock',
-				firebaseUid: this.helperService.getNanoId(4),
-				description: 'Compono adduco demitto curatio tabgo ipsum demo sto ubi.',
-				image: null,
-				category: scope.includes('category') ? this.getCategory() : undefined,
-				user: scope.includes('user') ? this.getUser() : undefined,
-				createdAt: '2023-10-15T12:55:54.955Z',
-				updatedAt: '2023-10-15T12:55:54.955Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Can You Feel the Love Tonight',
-				firebaseUid: this.helperService.getNanoId(4),
-				description: 'Recusandae texo pauci terga compono.',
-				image: null,
-				category: scope.includes('category') ? this.getCategory() : undefined,
-				user: scope.includes('user') ? this.getUser() : undefined,
-				createdAt: '2023-10-15T12:55:54.955Z',
-				updatedAt: '2023-10-15T12:55:54.955Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Make it With You',
-				firebaseUid: this.helperService.getNanoId(4),
-				description: 'Adversus stips allatus paulatim.',
-				image: null,
-				category: scope.includes('category') ? this.getCategory() : undefined,
-				user: scope.includes('user') ? this.getUser() : undefined,
-				createdAt: '2023-10-15T12:55:54.955Z',
-				updatedAt: '2023-10-15T12:55:54.955Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Morning Train (Nine to Five)',
-				firebaseUid: this.helperService.getNanoId(4),
-				description: 'Super tardus approbo vorago vulgus angustus creta tremo subito approbo.',
-				image: null,
-				category: scope.includes('category') ? this.getCategory() : undefined,
-				user: scope.includes('user') ? this.getUser() : undefined,
-				createdAt: '2023-10-15T12:55:54.955Z',
-				updatedAt: '2023-10-15T12:55:54.955Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Be My Baby',
-				firebaseUid: this.helperService.getNanoId(4),
-				description: 'Taceo vulgo confugo derideo.',
-				image: null,
-				category: scope.includes('category') ? this.getCategory() : undefined,
-				user: scope.includes('user') ? this.getUser() : undefined,
-				createdAt: '2023-10-15T12:55:54.955Z',
-				updatedAt: '2023-10-15T12:55:54.955Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'White Christmas',
-				firebaseUid: this.helperService.getNanoId(4),
-				description: 'Turpis nesciunt tendo ago urbanus.',
-				image: null,
-				category: scope.includes('category') ? this.getCategory() : undefined,
-				user: scope.includes('user') ? this.getUser() : undefined,
-				createdAt: '2023-10-15T12:55:54.955Z',
-				updatedAt: '2023-10-15T12:55:54.955Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Wichita Lineman',
-				firebaseUid: this.helperService.getNanoId(4),
-				description: 'Speciosus casso eligendi facilis amiculum.',
-				image: null,
-				category: scope.includes('category') ? this.getCategory() : undefined,
-				user: scope.includes('user') ? this.getUser() : undefined,
-				createdAt: '2023-10-15T12:55:54.955Z',
-				updatedAt: '2023-10-15T12:55:54.955Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Get Down Tonight',
-				firebaseUid: this.helperService.getNanoId(4),
-				description: 'Sonitus pax tabernus turba viriliter agnitio nulla arca.',
-				image: null,
-				category: scope.includes('category') ? this.getCategory() : undefined,
-				user: scope.includes('user') ? this.getUser() : undefined,
-				createdAt: '2023-10-15T12:55:54.955Z',
-				updatedAt: '2023-10-15T12:55:54.955Z'
-			}
-		];
+		return Array(10)
+			.fill(1)
+			.map(() => this.getPost(scope));
 	}
 
 	getUser(scope: string[] = []): User {
 		return {
 			id: Number(customAlphabet(numbers, 8)()),
-			name: 'Kayley75',
-			description: 'Quidem volutabrum.',
-			avatar: null,
+			name: this.loremIpsum.generateWords(1),
+			description: this.loremIpsum.generateSentences(1),
+			avatar: +customAlphabet('01', 1)() ? './assets/images/placeholder-image.svg' : null,
 			categories: scope.includes('categories') ? this.getCategoryList() : [],
 			posts: scope.includes('posts') ? this.getPostList() : [],
-			createdAt: '2023-10-16T13:47:47.360Z',
-			updatedAt: '2023-10-16T13:47:47.360Z'
+			createdAt: new Date().toISOString(),
+			updatedAt: new Date().toISOString()
 		};
 	}
 
 	getUserList(scope: string[] = []): User[] {
-		return [
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Denis.23x',
-				description: null,
-				avatar: null,
-				categories: scope.includes('categories') ? this.getCategoryList() : [],
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-16T13:47:47.360Z',
-				updatedAt: '2023-10-16T13:47:47.360Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Duncan.Doyle35',
-				description: null,
-				avatar: null,
-				categories: scope.includes('categories') ? this.getCategoryList() : [],
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.635Z',
-				updatedAt: '2023-10-15T12:55:54.635Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Tiara.Harvey',
-				description: null,
-				avatar: null,
-				categories: scope.includes('categories') ? this.getCategoryList() : [],
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.635Z',
-				updatedAt: '2023-10-15T12:55:54.635Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Alessia_Rath',
-				description: null,
-				avatar: null,
-				categories: scope.includes('categories') ? this.getCategoryList() : [],
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.635Z',
-				updatedAt: '2023-10-15T12:55:54.635Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Lambert_Wyman17',
-				description: null,
-				avatar: null,
-				categories: scope.includes('categories') ? this.getCategoryList() : [],
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.635Z',
-				updatedAt: '2023-10-15T12:55:54.635Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Scot_Shields7',
-				description: null,
-				avatar: null,
-				categories: scope.includes('categories') ? this.getCategoryList() : [],
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.635Z',
-				updatedAt: '2023-10-15T12:55:54.635Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Eino35',
-				description: null,
-				avatar: null,
-				categories: scope.includes('categories') ? this.getCategoryList() : [],
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.635Z',
-				updatedAt: '2023-10-15T12:55:54.635Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Kayley75',
-				description: null,
-				avatar: null,
-				categories: scope.includes('categories') ? this.getCategoryList() : [],
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.635Z',
-				updatedAt: '2023-10-15T12:55:54.635Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Lacey_OConner',
-				description: null,
-				avatar: null,
-				categories: scope.includes('categories') ? this.getCategoryList() : [],
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.635Z',
-				updatedAt: '2023-10-15T12:55:54.635Z'
-			},
-			{
-				id: Number(customAlphabet(numbers, 8)()),
-				name: 'Sarai88',
-				description: null,
-				avatar: null,
-				categories: scope.includes('categories') ? this.getCategoryList() : [],
-				posts: scope.includes('posts') ? this.getPostList() : [],
-				createdAt: '2023-10-15T12:55:54.635Z',
-				updatedAt: '2023-10-15T12:55:54.635Z'
-			}
-		];
+		return Array(10)
+			.fill(1)
+			.map(() => this.getUser(scope));
 	}
 }

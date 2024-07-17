@@ -4,7 +4,6 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable, Observer, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
-import { CurrentUser } from '../models/current-user.model';
 import { AppearanceService } from './appearance.service';
 import { FirebaseService } from './firebase.service';
 import {
@@ -23,12 +22,13 @@ import {
 	OAuthCredential,
 	Auth
 } from 'firebase/auth';
-import { FirebaseError } from 'firebase/app';
-import { UserCreateDto } from '../dto/user/user-create.dto';
-import { SignInDto } from '../dto/authorization/sign-in.dto';
 import { Router } from '@angular/router';
 import { CookiesService } from './cookies.service';
 import { HelperService } from './helper.service';
+import type { CurrentUser } from '../models/current-user.model';
+import type { FirebaseError } from 'firebase/app';
+import type { UserCreateDto } from '../dto/user/user-create.dto';
+import type { SignInDto } from '../dto/authorization/sign-in.dto';
 
 @Injectable({
 	providedIn: 'root'

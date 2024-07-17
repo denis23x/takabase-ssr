@@ -1,17 +1,19 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { Meta, MetaDefinition } from '@angular/platform-browser';
+import { Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
-import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
 import { HelperService } from './helper.service';
 import { Observable, of } from 'rxjs';
-import { SharpOutputDownloadUrlDto } from '../dto/sharp/sharp-output-download-url.dto';
 import { catchError, map } from 'rxjs/operators';
 import { PlatformService } from './platform.service';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { environment } from '../../../environments/environment';
+import type { SharpOutputDownloadUrlDto } from '../dto/sharp/sharp-output-download-url.dto';
+import type { HttpErrorResponse } from '@angular/common/http';
+import type { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
+import type { MetaDefinition } from '@angular/platform-browser';
 
 @Injectable({
 	providedIn: 'root'

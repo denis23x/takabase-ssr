@@ -3,12 +3,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import { User } from '../models/user.model';
-import { UserCreateDto } from '../dto/user/user-create.dto';
-import { UserGetAllDto } from '../dto/user/user-get-all.dto';
-import { UserGetOneDto } from '../dto/user/user-get-one.dto';
-import { UserUpdateDto } from '../dto/user/user-update.dto';
-import { UserDeleteDto } from '../dto/user/user-delete.dto';
+import type { User } from '../models/user.model';
+import type { UserCreateDto } from '../dto/user/user-create.dto';
+import type { UserGetAllDto } from '../dto/user/user-get-all.dto';
+import type { UserGetOneDto } from '../dto/user/user-get-one.dto';
+import type { UserUpdateDto } from '../dto/user/user-update.dto';
+import type { UserDeleteDto } from '../dto/user/user-delete.dto';
 
 @Injectable()
 export class UserService {

@@ -6,7 +6,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SnackbarService } from './snackbar.service';
-import { FirebaseError } from 'firebase/app';
+import type { FirebaseError } from 'firebase/app';
 
 // prettier-ignore
 const httpErrorResponseKey: StateKey<HttpErrorResponse | undefined> = makeStateKey<HttpErrorResponse | undefined>('httpErrorResponse');

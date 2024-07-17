@@ -2,7 +2,8 @@
 
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch/lite';
+import algoliasearch from 'algoliasearch/lite';
+import type { SearchClient, SearchIndex } from 'algoliasearch/lite';
 
 @Injectable()
 export class AlgoliaService {

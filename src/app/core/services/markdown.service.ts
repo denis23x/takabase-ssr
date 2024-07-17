@@ -1,7 +1,7 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import MarkdownIt, { Token } from 'markdown-it';
+import MarkdownIt from 'markdown-it';
 import morphdom from 'morphdom';
 import { Subject } from 'rxjs';
 import { MarkdownItPlugins, MarkdownShortcut } from '../models/markdown.model';
@@ -16,6 +16,7 @@ import bracketedSpans from 'markdown-it-bracketed-spans';
 import ins from 'markdown-it-ins';
 import linkAttributes from 'markdown-it-link-attributes';
 import plainText from 'markdown-it-plain-text';
+import type { Token } from 'markdown-it';
 
 @Injectable()
 export class MarkdownService {
@@ -31,7 +32,6 @@ export class MarkdownService {
 	markdownItCropperToggle: Subject<boolean> = new Subject<boolean>();
 
 	markdownItPlugins: string[] = [];
-	markdownItDefault: MarkdownIt;
 	markdownIt: MarkdownIt;
 
 	getMarkdownItDefault(): MarkdownIt {

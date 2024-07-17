@@ -6,7 +6,6 @@ import { PlatformService } from './platform.service';
 import { HttpClient } from '@angular/common/http';
 import { EMPTY, from, fromEvent, Observable, of, race, switchMap } from 'rxjs';
 import { catchError, filter, map, tap } from 'rxjs/operators';
-import { Appearance } from '../models/appearance.model';
 import { HelperService } from './helper.service';
 import { CookiesService } from './cookies.service';
 import { Meta } from '@angular/platform-browser';
@@ -21,9 +20,10 @@ import {
 	getDoc,
 	updateDoc
 } from 'firebase/firestore';
-import { FirebaseError } from 'firebase/app';
 import { ApiService } from './api.service';
 import { getValue, Value } from 'firebase/remote-config';
+import type { Appearance } from '../models/appearance.model';
+import type { FirebaseError } from 'firebase/app';
 
 @Injectable({
 	providedIn: 'root'

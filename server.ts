@@ -8,6 +8,7 @@ import { REQUEST, RESPONSE } from './src/app/core/tokens/express.tokens';
 import express from 'express';
 import bootstrap from './src/main.server';
 import expressStaticGzip from 'express-static-gzip';
+import compression from 'compression';
 
 // Function to get the value of a specific cookie
 function getCookie(cookieString: string, cookieName: string) {
@@ -30,8 +31,9 @@ export function app(): express.Express {
 	const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 	const browserDistFolder = resolve(serverDistFolder, '../browser');
 	const indexHtml = join(serverDistFolder, 'index.server.html');
-
 	const commonEngine = new CommonEngine();
+
+	server.use(compression());
 
 	server.set('view engine', 'html');
 	server.set('views', browserDistFolder);

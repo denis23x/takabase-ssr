@@ -7,8 +7,8 @@ import { catchError, map } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { FileService } from './file.service';
-import { SharpFetchDto } from '../dto/sharp/sharp-fetch.dto';
-import { SharpOutputDownloadUrlDto } from '../dto/sharp/sharp-output-download-url.dto';
+import type { SharpFetchDto } from '../dto/sharp/sharp-fetch.dto';
+import type { SharpOutputDownloadUrlDto } from '../dto/sharp/sharp-output-download-url.dto';
 
 @Injectable()
 export class SharpService {

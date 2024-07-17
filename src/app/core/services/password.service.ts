@@ -3,9 +3,6 @@
 import { inject, Injectable } from '@angular/core';
 import { from, Observable, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
-import { PasswordValidateGetDto } from '../dto/password/password-validate-get.dto';
-import { PasswordResetGetDto } from '../dto/password/password-reset-get.dto';
-import { PasswordResetUpdateDto } from '../dto/password/password-reset-update.dto';
 import { catchError } from 'rxjs/operators';
 import {
 	Auth,
@@ -18,9 +15,12 @@ import {
 	verifyPasswordResetCode,
 	confirmPasswordReset
 } from 'firebase/auth';
-import { PasswordUpdateDto } from '../dto/password/password-update.dto';
-import { FirebaseError } from 'firebase/app';
 import { FirebaseService } from './firebase.service';
+import type { PasswordUpdateDto } from '../dto/password/password-update.dto';
+import type { FirebaseError } from 'firebase/app';
+import type { PasswordValidateGetDto } from '../dto/password/password-validate-get.dto';
+import type { PasswordResetGetDto } from '../dto/password/password-reset-get.dto';
+import type { PasswordResetUpdateDto } from '../dto/password/password-reset-update.dto';
 
 @Injectable()
 export class PasswordService {

@@ -22,11 +22,12 @@ import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { RouterModule } from '@angular/router';
 import { User } from '../../../../core/models/user.model';
 import { ListMockComponent } from '../mock/mock.component';
+import { PlatformDirective } from '../../../directives/app-platform.directive';
 
 @Component({
 	standalone: true,
 	selector: 'app-list-load-more, [appListLoadMore]',
-	imports: [RouterModule, SvgIconComponent, ListMockComponent],
+	imports: [RouterModule, SvgIconComponent, ListMockComponent, PlatformDirective],
 	templateUrl: './load-more.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -5,18 +5,11 @@ import { from, Observable, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
 import { catchError } from 'rxjs/operators';
 import { HelperService } from './helper.service';
-import { FirebaseError } from 'firebase/app';
 import { FirebaseService } from './firebase.service';
-import {
-	FirebaseStorage,
-	ref,
-	StorageReference,
-	uploadBytes,
-	getDownloadURL,
-	UploadMetadata
-} from 'firebase/storage';
+import { FirebaseStorage, ref, StorageReference, uploadBytes, getDownloadURL, UploadMetadata } from 'firebase/storage';
 import mime from 'mime';
 import dayjs from 'dayjs/esm';
+import type { FirebaseError } from 'firebase/app';
 
 @Injectable({
 	providedIn: 'root'

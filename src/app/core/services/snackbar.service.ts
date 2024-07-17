@@ -2,8 +2,8 @@
 
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Snack, SnackOptions } from '../models/snack.model';
 import { HelperService } from './helper.service';
+import type { Snack, SnackOptions } from '../models/snack.model';
 
 @Injectable({
 	providedIn: 'root'

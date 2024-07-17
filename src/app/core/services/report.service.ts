@@ -2,16 +2,16 @@
 
 import { inject, Injectable, NgZone } from '@angular/core';
 import { from, Observable } from 'rxjs';
-import { ReportCreateDto } from '../dto/report/report-create.dto';
 import { environment } from '../../../environments/environment';
 import { AuthorizationService } from './authorization.service';
-import { CurrentUser } from '../models/current-user.model';
 import { HelperService } from './helper.service';
 import { collection, CollectionReference, addDoc, DocumentReference } from 'firebase/firestore';
 import { FirebaseService } from './firebase.service';
 import { catchError } from 'rxjs/operators';
-import { FirebaseError } from 'firebase/app';
 import { ApiService } from './api.service';
+import type { ReportCreateDto } from '../dto/report/report-create.dto';
+import type { FirebaseError } from 'firebase/app';
+import type { CurrentUser } from '../models/current-user.model';
 
 @Injectable()
 export class ReportService {

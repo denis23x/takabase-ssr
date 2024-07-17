@@ -3,10 +3,7 @@
 import { inject, Injectable } from '@angular/core';
 import { from, Observable, of, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
-import { EmailConfirmationUpdateDto } from '../dto/email/email-confirmation-update.dto';
 import { catchError } from 'rxjs/operators';
-import { EmailUpdateDto } from '../dto/email/email-update.dto';
-import { EmailRecoveryDto } from '../dto/email/email-recovery.dto';
 import {
 	Auth,
 	ActionCodeInfo,
@@ -17,7 +14,10 @@ import {
 	sendEmailVerification
 } from 'firebase/auth';
 import { FirebaseService } from './firebase.service';
-import { FirebaseError } from 'firebase/app';
+import type { FirebaseError } from 'firebase/app';
+import type { EmailConfirmationUpdateDto } from '../dto/email/email-confirmation-update.dto';
+import type { EmailUpdateDto } from '../dto/email/email-update.dto';
+import type { EmailRecoveryDto } from '../dto/email/email-recovery.dto';
 
 @Injectable()
 export class EmailService {
