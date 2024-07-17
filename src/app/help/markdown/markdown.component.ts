@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component } from '@angular/core';
-import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
+import { MarkdownLazyPipe } from '../../standalone/pipes/markdown-lazy.pipe';
 import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 import { FormsModule } from '@angular/forms';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -15,7 +15,7 @@ import helpMarkdown from '../../../assets/json/help-markdown.json';
 	imports: [
 		CommonModule,
 		RouterModule,
-		MarkdownPipe,
+		MarkdownLazyPipe,
 		SanitizerPipe,
 		FormsModule,
 		SvgIconComponent,

@@ -11,8 +11,6 @@ import { DayjsPipe } from '../standalone/pipes/dayjs.pipe';
 import { User } from '../core/models/user.model';
 import { Category } from '../core/models/category.model';
 import { UserService } from '../core/services/user.service';
-import { MarkdownPipe } from '../standalone/pipes/markdown.pipe';
-import { SanitizerPipe } from '../standalone/pipes/sanitizer.pipe';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
@@ -45,8 +43,6 @@ import type { ReportComponent } from '../standalone/components/report/report.com
 		DayjsPipe,
 		ScrollPresetDirective,
 		SvgIconComponent,
-		MarkdownPipe,
-		SanitizerPipe,
 		DropdownComponent,
 		SkeletonDirective,
 		CopyToClipboardDirective

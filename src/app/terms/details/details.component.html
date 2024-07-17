@@ -39,7 +39,7 @@
 		@case (false) {
 			<article
 				class="prose max-w-none overflow-auto"
-				[innerHTML]="abstractProse | markdown | async | sanitizer: 'html'"
+				[innerHTML]="abstractProse | markdown | sanitizer: 'html'"
 			></article>
 		}
 	}

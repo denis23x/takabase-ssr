@@ -20,8 +20,6 @@ import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-pr
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { Category } from '../../core/models/category.model';
-import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
-import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
@@ -62,8 +60,6 @@ const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchRes
 		DayjsPipe,
 		ScrollPresetDirective,
 		SvgIconComponent,
-		MarkdownPipe,
-		SanitizerPipe,
 		DropdownComponent,
 		SkeletonDirective,
 		SearchFormComponent,

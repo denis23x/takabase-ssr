@@ -15,6 +15,7 @@ import attrs from 'markdown-it-attrs';
 import bracketedSpans from 'markdown-it-bracketed-spans';
 import ins from 'markdown-it-ins';
 import linkAttributes from 'markdown-it-link-attributes';
+import plainText from 'markdown-it-plain-text';
 
 @Injectable({
 	providedIn: 'root'
@@ -31,6 +32,131 @@ export class MarkdownService {
 	markdownItCropperImage: Subject<File> = new Subject<File>();
 	markdownItCropperToggle: Subject<boolean> = new Subject<boolean>();
 
+	getMarkdownItDefault(): MarkdownIt {
+		const markdownIt: MarkdownIt = new MarkdownIt({
+			html: false,
+			xhtmlOut: false,
+			linkify: true,
+			breaks: true,
+			typographer: true,
+			quotes: '“”‘’',
+			highlight: (value: string, language: string) => {
+				if (language === 'mermaid') {
+					return `<pre class="mermaid">${value}</pre>`;
+				} else {
+					return `<pre class="language-${language} line-numbers"><code class="language-${language} match-braces rainbow-braces">${value}</code></pre>`;
+				}
+			}
+		})
+			.use(attrs, {
+				allowedAttributes: ['class', 'style', 'width', 'height']
+			})
+			.use(bracketedSpans)
+			.use(ins)
+			.use(plainText)
+			.use(linkAttributes, [
+				{
+					matcher(href: string) {
+						return href.match(/^https?:\/\//);
+					},
+					attrs: {
+						target: '_blank',
+						rel: 'ugc noopener noreferrer'
+					}
+				}
+			]);
+
+		/** Update default rules */
+
+		markdownIt.renderer.rules.image = (tokenList: Token[], idx: number): string => {
+			const imageElement: HTMLImageElement = this.document.createElement('img');
+
+			const token: Token = tokenList[idx];
+
+			token.attrs?.forEach(([key, value]: string[]) => {
+				switch (key) {
+					case 'class': {
+						const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
+
+						imageElement.classList.add(...classList);
+
+						break;
+					}
+					case 'src': {
+						if (value.includes(environment.firebase.storageBucket)) {
+							imageElement.id = this.helperService.getNanoId(12);
+							imageElement.src = './assets/images/placeholder-image.svg';
+
+							this.httpClient
+								.get(value, {
+									params: {
+										alt: 'media'
+									},
+									responseType: 'blob'
+								})
+								.pipe(map((blob: Blob) => URL.createObjectURL(blob)))
+								.subscribe({
+									next: (blob: string) => {
+										const elementHTML: HTMLElement | null = this.document.getElementById(imageElement.id);
+										const elementHTMLImage: HTMLImageElement = elementHTML as HTMLImageElement;
+
+										/** Set Image */
+
+										if (elementHTMLImage) {
+											elementHTMLImage.src = blob;
+										}
+									},
+									error: (error: any) => console.error(error)
+								});
+						} else {
+							// @ts-ignore
+							imageElement[key] = value;
+						}
+
+						break;
+					}
+					default: {
+						// @ts-ignore
+						imageElement[key] = value;
+
+						break;
+					}
+				}
+			});
+
+			imageElement.loading = 'lazy';
+			imageElement.alt = token.content;
+			imageElement.title = token.content;
+
+			return imageElement.outerHTML;
+		};
+
+		markdownIt.renderer.rules.table_open = (tokenList: Token[], idx: number): string => {
+			const tableElement: HTMLTableElement = this.document.createElement('table');
+
+			const token: Token = tokenList[idx];
+
+			token.attrs?.forEach(([key, value]: string[]) => {
+				if (key === 'class') {
+					const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
+
+					tableElement.classList.add(...classList);
+				} else {
+					// @ts-ignore
+					tableElement[key] = value;
+				}
+			});
+
+			return `<div class="overflow-auto my-4">${tableElement.outerHTML.replace('</table>', '')}`;
+		};
+
+		markdownIt.renderer.rules.table_close = (): string => {
+			return `</table></div>`;
+		};
+
+		return markdownIt;
+	}
+
 	async getMarkdownIt(value: string): Promise<MarkdownIt> {
 		const markdownItPlugins: MarkdownItPlugins = {
 			prism: /```\s?(?!mermaid)([\w-]+)\n[\s\S]*?```/gm.test(value),
@@ -45,6 +171,10 @@ export class MarkdownService {
 		// prettier-ignore
 		const markdownItPluginsFiltered: any = Object.fromEntries(Object.entries(markdownItPlugins).filter(([key, value]) => value));
 		const markdownItModules: any[] = [];
+
+		/** Markdown instance */
+
+		const markdownIt: MarkdownIt = this.getMarkdownItDefault();
 
 		/** Lazy load prepare */
 
@@ -81,40 +211,6 @@ export class MarkdownService {
 		/** Lazy load */
 
 		const markdownItModulesLoaded: any[] = await Promise.all(markdownItModules);
-
-		/** Markdown instance */
-
-		const markdownIt: MarkdownIt = new MarkdownIt({
-			html: false,
-			xhtmlOut: false,
-			linkify: true,
-			breaks: true,
-			typographer: true,
-			quotes: '“”‘’',
-			highlight: (value: string, language: string) => {
-				if (language === 'mermaid') {
-					return `<pre class="mermaid">${value}</pre>`;
-				} else {
-					return `<pre class="language-${language} line-numbers"><code class="language-${language} match-braces rainbow-braces">${value}</code></pre>`;
-				}
-			}
-		})
-			.use(attrs, {
-				allowedAttributes: ['class', 'style', 'width', 'height']
-			})
-			.use(bracketedSpans)
-			.use(ins)
-			.use(linkAttributes, [
-				{
-					matcher(href: string) {
-						return href.match(/^https?:\/\//);
-					},
-					attrs: {
-						target: '_blank',
-						rel: 'ugc noopener noreferrer'
-					}
-				}
-			]);
 
 		/** Lazy load apply */
 
@@ -214,94 +310,6 @@ export class MarkdownService {
 				};
 			}
 		});
-
-		/** Update default rules */
-
-		markdownIt.renderer.rules.image = (tokenList: Token[], idx: number): string => {
-			const imageElement: HTMLImageElement = this.document.createElement('img');
-
-			const token: Token = tokenList[idx];
-
-			token.attrs?.forEach(([key, value]: string[]) => {
-				switch (key) {
-					case 'class': {
-						const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
-
-						imageElement.classList.add(...classList);
-
-						break;
-					}
-					case 'src': {
-						if (value.includes(environment.firebase.storageBucket)) {
-							imageElement.id = this.helperService.getNanoId(12);
-							imageElement.src = './assets/images/placeholder-image.svg';
-
-							this.httpClient
-								.get(value, {
-									params: {
-										alt: 'media'
-									},
-									responseType: 'blob'
-								})
-								.pipe(map((blob: Blob) => URL.createObjectURL(blob)))
-								.subscribe({
-									next: (blob: string) => {
-										const elementHTML: HTMLElement | null = this.document.getElementById(imageElement.id);
-										const elementHTMLImage: HTMLImageElement = elementHTML as HTMLImageElement;
-
-										/** Set Image */
-
-										if (elementHTMLImage) {
-											elementHTMLImage.src = blob;
-										}
-									},
-									error: (error: any) => console.error(error)
-								});
-						} else {
-							// @ts-ignore
-							imageElement[key] = value;
-						}
-
-						break;
-					}
-					default: {
-						// @ts-ignore
-						imageElement[key] = value;
-
-						break;
-					}
-				}
-			});
-
-			imageElement.loading = 'lazy';
-			imageElement.alt = token.content;
-			imageElement.title = token.content;
-
-			return imageElement.outerHTML;
-		};
-
-		markdownIt.renderer.rules.table_open = (tokenList: Token[], idx: number): string => {
-			const tableElement: HTMLTableElement = this.document.createElement('table');
-
-			const token: Token = tokenList[idx];
-
-			token.attrs?.forEach(([key, value]: string[]) => {
-				if (key === 'class') {
-					const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
-
-					tableElement.classList.add(...classList);
-				} else {
-					// @ts-ignore
-					tableElement[key] = value;
-				}
-			});
-
-			return `<div class="overflow-auto my-4">${tableElement.outerHTML.replace('</table>', '')}`;
-		};
-
-		markdownIt.renderer.rules.table_close = (): string => {
-			return `</table></div>`;
-		};
 
 		return markdownIt;
 	}

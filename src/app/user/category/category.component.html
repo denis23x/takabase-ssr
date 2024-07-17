@@ -112,10 +112,7 @@
 				[appSkeletonClassListParent]="['!rounded-box']"
 				[appSkeletonClassList]="['!rounded-box']"
 			>
-				<article
-					class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4"
-					[innerHTML]="category?.description | markdown | async | sanitizer: 'html'"
-				></article>
+				<p class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4">{{ category?.description }}</p>
 			</div>
 		}
 		<div class="grid gap-4">
