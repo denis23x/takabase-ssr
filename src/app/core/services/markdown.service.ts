@@ -37,10 +37,6 @@ export class MarkdownService {
 	markdownIt: MarkdownIt;
 
 	getMarkdownItDefault(): MarkdownIt {
-		if (this.markdownItDefault) {
-			return this.markdownItDefault;
-		}
-
 		/** Create new instance */
 
 		const markdownIt: MarkdownIt = new MarkdownIt({
@@ -164,9 +160,7 @@ export class MarkdownService {
 			return `</table></div>`;
 		};
 
-		/** Set default instance */
-
-		return (this.markdownItDefault = markdownIt);
+		return markdownIt;
 	}
 
 	async getMarkdownIt(value: string): Promise<MarkdownIt> {
@@ -314,14 +308,14 @@ export class MarkdownService {
 			}
 
 			if (key === 'tasks') {
-				// markdownIt.use(markdownItModulesLoaded[i].default, {
-				// 	enabled: true,
-				// 	label: true,
-				// 	labelAfter: false,
-				// 	itemClass: 'form-control',
-				// 	inputClass: 'checkbox checkbox-success mr-4',
-				// 	labelClass: 'label cursor-pointer'
-				// });
+				markdownIt.use(markdownItModulesLoaded[i].default, {
+					enabled: true,
+					label: true,
+					labelAfter: false,
+					itemClass: 'form-control',
+					inputClass: 'checkbox checkbox-success mr-4',
+					labelClass: 'label cursor-pointer'
+				});
 			}
 
 			if (key === 'video') {

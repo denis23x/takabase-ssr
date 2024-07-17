@@ -1,7 +1,7 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { User } from '../models/user.model';
 import { UserCreateDto } from '../dto/user/user-create.dto';
@@ -15,10 +15,6 @@ import { UserDeleteDto } from '../dto/user/user-delete.dto';
 })
 export class UserService {
 	private readonly apiService: ApiService = inject(ApiService);
-
-	/** userTemp subject for connect UserComponent & UserPostComponent */
-
-	userTemp: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 
 	/** REST */
 
