@@ -1,11 +1,12 @@
 /** @format */
 
-import MarkdownIt, { Token } from 'markdown-it';
 import Prism from 'prismjs';
 import 'prismjs/plugins/autolinker/prism-autolinker.min.js';
 import 'prismjs/plugins/autoloader/prism-autoloader.min.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
 import 'prismjs/plugins/match-braces/prism-match-braces.min.js';
+import type MarkdownIt from 'markdown-it';
+import type { Token } from 'markdown-it';
 
 export default function PrismPlugin(md: MarkdownIt): void {
 	const tokenListRendered: Record<number, Partial<Token>> = {};
@@ -43,6 +44,6 @@ export default function PrismPlugin(md: MarkdownIt): void {
 			}
 		}
 
-		return `<pre id="${tokenSelectorId}" class="language-${tokenInfo} line-numbers"><code class="language-${tokenInfo} match-braces rainbow-braces">${tokenContent}</code></pre>`;
+		return `<pre id="${tokenSelectorId}" class="language-${tokenInfo} line-numbers"><code class="language-${tokenInfo} match-braces rainbow-braces">${md.utils.escapeHtml(tokenContent)}</code></pre>`;
 	};
 }

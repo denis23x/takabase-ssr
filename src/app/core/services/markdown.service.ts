@@ -32,7 +32,17 @@ export class MarkdownService {
 	markdownItCropperImage: Subject<File> = new Subject<File>();
 	markdownItCropperToggle: Subject<boolean> = new Subject<boolean>();
 
+	markdownItPlugins: string[] = [];
+	markdownItDefault: MarkdownIt;
+	markdownIt: MarkdownIt;
+
 	getMarkdownItDefault(): MarkdownIt {
+		if (this.markdownItDefault) {
+			return this.markdownItDefault;
+		}
+
+		/** Create new instance */
+
 		const markdownIt: MarkdownIt = new MarkdownIt({
 			html: false,
 			xhtmlOut: false,
@@ -44,7 +54,7 @@ export class MarkdownService {
 				if (language === 'mermaid') {
 					return `<pre class="mermaid">${value}</pre>`;
 				} else {
-					return `<pre class="language-${language} line-numbers"><code class="language-${language} match-braces rainbow-braces">${value}</code></pre>`;
+					return `<pre class="language-${language} line-numbers"><code class="language-${language} match-braces rainbow-braces">${markdownIt.utils.escapeHtml(value)}</code></pre>`;
 				}
 			}
 		})
@@ -154,7 +164,9 @@ export class MarkdownService {
 			return `</table></div>`;
 		};
 
-		return markdownIt;
+		/** Set default instance */
+
+		return (this.markdownItDefault = markdownIt);
 	}
 
 	async getMarkdownIt(value: string): Promise<MarkdownIt> {
@@ -170,13 +182,43 @@ export class MarkdownService {
 
 		// prettier-ignore
 		const markdownItPluginsFiltered: any = Object.fromEntries(Object.entries(markdownItPlugins).filter(([key, value]) => value));
-		const markdownItModules: any[] = [];
+		const markdownItPluginsFilteredIsEqual = (arr1: string[], arr2: string[]): boolean => {
+			if (arr1.length !== arr2.length) {
+				return false;
+			}
+
+			const sortedArr1: string[] = arr1.slice().sort();
+			const sortedArr2: string[] = arr2.slice().sort();
+
+			for (let i = 0; i < sortedArr1.length; i++) {
+				if (sortedArr1[i] !== sortedArr2[i]) {
+					return false;
+				}
+			}
+
+			return true;
+		};
+
+		const arr1: string[] = Object.keys(markdownItPluginsFiltered);
+		const arr2: string[] = this.markdownItPlugins;
+
+		// Avoid unnecessary re-init
+		if (markdownItPluginsFilteredIsEqual(arr1, arr2)) {
+			if (this.markdownIt) {
+				return this.markdownIt;
+			}
+		}
+
+		// Save list for next logic
+		this.markdownItPlugins = Object.keys(markdownItPluginsFiltered);
 
 		/** Markdown instance */
 
 		const markdownIt: MarkdownIt = this.getMarkdownItDefault();
 
 		/** Lazy load prepare */
+
+		const markdownItModules: any[] = [];
 
 		Object.keys(markdownItPluginsFiltered).forEach((key: string) => {
 			if (key === 'prism') {
@@ -311,7 +353,7 @@ export class MarkdownService {
 			}
 		});
 
-		return markdownIt;
+		return (this.markdownIt = markdownIt);
 	}
 
 	setRender(value: string, element: HTMLElement): void {

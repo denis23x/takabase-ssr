@@ -1,7 +1,8 @@
 /** @format */
 
-import MarkdownIt, { StateBlock, Token } from 'markdown-it';
 import mermaid, { RunOptions } from 'mermaid';
+import type MarkdownIt from 'markdown-it';
+import type { StateBlock, Token } from 'markdown-it';
 
 export default function MermaidPlugin(md: MarkdownIt, options: any): void {
 	const tokenListRendered: Record<number, Partial<Token>> = {};
