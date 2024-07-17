@@ -22,9 +22,7 @@ import { PasswordUpdateDto } from '../dto/password/password-update.dto';
 import { FirebaseError } from 'firebase/app';
 import { FirebaseService } from './firebase.service';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class PasswordService {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);

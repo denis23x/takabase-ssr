@@ -19,6 +19,7 @@ import { PWAService } from '../core/services/pwa.service';
 @Component({
 	standalone: true,
 	imports: [RouterModule, SnackbarComponent, HeaderComponent, ScrollToTopComponent, CookiesComponent],
+	providers: [PWAService],
 	selector: 'app-outlet',
 	templateUrl: './outlet.component.html'
 })

@@ -19,6 +19,7 @@ import { CopyToClipboardDirective } from '../../../directives/app-copy-to-clipbo
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { AppCheckPipe } from '../../../pipes/app-check.pipe';
 import { HelperService } from '../../../../core/services/helper.service';
+import { MarkdownService } from '../../../../core/services/markdown.service';
 
 // Types for lazy loading
 
@@ -43,6 +44,7 @@ import type { ReportComponent } from '../../report/report.component';
 		AsyncPipe,
 		NgComponentOutlet
 	],
+	providers: [MarkdownService],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
 })

@@ -19,6 +19,7 @@ import { AuthenticatedComponent } from '../../../standalone/components/authentic
 @Component({
 	standalone: true,
 	imports: [RouterModule, SvgIconComponent, SkeletonDirective, AuthenticatedComponent],
+	providers: [EmailService],
 	selector: 'app-authorization-confirmation-email',
 	templateUrl: './email.component.html'
 })

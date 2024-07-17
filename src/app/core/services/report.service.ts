@@ -13,9 +13,7 @@ import { catchError } from 'rxjs/operators';
 import { FirebaseError } from 'firebase/app';
 import { ApiService } from './api.service';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class ReportService {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly helperService: HelperService = inject(HelperService);

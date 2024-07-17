@@ -53,6 +53,7 @@ interface ReportForm {
 		SkeletonDirective,
 		AppCheckPipe
 	],
+	providers: [ReportService],
 	selector: 'app-report, [appReport]',
 	templateUrl: './report.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

@@ -5,9 +5,7 @@ import { Title } from '@angular/platform-browser';
 import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
 import { TitleService } from '../services/title.service';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class AppTitleStrategy extends TitleStrategy {
 	private readonly title: Title = inject(Title);
 	private readonly titleService: TitleService = inject(TitleService);

@@ -4,9 +4,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import algoliasearch, { SearchClient, SearchIndex } from 'algoliasearch/lite';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class AlgoliaService {
 	searchClient: SearchClient | undefined;
 

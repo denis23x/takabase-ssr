@@ -30,6 +30,7 @@ import { PostDeleteDto } from '../../../../core/dto/post/post-delete.dto';
 @Component({
 	standalone: true,
 	imports: [SvgIconComponent, WindowComponent],
+	providers: [PostService],
 	selector: 'app-post-delete, [appPostDelete]',
 	templateUrl: './delete.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

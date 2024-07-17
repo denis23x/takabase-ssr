@@ -19,9 +19,7 @@ import {
 import { FirebaseService } from './firebase.service';
 import { FirebaseError } from 'firebase/app';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class EmailService {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);

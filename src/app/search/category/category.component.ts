@@ -35,6 +35,7 @@ const searchResponseKey: StateKey<SearchResponse<Category>> = makeStateKey<Searc
 		ListLoadMoreComponent,
 		ListMockComponent
 	],
+	providers: [AlgoliaService],
 	selector: 'app-search-category',
 	templateUrl: './category.component.html'
 })

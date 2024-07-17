@@ -10,9 +10,7 @@ import { FileService } from './file.service';
 import { SharpFetchDto } from '../dto/sharp/sharp-fetch.dto';
 import { SharpOutputDownloadUrlDto } from '../dto/sharp/sharp-output-download-url.dto';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class SharpService {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly httpClient: HttpClient = inject(HttpClient);

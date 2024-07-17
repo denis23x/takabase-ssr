@@ -73,6 +73,7 @@ interface ProfileForm {
 		SkeletonDirective,
 		BadgeErrorComponent
 	],
+	providers: [AIService, UserService],
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'
 })

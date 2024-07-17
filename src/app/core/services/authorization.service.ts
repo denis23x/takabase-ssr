@@ -4,7 +4,6 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable, Observer, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
-import { UserService } from './user.service';
 import { CurrentUser } from '../models/current-user.model';
 import { AppearanceService } from './appearance.service';
 import { FirebaseService } from './firebase.service';
@@ -36,7 +35,6 @@ import { HelperService } from './helper.service';
 })
 export class AuthorizationService {
 	private readonly apiService: ApiService = inject(ApiService);
-	private readonly userService: UserService = inject(UserService);
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 	private readonly router: Router = inject(Router);
@@ -112,7 +110,7 @@ export class AuthorizationService {
 
 		return from(createUserWithEmailAndPassword(auth, signInDto.email, signInDto.password)).pipe(
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
-			switchMap(() => this.userService.create(userCreateDto)),
+			switchMap(() => this.apiService.post('/v1/users', userCreateDto)),
 			switchMap(() => this.onSignInWithEmailAndPassword(signInDto))
 		);
 	}

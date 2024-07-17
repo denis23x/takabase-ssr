@@ -1,13 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import {
-	FormBuilder,
-	FormControl,
-	FormGroup,
-	ReactiveFormsModule,
-	Validators
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../core/services/helper.service';
@@ -35,6 +29,7 @@ interface ResetForm {
 		InputTrimWhitespaceDirective,
 		BadgeErrorComponent
 	],
+	providers: [PasswordService],
 	selector: 'app-authorization-reset',
 	templateUrl: './reset.component.html'
 })

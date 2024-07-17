@@ -29,6 +29,7 @@ interface PasswordForm {
 		BadgeErrorComponent,
 		InputShowPassword
 	],
+	providers: [PasswordService],
 	selector: 'app-authorization-confirmation-password',
 	templateUrl: './password.component.html'
 })

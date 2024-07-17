@@ -10,9 +10,7 @@ import { CategoryUpdateDto } from '../dto/category/category-update.dto';
 import { CategoryDeleteDto } from '../dto/category/category-delete.dto';
 import { CategoryGetOneDto } from '../dto/category/category-get-one.dto';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class CategoryService {
 	private readonly apiService: ApiService = inject(ApiService);
 

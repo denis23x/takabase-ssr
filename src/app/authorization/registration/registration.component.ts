@@ -59,6 +59,7 @@ interface RegistrationForm {
 		DayjsPipe,
 		InputShowPassword
 	],
+	providers: [AIService, UserService],
 	selector: 'app-authorization-registration',
 	templateUrl: './registration.component.html'
 })

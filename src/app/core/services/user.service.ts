@@ -10,9 +10,7 @@ import { UserGetOneDto } from '../dto/user/user-get-one.dto';
 import { UserUpdateDto } from '../dto/user/user-update.dto';
 import { UserDeleteDto } from '../dto/user/user-delete.dto';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class UserService {
 	private readonly apiService: ApiService = inject(ApiService);
 

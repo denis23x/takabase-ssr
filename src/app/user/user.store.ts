@@ -6,9 +6,7 @@ import { User } from '../core/models/user.model';
 import { Post } from '../core/models/post.model';
 import { Category } from '../core/models/category.model';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class UserStore {
 	readonly user: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 	readonly userList: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);

@@ -47,6 +47,7 @@ import type { ReportComponent } from '../standalone/components/report/report.com
 		SkeletonDirective,
 		CopyToClipboardDirective
 	],
+	providers: [CategoryService, UserService, UserStore],
 	selector: 'app-user',
 	templateUrl: './user.component.html'
 })

@@ -7,9 +7,11 @@ import { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
 import { HelperService } from './helper.service';
 import { Observable, of } from 'rxjs';
 import { SharpOutputDownloadUrlDto } from '../dto/sharp/sharp-output-download-url.dto';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { PlatformService } from './platform.service';
-import { SharpService } from './sharp.service';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ApiService } from './api.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root'
@@ -19,7 +21,8 @@ export class MetaService {
 	private readonly meta: Meta = inject(Meta);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly sharpService: SharpService = inject(SharpService);
+	private readonly apiService: ApiService = inject(ApiService);
+	private readonly httpClient: HttpClient = inject(HttpClient);
 
 	getMetaImageDownloadURL(url: string | null): Observable<string | null> {
 		if (url) {
@@ -28,9 +31,19 @@ export class MetaService {
 					url
 				};
 
-				return this.sharpService
-					.getOutputDownloadUrl(sharpOutputDownloadUrlDto)
-					.pipe(map((data: any) => data.downloadURL));
+				return this.httpClient
+					.get(environment.sharp.url + '/v1/output/download-url', {
+						params: {
+							...sharpOutputDownloadUrlDto
+						}
+					})
+					.pipe(
+						map((response: any) => response.data),
+						map((data: any) => data.downloadURL),
+						catchError((httpErrorResponse: HttpErrorResponse) => {
+							return this.apiService.setHttpErrorResponse(httpErrorResponse);
+						})
+					);
 			}
 		}
 

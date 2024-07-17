@@ -10,9 +10,7 @@ import { PostGetOneDto } from '../dto/post/post-get-one.dto';
 import { PostUpdateDto } from '../dto/post/post-update.dto';
 import { PostDeleteDto } from '../dto/post/post-delete.dto';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class PostService {
 	private readonly apiService: ApiService = inject(ApiService);
 

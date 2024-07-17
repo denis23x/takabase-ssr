@@ -17,9 +17,7 @@ import ins from 'markdown-it-ins';
 import linkAttributes from 'markdown-it-link-attributes';
 import plainText from 'markdown-it-plain-text';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class MarkdownService {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly document: Document = inject(DOCUMENT);

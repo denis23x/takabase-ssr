@@ -97,6 +97,7 @@ interface NewPasswordForm {
 		SvgLogoComponent,
 		NgOptimizedImage
 	],
+	providers: [EmailService, PasswordService],
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'
 })

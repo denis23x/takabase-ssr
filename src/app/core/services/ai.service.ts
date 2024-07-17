@@ -10,9 +10,7 @@ import { AIModerateTextDto, AIModerateTextResult, AIModerateTextResultItem } fro
 import { AIModerateImageResult } from '../dto/ai/ai-moderate-image.dto';
 import { SnackbarService } from './snackbar.service';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class AIService {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly httpClient: HttpClient = inject(HttpClient);

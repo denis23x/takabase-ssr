@@ -39,6 +39,7 @@ import { PlatformService } from '../../../../core/services/platform.service';
 		ReactiveFormsModule,
 		BadgeErrorComponent
 	],
+	providers: [PasswordService],
 	selector: 'app-user-password-reset, [appUserPasswordReset]',
 	templateUrl: './password-reset.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

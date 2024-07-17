@@ -41,6 +41,7 @@ const searchResponseKey: StateKey<SearchResponse<User>> = makeStateKey<SearchRes
 		ListLoadMoreComponent,
 		ListMockComponent
 	],
+	providers: [AlgoliaService],
 	selector: 'app-search-user',
 	templateUrl: './user.component.html'
 })

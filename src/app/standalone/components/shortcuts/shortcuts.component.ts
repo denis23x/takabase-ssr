@@ -10,6 +10,7 @@ import hotkeys from 'hotkeys-js';
 @Component({
 	standalone: true,
 	imports: [WindowComponent],
+	providers: [MarkdownService],
 	selector: 'app-shortcuts, [appShortcuts]',
 	templateUrl: './shortcuts.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

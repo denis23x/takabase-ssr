@@ -17,6 +17,7 @@ import { SkeletonService } from '../core/services/skeleton.service';
 @Component({
 	standalone: true,
 	imports: [RouterModule, CommonModule, SvgIconComponent, SkeletonDirective],
+	providers: [PostStore],
 	selector: 'app-post',
 	templateUrl: './post.component.html'
 })

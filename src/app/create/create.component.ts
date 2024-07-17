@@ -73,7 +73,6 @@ interface PostForm {
 
 @Component({
 	standalone: true,
-	selector: 'app-create',
 	imports: [
 		CommonModule,
 		RouterModule,
@@ -93,6 +92,8 @@ interface PostForm {
 		DeviceDirective,
 		AppCheckPipe
 	],
+	providers: [CategoryService, PostService, AIService],
+	selector: 'app-create',
 	templateUrl: './create.component.html'
 })
 export class CreateComponent implements OnInit, OnDestroy {

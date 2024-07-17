@@ -14,6 +14,7 @@ import { PlatformService } from '../../../core/services/platform.service';
 @Component({
 	standalone: true,
 	imports: [RouterModule, SvgIconComponent],
+	providers: [EmailService],
 	selector: 'app-authorization-recovery-recovery',
 	templateUrl: './recovery.component.html'
 })

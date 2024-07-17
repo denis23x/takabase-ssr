@@ -63,6 +63,7 @@ interface CropperImageForm {
 		BadgeErrorComponent,
 		ImageCropperComponent
 	],
+	providers: [AIService, SharpService, MarkdownService],
 	selector: 'app-cropper, [appCropper]',
 	templateUrl: './cropper.component.html'
 })

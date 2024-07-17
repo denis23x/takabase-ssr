@@ -57,6 +57,7 @@ interface UserDeleteForm {
 		BadgeErrorComponent,
 		InputShowPassword
 	],
+	providers: [PasswordService, UserService],
 	selector: 'app-user-delete, [appUserDelete]',
 	templateUrl: './delete.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

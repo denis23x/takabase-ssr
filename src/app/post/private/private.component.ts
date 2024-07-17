@@ -18,6 +18,7 @@ import { PostStore } from '../post.store';
 @Component({
 	standalone: true,
 	imports: [PostProseComponent, ShareComponent],
+	providers: [PostService],
 	selector: 'app-post-private',
 	templateUrl: './private.component.html'
 })
