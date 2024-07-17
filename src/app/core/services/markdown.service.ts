@@ -31,16 +31,43 @@ export class MarkdownService {
 	markdownItCropperImage: Subject<File> = new Subject<File>();
 	markdownItCropperToggle: Subject<boolean> = new Subject<boolean>();
 
-	markdownIt: MarkdownIt;
+	async getMarkdownIt(value: string): Promise<MarkdownIt> {
+		const markdownItPlugins: MarkdownItPlugins = {
+			prism: /```\s?(?!mermaid)([\w-]+)\n[\s\S]*?```/gm.test(value),
+			mermaid: /```\s?(mermaid)\n[\s\S]*?```/gm.test(value),
+			collapsible: /\+\+\+\s?\S[^\n]*\n[\s\S]*?\n\+\+\+/gim.test(value),
+			emoji: /:\w+:/gm.test(value),
+			smartArrows: /(-->|<--|<-->|==>|<==|<==>)/gm.test(value),
+			tasks: /-\s\[[\s|xX]]/gm.test(value),
+			video: /@\[(youtube|vimeo|vine|prezi|osf)]\(\s*https?:\/\/[^\s)]+\s*\)/gm.test(value)
+		};
 
-	getMarkdownIt(): MarkdownIt {
-		if (this.markdownIt) {
-			return this.markdownIt;
-		}
+		// prettier-ignore
+		const markdownItPluginsFiltered: any = Object.fromEntries(Object.entries(markdownItPlugins).filter(([key, value]) => value));
+		const markdownItModules: any[] = [];
 
-		/** Set Prism autoloader */
+		/** Lazy load prepare */
 
-		this.setMarkdownItPrism();
+		Object.keys(markdownItPluginsFiltered).forEach((key: string) => {
+			if (key === 'prism') {
+				markdownItModules.push(import('../markdown/parts/prism'));
+			}
+
+			if (key === 'mermaid') {
+				markdownItModules.push(import('../markdown/parts/mermaid'));
+			}
+
+			if (key === 'collapsible') {
+				markdownItModules.push(import('markdown-it-collapsible'));
+			}
+
+			if (key === 'emoji') {
+				markdownItModules.push(import('markdown-it-emoji'));
+			}
+
+			if (key === 'smartArrows') {
+				markdownItModules.push(import('markdown-it-smartarrows'));
+			}
 
 			if (key === 'tasks') {
 				markdownItModules.push(import('markdown-it-tasks'));
@@ -277,65 +304,6 @@ export class MarkdownService {
 		};
 
 		return markdownIt;
-	}
-
-	getMarkdownItAttrsConfig(): any {
-		return {
-			allowedAttributes: ['class', 'style', 'width', 'height']
-		};
-	}
-
-	getMarkdownItLinkAttributesConfig(): any[] {
-		return [
-			{
-				matcher(href: string) {
-					return href.match(/^https?:\/\//);
-				},
-				attrs: {
-					target: '_blank',
-					rel: 'ugc noopener noreferrer'
-				}
-			}
-		];
-	}
-
-	getMarkdownItMultiMdTableConfig(): any {
-		return {
-			multiline: true,
-			rowspan: true,
-			headerless: true,
-			multibody: false,
-			autolabel: false
-		};
-	}
-
-	getMarkdownITasksConfig(): any {
-		return {
-			enabled: true,
-			label: true,
-			labelAfter: false,
-			itemClass: 'form-control',
-			inputClass: 'checkbox checkbox-success mr-4',
-			labelClass: 'label cursor-pointer'
-		};
-	}
-
-	getMarkdownItMermaidConfig(): any {
-		return {
-			theme: 'base',
-			themeVariables: {
-				darkMode: false,
-				background: this.appearanceService.getCSSColor('--b1', 'hex'),
-				primaryColor: this.appearanceService.getCSSColor('--b1', 'hex'),
-				primaryTextColor: this.appearanceService.getCSSColor('--bc', 'hex'),
-				primaryBorderColor: this.appearanceService.getCSSColor('--p', 'hex'),
-				secondaryColor: this.appearanceService.getCSSColor('--b1', 'hex'),
-				secondaryTextColor: this.appearanceService.getCSSColor('--bc', 'hex'),
-				secondaryBorderColor: this.appearanceService.getCSSColor('--s', 'hex'),
-				lineColor: this.appearanceService.getCSSColor('--bc', 'hex'),
-				textColor: this.appearanceService.getCSSColor('--bc', 'hex')
-			}
-		};
 	}
 
 	setRender(value: string, element: HTMLElement): void {
