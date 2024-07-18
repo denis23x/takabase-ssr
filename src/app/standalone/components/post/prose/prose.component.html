@@ -17,7 +17,7 @@
 										class="object-cover object-center bg-base-300"
 										loading="lazy"
 										[fill]="true"
-										[ngSrc]="post.image + '?alt=media'"
+										[ngSrc]="post.image | fireStorage"
 										[alt]="post.name"
 									/>
 								</figure>

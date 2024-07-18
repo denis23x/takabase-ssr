@@ -18,6 +18,7 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { HelperService } from '../../../../core/services/helper.service';
 import { MarkdownRenderDirective } from '../../../directives/app-markdown-render.directive';
 import { MarkdownTimeToReadPipe } from '../../../pipes/markdown-time-to-read.pipe';
+import { FireStoragePipe } from '../../../pipes/fire-storage.pipe';
 
 // Types for lazy loading
 
@@ -39,7 +40,8 @@ import type { ReportComponent } from '../../report/report.component';
 		AsyncPipe,
 		NgComponentOutlet,
 		MarkdownRenderDirective,
-		MarkdownTimeToReadPipe
+		MarkdownTimeToReadPipe,
+		FireStoragePipe
 	],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'

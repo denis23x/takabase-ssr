@@ -38,7 +38,7 @@
 									class="object-cover object-center bg-base-300"
 									loading="lazy"
 									[fill]="true"
-									[ngSrc]="reportPost.image + '?alt=media'"
+									[ngSrc]="reportPost.image | fireStorage"
 									[alt]="reportPost.name"
 								/>
 							</figure>

@@ -23,7 +23,7 @@
                       height="48"
                       loading="lazy"
                       [alt]="'Image'"
-                      [ngSrc]="image.value + '?alt=media'"
+                      [ngSrc]="image.value | fireStorage"
                     />
                   }
                   @case (!!image.value === false) {

@@ -29,6 +29,7 @@ import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { PlatformService } from '../../../core/services/platform.service';
 import { Post } from '../../../core/models/post.model';
 import { User } from '../../../core/models/user.model';
+import { FireStoragePipe } from '../../pipes/fire-storage.pipe';
 
 interface ReportForm {
 	name: FormControl<string>;
@@ -49,7 +50,8 @@ interface ReportForm {
 		SvgIconComponent,
 		BadgeErrorComponent,
 		AvatarComponent,
-		SkeletonDirective
+		SkeletonDirective,
+		FireStoragePipe
 	],
 	providers: [ReportService],
 	selector: 'app-report, [appReport]',
