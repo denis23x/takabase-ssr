@@ -14,12 +14,11 @@ import { CurrentUser } from '../../core/models/current-user.model';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
-import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 import { HttpClient } from '@angular/common/http';
 import { PlatformService } from '../../core/services/platform.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { CommonModule } from '@angular/common';
+import { MarkdownRenderDirective } from '../../standalone/directives/app-markdown-render.directive';
 
 interface AppearanceForm {
 	theme: FormControl<string>;
@@ -44,8 +43,7 @@ interface AppearanceForm {
 		ScrollPresetDirective,
 		SkeletonDirective,
 		SvgIconComponent,
-		MarkdownPipe,
-		SanitizerPipe
+		MarkdownRenderDirective
 	],
 	selector: 'app-settings-appearance',
 	templateUrl: './appearance.component.html'

@@ -151,7 +151,7 @@
 					</time>
 					@if (post.markdown) {
 						<span class="block text-sm text-base-content" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-							Time to read: ??? min.
+							Time to read: {{ post?.markdown | markdownTimeToRead }} min.
 						</span>
 					}
 				</div>
@@ -166,7 +166,8 @@
 			>
 				<article
 					class="prose w-full max-w-full flex-1"
-					[innerHTML]="post.markdown || 'Markdown' | markdown | sanitizer: 'html'"
+					appMarkdownRender
+					[appMarkdownRenderValue]="post.markdown || 'Markdown'"
 				></article>
 			</div>
 			@if (!postPreview && !postSkeletonToggle) {

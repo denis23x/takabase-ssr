@@ -7,8 +7,6 @@ import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { Post } from '../../../../core/models/post.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
-import { MarkdownPipe } from '../../../pipes/markdown.pipe';
-import { SanitizerPipe } from '../../../pipes/sanitizer.pipe';
 import { CurrentUser } from '../../../../core/models/current-user.model';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../../dropdown/dropdown.component';
@@ -20,6 +18,8 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { AppCheckPipe } from '../../../pipes/app-check.pipe';
 import { HelperService } from '../../../../core/services/helper.service';
 import { MarkdownService } from '../../../../core/services/markdown.service';
+import { MarkdownRenderDirective } from '../../../directives/app-markdown-render.directive';
+import { MarkdownTimeToReadPipe } from '../../../pipes/markdown-time-to-read.pipe';
 
 // Types for lazy loading
 
@@ -33,8 +33,6 @@ import type { ReportComponent } from '../../report/report.component';
 		RouterModule,
 		DayjsPipe,
 		NgOptimizedImage,
-		MarkdownPipe,
-		SanitizerPipe,
 		SkeletonDirective,
 		DropdownComponent,
 		SvgIconComponent,
@@ -42,7 +40,9 @@ import type { ReportComponent } from '../../report/report.component';
 		CopyToClipboardDirective,
 		AppCheckPipe,
 		AsyncPipe,
-		NgComponentOutlet
+		NgComponentOutlet,
+		MarkdownRenderDirective,
+		MarkdownTimeToReadPipe
 	],
 	providers: [MarkdownService],
 	selector: 'app-post-prose, [appPostProse]',

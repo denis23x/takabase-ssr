@@ -1,14 +1,13 @@
 /** @format */
 
 import { Component } from '@angular/core';
-import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
-import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 import { AbstractMarkdownComponent } from '../../abstracts/abstract-markdown.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
+import { MarkdownRenderDirective } from '../../standalone/directives/app-markdown-render.directive';
 
 @Component({
 	standalone: true,
-	imports: [MarkdownPipe, SanitizerPipe, SkeletonDirective],
+	imports: [SkeletonDirective, MarkdownRenderDirective],
 	selector: 'app-help-details',
 	templateUrl: './details.component.html'
 })

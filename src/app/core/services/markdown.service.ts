@@ -15,7 +15,6 @@ import attrs from 'markdown-it-attrs';
 import bracketedSpans from 'markdown-it-bracketed-spans';
 import ins from 'markdown-it-ins';
 import linkAttributes from 'markdown-it-link-attributes';
-import plainText from 'markdown-it-plain-text';
 import type { Token } from 'markdown-it';
 
 @Injectable()
@@ -57,7 +56,6 @@ export class MarkdownService {
 			})
 			.use(bracketedSpans)
 			.use(ins)
-			.use(plainText)
 			.use(linkAttributes, [
 				{
 					matcher(href: string) {

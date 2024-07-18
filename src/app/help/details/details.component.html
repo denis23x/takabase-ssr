@@ -39,7 +39,8 @@
 		@case (false) {
 			<article
 				class="prose max-w-none overflow-auto"
-				[innerHTML]="abstractProse | markdown | sanitizer: 'html'"
+				appMarkdownRender
+				[appMarkdownRenderValue]="abstractProse"
 			></article>
 		}
 	}
