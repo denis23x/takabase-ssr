@@ -1,11 +1,6 @@
 /** @format */
 
-import {
-	MarkdownControl,
-	MarkdownTextarea,
-	MarkdownWrapper,
-	MarkdownWrapperPayload
-} from '../../../core/models/markdown.model';
+import { MarkdownControl, MarkdownTextarea, MarkdownWrapper, MarkdownWrapperPayload } from '../models/markdown.model';
 
 /** Selection */
 

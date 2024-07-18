@@ -26,9 +26,10 @@ export default function PrismPlugin(md: MarkdownIt): void {
 
 		const isSameInfo: boolean = tokenListRendered[idx]?.info === token.info;
 		const isSameContent: boolean = tokenListRendered[idx]?.content === token.content;
+		const isSaveOuterHTML: boolean = !!tokenListRendered[idx]?.meta?.outerHTML;
 
 		// Avoid unnecessary rerender
-		if (isSameInfo && isSameContent) {
+		if (isSameInfo && isSameContent && isSaveOuterHTML) {
 			return tokenListRendered[idx].meta.outerHTML;
 		} else {
 			if (typeof window !== 'undefined') {

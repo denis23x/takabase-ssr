@@ -25,7 +25,7 @@ import {
 	MarkdownControlSpoiler,
 	MarkdownControlTable,
 	MarkdownControlUrl
-} from './markdown';
+} from '../../../core/markdown/markdown.controls';
 import { fromEvent, merge, Subscription } from 'rxjs';
 import { debounceTime, filter, map } from 'rxjs/operators';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';

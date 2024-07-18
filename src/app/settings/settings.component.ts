@@ -6,10 +6,12 @@ import { ScrollPresetDirective } from '../standalone/directives/app-scroll-prese
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 import { PlatformDirective } from '../standalone/directives/app-platform.directive';
+import { MarkdownService } from '../core/services/markdown.service';
 
 @Component({
 	standalone: true,
 	imports: [RouterModule, ScrollPresetDirective, PlatformDirective],
+	providers: [MarkdownService],
 	selector: 'app-settings',
 	templateUrl: './settings.component.html'
 })

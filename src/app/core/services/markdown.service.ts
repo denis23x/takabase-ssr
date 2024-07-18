@@ -214,11 +214,11 @@ export class MarkdownService {
 
 		Object.keys(markdownItPluginsFiltered).forEach((key: string) => {
 			if (key === 'prism') {
-				markdownItModules.push(import('../markdown/parts/prism'));
+				markdownItModules.push(import('../markdown/plugins/prism'));
 			}
 
 			if (key === 'mermaid') {
-				markdownItModules.push(import('../markdown/parts/mermaid'));
+				markdownItModules.push(import('../markdown/plugins/mermaid'));
 			}
 
 			if (key === 'collapsible') {
