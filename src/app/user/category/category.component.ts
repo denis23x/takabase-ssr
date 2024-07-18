@@ -40,14 +40,9 @@ import { User } from '../../core/models/user.model';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
-
-// Types for lazy loading
-
 import type { CategoryCreateComponent } from '../../standalone/components/category/create/create.component';
 import type { CategoryUpdateComponent } from '../../standalone/components/category/update/update.component';
 import type { CategoryDeleteComponent } from '../../standalone/components/category/delete/delete.component';
-
-// Transfer state keys
 
 const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 

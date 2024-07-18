@@ -1,6 +1,7 @@
 /** @format */
 
 import {
+	AfterViewInit,
 	Component,
 	ComponentRef,
 	computed,
@@ -14,7 +15,7 @@ import {
 	WritableSignal
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { Subscription, switchMap } from 'rxjs';
+import { fromEvent, Subscription, switchMap } from 'rxjs';
 import { filter, map, startWith, tap } from 'rxjs/operators';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
@@ -50,18 +51,13 @@ import { PlatformDirective } from '../standalone/directives/app-platform.directi
 import { DeviceDirective } from '../standalone/directives/app-device.directive';
 import { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../core/services/ai.service';
-import { MarkdownService } from '../core/services/markdown.service';
 import { FireStoragePipe } from '../standalone/pipes/fire-storage.pipe';
-
-// Types for lazy loading
-
+import { BusService } from '../core/services/bus.service';
 import type { CropperComponent } from '../standalone/components/cropper/cropper.component';
 import type { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import type { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
 import type { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
 import type { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
-
-// Form interfaces
 
 interface PostForm {
 	name: FormControl<string>;
@@ -97,7 +93,7 @@ interface PostForm {
 	selector: 'app-create',
 	templateUrl: './create.component.html'
 })
-export class CreateComponent implements OnInit, OnDestroy {
+export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
@@ -114,7 +110,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly aiService: AIService = inject(AIService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
-	private readonly markdownService: MarkdownService = inject(MarkdownService);
+	private readonly busService: BusService = inject(BusService);
 
 	category: Category | undefined;
 	categorySkeletonToggle: boolean = true;
@@ -159,6 +155,9 @@ export class CreateComponent implements OnInit, OnDestroy {
 	postFormTextareaPlaceholderToggle: boolean = true;
 	postFormTextareaIsSubmitted: WritableSignal<boolean> = signal(false);
 	postFormTextareaId: string = 'postFormTextarea';
+	postFormTextareaMarkdownItCropperToggle$: Subscription | undefined;
+	postFormTextareaMarkdownItCropperClipboard$: Subscription | undefined;
+
 	postFormTextareaMonospace: boolean = false;
 	postFormPreviewId: string = 'postFormPreview';
 	postFormFullscreenId: string = 'postFormFullscreen';
@@ -175,7 +174,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	// Lazy loading
 
-	appCropperComponentToggle$: Subscription | undefined;
 	appCropperComponent: ComponentRef<CropperComponent>;
 	appCategoryCreateComponent: ComponentRef<CategoryCreateComponent>;
 	appCategoryUpdateComponent: ComponentRef<CategoryUpdateComponent>;
@@ -200,14 +198,6 @@ export class CreateComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
-		this.appCropperComponentToggle$?.unsubscribe();
-		this.appCropperComponentToggle$ = this.markdownService.markdownItCropperToggle
-			.pipe(filter((toggle: boolean) => toggle))
-			.subscribe({
-				next: () => this.onToggleCropperDialog(),
-				error: (error: any) => console.error(error)
-			});
-
 		/** Apply Share Target */
 
 		this.setShareTarget();
@@ -221,15 +211,38 @@ export class CreateComponent implements OnInit, OnDestroy {
 		this.setMetaTags();
 	}
 
+	ngAfterViewInit(): void {
+		/** Load cropper component by click in markdown control */
+
+		this.postFormTextareaMarkdownItCropperToggle$?.unsubscribe();
+		this.postFormTextareaMarkdownItCropperToggle$ = this.busService.markdownItCropperToggle
+			.pipe(filter((toggle: boolean) => toggle))
+			.subscribe({
+				next: () => this.onToggleCropperDialog(),
+				error: (error: any) => console.error(error)
+			});
+
+		/** Load cropper component by click in textarea (for manage clipboard image paste) */
+
+		const textarea: HTMLElement | null = this.document.getElementById(this.postFormTextareaId);
+
+		this.postFormTextareaMarkdownItCropperClipboard$?.unsubscribe();
+		this.postFormTextareaMarkdownItCropperClipboard$ = fromEvent(textarea, 'click').subscribe({
+			next: () => this.onToggleCropperDialog(false),
+			error: (error: any) => console.error(error)
+		});
+	}
+
 	ngOnDestroy(): void {
 		[
 			this.currentUser$,
-			this.appCropperComponentToggle$,
 			this.categoryListRequest$,
 			this.postRequest$,
 			this.postFormRequest$,
 			this.postFormImageRequest$,
-			this.postFormIsPristine$
+			this.postFormIsPristine$,
+			this.postFormTextareaMarkdownItCropperToggle$,
+			this.postFormTextareaMarkdownItCropperClipboard$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -531,7 +544,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	/** LAZY */
 
-	async onToggleCropperDialog(): Promise<void> {
+	async onToggleCropperDialog(toggle: boolean = true): Promise<void> {
 		if (!this.appCropperComponent) {
 			// prettier-ignore
 			const cropperComponent: Type<CropperComponent> = await import('../standalone/components/cropper/cropper.component').then(m => {
@@ -549,7 +562,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 		}
 
 		this.appCropperComponent.changeDetectorRef.detectChanges();
-		this.appCropperComponent.instance.onToggleCropperDialog(true);
+		this.appCropperComponent.instance.onToggleCropperDialog(toggle);
 	}
 
 	async onToggleCategoryCreateDialog(): Promise<void> {

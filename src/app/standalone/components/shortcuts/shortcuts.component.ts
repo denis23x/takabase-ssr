@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, inject, OnDestroy, OnIn
 import { WindowComponent } from '../window/window.component';
 import { PlatformService } from '../../../core/services/platform.service';
 import { MarkdownShortcut } from '../../../core/models/markdown.model';
-import { MarkdownService } from '../../../core/services/markdown.service';
+import { BusService } from '../../../core/services/bus.service';
 import hotkeys from 'hotkeys-js';
 
 @Component({
@@ -15,7 +15,7 @@ import hotkeys from 'hotkeys-js';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShortcutsComponent implements OnInit, OnDestroy {
-	private readonly markdownService: MarkdownService = inject(MarkdownService);
+	private readonly busService: BusService = inject(BusService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 
 	@ViewChild('shortcutsDialog') shortcutsDialog: ElementRef<HTMLDialogElement> | undefined;
@@ -102,7 +102,7 @@ export class ShortcutsComponent implements OnInit, OnDestroy {
 
 					/** Emit to markdown-it */
 
-					this.markdownService.markdownItShortcut.next(markdownShortcut);
+					this.busService.markdownItTriggerShortcut.next(markdownShortcut);
 				});
 			});
 

@@ -28,9 +28,6 @@ import { CategoryService } from '../core/services/category.service';
 import { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
 import { UserStore } from './user.store';
 import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
-
-// Types for lazy loading
-
 import type { QRCodeComponent } from '../standalone/components/qr-code/qr-code.component';
 import type { ReportComponent } from '../standalone/components/report/report.component';
 

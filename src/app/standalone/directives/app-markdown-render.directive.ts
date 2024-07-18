@@ -11,7 +11,7 @@ import type MarkdownIt from 'markdown-it';
 @Directive({
 	standalone: true,
 	selector: '[appMarkdownRender]',
-	providers: [SanitizerPipe]
+	providers: [MarkdownService, SanitizerPipe]
 })
 export class MarkdownRenderDirective {
 	private readonly markdownService: MarkdownService = inject(MarkdownService);

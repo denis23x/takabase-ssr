@@ -26,7 +26,6 @@ import { SnackbarService } from '../../../core/services/snackbar.service';
 import { WindowComponent } from '../window/window.component';
 import { PlatformDirective } from '../../directives/app-platform.directive';
 import { PlatformService } from '../../../core/services/platform.service';
-import { MarkdownService } from '../../../core/services/markdown.service';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { SharpService } from '../../../core/services/sharp.service';
@@ -35,6 +34,7 @@ import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { BadgeErrorComponent } from '../badge-error/badge-error.component';
 import { AIService } from '../../../core/services/ai.service';
 import { SharpFetchDto } from '../../../core/dto/sharp/sharp-fetch.dto';
+import { BusService } from '../../../core/services/bus.service';
 
 interface ImageForm {
 	url: FormControl<string>;
@@ -74,9 +74,9 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	private readonly fileService: FileService = inject(FileService);
 	private readonly sharpService: SharpService = inject(SharpService);
 	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly markdownService: MarkdownService = inject(MarkdownService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly aiService: AIService = inject(AIService);
+	private readonly busService: BusService = inject(BusService);
 
 	@ViewChild('cropperDialogElement') cropperDialogElement: ElementRef<HTMLDialogElement> | undefined;
 	@ViewChild('imageFormFile') imageFormFile: ElementRef<HTMLInputElement> | undefined;
@@ -182,8 +182,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 			this.markdownItToggle$?.unsubscribe();
 			this.markdownItToggle$ = merge(
-				this.markdownService.markdownItCropperToggle.pipe(filter((toggle: boolean) => toggle)),
-				this.markdownService.markdownItClipboard.pipe(
+				this.busService.markdownItCropperToggle.pipe(filter((toggle: boolean) => toggle)),
+				this.busService.markdownItTriggerClipboard.pipe(
 					tap((clipboardEvent: ClipboardEventInit) => this.onGetFileFromClipboard(clipboardEvent))
 				)
 			).subscribe({
@@ -477,7 +477,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 				}),
 				tap((file: File) => {
 					if (this.markdownItToggle) {
-						this.markdownService.markdownItCropperImage.next(file);
+						this.busService.markdownItCropperImage.next(file);
 					} else {
 						this.appCropperSubmit.emit(file);
 					}

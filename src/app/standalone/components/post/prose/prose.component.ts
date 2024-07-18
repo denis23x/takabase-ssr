@@ -19,9 +19,7 @@ import { HelperService } from '../../../../core/services/helper.service';
 import { MarkdownRenderDirective } from '../../../directives/app-markdown-render.directive';
 import { MarkdownTimeToReadPipe } from '../../../pipes/markdown-time-to-read.pipe';
 import { FireStoragePipe } from '../../../pipes/fire-storage.pipe';
-
-// Types for lazy loading
-
+import { MarkdownService } from '../../../../core/services/markdown.service';
 import type { QRCodeComponent } from '../../qr-code/qr-code.component';
 import type { PostDeleteComponent } from '../delete/delete.component';
 import type { ReportComponent } from '../../report/report.component';
@@ -43,6 +41,7 @@ import type { ReportComponent } from '../../report/report.component';
 		MarkdownTimeToReadPipe,
 		FireStoragePipe
 	],
+	providers: [MarkdownService],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
 })

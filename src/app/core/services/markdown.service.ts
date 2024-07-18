@@ -3,8 +3,7 @@
 import { inject, Injectable } from '@angular/core';
 import MarkdownIt from 'markdown-it';
 import morphdom from 'morphdom';
-import { Subject } from 'rxjs';
-import { MarkdownItPlugins, MarkdownShortcut } from '../models/markdown.model';
+import { MarkdownItPlugins } from '../models/markdown.model';
 import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
 import { AppearanceService } from './appearance.service';
@@ -17,20 +16,12 @@ import ins from 'markdown-it-ins';
 import linkAttributes from 'markdown-it-link-attributes';
 import type { Token } from 'markdown-it';
 
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class MarkdownService {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly httpClient: HttpClient = inject(HttpClient);
 	private readonly helperService: HelperService = inject(HelperService);
-
-	markdownItClipboard: Subject<ClipboardEventInit> = new Subject<ClipboardEventInit>();
-	markdownItShortcut: Subject<MarkdownShortcut | null> = new Subject<MarkdownShortcut | null>();
-
-	markdownItCropperImage: Subject<File> = new Subject<File>();
-	markdownItCropperToggle: Subject<boolean> = new Subject<boolean>();
 
 	markdownItPlugins: string[] = [];
 	markdownIt: MarkdownIt;

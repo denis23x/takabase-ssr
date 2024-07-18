@@ -45,12 +45,7 @@ import { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../../core/services/ai.service';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { getValue, Value } from 'firebase/remote-config';
-
-// Types for lazy loading
-
 import type { CropperComponent } from '../../standalone/components/cropper/cropper.component';
-
-// Form interfaces
 
 interface ProfileForm {
 	avatar: FormControl<string | null>;

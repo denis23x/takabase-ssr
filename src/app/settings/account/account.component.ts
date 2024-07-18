@@ -54,13 +54,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
 import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
 import { SvgLogoComponent } from '../../standalone/components/svg-logo/svg-logo.component';
-
-// Types for lazy loading
-
 import type { UserPasswordResetComponent } from '../../standalone/components/user/password-reset/password-reset.component';
 import type { UserDeleteComponent } from '../../standalone/components/user/delete/delete.component';
-
-// Form interfaces
 
 interface EmailAuthProviderForm {
 	email: FormControl<string>;

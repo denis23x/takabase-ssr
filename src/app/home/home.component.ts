@@ -8,9 +8,6 @@ import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { SvgLogoComponent } from '../standalone/components/svg-logo/svg-logo.component';
 import { TitleService } from '../core/services/title.service';
 import homeFeatures from '../../assets/json/home-features.json';
-
-// Types for lazy loading
-
 import type { PWAComponent } from '../standalone/components/pwa/pwa.component';
 
 @Component({

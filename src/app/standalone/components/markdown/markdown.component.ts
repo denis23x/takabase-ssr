@@ -47,6 +47,7 @@ import { HelperService } from '../../../core/services/helper.service';
 import { AppearanceService } from '../../../core/services/appearance.service';
 import { FileService } from '../../../core/services/file.service';
 import { BadgeErrorComponent } from '../badge-error/badge-error.component';
+import { BusService } from '../../../core/services/bus.service';
 
 interface UrlForm {
 	title?: FormControl<string>;
@@ -65,6 +66,7 @@ interface UrlForm {
 		InputOnlyPasteDirective,
 		BadgeErrorComponent
 	],
+	providers: [MarkdownService],
 	selector: 'app-markdown, [appMarkdown]',
 	templateUrl: './markdown.component.html'
 })
@@ -76,6 +78,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly fileService: FileService = inject(FileService);
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
+	private readonly busService: BusService = inject(BusService);
 
 	@ViewChild('urlFormDialog') urlFormDialog: ElementRef<HTMLDialogElement> | undefined;
 
@@ -191,14 +194,14 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				)
 				.subscribe({
 					// prettier-ignore
-					next: (clipboardEventInit: ClipboardEventInit) => this.markdownService.markdownItClipboard.next(clipboardEventInit),
+					next: (clipboardEventInit: ClipboardEventInit) => this.busService.markdownItTriggerClipboard.next(clipboardEventInit),
 					error: (error: any) => console.error(error)
 				});
 
 			/** Cropper call by paste */
 
 			this.textareaPasteFileImage$?.unsubscribe();
-			this.textareaPasteFileImage$ = this.markdownService.markdownItCropperImage.subscribe({
+			this.textareaPasteFileImage$ = this.busService.markdownItCropperImage.subscribe({
 				next: (file: File) => {
 					this.appMarkdownUploadToggle.emit(true);
 
@@ -227,7 +230,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			/** Shortcuts */
 
 			this.textareaShortcuts$?.unsubscribe();
-			this.textareaShortcuts$ = this.markdownService.markdownItShortcut
+			this.textareaShortcuts$ = this.busService.markdownItTriggerShortcut
 				.pipe(
 					map((markdownShortcut: MarkdownShortcut) => {
 						const markdownControlList: MarkdownControl[] = [
@@ -315,7 +318,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	}
 
 	onControlListCropperClick(): void {
-		this.markdownService.markdownItCropperToggle.next(true);
+		this.busService.markdownItCropperToggle.next(true);
 	}
 
 	/** Extra handlers */
