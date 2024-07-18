@@ -7,12 +7,10 @@ import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
-import { MarkdownService } from '../core/services/markdown.service';
 
 @Component({
 	standalone: true,
 	imports: [RouterModule, ScrollPresetDirective, SvgIconComponent, SkeletonDirective],
-	providers: [MarkdownService],
 	selector: 'app-help',
 	templateUrl: './help.component.html'
 })

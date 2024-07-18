@@ -65,7 +65,6 @@ interface UrlForm {
 		InputOnlyPasteDirective,
 		BadgeErrorComponent
 	],
-	providers: [MarkdownService],
 	selector: 'app-markdown, [appMarkdown]',
 	templateUrl: './markdown.component.html'
 })

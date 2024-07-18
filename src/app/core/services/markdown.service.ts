@@ -17,7 +17,9 @@ import ins from 'markdown-it-ins';
 import linkAttributes from 'markdown-it-link-attributes';
 import type { Token } from 'markdown-it';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class MarkdownService {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly document: Document = inject(DOCUMENT);

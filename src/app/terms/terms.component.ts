@@ -6,12 +6,10 @@ import { MetaService } from '../core/services/meta.service';
 import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
-import { MarkdownService } from '../core/services/markdown.service';
 
 @Component({
 	standalone: true,
 	imports: [RouterModule, ScrollPresetDirective, SvgIconComponent],
-	providers: [MarkdownService],
 	selector: 'app-terms',
 	templateUrl: './terms.component.html'
 })

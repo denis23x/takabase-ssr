@@ -17,7 +17,6 @@ import { CopyToClipboardDirective } from '../../../directives/app-copy-to-clipbo
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { AppCheckPipe } from '../../../pipes/app-check.pipe';
 import { HelperService } from '../../../../core/services/helper.service';
-import { MarkdownService } from '../../../../core/services/markdown.service';
 import { MarkdownRenderDirective } from '../../../directives/app-markdown-render.directive';
 import { MarkdownTimeToReadPipe } from '../../../pipes/markdown-time-to-read.pipe';
 
@@ -44,7 +43,6 @@ import type { ReportComponent } from '../../report/report.component';
 		MarkdownRenderDirective,
 		MarkdownTimeToReadPipe
 	],
-	providers: [MarkdownService],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
 })

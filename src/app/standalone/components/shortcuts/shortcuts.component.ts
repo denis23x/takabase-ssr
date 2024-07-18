@@ -10,7 +10,6 @@ import hotkeys from 'hotkeys-js';
 @Component({
 	standalone: true,
 	imports: [WindowComponent],
-	providers: [MarkdownService],
 	selector: 'app-shortcuts, [appShortcuts]',
 	templateUrl: './shortcuts.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
@@ -38,59 +37,39 @@ export class ShortcutsComponent implements OnInit, OnDestroy {
 			shortcut: ['modifier', 'd']
 		},
 		{
-			key: 'formatting-mark',
-			label: 'Mark',
+			key: 'formatting-underline',
+			label: 'Underline',
 			shortcut: ['modifier', 'u']
-		},
-		{
-			key: 'heading-h1',
-			label: 'Heading 1',
-			shortcut: ['shift', '1']
-		},
-		{
-			key: 'heading-h2',
-			label: 'Heading 2',
-			shortcut: ['shift', '2']
-		},
-		{
-			key: 'heading-h3',
-			label: 'Heading 3',
-			shortcut: ['shift', '3']
-		},
-		{
-			key: 'heading-h4',
-			label: 'Heading 4',
-			shortcut: ['shift', '4']
 		},
 		{
 			key: 'url-link',
 			label: 'Hyperlink dialog',
-			shortcut: ['shift', 'alt', '1']
+			shortcut: ['shift', 'ctrl', '1']
 		},
 		{
 			key: 'url-youtube',
 			label: 'Youtube dialog',
-			shortcut: ['shift', 'alt', '2']
+			shortcut: ['shift', 'ctrl', '2']
 		},
 		{
 			key: 'cropper',
 			label: 'Cropper dialog',
-			shortcut: ['shift', 'alt', '3']
+			shortcut: ['shift', 'ctrl', '3']
 		},
 		{
 			key: 'quote',
 			label: 'Quote',
-			shortcut: ['shift', 'alt', '4']
+			shortcut: ['shift', 'ctrl', '4']
 		},
 		{
 			key: 'spoiler',
 			label: 'Spoiler',
-			shortcut: ['shift', 'alt', '5']
+			shortcut: ['shift', 'ctrl', '5']
 		},
 		{
 			key: 'code',
 			label: 'Code',
-			shortcut: ['shift', 'alt', '6']
+			shortcut: ['shift', 'ctrl', '6']
 		}
 	];
 
