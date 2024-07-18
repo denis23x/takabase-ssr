@@ -231,9 +231,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				.pipe(
 					map((markdownShortcut: MarkdownShortcut) => {
 						const markdownControlList: MarkdownControl[] = [
-							...this.controlListHeading,
 							...this.controlListFormatting,
-							...this.controlListList,
 							...this.controlListUrl,
 							this.controlListQuote,
 							this.controlListCropper,

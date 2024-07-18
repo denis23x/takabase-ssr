@@ -51,6 +51,7 @@ import { DeviceDirective } from '../standalone/directives/app-device.directive';
 import { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../core/services/ai.service';
 import { AppCheckPipe } from '../standalone/pipes/app-check.pipe';
+import { MarkdownService } from '../core/services/markdown.service';
 
 // Types for lazy loading
 
@@ -113,6 +114,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly aiService: AIService = inject(AIService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+	private readonly markdownService: MarkdownService = inject(MarkdownService);
 
 	category: Category | undefined;
 	categorySkeletonToggle: boolean = true;
@@ -173,6 +175,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 
 	// Lazy loading
 
+	appCropperComponentToggle$: Subscription | undefined;
 	appCropperComponent: ComponentRef<CropperComponent>;
 	appCategoryCreateComponent: ComponentRef<CategoryCreateComponent>;
 	appCategoryUpdateComponent: ComponentRef<CategoryUpdateComponent>;
@@ -197,6 +200,14 @@ export class CreateComponent implements OnInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
+		this.appCropperComponentToggle$?.unsubscribe();
+		this.appCropperComponentToggle$ = this.markdownService.markdownItCropperToggle
+			.pipe(filter((toggle: boolean) => toggle))
+			.subscribe({
+				next: () => this.onToggleCropperDialog(),
+				error: (error: any) => console.error(error)
+			});
+
 		/** Apply Share Target */
 
 		this.setShareTarget();
@@ -213,6 +224,7 @@ export class CreateComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		[
 			this.currentUser$,
+			this.appCropperComponentToggle$,
 			this.categoryListRequest$,
 			this.postRequest$,
 			this.postFormRequest$,
