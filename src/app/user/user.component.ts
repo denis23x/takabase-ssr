@@ -228,40 +228,35 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		this.metaService.getMetaImageDownloadURL(this.user.avatar).subscribe({
-			next: (downloadURL: string | null) => {
-				const username: string = this.user.name;
-				const userDescription: string = this.user.description || 'User has not yet added a profile description';
+		const username: string = this.user.name;
+		const userDescription: string = this.user.description || 'User has not yet added a profile description';
 
-				const title: string = this.category?.name || username;
-				const description: string = this.category?.description || userDescription;
+		const title: string = this.category?.name || username;
+		const description: string = this.category?.description || userDescription;
 
-				const metaOpenGraph: Partial<MetaOpenGraph> = {
-					['og:title']: title,
-					['og:description']: description,
-					['og:image']: downloadURL,
-					['og:image:alt']: username,
-					['og:image:type']: 'image/png'
-				};
+		const metaOpenGraph: Partial<MetaOpenGraph> = {
+			['og:title']: title,
+			['og:description']: description,
+			['og:image']: this.user.avatar,
+			['og:image:alt']: username,
+			['og:image:type']: 'image/png'
+		};
 
-				if (this.category) {
-					metaOpenGraph['og:type'] = 'website';
-				} else {
-					metaOpenGraph['og:type'] = 'profile';
-					metaOpenGraph['profile:username'] = username;
-				}
+		if (this.category) {
+			metaOpenGraph['og:type'] = 'website';
+		} else {
+			metaOpenGraph['og:type'] = 'profile';
+			metaOpenGraph['profile:username'] = username;
+		}
 
-				const metaTwitter: MetaTwitter = {
-					['twitter:title']: title,
-					['twitter:description']: description,
-					['twitter:image']: downloadURL,
-					['twitter:image:alt']: username
-				};
+		const metaTwitter: MetaTwitter = {
+			['twitter:title']: title,
+			['twitter:description']: description,
+			['twitter:image']: this.user.avatar,
+			['twitter:image:alt']: username
+		};
 
-				this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
-			},
-			error: (error: any) => console.error(error)
-		});
+		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
 	}
 
 	/** LAZY */

@@ -53,23 +53,20 @@ export class TextareaAutosizeDirective implements AfterViewInit, OnDestroy {
 
 	setAutosize(method: string | undefined = undefined): void {
 		if (this.platformService.isBrowser()) {
+			const window: any = this.platformService.getWindow();
 			const textarea: HTMLTextAreaElement = this.elementRef.nativeElement;
 
-			import('autosize/dist/autosize.min')
-				.then((module: any) => {
-					if (method === undefined) {
-						setTimeout(() => module.default(textarea));
-					}
+			if (method === undefined) {
+				setTimeout(() => window.autosize(textarea));
+			}
 
-					if (method === 'update') {
-						setTimeout(() => module.update(textarea));
-					}
+			if (method === 'update') {
+				setTimeout(() => window.autosize.update(textarea));
+			}
 
-					if (method === 'destroy') {
-						setTimeout(() => module.destroy(textarea));
-					}
-				})
-				.catch((error: any) => console.error(error));
+			if (method === 'destroy') {
+				setTimeout(() => window.autosize.destroy(textarea));
+			}
 
 			// Save current state of autosize
 

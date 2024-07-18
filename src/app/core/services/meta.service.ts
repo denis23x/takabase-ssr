@@ -4,14 +4,6 @@ import { inject, Injectable } from '@angular/core';
 import { Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { HelperService } from './helper.service';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { PlatformService } from './platform.service';
-import { HttpClient } from '@angular/common/http';
-import { ApiService } from './api.service';
-import { environment } from '../../../environments/environment';
-import type { SharpOutputDownloadUrlDto } from '../dto/sharp/sharp-output-download-url.dto';
-import type { HttpErrorResponse } from '@angular/common/http';
 import type { MetaOpenGraph, MetaTwitter } from '../models/meta.model';
 import type { MetaDefinition } from '@angular/platform-browser';
 
@@ -22,35 +14,6 @@ export class MetaService {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly meta: Meta = inject(Meta);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly apiService: ApiService = inject(ApiService);
-	private readonly httpClient: HttpClient = inject(HttpClient);
-
-	getMetaImageDownloadURL(url: string | null): Observable<string | null> {
-		if (url) {
-			if (this.platformService.isServer()) {
-				const sharpOutputDownloadUrlDto: SharpOutputDownloadUrlDto = {
-					url
-				};
-
-				return this.httpClient
-					.get(environment.sharp.url + '/v1/output/download-url', {
-						params: {
-							...sharpOutputDownloadUrlDto
-						}
-					})
-					.pipe(
-						map((response: any) => response.data),
-						map((data: any) => data.downloadURL),
-						catchError((httpErrorResponse: HttpErrorResponse) => {
-							return this.apiService.setHttpErrorResponse(httpErrorResponse);
-						})
-					);
-			}
-		}
-
-		return of(url);
-	}
 
 	setCanonicalURL(): void {
 		const url: URL = this.helperService.getURL();

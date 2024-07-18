@@ -74,34 +74,29 @@ export class PostComponent implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		this.metaService.getMetaImageDownloadURL(this.post.image).subscribe({
-			next: (downloadURL: string | null) => {
-				const title: string = this.post.name;
-				const description: string = this.post.description;
+		const title: string = this.post.name;
+		const description: string = this.post.description;
 
-				const metaOpenGraph: MetaOpenGraph = {
-					['og:title']: title,
-					['og:description']: description,
-					['og:type']: 'article',
-					['article:published_time']: this.post.createdAt,
-					['article:modified_time']: this.post.updatedAt,
-					['article:author']: this.post.user.name,
-					['article:section']: this.post.category.name,
-					['og:image']: downloadURL,
-					['og:image:alt']: this.post.name,
-					['og:image:type']: 'image/webp'
-				};
+		const metaOpenGraph: MetaOpenGraph = {
+			['og:title']: title,
+			['og:description']: description,
+			['og:type']: 'article',
+			['article:published_time']: this.post.createdAt,
+			['article:modified_time']: this.post.updatedAt,
+			['article:author']: this.post.user.name,
+			['article:section']: this.post.category.name,
+			['og:image']: this.post.image,
+			['og:image:alt']: this.post.name,
+			['og:image:type']: 'image/webp'
+		};
 
-				const metaTwitter: MetaTwitter = {
-					['twitter:title']: title,
-					['twitter:description']: description,
-					['twitter:image']: downloadURL,
-					['twitter:image:alt']: this.post.name
-				};
+		const metaTwitter: MetaTwitter = {
+			['twitter:title']: title,
+			['twitter:description']: description,
+			['twitter:image']: this.post.image,
+			['twitter:image:alt']: this.post.name
+		};
 
-				this.metaService.setMeta(metaOpenGraph, metaTwitter);
-			},
-			error: (error: any) => console.error(error)
-		});
+		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 }

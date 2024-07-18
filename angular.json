@@ -120,6 +120,11 @@
             ],
             "scripts": [
               {
+                "input": "node_modules/autosize/dist/autosize.min.js",
+                "inject": true,
+                "bundleName": "autosize"
+              },
+              {
                 "input": "splash.js",
                 "inject": true,
                 "bundleName": "splash"
@@ -173,13 +178,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "4mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "8kb",
-                  "maximumError": "16kb"
+                  "maximumWarning": "4kb",
+                  "maximumError": "8kb"
                 }
               ],
               "fileReplacements": [
