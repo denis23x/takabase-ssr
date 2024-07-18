@@ -6,11 +6,10 @@ import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { Post } from '../../../../core/models/post.model';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
-import { AppCheckPipe } from '../../../pipes/app-check.pipe';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, DayjsPipe, NgOptimizedImage, SkeletonDirective, AppCheckPipe, AsyncPipe],
+	imports: [RouterModule, DayjsPipe, NgOptimizedImage, SkeletonDirective, AsyncPipe],
 	selector: 'app-card-post, [appCardPost]',
 	templateUrl: './post.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

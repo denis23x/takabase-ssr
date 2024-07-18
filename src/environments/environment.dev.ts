@@ -2,7 +2,6 @@
 
 export const environment = {
 	appUrl: 'https://takabase-dev.web.app',
-	appCheck: '6LdbRn0pAAAAAPESvk85IVZiep5mp_QnQKrs8lrg',
 	apiUrl: 'https://takabase-dev-api.web.app/api',
 	ai: {
 		url: 'https://takabase-dev-ai.web.app/api'

@@ -5,14 +5,12 @@ import { toSvg } from 'jdenticon';
 import { User } from '../../../core/models/user.model';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from '../../../core/services/platform.service';
-import { AppCheckPipe } from '../../pipes/app-check.pipe';
 import { HelperService } from '../../../core/services/helper.service';
 
 @Component({
 	standalone: true,
 	selector: 'app-avatar, [appAvatar]',
 	templateUrl: './avatar.component.html',
-	providers: [AppCheckPipe],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AvatarComponent {
@@ -20,7 +18,6 @@ export class AvatarComponent {
 	private readonly elementRef: ElementRef = inject(ElementRef);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly appCheckPipe: AppCheckPipe = inject(AppCheckPipe);
 
 	@Input({ required: true })
 	set appAvatarUser(user: Partial<User> | undefined) {
@@ -57,10 +54,7 @@ export class AvatarComponent {
 			/** Set Image */
 
 			if (elementHTMLImage) {
-				this.appCheckPipe.transform(this.user.avatar).subscribe({
-					next: (blob: string) => (elementHTMLImage.src = blob),
-					error: (error: any) => console.error(error)
-				});
+				elementHTMLImage.src = this.user.avatar + '?alt=media';
 			}
 		}
 	}

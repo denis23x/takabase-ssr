@@ -38,7 +38,7 @@
 									class="object-cover object-center bg-base-300"
 									loading="lazy"
 									[fill]="true"
-									[ngSrc]="(reportPost.image | appCheck | async) || './assets/images/placeholder-image.svg'"
+									[ngSrc]="reportPost.image + '?alt=media'"
 									[alt]="reportPost.name"
 								/>
 							</figure>

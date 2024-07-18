@@ -27,7 +27,6 @@ import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { PlatformService } from '../../../core/services/platform.service';
-import { AppCheckPipe } from '../../pipes/app-check.pipe';
 import { Post } from '../../../core/models/post.model';
 import { User } from '../../../core/models/user.model';
 
@@ -50,8 +49,7 @@ interface ReportForm {
 		SvgIconComponent,
 		BadgeErrorComponent,
 		AvatarComponent,
-		SkeletonDirective,
-		AppCheckPipe
+		SkeletonDirective
 	],
 	providers: [ReportService],
 	selector: 'app-report, [appReport]',

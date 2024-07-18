@@ -15,7 +15,6 @@ import { filter } from 'rxjs/operators';
 import { AdComponent } from '../../ad/ad.component';
 import { CopyToClipboardDirective } from '../../../directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
-import { AppCheckPipe } from '../../../pipes/app-check.pipe';
 import { HelperService } from '../../../../core/services/helper.service';
 import { MarkdownRenderDirective } from '../../../directives/app-markdown-render.directive';
 import { MarkdownTimeToReadPipe } from '../../../pipes/markdown-time-to-read.pipe';
@@ -37,7 +36,6 @@ import type { ReportComponent } from '../../report/report.component';
 		SvgIconComponent,
 		AdComponent,
 		CopyToClipboardDirective,
-		AppCheckPipe,
 		AsyncPipe,
 		NgComponentOutlet,
 		MarkdownRenderDirective,
