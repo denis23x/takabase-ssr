@@ -45,9 +45,9 @@ import { MarkdownService } from '../../../core/services/markdown.service';
 import { PlatformService } from '../../../core/services/platform.service';
 import { HelperService } from '../../../core/services/helper.service';
 import { AppearanceService } from '../../../core/services/appearance.service';
-import { FileService } from '../../../core/services/file.service';
 import { BadgeErrorComponent } from '../badge-error/badge-error.component';
 import { BusService } from '../../../core/services/bus.service';
+import { SharpService } from '../../../core/services/sharp.service';
 
 interface UrlForm {
 	title?: FormControl<string>;
@@ -66,7 +66,7 @@ interface UrlForm {
 		InputOnlyPasteDirective,
 		BadgeErrorComponent
 	],
-	providers: [MarkdownService],
+	providers: [MarkdownService, SharpService],
 	selector: 'app-markdown, [appMarkdown]',
 	templateUrl: './markdown.component.html'
 })
@@ -76,7 +76,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly fileService: FileService = inject(FileService);
+	private readonly sharpService: SharpService = inject(SharpService);
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly busService: BusService = inject(BusService);
 
@@ -205,9 +205,9 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				next: (file: File) => {
 					this.appMarkdownUploadToggle.emit(true);
 
-					this.fileService
+					this.sharpService
 						.create(file)
-						.pipe(map((fileUrl: string) => this.fileService.getFileUrlClean(fileUrl)))
+						.pipe(map((fileUrl: string) => this.sharpService.getFileUrlClean(fileUrl)))
 						.subscribe({
 							next: (fileUrl: string) => {
 								const params: any = {

@@ -39,12 +39,12 @@ import { User } from '../../core/models/user.model';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { PlatformService } from '../../core/services/platform.service';
-import { FileService } from '../../core/services/file.service';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../../core/services/ai.service';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { getValue, Value } from 'firebase/remote-config';
+import { SharpService } from '../../core/services/sharp.service';
 import type { CropperComponent } from '../../standalone/components/cropper/cropper.component';
 
 interface ProfileForm {
@@ -68,7 +68,7 @@ interface ProfileForm {
 		SkeletonDirective,
 		BadgeErrorComponent
 	],
-	providers: [AIService, UserService],
+	providers: [AIService, UserService, SharpService],
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'
 })
@@ -79,7 +79,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly fileService: FileService = inject(FileService);
+	private readonly sharpService: SharpService = inject(SharpService);
 	private readonly aiService: AIService = inject(AIService);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
@@ -188,9 +188,9 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 		/** Request */
 
 		this.profileFormAvatarRequest$?.unsubscribe();
-		this.profileFormAvatarRequest$ = this.fileService
+		this.profileFormAvatarRequest$ = this.sharpService
 			.create(file)
-			.pipe(map((fileUrl: string) => this.fileService.getFileUrlClean(fileUrl)))
+			.pipe(map((fileUrl: string) => this.sharpService.getFileUrlClean(fileUrl)))
 			.subscribe({
 				next: (fileUrl: string) => this.onUpdateCropperAvatar(fileUrl),
 				error: () => this.profileFormAvatarIsSubmitted.set(false)

@@ -29,7 +29,6 @@ import { PlatformService } from '../../../core/services/platform.service';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { SharpService } from '../../../core/services/sharp.service';
-import { FileService } from '../../../core/services/file.service';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { BadgeErrorComponent } from '../badge-error/badge-error.component';
 import { AIService } from '../../../core/services/ai.service';
@@ -71,7 +70,6 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly fileService: FileService = inject(FileService);
 	private readonly sharpService: SharpService = inject(SharpService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
@@ -325,7 +323,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 						canvasElementContext.drawImage(event.target, dx, dy, width, height);
 
 						// prettier-ignore
-						canvasElement.toBlob((blob: Blob) => resolve(this.fileService.getFileFromBlob(blob)), requiredType, 1);
+						canvasElement.toBlob((blob: Blob) => resolve(this.sharpService.getFileFromBlob(blob)), requiredType, 1);
 					} else {
 						resolve(file);
 					}
@@ -339,8 +337,8 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	}
 
 	getFileValidation(file: File): boolean {
-		if (this.fileService.getFileValidationMime(file, this.imageFormMime)) {
-			if (this.fileService.getFileValidationSize(file, 5)) {
+		if (this.sharpService.getFileValidationMime(file, this.imageFormMime)) {
+			if (this.sharpService.getFileValidationSize(file, 5)) {
 				return true;
 			} else {
 				this.snackbarService.error('Sorry', 'This file is too large to be uploaded');
@@ -453,7 +451,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		/** Get ready file */
 
-		const fileCropped: File = this.fileService.getFileFromBlob(this.cropperBlob);
+		const fileCropped: File = this.sharpService.getFileFromBlob(this.cropperBlob);
 
 		/** Moderate and make .webp image */
 

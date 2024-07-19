@@ -42,7 +42,6 @@ import { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { PlatformService } from '../core/services/platform.service';
-import { FileService } from '../core/services/file.service';
 import { PostUpdateDto } from '../core/dto/post/post-update.dto';
 import { BadgeErrorComponent } from '../standalone/components/badge-error/badge-error.component';
 import { ShortcutsComponent } from '../standalone/components/shortcuts/shortcuts.component';
@@ -53,6 +52,7 @@ import { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../core/services/ai.service';
 import { FireStoragePipe } from '../standalone/pipes/fire-storage.pipe';
 import { BusService } from '../core/services/bus.service';
+import { SharpService } from '../core/services/sharp.service';
 import type { CropperComponent } from '../standalone/components/cropper/cropper.component';
 import type { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import type { CategoryUpdateComponent } from '../standalone/components/category/update/update.component';
@@ -89,7 +89,7 @@ interface PostForm {
 		DeviceDirective,
 		FireStoragePipe
 	],
-	providers: [CategoryService, PostService, AIService],
+	providers: [CategoryService, PostService, AIService, SharpService],
 	selector: 'app-create',
 	templateUrl: './create.component.html'
 })
@@ -105,7 +105,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly cookiesService: CookiesService = inject(CookiesService);
 	private readonly metaService: MetaService = inject(MetaService);
-	private readonly fileService: FileService = inject(FileService);
+	private readonly sharpService: SharpService = inject(SharpService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly aiService: AIService = inject(AIService);
@@ -448,9 +448,9 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.postFormImageIsSubmitted.set(true);
 
 		this.postFormImageRequest$?.unsubscribe();
-		this.postFormImageRequest$ = this.fileService
+		this.postFormImageRequest$ = this.sharpService
 			.create(file)
-			.pipe(map((fileUrl: string) => this.fileService.getFileUrlClean(fileUrl)))
+			.pipe(map((fileUrl: string) => this.sharpService.getFileUrlClean(fileUrl)))
 			.subscribe({
 				next: (fileUrl: string) => this.onUpdateCropperImage(fileUrl),
 				error: () => this.postFormImageIsSubmitted.set(false)
