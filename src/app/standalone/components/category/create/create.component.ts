@@ -44,7 +44,7 @@ interface CategoryForm {
 		ReactiveFormsModule,
 		BadgeErrorComponent
 	],
-	providers: [AIService],
+	providers: [AIService, CategoryService],
 	selector: 'app-category-create, [appCategoryCreate]',
 	templateUrl: './create.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

@@ -23,6 +23,7 @@ import { ApiService } from '../core/services/api.service';
 import { CategoryService } from '../core/services/category.service';
 import { UserStore } from './user.store';
 import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
+import { FireStoragePipe } from '../standalone/pipes/fire-storage.pipe';
 import type { QRCodeComponent } from '../standalone/components/qr-code/qr-code.component';
 import type { ReportComponent } from '../standalone/components/report/report.component';
 import type { User } from '../core/models/user.model';
@@ -44,7 +45,7 @@ import type { CategoryGetAllDto } from '../core/dto/category/category-get-all.dt
 		SkeletonDirective,
 		CopyToClipboardDirective
 	],
-	providers: [CategoryService, UserService, UserStore],
+	providers: [CategoryService, UserService, UserStore, FireStoragePipe],
 	selector: 'app-user',
 	templateUrl: './user.component.html'
 })
@@ -61,6 +62,7 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly userStore: UserStore = inject(UserStore);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+	private readonly fireStoragePipe: FireStoragePipe = inject(FireStoragePipe);
 
 	@ViewChild('routerLinkActivePassword') routerLinkActivePassword: RouterLinkActive | undefined;
 	@ViewChild('routerLinkActivePrivate') routerLinkActivePrivate: RouterLinkActive | undefined;
@@ -233,13 +235,13 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 
 	setMetaTags(): void {
 		const metaOpenGraph: Partial<MetaOpenGraph> = {
-			['og:image']: this.user.avatar,
+			['og:image']: this.fireStoragePipe.transform(this.user.avatar),
 			['og:image:alt']: this.user.name,
-			['og:image:type']: 'image/png'
+			['og:image:type']: 'image/webp'
 		};
 
 		const metaTwitter: Partial<MetaTwitter> = {
-			['twitter:image']: this.user.avatar,
+			['twitter:image']: this.fireStoragePipe.transform(this.user.avatar),
 			['twitter:image:alt']: this.user.name
 		};
 

@@ -51,6 +51,7 @@ interface CategoryDeleteForm {
 		ReactiveFormsModule,
 		BadgeErrorComponent
 	],
+	providers: [CategoryService],
 	selector: 'app-category-delete, [appCategoryDelete]',
 	templateUrl: './delete.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

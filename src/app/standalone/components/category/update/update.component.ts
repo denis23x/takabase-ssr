@@ -46,7 +46,7 @@ interface CategoryUpdateForm {
 		ReactiveFormsModule,
 		BadgeErrorComponent
 	],
-	providers: [AIService],
+	providers: [AIService, CategoryService],
 	selector: 'app-category-update, [appCategoryUpdate]',
 	templateUrl: './update.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

@@ -39,6 +39,11 @@ export function app(): express.Express {
 	server.set('views', browserDistFolder);
 
 	// prettier-ignore
+	server.get(['/search/posts/:postId', '/:username/post/:postId', '/:username/category/:categoryId/post/:postId'], (req, res) => {
+		res.status(301).redirect('/post/' + req.params.postId);
+	});
+
+	// prettier-ignore
 	server.get('*.*', expressStaticGzip(browserDistFolder, {
 		enableBrotli: true,
 		serveStatic: {
@@ -95,7 +100,6 @@ export function app(): express.Express {
 	return server;
 }
 
-/*
 function run(): void {
 	const port = process.env['PORT'] || 4000;
 
@@ -107,4 +111,3 @@ function run(): void {
 }
 
 run();
-*/

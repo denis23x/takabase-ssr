@@ -11,13 +11,14 @@ import { MetaService } from '../core/services/meta.service';
 import { filter } from 'rxjs/operators';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
+import { FireStoragePipe } from '../standalone/pipes/fire-storage.pipe';
 import type { Post } from '../core/models/post.model';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 
 @Component({
 	standalone: true,
 	imports: [RouterModule, CommonModule, SvgIconComponent, SkeletonDirective],
-	providers: [PostStore],
+	providers: [PostStore, FireStoragePipe],
 	selector: 'app-post',
 	templateUrl: './post.component.html'
 })
@@ -26,6 +27,7 @@ export class PostComponent implements OnInit, OnDestroy {
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postStore: PostStore = inject(PostStore);
+	private readonly fireStoragePipe: FireStoragePipe = inject(FireStoragePipe);
 
 	post: Post | undefined;
 	post$: Subscription | undefined;
@@ -85,7 +87,7 @@ export class PostComponent implements OnInit, OnDestroy {
 			['article:modified_time']: this.post.updatedAt,
 			['article:author']: this.post.user.name,
 			['article:section']: this.post.category.name,
-			['og:image']: this.post.image,
+			['og:image']: this.fireStoragePipe.transform(this.post.image),
 			['og:image:alt']: this.post.name,
 			['og:image:type']: 'image/webp'
 		};
@@ -93,7 +95,7 @@ export class PostComponent implements OnInit, OnDestroy {
 		const metaTwitter: MetaTwitter = {
 			['twitter:title']: title,
 			['twitter:description']: description,
-			['twitter:image']: this.post.image,
+			['twitter:image']: this.fireStoragePipe.transform(this.post.image),
 			['twitter:image:alt']: this.post.name
 		};
 
