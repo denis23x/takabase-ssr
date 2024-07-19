@@ -15,6 +15,7 @@ import { CookiesComponent } from '../standalone/components/cookies/cookies.compo
 import { version } from '../../versions/version';
 import { environment } from '../../environments/environment';
 import { PWAService } from '../core/services/pwa.service';
+import { Location } from '@angular/common';
 
 @Component({
 	standalone: true,
@@ -28,6 +29,7 @@ export class OutletComponent implements OnInit, OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly pwaService: PWAService = inject(PWAService);
+	private readonly location: Location = inject(Location);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
@@ -67,6 +69,10 @@ export class OutletComponent implements OnInit, OnDestroy {
 
 			if (environment.production) {
 				console.debug(Object.values(version).join(' - '));
+
+				if (this.location.path().includes('debug')) {
+					import('eruda').then((eruda: any) => eruda.default.init());
+				}
 			}
 		}
 	}

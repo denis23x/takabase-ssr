@@ -46,6 +46,7 @@ export class AvatarComponent {
 			elementRefImage.classList.add(...['bg-base-300', 'object-cover', 'object-center']);
 			elementRefImage.src = './assets/images/placeholder-image.svg';
 			elementRefImage.alt = this.user.name;
+			elementRefImage.loading = 'eager';
 
 			/** Insert HTML */
 
@@ -54,11 +55,7 @@ export class AvatarComponent {
 			const elementHTML: HTMLElement | null = this.document.getElementById(elementRefImage.id);
 			const elementHTMLImage: HTMLImageElement = elementHTML as HTMLImageElement;
 
-			/** Set Image */
-
-			if (elementHTMLImage) {
-				elementHTMLImage.src = this.fireStoragePipe.transform(this.user.avatar);
-			}
+			elementHTMLImage.src = this.fireStoragePipe.transform(this.user.avatar);
 		}
 	}
 

@@ -14,6 +14,7 @@ import attrs from 'markdown-it-attrs';
 import bracketedSpans from 'markdown-it-bracketed-spans';
 import ins from 'markdown-it-ins';
 import linkAttributes from 'markdown-it-link-attributes';
+import tasks from 'markdown-it-tasks';
 import type { Token } from 'markdown-it';
 
 @Injectable()
@@ -59,7 +60,15 @@ export class MarkdownService {
 						rel: 'ugc noopener noreferrer'
 					}
 				}
-			]);
+			])
+			.use(tasks, {
+				enabled: true,
+				label: true,
+				labelAfter: false,
+				itemClass: 'form-control',
+				inputClass: 'checkbox checkbox-success mr-4',
+				labelClass: 'label cursor-pointer'
+			});
 
 		/** Update default rules */
 
@@ -159,7 +168,6 @@ export class MarkdownService {
 			collapsible: /\+\+\+\s?\S[^\n]*\n[\s\S]*?\n\+\+\+/gim.test(value),
 			emoji: /:\w+:/gm.test(value),
 			smartArrows: /(-->|<--|<-->|==>|<==|<==>)/gm.test(value),
-			tasks: /-\s\[[\s|xX]]/gm.test(value),
 			video: /@\[(youtube|vimeo|vine|prezi|osf)]\(\s*https?:\/\/[^\s)]+\s*\)/gm.test(value)
 		};
 
@@ -222,10 +230,6 @@ export class MarkdownService {
 
 			if (key === 'smartArrows') {
 				markdownItModules.push(import('markdown-it-smartarrows'));
-			}
-
-			if (key === 'tasks') {
-				markdownItModules.push(import('markdown-it-tasks'));
 			}
 
 			if (key === 'video') {
@@ -294,17 +298,6 @@ export class MarkdownService {
 
 			if (key === 'smartArrows') {
 				markdownIt.use(markdownItModulesLoaded[i].default);
-			}
-
-			if (key === 'tasks') {
-				markdownIt.use(markdownItModulesLoaded[i].default, {
-					enabled: true,
-					label: true,
-					labelAfter: false,
-					itemClass: 'form-control',
-					inputClass: 'checkbox checkbox-success mr-4',
-					labelClass: 'label cursor-pointer'
-				});
 			}
 
 			if (key === 'video') {

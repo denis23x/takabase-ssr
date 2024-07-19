@@ -37,7 +37,11 @@
 			</div>
 		}
 		@case (false) {
-			<article class="prose max-w-none overflow-auto" [innerHTML]="abstractProse | markdown | sanitizer: 1"></article>
+			<article
+				class="prose max-w-none overflow-auto"
+				appMarkdownRender
+				[appMarkdownRenderValue]="abstractProse"
+			></article>
 		}
 	}
 </ng-container>

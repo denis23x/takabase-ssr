@@ -125,6 +125,8 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
+		/** Get and set user */
+
 		const username: string = String(this.activatedRoute.snapshot.paramMap.get('username') || '');
 		const userGetAllDto: UserGetAllDto = {
 			username,
@@ -166,48 +168,53 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 					this.user = user;
 					this.userSkeletonToggle = false;
 
-					/** Set CategoryList */
+					/** Apply SEO meta tags */
 
-					const categoryGetAllDto: CategoryGetAllDto = {
-						username,
-						page: 1,
-						size: 50
-					};
+					this.setTitle();
+					this.setMetaTags();
+				},
+				error: (error: any) => console.error(error)
+			});
 
-					this.categoryListRequest$?.unsubscribe();
-					this.categoryListRequest$ = this.categoryService
-						.getAll(categoryGetAllDto)
+		/** Get and set categoryList */
+
+		const categoryGetAllDto: CategoryGetAllDto = {
+			username,
+			page: 1,
+			size: 50
+		};
+
+		this.categoryListRequest$?.unsubscribe();
+		this.categoryListRequest$ = this.categoryService
+			.getAll(categoryGetAllDto)
+			.pipe(
+				tap((categoryList: Category[]) => this.userStore.setCategoryList(categoryList)),
+				switchMap(() => this.userStore.getCategoryList())
+			)
+			.subscribe({
+				next: (categoryList: Category[]) => {
+					this.categoryList = categoryList;
+					this.categoryListSkeletonToggle = false;
+
+					/** Set and get category */
+
+					this.activatedRouteParamsCategoryId$?.unsubscribe();
+					this.activatedRouteParamsCategoryId$ = this.activatedRoute.params
 						.pipe(
-							tap((categoryList: Category[]) => this.userStore.setCategoryList(categoryList)),
-							switchMap(() => this.userStore.getCategoryList())
+							distinctUntilKeyChanged('categoryId'),
+							map(() => Number(this.activatedRoute.snapshot.paramMap.get('categoryId'))),
+							map((categoryId: number) => this.categoryList.find((category: Category) => category.id === categoryId)),
+							tap((category: Category | undefined) => this.userStore.setCategory(category))
 						)
 						.subscribe({
-							next: (categoryList: Category[]) => {
-								this.categoryList = categoryList;
-								this.categoryListSkeletonToggle = false;
+							next: (category: Category | undefined) => {
+								this.category = category;
+								this.categorySkeletonToggle = false;
 
-								/** Set Category */
+								/** Apply SEO meta tags */
 
-								this.activatedRouteParamsCategoryId$?.unsubscribe();
-								this.activatedRouteParamsCategoryId$ = this.activatedRoute.params
-									.pipe(
-										distinctUntilKeyChanged('categoryId'),
-										map(() => Number(this.activatedRoute.snapshot.paramMap.get('categoryId'))),
-										map((categoryId: number) => categoryList.find((category: Category) => category.id === categoryId)),
-										tap((category: Category | undefined) => this.userStore.setCategory(category))
-									)
-									.subscribe({
-										next: (category: Category | undefined) => {
-											this.category = category;
-											this.categorySkeletonToggle = false;
-
-											/** Apply SEO meta tags */
-
-											this.setMetaTags();
-											this.setTitle();
-										},
-										error: (error: any) => console.error(error)
-									});
+								this.setTitle();
+								this.setMetaTags();
 							},
 							error: (error: any) => console.error(error)
 						});
@@ -217,43 +224,48 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	}
 
 	setTitle(): void {
-		this.titleService.setTitle(this.user.name);
-
 		if (this.category) {
 			this.titleService.setTitle(this.category.name);
+		} else {
+			this.titleService.setTitle(this.user.name);
 		}
 	}
 
 	setMetaTags(): void {
-		const username: string = this.user.name;
-		const userDescription: string = this.user.description || 'User has not yet added a profile description';
-
-		const title: string = this.category?.name || username;
-		const description: string = this.category?.description || userDescription;
-
 		const metaOpenGraph: Partial<MetaOpenGraph> = {
-			['og:title']: title,
-			['og:description']: description,
 			['og:image']: this.user.avatar,
-			['og:image:alt']: username,
+			['og:image:alt']: this.user.name,
 			['og:image:type']: 'image/png'
 		};
 
-		if (this.category) {
-			metaOpenGraph['og:type'] = 'website';
-		} else {
-			metaOpenGraph['og:type'] = 'profile';
-			metaOpenGraph['profile:username'] = username;
-		}
-
-		const metaTwitter: MetaTwitter = {
-			['twitter:title']: title,
-			['twitter:description']: description,
+		const metaTwitter: Partial<MetaTwitter> = {
 			['twitter:image']: this.user.avatar,
-			['twitter:image:alt']: username
+			['twitter:image:alt']: this.user.name
 		};
 
-		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter);
+		if (this.category) {
+			const title: string = this.category.name;
+			const description: string = this.category.description || 'Category has not yet a description';
+
+			metaOpenGraph['og:title'] = title;
+			metaOpenGraph['og:description'] = description;
+			metaOpenGraph['og:type'] = 'profile';
+
+			metaTwitter['twitter:title'] = title;
+			metaTwitter['twitter:description'] = description;
+		} else {
+			const title: string = this.user.name;
+			const description: string = this.user.description || 'User has not yet added a profile description';
+
+			metaOpenGraph['og:title'] = title;
+			metaOpenGraph['og:description'] = description;
+			metaOpenGraph['og:type'] = 'website';
+
+			metaTwitter['twitter:title'] = title;
+			metaTwitter['twitter:description'] = description;
+		}
+
+		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter as MetaTwitter);
 	}
 
 	/** LAZY */

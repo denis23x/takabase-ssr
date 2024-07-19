@@ -22,10 +22,16 @@ export class CardPostComponent {
 	}
 
 	@Input()
+	set appCardPostImagePriority(postImagePriority: boolean) {
+		this.postImagePriority = postImagePriority;
+	}
+
+	@Input()
 	set appCardPostSkeletonToggle(postSkeletonToggle: boolean) {
 		this.postSkeletonToggle = postSkeletonToggle;
 	}
 
 	post: Post | undefined;
+	postImagePriority: boolean = false;
 	postSkeletonToggle: boolean = true;
 }

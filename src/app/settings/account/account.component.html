@@ -530,9 +530,9 @@
 								@if (providerData.linked) {
 									<img
 										class="object-cover object-center bg-base-300"
-										loading="lazy"
-										[ngSrc]="providerData.photoURL"
 										[fill]="true"
+										[priority]="true"
+										[ngSrc]="providerData.photoURL"
 										[alt]="providerData.providerLabel"
 									/>
 								} @else {

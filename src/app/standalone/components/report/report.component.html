@@ -36,8 +36,8 @@
 							<figure class="h-12 w-12 rounded-btn relative overflow-hidden">
 								<img
 									class="object-cover object-center bg-base-300"
-									loading="lazy"
 									[fill]="true"
+									[priority]="true"
 									[ngSrc]="reportPost.image | fireStorage"
 									[alt]="reportPost.name"
 								/>

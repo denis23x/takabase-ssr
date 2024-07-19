@@ -21,8 +21,8 @@
                       class="block bg-base-300 object-cover object-center"
                       width="48"
                       height="48"
-                      loading="lazy"
                       [alt]="'Image'"
+                      [priority]="true"
                       [ngSrc]="image.value | fireStorage"
                     />
                   }
