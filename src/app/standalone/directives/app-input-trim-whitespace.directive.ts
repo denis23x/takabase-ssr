@@ -1,7 +1,8 @@
 /** @format */
 
 import { Directive, inject } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { NgControl } from '@angular/forms';
+import type { ControlValueAccessor } from '@angular/forms';
 
 /** https://netbasal.com/how-to-trim-the-value-of-angulars-form-control-87660941e6cb */
 

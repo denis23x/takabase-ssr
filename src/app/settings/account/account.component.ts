@@ -28,11 +28,8 @@ import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.
 import { HelperService } from '../../core/services/helper.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { PasswordValidateGetDto } from '../../core/dto/password/password-validate-get.dto';
 import { PasswordService } from '../../core/services/password.service';
 import { EmailService } from '../../core/services/email.service';
-import { PasswordUpdateDto } from '../../core/dto/password/password-update.dto';
-import { CurrentUser, CurrentUserProviderData } from '../../core/models/current-user.model';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { PlatformService } from '../../core/services/platform.service';
@@ -51,9 +48,12 @@ import {
 } from 'firebase/auth';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
 import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
 import { SvgLogoComponent } from '../../standalone/components/svg-logo/svg-logo.component';
+import type { PasswordValidateGetDto } from '../../core/dto/password/password-validate-get.dto';
+import type { PasswordUpdateDto } from '../../core/dto/password/password-update.dto';
+import type { CurrentUser, CurrentUserProviderData } from '../../core/models/current-user.model';
+import type { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
 import type { UserPasswordResetComponent } from '../../standalone/components/user/password-reset/password-reset.component';
 import type { UserDeleteComponent } from '../../standalone/components/user/delete/delete.component';
 

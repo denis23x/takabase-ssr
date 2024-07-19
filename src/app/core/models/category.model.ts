@@ -1,7 +1,7 @@
 /** @format */
 
-import { User } from './user.model';
-import { Post } from './post.model';
+import type { User } from './user.model';
+import type { Post } from './post.model';
 
 export interface Category {
 	id: number;

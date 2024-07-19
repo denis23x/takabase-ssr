@@ -4,7 +4,6 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { AppearanceService } from '../core/services/appearance.service';
 import { AuthorizationService } from '../core/services/authorization.service';
 import { filter, first, switchMap, tap } from 'rxjs/operators';
-import { CurrentUser } from '../core/models/current-user.model';
 import { fromEvent, Subscription } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { SnackbarComponent } from '../standalone/components/snackbar/snackbar.component';
@@ -16,6 +15,7 @@ import { version } from '../../versions/version';
 import { environment } from '../../environments/environment';
 import { PWAService } from '../core/services/pwa.service';
 import { Location } from '@angular/common';
+import type { CurrentUser } from '../core/models/current-user.model';
 
 @Component({
 	standalone: true,

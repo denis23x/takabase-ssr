@@ -5,7 +5,7 @@ import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { PlatformService } from '../services/platform.service';
 import { ApiService } from '../services/api.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import type { HttpErrorResponse } from '@angular/common/http';
 
 export const redirectHttpErrorGuard = (): CanActivateFn => {
 	return (): Observable<boolean | UrlTree> => {

@@ -2,17 +2,17 @@
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Post } from '../core/models/post.model';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { PostStore } from './post.store';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { TitleService } from '../core/services/title.service';
-import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 import { filter } from 'rxjs/operators';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
+import type { Post } from '../core/models/post.model';
+import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 
 @Component({
 	standalone: true,

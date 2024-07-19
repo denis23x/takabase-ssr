@@ -6,20 +6,20 @@ import { Router, RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { HelperService } from '../../core/services/helper.service';
-import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SignInComponent } from '../../standalone/components/sign-in/sign-in.component';
 import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
-import { SignInDto } from '../../core/dto/authorization/sign-in.dto';
-import { User as FirebaseUser } from 'firebase/auth';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
 import { filter } from 'rxjs/operators';
-import { CurrentUser } from '../../core/models/current-user.model';
+import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
+import type { CurrentUser } from '../../core/models/current-user.model';
+import type { User as FirebaseUser } from 'firebase/auth';
+import type { SignInDto } from '../../core/dto/authorization/sign-in.dto';
 
 interface LoginForm {
 	email: FormControl<string>;

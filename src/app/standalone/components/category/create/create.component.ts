@@ -17,16 +17,16 @@ import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
 import { TextareaAutosizeDirective } from '../../../directives/app-textarea-autosize.directive';
-import { CategoryCreateDto } from '../../../../core/dto/category/category-create.dto';
-import { Category } from '../../../../core/models/category.model';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HelperService } from '../../../../core/services/helper.service';
 import { CategoryService } from '../../../../core/services/category.service';
 import { Subscription, switchMap } from 'rxjs';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { PlatformService } from '../../../../core/services/platform.service';
-import { AIModerateTextDto } from '../../../../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../../../../core/services/ai.service';
+import type { Category } from '../../../../core/models/category.model';
+import type { CategoryCreateDto } from '../../../../core/dto/category/category-create.dto';
+import type { AIModerateTextDto } from '../../../../core/dto/ai/ai-moderate-text.dto';
 
 interface CategoryForm {
 	name: FormControl<string>;

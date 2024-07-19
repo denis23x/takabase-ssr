@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, Input } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+import type { AbstractControl } from '@angular/forms';
 
 @Component({
 	standalone: true,

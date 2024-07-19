@@ -1,8 +1,6 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import MarkdownIt from 'markdown-it';
-import morphdom from 'morphdom';
 import { MarkdownItPlugins } from '../models/markdown.model';
 import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
@@ -10,6 +8,8 @@ import { AppearanceService } from './appearance.service';
 import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { HelperService } from './helper.service';
+import MarkdownIt from 'markdown-it';
+import morphdom from 'morphdom';
 import attrs from 'markdown-it-attrs';
 import bracketedSpans from 'markdown-it-bracketed-spans';
 import ins from 'markdown-it-ins';

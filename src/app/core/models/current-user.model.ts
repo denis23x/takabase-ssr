@@ -1,7 +1,7 @@
 /** @format */
 
-import { User } from './user.model';
-import { UserInfo, User as FirebaseUser } from 'firebase/auth';
+import type { User } from './user.model';
+import type { UserInfo, User as FirebaseUser } from 'firebase/auth';
 
 export interface CurrentUser extends User {
 	bearer?: string;

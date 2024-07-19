@@ -2,12 +2,10 @@
 
 import { Component, ComponentRef, inject, Input, OnDestroy, OnInit, Type, ViewContainerRef } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AsyncPipe, NgComponentOutlet, NgOptimizedImage } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
-import { Post } from '../../../../core/models/post.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
-import { CurrentUser } from '../../../../core/models/current-user.model';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../../dropdown/dropdown.component';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
@@ -23,10 +21,13 @@ import { MarkdownService } from '../../../../core/services/markdown.service';
 import type { QRCodeComponent } from '../../qr-code/qr-code.component';
 import type { PostDeleteComponent } from '../delete/delete.component';
 import type { ReportComponent } from '../../report/report.component';
+import type { Post } from '../../../../core/models/post.model';
+import type { CurrentUser } from '../../../../core/models/current-user.model';
 
 @Component({
 	standalone: true,
 	imports: [
+		CommonModule,
 		RouterModule,
 		DayjsPipe,
 		NgOptimizedImage,
@@ -35,8 +36,6 @@ import type { ReportComponent } from '../../report/report.component';
 		SvgIconComponent,
 		AdComponent,
 		CopyToClipboardDirective,
-		AsyncPipe,
-		NgComponentOutlet,
 		MarkdownRenderDirective,
 		MarkdownTimeToReadPipe,
 		FireStoragePipe

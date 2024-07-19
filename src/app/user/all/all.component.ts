@@ -14,15 +14,15 @@ import { SearchFormComponent } from '../../standalone/components/search-form/sea
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
 import { CommonModule } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { Post } from '../../core/models/post.model';
-import { SearchIndex } from 'algoliasearch/lite';
-import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { PlatformService } from '../../core/services/platform.service';
 import { AlgoliaService } from '../../core/services/algolia.service';
-import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { HelperService } from '../../core/services/helper.service';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
+import type { Post } from '../../core/models/post.model';
+import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
+import type { SearchIndex } from 'algoliasearch/lite';
+import type { SearchOptions, SearchResponse } from '@algolia/client-search';
 
 const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 

@@ -1,15 +1,15 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 import { switchMap } from 'rxjs/operators';
-import { CurrentUser } from '../core/models/current-user.model';
 import { AuthorizationService } from '../core/services/authorization.service';
 import { PlatformService } from '../core/services/platform.service';
 import { from, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { AppearanceService } from '../core/services/appearance.service';
+import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
+import type { CurrentUser } from '../core/models/current-user.model';
 
 @Component({
 	standalone: true,

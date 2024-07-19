@@ -32,20 +32,20 @@ import { HelperService } from '../../core/services/helper.service';
 import { UserService } from '../../core/services/user.service';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import { TextareaAutosizeDirective } from '../../standalone/directives/app-textarea-autosize.directive';
-import { CurrentUser } from '../../core/models/current-user.model';
-import { User } from '../../core/models/user.model';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { PlatformService } from '../../core/services/platform.service';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
-import { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
 import { AIService } from '../../core/services/ai.service';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { getValue, Value } from 'firebase/remote-config';
 import { SharpService } from '../../core/services/sharp.service';
+import type { User } from '../../core/models/user.model';
+import type { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import type { CropperComponent } from '../../standalone/components/cropper/cropper.component';
+import type { CurrentUser } from '../../core/models/current-user.model';
+import type { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
 
 interface ProfileForm {
 	avatar: FormControl<string | null>;

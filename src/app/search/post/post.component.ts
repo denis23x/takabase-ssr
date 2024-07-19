@@ -4,15 +4,10 @@ import { Component, OnDestroy, OnInit, makeStateKey, StateKey, inject, TransferS
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { Post } from '../../core/models/post.model';
-import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
-import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
-import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
+import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 import { BehaviorSubject, distinctUntilKeyChanged, from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
-import { SearchIndex } from 'algoliasearch/lite';
-import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { MetaService } from '../../core/services/meta.service';
@@ -20,6 +15,11 @@ import { AlgoliaService } from '../../core/services/algolia.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { CookiesService } from '../../core/services/cookies.service';
+import type { Post } from '../../core/models/post.model';
+import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
+import type { SearchIndex } from 'algoliasearch/lite';
+import type { SearchOptions, SearchResponse } from '@algolia/client-search';
+import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 
 const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 

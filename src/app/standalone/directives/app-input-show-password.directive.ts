@@ -1,7 +1,7 @@
 /** @format */
 
 import { Directive, ElementRef, HostListener, inject, Input, OnInit } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+import type { AbstractControl } from '@angular/forms';
 
 @Directive({
 	standalone: true,

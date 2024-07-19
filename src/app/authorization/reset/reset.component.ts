@@ -6,14 +6,14 @@ import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../core/services/helper.service';
 import { MetaService } from '../../core/services/meta.service';
-import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
 import { PasswordService } from '../../core/services/password.service';
 import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
+import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
+import type { PasswordResetGetDto } from '../../core/dto/password/password-reset-get.dto';
 
 interface ResetForm {
 	email: FormControl<string>;

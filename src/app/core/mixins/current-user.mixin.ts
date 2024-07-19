@@ -3,9 +3,9 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { CurrentUser } from '../models/current-user.model';
 import { AuthorizationService } from '../services/authorization.service';
 import { nanoid } from 'nanoid';
+import type { CurrentUser } from '../models/current-user.model';
 
 export function CurrentUserMixin<T extends new (...args: any[]) => any>(MasterClass: T) {
 	@Component({

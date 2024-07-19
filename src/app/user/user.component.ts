@@ -8,15 +8,11 @@ import { AvatarComponent } from '../standalone/components/avatar/avatar.componen
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { DayjsPipe } from '../standalone/pipes/dayjs.pipe';
-import { User } from '../core/models/user.model';
-import { Category } from '../core/models/category.model';
 import { UserService } from '../core/services/user.service';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
 import { SkeletonService } from '../core/services/skeleton.service';
-import { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { TitleService } from '../core/services/title.service';
-import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
 import { CopyToClipboardDirective } from '../standalone/directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../core/services/snackbar.service';
@@ -25,11 +21,15 @@ import { CommonModule } from '@angular/common';
 import { PlatformService } from '../core/services/platform.service';
 import { ApiService } from '../core/services/api.service';
 import { CategoryService } from '../core/services/category.service';
-import { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
 import { UserStore } from './user.store';
 import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
 import type { QRCodeComponent } from '../standalone/components/qr-code/qr-code.component';
 import type { ReportComponent } from '../standalone/components/report/report.component';
+import type { User } from '../core/models/user.model';
+import type { Category } from '../core/models/category.model';
+import type { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
+import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
+import type { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
 
 @Component({
 	standalone: true,

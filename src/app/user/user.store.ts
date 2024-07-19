@@ -2,9 +2,9 @@
 
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../core/models/user.model';
-import { Post } from '../core/models/post.model';
-import { Category } from '../core/models/category.model';
+import type { User } from '../core/models/user.model';
+import type { Post } from '../core/models/post.model';
+import type { Category } from '../core/models/category.model';
 
 @Injectable()
 export class UserStore {

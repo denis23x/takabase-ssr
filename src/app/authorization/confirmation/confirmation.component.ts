@@ -2,9 +2,9 @@
 
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { HelperService } from '../../core/services/helper.service';
+import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 
 @Component({
 	standalone: true,

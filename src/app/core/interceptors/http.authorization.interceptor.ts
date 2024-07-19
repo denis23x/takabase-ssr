@@ -5,7 +5,7 @@ import { HttpRequest, HttpInterceptorFn, HttpHandlerFn, HttpEvent } from '@angul
 import { environment } from '../../../environments/environment';
 import { from, Observable, switchMap } from 'rxjs';
 import { FirebaseService } from '../services/firebase.service';
-import { User as FirebaseUser } from 'firebase/auth';
+import type { User as FirebaseUser } from 'firebase/auth';
 
 // prettier-ignore
 export const httpAuthorizationInterceptor: HttpInterceptorFn = (request: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {

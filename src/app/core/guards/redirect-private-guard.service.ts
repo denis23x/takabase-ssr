@@ -4,10 +4,10 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router, UrlTree } from '@angular/router';
 import { from, Observable, of, switchMap, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
 import { PlatformService } from '../services/platform.service';
 import { AuthorizationService } from '../services/authorization.service';
-import { CurrentUser } from '../models/current-user.model';
+import type { CurrentUser } from '../models/current-user.model';
+import type { HttpErrorResponse } from '@angular/common/http';
 
 export const redirectPrivateGuard = (): CanActivateFn => {
 	return (activatedRouteSnapshot: ActivatedRouteSnapshot): Observable<boolean | UrlTree> => {

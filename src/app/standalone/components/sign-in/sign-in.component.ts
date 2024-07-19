@@ -5,8 +5,8 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { AuthorizationService } from '../../../core/services/authorization.service';
 import { Subscription } from 'rxjs';
-import { AuthProvider } from 'firebase/auth';
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
+import type { AuthProvider } from 'firebase/auth';
 
 @Component({
 	standalone: true,

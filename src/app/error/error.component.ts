@@ -4,12 +4,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
-import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { TitleService } from '../core/services/title.service';
 import { HelperService } from '../core/services/helper.service';
 import { RESPONSE } from '../core/tokens/express.tokens';
 import { PlatformService } from '../core/services/platform.service';
-import { Response } from 'express';
+import type { Response } from 'express';
+import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 
 @Component({
 	standalone: true,

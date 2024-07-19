@@ -3,9 +3,9 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { WindowComponent } from '../window/window.component';
 import { PlatformService } from '../../../core/services/platform.service';
-import { MarkdownShortcut } from '../../../core/models/markdown.model';
 import { BusService } from '../../../core/services/bus.service';
 import hotkeys from 'hotkeys-js';
+import type { MarkdownShortcut } from '../../../core/models/markdown.model';
 
 @Component({
 	standalone: true,

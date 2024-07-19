@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { MarkdownShortcut } from '../models/markdown.model';
+import type { MarkdownShortcut } from '../models/markdown.model';
 
 @Injectable({
 	providedIn: 'root'

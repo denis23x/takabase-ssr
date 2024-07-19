@@ -1,6 +1,6 @@
 /** @format */
 
-import { Appearance } from '../../models/appearance.model';
+import type { Appearance } from '../../models/appearance.model';
 
 export interface UserCreateDto {
 	name: string;

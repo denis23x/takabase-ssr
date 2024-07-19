@@ -12,14 +12,14 @@ import { DropdownComponent } from '../../standalone/components/dropdown/dropdown
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { Post } from '../../core/models/post.model';
-import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
-import { SearchResponse } from '@algolia/client-search';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
+import type { Post } from '../../core/models/post.model';
+import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
+import type { SearchResponse } from '@algolia/client-search';
 
 @Component({
 	standalone: true,
@@ -34,7 +34,6 @@ import { ListMockComponent } from '../../standalone/components/list/mock/mock.co
 		DropdownComponent,
 		SkeletonDirective,
 		CopyToClipboardDirective,
-		AsyncPipe,
 		CardPostComponent,
 		ListLoadMoreComponent,
 		ListMockComponent

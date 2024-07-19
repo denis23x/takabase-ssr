@@ -2,11 +2,11 @@
 
 import { ChangeDetectionStrategy, Component, ElementRef, inject, Input } from '@angular/core';
 import { toSvg } from 'jdenticon';
-import { User } from '../../../core/models/user.model';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from '../../../core/services/platform.service';
 import { HelperService } from '../../../core/services/helper.service';
 import { FireStoragePipe } from '../../pipes/fire-storage.pipe';
+import type { User } from '../../../core/models/user.model';
 
 @Component({
 	standalone: true,

@@ -6,14 +6,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
 import { HelperService } from '../../../core/services/helper.service';
 import { InputTrimWhitespaceDirective } from '../../../standalone/directives/app-input-trim-whitespace.directive';
-import { PasswordResetUpdateDto } from '../../../core/dto/password/password-reset-update.dto';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { PasswordService } from '../../../core/services/password.service';
-import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 import { MetaService } from '../../../core/services/meta.service';
 import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../../standalone/components/badge-error/badge-error.component';
 import { InputShowPassword } from '../../../standalone/directives/app-input-show-password.directive';
+import type { PasswordResetUpdateDto } from '../../../core/dto/password/password-reset-update.dto';
+import type { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 
 interface PasswordForm {
 	code: FormControl<string>;

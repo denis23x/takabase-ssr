@@ -4,15 +4,10 @@ import { Component, inject, makeStateKey, OnDestroy, OnInit, StateKey, TransferS
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { Category } from '../../core/models/category.model';
-import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
-import { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { CardCategoryComponent } from '../../standalone/components/card/category/category.component';
 import { BehaviorSubject, distinctUntilKeyChanged, from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
-import { SearchIndex } from 'algoliasearch/lite';
-import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { MetaService } from '../../core/services/meta.service';
@@ -20,6 +15,11 @@ import { AlgoliaService } from '../../core/services/algolia.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { CookiesService } from '../../core/services/cookies.service';
+import type { Category } from '../../core/models/category.model';
+import type { CategoryGetAllDto } from '../../core/dto/category/category-get-all.dto';
+import type { SearchIndex } from 'algoliasearch/lite';
+import type { SearchOptions, SearchResponse } from '@algolia/client-search';
+import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 
 const searchResponseKey: StateKey<SearchResponse<Category>> = makeStateKey<SearchResponse<Category>>('searchResponse');
 

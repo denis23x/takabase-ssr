@@ -27,20 +27,20 @@ import {
 } from '@angular/forms';
 import { Observable, Subscription, switchMap, throwError } from 'rxjs';
 import { HelperService } from '../../../../core/services/helper.service';
-import { CurrentUser } from '../../../../core/models/current-user.model';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { PlatformService } from '../../../../core/services/platform.service';
-import { User } from '../../../../core/models/user.model';
 import { UserService } from '../../../../core/services/user.service';
-import { UserDeleteDto } from '../../../../core/dto/user/user-delete.dto';
 import { catchError } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { UserInfo } from 'firebase/auth';
 import { InputShowPassword } from '../../../directives/app-input-show-password.directive';
-import { PasswordValidateGetDto } from '../../../../core/dto/password/password-validate-get.dto';
 import { PasswordService } from '../../../../core/services/password.service';
+import type { PasswordValidateGetDto } from '../../../../core/dto/password/password-validate-get.dto';
+import type { CurrentUser } from '../../../../core/models/current-user.model';
+import type { User } from '../../../../core/models/user.model';
+import type { UserInfo } from 'firebase/auth';
+import type { UserDeleteDto } from '../../../../core/dto/user/user-delete.dto';
+import type { HttpErrorResponse } from '@angular/common/http';
 
 interface UserDeleteForm {
 	name: FormControl<string>;

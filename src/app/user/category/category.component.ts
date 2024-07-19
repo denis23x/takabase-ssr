@@ -19,30 +19,30 @@ import { AvatarComponent } from '../../standalone/components/avatar/avatar.compo
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
-import { Category } from '../../core/models/category.model';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
-import { CategoryDeleteDto } from '../../core/dto/category/category-delete.dto';
 import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { Post } from '../../core/models/post.model';
-import { SearchIndex } from 'algoliasearch/lite';
-import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { PlatformService } from '../../core/services/platform.service';
 import { AlgoliaService } from '../../core/services/algolia.service';
-import { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import { HelperService } from '../../core/services/helper.service';
 import { UserStore } from '../user.store';
-import { User } from '../../core/models/user.model';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
+import type { User } from '../../core/models/user.model';
+import type { Post } from '../../core/models/post.model';
+import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
+import type { SearchIndex } from 'algoliasearch/lite';
+import type { SearchOptions, SearchResponse } from '@algolia/client-search';
+import type { Category } from '../../core/models/category.model';
 import type { CategoryCreateComponent } from '../../standalone/components/category/create/create.component';
 import type { CategoryUpdateComponent } from '../../standalone/components/category/update/update.component';
 import type { CategoryDeleteComponent } from '../../standalone/components/category/delete/delete.component';
+import type { CategoryDeleteDto } from '../../core/dto/category/category-delete.dto';
 
 const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 
@@ -59,7 +59,6 @@ const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchRes
 		SkeletonDirective,
 		SearchFormComponent,
 		CopyToClipboardDirective,
-		AsyncPipe,
 		CardPostComponent,
 		ListLoadMoreComponent,
 		ListMockComponent

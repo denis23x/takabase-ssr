@@ -1,13 +1,13 @@
 /** @format */
 
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
-import { Params } from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { Post } from '../../../core/models/post.model';
 import { HelperService } from '../../../core/services/helper.service';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 import { PlatformService } from '../../../core/services/platform.service';
+import type { Post } from '../../../core/models/post.model';
+import type { Params } from '@angular/router';
 
 @Component({
 	standalone: true,

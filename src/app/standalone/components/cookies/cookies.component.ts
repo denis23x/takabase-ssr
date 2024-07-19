@@ -4,10 +4,10 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { RouterModule } from '@angular/router';
 import { AuthorizationService } from '../../../core/services/authorization.service';
-import { CurrentUser } from '../../../core/models/current-user.model';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { CookiesService } from '../../../core/services/cookies.service';
+import type { CurrentUser } from '../../../core/models/current-user.model';
 
 @Component({
 	standalone: true,

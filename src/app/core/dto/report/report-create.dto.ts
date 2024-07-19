@@ -1,7 +1,7 @@
 /** @format */
 
-import { User } from '../../models/user.model';
-import { Post } from '../../models/post.model';
+import type { User } from '../../models/user.model';
+import type { Post } from '../../models/post.model';
 
 export interface ReportCreateDto {
 	name: string;

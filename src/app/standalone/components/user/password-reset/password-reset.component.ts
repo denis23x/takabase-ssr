@@ -20,14 +20,13 @@ import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subscription, switchMap } from 'rxjs';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
-import { User } from '../../../../core/models/user.model';
-import { PasswordResetGetDto } from '../../../../core/dto/password/password-reset-get.dto';
 import { Router } from '@angular/router';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { PasswordService } from '../../../../core/services/password.service';
-import { CurrentUser } from '../../../../core/models/current-user.model';
 import { PlatformService } from '../../../../core/services/platform.service';
+import type { CurrentUser } from '../../../../core/models/current-user.model';
+import type { PasswordResetGetDto } from '../../../../core/dto/password/password-reset-get.dto';
 
 @Component({
 	standalone: true,

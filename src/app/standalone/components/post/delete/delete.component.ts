@@ -16,16 +16,16 @@ import {
 } from '@angular/core';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
-import { Post } from '../../../../core/models/post.model';
 import { PostService } from '../../../../core/services/post.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { Router } from '@angular/router';
-import { CurrentUser } from '../../../../core/models/current-user.model';
 import { Subscription } from 'rxjs';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { Location } from '@angular/common';
-import { PostDeleteDto } from '../../../../core/dto/post/post-delete.dto';
+import type { Post } from '../../../../core/models/post.model';
+import type { PostDeleteDto } from '../../../../core/dto/post/post-delete.dto';
+import type { CurrentUser } from '../../../../core/models/current-user.model';
 
 @Component({
 	standalone: true,

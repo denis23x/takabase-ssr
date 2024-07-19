@@ -4,9 +4,9 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { AsyncPipe, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
-import { Post } from '../../../../core/models/post.model';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { FireStoragePipe } from '../../../pipes/fire-storage.pipe';
+import type { Post } from '../../../../core/models/post.model';
 
 @Component({
 	standalone: true,

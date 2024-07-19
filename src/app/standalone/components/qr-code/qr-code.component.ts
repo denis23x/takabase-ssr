@@ -20,7 +20,8 @@ import { SnackbarService } from '../../../core/services/snackbar.service';
 import { HelperService } from '../../../core/services/helper.service';
 import { filter, map } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import QRCode, { QRCodeRenderersOptions } from 'qrcode';
+import QRCode from 'qrcode';
+import type { QRCodeRenderersOptions } from 'qrcode';
 
 @Component({
 	standalone: true,

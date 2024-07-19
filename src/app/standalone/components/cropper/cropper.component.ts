@@ -14,7 +14,6 @@ import {
 } from '@angular/core';
 import { Dimensions, ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { CropperPosition } from 'ngx-image-cropper/lib/interfaces/cropper-position.interface';
-import { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
 import { Subscription, merge } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DOCUMENT } from '@angular/common';
@@ -32,8 +31,9 @@ import { SharpService } from '../../../core/services/sharp.service';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { BadgeErrorComponent } from '../badge-error/badge-error.component';
 import { AIService } from '../../../core/services/ai.service';
-import { SharpFetchDto } from '../../../core/dto/sharp/sharp-fetch.dto';
 import { BusService } from '../../../core/services/bus.service';
+import type { SharpFetchDto } from '../../../core/dto/sharp/sharp-fetch.dto';
+import type { ImageTransform } from 'ngx-image-cropper/lib/interfaces/image-transform.interface';
 
 interface ImageForm {
 	url: FormControl<string>;

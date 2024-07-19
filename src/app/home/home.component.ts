@@ -4,10 +4,10 @@ import { Component, ComponentRef, inject, OnInit, Type, ViewContainerRef } from 
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
-import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { SvgLogoComponent } from '../standalone/components/svg-logo/svg-logo.component';
 import { TitleService } from '../core/services/title.service';
 import homeFeatures from '../../assets/json/home-features.json';
+import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import type { PWAComponent } from '../standalone/components/pwa/pwa.component';
 
 @Component({

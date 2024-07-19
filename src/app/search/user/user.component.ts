@@ -6,16 +6,11 @@ import { CommonModule } from '@angular/common';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
-import { User } from '../../core/models/user.model';
-import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
-import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 import { CardUserComponent } from '../../standalone/components/card/user/user.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { BehaviorSubject, distinctUntilKeyChanged, from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { AuthenticatedComponent } from '../../standalone/components/authenticated/authenticated.component';
-import { SearchIndex } from 'algoliasearch/lite';
-import { SearchOptions, SearchResponse } from '@algolia/client-search';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { MetaService } from '../../core/services/meta.service';
@@ -23,6 +18,11 @@ import { AlgoliaService } from '../../core/services/algolia.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { CookiesService } from '../../core/services/cookies.service';
+import type { User } from '../../core/models/user.model';
+import type { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
+import type { SearchIndex } from 'algoliasearch/lite';
+import type { SearchOptions, SearchResponse } from '@algolia/client-search';
+import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 
 const searchResponseKey: StateKey<SearchResponse<User>> = makeStateKey<SearchResponse<User>>('searchResponse');
 

@@ -13,12 +13,12 @@ import {
 } from '@angular/core';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
-import { Post } from '../../../../core/models/post.model';
 import { PostProseComponent } from '../prose/prose.component';
-import { CurrentUser } from '../../../../core/models/current-user.model';
 import { Subscription } from 'rxjs';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
-import { Category } from '../../../../core/models/category.model';
+import type { Category } from '../../../../core/models/category.model';
+import type { Post } from '../../../../core/models/post.model';
+import type { CurrentUser } from '../../../../core/models/current-user.model';
 
 @Component({
 	standalone: true,

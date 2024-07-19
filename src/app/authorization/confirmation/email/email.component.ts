@@ -2,19 +2,19 @@
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 import { MetaService } from '../../../core/services/meta.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
-import { EmailConfirmationUpdateDto } from '../../../core/dto/email/email-confirmation-update.dto';
 import { EmailService } from '../../../core/services/email.service';
 import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
 import { from, of, Subscription, switchMap } from 'rxjs';
 import { PlatformService } from '../../../core/services/platform.service';
-import { CurrentUser } from '../../../core/models/current-user.model';
 import { AuthorizationService } from '../../../core/services/authorization.service';
 import { filter } from 'rxjs/operators';
 import { SkeletonDirective } from '../../../standalone/directives/app-skeleton.directive';
 import { AuthenticatedComponent } from '../../../standalone/components/authenticated/authenticated.component';
+import type { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
+import type { CurrentUser } from '../../../core/models/current-user.model';
+import type { EmailConfirmationUpdateDto } from '../../../core/dto/email/email-confirmation-update.dto';
 
 @Component({
 	standalone: true,

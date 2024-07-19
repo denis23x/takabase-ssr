@@ -1,8 +1,8 @@
 /** @format */
 
 import { Component, inject, OnInit } from '@angular/core';
-import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import { MetaService } from '../core/services/meta.service';
+import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 
 @Component({
 	standalone: true,

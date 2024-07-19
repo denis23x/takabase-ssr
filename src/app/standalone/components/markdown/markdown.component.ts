@@ -35,12 +35,6 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { WindowComponent } from '../window/window.component';
 import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
 import { InputOnlyPasteDirective } from '../../directives/app-input-only-paste.directive';
-import {
-	MarkdownControl,
-	MarkdownShortcut,
-	MarkdownTextarea,
-	MarkdownWrapper
-} from '../../../core/models/markdown.model';
 import { MarkdownService } from '../../../core/services/markdown.service';
 import { PlatformService } from '../../../core/services/platform.service';
 import { HelperService } from '../../../core/services/helper.service';
@@ -48,6 +42,12 @@ import { AppearanceService } from '../../../core/services/appearance.service';
 import { BadgeErrorComponent } from '../badge-error/badge-error.component';
 import { BusService } from '../../../core/services/bus.service';
 import { SharpService } from '../../../core/services/sharp.service';
+import type {
+	MarkdownControl,
+	MarkdownShortcut,
+	MarkdownTextarea,
+	MarkdownWrapper
+} from '../../../core/models/markdown.model';
 
 interface UrlForm {
 	title?: FormControl<string>;

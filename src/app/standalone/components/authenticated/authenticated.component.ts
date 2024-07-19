@@ -3,8 +3,8 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { CurrentUser } from '../../../core/models/current-user.model';
 import { AuthorizationService } from '../../../core/services/authorization.service';
+import type { CurrentUser } from '../../../core/models/current-user.model';
 
 @Component({
 	standalone: true,

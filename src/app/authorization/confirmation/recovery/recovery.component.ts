@@ -2,14 +2,14 @@
 
 import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 import { MetaService } from '../../../core/services/meta.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { EmailService } from '../../../core/services/email.service';
 import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
-import { EmailRecoveryDto } from '../../../core/dto/email/email-recovery.dto';
 import { Subscription } from 'rxjs';
 import { PlatformService } from '../../../core/services/platform.service';
+import type { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
+import type { EmailRecoveryDto } from '../../../core/dto/email/email-recovery.dto';
 
 @Component({
 	standalone: true,

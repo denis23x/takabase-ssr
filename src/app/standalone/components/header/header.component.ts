@@ -7,7 +7,6 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { AuthorizationService } from '../../../core/services/authorization.service';
 import { filter } from 'rxjs/operators';
-import { CurrentUser } from '../../../core/models/current-user.model';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { SnackbarService } from '../../../core/services/snackbar.service';
@@ -15,6 +14,7 @@ import { AuthenticatedComponent } from '../authenticated/authenticated.component
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 import { Location } from '@angular/common';
 import { HelperService } from '../../../core/services/helper.service';
+import type { CurrentUser } from '../../../core/models/current-user.model';
 
 @Component({
 	standalone: true,

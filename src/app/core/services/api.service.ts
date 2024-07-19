@@ -2,11 +2,12 @@
 
 import { inject, Injectable, makeStateKey, StateKey, TransferState } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SnackbarService } from './snackbar.service';
 import type { FirebaseError } from 'firebase/app';
+import type { HttpErrorResponse } from '@angular/common/http';
 
 // prettier-ignore
 const httpErrorResponseKey: StateKey<HttpErrorResponse | undefined> = makeStateKey<HttpErrorResponse | undefined>('httpErrorResponse');

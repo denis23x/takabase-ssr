@@ -20,16 +20,16 @@ import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModu
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { HelperService } from '../../../core/services/helper.service';
 import { SnackbarService } from '../../../core/services/snackbar.service';
-import { ReportCreateDto } from '../../../core/dto/report/report-create.dto';
 import { ReportService } from '../../../core/services/report.service';
 import { BadgeErrorComponent } from '../badge-error/badge-error.component';
 import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { PlatformService } from '../../../core/services/platform.service';
-import { Post } from '../../../core/models/post.model';
-import { User } from '../../../core/models/user.model';
 import { FireStoragePipe } from '../../pipes/fire-storage.pipe';
+import type { User } from '../../../core/models/user.model';
+import type { Post } from '../../../core/models/post.model';
+import type { ReportCreateDto } from '../../../core/dto/report/report-create.dto';
 
 interface ReportForm {
 	name: FormControl<string>;

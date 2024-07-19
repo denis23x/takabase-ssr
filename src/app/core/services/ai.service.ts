@@ -4,11 +4,12 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, of, switchMap, throwError } from 'rxjs';
 import { ApiService } from './api.service';
 import { catchError, map } from 'rxjs/operators';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { AIModerateTextDto, AIModerateTextResult, AIModerateTextResultItem } from '../dto/ai/ai-moderate-text.dto';
-import { AIModerateImageResult } from '../dto/ai/ai-moderate-image.dto';
 import { SnackbarService } from './snackbar.service';
+import type { AIModerateImageResult } from '../dto/ai/ai-moderate-image.dto';
+import type { AIModerateTextDto, AIModerateTextResult, AIModerateTextResultItem } from '../dto/ai/ai-moderate-text.dto';
+import type { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class AIService {

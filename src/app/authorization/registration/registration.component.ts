@@ -15,8 +15,6 @@ import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { UserService } from '../../core/services/user.service';
 import { HelperService } from '../../core/services/helper.service';
-import { User } from '../../core/models/user.model';
-import { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import { MetaService } from '../../core/services/meta.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
@@ -25,18 +23,20 @@ import { of, Subscription, switchMap, throwError } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
 import { AIService } from '../../core/services/ai.service';
-import { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
-import { UserCreateDto } from '../../core/dto/user/user-create.dto';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
-import { User as FirebaseUser } from 'firebase/auth';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { PlatformService } from '../../core/services/platform.service';
-import { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 import { getValue, Value } from 'firebase/remote-config';
 import { filter } from 'rxjs/operators';
-import { CurrentUser } from '../../core/models/current-user.model';
+import type { User as FirebaseUser } from 'firebase/auth';
+import type { CurrentUser } from '../../core/models/current-user.model';
+import type { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
+import type { User } from '../../core/models/user.model';
+import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
+import type { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
+import type { UserCreateDto } from '../../core/dto/user/user-create.dto';
 
 interface RegistrationForm {
 	name: FormControl<string>;

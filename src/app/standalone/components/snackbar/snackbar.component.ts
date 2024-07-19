@@ -2,10 +2,10 @@
 
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Snack } from '../../../core/models/snack.model';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { Observable } from 'rxjs';
+import type { Snack } from '../../../core/models/snack.model';
 
 @Component({
 	standalone: true,

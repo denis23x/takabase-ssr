@@ -8,9 +8,7 @@ import { RouterModule } from '@angular/router';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { environment } from '../../../environments/environment';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
-import { Appearance } from '../../core/models/appearance.model';
 import { AppearanceService } from '../../core/services/appearance.service';
-import { CurrentUser } from '../../core/models/current-user.model';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -19,6 +17,8 @@ import { PlatformService } from '../../core/services/platform.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { CommonModule } from '@angular/common';
 import { MarkdownRenderDirective } from '../../standalone/directives/app-markdown-render.directive';
+import type { CurrentUser } from '../../core/models/current-user.model';
+import type { Appearance } from '../../core/models/appearance.model';
 
 interface AppearanceForm {
 	theme: FormControl<string>;

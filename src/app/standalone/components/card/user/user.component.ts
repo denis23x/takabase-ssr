@@ -5,7 +5,7 @@ import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../../avatar/avatar.component';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
-import { User } from '../../../../core/models/user.model';
+import type { User } from '../../../../core/models/user.model';
 
 @Component({
 	standalone: true,

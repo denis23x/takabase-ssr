@@ -3,9 +3,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
-import { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
-import { MetaService } from '../core/services/meta.service';
 import { PlatformDirective } from '../standalone/directives/app-platform.directive';
+import { MetaService } from '../core/services/meta.service';
+import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 
 @Component({
 	standalone: true,

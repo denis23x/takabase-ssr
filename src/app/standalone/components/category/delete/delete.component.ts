@@ -28,13 +28,13 @@ import {
 } from '@angular/forms';
 import { CategoryService } from '../../../../core/services/category.service';
 import { Subscription } from 'rxjs';
-import { Post } from '../../../../core/models/post.model';
-import { CategoryDeleteDto } from '../../../../core/dto/category/category-delete.dto';
-import { Category } from '../../../../core/models/category.model';
 import { HelperService } from '../../../../core/services/helper.service';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { UserStore } from '../../../../user/user.store';
+import type { Post } from '../../../../core/models/post.model';
+import type { CategoryDeleteDto } from '../../../../core/dto/category/category-delete.dto';
+import type { Category } from '../../../../core/models/category.model';
 
 interface CategoryDeleteForm {
 	name: FormControl<string>;

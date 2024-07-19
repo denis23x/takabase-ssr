@@ -15,14 +15,14 @@ import { debounceTime, filter, map } from 'rxjs/operators';
 import { CookiesService } from '../../../../core/services/cookies.service';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { DOCUMENT } from '@angular/common';
-import { SearchResponse } from '@algolia/client-search';
-import { Category } from '../../../../core/models/category.model';
-import { Post } from '../../../../core/models/post.model';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { RouterModule } from '@angular/router';
-import { User } from '../../../../core/models/user.model';
 import { ListMockComponent } from '../mock/mock.component';
 import { PlatformDirective } from '../../../directives/app-platform.directive';
+import type { User } from '../../../../core/models/user.model';
+import type { Category } from '../../../../core/models/category.model';
+import type { Post } from '../../../../core/models/post.model';
+import type { SearchResponse } from '@algolia/client-search';
 
 @Component({
 	standalone: true,
