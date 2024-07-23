@@ -154,65 +154,169 @@
 					</fieldset>
 				}
 				<div class="col-span-12 flex items-end justify-end gap-4 sm:col-span-6">
-					@if (postForm.get("categoryName"); as categoryName) {
-						<fieldset class="form-control items-start w-full">
-							<label class="label" for="postFormCategoryName">
-								<div
-									class="indicator"
-									appSkeleton
-									[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
-									[appSkeletonClassListElementRef]="['!-mx-1']"
-								>
-									@if (categoryName.touched && !!categoryName.errors && postForm.enabled) {
-										<div class="block" appBadgeError [appBadgeErrorAbstractControl]="categoryName"></div>
-									}
-									<span class="label-text mr-2">Category</span>
-								</div>
-							</label>
-							<div
-								class="block w-full relative"
-								appSkeleton
-								appDropdown
-								[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
-								[appDropdownFit]="true"
-								[class.cursor-not-allowed]="postForm.disabled"
-								(appDropdownToggle)="onToggleCategory($event)"
-							>
-								<input
-									class="input input-bordered input-md w-full cursor-pointer truncate"
-									id="postFormCategoryName"
-									type="text"
-									title="Category"
-									aria-label="Category"
-									placeholder="Select post category"
-									formControlName="categoryName"
-									slot="target"
-									readonly
-									[class.input-success]="categoryName.touched && categoryName.value"
-									[class.input-error]="categoryName.touched && categoryName.invalid"
-								/>
-								<div class="menu menu-vertical menu-md p-0" slot="content" [class.hidden]="!categoryList.length">
-									<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
-										@for (category of categoryList; track category.id) {
-											<li class="flex w-full snap-start scroll-my-2">
-												<button
-													class="rounded-btn block w-full truncate text-left"
-													type="button"
-													appScrollPreset
-													[appScrollPresetActive]="categoryName.value === category.name"
-													[class.active]="categoryName.value === category.name"
-													[title]="category.name"
-													[attr.aria-label]="category.name"
-													(click)="onSelectCategory(category)"
-												>
-													{{ category.name }}
-												</button>
-											</li>
+					@switch (postType) {
+						@case ("password") {
+							@if (postForm.get("password"); as password) {
+								<fieldset class="form-control items-start w-full">
+									<label class="label" for="postFormPassword">
+										<div class="indicator">
+											@if (password.touched && !!password.errors && postForm.enabled) {
+												<div class="block" appBadgeError [appBadgeErrorAbstractControl]="password"></div>
+											}
+											<span class="label-text mr-2">Password</span>
+										</div>
+									</label>
+									<div class="block w-full relative">
+										<input
+											class="input input-bordered input-md w-full truncate"
+											id="postFormPassword"
+											type="password"
+											title="Password"
+											aria-label="Password"
+											autocomplete="new-password"
+											formControlName="password"
+											placeholder="Type post password"
+											appInputTrimWhitespace
+											#postFormPassword
+											[type]="'password'"
+											[class.input-success]="password.value && password.valid"
+											[class.input-error]="password.touched && password.invalid"
+										/>
+										@if (password.value) {
+											<button
+												class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+												type="button"
+												title="Show password"
+												aria-label="Show password"
+												appSvgIcon
+												appInputShowPassword
+												[disabled]="postForm.disabled"
+												[class.btn-success]="password.valid"
+												[class.btn-error]="password.touched && password.invalid"
+												[class.btn-ghost]="password.untouched && password.invalid"
+												[appSvgIconIcon]="'incognito'"
+												[appSvgIconSquare]="'1.5em'"
+												[appInputShowPasswordFormControl]="password"
+												[appInputShowPasswordInputElement]="postFormPassword"
+											></button>
 										}
-									</ul>
+									</div>
+								</fieldset>
+							}
+						}
+						@case ("private") {
+							<fieldset class="form-control items-start w-full">
+								<label class="label" for="postFormPrivate">
+									<div class="indicator">
+										<span class="label-text mr-2">Private</span>
+									</div>
+								</label>
+								<div class="block w-full relative">
+									<input
+										class="input input-bordered input-md w-full truncate"
+										id="postFormPrivate"
+										type="text"
+										title="Type"
+										aria-label="Type"
+										placeholder="Available only for you"
+										disabled
+									/>
 								</div>
-							</div>
-						</fieldset>
+							</fieldset>
+						}
+						@default {
+							@if (postForm.get("categoryName"); as categoryName) {
+								<fieldset class="form-control items-start w-full">
+									<label class="label" for="postFormCategoryName">
+										<div
+											class="indicator"
+											appSkeleton
+											[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
+											[appSkeletonClassListElementRef]="['!-mx-1']"
+										>
+											@if (categoryName.touched && !!categoryName.errors && postForm.enabled) {
+												<div class="block" appBadgeError [appBadgeErrorAbstractControl]="categoryName"></div>
+											}
+											<span class="label-text mr-2">Category</span>
+										</div>
+									</label>
+									<div
+										class="block w-full relative"
+										appSkeleton
+										appDropdown
+										[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
+										[appDropdownFit]="true"
+										[class.cursor-not-allowed]="postForm.disabled"
+										(appDropdownToggle)="onToggleCategory($event)"
+									>
+										<input
+											class="input input-bordered input-md w-full cursor-pointer truncate"
+											id="postFormCategoryName"
+											type="text"
+											title="Category"
+											aria-label="Category"
+											placeholder="Select post category"
+											formControlName="categoryName"
+											slot="target"
+											readonly
+											[class.input-success]="categoryName.touched && categoryName.value"
+											[class.input-error]="categoryName.touched && categoryName.invalid"
+										/>
+										<div class="menu menu-vertical menu-md p-0" slot="content">
+											<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
+												<li class="flex w-full snap-start scroll-my-2">
+													<button
+														class="rounded-btn flex items-center justify-start gap-2 w-full text-base-content truncate"
+														type="button"
+														title="Create new category"
+														aria-label="Create new category"
+														(click)="onToggleCategoryCreateDialog()"
+													>
+														<i
+															class="fill-current"
+															appSvgIcon
+															[appSvgIconIcon]="'folder-plus'"
+															[appSvgIconSquare]="'1.5em'"
+														></i>
+														<span class="block text-sm">Create new</span>
+													</button>
+												</li>
+												<li class="flex w-full snap-start scroll-my-2 menu-title">
+													<hr class="my-0 border-base-content/20" />
+												</li>
+												@for (category of categoryList; track category.id) {
+													<li class="flex w-full snap-start scroll-my-2">
+														<button
+															class="rounded-btn block w-full truncate text-left"
+															type="button"
+															appScrollPreset
+															[appScrollPresetActive]="categoryName.value === category.name"
+															[class.active]="categoryName.value === category.name"
+															[title]="category.name"
+															[attr.aria-label]="category.name"
+															(click)="onSelectCategory(category)"
+														>
+															{{ category.name }}
+														</button>
+													</li>
+												} @empty {
+													<li class="flex w-full snap-start scroll-my-2">
+														<button
+															class="rounded-btn block w-full truncate pointer-events-none text-base-content/50"
+															type="button"
+															title="Categories not found"
+															aria-label="Categories not found"
+														>
+															Categories not found
+														</button>
+													</li>
+												}
+											</ul>
+										</div>
+									</div>
+								</fieldset>
+							}
+						}
 					}
 					<div
 						class="flex p-0 relative"
@@ -229,35 +333,50 @@
 							appSvgIcon
 							slot="target"
 							[disabled]="postForm.disabled"
-							[appSvgIconIcon]="'three-dots-vertical'"
+							[appSvgIconIcon]="'gear'"
 							[appSvgIconSquare]="'1.5em'"
 						></button>
 						<ul class="menu menu-vertical menu-md" slot="content">
-							<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Category</li>
+							<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Type</li>
 							<li class="flex w-full snap-start scroll-my-2">
 								<button
 									class="rounded-btn block w-full truncate text-right"
 									type="button"
-									title="Create new category"
-									aria-label="Create new category"
-									(click)="onToggleCategoryCreateDialog()"
+									title="Private post"
+									aria-label="Private post"
+									[class.active]="postType === 'category'"
+									(click)="onChangePostType('category')"
 								>
-									Create
+									Category
 								</button>
 							</li>
-							@if (category) {
-								<li class="flex w-full snap-start scroll-my-2">
-									<button
-										class="rounded-btn block w-full truncate text-right"
-										type="button"
-										title="Update category"
-										aria-label="Update category"
-										(click)="onToggleCategoryUpdateDialog()"
-									>
-										Update
-									</button>
-								</li>
-							}
+							<li class="flex w-full snap-start scroll-my-2 menu-title">
+								<hr class="my-0 border-base-content/20" />
+							</li>
+							<li class="flex w-full snap-start scroll-my-2">
+								<button
+									class="rounded-btn block w-full truncate text-right"
+									type="button"
+									title="Hidden post available with password"
+									aria-label="Hidden post available with password"
+									[class.active]="postType === 'password'"
+									(click)="onChangePostType('password')"
+								>
+									Password
+								</button>
+							</li>
+							<li class="flex w-full snap-start scroll-my-2">
+								<button
+									class="rounded-btn block w-full truncate text-right"
+									type="button"
+									title="Make private post"
+									aria-label="Make private post"
+									[class.active]="postType === 'private'"
+									(click)="onChangePostType('private')"
+								>
+									Private
+								</button>
+							</li>
 						</ul>
 					</div>
 				</div>
@@ -546,7 +665,5 @@
 			</div>
 		</div>
 	</div>
-	@defer (on timer(1s)) {
-		<div appShortcuts></div>
-	}
+	<div appShortcuts></div>
 </ng-container>
