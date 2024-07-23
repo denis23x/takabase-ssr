@@ -18,7 +18,7 @@
 		</a>
 		<div class="flex flex-col items-center text-center gap-2">
 			<a
-				class="link text-base-content w-full truncate text-xl font-bold"
+				class="link text-base-content w-full truncate text-base font-bold"
 				appSkeleton
 				[appSkeletonToggle]="userSkeletonToggle"
 				[routerLink]="['/', user.name]"
@@ -31,9 +31,9 @@
 				class="text-sm text-base-content/50"
 				appSkeleton
 				[appSkeletonToggle]="userSkeletonToggle"
-				[attr.datetime]="user.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
+				[attr.datetime]="user.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 			>
-				{{ user.updatedAt | dayjs: "fromX" }}
+				{{ user.createdAt | dayjs: "fromX" }}
 			</time>
 		</div>
 	</div>

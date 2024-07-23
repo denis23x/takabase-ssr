@@ -12,7 +12,7 @@ import { DropdownComponent } from '../dropdown/dropdown.component';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { AuthenticatedComponent } from '../authenticated/authenticated.component';
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { HelperService } from '../../../core/services/helper.service';
 import type { CurrentUser } from '../../../core/models/current-user.model';
 
@@ -20,6 +20,7 @@ import type { CurrentUser } from '../../../core/models/current-user.model';
 	standalone: true,
 	selector: 'app-header, [appHeader]',
 	imports: [
+		CommonModule,
 		RouterModule,
 		SvgIconComponent,
 		AvatarComponent,

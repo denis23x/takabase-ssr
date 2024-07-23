@@ -145,9 +145,9 @@
 						class="block text-sm text-base-content/50"
 						appSkeleton
 						[appSkeletonToggle]="postSkeletonToggle"
-						[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
+						[attr.datetime]="post.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
 					>
-						Published {{ post.createdAt | dayjs: "fromX" }}
+						Updated {{ post.updatedAt | dayjs: "fromX" }}
 					</time>
 					@if (post.markdown) {
 						<span class="block text-sm text-base-content" appSkeleton [appSkeletonToggle]="postSkeletonToggle">

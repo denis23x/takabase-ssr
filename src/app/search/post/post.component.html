@@ -12,7 +12,7 @@
 						[appCardPostPost]="post"
 						[appCardPostSkeletonToggle]="postListSkeletonToggle"
 					></li>
-					@if (i === 10 || i === 20 || i === 30) {
+					@if (i !== 0 && i % 8 === 0) {
 						<li class="block row-span-6" appAd></li>
 					}
 				}

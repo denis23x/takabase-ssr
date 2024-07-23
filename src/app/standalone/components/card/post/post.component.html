@@ -28,7 +28,7 @@
 		}
 		<div class="flex h-full w-full flex-col items-start gap-2 p-4">
 			<a
-				class="link text-base-content font-bold text-ellipsis max-w-full line-clamp-1 lg:line-clamp-2"
+				class="link text-base-content text-base font-bold text-ellipsis max-w-full line-clamp-1 lg:line-clamp-2"
 				appSkeleton
 				[appSkeletonToggle]="postSkeletonToggle"
 				[routerLink]="['/', 'post', post.id]"
@@ -48,10 +48,10 @@
 			<time
 				class="!mt-auto text-sm text-base-content/50"
 				appSkeleton
-				[attr.datetime]="post.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
+				[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 				[appSkeletonToggle]="postSkeletonToggle"
 			>
-				{{ post.updatedAt | dayjs: "fromX" }}
+				{{ post.createdAt | dayjs: "fromX" }}
 			</time>
 		</div>
 	</article>

@@ -32,9 +32,9 @@
 						</h1>
 						<time
 							class="truncate text-sm leading-4 text-base-content/50 max-w-full"
-							[attr.datetime]="currentUser.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
+							[attr.datetime]="currentUser.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 						>
-							Last updated {{ currentUser.updatedAt | dayjs: "fromX" }}
+							Registered {{ currentUser.createdAt | dayjs: "fromX" }}
 						</time>
 					</div>
 				</div>

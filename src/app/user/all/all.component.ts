@@ -19,6 +19,7 @@ import { AlgoliaService } from '../../core/services/algolia.service';
 import { HelperService } from '../../core/services/helper.service';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
+import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import type { SearchIndex } from 'algoliasearch/lite';
@@ -46,7 +47,7 @@ const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchRes
 	selector: 'app-user-all',
 	templateUrl: './all.component.html'
 })
-export class UserAllComponent implements OnInit, OnDestroy {
+export class UserAllComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly transferState: TransferState = inject(TransferState);
@@ -71,6 +72,8 @@ export class UserAllComponent implements OnInit, OnDestroy {
 	postListSearchResponse: Omit<SearchResponse<Post>, 'hits'> | undefined;
 
 	ngOnInit(): void {
+		super.ngOnInit();
+
 		this.activatedRouteParamsUsername$?.unsubscribe();
 		this.activatedRouteParamsUsername$ = this.activatedRoute.params
 			.pipe(distinctUntilKeyChanged('username'))
@@ -94,6 +97,8 @@ export class UserAllComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+		super.ngOnDestroy();
+
 		// prettier-ignore
 		[this.activatedRouteParamsUsername$, this.activatedRouteQueryParams$, this.postListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}

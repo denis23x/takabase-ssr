@@ -4,25 +4,41 @@
 	<div
 		class="rounded-box flex h-full w-full flex-col items-start overflow-hidden gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 	>
-		<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
+		<div class="flex items-center justify-start gap-4 overflow-hidden w-full">
 			<a
-				class="link text-xl truncate font-bold leading-6 text-base-content max-w-full"
+				class="avatar"
 				appSkeleton
 				[appSkeletonToggle]="categorySkeletonToggle"
-				[routerLink]="['/', category.user.name, 'category', category.id]"
-				[title]="category.name"
-				[attr.aria-label]="category.name"
+				[routerLink]="['/', category.user.name]"
+				[title]="category.user.name"
+				[attr.aria-label]="category.user.name"
 			>
-				{{ category.name }}
+				<figure
+					class="h-12 w-12 rounded-btn relative overflow-hidden"
+					appAvatar
+					[appAvatarUser]="category.user"
+				></figure>
 			</a>
-			<time
-				class="!mt-auto text-sm truncate leading text-base-content/50 max-w-full"
-				appSkeleton
-				[appSkeletonToggle]="categorySkeletonToggle"
-				[attr.datetime]="category.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
-			>
-				Updated {{ category.updatedAt | dayjs: "fromX" }}
-			</time>
+			<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
+				<a
+					class="link text-base truncate font-bold leading-6 text-base-content max-w-full"
+					appSkeleton
+					[appSkeletonToggle]="categorySkeletonToggle"
+					[routerLink]="['/', category.user.name, 'category', category.id]"
+					[title]="category.name"
+					[attr.aria-label]="category.name"
+				>
+					{{ category.name }}
+				</a>
+				<time
+					class="!mt-auto text-sm truncate leading text-base-content/50 max-w-full"
+					appSkeleton
+					[appSkeletonToggle]="categorySkeletonToggle"
+					[attr.datetime]="category.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
+				>
+					Updated {{ category.updatedAt | dayjs: "fromX" }}
+				</time>
+			</div>
 		</div>
 		@if (category.description) {
 			<p

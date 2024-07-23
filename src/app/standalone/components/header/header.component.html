@@ -15,8 +15,25 @@
 			</a>
 		</div>
 		<div class="navbar-end">
-			<nav class="block" appAuthenticated appSkeleton [appSkeletonToggle]="currentUserSkeletonToggle">
+			<nav
+				class="block"
+				appAuthenticated
+				appSkeleton
+				[ngClass]="{ 'h-12 w-12 overflow-hidden': currentUserSkeletonToggle }"
+				[appSkeletonToggle]="currentUserSkeletonToggle"
+			>
 				<div class="flex items-center justify-end gap-4" slot="public">
+					<a
+						class="btn-ghost btn-square btn fill-current text-base-content"
+						title="Search"
+						aria-label="Search"
+						appSvgIcon
+						[routerLink]="['/search']"
+						[routerLinkActive]="['btn-active']"
+						[appSvgIconIcon]="'search'"
+						[appSvgIconSquare]="'1.5em'"
+					>
+					</a>
 					<a
 						class="btn-ghost btn-square btn fill-current text-base-content"
 						title="Login"
