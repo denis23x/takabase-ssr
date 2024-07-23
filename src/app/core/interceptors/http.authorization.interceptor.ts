@@ -14,7 +14,10 @@ export const httpAuthorizationInterceptor: HttpInterceptorFn = (request: HttpReq
 	const isMethodMatch: boolean = ['POST', 'PUT', 'DELETE'].includes(request.method);
 	const isUrlMatch: boolean = request.url.startsWith(environment.apiUrl);
 
-	if (isMethodMatch && isUrlMatch) {
+	const isPostPrivate: boolean = request.url.includes('posts-private');
+	const isPostPassword: boolean = request.url.includes('posts-password');
+
+	if ((isMethodMatch && isUrlMatch) || (isPostPrivate || isPostPassword)) {
 		const firebaseUser: FirebaseUser = firebaseService.auth.currentUser;
 
 		if (firebaseUser) {

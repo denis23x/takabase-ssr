@@ -17,9 +17,9 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
-import type { Post } from '../../core/models/post.model';
-import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
-import type { SearchResponse } from '@algolia/client-search';
+import { PostPasswordService } from '../../core/services/post-password.service';
+import type { PostPassword } from '../../core/models/post-password.model';
+import type { PostPasswordGetAllDto } from '../../core/dto/post-password/post-password-get-all.dto';
 
 @Component({
 	standalone: true,
@@ -38,23 +38,22 @@ import type { SearchResponse } from '@algolia/client-search';
 		ListLoadMoreComponent,
 		ListMockComponent
 	],
+	providers: [PostPasswordService],
 	selector: 'app-user-password',
 	templateUrl: './password.component.html'
 })
 export class UserPasswordComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
+	private readonly postPasswordService: PostPasswordService = inject(PostPasswordService);
 
-	postList: Post[] = [];
-	postListSkeletonToggle: boolean = true;
-	postListIsLoading: boolean = false;
-	postListRequest$: Subscription | undefined;
-	postListGetAllDto: PostGetAllDto = {
+	postPasswordList: PostPassword[] = [];
+	postPasswordListSkeletonToggle: boolean = true;
+	postPasswordListIsLoading: boolean = false;
+	postPasswordListRequest$: Subscription | undefined;
+	postPasswordListGetAllDto: PostPasswordGetAllDto = {
 		page: 0,
 		size: 20
 	};
-
-	postListSearchFormToggle: boolean = false;
-	postListSearchResponse: Omit<SearchResponse<Post>, 'hits'> | undefined;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -69,12 +68,12 @@ export class UserPasswordComponent extends CU(class {}) implements OnInit, OnDes
 		super.ngOnDestroy();
 
 		// prettier-ignore
-		[this.currentUser$, this.currentUserSkeletonToggle$, this.postListRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$, this.currentUserSkeletonToggle$, this.postPasswordListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
-		this.postList = this.skeletonService.getPostList();
-		this.postListSkeletonToggle = true;
+		this.postPasswordList = this.skeletonService.getPostList();
+		this.postPasswordListSkeletonToggle = true;
 	}
 
 	setResolver(): void {
@@ -83,8 +82,20 @@ export class UserPasswordComponent extends CU(class {}) implements OnInit, OnDes
 
 	/** PostList */
 
-	getPostList(postListLoadMore: boolean = false): void {
-		this.postList = [];
-		this.postListSkeletonToggle = false;
+	getPostList(postPasswordListLoadMore: boolean = false): void {
+		const postPasswordGetAllDto: PostPasswordGetAllDto = {
+			page: 1,
+			size: 20
+		};
+
+		this.postPasswordService.getAll(postPasswordGetAllDto).subscribe({
+			next: (postPasswordList: PostPassword[]) => {
+				console.log(postPasswordList);
+
+				this.postPasswordList = postPasswordList;
+				this.postPasswordListSkeletonToggle = false;
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 }

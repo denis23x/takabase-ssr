@@ -2,4 +2,4 @@
 
 import type { PostUpdateDto } from '../post/post-update.dto';
 
-export interface PostPasswordUpdateDto extends Exclude<PostUpdateDto, 'categoryId'> {}
+export interface PostPasswordUpdateDto extends Omit<PostUpdateDto, 'categoryId'> {}

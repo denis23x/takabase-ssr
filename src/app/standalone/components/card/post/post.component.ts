@@ -7,6 +7,8 @@ import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { FireStoragePipe } from '../../../pipes/fire-storage.pipe';
 import type { Post } from '../../../../core/models/post.model';
+import type { PostPassword } from '../../../../core/models/post-password.model';
+import type { PostPrivate } from '../../../../core/models/post-private.model';
 
 @Component({
 	standalone: true,
@@ -17,7 +19,7 @@ import type { Post } from '../../../../core/models/post.model';
 })
 export class CardPostComponent {
 	@Input({ required: true })
-	set appCardPostPost(post: Post) {
+	set appCardPostPost(post: Post | PostPassword | PostPrivate) {
 		this.post = post;
 	}
 

@@ -17,9 +17,9 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
-import type { Post } from '../../core/models/post.model';
-import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
-import type { SearchResponse } from '@algolia/client-search';
+import { PostPrivateService } from '../../core/services/post-private.service';
+import type { PostPrivate } from '../../core/models/post-private.model';
+import type { PostPrivateGetAllDto } from '../../core/dto/post-private/post-private-get-all.dto';
 
 @Component({
 	standalone: true,
@@ -38,23 +38,22 @@ import type { SearchResponse } from '@algolia/client-search';
 		ListLoadMoreComponent,
 		ListMockComponent
 	],
+	providers: [PostPrivateService],
 	selector: 'app-user-private',
 	templateUrl: './private.component.html'
 })
 export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
+	private readonly postPrivateService: PostPrivateService = inject(PostPrivateService);
 
-	postList: Post[] = [];
-	postListSkeletonToggle: boolean = true;
-	postListIsLoading: boolean = false;
-	postListRequest$: Subscription | undefined;
-	postListGetAllDto: PostGetAllDto = {
+	postPrivateList: PostPrivate[] = [];
+	postPrivateListSkeletonToggle: boolean = true;
+	postPrivateListIsLoading: boolean = false;
+	postPrivateListRequest$: Subscription | undefined;
+	postPrivateListGetAllDto: PostPrivateGetAllDto = {
 		page: 0,
 		size: 20
 	};
-
-	postListSearchFormToggle: boolean = false;
-	postListSearchResponse: Omit<SearchResponse<Post>, 'hits'> | undefined;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -69,12 +68,12 @@ export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDest
 		super.ngOnDestroy();
 
 		// prettier-ignore
-		[this.currentUser$, this.currentUserSkeletonToggle$, this.postListRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$, this.currentUserSkeletonToggle$, this.postPrivateListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
-		this.postList = this.skeletonService.getPostList();
-		this.postListSkeletonToggle = true;
+		this.postPrivateList = this.skeletonService.getPostList();
+		this.postPrivateListSkeletonToggle = true;
 	}
 
 	setResolver(): void {
@@ -83,8 +82,18 @@ export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDest
 
 	/** PostList */
 
-	getPostList(postListLoadMore: boolean = false): void {
-		this.postList = [];
-		this.postListSkeletonToggle = false;
+	getPostList(postPrivateListLoadMore: boolean = false): void {
+		const postPrivateGetAllDto: PostPrivateGetAllDto = {
+			page: 1,
+			size: 20
+		};
+
+		this.postPrivateService.getAll(postPrivateGetAllDto).subscribe({
+			next: (postPrivateList: PostPrivate[]) => {
+				this.postPrivateList = postPrivateList;
+				this.postPrivateListSkeletonToggle = false;
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 }

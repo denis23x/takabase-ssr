@@ -10,8 +10,8 @@
 				appSkeleton
 				[title]="'Private'"
 				[attr.aria-label]="'Private'"
-				[disabled]="postListSkeletonToggle"
-				[appSkeletonToggle]="postListSkeletonToggle"
+				[disabled]="postPrivateListSkeletonToggle"
+				[appSkeletonToggle]="postPrivateListSkeletonToggle"
 				[appSkeletonClassListElementRef]="['border-0']"
 				[appSvgIconIcon]="'incognito'"
 				[appSvgIconSquare]="'1.5em'"
@@ -21,14 +21,14 @@
 					<h2
 						class="block truncate text-xl leading-6 font-bold text-base-content max-w-full"
 						appSkeleton
-						[appSkeletonToggle]="postListSkeletonToggle"
+						[appSkeletonToggle]="postPrivateListSkeletonToggle"
 					>
 						Private posts
 					</h2>
 					<span
 						class="text-sm text-base-content/50 leading-4 truncate max-w-full"
 						appSkeleton
-						[appSkeletonToggle]="postListSkeletonToggle"
+						[appSkeletonToggle]="postPrivateListSkeletonToggle"
 					>
 						Available only for you
 					</span>
@@ -36,26 +36,28 @@
 			</div>
 		</div>
 		<div class="grid gap-4">
-			@if (postList.length) {
+			@if (postPrivateList.length) {
 				<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4">
-					@for (post of postList; track post.id) {
+					@for (post of postPrivateList; track post.id) {
 						<li
 							class="block"
 							appCardPost
 							[ngClass]="post.image ? 'row-span-6' : 'row-span-3'"
 							[appCardPostPost]="post"
-							[appCardPostSkeletonToggle]="postListSkeletonToggle"
+							[appCardPostSkeletonToggle]="postPrivateListSkeletonToggle"
 						></li>
 					}
 				</ul>
-				@if (!postListSkeletonToggle) {
-					<div
+				@if (!postPrivateListSkeletonToggle) {
+					<!--
+          <div
 						class="block empty:hidden"
 						appListLoadMore
 						[appListLoadMoreIsLoading]="postListIsLoading"
 						[appListLoadMoreSearchResponse]="postListSearchResponse"
 						(appLoadMoreToggle)="getPostList(true)"
 					></div>
+					-->
 				}
 			} @else {
 				<div class="block" appListMock [appListMockTemplate]="'user-private-not-found'"></div>
