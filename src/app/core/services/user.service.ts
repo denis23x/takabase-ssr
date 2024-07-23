@@ -24,15 +24,15 @@ export class UserService {
 		return this.apiService.get('/v1/users', userGetAllDto);
 	}
 
-	getOne(id: number, userGetOneDto?: UserGetOneDto): Observable<User> {
-		return this.apiService.get('/v1/users/' + id, userGetOneDto);
+	getOne(userId: number, userGetOneDto?: UserGetOneDto): Observable<User> {
+		return this.apiService.get('/v1/users/' + userId, userGetOneDto);
 	}
 
-	update(id: number, userUpdateDto: UserUpdateDto): Observable<User> {
-		return this.apiService.put('/v1/users/' + id, userUpdateDto);
+	update(userId: number, userUpdateDto: UserUpdateDto): Observable<User> {
+		return this.apiService.put('/v1/users/' + userId, userUpdateDto);
 	}
 
-	delete(id: number, userDeleteDto: UserDeleteDto): Observable<User> {
-		return this.apiService.delete('/v1/users/' + id, userDeleteDto);
+	delete(userId: number, userDeleteDto: UserDeleteDto): Observable<User> {
+		return this.apiService.delete('/v1/users/' + userId, userDeleteDto);
 	}
 }

@@ -16,23 +16,23 @@ export class PostPrivateService {
 
 	/** REST */
 
-	create(postCreateDto: PostPrivateCreateDto): Observable<PostPrivate> {
-		return this.apiService.post('/v1/posts-private', postCreateDto);
+	create(postPrivateCreateDto: PostPrivateCreateDto): Observable<PostPrivate> {
+		return this.apiService.post('/v1/posts-private', postPrivateCreateDto);
 	}
 
-	getAll(postGetAllDto: PostPrivateGetAllDto): Observable<PostPrivate[]> {
-		return this.apiService.get('/v1/posts-private', postGetAllDto);
+	getAll(postPrivateGetAllDto: PostPrivateGetAllDto): Observable<PostPrivate[]> {
+		return this.apiService.get('/v1/posts-private', postPrivateGetAllDto);
 	}
 
-	getOne(id: number, postGetOneDto: PostPrivateGetOneDto): Observable<PostPrivate> {
-		return this.apiService.get('/v1/posts-private/' + id, postGetOneDto);
+	getOne(postPrivateId: number, postPrivateGetOneDto: PostPrivateGetOneDto): Observable<PostPrivate> {
+		return this.apiService.get('/v1/posts-private/' + postPrivateId, postPrivateGetOneDto);
 	}
 
-	update(id: number, postUpdateDto: PostPrivateUpdateDto): Observable<PostPrivate> {
-		return this.apiService.put('/v1/posts-private/' + id, postUpdateDto);
+	update(postPrivateId: number, postPrivateUpdateDto: PostPrivateUpdateDto): Observable<PostPrivate> {
+		return this.apiService.put('/v1/posts-private/' + postPrivateId, postPrivateUpdateDto);
 	}
 
-	delete(id: number, postDeleteDto: PostPrivateDeleteDto): Observable<Partial<PostPrivate>> {
-		return this.apiService.delete('/v1/posts-private/' + id, postDeleteDto);
+	delete(postPrivateId: number, postPrivateDeleteDto: PostPrivateDeleteDto): Observable<Partial<PostPrivate>> {
+		return this.apiService.delete('/v1/posts-private/' + postPrivateId, postPrivateDeleteDto);
 	}
 }

@@ -24,15 +24,15 @@ export class CategoryService {
 		return this.apiService.get('/v1/categories', categoryGetAllDto);
 	}
 
-	getOne(id: number, categoryGetOneDto?: CategoryGetOneDto): Observable<Category> {
-		return this.apiService.get('/v1/categories/' + id, categoryGetOneDto);
+	getOne(categoryId: number, categoryGetOneDto?: CategoryGetOneDto): Observable<Category> {
+		return this.apiService.get('/v1/categories/' + categoryId, categoryGetOneDto);
 	}
 
-	update(id: number, categoryUpdateDto: CategoryUpdateDto): Observable<Category> {
-		return this.apiService.put('/v1/categories/' + id, categoryUpdateDto);
+	update(categoryId: number, categoryUpdateDto: CategoryUpdateDto): Observable<Category> {
+		return this.apiService.put('/v1/categories/' + categoryId, categoryUpdateDto);
 	}
 
-	delete(id: number, categoryDeleteDto: CategoryDeleteDto): Observable<Category> {
-		return this.apiService.delete('/v1/categories/' + id, categoryDeleteDto);
+	delete(categoryId: number, categoryDeleteDto: CategoryDeleteDto): Observable<Category> {
+		return this.apiService.delete('/v1/categories/' + categoryId, categoryDeleteDto);
 	}
 }

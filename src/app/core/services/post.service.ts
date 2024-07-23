@@ -24,15 +24,15 @@ export class PostService {
 		return this.apiService.get('/v1/posts', postGetAllDto);
 	}
 
-	getOne(id: number, postGetOneDto: PostGetOneDto): Observable<Post> {
-		return this.apiService.get('/v1/posts/' + id, postGetOneDto);
+	getOne(postId: number, postGetOneDto: PostGetOneDto): Observable<Post> {
+		return this.apiService.get('/v1/posts/' + postId, postGetOneDto);
 	}
 
-	update(id: number, postUpdateDto: PostUpdateDto): Observable<Post> {
-		return this.apiService.put('/v1/posts/' + id, postUpdateDto);
+	update(postId: number, postUpdateDto: PostUpdateDto): Observable<Post> {
+		return this.apiService.put('/v1/posts/' + postId, postUpdateDto);
 	}
 
-	delete(id: number, postDeleteDto: PostDeleteDto): Observable<Partial<Post>> {
-		return this.apiService.delete('/v1/posts/' + id, postDeleteDto);
+	delete(postId: number, postDeleteDto: PostDeleteDto): Observable<Partial<Post>> {
+		return this.apiService.delete('/v1/posts/' + postId, postDeleteDto);
 	}
 }

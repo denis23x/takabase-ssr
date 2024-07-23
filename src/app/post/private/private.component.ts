@@ -5,35 +5,35 @@ import { ShareComponent } from '../../standalone/components/share/share.componen
 import { PostProseComponent } from '../../standalone/components/post/prose/prose.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, switchMap, tap } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
 import { from, Subscription, throwError } from 'rxjs';
-import { PostService } from '../../core/services/post.service';
+import { PostPrivateService } from '../../core/services/post-private.service';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { ApiService } from '../../core/services/api.service';
 import { PostStore } from '../post.store';
-import type { Post } from '../../core/models/post.model';
-import type { PostGetOneDto } from '../../core/dto/post/post-get-one.dto';
+import type { PostPrivate } from '../../core/models/post-private.model';
+import type { PostPrivateGetOneDto } from '../../core/dto/post-private/post-private-get-one.dto';
+import type { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
 	standalone: true,
 	imports: [PostProseComponent, ShareComponent],
-	providers: [PostService],
+	providers: [PostPrivateService],
 	selector: 'app-post-private',
 	templateUrl: './private.component.html'
 })
 export class PostPrivateComponent implements OnInit {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	private readonly postService: PostService = inject(PostService);
+	private readonly postPrivateService: PostPrivateService = inject(PostPrivateService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly router: Router = inject(Router);
 	private readonly postStore: PostStore = inject(PostStore);
 
-	post: Post | undefined;
-	postRequest$: Subscription | undefined;
-	postSkeletonToggle: boolean = true;
+	postPrivate: PostPrivate | undefined;
+	postPrivateRequest$: Subscription | undefined;
+	postPrivateSkeletonToggle: boolean = true;
 
 	ngOnInit(): void {
 		/** Apply Data */
@@ -43,22 +43,22 @@ export class PostPrivateComponent implements OnInit {
 	}
 
 	ngOnDestroy(): void {
-		[this.postRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.postPrivateRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
-		this.post = this.skeletonService.getPost(['category', 'user']);
-		this.postSkeletonToggle = true;
+		this.postPrivate = this.skeletonService.getPost(['user']);
+		this.postPrivateSkeletonToggle = true;
 	}
 
 	setResolver(): void {
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-		const postGetOneDto: PostGetOneDto = {
-			scope: ['user', 'category']
+		const postPrivateId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+		const postPrivateGetOneDto: PostPrivateGetOneDto = {
+			scope: ['user']
 		};
 
-		this.postRequest$ = this.postService
-			.getOne(postId, postGetOneDto)
+		this.postPrivateRequest$ = this.postPrivateService
+			.getOne(postPrivateId, postPrivateGetOneDto)
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					/** Set Transfer State */
@@ -73,12 +73,12 @@ export class PostPrivateComponent implements OnInit {
 						switchMap(() => throwError(() => httpErrorResponse))
 					);
 				}),
-				tap((post: Post) => this.postStore.setPost(post))
+				tap((postPrivate: PostPrivate) => this.postStore.setPost(postPrivate))
 			)
 			.subscribe({
-				next: (post: Post) => {
-					this.post = post;
-					this.postSkeletonToggle = false;
+				next: (postPrivate: PostPrivate) => {
+					this.postPrivate = postPrivate;
+					this.postPrivateSkeletonToggle = false;
 				},
 				error: (error: any) => console.error(error)
 			});

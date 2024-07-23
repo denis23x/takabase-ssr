@@ -5,11 +5,16 @@
 		<main
 			class="w-full h-full"
 			appPostProse
-			[appPostProsePost]="post"
-			[appPostProsePostSkeletonToggle]="postSkeletonToggle"
+			[appPostProsePost]="postPrivate"
+			[appPostProsePostSkeletonToggle]="postPrivateSkeletonToggle"
 		></main>
 		<footer class="flex overflow-auto">
-			<div class="block" appShare [appSharePost]="post" [appSharePostSkeletonToggle]="postSkeletonToggle"></div>
+			<div
+				class="block"
+				appShare
+				[appSharePost]="postPrivate"
+				[appSharePostSkeletonToggle]="postPrivateSkeletonToggle"
+			></div>
 		</footer>
 	</section>
 </ng-container>

@@ -5,35 +5,35 @@ import { ShareComponent } from '../../standalone/components/share/share.componen
 import { PostProseComponent } from '../../standalone/components/post/prose/prose.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, switchMap, tap } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
 import { from, Subscription, throwError } from 'rxjs';
-import { PostService } from '../../core/services/post.service';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { ApiService } from '../../core/services/api.service';
 import { PostStore } from '../post.store';
-import type { Post } from '../../core/models/post.model';
-import type { PostGetOneDto } from '../../core/dto/post/post-get-one.dto';
+import { PostPasswordService } from '../../core/services/post-password.service';
+import type { PostPassword } from '../../core/models/post-password.model';
+import type { PostPasswordGetOneDto } from '../../core/dto/post-password/post-password-get-one.dto';
+import type { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
 	standalone: true,
 	imports: [PostProseComponent, ShareComponent],
-	providers: [PostService],
+	providers: [PostPasswordService],
 	selector: 'app-post-password',
 	templateUrl: './password.component.html'
 })
 export class PostPasswordComponent implements OnInit {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	private readonly postService: PostService = inject(PostService);
+	private readonly postPasswordService: PostPasswordService = inject(PostPasswordService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly router: Router = inject(Router);
 	private readonly postStore: PostStore = inject(PostStore);
 
-	post: Post | undefined;
-	postRequest$: Subscription | undefined;
-	postSkeletonToggle: boolean = true;
+	postPassword: PostPassword | undefined;
+	postPasswordRequest$: Subscription | undefined;
+	postPasswordSkeletonToggle: boolean = true;
 
 	ngOnInit(): void {
 		/** Apply Data */
@@ -43,22 +43,22 @@ export class PostPasswordComponent implements OnInit {
 	}
 
 	ngOnDestroy(): void {
-		[this.postRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.postPasswordRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
-		this.post = this.skeletonService.getPost(['category', 'user']);
-		this.postSkeletonToggle = true;
+		this.postPassword = this.skeletonService.getPost(['user']);
+		this.postPasswordSkeletonToggle = true;
 	}
 
 	setResolver(): void {
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-		const postGetOneDto: PostGetOneDto = {
-			scope: ['user', 'category']
+		const postPasswordId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+		const postPasswordGetOneDto: PostPasswordGetOneDto = {
+			scope: ['user']
 		};
 
-		this.postRequest$ = this.postService
-			.getOne(postId, postGetOneDto)
+		this.postPasswordRequest$ = this.postPasswordService
+			.getOne(postPasswordId, postPasswordGetOneDto)
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					/** Set Transfer State */
@@ -73,12 +73,12 @@ export class PostPasswordComponent implements OnInit {
 						switchMap(() => throwError(() => httpErrorResponse))
 					);
 				}),
-				tap((post: Post) => this.postStore.setPost(post))
+				tap((postPassword: PostPassword) => this.postStore.setPost(postPassword))
 			)
 			.subscribe({
-				next: (post: Post) => {
-					this.post = post;
-					this.postSkeletonToggle = false;
+				next: (postPassword: PostPassword) => {
+					this.postPassword = postPassword;
+					this.postPasswordSkeletonToggle = false;
 				},
 				error: (error: any) => console.error(error)
 			});
