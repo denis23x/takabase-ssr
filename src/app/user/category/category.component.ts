@@ -336,9 +336,6 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 				next: (category: Category) => this.onCreateCategory(category),
 				error: (error: any) => console.error(error)
 			});
-
-			// Self-call
-			await this.onToggleCategoryCreateDialog();
 		}
 
 		this.appCategoryCreateComponent.changeDetectorRef.detectChanges();
@@ -358,9 +355,6 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 				next: (category: Category) => this.onUpdateCategory(category),
 				error: (error: any) => console.error(error)
 			});
-
-			// Self-call
-			await this.onToggleCategoryUpdateDialog();
 		}
 
 		this.appCategoryUpdateComponent.changeDetectorRef.detectChanges();
@@ -381,9 +375,6 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 				next: (categoryDeleteDto: CategoryDeleteDto) => this.onDeleteCategory(categoryDeleteDto),
 				error: (error: any) => console.error(error)
 			});
-
-			// Self-call
-			await this.onToggleCategoryDeleteDialog();
 		}
 
 		this.appCategoryDeleteComponent.changeDetectorRef.detectChanges();

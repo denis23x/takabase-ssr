@@ -1,16 +1,6 @@
 /** @format */
 
-import {
-	ChangeDetectionStrategy,
-	Component,
-	ElementRef,
-	EventEmitter,
-	inject,
-	OnDestroy,
-	OnInit,
-	Output,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
@@ -59,8 +49,7 @@ interface UserDeleteForm {
 	],
 	providers: [PasswordService, UserService],
 	selector: 'app-user-delete, [appUserDelete]',
-	templateUrl: './delete.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './delete.component.html'
 })
 export class UserDeleteComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
@@ -136,8 +125,6 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 					Validators.maxLength(48),
 					Validators.pattern(this.helperService.getRegex('password'))
 				]));
-
-				abstractControlName.updateValueAndValidity();
 			}
 		} else {
 			this.userDeleteForm.reset();

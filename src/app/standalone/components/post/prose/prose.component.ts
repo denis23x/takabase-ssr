@@ -116,9 +116,6 @@ export class PostProseComponent implements OnInit, OnDestroy {
 
 				this.appReportComponent = this.viewContainerRef.createComponent(reportComponent);
 				this.appReportComponent.setInput('appReportPost', this.post);
-
-				// Self-call
-				await this.onToggleReportDialog();
 			}
 
 			this.appReportComponent.changeDetectorRef.detectChanges();
@@ -137,9 +134,6 @@ export class PostProseComponent implements OnInit, OnDestroy {
 			this.appQRCodeComponent = this.viewContainerRef.createComponent(qrCodeComponent);
 			this.appQRCodeComponent.setInput('appQRCodeData', this.postShareUrl);
 			this.appQRCodeComponent.setInput('appQRCodeOrigin', false);
-
-			// Self-call
-			await this.onToggleQRCodeDialog();
 		}
 
 		this.appQRCodeComponent.changeDetectorRef.detectChanges();
@@ -154,9 +148,6 @@ export class PostProseComponent implements OnInit, OnDestroy {
 
 			this.appPostDeleteComponent = this.viewContainerRef.createComponent(postDeleteComponent);
 			this.appPostDeleteComponent.setInput('appPostDeletePost', this.post);
-
-			// Self-call
-			await this.onTogglePostDeleteDialog();
 		}
 
 		this.appPostDeleteComponent.changeDetectorRef.detectChanges();

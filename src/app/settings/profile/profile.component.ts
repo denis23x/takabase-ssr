@@ -262,9 +262,6 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 				next: (file: File) => this.onSubmitCropperAvatar(file),
 				error: (error: any) => console.error(error)
 			});
-
-			// Self-call
-			await this.onToggleCropperDialog();
 		}
 
 		this.appCropperComponent.changeDetectorRef.detectChanges();

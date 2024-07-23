@@ -478,9 +478,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			});
 
 			this.appUserPasswordResetComponent = this.viewContainerRef.createComponent(userPasswordResetComponent);
-
-			// Self-call
-			await this.onToggleUserPasswordResetDialog();
 		}
 
 		this.appUserPasswordResetComponent.changeDetectorRef.detectChanges();
@@ -495,9 +492,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			});
 
 			this.appUserDeleteComponent = this.viewContainerRef.createComponent(userDeleteComponent);
-
-			// Self-call
-			await this.onToggleUserDeleteDialog();
 		}
 
 		this.appUserDeleteComponent.changeDetectorRef.detectChanges();

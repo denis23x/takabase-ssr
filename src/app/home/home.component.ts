@@ -70,9 +70,6 @@ export class HomeComponent implements OnInit {
 			});
 
 			this.appPWAComponent = this.viewContainerRef.createComponent(pwaComponent);
-
-			// Self-call
-			await this.onTogglePWADialog();
 		}
 
 		this.appPWAComponent.changeDetectorRef.detectChanges();

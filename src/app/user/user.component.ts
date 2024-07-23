@@ -282,9 +282,6 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 
 				this.appReportComponent = this.viewContainerRef.createComponent(reportComponent);
 				this.appReportComponent.setInput('appReportUser', this.user);
-
-				// Self-call
-				await this.onToggleReportDialog();
 			}
 
 			this.appReportComponent.changeDetectorRef.detectChanges();
@@ -304,9 +301,6 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 			this.appQRCodeComponent = this.viewContainerRef.createComponent(qrCodeComponent);
 			this.appQRCodeComponent.setInput('appQRCodeData', this.user.name);
 			this.appQRCodeComponent.setInput('appQRCodeOrigin', true);
-
-			// Self-call
-			await this.onToggleQRCodeDialog();
 		}
 
 		this.appQRCodeComponent.changeDetectorRef.detectChanges();
