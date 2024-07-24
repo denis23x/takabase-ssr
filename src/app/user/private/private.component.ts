@@ -1,8 +1,9 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { distinctUntilKeyChanged, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -18,6 +19,8 @@ import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { PostPrivateService } from '../../core/services/post-private.service';
+import { HelperService } from '../../core/services/helper.service';
+import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
 import type { PostPrivate } from '../../core/models/post-private.model';
 import type { PostPrivateGetAllDto } from '../../core/dto/post-private/post-private-get-all.dto';
 
@@ -36,7 +39,8 @@ import type { PostPrivateGetAllDto } from '../../core/dto/post-private/post-priv
 		CopyToClipboardDirective,
 		CardPostComponent,
 		ListLoadMoreComponent,
-		ListMockComponent
+		ListMockComponent,
+		SearchFormComponent
 	],
 	providers: [PostPrivateService],
 	selector: 'app-user-private',
@@ -45,15 +49,23 @@ import type { PostPrivateGetAllDto } from '../../core/dto/post-private/post-priv
 export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postPrivateService: PostPrivateService = inject(PostPrivateService);
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly router: Router = inject(Router);
+	private readonly helperService: HelperService = inject(HelperService);
+
+	activatedRouteQueryParams$: Subscription | undefined;
 
 	postPrivateList: PostPrivate[] = [];
 	postPrivateListSkeletonToggle: boolean = true;
 	postPrivateListIsLoading: boolean = false;
 	postPrivateListRequest$: Subscription | undefined;
 	postPrivateListGetAllDto: PostPrivateGetAllDto = {
-		page: 0,
+		page: 1,
 		size: 20
 	};
+
+	postPrivateListSearchFormToggle: boolean = false;
+	postPrivateListSearchResponse: any;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -62,13 +74,22 @@ export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDest
 
 		this.setSkeleton();
 		this.setResolver();
+
+		/** Toggle SearchForm component */
+
+		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
+			this.onToggleSearchForm(true);
+		} else {
+			this.onToggleSearchForm(false);
+		}
 	}
 
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		// prettier-ignore
-		[this.currentUser$, this.currentUserSkeletonToggle$, this.postPrivateListRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		// Unsubscribe
+
+		[this.activatedRouteQueryParams$, this.postPrivateListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
@@ -77,21 +98,66 @@ export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDest
 	}
 
 	setResolver(): void {
-		this.getPostList();
+		this.activatedRouteQueryParams$?.unsubscribe();
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
+			.pipe(
+				distinctUntilKeyChanged('query'),
+				tap(() => this.setSkeleton())
+			)
+			.subscribe({
+				next: () => this.getPostPrivateList(),
+				error: (error: any) => console.error(error)
+			});
 	}
 
-	/** PostList */
+	/** Search */
 
-	getPostList(postPrivateListLoadMore: boolean = false): void {
+	onToggleSearchForm(toggle: boolean): void {
+		if (toggle) {
+			this.postPrivateListSearchFormToggle = true;
+		} else {
+			this.postPrivateListSearchFormToggle = false;
+
+			this.router
+				.navigate([], {
+					relativeTo: this.activatedRoute,
+					queryParams: null,
+					replaceUrl: true
+				})
+				.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
+		}
+	}
+
+	/** PostPrivateList */
+
+	getPostPrivateList(postPrivateListLoadMore: boolean = false): void {
+		this.postPrivateListIsLoading = true;
+
+		// prettier-ignore
+		const postPasswordPage: number = (this.postPrivateListGetAllDto.page = postPrivateListLoadMore ? this.postPrivateListGetAllDto.page + 1 : 1);
+		const postPrivateQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
 		const postPrivateGetAllDto: PostPrivateGetAllDto = {
-			page: 1,
-			size: 20
+			...this.postPrivateListGetAllDto,
+			page: postPasswordPage
 		};
 
-		this.postPrivateService.getAll(postPrivateGetAllDto).subscribe({
+		// Query
+
+		if (postPrivateQuery) {
+			postPrivateGetAllDto.query = postPrivateQuery;
+		}
+
+		this.postPrivateListRequest$?.unsubscribe();
+		this.postPrivateListRequest$ = this.postPrivateService.getAll(postPrivateGetAllDto).subscribe({
 			next: (postPrivateList: PostPrivate[]) => {
-				this.postPrivateList = postPrivateList;
+				// prettier-ignore
+				this.postPrivateList = postPrivateGetAllDto.page > 1 ? this.postPrivateList.concat(postPrivateList) : postPrivateList;
 				this.postPrivateListSkeletonToggle = false;
+				this.postPrivateListIsLoading = false;
+				this.postPrivateListSearchResponse = {
+					isOnePage: postPrivateGetAllDto.page === 1 && postPrivateGetAllDto.size !== postPrivateList.length,
+					isEndPage: postPrivateGetAllDto.page !== 1 && postPrivateGetAllDto.size !== postPrivateList.length
+				};
 			},
 			error: (error: any) => console.error(error)
 		});

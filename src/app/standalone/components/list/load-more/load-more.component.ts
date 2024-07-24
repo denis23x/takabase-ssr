@@ -24,6 +24,11 @@ import type { Category } from '../../../../core/models/category.model';
 import type { Post } from '../../../../core/models/post.model';
 import type { SearchResponse } from '@algolia/client-search';
 
+interface Pagination {
+	isOnePage?: boolean;
+	isEndPage?: boolean;
+}
+
 @Component({
 	standalone: true,
 	selector: 'app-list-load-more, [appListLoadMore]',
@@ -32,9 +37,9 @@ import type { SearchResponse } from '@algolia/client-search';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListLoadMoreComponent implements OnInit, OnDestroy {
+	private readonly document: Document = inject(DOCUMENT);
 	private readonly cookiesService: CookiesService = inject(CookiesService);
 	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly document: Document = inject(DOCUMENT);
 
 	@Output() appLoadMoreToggle: EventEmitter<void> = new EventEmitter<void>();
 
@@ -44,11 +49,11 @@ export class ListLoadMoreComponent implements OnInit, OnDestroy {
 	}
 
 	@Input({ required: true })
-	set appListLoadMoreSearchResponse(searchResponse: Omit<SearchResponse<Post | Category | User>, 'hits'> | undefined) {
+	set appListLoadMoreSearchResponse(searchResponse: Omit<SearchResponse<Post | Category | User>, 'hits'> & Pagination) {
+		// prettier-ignore
 		if (searchResponse) {
-			this.searchResponse = searchResponse;
-			this.searchResponseIsOnePage = searchResponse.nbPages === 1 || searchResponse.nbPages === 0;
-			this.searchResponseIsEndPage = searchResponse.nbPages === searchResponse.page + 1 || searchResponse.nbPages === 0;
+			this.searchResponseIsOnePage = searchResponse.isOnePage || (searchResponse.nbPages === 1 || searchResponse.nbPages === 0);
+			this.searchResponseIsEndPage = searchResponse.isEndPage || (searchResponse.nbPages === searchResponse.page + 1 || searchResponse.nbPages === 0);
 		}
 	}
 
@@ -57,7 +62,6 @@ export class ListLoadMoreComponent implements OnInit, OnDestroy {
 
 	isLoading: boolean = false;
 
-	searchResponse: Omit<SearchResponse<Post | Category | User>, 'hits'> | undefined;
 	searchResponseIsOnePage: boolean = false;
 	searchResponseIsEndPage: boolean = false;
 
@@ -89,8 +93,6 @@ export class ListLoadMoreComponent implements OnInit, OnDestroy {
 	}
 
 	onLoadMore(): void {
-		// Emit load more
-
 		this.appLoadMoreToggle.emit();
 	}
 }

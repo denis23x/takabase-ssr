@@ -1,8 +1,9 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { distinctUntilKeyChanged, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -17,7 +18,9 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
+import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
 import { PostPasswordService } from '../../core/services/post-password.service';
+import { HelperService } from '../../core/services/helper.service';
 import type { PostPassword } from '../../core/models/post-password.model';
 import type { PostPasswordGetAllDto } from '../../core/dto/post-password/post-password-get-all.dto';
 
@@ -36,7 +39,8 @@ import type { PostPasswordGetAllDto } from '../../core/dto/post-password/post-pa
 		CopyToClipboardDirective,
 		CardPostComponent,
 		ListLoadMoreComponent,
-		ListMockComponent
+		ListMockComponent,
+		SearchFormComponent
 	],
 	providers: [PostPasswordService],
 	selector: 'app-user-password',
@@ -45,6 +49,11 @@ import type { PostPasswordGetAllDto } from '../../core/dto/post-password/post-pa
 export class UserPasswordComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postPasswordService: PostPasswordService = inject(PostPasswordService);
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly router: Router = inject(Router);
+	private readonly helperService: HelperService = inject(HelperService);
+
+	activatedRouteQueryParams$: Subscription | undefined;
 
 	postPasswordList: PostPassword[] = [];
 	postPasswordListSkeletonToggle: boolean = true;
@@ -55,6 +64,9 @@ export class UserPasswordComponent extends CU(class {}) implements OnInit, OnDes
 		size: 20
 	};
 
+	postPasswordListSearchFormToggle: boolean = false;
+	postPasswordListSearchResponse: any;
+
 	ngOnInit(): void {
 		super.ngOnInit();
 
@@ -62,13 +74,22 @@ export class UserPasswordComponent extends CU(class {}) implements OnInit, OnDes
 
 		this.setSkeleton();
 		this.setResolver();
+
+		/** Toggle SearchForm component */
+
+		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
+			this.onToggleSearchForm(true);
+		} else {
+			this.onToggleSearchForm(false);
+		}
 	}
 
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		// prettier-ignore
-		[this.currentUser$, this.currentUserSkeletonToggle$, this.postPasswordListRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		// Unsubscribe
+
+		[this.activatedRouteQueryParams$, this.postPasswordListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
@@ -77,23 +98,66 @@ export class UserPasswordComponent extends CU(class {}) implements OnInit, OnDes
 	}
 
 	setResolver(): void {
-		this.getPostList();
+		this.activatedRouteQueryParams$?.unsubscribe();
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
+			.pipe(
+				distinctUntilKeyChanged('query'),
+				tap(() => this.setSkeleton())
+			)
+			.subscribe({
+				next: () => this.getPostPasswordList(),
+				error: (error: any) => console.error(error)
+			});
 	}
 
-	/** PostList */
+	/** Search */
 
-	getPostList(postPasswordListLoadMore: boolean = false): void {
+	onToggleSearchForm(toggle: boolean): void {
+		if (toggle) {
+			this.postPasswordListSearchFormToggle = true;
+		} else {
+			this.postPasswordListSearchFormToggle = false;
+
+			this.router
+				.navigate([], {
+					relativeTo: this.activatedRoute,
+					queryParams: null,
+					replaceUrl: true
+				})
+				.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
+		}
+	}
+
+	/** PostPasswordList */
+
+	getPostPasswordList(postPasswordListLoadMore: boolean = false): void {
+		this.postPasswordListIsLoading = true;
+
+		// prettier-ignore
+		const postPasswordPage: number = (this.postPasswordListGetAllDto.page = postPasswordListLoadMore ? this.postPasswordListGetAllDto.page + 1 : 1);
+		const postPasswordQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
 		const postPasswordGetAllDto: PostPasswordGetAllDto = {
-			page: 1,
-			size: 20
+			...this.postPasswordListGetAllDto,
+			page: postPasswordPage
 		};
 
-		this.postPasswordService.getAll(postPasswordGetAllDto).subscribe({
-			next: (postPasswordList: PostPassword[]) => {
-				console.log(postPasswordList);
+		// Query
 
-				this.postPasswordList = postPasswordList;
+		if (postPasswordQuery) {
+			postPasswordGetAllDto.query = postPasswordQuery;
+		}
+
+		this.postPasswordListRequest$?.unsubscribe();
+		this.postPasswordListRequest$ = this.postPasswordService.getAll(postPasswordGetAllDto).subscribe({
+			next: (postPasswordList: PostPassword[]) => {
+				// prettier-ignore
+				this.postPasswordList = postPasswordGetAllDto.page > 1 ? this.postPasswordList.concat(postPasswordList) : postPasswordList;
 				this.postPasswordListSkeletonToggle = false;
+				this.postPasswordListIsLoading = false;
+				this.postPasswordListSearchResponse = {
+					isOnePage: postPasswordGetAllDto.page === 1 && postPasswordGetAllDto.size !== postPasswordList.length,
+					isEndPage: postPasswordGetAllDto.page !== 1 && postPasswordGetAllDto.size !== postPasswordList.length
+				};
 			},
 			error: (error: any) => console.error(error)
 		});
