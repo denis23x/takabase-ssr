@@ -1,7 +1,7 @@
 /** @format */
 
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import type { MarkdownShortcut } from '../models/markdown.model';
 
 @Injectable({
@@ -13,4 +13,6 @@ export class BusService {
 
 	markdownItCropperImage: Subject<File> = new Subject<File>();
 	markdownItCropperToggle: Subject<boolean> = new Subject<boolean>();
+
+	pwaPrompt$: BehaviorSubject<Event | undefined> = new BehaviorSubject<Event | undefined>(undefined);
 }

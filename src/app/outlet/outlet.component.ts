@@ -13,14 +13,13 @@ import { PlatformService } from '../core/services/platform.service';
 import { CookiesComponent } from '../standalone/components/cookies/cookies.component';
 import { version } from '../../versions/version';
 import { environment } from '../../environments/environment';
-import { PWAService } from '../core/services/pwa.service';
 import { Location } from '@angular/common';
+import { BusService } from '../core/services/bus.service';
 import type { CurrentUser } from '../core/models/current-user.model';
 
 @Component({
 	standalone: true,
 	imports: [RouterModule, SnackbarComponent, HeaderComponent, ScrollToTopComponent, CookiesComponent],
-	providers: [PWAService],
 	selector: 'app-outlet',
 	templateUrl: './outlet.component.html'
 })
@@ -28,7 +27,7 @@ export class OutletComponent implements OnInit, OnDestroy {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly pwaService: PWAService = inject(PWAService);
+	private readonly busService: BusService = inject(BusService);
 	private readonly location: Location = inject(Location);
 
 	currentUser: CurrentUser | undefined;
@@ -61,7 +60,7 @@ export class OutletComponent implements OnInit, OnDestroy {
 			this.beforeInstallPrompt$ = fromEvent(window, 'beforeinstallprompt')
 				.pipe(tap((event: Event) => event.preventDefault()))
 				.subscribe({
-					next: (event: Event) => this.pwaService.pwaPrompt$.next(event),
+					next: (event: Event) => this.busService.pwaPrompt$.next(event),
 					error: (error: any) => console.error(error)
 				});
 

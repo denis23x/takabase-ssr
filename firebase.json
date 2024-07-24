@@ -61,7 +61,7 @@
         "region": "us-central1",
         "minInstances": 0,
         "maxInstances": 4,
-        "memory": "1GiB"
+        "memory": "512MiB"
       }
     }
   ]

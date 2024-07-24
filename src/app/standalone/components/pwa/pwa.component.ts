@@ -17,8 +17,8 @@ import { Subscription } from 'rxjs';
 import { PlatformService } from '../../../core/services/platform.service';
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 import { DeviceDirective } from '../../directives/app-device.directive';
-import { PWAService } from '../../../core/services/pwa.service';
 import { HelperService } from '../../../core/services/helper.service';
+import { BusService } from '../../../core/services/bus.service';
 
 @Component({
 	standalone: true,
@@ -30,7 +30,7 @@ import { HelperService } from '../../../core/services/helper.service';
 export class PWAComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly pwaService: PWAService = inject(PWAService);
+	private readonly busService: BusService = inject(BusService);
 
 	@ViewChild('pwaDialogElement') pwaDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
@@ -53,7 +53,7 @@ export class PWAComponent implements OnInit, OnDestroy {
 			/** Prompt */
 
 			this.pwaInstallPrompt$?.unsubscribe();
-			this.pwaInstallPrompt$ = this.pwaService.pwaPrompt$.subscribe({
+			this.pwaInstallPrompt$ = this.busService.pwaPrompt$.subscribe({
 				next: (event: Event) => (this.pwaInstallPrompt = event),
 				error: (error: any) => console.error(error)
 			});
