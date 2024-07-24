@@ -224,6 +224,7 @@ export const APP_ROUTES: Route[] = [
 					},
 					{
 						path: 'password/:postPasswordId',
+						canMatch: [redirectCurrentUserGuard()],
 						loadComponent: async () => {
 							return import('./post/password/password.component').then(m => m.PostPasswordComponent);
 						}
@@ -235,6 +236,7 @@ export const APP_ROUTES: Route[] = [
 					},
 					{
 						path: 'private/:postPrivateId',
+						canMatch: [redirectCurrentUserGuard()],
 						loadComponent: async () => {
 							return import('./post/private/private.component').then(m => m.PostPrivateComponent);
 						}

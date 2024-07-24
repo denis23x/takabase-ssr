@@ -7,8 +7,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { from, Subscription, throwError } from 'rxjs';
 import { SkeletonService } from '../../core/services/skeleton.service';
-import { PlatformService } from '../../core/services/platform.service';
-import { ApiService } from '../../core/services/api.service';
 import { PostStore } from '../post.store';
 import { PostPasswordService } from '../../core/services/post-password.service';
 import type { PostPassword } from '../../core/models/post-password.model';
@@ -26,8 +24,6 @@ export class PostPasswordComponent implements OnInit {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly postPasswordService: PostPasswordService = inject(PostPasswordService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
-	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly apiService: ApiService = inject(ApiService);
 	private readonly router: Router = inject(Router);
 	private readonly postStore: PostStore = inject(PostStore);
 
@@ -52,7 +48,7 @@ export class PostPasswordComponent implements OnInit {
 	}
 
 	setResolver(): void {
-		const postPasswordId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+		const postPasswordId: number = Number(this.activatedRoute.snapshot.paramMap.get('postPasswordId'));
 		const postPasswordGetOneDto: PostPasswordGetOneDto = {
 			scope: ['user']
 		};
@@ -61,14 +57,6 @@ export class PostPasswordComponent implements OnInit {
 			.getOne(postPasswordId, postPasswordGetOneDto)
 			.pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
-					/** Set Transfer State */
-
-					if (this.platformService.isServer()) {
-						this.apiService.setHttpErrorResponseKey(httpErrorResponse);
-					}
-
-					/** Redirect */
-
 					return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(
 						switchMap(() => throwError(() => httpErrorResponse))
 					);
