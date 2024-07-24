@@ -8,10 +8,9 @@ import { EmailService } from '../../../core/services/email.service';
 import { SvgIconComponent } from '../../../standalone/components/svg-icon/svg-icon.component';
 import { from, of, Subscription, switchMap } from 'rxjs';
 import { PlatformService } from '../../../core/services/platform.service';
-import { AuthorizationService } from '../../../core/services/authorization.service';
-import { filter } from 'rxjs/operators';
 import { SkeletonDirective } from '../../../standalone/directives/app-skeleton.directive';
 import { AuthenticatedComponent } from '../../../standalone/components/authenticated/authenticated.component';
+import { CurrentUserMixin as CU } from '../../../core/mixins/current-user.mixin';
 import type { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 import type { CurrentUser } from '../../../core/models/current-user.model';
 import type { EmailConfirmationUpdateDto } from '../../../core/dto/email/email-confirmation-update.dto';
@@ -23,38 +22,19 @@ import type { EmailConfirmationUpdateDto } from '../../../core/dto/email/email-c
 	selector: 'app-authorization-confirmation-email',
 	templateUrl: './email.component.html'
 })
-export class AuthConfirmationEmailComponent implements OnInit, OnDestroy {
+export class AuthConfirmationEmailComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly emailService: EmailService = inject(EmailService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
-
-	currentUser: CurrentUser | undefined;
-	currentUser$: Subscription | undefined;
-
-	currentUserSkeletonToggle: boolean = true;
-	currentUserSkeletonToggle$: Subscription | undefined;
 
 	confirmationRequest$: Subscription | undefined;
 	confirmationRequestToggle: boolean = true;
 	confirmationRequestIsSucceed: boolean = false;
 
 	ngOnInit(): void {
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
-			error: (error: any) => console.error(error)
-		});
-
-		this.currentUserSkeletonToggle$?.unsubscribe();
-		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
-			.pipe(filter((currentUserIsPopulated: boolean) => currentUserIsPopulated))
-			.subscribe({
-				next: () => (this.currentUserSkeletonToggle = false),
-				error: (error: any) => console.error(error)
-			});
+		super.ngOnInit();
 
 		/** Apply Data */
 
@@ -66,8 +46,11 @@ export class AuthConfirmationEmailComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.currentUser$, this.currentUserSkeletonToggle$, this.confirmationRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		super.ngOnDestroy();
+
+		// Unsubscribe
+
+		[this.confirmationRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setResolver(): void {

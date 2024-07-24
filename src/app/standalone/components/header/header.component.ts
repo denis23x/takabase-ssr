@@ -5,8 +5,6 @@ import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { AvatarComponent } from '../avatar/avatar.component';
-import { AuthorizationService } from '../../../core/services/authorization.service';
-import { filter } from 'rxjs/operators';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { SnackbarService } from '../../../core/services/snackbar.service';
@@ -14,7 +12,7 @@ import { AuthenticatedComponent } from '../authenticated/authenticated.component
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
 import { CommonModule, Location } from '@angular/common';
 import { HelperService } from '../../../core/services/helper.service';
-import type { CurrentUser } from '../../../core/models/current-user.model';
+import { CurrentUserMixin as CU } from '../../../core/mixins/current-user.mixin';
 
 @Component({
 	standalone: true,
@@ -31,39 +29,24 @@ import type { CurrentUser } from '../../../core/models/current-user.model';
 	],
 	templateUrl: './header.component.html'
 })
-export class HeaderComponent implements OnInit, OnDestroy {
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+export class HeaderComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly router: Router = inject(Router);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly location: Location = inject(Location);
 	private readonly helperService: HelperService = inject(HelperService);
 
-	currentUser: CurrentUser | undefined;
-	currentUser$: Subscription | undefined;
 	currentUserSignOutRequest$: Subscription | undefined;
 
-	currentUserSkeletonToggle: boolean = true;
-	currentUserSkeletonToggle$: Subscription | undefined;
-
 	ngOnInit(): void {
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
-			error: (error: any) => console.error(error)
-		});
-
-		this.currentUserSkeletonToggle$?.unsubscribe();
-		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
-			.pipe(filter((currentUserIsPopulated: boolean) => currentUserIsPopulated))
-			.subscribe({
-				next: () => (this.currentUserSkeletonToggle = false),
-				error: (error: any) => console.error(error)
-			});
+		super.ngOnInit();
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.currentUser$, this.currentUserSkeletonToggle$, this.currentUserSignOutRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		super.ngOnDestroy();
+
+		// Unsubscribe
+
+		[this.currentUserSignOutRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onLogout(): void {

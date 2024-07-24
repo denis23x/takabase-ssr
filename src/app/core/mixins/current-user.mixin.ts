@@ -16,7 +16,7 @@ export function CurrentUserMixin<T extends new (...args: any[]) => any>(MasterCl
 		}
 	})
 	abstract class SlaveClass extends MasterClass implements OnInit, OnDestroy {
-		private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+		public readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 
 		currentUser: CurrentUser | undefined;
 		currentUser$: Subscription | undefined;

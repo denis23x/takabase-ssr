@@ -3,21 +3,9 @@
 <ng-container>
 	<ul class="toast toast-top toast-center w-full max-w-sm min-w-min pointer-events-none z-20">
 		@for (snack of snackbarList$ | async; track snack.id) {
-			<li
-				class="flex relative overflow-hidden rounded-box shadow-xl animate-none"
-				(click)="onClose(snack)"
-			>
-				<div
-					class="alert pointer-events-auto grid-cols-alert"
-					role="alert"
-					[ngClass]="snack.options.alertClassList"
-				>
-					<i
-						class="fill-current"
-						appSvgIcon
-						[appSvgIconIcon]="snack.options.icon"
-						[appSvgIconSquare]="'1.5em'"
-					></i>
+			<li class="flex relative overflow-hidden rounded-box shadow-xl animate-none" (click)="onClose(snack)">
+				<div class="alert pointer-events-auto grid-cols-alert" role="alert" [ngClass]="snack.options.alertClassList">
+					<i class="fill-current" appSvgIcon [appSvgIconIcon]="snack.options.icon" [appSvgIconSquare]="'1.5em'"></i>
 					<div class="flex flex-col w-full">
 						@if (snack.title) {
 							<span class="block font-bold first-letter:capitalize">
@@ -36,9 +24,7 @@
 								</a>
 							}
 							@default {
-								<p
-									class="font-base first-letter:capitalize whitespace-normal text-ellipsis overflow-hidden"
-								>
+								<p class="font-base first-letter:capitalize whitespace-normal text-ellipsis overflow-hidden">
 									{{ snack.message }}
 								</p>
 							}
@@ -47,7 +33,7 @@
 				</div>
 				@if (snack.options.progress) {
 					<progress
-						class="absolute left-0 bottom-0 progress h-1"
+						class="absolute left-0 bottom-0 progress h-1.5"
 						[ngClass]="snack.options.progressClassList"
 						[value]="snack.progress.value || 0"
 						[max]="100"

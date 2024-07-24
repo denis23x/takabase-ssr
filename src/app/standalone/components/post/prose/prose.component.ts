@@ -1,15 +1,12 @@
 /** @format */
 
 import { Component, ComponentRef, inject, Input, OnDestroy, OnInit, Type, ViewContainerRef } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
-import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../../dropdown/dropdown.component';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
-import { filter } from 'rxjs/operators';
 import { AdComponent } from '../../ad/ad.component';
 import { CopyToClipboardDirective } from '../../../directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
@@ -18,11 +15,11 @@ import { MarkdownRenderDirective } from '../../../directives/app-markdown-render
 import { MarkdownTimeToReadPipe } from '../../../pipes/markdown-time-to-read.pipe';
 import { FireStoragePipe } from '../../../pipes/fire-storage.pipe';
 import { MarkdownService } from '../../../../core/services/markdown.service';
+import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import type { QRCodeComponent } from '../../qr-code/qr-code.component';
 import type { PostDeleteComponent } from '../delete/delete.component';
 import type { ReportComponent } from '../../report/report.component';
 import type { Post } from '../../../../core/models/post.model';
-import type { CurrentUser } from '../../../../core/models/current-user.model';
 
 @Component({
 	standalone: true,
@@ -44,8 +41,7 @@ import type { CurrentUser } from '../../../../core/models/current-user.model';
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
 })
-export class PostProseComponent implements OnInit, OnDestroy {
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+export class PostProseComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
@@ -70,12 +66,6 @@ export class PostProseComponent implements OnInit, OnDestroy {
 		this.postSkeletonToggle = postSkeletonToggle;
 	}
 
-	currentUser: CurrentUser | undefined;
-	currentUser$: Subscription | undefined;
-
-	currentUserSkeletonToggle: boolean = true;
-	currentUserSkeletonToggle$: Subscription | undefined;
-
 	post: Post | undefined;
 	postType: string | undefined;
 	postPreview: boolean = false;
@@ -89,26 +79,14 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	appReportComponent: ComponentRef<ReportComponent>;
 
 	ngOnInit(): void {
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
-			error: (error: any) => console.error(error)
-		});
-
-		this.currentUserSkeletonToggle$?.unsubscribe();
-		this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
-			.pipe(filter((currentUserIsPopulated: boolean) => currentUserIsPopulated))
-			.subscribe({
-				next: () => (this.currentUserSkeletonToggle = false),
-				error: (error: any) => console.error(error)
-			});
+		super.ngOnInit();
 
 		// Get current url
 		this.postShareUrl = this.helperService.getURL().toString();
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$, this.currentUserSkeletonToggle$].forEach(($: Subscription) => $?.unsubscribe());
+		super.ngOnDestroy();
 	}
 
 	/** LAZY */

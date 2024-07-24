@@ -1,18 +1,17 @@
 /** @format */
 
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import type { Snack } from '../../../core/models/snack.model';
 
 @Component({
 	standalone: true,
 	imports: [CommonModule, SvgIconComponent],
 	selector: 'app-snackbar, [appSnackbar]',
-	templateUrl: './snackbar.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './snackbar.component.html'
 })
 export class SnackbarComponent implements OnInit {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);

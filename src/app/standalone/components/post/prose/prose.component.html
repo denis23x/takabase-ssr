@@ -87,32 +87,34 @@
 								[appSvgIconSquare]="'1.5em'"
 							></button>
 							<ul class="menu menu-vertical menu-md" slot="content">
-								<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Share</li>
-								<li class="flex w-full snap-start scroll-my-2">
-									<button
-										class="rounded-btn block w-full truncate text-right"
-										type="button"
-										title="Copy share link"
-										aria-label="Copy share link"
-										appCopyToClipboard
-									>
-										Copy link
-									</button>
-								</li>
-								<li class="flex w-full snap-start scroll-my-2">
-									<button
-										class="rounded-btn block w-full truncate text-right"
-										type="button"
-										title="Show QR Code"
-										aria-label="Show QR Code"
-										(click)="onToggleQRCodeDialog()"
-									>
-										QR Code
-									</button>
-								</li>
+								@if (postType !== "private") {
+									<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Share</li>
+									<li class="flex w-full snap-start scroll-my-2">
+										<button
+											class="rounded-btn block w-full truncate text-right"
+											type="button"
+											title="Copy share link"
+											aria-label="Copy share link"
+											appCopyToClipboard
+										>
+											Copy link
+										</button>
+									</li>
+									<li class="flex w-full snap-start scroll-my-2">
+										<button
+											class="rounded-btn block w-full truncate text-right"
+											type="button"
+											title="Show QR Code"
+											aria-label="Show QR Code"
+											(click)="onToggleQRCodeDialog()"
+										>
+											QR Code
+										</button>
+									</li>
+								}
 								<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Post</li>
-								@switch (true) {
-									@case (currentUser?.id === post.user.id) {
+								@if (currentUser) {
+									@if (currentUser.id === post.user.id) {
 										<li class="flex w-full snap-start scroll-my-2">
 											<a
 												class="rounded-btn block w-full truncate text-right"
@@ -134,8 +136,7 @@
 												Delete
 											</button>
 										</li>
-									}
-									@case (currentUser?.id !== post.user.id) {
+									} @else {
 										<li class="flex w-full snap-start scroll-my-2">
 											<button
 												class="rounded-btn block w-full truncate text-right"
