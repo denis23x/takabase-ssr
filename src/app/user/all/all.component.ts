@@ -1,8 +1,8 @@
 /** @format */
 
-import { Component, inject, makeStateKey, OnDestroy, OnInit, StateKey, TransferState } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { distinctUntilKeyChanged, from, Subscription } from 'rxjs';
+import { distinctUntilKeyChanged, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
@@ -14,18 +14,13 @@ import { SearchFormComponent } from '../../standalone/components/search-form/sea
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
 import { CommonModule } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { PlatformService } from '../../core/services/platform.service';
-import { AlgoliaService } from '../../core/services/algolia.service';
 import { HelperService } from '../../core/services/helper.service';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
+import { PostService } from '../../core/services/post.service';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
-import type { SearchIndex } from 'algoliasearch/lite';
-import type { SearchOptions, SearchResponse } from '@algolia/client-search';
-
-const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 
 @Component({
 	standalone: true,
@@ -43,16 +38,14 @@ const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchRes
 		ListLoadMoreComponent,
 		ListMockComponent
 	],
-	providers: [AlgoliaService],
+	providers: [PostService],
 	selector: 'app-user-all',
 	templateUrl: './all.component.html'
 })
 export class UserAllComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
+	private readonly postService: PostService = inject(PostService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	private readonly transferState: TransferState = inject(TransferState);
-	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly algoliaService: AlgoliaService = inject(AlgoliaService);
 	private readonly router: Router = inject(Router);
 	private readonly helperService: HelperService = inject(HelperService);
 
@@ -69,7 +62,7 @@ export class UserAllComponent extends CU(class {}) implements OnInit, OnDestroy 
 	};
 
 	postListSearchFormToggle: boolean = false;
-	postListSearchResponse: Omit<SearchResponse<Post>, 'hits'> | undefined;
+	postListSearchResponse: any;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -116,17 +109,7 @@ export class UserAllComponent extends CU(class {}) implements OnInit, OnDestroy 
 				tap(() => this.setSkeleton())
 			)
 			.subscribe({
-				next: () => {
-					if (this.transferState.hasKey(searchResponseKey)) {
-						this.setPostListSearchResponse(this.transferState.get(searchResponseKey, null));
-
-						if (this.platformService.isBrowser()) {
-							this.transferState.remove(searchResponseKey);
-						}
-					} else {
-						this.getPostList();
-					}
-				},
+				next: () => this.getPostList(),
 				error: (error: any) => console.error(error)
 			});
 	}
@@ -154,42 +137,33 @@ export class UserAllComponent extends CU(class {}) implements OnInit, OnDestroy 
 	getPostList(postListLoadMore: boolean = false): void {
 		this.postListIsLoading = true;
 
-		/** Params */
-
-		const username: string = String(this.activatedRoute.snapshot.paramMap.get('username') || '');
-
-		/** Algolia */
-
+		const postPage: number = (this.postListGetAllDto.page = postListLoadMore ? this.postListGetAllDto.page + 1 : 1);
+		const postUsername: string = String(this.activatedRoute.snapshot.paramMap.get('username') || '');
 		const postQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
-		const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
-		const postIndexFilters: string[] = ['user.name:' + username];
-		const postIndexSearch: SearchOptions = {
-			page: (() => (this.postListGetAllDto.page = postListLoadMore ? this.postListGetAllDto.page + 1 : 0))(),
-			hitsPerPage: this.postListGetAllDto.size,
-			filters: postIndexFilters.join(' AND ')
+		const postGetAllDto: PostGetAllDto = {
+			...this.postListGetAllDto,
+			username: postUsername,
+			page: postPage
 		};
 
-		this.postListRequest$?.unsubscribe();
-		this.postListRequest$ = from(postIndex.search(postQuery, postIndexSearch)).subscribe({
-			next: (searchResponse: SearchResponse<any>) => {
-				this.setPostListSearchResponse(searchResponse);
+		// Query
 
-				if (this.platformService.isServer()) {
-					this.transferState.set(searchResponseKey, searchResponse);
-				}
+		if (postQuery) {
+			postGetAllDto.query = postQuery;
+		}
+
+		this.postListRequest$?.unsubscribe();
+		this.postListRequest$ = this.postService.getAll(postGetAllDto).subscribe({
+			next: (postList: Post[]) => {
+				this.postList = postGetAllDto.page > 1 ? this.postList.concat(postList) : postList;
+				this.postListSkeletonToggle = false;
+				this.postListIsLoading = false;
+				this.postListSearchResponse = {
+					isOnePage: postGetAllDto.page === 1 && postGetAllDto.size !== postList.length,
+					isEndPage: postGetAllDto.page !== 1 && postGetAllDto.size !== postList.length
+				};
 			},
 			error: (error: any) => console.error(error)
 		});
-	}
-
-	setPostListSearchResponse(searchResponse: SearchResponse<Post> | null): void {
-		const { hits: postList, ...postListSearchResponse }: any = searchResponse;
-
-		// Set
-
-		this.postList = searchResponse.page > 0 ? this.postList.concat(postList) : postList;
-		this.postListSearchResponse = postListSearchResponse;
-		this.postListSkeletonToggle = false;
-		this.postListIsLoading = false;
 	}
 }

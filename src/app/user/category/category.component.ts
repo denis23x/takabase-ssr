@@ -1,20 +1,9 @@
 /** @format */
 
-import {
-	Component,
-	ComponentRef,
-	inject,
-	makeStateKey,
-	OnDestroy,
-	OnInit,
-	StateKey,
-	TransferState,
-	Type,
-	ViewContainerRef
-} from '@angular/core';
+import { Component, ComponentRef, inject, OnDestroy, OnInit, Type, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
-import { distinctUntilKeyChanged, from, Subscription, switchMap } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { distinctUntilKeyChanged, Subscription, switchMap } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -26,25 +15,20 @@ import { SearchFormComponent } from '../../standalone/components/search-form/sea
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
 import { CommonModule } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { PlatformService } from '../../core/services/platform.service';
-import { AlgoliaService } from '../../core/services/algolia.service';
 import { HelperService } from '../../core/services/helper.service';
 import { UserStore } from '../user.store';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
+import { PostService } from '../../core/services/post.service';
 import type { User } from '../../core/models/user.model';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
-import type { SearchIndex } from 'algoliasearch/lite';
-import type { SearchOptions, SearchResponse } from '@algolia/client-search';
 import type { Category } from '../../core/models/category.model';
 import type { CategoryCreateComponent } from '../../standalone/components/category/create/create.component';
 import type { CategoryUpdateComponent } from '../../standalone/components/category/update/update.component';
 import type { CategoryDeleteComponent } from '../../standalone/components/category/delete/delete.component';
 import type { CategoryDeleteDto } from '../../core/dto/category/category-delete.dto';
-
-const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchResponse<Post>>('searchResponse');
 
 @Component({
 	standalone: true,
@@ -63,16 +47,14 @@ const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchRes
 		ListLoadMoreComponent,
 		ListMockComponent
 	],
-	providers: [AlgoliaService],
+	providers: [PostService],
 	selector: 'app-user-category',
 	templateUrl: './category.component.html'
 })
 export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
+	private readonly postService: PostService = inject(PostService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	private readonly transferState: TransferState = inject(TransferState);
-	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly algoliaService: AlgoliaService = inject(AlgoliaService);
 	private readonly router: Router = inject(Router);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly userStore: UserStore = inject(UserStore);
@@ -99,7 +81,7 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 	};
 
 	postListSearchFormToggle: boolean = false;
-	postListSearchResponse: Omit<SearchResponse<Post>, 'hits'> | undefined;
+	postListSearchResponse: any;
 
 	// Lazy loading
 
@@ -178,20 +160,18 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 			});
 
 		this.activatedRouteQueryParams$?.unsubscribe();
-		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.pipe(distinctUntilKeyChanged('query')).subscribe({
-			next: () => {
-				if (this.transferState.hasKey(searchResponseKey)) {
-					this.setPostListSearchResponse(this.transferState.get(searchResponseKey, null));
-
-					if (this.platformService.isBrowser()) {
-						this.transferState.remove(searchResponseKey);
-					}
-				} else {
-					this.getPostList();
-				}
-			},
-			error: (error: any) => console.error(error)
-		});
+		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams
+			.pipe(
+				distinctUntilKeyChanged('query'),
+				tap(() => {
+					this.postList = this.skeletonService.getPostList();
+					this.postListSkeletonToggle = true;
+				})
+			)
+			.subscribe({
+				next: () => this.getPostList(),
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	/** Search */
@@ -278,48 +258,36 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 	getPostList(postListLoadMore: boolean = false): void {
 		this.postListIsLoading = true;
 
-		/** Params */
-
-		const username: string = String(this.activatedRoute.snapshot.paramMap.get('username') || '');
-		const categoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
-
-		/** Algolia */
-
+		const postPage: number = (this.postListGetAllDto.page = postListLoadMore ? this.postListGetAllDto.page + 1 : 1);
+		const postUsername: string = String(this.activatedRoute.snapshot.paramMap.get('username') || '');
+		const postCategoryId: number = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
 		const postQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
-		const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
-		const postIndexFilters: string[] = [];
-
-		postIndexFilters.push('user.name:' + username);
-		postIndexFilters.push('category.id:' + String(categoryId));
-
-		const postIndexSearch: SearchOptions = {
-			page: (() => (this.postListGetAllDto.page = postListLoadMore ? this.postListGetAllDto.page + 1 : 0))(),
-			hitsPerPage: this.postListGetAllDto.size,
-			filters: postIndexFilters.join(' AND ')
+		const postGetAllDto: PostGetAllDto = {
+			...this.postListGetAllDto,
+			username: postUsername,
+			categoryId: postCategoryId,
+			page: postPage
 		};
 
-		this.postListRequest$?.unsubscribe();
-		this.postListRequest$ = from(postIndex.search(postQuery, postIndexSearch)).subscribe({
-			next: (searchResponse: SearchResponse<any>) => {
-				this.setPostListSearchResponse(searchResponse);
+		// Query
 
-				if (this.platformService.isServer()) {
-					this.transferState.set(searchResponseKey, searchResponse);
-				}
+		if (postQuery) {
+			postGetAllDto.query = postQuery;
+		}
+
+		this.postListRequest$?.unsubscribe();
+		this.postListRequest$ = this.postService.getAll(postGetAllDto).subscribe({
+			next: (postList: Post[]) => {
+				this.postList = postGetAllDto.page > 1 ? this.postList.concat(postList) : postList;
+				this.postListSkeletonToggle = false;
+				this.postListIsLoading = false;
+				this.postListSearchResponse = {
+					isOnePage: postGetAllDto.page === 1 && postGetAllDto.size !== postList.length,
+					isEndPage: postGetAllDto.page !== 1 && postGetAllDto.size !== postList.length
+				};
 			},
 			error: (error: any) => console.error(error)
 		});
-	}
-
-	setPostListSearchResponse(searchResponse: SearchResponse<Post> | null): void {
-		const { hits: postList, ...postListSearchResponse }: any = searchResponse;
-
-		// Set
-
-		this.postList = searchResponse.page > 0 ? this.postList.concat(postList) : postList;
-		this.postListSearchResponse = postListSearchResponse;
-		this.postListSkeletonToggle = false;
-		this.postListIsLoading = false;
 	}
 
 	/** LAZY */

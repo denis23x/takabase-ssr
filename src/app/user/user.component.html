@@ -148,6 +148,7 @@
 								#routerLinkActivePassword="routerLinkActive"
 								[appScrollPresetActive]="routerLinkActivePassword.isActive"
 								[routerLink]="['/', user.name, 'password']"
+								[queryParamsHandling]="'merge'"
 								[appSvgIconIcon]="'shield-lock'"
 								[appSvgIconSquare]="'1.25em'"
 							>
@@ -172,6 +173,7 @@
 								#routerLinkActivePrivate="routerLinkActive"
 								[appScrollPresetActive]="routerLinkActivePrivate.isActive"
 								[routerLink]="['/', user.name, 'private']"
+								[queryParamsHandling]="'merge'"
 								[appSvgIconIcon]="'incognito'"
 								[appSvgIconSquare]="'1.25em'"
 							>
