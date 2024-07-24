@@ -98,7 +98,7 @@ export class ShareComponent {
 				return {
 					url: url.href,
 					text: this.post.name,
-					hashtags: ['takabase', this.post.category.name],
+					hashtags: ['takabase'],
 					via: this.post.user.name
 				};
 			}

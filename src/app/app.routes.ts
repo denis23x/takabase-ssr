@@ -223,8 +223,7 @@ export const APP_ROUTES: Route[] = [
 						redirectTo: '/error/404'
 					},
 					{
-						path: 'password/:postId',
-						canActivate: [redirectHttpErrorGuard()],
+						path: 'password/:postPasswordId',
 						loadComponent: async () => {
 							return import('./post/password/password.component').then(m => m.PostPasswordComponent);
 						}
@@ -235,8 +234,7 @@ export const APP_ROUTES: Route[] = [
 						redirectTo: '/error/404'
 					},
 					{
-						path: 'private/:postId',
-						canActivate: [redirectHttpErrorGuard()],
+						path: 'private/:postPrivateId',
 						loadComponent: async () => {
 							return import('./post/private/private.component').then(m => m.PostPrivateComponent);
 						}

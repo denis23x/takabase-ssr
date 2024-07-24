@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { PostStore } from './post.store';
@@ -28,12 +28,19 @@ export class PostComponent implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postStore: PostStore = inject(PostStore);
 	private readonly fireStoragePipe: FireStoragePipe = inject(FireStoragePipe);
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
 	post: Post | undefined;
 	post$: Subscription | undefined;
 	postSkeletonToggle: boolean = true;
 
+	postPasswordId: number | undefined;
+	postPrivateId: number | undefined;
+
 	ngOnInit(): void {
+		this.postPasswordId = Number(this.activatedRoute.snapshot.firstChild.paramMap.get('postPasswordId'));
+		this.postPrivateId = Number(this.activatedRoute.snapshot.firstChild.paramMap.get('postPrivateId'));
+
 		/** Apply Data */
 
 		this.setSkeleton();
@@ -86,7 +93,6 @@ export class PostComponent implements OnInit, OnDestroy {
 			['article:published_time']: this.post.createdAt,
 			['article:modified_time']: this.post.updatedAt,
 			['article:author']: this.post.user.name,
-			['article:section']: this.post.category.name,
 			['og:image']: this.fireStoragePipe.transform(this.post.image),
 			['og:image:alt']: this.post.name,
 			['og:image:type']: 'image/webp'

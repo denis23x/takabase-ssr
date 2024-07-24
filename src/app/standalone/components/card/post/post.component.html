@@ -11,7 +11,7 @@
 					appSkeleton
 					[appSkeletonToggle]="postSkeletonToggle"
 					[appSkeletonClassList]="['!rounded-none']"
-					[routerLink]="['/', 'post', post.id]"
+					[routerLink]="postRouterLink"
 					[queryParamsHandling]="'preserve'"
 					[title]="post.name"
 					[attr.aria-label]="post.name"
@@ -31,7 +31,7 @@
 				class="link text-base-content text-base font-bold text-ellipsis max-w-full line-clamp-1 lg:line-clamp-2"
 				appSkeleton
 				[appSkeletonToggle]="postSkeletonToggle"
-				[routerLink]="['/', 'post', post.id]"
+				[routerLink]="postRouterLink"
 				[queryParamsHandling]="'preserve'"
 				[title]="post.name"
 				[attr.aria-label]="post.name"

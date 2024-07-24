@@ -1,7 +1,7 @@
 /** @format */
 
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { AsyncPipe, NgOptimizedImage } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
@@ -12,7 +12,7 @@ import type { PostPrivate } from '../../../../core/models/post-private.model';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, DayjsPipe, NgOptimizedImage, SkeletonDirective, AsyncPipe, FireStoragePipe],
+	imports: [CommonModule, RouterModule, DayjsPipe, NgOptimizedImage, SkeletonDirective, FireStoragePipe],
 	selector: 'app-card-post, [appCardPost]',
 	templateUrl: './post.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
@@ -21,6 +21,13 @@ export class CardPostComponent {
 	@Input({ required: true })
 	set appCardPostPost(post: Post | PostPassword | PostPrivate) {
 		this.post = post;
+		this.postRouterLink.push(String(this.post.id));
+	}
+
+	@Input()
+	set appCardPostType(postType: string) {
+		this.postType = postType;
+		this.postRouterLink.splice(this.postRouterLink.length - 1, 0, this.postType);
 	}
 
 	@Input()
@@ -34,6 +41,8 @@ export class CardPostComponent {
 	}
 
 	post: Post | undefined;
+	postType: string | undefined;
 	postImagePriority: boolean = false;
 	postSkeletonToggle: boolean = true;
+	postRouterLink: string[] = ['/', 'post'];
 }

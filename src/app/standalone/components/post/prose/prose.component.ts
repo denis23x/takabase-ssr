@@ -56,6 +56,11 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	}
 
 	@Input()
+	set appPostProsePostType(postType: string) {
+		this.postType = postType;
+	}
+
+	@Input()
 	set appPostProsePreview(postPreview: boolean) {
 		this.postPreview = postPreview;
 	}
@@ -72,6 +77,7 @@ export class PostProseComponent implements OnInit, OnDestroy {
 	currentUserSkeletonToggle$: Subscription | undefined;
 
 	post: Post | undefined;
+	postType: string | undefined;
 	postPreview: boolean = false;
 	postShareUrl: string | undefined;
 	postSkeletonToggle: boolean = true;

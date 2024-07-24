@@ -31,17 +31,41 @@
 							>
 								{{ post.name || "Name" }}
 							</h2>
-							<a
-								class="link text-sm text-base-content leading-4 truncate max-w-full"
-								appSkeleton
-								[target]="postPreview ? '_blank' : '_self'"
-								[appSkeletonToggle]="postSkeletonToggle"
-								[routerLink]="['/', post.user.name, 'category', post.category?.id]"
-								[title]="post.category?.name || 'Category'"
-								[attr.aria-label]="post.category?.name || 'Category'"
-							>
-								{{ post.category?.name || "Category" }}
-							</a>
+							@switch (postType) {
+								@case ("password") {
+									<span
+										class="badge badge-success badge-outline badge-sm"
+										appSkeleton
+										[class.border-transparent]="postSkeletonToggle"
+										[appSkeletonToggle]="postSkeletonToggle"
+									>
+										Protected with password
+									</span>
+								}
+								@case ("private") {
+									<span
+										class="badge badge-error badge-outline badge-sm"
+										appSkeleton
+										[class.border-transparent]="postSkeletonToggle"
+										[appSkeletonToggle]="postSkeletonToggle"
+									>
+										Private
+									</span>
+								}
+								@default {
+									<a
+										class="link text-sm text-base-content leading-4 truncate max-w-full"
+										appSkeleton
+										[target]="postPreview ? '_blank' : '_self'"
+										[appSkeletonToggle]="postSkeletonToggle"
+										[routerLink]="['/', post.user.name, 'category', post.category?.id]"
+										[title]="post.category?.name || 'Category'"
+										[attr.aria-label]="post.category?.name || 'Category'"
+									>
+										{{ post.category?.name || "Category" }}
+									</a>
+								}
+							}
 						</div>
 					</div>
 					@if (postPreview === false) {

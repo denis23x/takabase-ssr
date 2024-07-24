@@ -1,10 +1,10 @@
 /** @format */
 
 import { inject } from '@angular/core';
-import { HttpRequest, HttpInterceptorFn, HttpHandlerFn, HttpEvent } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { from, Observable, switchMap } from 'rxjs';
 import { FirebaseService } from '../services/firebase.service';
+import type { HttpRequest, HttpInterceptorFn, HttpHandlerFn, HttpEvent } from '@angular/common/http';
 import type { User as FirebaseUser } from 'firebase/auth';
 
 // prettier-ignore

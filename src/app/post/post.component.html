@@ -53,26 +53,74 @@
 							</span>
 						</a>
 					</li>
-					<li class="block">
-						<a
-							class="flex items-center justify-start gap-2 text-base-content"
-							[routerLink]="['/', post.user.name, 'category', post.category.id]"
-							[title]="'Go to ' + post.category.name"
-							[attr.aria-label]="'Go to ' + post.category.name"
-						>
-							<i
-								class="block fill-current"
-								appSvgIcon
-								[class.sm:hidden]="postSkeletonToggle"
-								[appSvgIconIcon]="'folder'"
-								[appSvgIconSquare]="'1.25em'"
-							>
-							</i>
-							<span class="block link link-hover text-sm" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-								{{ post.category.name }}
-							</span>
-						</a>
-					</li>
+					@switch (true) {
+						@case (!!postPasswordId) {
+							<li class="block">
+								<a
+									class="flex items-center justify-start gap-2 text-base-content"
+									[routerLink]="['/', post.user.name, 'password']"
+									[title]="'Go to Password protected posts'"
+									[attr.aria-label]="'Go to Password protected posts'"
+								>
+									<i
+										class="block fill-current"
+										appSvgIcon
+										[class.sm:hidden]="postSkeletonToggle"
+										[appSvgIconIcon]="'shield-lock'"
+										[appSvgIconSquare]="'1.15em'"
+									>
+									</i>
+									<span class="block link link-hover text-sm" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+										Password
+									</span>
+								</a>
+							</li>
+						}
+						@case (!!postPrivateId) {
+							<li class="block">
+								<a
+									class="flex items-center justify-start gap-2 text-base-content"
+									[routerLink]="['/', post.user.name, 'private']"
+									[title]="'Go to Private posts'"
+									[attr.aria-label]="'Go to Private posts'"
+								>
+									<i
+										class="block fill-current"
+										appSvgIcon
+										[class.sm:hidden]="postSkeletonToggle"
+										[appSvgIconIcon]="'incognito'"
+										[appSvgIconSquare]="'1.15em'"
+									>
+									</i>
+									<span class="block link link-hover text-sm" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+										Private
+									</span>
+								</a>
+							</li>
+						}
+						@default {
+							<li class="block">
+								<a
+									class="flex items-center justify-start gap-2 text-base-content"
+									[routerLink]="['/', post.user.name, 'category', post.category.id]"
+									[title]="'Go to ' + post.category.name"
+									[attr.aria-label]="'Go to ' + post.category.name"
+								>
+									<i
+										class="block fill-current"
+										appSvgIcon
+										[class.sm:hidden]="postSkeletonToggle"
+										[appSvgIconIcon]="'folder'"
+										[appSvgIconSquare]="'1.25em'"
+									>
+									</i>
+									<span class="block link link-hover text-sm" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+										{{ post.category.name }}
+									</span>
+								</a>
+							</li>
+						}
+					}
 				</ul>
 			</nav>
 		</header>
