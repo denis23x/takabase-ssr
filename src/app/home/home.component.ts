@@ -41,13 +41,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 	appPWAComponent: ComponentRef<PWAComponent>;
 
 	ngOnInit(): void {
-		const timeLastMonth: string = dayjs().format('MMM D');
-		const timeToday: string = dayjs().subtract(1, 'month').format('MMM D');
-
-		this.appInsightListTime = timeLastMonth + ' - ' + timeToday;
+		this.appInsightListTime = dayjs().format('MMM D') + ' - ' + dayjs().subtract(1, 'month').format('MMM D');
 
 		this.appInsightList$?.unsubscribe();
-		this.appInsightList$ = this.apiService.get('/v1/tests/dummy').subscribe({
+		this.appInsightList$ = this.apiService.get('/v1/utilities/insights').subscribe({
 			next: (insights: any) => {
 				Object.keys(insights).forEach((key: string, i: number) => {
 					this.appInsightList.push({
@@ -56,8 +53,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 						...insights[key]
 					});
 				});
-
-				console.log(this.appInsightList);
 			},
 			error: (error: any) => console.error(error)
 		});
