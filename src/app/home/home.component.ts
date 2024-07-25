@@ -9,17 +9,22 @@ import { TitleService } from '../core/services/title.service';
 import { ApiService } from '../core/services/api.service';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
+import { SkeletonService } from '../core/services/skeleton.service';
 import homeFeatures from '../../assets/json/home-features.json';
 import dayjs from 'dayjs/esm';
 import relativeTime from 'dayjs/esm/plugin/relativeTime';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
+import type { ManipulateType } from 'dayjs/esm';
 import type { PWAComponent } from '../standalone/components/pwa/pwa.component';
+import type { Insight } from '../core/models/insight.model';
+import type { InsightGetAllDto } from '../core/dto/insight/insight-get-all.dto';
 
 dayjs.extend(relativeTime);
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, SvgIconComponent, SvgLogoComponent],
+	imports: [CommonModule, RouterModule, SvgIconComponent, SvgLogoComponent, SkeletonDirective],
 	selector: 'app-home',
 	templateUrl: './home.component.html'
 })
@@ -28,34 +33,43 @@ export class HomeComponent implements OnInit, OnDestroy {
 	private readonly titleService: TitleService = inject(TitleService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 	private readonly apiService: ApiService = inject(ApiService);
+	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 
 	appFeatureList: Record<string, string | number>[] = homeFeatures;
 	appFeatureListIndex: number = 1;
 
-	appInsightList: any[] = [];
+	appInsightValue: number = 1;
+	appInsightUnit: ManipulateType = 'day';
+
+	appInsightList: Insight[] = [];
+	appInsightListSkeletonToggle: boolean = true;
 	appInsightList$: Subscription | undefined;
 	appInsightListTime: string | undefined;
+	appInsightListTimeFormat: string = 'MMM D';
+	appInsightListChangeState: any = {
+		stasis: {
+			classList: 'text-base-content/50',
+			character: '='
+		},
+		positive: {
+			classList: 'text-success',
+			character: '↗︎'
+		},
+		negative: {
+			classList: 'text-error',
+			character: '↘︎'
+		}
+	};
 
 	// Lazy loading
 
 	appPWAComponent: ComponentRef<PWAComponent>;
 
 	ngOnInit(): void {
-		this.appInsightListTime = dayjs().format('MMM D') + ' - ' + dayjs().subtract(1, 'month').format('MMM D');
+		/** Apply Data */
 
-		this.appInsightList$?.unsubscribe();
-		this.appInsightList$ = this.apiService.get('/v1/utilities/insights').subscribe({
-			next: (insights: any) => {
-				Object.keys(insights).forEach((key: string, i: number) => {
-					this.appInsightList.push({
-						id: i + 1,
-						title: key,
-						...insights[key]
-					});
-				});
-			},
-			error: (error: any) => console.error(error)
-		});
+		this.setSkeleton();
+		this.setResolver();
 
 		/** Apply SEO meta tags */
 
@@ -65,6 +79,33 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[this.appInsightList$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	setSkeleton(): void {
+		this.appInsightList = this.skeletonService.getInsightList();
+		this.appInsightListSkeletonToggle = true;
+	}
+
+	setResolver(): void {
+		// prettier-ignore
+		this.appInsightListTime = dayjs().format(this.appInsightListTimeFormat) + ' - ' + dayjs().subtract(this.appInsightValue, this.appInsightUnit).format(this.appInsightListTimeFormat);
+
+		const insightGetAllDto: InsightGetAllDto = {
+			value: this.appInsightValue,
+			unit: this.appInsightUnit
+		};
+
+		this.appInsightList$?.unsubscribe();
+		this.appInsightList$ = this.apiService.get('/v1/utilities/insights', insightGetAllDto).subscribe({
+			next: (insightList: any) => {
+				this.appInsightListSkeletonToggle = false;
+				this.appInsightList = this.appInsightList.map((insight: Insight) => ({
+					...insight,
+					...insightList[insight.key]
+				}));
+			},
+			error: (error: any) => console.error(error)
+		});
 	}
 
 	setTitle(): void {

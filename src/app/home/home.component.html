@@ -63,7 +63,7 @@
 		</header>
 		<ul class="rounded-box grid grid-cols-12 border border-base-content/20 bg-base-100 shadow-xl">
 			<li
-				class="flex flex-col col-span-12 sm:col-span-12 lg:col-span-6 gap-2 border-b lg:border-b-0 lg:border-r border-base-content/20 p-4"
+				class="flex flex-col col-span-12 lg:col-span-6 gap-2 border-b lg:border-b-0 lg:border-r border-base-content/20 p-4"
 			>
 				<div class="flex items-center justify-between">
 					<h4 class="text-base font-bold text-base-content">Insights</h4>
@@ -85,20 +85,29 @@
 			</li>
 			@for (appInsight of appInsightList; track appInsight.id) {
 				<li
-					class="flex flex-col items-center justify-center text-center col-span-4 sm:col-span-4 lg:col-span-2 border-r border-base-content/20 p-4"
+					class="flex flex-col items-center justify-center gap-1 text-center col-span-4 lg:col-span-2 border-r border-base-content/20 p-4"
 				>
-					<h4 class="text-sm uppercase text-base-content">{{ appInsight.title }}</h4>
-					<span class="text-3xl text-base-content font-bold">
-						{{ appInsight.countPreceding + appInsight.countLastMonth }}
-					</span>
-					<div
-						class="text-xs flex items-center justify-center gap-1"
-						[ngClass]="appInsight.isPositive ? 'text-success' : 'text-error'"
-					>
-						<span class="whitespace-nowrap">
-							{{ appInsight.isPositive ? "↗︎" : "↘︎" }} {{ appInsight.countLastMonth }}
+					<h4 class="text-sm uppercase text-base-content">{{ appInsight.value }}</h4>
+					<div class="flex flex-col items-center justify-center gap-1">
+						<span
+							class="text-3xl text-base-content font-bold"
+							appSkeleton
+							[ngClass]="{ 'w-9 h-9 rounded-full overflow-hidden': appInsightListSkeletonToggle }"
+							[appSkeletonToggle]="appInsightListSkeletonToggle"
+						>
+							{{ appInsight.countPreceding + appInsight.countFollowing }}
 						</span>
-						<span class="block">({{ appInsight.changePercent }})</span>
+						<div
+							class="text-xs flex items-center justify-center gap-1"
+							appSkeleton
+							[appSkeletonToggle]="appInsightListSkeletonToggle"
+							[ngClass]="appInsightListChangeState[appInsight.changeState].classList"
+						>
+							<span class="block whitespace-nowrap">
+								{{ appInsightListChangeState[appInsight.changeState].character }} {{ appInsight.countFollowing }}
+							</span>
+							<span class="block">({{ appInsight.changePercent | number: "1.0-1" }}%)</span>
+						</div>
 					</div>
 				</li>
 			}

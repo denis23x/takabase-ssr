@@ -40,7 +40,7 @@ export class SkeletonService {
 
 	getCategoryList(scope: string[] = []): Category[] {
 		return Array(10)
-			.fill(1)
+			.fill(null)
 			.map(() => this.getCategory(scope));
 	}
 
@@ -61,7 +61,7 @@ export class SkeletonService {
 
 	getPostList(scope: string[] = []): Post[] {
 		return Array(10)
-			.fill(1)
+			.fill(null)
 			.map(() => this.getPost(scope));
 	}
 
@@ -80,7 +80,39 @@ export class SkeletonService {
 
 	getUserList(scope: string[] = []): User[] {
 		return Array(10)
-			.fill(1)
+			.fill(null)
 			.map(() => this.getUser(scope));
+	}
+
+	getInsightList(): any {
+		return [
+			{
+				id: Number(customAlphabet(numbers, 8)()),
+				key: 'categories',
+				value: 'Categories',
+				countPreceding: 10,
+				countFollowing: 5,
+				changeState: 'positive',
+				changePercent: 50
+			},
+			{
+				id: Number(customAlphabet(numbers, 8)()),
+				key: 'posts',
+				value: 'Posts',
+				countPreceding: 10,
+				countFollowing: 5,
+				changeState: 'positive',
+				changePercent: 50
+			},
+			{
+				id: Number(customAlphabet(numbers, 8)()),
+				key: 'users',
+				value: 'Users',
+				countPreceding: 10,
+				countFollowing: 5,
+				changeState: 'positive',
+				changePercent: 50
+			}
+		];
 	}
 }
