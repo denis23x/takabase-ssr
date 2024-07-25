@@ -1,0 +1,71 @@
+[
+  {
+    "id": 1,
+    "icon": "gem",
+    "title": "Clarity",
+    "description": "By eliminating direct messaging and likes, the environment allows users to focus on sharing knowledge and experiences without the noise of constant notifications.",
+    "list": [
+      {
+        "id": 1,
+        "title": "Customizable Themes",
+        "description": "Personalize your writing space with a variety of themes"
+      },
+      {
+        "id": 2,
+        "title": "Social Authorization",
+        "description": "Enjoy the convenience of social authorization"
+      },
+      {
+        "id": 3,
+        "title": "Minimalistic UI",
+        "description": "Enjoy a clutter-free and easy-to-navigate user interface"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "icon": "robot",
+    "title": "PWA",
+    "description": "Access the website even when you're offline or facing unreliable network connectivity. Progressive Web App technology ensures that you can continue browsing and interacting with content without interruption.",
+    "list": [
+      {
+        "id": 1,
+        "title": "Responsive Layout",
+        "description": "Experience consistent and intuitive browsing across a range of mobile devices"
+      },
+      {
+        "id": 2,
+        "title": "Touch-Friendly Interactions",
+        "description": "Engage with the website's interactive elements using touch gestures"
+      },
+      {
+        "id": 3,
+        "title": "Optimized Images and Media",
+        "description": "Visuals load quickly without compromising quality"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "icon": "markdown",
+    "title": "Markdown",
+    "description": "Unlock the potential of your writing with an intuitive Markdown editor equipped with an array of powerful built-in tools. Experience the joy of effortless content creation today.",
+    "list": [
+      {
+        "id": 1,
+        "title": "Real-time Preview",
+        "description": "Witness the magic of your Markdown content transforming into a live preview as you type"
+      },
+      {
+        "id": 2,
+        "title": "Syntax Highlighting",
+        "description": "Watch your code snippets come alive with syntax highlighting"
+      },
+      {
+        "id": 3,
+        "title": "Arbitrary Styling",
+        "description": "Fine-tune your text and elements with arbitrary styles"
+      }
+    ]
+  }
+]

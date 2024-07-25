@@ -6,13 +6,17 @@
 			class="rounded-box flex flex-col items-stretch justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
 			<div class="relative sm:divider sm:divider-start">
-				<h1 class="text-3xl text-base-content font-semibold">The easiest post platform</h1>
+				<h1 class="text-3xl text-base-content font-bold">The new post platform</h1>
 			</div>
 			<div class="flex items-start justify-start gap-4">
 				<p class="text-base text-base-content/50">
-					Takabase is designed to provide you with an easy-to-use, lightweight app that is highly customizable to your
-					preferences. Whether you’re a blogger, writer, or developer, this website is the perfect tool to bring your
-					ideas to life.
+					<span class="inline">
+						Takabase is designed to provide you with an easy-to-use, lightweight app that is highly customizable to your
+						preferences.
+					</span>
+					<span class="hidden sm:inline">
+						Whether you’re a writer, or developer, the platform is the perfect tool to bring your ideas to life.
+					</span>
 				</p>
 				<figure class="hidden md:flex items-start justify-end">
 					<i class="rounded-box" appSvgLogo [appSvgLogoIcon]="'takabase'" [appSvgLogoSquare]="'64'"></i>
@@ -57,51 +61,88 @@
 				</a>
 			</nav>
 		</header>
-		<main
-			class="rounded-box flex flex-col items-stretch justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-		>
-			<section class="flex flex-col items-stretch justify-start gap-4">
-				<header class="flex items-center justify-between">
-					<div class="flex items-center justify-start gap-4">
-						<i
-							class="text-base-content fill-current"
-							appSvgIcon
-							[appSvgIconIcon]="appFeatureActive.icon"
-							[appSvgIconSquare]="'1.5em'"
-						></i>
-						<h2 class="text-xl sm:text-2xl font-semibold text-base-content">
-							{{ appFeatureActive.title }}
-						</h2>
+		<ul class="rounded-box grid grid-cols-12 border border-base-content/20 bg-base-100 shadow-xl">
+			<li
+				class="flex flex-col col-span-12 sm:col-span-12 lg:col-span-6 gap-2 border-b lg:border-b-0 lg:border-r border-base-content/20 p-4"
+			>
+				<div class="flex items-center justify-between">
+					<h4 class="text-base font-bold text-base-content">Insights</h4>
+					<span class="text-sm text-base-content/50">
+						{{ appInsightListTime }}
+					</span>
+				</div>
+				<div class="flex items-center justify-between gap-4">
+					<p class="text-base text-base-content">
+						Current platform activity, including the total number of public posts, active users, and categories
+					</p>
+					<i
+						class="fill-current text-secondary"
+						appSvgIcon
+						[appSvgIconIcon]="'sliders2-vertical'"
+						[appSvgIconSquare]="'2em'"
+					></i>
+				</div>
+			</li>
+			@for (appInsight of appInsightList; track appInsight.id) {
+				<li
+					class="flex flex-col items-center justify-center text-center col-span-4 sm:col-span-4 lg:col-span-2 border-r border-base-content/20 p-4"
+				>
+					<h4 class="text-sm uppercase text-base-content">{{ appInsight.title }}</h4>
+					<span class="text-3xl text-base-content font-bold">
+						{{ appInsight.countPreceding + appInsight.countLastMonth }}
+					</span>
+					<div
+						class="text-xs flex items-center justify-center gap-1"
+						[ngClass]="appInsight.isPositive ? 'text-success' : 'text-error'"
+					>
+						<span class="whitespace-nowrap">
+							{{ appInsight.isPositive ? "↗︎" : "↘︎" }} {{ appInsight.countLastMonth }}
+						</span>
+						<span class="block">({{ appInsight.changePercent }})</span>
 					</div>
-					<nav class="join">
-						@for (appFeature of appFeatureList; track appFeature.id) {
-							<button
-								class="join-item btn btn-sm"
-								[class.btn-active]="appFeature.id === appFeatureActive.id"
-								(click)="onClickNav(appFeature)"
-							>
-								{{ appFeature.id }}
-							</button>
-						}
-					</nav>
-				</header>
-				<hr class="border-t border-base-content/20" />
-				<p class="text-base text-base-content">
-					{{ appFeatureActive.description }}
-				</p>
-				<ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-					@for (appFeatureActive of $any(appFeatureActive.list); track appFeatureActive.id) {
-						<li class="flex flex-col items-start justify-start gap-4 col-span-1">
-							<span class="text-base sm:text-xl font-semibold text-base-content">
-								{{ appFeatureActive.title }}
-							</span>
-							<p class="text-sm text-base-content/50">
-								{{ appFeatureActive.description }}
-							</p>
-						</li>
-					}
-				</ul>
-			</section>
+				</li>
+			}
+		</ul>
+		<main
+			class="rounded-box sm:rounded-none border sm:border-none border-base-content/20 w-full overflow-auto sm:overflow-visible"
+		>
+			<ul class="grid grid-cols-1 sm:grid-cols-3 sm:gap-4">
+				@for (appFeature of appFeatureList; track appFeature.id; let i = $index) {
+					<li
+						class="sm:rounded-box hidden sm:flex flex-col gap-2 col-span-1 border-t [&:nth-child(3n+1)]:border-t-0 sm:border border-base-content/20 bg-base-100 sm:shadow-xl p-4"
+						[class.!flex]="i + 1 <= 3 * appFeatureListIndex && i + 1 > 3 * appFeatureListIndex - 3"
+					>
+						<span class="text-base font-bold text-base-content">
+							{{ appFeature.title }}
+						</span>
+						<p class="text-sm text-base-content/50">
+							{{ appFeature.description }}
+						</p>
+					</li>
+				}
+			</ul>
+			<nav class="join bg-base-200 grid grid-cols-2 rounded-none sm:hidden border-t border-base-content/20 shadow-xl">
+				<button
+					class="join-item btn"
+					type="button"
+					title="Previous"
+					aria-label="Previous"
+					[disabled]="appFeatureListIndex === 1"
+					(click)="appFeatureListIndex = appFeatureListIndex - 1"
+				>
+					Previous
+				</button>
+				<button
+					class="join-item btn"
+					type="button"
+					title="Next"
+					aria-label="Next"
+					[disabled]="appFeatureListIndex === 3"
+					(click)="appFeatureListIndex = appFeatureListIndex + 1"
+				>
+					Next
+				</button>
+			</nav>
 		</main>
 	</section>
 </ng-container>

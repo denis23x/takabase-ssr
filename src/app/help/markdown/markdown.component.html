@@ -3,12 +3,12 @@
 <ng-container>
 	<section class="flex flex-col items-stretch justify-start gap-4">
 		<header class="flex flex-col items-stretch justify-start gap-4">
-			<h3 class="text-2xl font-semibold text-base-content">What is Markdown?</h3>
+			<h3 class="text-2xl font-bold text-base-content">What is Markdown?</h3>
 			<p class="text-base text-base-content">
 				Markdown is a lightweight markup language that you can use to add formatting elements to plaintext text
 				documents. Created by John Gruber in 2004, Markdown is now one of the world’s most popular markup languages.
 			</p>
-			<h4 class="text-xl font-semibold text-base-content divider divider-start">Overview</h4>
+			<h4 class="text-xl font-bold text-base-content divider divider-start">Overview</h4>
 			<p class="text-base text-base-content">
 				Nearly all Markdown applications support the basic syntax outlined in the original Markdown design document.
 				There are minor variations and discrepancies between Markdown processors — those are noted inline wherever
@@ -42,7 +42,7 @@
 		<ul class="flex flex-col gap-4">
 			@for (syntax of markdownSyntax; track syntax.id) {
 				<li class="flex flex-col items-stretch justify-start gap-4">
-					<h4 class="text-xl font-semibold text-base-content divider divider-start">
+					<h4 class="text-xl font-bold text-base-content divider divider-start">
 						{{ syntax.title }}
 					</h4>
 					<p class="text-base text-base-content prose max-w-full" [innerHTML]="syntax.description | sanitizer: 1"></p>
