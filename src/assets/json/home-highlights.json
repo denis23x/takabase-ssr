@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "title": "Customizable Themes",
+    "description": "Personalize your writing space with a variety of themes",
+    "icon": "palette"
+  },
+  {
+    "id": 2,
+    "title": "Social Authorization",
+    "description": "Enjoy the convenience of social authorization",
+    "icon": "door-open"
+  },
+  {
+    "id": 3,
+    "title": "Minimalistic UI",
+    "description": "Enjoy a clutter-free and easy-to-navigate user interface",
+    "icon": "house"
+  },
+  {
+    "id": 4,
+    "title": "Responsive Layout",
+    "description": "Experience consistent and intuitive browsing across a range of mobile devices",
+    "icon": "phone"
+  },
+  {
+    "id": 5,
+    "title": "Touch-Friendly Interactions",
+    "description": "Engage with the website's interactive elements using touch devices",
+    "icon": "hand-index-thumb"
+  },
+  {
+    "id": 6,
+    "title": "Optimized Images and Media",
+    "description": "Visuals load quickly without compromising quality",
+    "icon": "play-circle"
+  },
+  {
+    "id": 7,
+    "title": "Real-time Preview",
+    "description": "Witness the magic of Markdown content transforming into a live as you type",
+    "icon": "markdown"
+  },
+  {
+    "id": 8,
+    "title": "Syntax Highlighting",
+    "description": "Watch your code snippets come alive with syntax highlighting",
+    "icon": "code-slash"
+  },
+  {
+    "id": 9,
+    "title": "Arbitrary Styling",
+    "description": "Fine-tune your text and elements with arbitrary styles",
+    "icon": "paint-bucket"
+  }
+]

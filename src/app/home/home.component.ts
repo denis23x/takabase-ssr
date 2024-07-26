@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
-import homeFeatures from '../../assets/json/home-features.json';
+import homeHighlights from '../../assets/json/home-highlights.json';
 import dayjs from 'dayjs/esm';
 import relativeTime from 'dayjs/esm/plugin/relativeTime';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
@@ -35,11 +35,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 
-	appFeatureList: Record<string, string | number>[] = homeFeatures;
-	appFeatureListIndex: number = 1;
+	appHighlightList: Record<string, string | number>[] = homeHighlights;
+	appHighlightListIndex: number = 1;
 
 	appInsightValue: number = 1;
-	appInsightUnit: ManipulateType = 'day';
+	appInsightUnit: ManipulateType = 'week';
 
 	appInsightList: Insight[] = [];
 	appInsightListSkeletonToggle: boolean = true;
@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	setResolver(): void {
 		// prettier-ignore
-		this.appInsightListTime = dayjs().format(this.appInsightListTimeFormat) + ' - ' + dayjs().subtract(this.appInsightValue, this.appInsightUnit).format(this.appInsightListTimeFormat);
+		this.appInsightListTime = dayjs().subtract(this.appInsightValue, this.appInsightUnit).format(this.appInsightListTimeFormat) + ' - ' + dayjs().format(this.appInsightListTimeFormat);
 
 		const insightGetAllDto: InsightGetAllDto = {
 			value: this.appInsightValue,
@@ -96,7 +96,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		};
 
 		this.appInsightList$?.unsubscribe();
-		this.appInsightList$ = this.apiService.get('/v1/utilities/insights', insightGetAllDto).subscribe({
+		this.appInsightList$ = this.apiService.get('/v1/insights', insightGetAllDto).subscribe({
 			next: (insightList: any) => {
 				this.appInsightListSkeletonToggle = false;
 				this.appInsightList = this.appInsightList.map((insight: Insight) => ({

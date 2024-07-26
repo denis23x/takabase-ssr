@@ -1,7 +1,6 @@
 /** @format */
 
 import { Component, inject, OnInit } from '@angular/core';
-import { ShareComponent } from '../../standalone/components/share/share.component';
 import { PostProseComponent } from '../../standalone/components/post/prose/prose.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, switchMap, tap } from 'rxjs/operators';
@@ -15,7 +14,7 @@ import type { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
 	standalone: true,
-	imports: [PostProseComponent, ShareComponent],
+	imports: [PostProseComponent],
 	providers: [PostPrivateService],
 	selector: 'app-post-private',
 	templateUrl: './private.component.html'
