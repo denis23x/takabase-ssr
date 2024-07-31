@@ -67,7 +67,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	}
 
 	post: Post | undefined;
-	postType: string = 'category';
+	postType: string = 'public';
 	postPreview: boolean = false;
 	postShareUrl: string | undefined;
 	postSkeletonToggle: boolean = true;

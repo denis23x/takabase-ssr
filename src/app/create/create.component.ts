@@ -214,10 +214,6 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
-		/** Apply target */
-
-		this.setTarget();
-
 		/** Apply appearance settings */
 
 		this.setAppearance();
