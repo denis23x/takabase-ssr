@@ -31,6 +31,7 @@ export class ListMockComponent extends CurrentUserMixin(class {}) implements OnI
 	username: string | undefined;
 	categoryId: number | undefined;
 	postId: number | undefined;
+	query: string | undefined;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -40,6 +41,7 @@ export class ListMockComponent extends CurrentUserMixin(class {}) implements OnI
 		this.username = String(this.activatedRoute.snapshot.paramMap.get('username') || '');
 		this.categoryId = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
 		this.postId = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+		this.query = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
 	}
 
 	ngOnDestroy(): void {

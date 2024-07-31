@@ -214,9 +214,9 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
-		/** Apply Share Target */
+		/** Apply target */
 
-		this.setShareTarget();
+		this.setTarget();
 
 		/** Apply appearance settings */
 
@@ -298,6 +298,10 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 				next: (categoryList: Category[]) => {
 					this.categoryList = categoryList;
 					this.categoryListSkeletonToggle = false;
+
+					/** Apply target */
+
+					this.setTarget();
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -403,30 +407,52 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	/** Share Target */
-
-	setShareTarget(): void {
+	setTarget(): void {
 		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 
-		// Set only if there is no post update
+		// Set only if there is no post to update
 
 		if (!postId) {
-			Object.keys(this.activatedRoute.snapshot.queryParams).forEach((key: string) => {
-				const value: string = String(this.activatedRoute.snapshot.queryParamMap.get(key));
-				const valueParamsMap: any = {
-					['title']: 'name',
-					['text']: 'markdown',
-					['url']: 'markdown'
-				};
+			Object.entries(this.activatedRoute.snapshot.queryParams).forEach(([key, value]: string[]) => {
+				switch (key) {
+					case 'categoryId': {
+						const category: Category = this.categoryList.find((category: Category) => category.id === Number(value));
 
-				const abstractControl: AbstractControl | null = this.postForm.get(valueParamsMap[key]);
+						if (category) {
+							this.onSelectCategory(category);
+						}
 
-				if (abstractControl) {
-					if (key !== 'url') {
+						break;
+					}
+					case 'categoryName': {
+						this.onToggleCategoryCreateDialog()
+							.then(() => this.appCategoryCreateComponent.instance.categoryForm.get('name').setValue(value))
+							.catch((error: any) => console.error(error));
+
+						break;
+					}
+					case 'url':
+					case 'text': {
+						const abstractControl: AbstractControl | null = this.postForm.get('markdown');
+
+						abstractControl.patchValue(value + '\n\n' + abstractControl.value);
+						abstractControl.markAsTouched();
+
+						break;
+					}
+					case 'query':
+					case 'title': {
+						const abstractControl: AbstractControl | null = this.postForm.get('name');
+
 						abstractControl.setValue(value);
 						abstractControl.markAsTouched();
-					} else {
-						abstractControl.patchValue(value + '\n\n' + abstractControl.value);
+
+						break;
+					}
+					case 'postType': {
+						this.onChangePostType(value);
+
+						break;
 					}
 				}
 			});

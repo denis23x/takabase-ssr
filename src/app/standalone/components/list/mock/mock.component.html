@@ -12,7 +12,13 @@
 				></i>
 				<div class="text-center text-base-content">
 					<p class="text-lg font-bold">Posts <span class="text-error"> not found </span></p>
-					<a class="link text-sm" title="Create new post" aria-label="Create new post" [routerLink]="['/create']">
+					<a
+						class="link text-sm"
+						title="Create new post"
+						aria-label="Create new post"
+						[routerLink]="['/create']"
+						[queryParamsHandling]="'merge'"
+					>
 						Create new post
 					</a>
 				</div>
@@ -31,6 +37,7 @@
 						title="Create new category"
 						aria-label="Create new category"
 						[routerLink]="['/create']"
+						[queryParams]="{ categoryName: query }"
 					>
 						Create new category
 					</a>
@@ -73,7 +80,13 @@
 				></i>
 				<div class="text-center text-base-content">
 					<p class="text-lg font-bold">Posts <span class="text-error"> not found </span></p>
-					<a class="link text-sm" title="Create new post" aria-label="Create new post" [routerLink]="['/create']">
+					<a
+						class="link text-sm"
+						title="Create new post"
+						aria-label="Create new post"
+						[routerLink]="['/create']"
+						[queryParamsHandling]="'merge'"
+					>
 						Create new post
 					</a>
 				</div>
@@ -87,8 +100,15 @@
 				></i>
 				<div class="text-center text-base-content">
 					<p class="text-lg font-bold">Posts <span class="text-error"> not found </span></p>
-					<a class="link text-sm" title="Create new post" aria-label="Create new post" [routerLink]="['/create']">
-						Create new post
+					<a
+						class="link text-sm"
+						title="Create new post"
+						aria-label="Create new post"
+						[routerLink]="['/create']"
+						[queryParams]="{ postType: 'password' }"
+						[queryParamsHandling]="'merge'"
+					>
+						Create new hidden post
 					</a>
 				</div>
 			}
@@ -101,8 +121,15 @@
 				></i>
 				<div class="text-center text-base-content">
 					<p class="text-lg font-bold">Posts <span class="text-error"> not found </span></p>
-					<a class="link text-sm" title="Create new post" aria-label="Create new post" [routerLink]="['/create']">
-						Create new post
+					<a
+						class="link text-sm"
+						title="Create new post"
+						aria-label="Create new post"
+						[routerLink]="['/create']"
+						[queryParams]="{ postType: 'private' }"
+						[queryParamsHandling]="'merge'"
+					>
+						Create new private post
 					</a>
 				</div>
 			}
@@ -120,8 +147,8 @@
 						title="Create new post"
 						aria-label="Create new post"
 						[routerLink]="['/create']"
-						[queryParams]="{ categoryId }"
-						[queryParamsHandling]="''"
+						[queryParams]="{ categoryId: username === currentUser?.name ? categoryId : null }"
+						[queryParamsHandling]="'merge'"
 					>
 						Create new post
 					</a>
@@ -136,9 +163,7 @@
 				></i>
 				<div class="text-center text-base-content">
 					<p class="text-lg font-bold"><span class="text-success">Nothing more </span> to load</p>
-					<a class="link text-sm" title="Create new post" aria-label="Create new post" [routerLink]="['/create']">
-						Create new post
-					</a>
+					<span class="text-sm"> Why not explore other sections? </span>
 				</div>
 			}
 		}

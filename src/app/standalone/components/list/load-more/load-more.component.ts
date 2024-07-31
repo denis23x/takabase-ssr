@@ -77,7 +77,7 @@ export class ListLoadMoreComponent implements OnInit, OnDestroy {
 					.pipe(
 						map(() => window.innerHeight + Math.round(window.scrollY)),
 						filter((scrollY: number) => Math.abs(scrollY - this.document.body.offsetHeight) <= 96 + 64),
-						filter(() => !this.searchResponseIsEndPage && !this.isLoading),
+						filter(() => !this.searchResponseIsOnePage && !this.searchResponseIsEndPage && !this.isLoading),
 						debounceTime(300)
 					)
 					.subscribe({

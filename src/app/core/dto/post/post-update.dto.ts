@@ -7,4 +7,5 @@ export interface PostUpdateDto {
 	markdown?: string;
 	image?: string;
 	categoryId?: number;
+	password?: number;
 }

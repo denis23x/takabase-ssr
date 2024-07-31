@@ -108,7 +108,7 @@
 			<form class="grid flex-1 grid-cols-12 gap-x-4 gap-y-2" autocomplete="off" [formGroup]="postForm">
 				@if (postForm.get("name"); as name) {
 					<fieldset class="form-control items-start col-span-12 sm:col-span-6">
-						<label class="label" for="postFormTitle">
+						<label class="label" for="postFormName">
 							<div
 								class="indicator"
 								appSkeleton
@@ -124,10 +124,11 @@
 						<div class="relative w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 							<input
 								class="input-bordered input input-md w-full"
-								id="postFormTitle"
+								id="postFormName"
 								type="text"
 								title="Name"
 								aria-label="Name"
+								autocomplete="off"
 								placeholder="Type post name"
 								formControlName="name"
 								appInputTrimWhitespace
@@ -379,8 +380,8 @@
 								<button
 									class="rounded-btn block w-full truncate text-right"
 									type="button"
-									title="Make private post"
-									aria-label="Make private post"
+									title="Private post"
+									aria-label="Private post"
 									[class.active]="postType === 'private'"
 									(click)="onChangePostType('private')"
 								>
