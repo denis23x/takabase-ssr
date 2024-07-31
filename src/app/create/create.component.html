@@ -159,14 +159,19 @@
 							@if (postForm.get("password"); as password) {
 								<fieldset class="form-control items-start w-full">
 									<label class="label" for="postFormPassword">
-										<div class="indicator">
+										<div
+											class="indicator"
+											appSkeleton
+											[appSkeletonToggle]="postSkeletonToggle"
+											[appSkeletonClassListElementRef]="['!-mx-1']"
+										>
 											@if (password.touched && !!password.errors && postForm.enabled) {
 												<div class="block" appBadgeError [appBadgeErrorAbstractControl]="password"></div>
 											}
 											<span class="label-text mr-2">Password</span>
 										</div>
 									</label>
-									<div class="block w-full relative">
+									<div class="block w-full relative" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 										<input
 											class="input input-bordered input-md w-full truncate"
 											id="postFormPassword"
@@ -207,11 +212,16 @@
 						@case ("private") {
 							<fieldset class="form-control items-start w-full">
 								<label class="label" for="postFormPrivate">
-									<div class="indicator">
+									<div
+										class="indicator"
+										appSkeleton
+										[appSkeletonToggle]="postSkeletonToggle"
+										[appSkeletonClassListElementRef]="['!-mx-1']"
+									>
 										<span class="label-text mr-2">Private</span>
 									</div>
 								</label>
-								<div class="block w-full relative">
+								<div class="block w-full relative" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 									<input
 										class="input input-bordered input-md w-full truncate"
 										id="postFormPrivate"
@@ -342,10 +352,10 @@
 								<button
 									class="rounded-btn block w-full truncate text-right"
 									type="button"
-									title="Private post"
-									aria-label="Private post"
-									[class.active]="postType === 'category'"
-									(click)="onChangePostType('category')"
+									title="Public available post"
+									aria-label="Public available post"
+									[class.active]="postType === 'public'"
+									(click)="onChangePostType('public')"
 								>
 									Category
 								</button>

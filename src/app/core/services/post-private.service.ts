@@ -24,7 +24,7 @@ export class PostPrivateService {
 		return this.apiService.get('/v1/posts-private', postPrivateGetAllDto);
 	}
 
-	getOne(postPrivateId: number, postPrivateGetOneDto: PostPrivateGetOneDto): Observable<PostPrivate> {
+	getOne(postPrivateId: number, postPrivateGetOneDto?: PostPrivateGetOneDto): Observable<PostPrivate> {
 		return this.apiService.get('/v1/posts-private/' + postPrivateId, postPrivateGetOneDto);
 	}
 

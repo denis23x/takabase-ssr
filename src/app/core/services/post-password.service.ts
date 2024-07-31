@@ -24,7 +24,7 @@ export class PostPasswordService {
 		return this.apiService.get('/v1/posts-password', postPasswordGetAllDto);
 	}
 
-	getOne(postPasswordId: number, postPasswordGetOneDto: PostPasswordGetOneDto): Observable<PostPassword> {
+	getOne(postPasswordId: number, postPasswordGetOneDto?: PostPasswordGetOneDto): Observable<PostPassword> {
 		return this.apiService.get('/v1/posts-password/' + postPasswordId, postPasswordGetOneDto);
 	}
 

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ComponentRef, inject, Input, OnDestroy, OnInit, Type, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, inject, Input, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
@@ -67,7 +67,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	}
 
 	post: Post | undefined;
-	postType: string | undefined;
+	postType: string = 'category';
 	postPreview: boolean = false;
 	postShareUrl: string | undefined;
 	postSkeletonToggle: boolean = true;
@@ -94,13 +94,12 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	async onToggleReportDialog(): Promise<void> {
 		if (this.currentUser) {
 			if (!this.appReportComponent) {
-				const reportComponent: Type<ReportComponent> = await import('../../report/report.component').then(m => {
-					return m.ReportComponent;
-				});
-
-				this.appReportComponent = this.viewContainerRef.createComponent(reportComponent);
-				this.appReportComponent.setInput('appReportPost', this.post);
+				await import('../../report/report.component')
+					.then(m => (this.appReportComponent = this.viewContainerRef.createComponent(m.ReportComponent)))
+					.catch((error: any) => console.error(error));
 			}
+
+			this.appReportComponent.setInput('appReportPost', this.post);
 
 			this.appReportComponent.changeDetectorRef.detectChanges();
 			this.appReportComponent.instance.onToggleReportDialog(true);
@@ -111,14 +110,13 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 
 	async onToggleQRCodeDialog(): Promise<void> {
 		if (!this.appQRCodeComponent) {
-			const qrCodeComponent: Type<QRCodeComponent> = await import('../../qr-code/qr-code.component').then(m => {
-				return m.QRCodeComponent;
-			});
-
-			this.appQRCodeComponent = this.viewContainerRef.createComponent(qrCodeComponent);
-			this.appQRCodeComponent.setInput('appQRCodeData', this.postShareUrl);
-			this.appQRCodeComponent.setInput('appQRCodeOrigin', false);
+			await import('../../qr-code/qr-code.component')
+				.then(m => (this.appQRCodeComponent = this.viewContainerRef.createComponent(m.QRCodeComponent)))
+				.catch((error: any) => console.error(error));
 		}
+
+		this.appQRCodeComponent.setInput('appQRCodeData', this.postShareUrl);
+		this.appQRCodeComponent.setInput('appQRCodeOrigin', false);
 
 		this.appQRCodeComponent.changeDetectorRef.detectChanges();
 		this.appQRCodeComponent.instance.onToggleQRCodeDialog(true);
@@ -126,13 +124,13 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 
 	async onTogglePostDeleteDialog(): Promise<void> {
 		if (!this.appPostDeleteComponent) {
-			const postDeleteComponent: Type<PostDeleteComponent> = await import('../delete/delete.component').then(m => {
-				return m.PostDeleteComponent;
-			});
-
-			this.appPostDeleteComponent = this.viewContainerRef.createComponent(postDeleteComponent);
-			this.appPostDeleteComponent.setInput('appPostDeletePost', this.post);
+			await import('../delete/delete.component')
+				.then(m => (this.appPostDeleteComponent = this.viewContainerRef.createComponent(m.PostDeleteComponent)))
+				.catch((error: any) => console.error(error));
 		}
+
+		this.appPostDeleteComponent.setInput('appPostDeletePost', this.post);
+		this.appPostDeleteComponent.setInput('appPostDeletePostType', this.postType);
 
 		this.appPostDeleteComponent.changeDetectorRef.detectChanges();
 		this.appPostDeleteComponent.instance.onTogglePostDeleteDialog(true);

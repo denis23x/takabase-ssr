@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ComponentRef, inject, OnDestroy, OnInit, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, inject, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -275,14 +275,12 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	async onToggleReportDialog(): Promise<void> {
 		if (this.currentUser) {
 			if (!this.appReportComponent) {
-				// prettier-ignore
-				const reportComponent: Type<ReportComponent> = await import('../standalone/components/report/report.component').then(m => {
-					return m.ReportComponent;
-				});
-
-				this.appReportComponent = this.viewContainerRef.createComponent(reportComponent);
-				this.appReportComponent.setInput('appReportUser', this.user);
+				await import('../standalone/components/report/report.component')
+					.then(m => (this.appReportComponent = this.viewContainerRef.createComponent(m.ReportComponent)))
+					.catch((error: any) => console.error(error));
 			}
+
+			this.appReportComponent.setInput('appReportUser', this.user);
 
 			this.appReportComponent.changeDetectorRef.detectChanges();
 			this.appReportComponent.instance.onToggleReportDialog(true);
@@ -293,15 +291,13 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 
 	async onToggleQRCodeDialog(): Promise<void> {
 		if (!this.appQRCodeComponent) {
-			// prettier-ignore
-			const qrCodeComponent: Type<QRCodeComponent> = await import('../standalone/components/qr-code/qr-code.component').then(m => {
-				return m.QRCodeComponent;
-			});
-
-			this.appQRCodeComponent = this.viewContainerRef.createComponent(qrCodeComponent);
-			this.appQRCodeComponent.setInput('appQRCodeData', this.user.name);
-			this.appQRCodeComponent.setInput('appQRCodeOrigin', true);
+			await import('../standalone/components/qr-code/qr-code.component')
+				.then(m => (this.appQRCodeComponent = this.viewContainerRef.createComponent(m.QRCodeComponent)))
+				.catch((error: any) => console.error(error));
 		}
+
+		this.appQRCodeComponent.setInput('appQRCodeData', this.user.name);
+		this.appQRCodeComponent.setInput('appQRCodeOrigin', true);
 
 		this.appQRCodeComponent.changeDetectorRef.detectChanges();
 		this.appQRCodeComponent.instance.onToggleQRCodeDialog(true);

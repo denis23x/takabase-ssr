@@ -24,7 +24,7 @@ export class PostService {
 		return this.apiService.get('/v1/posts', postGetAllDto);
 	}
 
-	getOne(postId: number, postGetOneDto: PostGetOneDto): Observable<Post> {
+	getOne(postId: number, postGetOneDto?: PostGetOneDto): Observable<Post> {
 		return this.apiService.get('/v1/posts/' + postId, postGetOneDto);
 	}
 

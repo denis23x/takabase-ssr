@@ -7,7 +7,6 @@ import {
 	OnDestroy,
 	OnInit,
 	signal,
-	Type,
 	ViewContainerRef,
 	WritableSignal
 } from '@angular/core';
@@ -252,15 +251,12 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 	async onToggleCropperDialog(): Promise<void> {
 		if (!this.appCropperComponent) {
-			// prettier-ignore
-			const cropperComponent: Type<CropperComponent> = await import('../../standalone/components/cropper/cropper.component').then(m => {
-				return m.CropperComponent;
-			});
-
-			this.appCropperComponent = this.viewContainerRef.createComponent(cropperComponent);
-			this.appCropperComponent.instance.appCropperSubmit.subscribe({
-				next: (file: File) => this.onSubmitCropperAvatar(file),
-				error: (error: any) => console.error(error)
+			await import('../../standalone/components/cropper/cropper.component').then(m => {
+				this.appCropperComponent = this.viewContainerRef.createComponent(m.CropperComponent);
+				this.appCropperComponent.instance.appCropperSubmit.subscribe({
+					next: (file: File) => this.onSubmitCropperAvatar(file),
+					error: (error: any) => console.error(error)
+				});
 			});
 		}
 

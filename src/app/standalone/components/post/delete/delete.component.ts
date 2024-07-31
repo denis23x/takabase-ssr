@@ -17,28 +17,32 @@ import {
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { PostService } from '../../../../core/services/post.service';
+import { PostPasswordService } from '../../../../core/services/post-password.service';
+import { PostPrivateService } from '../../../../core/services/post-private.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { AuthorizationService } from '../../../../core/services/authorization.service';
+import { Observable, Subscription } from 'rxjs';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { Location } from '@angular/common';
+import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import type { Post } from '../../../../core/models/post.model';
 import type { PostDeleteDto } from '../../../../core/dto/post/post-delete.dto';
-import type { CurrentUser } from '../../../../core/models/current-user.model';
+import type { PostPassword } from '../../../../core/models/post-password.model';
+import type { PostPrivate } from '../../../../core/models/post-private.model';
 
 @Component({
 	standalone: true,
 	imports: [SvgIconComponent, WindowComponent],
-	providers: [PostService],
+	providers: [PostService, PostPasswordService, PostPrivateService],
 	selector: 'app-post-delete, [appPostDelete]',
 	templateUrl: './delete.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PostDeleteComponent implements OnInit, OnDestroy {
+export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly router: Router = inject(Router);
 	private readonly postService: PostService = inject(PostService);
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+	private readonly postPasswordService: PostPasswordService = inject(PostPasswordService);
+	private readonly postPrivateService: PostPrivateService = inject(PostPrivateService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly location: Location = inject(Location);
@@ -53,20 +57,19 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 		this.post = post;
 	}
 
-	currentUser: CurrentUser | undefined;
-	currentUser$: Subscription | undefined;
+	@Input({ required: true })
+	set appPostDeletePostType(postType: string) {
+		this.postType = postType;
+	}
 
 	post: Post | undefined;
+	postType: string | undefined;
 	postDeleteRequest$: Subscription | undefined;
 	postDeleteDialogToggle: boolean = false;
 	postDeleteIsSubmitted: WritableSignal<boolean> = signal(false);
 
 	ngOnInit(): void {
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
-			error: (error: any) => console.error(error)
-		});
+		super.ngOnInit();
 
 		/** Extra toggle close when url change */
 
@@ -76,7 +79,11 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$, this.postDeleteRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		super.ngOnDestroy();
+
+		// Unsubscribe
+
+		[this.postDeleteRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onTogglePostDeleteDialog(toggle: boolean): void {
@@ -94,22 +101,37 @@ export class PostDeleteComponent implements OnInit, OnDestroy {
 	onSubmitPostDelete(): void {
 		this.postDeleteIsSubmitted.set(true);
 
+		// Delete
+
 		const postId: number = this.post.id;
 		const postDeleteDto: PostDeleteDto = {
 			firebaseUid: this.post.firebaseUid
 		};
 
-		// Attach only if exists (querystring parse issue)
+		// prettier-ignore
+		const postTypeMap: Record<string, Observable<Partial<Post | PostPassword | PostPrivate>>> = {
+			password: this.postPasswordService.delete(postId, postDeleteDto),
+			private: this.postPrivateService.delete(postId, postDeleteDto),
+			public: this.postService.delete(postId, postDeleteDto)
+		};
+
+		// Put field only if exists (querystring parse issue)
 
 		if (this.post.image) {
 			postDeleteDto.image = this.post.image;
 		}
 
 		this.postDeleteRequest$?.unsubscribe();
-		this.postDeleteRequest$ = this.postService.delete(postId, postDeleteDto).subscribe({
+		this.postDeleteRequest$ = postTypeMap[this.postType].subscribe({
 			next: () => {
+				const postTypeRedirectMap: Record<string, string[]> = {
+					password: ['password'],
+					private: ['private'],
+					public: ['category', String(this.post.category?.id)]
+				};
+
 				this.router
-					.navigate(['/', this.post.user.name, 'category', this.post.category.id])
+					.navigate(['/', this.currentUser.name, ...postTypeRedirectMap[this.postType]])
 					.then(() => this.snackbarService.success('Sadly..', 'Post has been deleted'));
 			},
 			error: () => this.postDeleteIsSubmitted.set(false)

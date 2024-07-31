@@ -10,13 +10,12 @@ import {
 	OnInit,
 	signal,
 	Signal,
-	Type,
 	ViewContainerRef,
 	WritableSignal
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { fromEvent, Observable, Subscription, switchMap } from 'rxjs';
-import { filter, map, startWith, tap } from 'rxjs/operators';
+import { from, fromEvent, Observable, Subscription, switchMap, throwError } from 'rxjs';
+import { catchError, filter, map, startWith, tap } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -26,7 +25,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
+import { CommonModule, DOCUMENT, Location, NgOptimizedImage } from '@angular/common';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { InputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
@@ -58,14 +57,14 @@ import { InputShowPassword } from '../standalone/directives/app-input-show-passw
 import type { PostCreateDto } from '../core/dto/post/post-create.dto';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import type { CurrentUser } from '../core/models/current-user.model';
+import type { Category } from '../core/models/category.model';
+import type { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import type { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
+import type { Post } from '../core/models/post.model';
 import type { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
 import type { PostUpdateDto } from '../core/dto/post/post-update.dto';
 import type { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
-import type { Category } from '../core/models/category.model';
-import type { Post } from '../core/models/post.model';
 import type { CropperComponent } from '../standalone/components/cropper/cropper.component';
-import type { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import type { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
 import type { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
 import type { PostPassword } from '../core/models/post-password.model';
@@ -74,6 +73,7 @@ import type { PostPasswordUpdateDto } from '../core/dto/post-password/post-passw
 import type { PostPrivate } from '../core/models/post-private.model';
 import type { PostPrivateCreateDto } from '../core/dto/post-private/post-private-create.dto';
 import type { PostPrivateUpdateDto } from '../core/dto/post-private/post-private-update.dto';
+import type { HttpErrorResponse } from '@angular/common/http';
 
 interface PostForm {
 	name: FormControl<string>;
@@ -132,6 +132,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 	private readonly aiService: AIService = inject(AIService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 	private readonly busService: BusService = inject(BusService);
+	private readonly location: Location = inject(Location);
 
 	category: Category | undefined;
 	categorySkeletonToggle: boolean = true;
@@ -143,7 +144,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 	post: Post | undefined;
 	postRequest$: Subscription | undefined;
 	postSkeletonToggle: boolean = true;
-	postType: string = 'category';
+	postType: string = 'public';
 
 	postForm: FormGroup = this.formBuilder.group<PostForm>({
 		name: this.formBuilder.nonNullable.control('', [
@@ -268,12 +269,17 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	setSkeleton(): void {
-		// Get categoryList
+		// Set categoryList
 
 		this.categoryList = this.skeletonService.getCategoryList();
 		this.categoryListSkeletonToggle = true;
 
-		// Get post && Set category
+		// Set category
+
+		this.category = this.skeletonService.getCategory();
+		this.categorySkeletonToggle = true;
+
+		// Set post (when update post)
 
 		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 
@@ -281,9 +287,6 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.post = this.skeletonService.getPost(['category']);
 			this.postSkeletonToggle = true;
 		}
-
-		this.category = this.skeletonService.getCategory();
-		this.categorySkeletonToggle = true;
 	}
 
 	setResolver(): void {
@@ -294,6 +297,8 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 				username: this.currentUser.name
 			};
 
+			// Get categories
+
 			this.categoryListRequest$?.unsubscribe();
 			this.categoryListRequest$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
 				next: (categoryList: Category[]) => {
@@ -303,55 +308,73 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 				error: (error: any) => console.error(error)
 			});
 
-			// Get post && Set category
+			// Get post
 
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+			const postState: any = this.location.getState();
 
-			if (postId) {
+			if (postId && postState) {
 				const postGetOneDto: PostGetOneDto = {
 					userFirebaseUid: this.currentUser.firebase.uid,
 					scope: ['category']
 				};
 
+				const postTypeMap: Record<string, Observable<Post | PostPassword | PostPrivate>> = {
+					password: this.postPasswordService.getOne(postId),
+					private: this.postPrivateService.getOne(postId),
+					public: this.postService.getOne(postId, postGetOneDto)
+				};
+
+				// Set postType
+
+				this.onChangePostType(postState.postType);
+
+				// Request
+
 				this.postRequest$?.unsubscribe();
-				this.postRequest$ = this.postService.getOne(postId, postGetOneDto).subscribe({
-					next: (post: Post) => {
-						this.post = post;
-						this.postSkeletonToggle = false;
+				this.postRequest$ = postTypeMap[this.postType]
+					.pipe(
+						catchError((httpErrorResponse: HttpErrorResponse) => {
+							return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(
+								switchMap(() => throwError(() => httpErrorResponse))
+							);
+						})
+					)
+					.subscribe({
+						next: (post: Post | PostPassword | PostPrivate) => {
+							this.post = post;
+							this.postSkeletonToggle = false;
 
-						this.category = this.post.category;
-						this.categorySkeletonToggle = false;
+							this.category = this.post.category || undefined;
+							this.categorySkeletonToggle = false;
 
-						this.postForm.patchValue({
-							...this.post,
-							categoryId: this.category.id,
-							categoryName: this.category.name
-						});
-						this.postForm.markAllAsTouched();
+							this.postForm.patchValue({
+								...this.post,
+								categoryId: this.category?.id,
+								categoryName: this.category?.name
+							});
+							this.postForm.markAllAsTouched();
 
-						// Get postFormIsPristine
+							// Get postFormIsPristine
 
-						this.postFormIsPristine$?.unsubscribe();
-						this.postFormIsPristine$ = this.postForm.valueChanges.pipe(startWith(this.postForm.value)).subscribe({
-							next: (value: any) => {
-								this.postFormIsPristine = Object.keys(value).every((key: string) => {
-									if (key === 'categoryId') {
-										return value[key] === this.post.category.id;
-									}
-
-									if (key === 'categoryName') {
-										return value[key] === this.post.category.name;
-									}
-
-									// @ts-ignore
-									return value[key] === this.post[key];
-								});
-							},
-							error: (error: any) => console.error(error)
-						});
-					},
-					error: (error: any) => console.error(error)
-				});
+							this.postFormIsPristine$?.unsubscribe();
+							this.postFormIsPristine$ = this.postForm.valueChanges.pipe(startWith(this.postForm.value)).subscribe({
+								next: (value: any) => {
+									this.postFormIsPristine = Object.keys(value).every((key: string) => {
+										switch (key) {
+											case 'categoryId':
+												return value[key] === this.post.category?.id;
+											case 'categoryName':
+												return value[key] === this.post.category?.name;
+											default:
+												return value[key] === this.post[key as keyof Post];
+										}
+									});
+								},
+								error: (error: any) => console.error(error)
+							});
+						}
+					});
 			} else {
 				this.post = undefined;
 				this.postSkeletonToggle = false;
@@ -518,17 +541,12 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.postType = postType;
 
 		// Remove control if already exists
+
 		this.postForm.removeControl('categoryId');
 		this.postForm.removeControl('categoryName');
 		this.postForm.removeControl('password');
 
 		switch (this.postType) {
-			case 'category': {
-				this.postForm.addControl('categoryId', this.formBuilder.control(null, [Validators.required]));
-				this.postForm.addControl('categoryName', this.formBuilder.nonNullable.control('', []));
-
-				break;
-			}
 			case 'password': {
 				// prettier-ignore
 				this.postForm.addControl('password', this.formBuilder.nonNullable.control('', [
@@ -541,6 +559,13 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 				break;
 			}
 			case 'private': {
+				// Nothing to add
+				break;
+			}
+			case 'public': {
+				this.postForm.addControl('categoryId', this.formBuilder.control(null, [Validators.required]));
+				this.postForm.addControl('categoryName', this.formBuilder.nonNullable.control('', []));
+
 				break;
 			}
 			default: {
@@ -553,88 +578,48 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.postForm)) {
 			this.postForm.disable();
 
+			// Create or Update
+
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+
+			// prettier-ignore
+			const postDto: (PostCreateDto & PostUpdateDto) | (PostPasswordCreateDto & PostPasswordUpdateDto) | (PostPrivateCreateDto & PostPrivateUpdateDto) = {
+				...this.postForm.value,
+				firebaseUid: this.post?.firebaseUid || undefined
+			};
+
+			// prettier-ignore
+			const postTypeMap: Record<string, Observable<Post | PostPassword | PostPrivate>> = {
+				password: postId ? this.postPasswordService.update(postId, postDto) : this.postPasswordService.create(postDto),
+				private: postId ? this.postPrivateService.update(postId, postDto) : this.postPrivateService.create(postDto),
+				public: postId ? this.postService.update(postId, postDto) : this.postService.create(postDto as PostCreateDto),
+			};
+
+			// Moderate
 
 			const aiModerateTextDto: AIModerateTextDto = {
 				model: 'text-moderation-stable',
 				input: this.aiService.setInput(this.postForm.value)
 			};
 
-			const aiModerate: Observable<boolean> = this.aiService.moderateText(aiModerateTextDto);
+			this.postFormRequest$?.unsubscribe();
+			this.postFormRequest$ = this.aiService
+				.moderateText(aiModerateTextDto)
+				.pipe(switchMap(() => postTypeMap[this.postType]))
+				.subscribe({
+					next: (post: Post | PostPassword | PostPrivate) => {
+						const postTypeRedirectMap: Record<string, string[]> = {
+							password: ['password'],
+							private: ['private'],
+							public: ['category', String(post.category?.id)]
+						};
 
-			/** Moderate and create/update */
-
-			switch (this.postType) {
-				case 'category': {
-					const postDto: PostCreateDto & PostUpdateDto = {
-						...this.postForm.value,
-						firebaseUid: this.post?.firebaseUid
-					};
-
-					const postMethod: Observable<Post> = postId
-						? this.postService.update(postId, postDto)
-						: this.postService.create(postDto);
-
-					this.postFormRequest$?.unsubscribe();
-					this.postFormRequest$ = aiModerate.pipe(switchMap(() => postMethod)).subscribe({
-						next: (post: Post) => {
-							this.router
-								.navigate(['/', post.user.name, 'category', post.category.id])
-								.then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
-						},
-						error: () => this.postForm.enable()
-					});
-
-					break;
-				}
-				case 'password': {
-					const postPasswordDto: PostPasswordCreateDto & PostPasswordUpdateDto = {
-						...this.postForm.value,
-						firebaseUid: this.post?.firebaseUid
-					};
-
-					const postPasswordMethod: Observable<Post> = postId
-						? this.postPasswordService.update(postId, postPasswordDto)
-						: this.postPasswordService.create(postPasswordDto);
-
-					this.postFormRequest$?.unsubscribe();
-					this.postFormRequest$ = aiModerate.pipe(switchMap(() => postPasswordMethod)).subscribe({
-						next: (postPassword: PostPassword) => {
-							this.router
-								.navigate(['/', postPassword.user.name, 'password'])
-								.then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
-						},
-						error: () => this.postForm.enable()
-					});
-
-					break;
-				}
-				case 'private': {
-					const postPrivateDto: PostPrivateCreateDto & PostPrivateUpdateDto = {
-						...this.postForm.value,
-						firebaseUid: this.post?.firebaseUid
-					};
-
-					const postPrivateMethod: Observable<Post> = postId
-						? this.postPrivateService.update(postId, postPrivateDto)
-						: this.postPrivateService.create(postPrivateDto);
-
-					this.postFormRequest$?.unsubscribe();
-					this.postFormRequest$ = aiModerate.pipe(switchMap(() => postPrivateMethod)).subscribe({
-						next: (postPrivate: PostPrivate) => {
-							this.router
-								.navigate(['/', postPrivate.user.name, 'private'])
-								.then(() => this.snackbarService.success('Cheers!', 'Post has been saved'));
-						},
-						error: () => this.postForm.enable()
-					});
-
-					break;
-				}
-				default: {
-					throw new Error('Invalid post type specified: ' + this.postType);
-				}
-			}
+						this.router
+							.navigate(['/', post.user.name, ...postTypeRedirectMap[this.postType]])
+							.then(() => this.snackbarService.success('Cheers!', 'Post has been ' + (postId ? 'updated' : 'saved')));
+					},
+					error: () => this.postForm.enable()
+				});
 		}
 	}
 
@@ -642,15 +627,12 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	async onToggleCropperDialog(toggle: boolean = true): Promise<void> {
 		if (!this.appCropperComponent) {
-			// prettier-ignore
-			const cropperComponent: Type<CropperComponent> = await import('../standalone/components/cropper/cropper.component').then(m => {
-				return m.CropperComponent;
-			});
-
-			this.appCropperComponent = this.viewContainerRef.createComponent(cropperComponent);
-			this.appCropperComponent.instance.appCropperSubmit.subscribe({
-				next: (file: File) => this.onSubmitCropperImage(file),
-				error: (error: any) => console.error(error)
+			await import('../standalone/components/cropper/cropper.component').then(m => {
+				this.appCropperComponent = this.viewContainerRef.createComponent(m.CropperComponent);
+				this.appCropperComponent.instance.appCropperSubmit.subscribe({
+					next: (file: File) => this.onSubmitCropperImage(file),
+					error: (error: any) => console.error(error)
+				});
 			});
 		}
 
@@ -660,15 +642,12 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	async onToggleCategoryCreateDialog(): Promise<void> {
 		if (!this.appCategoryCreateComponent) {
-			// prettier-ignore
-			const categoryCreateComponent: Type<CategoryCreateComponent> = await import('../standalone/components/category/create/create.component').then(m => {
-				return m.CategoryCreateComponent;
-			});
-
-			this.appCategoryCreateComponent = this.viewContainerRef.createComponent(categoryCreateComponent);
-			this.appCategoryCreateComponent.instance.appCategoryCreateSuccess.subscribe({
-				next: (category: Category) => this.onCreateCategory(category),
-				error: (error: any) => console.error(error)
+			await import('../standalone/components/category/create/create.component').then(m => {
+				this.appCategoryCreateComponent = this.viewContainerRef.createComponent(m.CategoryCreateComponent);
+				this.appCategoryCreateComponent.instance.appCategoryCreateSuccess.subscribe({
+					next: (category: Category) => this.onCreateCategory(category),
+					error: (error: any) => console.error(error)
+				});
 			});
 		}
 
@@ -678,15 +657,13 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	async onTogglePostPreviewDialog(): Promise<void> {
 		if (!this.appPostPreviewComponent) {
-			// prettier-ignore
-			const postPreviewComponent: Type<PostPreviewComponent> = await import('../standalone/components/post/preview/preview.component').then(m => {
-				return m.PostPreviewComponent;
-			});
-
-			this.appPostPreviewComponent = this.viewContainerRef.createComponent(postPreviewComponent);
-			this.appPostPreviewComponent.setInput('appPostPreviewPost', this.postForm.value);
-			this.appPostPreviewComponent.setInput('appPostPreviewCategory', this.category);
+			await import('../standalone/components/post/preview/preview.component')
+				.then(m => (this.appPostPreviewComponent = this.viewContainerRef.createComponent(m.PostPreviewComponent)))
+				.catch((error: any) => console.error(error));
 		}
+
+		this.appPostPreviewComponent.setInput('appPostPreviewPost', this.postForm.value);
+		this.appPostPreviewComponent.setInput('appPostPreviewCategory', this.category);
 
 		this.appPostPreviewComponent.changeDetectorRef.detectChanges();
 		this.appPostPreviewComponent.instance.onTogglePostPreviewDialog(true);
@@ -694,14 +671,13 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	async onTogglePostDeleteDialog(): Promise<void> {
 		if (!this.appPostDeleteComponent) {
-			// prettier-ignore
-			const postDeleteComponent: Type<PostDeleteComponent> = await import('../standalone/components/post/delete/delete.component').then(m => {
-				return m.PostDeleteComponent;
-			});
-
-			this.appPostDeleteComponent = this.viewContainerRef.createComponent(postDeleteComponent);
-			this.appPostDeleteComponent.setInput('appPostDeletePost', this.post);
+			await import('../standalone/components/post/delete/delete.component')
+				.then(m => (this.appPostDeleteComponent = this.viewContainerRef.createComponent(m.PostDeleteComponent)))
+				.catch((error: any) => console.error(error));
 		}
+
+		this.appPostDeleteComponent.setInput('appPostDeletePost', this.post);
+		this.appPostDeleteComponent.setInput('appPostDeletePostType', this.postType);
 
 		this.appPostDeleteComponent.changeDetectorRef.detectChanges();
 		this.appPostDeleteComponent.instance.onTogglePostDeleteDialog(true);

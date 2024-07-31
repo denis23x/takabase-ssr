@@ -9,7 +9,6 @@ import {
 	OnInit,
 	signal,
 	Signal,
-	Type,
 	ViewContainerRef,
 	WritableSignal
 } from '@angular/core';
@@ -473,11 +472,9 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	async onToggleUserPasswordResetDialog(): Promise<void> {
 		if (!this.appUserPasswordResetComponent) {
 			// prettier-ignore
-			const userPasswordResetComponent: Type<UserPasswordResetComponent> = await import('../../standalone/components/user/password-reset/password-reset.component').then(m => {
-				return m.UserPasswordResetComponent;
-			});
-
-			this.appUserPasswordResetComponent = this.viewContainerRef.createComponent(userPasswordResetComponent);
+			await import('../../standalone/components/user/password-reset/password-reset.component')
+				.then(m => (this.appUserPasswordResetComponent = this.viewContainerRef.createComponent(m.UserPasswordResetComponent)))
+				.catch((error: any) => console.error(error));
 		}
 
 		this.appUserPasswordResetComponent.changeDetectorRef.detectChanges();
@@ -486,12 +483,9 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 	async onToggleUserDeleteDialog(): Promise<void> {
 		if (!this.appUserDeleteComponent) {
-			// prettier-ignore
-			const userDeleteComponent: Type<UserDeleteComponent> = await import('../../standalone/components/user/delete/delete.component').then(m => {
-				return m.UserDeleteComponent;
-			});
-
-			this.appUserDeleteComponent = this.viewContainerRef.createComponent(userDeleteComponent);
+			await import('../../standalone/components/user/delete/delete.component')
+				.then(m => (this.appUserDeleteComponent = this.viewContainerRef.createComponent(m.UserDeleteComponent)))
+				.catch((error: any) => console.error(error));
 		}
 
 		this.appUserDeleteComponent.changeDetectorRef.detectChanges();

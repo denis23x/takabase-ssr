@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ComponentRef, inject, OnDestroy, OnInit, Type, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, Subscription, switchMap } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
@@ -294,15 +294,12 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 
 	async onToggleCategoryCreateDialog(): Promise<void> {
 		if (!this.appCategoryCreateComponent) {
-			// prettier-ignore
-			const categoryCreateComponent: Type<CategoryCreateComponent> = await import('../../standalone/components/category/create/create.component').then(m => {
-				return m.CategoryCreateComponent;
-			});
-
-			this.appCategoryCreateComponent = this.viewContainerRef.createComponent(categoryCreateComponent);
-			this.appCategoryCreateComponent.instance.appCategoryCreateSuccess.subscribe({
-				next: (category: Category) => this.onCreateCategory(category),
-				error: (error: any) => console.error(error)
+			await import('../../standalone/components/category/create/create.component').then(m => {
+				this.appCategoryCreateComponent = this.viewContainerRef.createComponent(m.CategoryCreateComponent);
+				this.appCategoryCreateComponent.instance.appCategoryCreateSuccess.subscribe({
+					next: (category: Category) => this.onCreateCategory(category),
+					error: (error: any) => console.error(error)
+				});
 			});
 		}
 
@@ -312,18 +309,16 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 
 	async onToggleCategoryUpdateDialog(): Promise<void> {
 		if (!this.appCategoryUpdateComponent) {
-			// prettier-ignore
-			const categoryUpdateComponent: Type<CategoryUpdateComponent> = await import('../../standalone/components/category/update/update.component').then(m => {
-				return m.CategoryUpdateComponent;
-			});
-
-			this.appCategoryUpdateComponent = this.viewContainerRef.createComponent(categoryUpdateComponent);
-			this.appCategoryUpdateComponent.setInput('appCategoryUpdateCategory', this.category);
-			this.appCategoryUpdateComponent.instance.appCategoryUpdateSuccess.subscribe({
-				next: (category: Category) => this.onUpdateCategory(category),
-				error: (error: any) => console.error(error)
+			await import('../../standalone/components/category/update/update.component').then(m => {
+				this.appCategoryUpdateComponent = this.viewContainerRef.createComponent(m.CategoryUpdateComponent);
+				this.appCategoryUpdateComponent.instance.appCategoryUpdateSuccess.subscribe({
+					next: (category: Category) => this.onUpdateCategory(category),
+					error: (error: any) => console.error(error)
+				});
 			});
 		}
+
+		this.appCategoryUpdateComponent.setInput('appCategoryUpdateCategory', this.category);
 
 		this.appCategoryUpdateComponent.changeDetectorRef.detectChanges();
 		this.appCategoryUpdateComponent.instance.onToggleCategoryUpdateDialog(true);
@@ -331,19 +326,17 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 
 	async onToggleCategoryDeleteDialog(): Promise<void> {
 		if (!this.appCategoryDeleteComponent) {
-			// prettier-ignore
-			const categoryDeleteComponent: Type<CategoryDeleteComponent> = await import('../../standalone/components/category/delete/delete.component').then(m => {
-				return m.CategoryDeleteComponent;
-			});
-
-			this.appCategoryDeleteComponent = this.viewContainerRef.createComponent(categoryDeleteComponent);
-			this.appCategoryDeleteComponent.setInput('appCategoryDeleteCategory', this.category);
-			this.appCategoryDeleteComponent.setInput('appCategoryDeleteCategoryPostList', this.postList);
-			this.appCategoryDeleteComponent.instance.appCategoryDeleteSuccess.subscribe({
-				next: (categoryDeleteDto: CategoryDeleteDto) => this.onDeleteCategory(categoryDeleteDto),
-				error: (error: any) => console.error(error)
+			await import('../../standalone/components/category/delete/delete.component').then(m => {
+				this.appCategoryDeleteComponent = this.viewContainerRef.createComponent(m.CategoryDeleteComponent);
+				this.appCategoryDeleteComponent.instance.appCategoryDeleteSuccess.subscribe({
+					next: (categoryDeleteDto: CategoryDeleteDto) => this.onDeleteCategory(categoryDeleteDto),
+					error: (error: any) => console.error(error)
+				});
 			});
 		}
+
+		this.appCategoryDeleteComponent.setInput('appCategoryDeleteCategory', this.category);
+		this.appCategoryDeleteComponent.setInput('appCategoryDeleteCategoryPostList', this.postList);
 
 		this.appCategoryDeleteComponent.changeDetectorRef.detectChanges();
 		this.appCategoryDeleteComponent.instance.onToggleCategoryDeleteDialog(true);

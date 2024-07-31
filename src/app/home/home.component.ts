@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ComponentRef, inject, OnDestroy, OnInit, Type, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
@@ -134,11 +134,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 	async onTogglePWADialog(): Promise<void> {
 		if (!this.appPWAComponent) {
-			const pwaComponent: Type<PWAComponent> = await import('../standalone/components/pwa/pwa.component').then(m => {
-				return m.PWAComponent;
-			});
-
-			this.appPWAComponent = this.viewContainerRef.createComponent(pwaComponent);
+			await import('../standalone/components/pwa/pwa.component')
+				.then(m => (this.appPWAComponent = this.viewContainerRef.createComponent(m.PWAComponent)))
+				.catch((error: any) => console.error(error));
 		}
 
 		this.appPWAComponent.changeDetectorRef.detectChanges();
