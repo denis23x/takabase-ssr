@@ -21,8 +21,8 @@ import { ListMockComponent } from '../../standalone/components/list/mock/mock.co
 import { PostPrivateService } from '../../core/services/post-private.service';
 import { HelperService } from '../../core/services/helper.service';
 import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
-import type { PostPrivate } from '../../core/models/post-private.model';
-import type { PostPrivateGetAllDto } from '../../core/dto/post-private/post-private-get-all.dto';
+import type { Post } from '../../core/models/post.model';
+import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 
 @Component({
 	standalone: true,
@@ -55,11 +55,11 @@ export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDest
 
 	activatedRouteQueryParams$: Subscription | undefined;
 
-	postPrivateList: PostPrivate[] = [];
+	postPrivateList: Post[] = [];
 	postPrivateListSkeletonToggle: boolean = true;
 	postPrivateListIsLoading: boolean = false;
 	postPrivateListRequest$: Subscription | undefined;
-	postPrivateListGetAllDto: PostPrivateGetAllDto = {
+	postPrivateListGetAllDto: PostGetAllDto = {
 		page: 1,
 		size: 20
 	};
@@ -136,7 +136,7 @@ export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDest
 		// prettier-ignore
 		const postPasswordPage: number = (this.postPrivateListGetAllDto.page = postPrivateListLoadMore ? this.postPrivateListGetAllDto.page + 1 : 1);
 		const postPrivateQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
-		const postPrivateGetAllDto: PostPrivateGetAllDto = {
+		const postPrivateGetAllDto: PostGetAllDto = {
 			...this.postPrivateListGetAllDto,
 			page: postPasswordPage
 		};
@@ -149,7 +149,7 @@ export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDest
 
 		this.postPrivateListRequest$?.unsubscribe();
 		this.postPrivateListRequest$ = this.postPrivateService.getAll(postPrivateGetAllDto).subscribe({
-			next: (postPrivateList: PostPrivate[]) => {
+			next: (postPrivateList: Post[]) => {
 				// prettier-ignore
 				this.postPrivateList = postPrivateGetAllDto.page > 1 ? this.postPrivateList.concat(postPrivateList) : postPrivateList;
 				this.postPrivateListSkeletonToggle = false;

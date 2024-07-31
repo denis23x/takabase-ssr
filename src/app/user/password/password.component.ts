@@ -21,8 +21,8 @@ import { ListMockComponent } from '../../standalone/components/list/mock/mock.co
 import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
 import { PostPasswordService } from '../../core/services/post-password.service';
 import { HelperService } from '../../core/services/helper.service';
-import type { PostPassword } from '../../core/models/post-password.model';
-import type { PostPasswordGetAllDto } from '../../core/dto/post-password/post-password-get-all.dto';
+import type { Post } from '../../core/models/post.model';
+import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 
 @Component({
 	standalone: true,
@@ -55,11 +55,11 @@ export class UserPasswordComponent extends CU(class {}) implements OnInit, OnDes
 
 	activatedRouteQueryParams$: Subscription | undefined;
 
-	postPasswordList: PostPassword[] = [];
+	postPasswordList: Post[] = [];
 	postPasswordListSkeletonToggle: boolean = true;
 	postPasswordListIsLoading: boolean = false;
 	postPasswordListRequest$: Subscription | undefined;
-	postPasswordListGetAllDto: PostPasswordGetAllDto = {
+	postPasswordListGetAllDto: PostGetAllDto = {
 		page: 0,
 		size: 20
 	};
@@ -136,7 +136,7 @@ export class UserPasswordComponent extends CU(class {}) implements OnInit, OnDes
 		// prettier-ignore
 		const postPasswordPage: number = (this.postPasswordListGetAllDto.page = postPasswordListLoadMore ? this.postPasswordListGetAllDto.page + 1 : 1);
 		const postPasswordQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
-		const postPasswordGetAllDto: PostPasswordGetAllDto = {
+		const postPasswordGetAllDto: PostGetAllDto = {
 			...this.postPasswordListGetAllDto,
 			page: postPasswordPage
 		};
@@ -149,7 +149,7 @@ export class UserPasswordComponent extends CU(class {}) implements OnInit, OnDes
 
 		this.postPasswordListRequest$?.unsubscribe();
 		this.postPasswordListRequest$ = this.postPasswordService.getAll(postPasswordGetAllDto).subscribe({
-			next: (postPasswordList: PostPassword[]) => {
+			next: (postPasswordList: Post[]) => {
 				// prettier-ignore
 				this.postPasswordList = postPasswordGetAllDto.page > 1 ? this.postPasswordList.concat(postPasswordList) : postPasswordList;
 				this.postPasswordListSkeletonToggle = false;

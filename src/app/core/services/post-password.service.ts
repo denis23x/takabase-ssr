@@ -3,12 +3,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import type { PostPassword } from '../models/post-password.model';
-import type { PostPasswordGetAllDto } from '../dto/post-password/post-password-get-all.dto';
-import type { PostPasswordCreateDto } from '../dto/post-password/post-password-create.dto';
-import type { PostPasswordGetOneDto } from '../dto/post-password/post-password-get-one.dto';
-import type { PostPasswordUpdateDto } from '../dto/post-password/post-password-update.dto';
-import type { PostPasswordDeleteDto } from '../dto/post-password/post-password-delete.dto';
+import type { Post } from '../models/post.model';
+import type { PostCreateDto } from '../dto/post/post-create.dto';
+import type { PostDeleteDto } from '../dto/post/post-delete.dto';
+import type { PostGetOneDto } from '../dto/post/post-get-one.dto';
+import type { PostGetAllDto } from '../dto/post/post-get-all.dto';
+import type { PostUpdateDto } from '../dto/post/post-update.dto';
 
 @Injectable()
 export class PostPasswordService {
@@ -16,23 +16,23 @@ export class PostPasswordService {
 
 	/** REST */
 
-	create(postPasswordCreateDto: PostPasswordCreateDto): Observable<PostPassword> {
-		return this.apiService.post('/v1/posts-password', postPasswordCreateDto);
+	create(postCreateDto: PostCreateDto): Observable<Post> {
+		return this.apiService.post('/v1/posts-password', postCreateDto);
 	}
 
-	getAll(postPasswordGetAllDto: PostPasswordGetAllDto): Observable<PostPassword[]> {
-		return this.apiService.get('/v1/posts-password', postPasswordGetAllDto);
+	getAll(postGetAllDto: PostGetAllDto): Observable<Post[]> {
+		return this.apiService.get('/v1/posts-password', postGetAllDto);
 	}
 
-	getOne(postPasswordId: number, postPasswordGetOneDto?: PostPasswordGetOneDto): Observable<PostPassword> {
-		return this.apiService.get('/v1/posts-password/' + postPasswordId, postPasswordGetOneDto);
+	getOne(postId: number, postGetOneDto?: PostGetOneDto): Observable<Post> {
+		return this.apiService.get('/v1/posts-password/' + postId, postGetOneDto);
 	}
 
-	update(postPasswordId: number, postPasswordUpdateDto: PostPasswordUpdateDto): Observable<PostPassword> {
-		return this.apiService.put('/v1/posts-password/' + postPasswordId, postPasswordUpdateDto);
+	update(postId: number, postUpdateDto: PostUpdateDto): Observable<Post> {
+		return this.apiService.put('/v1/posts-password/' + postId, postUpdateDto);
 	}
 
-	delete(postPasswordId: number, postPasswordDeleteDto: PostPasswordDeleteDto): Observable<Partial<PostPassword>> {
-		return this.apiService.delete('/v1/posts-password/' + postPasswordId, postPasswordDeleteDto);
+	delete(postId: number, postDeleteDto: PostDeleteDto): Observable<Partial<Post>> {
+		return this.apiService.delete('/v1/posts-password/' + postId, postDeleteDto);
 	}
 }

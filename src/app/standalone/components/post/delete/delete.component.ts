@@ -27,8 +27,6 @@ import { Location } from '@angular/common';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import type { Post } from '../../../../core/models/post.model';
 import type { PostDeleteDto } from '../../../../core/dto/post/post-delete.dto';
-import type { PostPassword } from '../../../../core/models/post-password.model';
-import type { PostPrivate } from '../../../../core/models/post-private.model';
 
 @Component({
 	standalone: true,
@@ -108,8 +106,7 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 			firebaseUid: this.post.firebaseUid
 		};
 
-		// prettier-ignore
-		const postTypeMap: Record<string, Observable<Partial<Post | PostPassword | PostPrivate>>> = {
+		const postTypeMap: Record<string, Observable<Partial<Post>>> = {
 			password: this.postPasswordService.delete(postId, postDeleteDto),
 			private: this.postPrivateService.delete(postId, postDeleteDto),
 			public: this.postService.delete(postId, postDeleteDto)

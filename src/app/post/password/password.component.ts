@@ -9,8 +9,8 @@ import { from, Subscription, throwError } from 'rxjs';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { PostStore } from '../post.store';
 import { PostPasswordService } from '../../core/services/post-password.service';
-import type { PostPassword } from '../../core/models/post-password.model';
-import type { PostPasswordGetOneDto } from '../../core/dto/post-password/post-password-get-one.dto';
+import type { Post } from '../../core/models/post.model';
+import type { PostGetOneDto } from '../../core/dto/post/post-get-one.dto';
 import type { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -27,7 +27,7 @@ export class PostPasswordComponent implements OnInit {
 	private readonly router: Router = inject(Router);
 	private readonly postStore: PostStore = inject(PostStore);
 
-	postPassword: PostPassword | undefined;
+	postPassword: Post | undefined;
 	postPasswordRequest$: Subscription | undefined;
 	postPasswordSkeletonToggle: boolean = true;
 
@@ -49,7 +49,7 @@ export class PostPasswordComponent implements OnInit {
 
 	setResolver(): void {
 		const postPasswordId: number = Number(this.activatedRoute.snapshot.paramMap.get('postPasswordId'));
-		const postPasswordGetOneDto: PostPasswordGetOneDto = {
+		const postPasswordGetOneDto: PostGetOneDto = {
 			scope: ['user']
 		};
 
@@ -61,10 +61,10 @@ export class PostPasswordComponent implements OnInit {
 						switchMap(() => throwError(() => httpErrorResponse))
 					);
 				}),
-				tap((postPassword: PostPassword) => this.postStore.setPost(postPassword))
+				tap((postPassword: Post) => this.postStore.setPost(postPassword))
 			)
 			.subscribe({
-				next: (postPassword: PostPassword) => {
+				next: (postPassword: Post) => {
 					this.postPassword = postPassword;
 					this.postPasswordSkeletonToggle = false;
 				},

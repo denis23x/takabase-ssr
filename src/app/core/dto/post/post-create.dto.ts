@@ -5,5 +5,6 @@ export interface PostCreateDto {
 	description: string;
 	markdown: string;
 	image?: string;
-	categoryId: number;
+	categoryId?: number;
+	password?: number;
 }

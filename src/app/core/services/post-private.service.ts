@@ -3,12 +3,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
-import type { PostPrivate } from '../models/post-private.model';
-import type { PostPrivateGetAllDto } from '../dto/post-private/post-private-get-all.dto';
-import type { PostPrivateCreateDto } from '../dto/post-private/post-private-create.dto';
-import type { PostPrivateGetOneDto } from '../dto/post-private/post-private-get-one.dto';
-import type { PostPrivateUpdateDto } from '../dto/post-private/post-private-update.dto';
-import type { PostPrivateDeleteDto } from '../dto/post-private/post-private-delete.dto';
+import type { Post } from '../models/post.model';
+import type { PostCreateDto } from '../dto/post/post-create.dto';
+import type { PostDeleteDto } from '../dto/post/post-delete.dto';
+import type { PostGetAllDto } from '../dto/post/post-get-all.dto';
+import type { PostGetOneDto } from '../dto/post/post-get-one.dto';
+import type { PostUpdateDto } from '../dto/post/post-update.dto';
 
 @Injectable()
 export class PostPrivateService {
@@ -16,23 +16,23 @@ export class PostPrivateService {
 
 	/** REST */
 
-	create(postPrivateCreateDto: PostPrivateCreateDto): Observable<PostPrivate> {
-		return this.apiService.post('/v1/posts-private', postPrivateCreateDto);
+	create(postCreateDto: PostCreateDto): Observable<Post> {
+		return this.apiService.post('/v1/posts-private', postCreateDto);
 	}
 
-	getAll(postPrivateGetAllDto: PostPrivateGetAllDto): Observable<PostPrivate[]> {
-		return this.apiService.get('/v1/posts-private', postPrivateGetAllDto);
+	getAll(postGetAllDto: PostGetAllDto): Observable<Post[]> {
+		return this.apiService.get('/v1/posts-private', postGetAllDto);
 	}
 
-	getOne(postPrivateId: number, postPrivateGetOneDto?: PostPrivateGetOneDto): Observable<PostPrivate> {
-		return this.apiService.get('/v1/posts-private/' + postPrivateId, postPrivateGetOneDto);
+	getOne(postId: number, postGetOneDto?: PostGetOneDto): Observable<Post> {
+		return this.apiService.get('/v1/posts-private/' + postId, postGetOneDto);
 	}
 
-	update(postPrivateId: number, postPrivateUpdateDto: PostPrivateUpdateDto): Observable<PostPrivate> {
-		return this.apiService.put('/v1/posts-private/' + postPrivateId, postPrivateUpdateDto);
+	update(postId: number, postUpdateDto: PostUpdateDto): Observable<Post> {
+		return this.apiService.put('/v1/posts-private/' + postId, postUpdateDto);
 	}
 
-	delete(postPrivateId: number, postPrivateDeleteDto: PostPrivateDeleteDto): Observable<Partial<PostPrivate>> {
-		return this.apiService.delete('/v1/posts-private/' + postPrivateId, postPrivateDeleteDto);
+	delete(postId: number, postDeleteDto: PostDeleteDto): Observable<Partial<Post>> {
+		return this.apiService.delete('/v1/posts-private/' + postId, postDeleteDto);
 	}
 }

@@ -12,6 +12,7 @@ export interface Post {
 	image: string | null;
 	user?: User;
 	category?: Category;
+	password?: string;
 	createdAt: string;
 	updatedAt: string;
 }

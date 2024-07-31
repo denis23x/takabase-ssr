@@ -67,12 +67,6 @@ import type { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
 import type { CropperComponent } from '../standalone/components/cropper/cropper.component';
 import type { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
 import type { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
-import type { PostPassword } from '../core/models/post-password.model';
-import type { PostPasswordCreateDto } from '../core/dto/post-password/post-password-create.dto';
-import type { PostPasswordUpdateDto } from '../core/dto/post-password/post-password-update.dto';
-import type { PostPrivate } from '../core/models/post-private.model';
-import type { PostPrivateCreateDto } from '../core/dto/post-private/post-private-create.dto';
-import type { PostPrivateUpdateDto } from '../core/dto/post-private/post-private-update.dto';
 import type { HttpErrorResponse } from '@angular/common/http';
 
 interface PostForm {
@@ -319,7 +313,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 					scope: ['category']
 				};
 
-				const postTypeMap: Record<string, Observable<Post | PostPassword | PostPrivate>> = {
+				const postTypeMap: Record<string, Observable<Post>> = {
 					password: this.postPasswordService.getOne(postId),
 					private: this.postPrivateService.getOne(postId),
 					public: this.postService.getOne(postId, postGetOneDto)
@@ -341,7 +335,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 						})
 					)
 					.subscribe({
-						next: (post: Post | PostPassword | PostPrivate) => {
+						next: (post: Post) => {
 							this.post = post;
 							this.postSkeletonToggle = false;
 
@@ -582,17 +576,15 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 
-			// prettier-ignore
-			const postDto: (PostCreateDto & PostUpdateDto) | (PostPasswordCreateDto & PostPasswordUpdateDto) | (PostPrivateCreateDto & PostPrivateUpdateDto) = {
+			const postDto: PostCreateDto & PostUpdateDto = {
 				...this.postForm.value,
 				firebaseUid: this.post?.firebaseUid || undefined
 			};
 
-			// prettier-ignore
-			const postTypeMap: Record<string, Observable<Post | PostPassword | PostPrivate>> = {
+			const postTypeMap: Record<string, Observable<Post>> = {
 				password: postId ? this.postPasswordService.update(postId, postDto) : this.postPasswordService.create(postDto),
 				private: postId ? this.postPrivateService.update(postId, postDto) : this.postPrivateService.create(postDto),
-				public: postId ? this.postService.update(postId, postDto) : this.postService.create(postDto as PostCreateDto),
+				public: postId ? this.postService.update(postId, postDto) : this.postService.create(postDto as PostCreateDto)
 			};
 
 			// Moderate
@@ -607,7 +599,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 				.moderateText(aiModerateTextDto)
 				.pipe(switchMap(() => postTypeMap[this.postType]))
 				.subscribe({
-					next: (post: Post | PostPassword | PostPrivate) => {
+					next: (post: Post) => {
 						const postTypeRedirectMap: Record<string, string[]> = {
 							password: ['password'],
 							private: ['private'],
