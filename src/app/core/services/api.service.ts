@@ -98,7 +98,7 @@ export class ApiService {
 		const message: string = getMessage();
 
 		this.snackbarService.error('Firebase', message, {
-			icon: 'database',
+			icon: 'database-slash',
 			duration: 6000
 		});
 
