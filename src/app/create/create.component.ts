@@ -25,7 +25,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { CommonModule, DOCUMENT, Location, NgOptimizedImage } from '@angular/common';
+import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { InputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
@@ -124,7 +124,6 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 	private readonly aiService: AIService = inject(AIService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 	private readonly busService: BusService = inject(BusService);
-	private readonly location: Location = inject(Location);
 
 	category: Category | undefined;
 	categorySkeletonToggle: boolean = true;
@@ -303,9 +302,9 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 			// Get post
 
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-			const postState: any = this.location.getState();
+			const postType: string = String(this.activatedRoute.snapshot.queryParamMap.get('postType') || '');
 
-			if (postId && postState) {
+			if (postId && postType) {
 				const postGetOneDto: PostGetOneDto = {
 					userFirebaseUid: this.currentUser.firebase.uid,
 					scope: ['category']
@@ -319,7 +318,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
 				// Set postType
 
-				this.onChangePostType(postState.postType);
+				this.onChangePostType(postType);
 
 				// Request
 

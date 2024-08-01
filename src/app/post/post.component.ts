@@ -12,6 +12,7 @@ import { filter } from 'rxjs/operators';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { FireStoragePipe } from '../standalone/pipes/fire-storage.pipe';
+import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
 import type { Post } from '../core/models/post.model';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 
@@ -22,7 +23,7 @@ import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 	selector: 'app-post',
 	templateUrl: './post.component.html'
 })
-export class PostComponent implements OnInit, OnDestroy {
+export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly titleService: TitleService = inject(TitleService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
@@ -38,6 +39,8 @@ export class PostComponent implements OnInit, OnDestroy {
 	postPrivateId: number | undefined;
 
 	ngOnInit(): void {
+		super.ngOnInit();
+
 		this.postPasswordId = Number(this.activatedRoute.snapshot.firstChild.paramMap.get('postPasswordId'));
 		this.postPrivateId = Number(this.activatedRoute.snapshot.firstChild.paramMap.get('postPrivateId'));
 
@@ -48,6 +51,10 @@ export class PostComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+		super.ngOnDestroy();
+
+		// Unsubscribe
+
 		[this.post$].forEach(($: Subscription) => $?.unsubscribe());
 
 		// Reset store
