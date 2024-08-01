@@ -23,7 +23,6 @@ import { PlatformService } from '../../../../core/services/platform.service';
 import { UserService } from '../../../../core/services/user.service';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { InputShowPassword } from '../../../directives/app-input-show-password.directive';
 import { PasswordService } from '../../../../core/services/password.service';
 import type { PasswordValidateGetDto } from '../../../../core/dto/password/password-validate-get.dto';
 import type { CurrentUser } from '../../../../core/models/current-user.model';
@@ -44,8 +43,7 @@ interface UserDeleteForm {
 		WindowComponent,
 		InputTrimWhitespaceDirective,
 		ReactiveFormsModule,
-		BadgeErrorComponent,
-		InputShowPassword
+		BadgeErrorComponent
 	],
 	providers: [PasswordService, UserService],
 	selector: 'app-user-delete, [appUserDelete]',

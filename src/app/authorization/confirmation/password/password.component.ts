@@ -11,7 +11,6 @@ import { PasswordService } from '../../../core/services/password.service';
 import { MetaService } from '../../../core/services/meta.service';
 import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../../standalone/components/badge-error/badge-error.component';
-import { InputShowPassword } from '../../../standalone/directives/app-input-show-password.directive';
 import type { PasswordResetUpdateDto } from '../../../core/dto/password/password-reset-update.dto';
 import type { MetaOpenGraph, MetaTwitter } from '../../../core/models/meta.model';
 
@@ -22,13 +21,7 @@ interface PasswordForm {
 
 @Component({
 	standalone: true,
-	imports: [
-		ReactiveFormsModule,
-		SvgIconComponent,
-		InputTrimWhitespaceDirective,
-		BadgeErrorComponent,
-		InputShowPassword
-	],
+	imports: [ReactiveFormsModule, SvgIconComponent, InputTrimWhitespaceDirective, BadgeErrorComponent],
 	providers: [PasswordService],
 	selector: 'app-authorization-confirmation-password',
 	templateUrl: './password.component.html'

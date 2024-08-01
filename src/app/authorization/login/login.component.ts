@@ -14,7 +14,6 @@ import { BadgeErrorComponent } from '../../standalone/components/badge-error/bad
 import { CommonModule } from '@angular/common';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { PlatformService } from '../../core/services/platform.service';
-import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
 import { filter } from 'rxjs/operators';
 import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import type { CurrentUser } from '../../core/models/current-user.model';
@@ -35,8 +34,7 @@ interface LoginForm {
 		SvgIconComponent,
 		InputTrimWhitespaceDirective,
 		SignInComponent,
-		BadgeErrorComponent,
-		InputShowPassword
+		BadgeErrorComponent
 	],
 	selector: 'app-authorization-login',
 	templateUrl: './login.component.html'

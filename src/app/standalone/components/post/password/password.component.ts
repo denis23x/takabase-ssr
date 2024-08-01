@@ -15,7 +15,6 @@ import { WindowComponent } from '../../window/window.component';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { Location } from '@angular/common';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
-import { InputShowPassword } from '../../../directives/app-input-show-password.directive';
 import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HelperService } from '../../../../core/services/helper.service';
@@ -27,14 +26,7 @@ interface PostPasswordForm {
 
 @Component({
 	standalone: true,
-	imports: [
-		SvgIconComponent,
-		WindowComponent,
-		BadgeErrorComponent,
-		InputShowPassword,
-		InputTrimWhitespaceDirective,
-		ReactiveFormsModule
-	],
+	imports: [SvgIconComponent, WindowComponent, BadgeErrorComponent, InputTrimWhitespaceDirective, ReactiveFormsModule],
 	selector: 'app-post-password, [appPostPassword]',
 	templateUrl: './password.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

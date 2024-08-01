@@ -68,6 +68,7 @@
 							<input
 								class="input-bordered input input-md w-full"
 								id="loginFormPassword"
+								type="password"
 								title="Password"
 								aria-label="Password"
 								autocomplete="current-password"
@@ -75,26 +76,24 @@
 								placeholder="Type your password"
 								appInputTrimWhitespace
 								#loginFormPasswordElement
-								[type]="'password'"
 								[class.input-success]="password.value && password.valid"
 								[class.input-error]="password.touched && password.invalid"
 							/>
 							@if (password.value) {
+								<!-- prettier-ignore -->
 								<button
 									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 									type="button"
 									title="Show password"
 									aria-label="Show password"
 									appSvgIcon
-									appInputShowPassword
 									[disabled]="loginForm.disabled"
 									[class.btn-success]="password.valid"
 									[class.btn-error]="password.touched && password.invalid"
 									[class.btn-ghost]="password.untouched && password.invalid"
-									[appSvgIconIcon]="'incognito'"
+									[appSvgIconIcon]="loginFormPasswordElement.type === 'text' ? 'eye-slash' : 'eye'"
 									[appSvgIconSquare]="'1.5em'"
-									[appInputShowPasswordFormControl]="password"
-									[appInputShowPasswordInputElement]="loginFormPasswordElement"
+									(click)="loginFormPasswordElement.type = loginFormPasswordElement.type === 'text' ? 'password' : 'text'"
 								></button>
 							}
 						</div>

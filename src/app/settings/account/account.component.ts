@@ -47,7 +47,6 @@ import {
 } from 'firebase/auth';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
 import { SvgLogoComponent } from '../../standalone/components/svg-logo/svg-logo.component';
 import type { PasswordValidateGetDto } from '../../core/dto/password/password-validate-get.dto';
 import type { PasswordUpdateDto } from '../../core/dto/password/password-update.dto';
@@ -87,7 +86,6 @@ interface NewPasswordForm {
 		InputTrimWhitespaceDirective,
 		BadgeErrorComponent,
 		WindowComponent,
-		InputShowPassword,
 		SvgLogoComponent,
 		NgOptimizedImage
 	],

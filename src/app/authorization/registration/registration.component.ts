@@ -25,7 +25,6 @@ import { CommonModule } from '@angular/common';
 import { AIService } from '../../core/services/ai.service';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
-import { InputShowPassword } from '../../standalone/directives/app-input-show-password.directive';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { getValue, Value } from 'firebase/remote-config';
@@ -56,8 +55,7 @@ interface RegistrationForm {
 		SignInComponent,
 		BadgeErrorComponent,
 		AvatarComponent,
-		DayjsPipe,
-		InputShowPassword
+		DayjsPipe
 	],
 	providers: [AIService, UserService],
 	selector: 'app-authorization-registration',

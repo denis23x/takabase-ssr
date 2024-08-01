@@ -176,6 +176,7 @@
 										<input
 											class="input input-bordered input-md w-full truncate"
 											id="postFormPassword"
+											type="password"
 											title="Password"
 											aria-label="Password"
 											autocomplete="new-password"
@@ -183,7 +184,6 @@
 											placeholder="Type post password"
 											appInputTrimWhitespace
 											#postFormPassword
-											[type]="'password'"
 											[class.input-success]="password.value && password.valid"
 											[class.input-error]="password.touched && password.invalid"
 										/>
@@ -194,15 +194,13 @@
 												title="Show password"
 												aria-label="Show password"
 												appSvgIcon
-												appInputShowPassword
 												[disabled]="postForm.disabled"
 												[class.btn-success]="password.valid"
 												[class.btn-error]="password.touched && password.invalid"
 												[class.btn-ghost]="password.untouched && password.invalid"
-												[appSvgIconIcon]="'incognito'"
+												[appSvgIconIcon]="postFormPassword.type === 'text' ? 'eye-slash' : 'eye'"
 												[appSvgIconSquare]="'1.5em'"
-												[appInputShowPasswordFormControl]="password"
-												[appInputShowPasswordInputElement]="postFormPassword"
+												(click)="postFormPassword.type = postFormPassword.type === 'text' ? 'password' : 'text'"
 											></button>
 										}
 									</div>

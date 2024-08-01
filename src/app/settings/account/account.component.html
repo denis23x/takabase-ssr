@@ -13,7 +13,7 @@
 								title="Security"
 								aria-label="Security"
 								appSvgIcon
-								[appSvgIconIcon]="'shield-lock'"
+								[appSvgIconIcon]="'key'"
 								[appSvgIconSquare]="'1.75em'"
 							></button>
 							<div class="flex flex-col items-start justify-start gap-2 w-full overflow-hidden">
@@ -125,6 +125,7 @@
 														<input
 															class="input-bordered input input-md w-full"
 															id="newPasswordFormNewPassword"
+															type="password"
 															title="New password"
 															aria-label="New password"
 															formControlName="newPassword"
@@ -133,26 +134,24 @@
 															placeholder="Type your new password"
 															appInputTrimWhitespace
 															#newPasswordFormNewPasswordElement
-															[type]="'password'"
 															[class.input-success]="newPassword.dirty && newPassword.valid"
 															[class.input-error]="newPassword.touched && newPassword.invalid"
 														/>
 														@if (newPassword.value) {
+															<!-- prettier-ignore -->
 															<button
 																class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 																type="button"
 																title="Show password"
 																aria-label="Show password"
 																appSvgIcon
-																appInputShowPassword
 																[class.btn-success]="newPassword.dirty && newPassword.value"
 																[class.btn-error]="newPassword.touched && newPassword.invalid"
 																[class.btn-ghost]="newPassword.untouched && newPassword.dirty && newPassword.invalid"
 																[disabled]="newPassword.disabled"
-																[appSvgIconIcon]="'incognito'"
+                                [appSvgIconIcon]="newPasswordFormNewPasswordElement.type === 'text' ? 'eye-slash' : 'eye'"
 																[appSvgIconSquare]="'1.5em'"
-																[appInputShowPasswordFormControl]="newPassword"
-																[appInputShowPasswordInputElement]="newPasswordFormNewPasswordElement"
+                                (click)="newPasswordFormNewPasswordElement.type = newPasswordFormNewPasswordElement.type === 'text' ? 'password' : 'text'"
 															></button>
 														}
 													</div>
@@ -218,6 +217,7 @@
 														<input
 															class="input-bordered input input-md w-full"
 															id="currentUserPasswordFormPassword"
+															type="password"
 															title="Current password"
 															aria-label="Current password"
 															formControlName="password"
@@ -226,27 +226,25 @@
 															placeholder="Type your current password"
 															appInputTrimWhitespace
 															#currentUserPasswordFormPasswordElement
-															[type]="'password'"
 															[class.input-success]="password.dirty && password.valid"
 															[class.input-error]="password.touched && password.invalid"
 														/>
 														@if (password.value) {
+															<!-- prettier-ignore -->
 															<button
 																class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 																type="button"
 																title="Show password"
 																aria-label="Show password"
 																appSvgIcon
-																appInputShowPassword
 																[disabled]="password.disabled"
 																[class.btn-success]="password.dirty && password.value"
 																[class.btn-error]="password.touched && password.invalid"
 																[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
-																[appSvgIconIcon]="'incognito'"
+                                [appSvgIconIcon]="currentUserPasswordFormPasswordElement.type === 'text' ? 'eye-slash' : 'eye'"
 																[appSvgIconSquare]="'1.5em'"
-																[appInputShowPasswordFormControl]="password"
-																[appInputShowPasswordInputElement]="currentUserPasswordFormPasswordElement"
-															></button>
+                                (click)="currentUserPasswordFormPasswordElement.type = currentUserPasswordFormPasswordElement.type === 'text' ? 'password' : 'text'"
+                            ></button>
 														}
 													</div>
 												</fieldset>
@@ -440,6 +438,7 @@
 													<input
 														class="input-bordered input input-md w-full"
 														id="emailAuthProviderFormPassword"
+														type="password"
 														title="Password"
 														aria-label="Password"
 														enterkeyhint="done"
@@ -448,27 +447,25 @@
 														placeholder="Type your password"
 														appInputTrimWhitespace
 														#emailAuthProviderFormPassword
-														[type]="'password'"
 														[class.input-success]="password.dirty && password.valid"
 														[class.input-error]="password.touched && password.invalid"
 													/>
 													@if (password.value) {
+														<!-- prettier-ignore -->
 														<button
 															class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
 															type="button"
 															title="Show password"
 															aria-label="Show password"
 															appSvgIcon
-															appInputShowPassword
 															[class.btn-success]="password.dirty && password.value"
 															[class.btn-error]="password.touched && password.invalid"
 															[class.btn-ghost]="password.untouched && password.dirty && password.invalid"
 															[disabled]="password.disabled"
-															[appSvgIconIcon]="'incognito'"
+                              [appSvgIconIcon]="emailAuthProviderFormPassword.type === 'text' ? 'eye-slash' : 'eye'"
 															[appSvgIconSquare]="'1.5em'"
-															[appInputShowPasswordFormControl]="password"
-															[appInputShowPasswordInputElement]="emailAuthProviderFormPassword"
-														></button>
+                              (click)="emailAuthProviderFormPassword.type = emailAuthProviderFormPassword.type === 'text' ? 'password' : 'text'"
+                          ></button>
 													}
 												</div>
 											</fieldset>

@@ -53,7 +53,6 @@ import { AIService } from '../core/services/ai.service';
 import { FireStoragePipe } from '../standalone/pipes/fire-storage.pipe';
 import { BusService } from '../core/services/bus.service';
 import { SharpService } from '../core/services/sharp.service';
-import { InputShowPassword } from '../standalone/directives/app-input-show-password.directive';
 import type { PostCreateDto } from '../core/dto/post/post-create.dto';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import type { CurrentUser } from '../core/models/current-user.model';
@@ -99,8 +98,7 @@ interface PostForm {
 		KbdPipe,
 		PlatformDirective,
 		DeviceDirective,
-		FireStoragePipe,
-		InputShowPassword
+		FireStoragePipe
 	],
 	providers: [CategoryService, PostService, PostPrivateService, PostPasswordService, AIService, SharpService],
 	selector: 'app-create',
