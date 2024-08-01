@@ -112,32 +112,32 @@
 										</button>
 									</li>
 								}
-								<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Post</li>
-								@if (currentUser) {
-									@if (currentUser.id === post.user.id) {
-										<li class="flex w-full snap-start scroll-my-2">
-											<a
-												class="rounded-btn block w-full truncate text-right"
-												[title]="'Update: ' + post.name"
-												[attr.aria-label]="'Update: ' + post.name"
-												[routerLink]="['/update', post.id]"
-												[state]="{ postType }"
-											>
-												Update
-											</a>
-										</li>
-										<li class="flex w-full snap-start scroll-my-2">
-											<button
-												class="rounded-btn block w-full truncate text-right"
-												type="button"
-												[title]="'Delete: ' + post.name"
-												[attr.aria-label]="'Delete: ' + post.name"
-												(click)="onTogglePostDeleteDialog()"
-											>
-												Delete
-											</button>
-										</li>
-									} @else {
+								@if (currentUser && currentUser.id === post.user.id) {
+									<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Post</li>
+									<li class="flex w-full snap-start scroll-my-2">
+										<a
+											class="rounded-btn block w-full truncate text-right"
+											[title]="'Update: ' + post.name"
+											[attr.aria-label]="'Update: ' + post.name"
+											[routerLink]="['/update', post.id]"
+											[state]="{ postType }"
+										>
+											Update
+										</a>
+									</li>
+									<li class="flex w-full snap-start scroll-my-2">
+										<button
+											class="rounded-btn block w-full truncate text-right"
+											type="button"
+											[title]="'Delete: ' + post.name"
+											[attr.aria-label]="'Delete: ' + post.name"
+											(click)="onTogglePostDeleteDialog()"
+										>
+											Delete
+										</button>
+									</li>
+								} @else {
+									@if (postType === "public") {
 										<li class="flex w-full snap-start scroll-my-2">
 											<button
 												class="rounded-btn block w-full truncate text-right"

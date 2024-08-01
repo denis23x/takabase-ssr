@@ -8,6 +8,7 @@ import { redirectHttpErrorGuard } from './core/guards/redirect-http-error-guard.
 import { redirectLoadingGuard } from './core/guards/redirect-loading-guard.service';
 import { redirectPasswordGuard } from './core/guards/redirect-password-guard.service';
 import { redirectPrivateGuard } from './core/guards/redirect-private-guard.service';
+import { redirectServerGuard } from './core/guards/redirect-server-guard.service';
 import { environment } from '../environments/environment';
 import { CookiesService } from './core/services/cookies.service';
 import { inject } from '@angular/core';
@@ -224,7 +225,7 @@ export const APP_ROUTES: Route[] = [
 					},
 					{
 						path: 'password/:postPasswordId',
-						canMatch: [redirectCurrentUserGuard()],
+						canMatch: [redirectServerGuard()],
 						loadComponent: async () => {
 							return import('./post/password/password.component').then(m => m.PostPasswordComponent);
 						}

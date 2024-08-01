@@ -9,6 +9,10 @@ import { SnackbarService } from './snackbar.service';
 import type { FirebaseError } from 'firebase/app';
 import type { HttpErrorResponse } from '@angular/common/http';
 
+interface HttpErrorResponseCustom extends HttpErrorResponse {
+	method?: string;
+}
+
 // prettier-ignore
 const httpErrorResponseKey: StateKey<HttpErrorResponse | undefined> = makeStateKey<HttpErrorResponse | undefined>('httpErrorResponse');
 
@@ -46,7 +50,7 @@ export class ApiService {
 		/** https://github.com/firebase/firebase-js-sdk/blob/master/packages/firestore/src/util/error.ts */
 		/** https://firebase.google.com/docs/storage/web/handle-errors */
 
-		console.error('Firebase: ' + firebaseError.code);
+		console.error(firebaseError.code);
 
 		/** STORAGE && FIRESTORE && AUTH */
 
@@ -101,12 +105,8 @@ export class ApiService {
 		return throwError(() => firebaseError);
 	}
 
-	setHttpErrorResponse(httpErrorResponse: HttpErrorResponse): Observable<never> {
+	setHttpErrorResponse(httpErrorResponse: HttpErrorResponseCustom): Observable<never> {
 		/** https://github.com/denis23x/takabase-dd */
-
-		console.error('HTTP:', httpErrorResponse);
-
-		/** FASTIFY */
 
 		const getMessage = (): string | undefined => {
 			switch (httpErrorResponse.error.code) {
@@ -131,10 +131,19 @@ export class ApiService {
 
 		const message: string = getMessage() || 'Something went wrong';
 
-		this.snackbarService.error('Error', message, {
-			icon: 'bug',
-			duration: 6000
-		});
+		/** IGNORE */
+
+		switch (true) {
+			case httpErrorResponse.method === 'GET' && /posts-password\/\d+/.test(httpErrorResponse.url): {
+				break;
+			}
+			default: {
+				this.snackbarService.error('Error', message, {
+					icon: 'bug',
+					duration: 6000
+				});
+			}
+		}
 
 		return throwError(() => httpErrorResponse);
 	}

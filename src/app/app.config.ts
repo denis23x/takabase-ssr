@@ -13,6 +13,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { provideServiceWorker } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { httpAuthorizationInterceptor } from './core/interceptors/http.authorization.interceptor';
+import { httpErrorInterceptor } from './core/interceptors/http.error.interceptor';
 import { provideClientHydration, withHttpTransferCacheOptions } from '@angular/platform-browser';
 import { FirebaseService } from './core/services/firebase.service';
 import { PlatformService } from './core/services/platform.service';
@@ -21,7 +22,7 @@ import { fetchAndActivate } from 'firebase/remote-config';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
-		provideHttpClient(withFetch(), withInterceptors([httpAuthorizationInterceptor])),
+		provideHttpClient(withFetch(), withInterceptors([httpAuthorizationInterceptor, httpErrorInterceptor])),
 		provideClientHydration(
 			withHttpTransferCacheOptions({
 				includeRequestsWithAuthHeaders: false,

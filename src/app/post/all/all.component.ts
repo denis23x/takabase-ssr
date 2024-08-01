@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ShareComponent } from '../../standalone/components/share/share.component';
 import { PostProseComponent } from '../../standalone/components/post/prose/prose.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,7 +22,7 @@ import type { HttpErrorResponse } from '@angular/common/http';
 	selector: 'app-post-all',
 	templateUrl: './all.component.html'
 })
-export class PostAllComponent implements OnInit {
+export class PostAllComponent implements OnInit, OnDestroy {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly postService: PostService = inject(PostService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
@@ -57,6 +57,7 @@ export class PostAllComponent implements OnInit {
 			scope: ['user', 'category']
 		};
 
+		this.postRequest$?.unsubscribe();
 		this.postRequest$ = this.postService
 			.getOne(postId, postGetOneDto)
 			.pipe(
