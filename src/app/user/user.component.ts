@@ -159,7 +159,7 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 
 					/** Redirect */
 
-					return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(
+					return from(this.router.navigate(['/error', httpErrorResponse.status], { skipLocationChange: true })).pipe(
 						switchMap(() => throwError(() => httpErrorResponse))
 					);
 				}),

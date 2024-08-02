@@ -86,7 +86,11 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 							catchError((httpErrorResponse: HttpErrorResponse) => {
 								// prettier-ignore
 								if (postPasswordGetOneDto.password) {
-									return from(this.router.navigate(['/error', 403])).pipe(switchMap(() => throwError(() => httpErrorResponse)));
+									const redirect$: Promise<boolean> = this.router.navigate(['/error', 403], {
+										skipLocationChange: true
+									});
+
+									return from(redirect$).pipe(switchMap(() => throwError(() => httpErrorResponse)));
 								} else {
 									return from(this.onTogglePostDeleteDialog()).pipe(switchMap(() => throwError(() => httpErrorResponse)));
 								}
@@ -124,7 +128,7 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 						take(1)
 					)
 					.subscribe({
-						next: () => this.router.navigate(['/error', 403]),
+						next: () => this.router.navigate(['/error', 403], { skipLocationChange: true }),
 						error: (error: any) => console.error(error)
 					});
 

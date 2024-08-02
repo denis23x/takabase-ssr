@@ -4,6 +4,8 @@ Disallow: /error
 Disallow: /create
 Disallow: /update/*
 Disallow: /settings/*
+Disallow: /post/private/*
+Disallow: /post/password/*
 
 User-agent: *
 Allow: /

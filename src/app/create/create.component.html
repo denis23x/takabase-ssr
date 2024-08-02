@@ -625,6 +625,19 @@
 					</div>
 				</div>
 			</div>
+			@if (post) {
+				@if (postTypeOriginal !== postType) {
+					<p class="alert" role="alert">
+						<i
+							class="fill-current text-info"
+							appSvgIcon
+							[appSvgIconIcon]="'info-circle'"
+							[appSvgIconSquare]="'1.5em'"
+						></i>
+						<span class="block"> Are you sure you want to change the post type? </span>
+					</p>
+				}
+			}
 			<div class="grid grid-cols-12 gap-4" [class.hidden]="fullscreenToggle">
 				<button
 					class="btn btn-primary btn-outline btn-md col-span-4 sm:col-span-3"
@@ -664,7 +677,7 @@
 						appSkeleton
 						[appSkeletonToggle]="postSkeletonToggle"
 						[appSkeletonClassListElementRef]="['border-0']"
-						[disabled]="postForm.disabled"
+						[disabled]="postForm.disabled || postTypeOriginal !== postType"
 						(click)="onTogglePostDeleteDialog()"
 					>
 						Delete

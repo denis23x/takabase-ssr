@@ -67,8 +67,11 @@ export class PostPrivateComponent implements OnInit, OnDestroy {
 						.getOne(postPrivateId, postPrivateGetOneDto)
 						.pipe(
 							catchError((httpErrorResponse: HttpErrorResponse) => {
-								// prettier-ignore
-								return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(switchMap(() => throwError(() => httpErrorResponse)));
+								const redirect$: Promise<boolean> = this.router.navigate(['/error', httpErrorResponse.status], {
+									skipLocationChange: true
+								});
+
+								return from(redirect$).pipe(switchMap(() => throwError(() => httpErrorResponse)));
 							}),
 							tap((postPrivate: Post) => this.postStore.setPost(postPrivate))
 						)

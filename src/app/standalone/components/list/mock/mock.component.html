@@ -147,7 +147,7 @@
 						title="Create new post"
 						aria-label="Create new post"
 						[routerLink]="['/create']"
-						[queryParams]="{ categoryId: username === currentUser?.name ? categoryId : null }"
+						[queryParams]="{ postType: 'public', categoryId: currentUser?.name === username ? categoryId : null }"
 						[queryParamsHandling]="'merge'"
 					>
 						Create new post
@@ -163,7 +163,7 @@
 				></i>
 				<div class="text-center text-base-content">
 					<p class="text-lg font-bold"><span class="text-success">Nothing more </span> to load</p>
-					<span class="text-sm"> Why not explore other sections? </span>
+					<span class="text-sm"> Why not discover something new? </span>
 				</div>
 			}
 		}

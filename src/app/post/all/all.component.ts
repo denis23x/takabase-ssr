@@ -68,11 +68,11 @@ export class PostAllComponent implements OnInit, OnDestroy {
 						this.apiService.setHttpErrorResponseKey(httpErrorResponse);
 					}
 
-					/** Redirect */
+					const redirect$: Promise<boolean> = this.router.navigate(['/error', httpErrorResponse.status], {
+						skipLocationChange: true
+					});
 
-					return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(
-						switchMap(() => throwError(() => httpErrorResponse))
-					);
+					return from(redirect$).pipe(switchMap(() => throwError(() => httpErrorResponse)));
 				}),
 				tap((post: Post) => this.postStore.setPost(post))
 			)

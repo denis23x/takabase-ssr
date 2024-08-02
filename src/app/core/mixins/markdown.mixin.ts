@@ -76,7 +76,7 @@ export function MarkdownMixin<T extends new (...args: any[]) => any>(MasterClass
 						return proseUpdated;
 					}),
 					catchError((httpErrorResponse: HttpErrorResponse) => {
-						return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(
+						return from(this.router.navigate(['/error', httpErrorResponse.status], { skipLocationChange: true })).pipe(
 							switchMap(() => throwError(() => httpErrorResponse))
 						);
 					})

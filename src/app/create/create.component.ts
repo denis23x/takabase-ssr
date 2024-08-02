@@ -53,13 +53,14 @@ import { AIService } from '../core/services/ai.service';
 import { FireStoragePipe } from '../standalone/pipes/fire-storage.pipe';
 import { BusService } from '../core/services/bus.service';
 import { SharpService } from '../core/services/sharp.service';
-import type { PostCreateDto } from '../core/dto/post/post-create.dto';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import type { CurrentUser } from '../core/models/current-user.model';
 import type { Category } from '../core/models/category.model';
 import type { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import type { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
 import type { Post } from '../core/models/post.model';
+import type { PostCreateDto } from '../core/dto/post/post-create.dto';
+import type { PostDeleteDto } from '../core/dto/post/post-delete.dto';
 import type { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
 import type { PostUpdateDto } from '../core/dto/post/post-update.dto';
 import type { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
@@ -136,6 +137,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 	postRequest$: Subscription | undefined;
 	postSkeletonToggle: boolean = true;
 	postType: string = 'public';
+	postTypeOriginal: string | undefined;
 
 	postForm: FormGroup = this.formBuilder.group<PostForm>({
 		name: this.formBuilder.nonNullable.control('', [
@@ -302,7 +304,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 			// Get post
 
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-			const postType: string = String(this.activatedRoute.snapshot.queryParamMap.get('postType') || '');
+			const postType: string = String(this.activatedRoute.snapshot.queryParamMap.get('postType') || 'public');
 
 			if (postId && postType) {
 				const postGetOneDto: PostGetOneDto = {
@@ -320,15 +322,21 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
 				this.onChangePostType(postType);
 
+				// Set postTypeOriginal for detect changing
+
+				this.postTypeOriginal = postType;
+
 				// Request
 
 				this.postRequest$?.unsubscribe();
 				this.postRequest$ = postTypeMap[this.postType]
 					.pipe(
 						catchError((httpErrorResponse: HttpErrorResponse) => {
-							return from(this.router.navigate(['/error', httpErrorResponse.status])).pipe(
-								switchMap(() => throwError(() => httpErrorResponse))
-							);
+							const redirect$: Promise<boolean> = this.router.navigate(['/error', httpErrorResponse.status], {
+								skipLocationChange: true
+							});
+
+							return from(redirect$).pipe(switchMap(() => throwError(() => httpErrorResponse)));
 						})
 					)
 					.subscribe({
@@ -351,7 +359,8 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 							this.postFormIsPristine$?.unsubscribe();
 							this.postFormIsPristine$ = this.postForm.valueChanges.pipe(startWith(this.postForm.value)).subscribe({
 								next: (value: any) => {
-									this.postFormIsPristine = Object.keys(value).every((key: string) => {
+									const postTypeIsPristine: boolean = this.postTypeOriginal === this.postType;
+									const postFormIsPristine: boolean = Object.keys(value).every((key: string) => {
 										switch (key) {
 											case 'categoryId':
 												return value[key] === this.post.category?.id;
@@ -361,10 +370,13 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 												return value[key] === this.post[key as keyof Post];
 										}
 									});
+
+									this.postFormIsPristine = this.post ? postTypeIsPristine && postFormIsPristine : postFormIsPristine;
 								},
 								error: (error: any) => console.error(error)
 							});
-						}
+						},
+						error: (error: any) => console.error(error)
 					});
 			} else {
 				this.post = undefined;
@@ -486,6 +498,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 			categoryName: this.category.name
 		});
 
+		this.postForm.get('categoryId').markAsTouched();
 		this.postForm.get('categoryName').markAsTouched();
 	}
 
@@ -553,31 +566,50 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 	onChangePostType(postType: string): void {
 		this.postType = postType;
 
-		// Remove control if already exists
-
-		this.postForm.removeControl('categoryId');
-		this.postForm.removeControl('categoryName');
-		this.postForm.removeControl('password');
-
 		switch (this.postType) {
 			case 'password': {
+				const password: string = this.post?.password || '';
+
 				// prettier-ignore
-				this.postForm.addControl('password', this.formBuilder.nonNullable.control('', [
+				this.postForm.addControl('password', this.formBuilder.nonNullable.control(password, [
 					Validators.required,
 					Validators.minLength(6),
 					Validators.maxLength(48),
 					Validators.pattern(this.helperService.getRegex('password'))
 				]));
 
+				if (password) {
+					this.postForm.get('password').markAsTouched();
+				}
+
+				// Remove unnecessary controls for this postType
+				this.postForm.removeControl('categoryId');
+				this.postForm.removeControl('categoryName');
+
 				break;
 			}
 			case 'private': {
-				// Nothing to add
+				// Remove unnecessary controls for this postType
+				this.postForm.removeControl('categoryId');
+				this.postForm.removeControl('categoryName');
+				this.postForm.removeControl('password');
+
 				break;
 			}
 			case 'public': {
-				this.postForm.addControl('categoryId', this.formBuilder.control(null, [Validators.required]));
-				this.postForm.addControl('categoryName', this.formBuilder.nonNullable.control('', []));
+				const categoryId: number | null = this.category?.id || null;
+				const categoryName: string = this.category?.name || '';
+
+				this.postForm.addControl('categoryId', this.formBuilder.control(categoryId, [Validators.required]));
+				this.postForm.addControl('categoryName', this.formBuilder.nonNullable.control(categoryName, []));
+
+				if (categoryId && categoryName) {
+					this.postForm.get('categoryId').markAsTouched();
+					this.postForm.get('categoryName').markAsTouched();
+				}
+
+				// Remove unnecessary controls for this postType
+				this.postForm.removeControl('password');
 
 				break;
 			}
@@ -597,13 +629,34 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
 			const postDto: PostCreateDto & PostUpdateDto = {
 				...this.postForm.value,
+				image: this.postForm.value.image || undefined,
 				firebaseUid: this.post?.firebaseUid || undefined
 			};
 
-			const postTypeMap: Record<string, Observable<Post>> = {
-				password: postId ? this.postPasswordService.update(postId, postDto) : this.postPasswordService.create(postDto),
-				private: postId ? this.postPrivateService.update(postId, postDto) : this.postPrivateService.create(postDto),
-				public: postId ? this.postService.update(postId, postDto) : this.postService.create(postDto as PostCreateDto)
+			const postDeleteDto: PostDeleteDto = {
+				firebaseUid: this.post.firebaseUid
+			};
+
+			const postTypeIsPristine: boolean = this.postTypeOriginal === this.postType;
+
+			const postTypeMap = (): Observable<Partial<Post>> => {
+				const postService: Record<string, PostPasswordService | PostPrivateService | PostService> = {
+					password: this.postPasswordService,
+					private: this.postPrivateService,
+					public: this.postService
+				};
+
+				if (postId) {
+					if (postTypeIsPristine) {
+						return postService[this.postType].update(postId, postDto);
+					} else {
+						return postService[this.postType]
+							.create(postDto)
+							.pipe(switchMap(() => postService[this.postTypeOriginal].delete(postId, postDeleteDto)));
+					}
+				} else {
+					return postService[this.postType].create(postDto);
+				}
 			};
 
 			// Moderate
@@ -616,17 +669,17 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.postFormRequest$?.unsubscribe();
 			this.postFormRequest$ = this.aiService
 				.moderateText(aiModerateTextDto)
-				.pipe(switchMap(() => postTypeMap[this.postType]))
+				.pipe(switchMap(() => postTypeMap()))
 				.subscribe({
-					next: (post: Post) => {
+					next: () => {
 						const postTypeRedirectMap: Record<string, string[]> = {
 							password: ['password'],
 							private: ['private'],
-							public: ['category', String(post.category?.id)]
+							public: ['category', String(this.category?.id)]
 						};
 
 						this.router
-							.navigate(['/', post.user.name, ...postTypeRedirectMap[this.postType]])
+							.navigate(['/', this.currentUser.name, ...postTypeRedirectMap[this.postType]])
 							.then(() => this.snackbarService.success('Cheers!', 'Post has been ' + (postId ? 'updated' : 'saved')));
 					},
 					error: () => this.postForm.enable()
