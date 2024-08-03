@@ -109,7 +109,7 @@ export class ApiService {
 		/** https://github.com/denis23x/takabase-dd */
 
 		const getMessage = (): string | undefined => {
-			switch (httpErrorResponse.error.code) {
+			switch (httpErrorResponse.error?.code) {
 				case 'firestore/add-document-failed':
 					return 'Failed to add document';
 				case 'firestore/get-document-failed':
@@ -125,7 +125,7 @@ export class ApiService {
 				case 'storage/file-move-failed':
 					return 'Failed to move the file inside the storage';
 				default:
-					return httpErrorResponse.error.message;
+					return httpErrorResponse.error?.message;
 			}
 		};
 

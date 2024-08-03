@@ -2,12 +2,9 @@
 
 import { inject, Injectable } from '@angular/core';
 import { MarkdownItPlugins } from '../models/markdown.model';
-import { environment } from '../../../environments/environment';
-import { map } from 'rxjs/operators';
 import { AppearanceService } from './appearance.service';
 import { DOCUMENT } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { HelperService } from './helper.service';
+import { environment } from '../../../environments/environment';
 import MarkdownIt from 'markdown-it';
 import morphdom from 'morphdom';
 import attrs from 'markdown-it-attrs';
@@ -21,11 +18,10 @@ import type { Token } from 'markdown-it';
 export class MarkdownService {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly document: Document = inject(DOCUMENT);
-	private readonly httpClient: HttpClient = inject(HttpClient);
-	private readonly helperService: HelperService = inject(HelperService);
 
 	markdownItPlugins: string[] = [];
 	markdownIt: MarkdownIt;
+	markdownItValue: string | undefined;
 
 	getMarkdownItDefault(): MarkdownIt {
 		/** Create new instance */
@@ -88,33 +84,9 @@ export class MarkdownService {
 					}
 					case 'src': {
 						if (value.includes(environment.firebase.storageBucket)) {
-							imageElement.id = this.helperService.getNanoId(12);
-							imageElement.src = './assets/images/placeholder-image.svg';
-
-							this.httpClient
-								.get(value, {
-									params: {
-										alt: 'media'
-									},
-									responseType: 'blob'
-								})
-								.pipe(map((blob: Blob) => URL.createObjectURL(blob)))
-								.subscribe({
-									next: (blob: string) => {
-										const elementHTML: HTMLElement | null = this.document.getElementById(imageElement.id);
-										const elementHTMLImage: HTMLImageElement = elementHTML as HTMLImageElement;
-
-										/** Set Image */
-
-										if (elementHTMLImage) {
-											elementHTMLImage.src = blob;
-										}
-									},
-									error: (error: any) => console.error(error)
-								});
+							imageElement.src = value + '?alt=media';
 						} else {
-							// @ts-ignore
-							imageElement[key] = value;
+							imageElement.src = value;
 						}
 
 						break;
@@ -128,7 +100,7 @@ export class MarkdownService {
 				}
 			});
 
-			imageElement.loading = 'lazy';
+			imageElement.loading = 'eager';
 			imageElement.alt = token.content;
 			imageElement.title = token.content;
 
@@ -333,14 +305,16 @@ export class MarkdownService {
 	}
 
 	setRender(value: string, element: HTMLElement): void {
-		const cloneElement: HTMLElement = element.cloneNode(true) as HTMLElement;
+		if (this.markdownItValue !== value) {
+			const cloneElement: HTMLElement = element.cloneNode(true) as HTMLElement;
 
-		/** Set markdown-it render */
+			/** Set markdown-it render */
 
-		this.getMarkdownIt(value).then((markdownIt: MarkdownIt) => {
-			cloneElement.innerHTML = markdownIt.render(value);
-
-			morphdom(element, cloneElement);
-		});
+			this.getMarkdownIt(value)
+				.then((markdownIt: MarkdownIt) => (cloneElement.innerHTML = markdownIt.render(value)))
+				.then(() => morphdom(element, cloneElement))
+				.catch((error: any) => console.error(error))
+				.finally(() => (this.markdownItValue = value));
+		}
 	}
 }

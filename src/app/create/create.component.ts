@@ -229,16 +229,16 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.postFormTextareaMarkdownItCropperToggle$ = this.busService.markdownItCropperToggle
 			.pipe(filter((toggle: boolean) => toggle))
 			.subscribe({
-				next: () => this.onToggleCropperDialog(),
+				next: () => this.onToggleCropperDialog(true, true),
 				error: (error: any) => console.error(error)
 			});
 
 		/** Load cropper component by click in textarea (for manage clipboard image paste) */
 
-		const textarea: HTMLElement | null = this.document.getElementById(this.postFormTextareaId);
+		const event$: Observable<Event> = fromEvent(this.document.getElementById(this.postFormTextareaId), 'click');
 
 		this.postFormTextareaMarkdownItCropperClipboard$?.unsubscribe();
-		this.postFormTextareaMarkdownItCropperClipboard$ = fromEvent(textarea, 'click').subscribe({
+		this.postFormTextareaMarkdownItCropperClipboard$ = event$.subscribe({
 			next: () => this.onToggleCropperDialog(false),
 			error: (error: any) => console.error(error)
 		});
@@ -634,7 +634,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 			};
 
 			const postDeleteDto: PostDeleteDto = {
-				firebaseUid: this.post.firebaseUid
+				firebaseUid: this.post?.firebaseUid
 			};
 
 			const postTypeIsPristine: boolean = this.postTypeOriginal === this.postType;
@@ -689,7 +689,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/** LAZY */
 
-	async onToggleCropperDialog(toggle: boolean = true): Promise<void> {
+	async onToggleCropperDialog(toggle: boolean, markdownItToggle: boolean = false): Promise<void> {
 		if (!this.appCropperComponent) {
 			await import('../standalone/components/cropper/cropper.component').then(m => {
 				this.appCropperComponent = this.viewContainerRef.createComponent(m.CropperComponent);
@@ -701,7 +701,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 
 		this.appCropperComponent.changeDetectorRef.detectChanges();
-		this.appCropperComponent.instance.onToggleCropperDialog(toggle);
+		this.appCropperComponent.instance.onToggleCropperDialog(toggle, markdownItToggle);
 	}
 
 	async onToggleCategoryCreateDialog(): Promise<void> {
