@@ -152,4 +152,8 @@ export class HelperService {
 
 		console.error('Error: ' + navigationPrevious + ' → ' + navigationCurrent, error);
 	}
+
+	setOmitUndefined(obj: any): any {
+		return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value !== undefined));
+	}
 }

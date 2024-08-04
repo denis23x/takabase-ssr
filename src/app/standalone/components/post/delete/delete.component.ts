@@ -25,6 +25,7 @@ import { Observable, Subscription } from 'rxjs';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { Location } from '@angular/common';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
+import { HelperService } from '../../../../core/services/helper.service';
 import type { Post } from '../../../../core/models/post.model';
 import type { PostDeleteDto } from '../../../../core/dto/post/post-delete.dto';
 
@@ -43,6 +44,7 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 	private readonly postPrivateService: PostPrivateService = inject(PostPrivateService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly helperService: HelperService = inject(HelperService);
 	private readonly location: Location = inject(Location);
 
 	@ViewChild('postDeleteDialogElement') postDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
@@ -108,9 +110,9 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 		};
 
 		const postTypeMap: Record<string, Observable<Partial<Post>>> = {
-			password: this.postPasswordService.delete(postId, postDeleteDto),
-			private: this.postPrivateService.delete(postId, postDeleteDto),
-			public: this.postService.delete(postId, postDeleteDto)
+			password: this.postPasswordService.delete(postId, this.helperService.setOmitUndefined(postDeleteDto)),
+			private: this.postPrivateService.delete(postId, this.helperService.setOmitUndefined(postDeleteDto)),
+			public: this.postService.delete(postId, this.helperService.setOmitUndefined(postDeleteDto))
 		};
 
 		this.postDeleteRequest$?.unsubscribe();

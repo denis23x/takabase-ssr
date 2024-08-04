@@ -629,7 +629,6 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 
 			const postDto: PostCreateDto & PostUpdateDto = {
 				...this.postForm.value,
-				image: this.postForm.value.image || undefined,
 				firebaseUid: this.post?.firebaseUid || undefined
 			};
 
@@ -651,9 +650,10 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 					if (postTypeIsPristine) {
 						return postService[this.postType].update(postId, postDto);
 					} else {
+						// prettier-ignore
 						return postService[this.postType]
 							.create(postDto)
-							.pipe(switchMap(() => postService[this.postTypeOriginal].delete(postId, postDeleteDto)));
+							.pipe(switchMap(() => postService[this.postTypeOriginal].delete(postId, this.helperService.setOmitUndefined(postDeleteDto))));
 					}
 				} else {
 					return postService[this.postType].create(postDto);
