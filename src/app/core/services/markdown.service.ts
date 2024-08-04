@@ -6,7 +6,6 @@ import { AppearanceService } from './appearance.service';
 import { DOCUMENT } from '@angular/common';
 import { HelperService } from './helper.service';
 import MarkdownIt from 'markdown-it';
-import morphdom from 'morphdom';
 import attrs from 'markdown-it-attrs';
 import bracketedSpans from 'markdown-it-bracketed-spans';
 import ins from 'markdown-it-ins';
@@ -22,7 +21,6 @@ export class MarkdownService {
 
 	markdownItPlugins: string[] = [];
 	markdownIt: MarkdownIt;
-	markdownItValue: string | undefined;
 
 	getMarkdownItDefault(): MarkdownIt {
 		/** Create new instance */
@@ -297,19 +295,5 @@ export class MarkdownService {
 		});
 
 		return (this.markdownIt = markdownIt);
-	}
-
-	setRender(value: string, element: HTMLElement): void {
-		if (this.markdownItValue !== value) {
-			const cloneElement: HTMLElement = element.cloneNode(true) as HTMLElement;
-
-			/** Set markdown-it render */
-
-			this.getMarkdownIt(value)
-				.then((markdownIt: MarkdownIt) => (cloneElement.innerHTML = markdownIt.render(value)))
-				.then(() => morphdom(element, cloneElement))
-				.catch((error: any) => console.error(error))
-				.finally(() => (this.markdownItValue = value));
-		}
 	}
 }

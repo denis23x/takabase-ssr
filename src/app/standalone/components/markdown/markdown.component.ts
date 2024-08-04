@@ -48,6 +48,8 @@ import type {
 	MarkdownTextarea,
 	MarkdownWrapper
 } from '../../../core/models/markdown.model';
+import type MarkdownIt from 'markdown-it';
+import morphdom from 'morphdom';
 
 interface UrlForm {
 	title?: FormControl<string>;
@@ -144,6 +146,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	textareaInput$: Subscription | undefined;
 	textareaId: string | undefined;
 	textarea: HTMLTextAreaElement | undefined;
+	textareaValue: string | undefined;
 
 	previewId: string | undefined;
 	preview: HTMLElement | undefined;
@@ -171,7 +174,18 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 						const hasValue: boolean = this.textarea.value !== '';
 						const hasPreview: boolean = this.preview.innerHTML !== '';
 
-						this.markdownService.setRender(this.textarea.value, this.preview);
+						// Render
+
+						if (this.textareaValue !== this.textarea.value) {
+							const cloneElement: HTMLElement = this.preview.cloneNode(true) as HTMLElement;
+
+							this.markdownService
+								.getMarkdownIt(this.textarea.value)
+								.then((markdownIt: MarkdownIt) => (cloneElement.innerHTML = markdownIt.render(this.textarea.value)))
+								.then(() => morphdom(this.preview, cloneElement))
+								.catch((error: any) => console.error(error))
+								.finally(() => (this.textareaValue = this.textarea.value));
+						}
 
 						// Scroll to top when initialize
 
