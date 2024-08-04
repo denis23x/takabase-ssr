@@ -7,7 +7,6 @@ import { tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { MarkdownPipe } from '../../standalone/pipes/markdown.pipe';
 import { SanitizerPipe } from '../../standalone/pipes/sanitizer.pipe';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
 import { SkeletonService } from '../../core/services/skeleton.service';
@@ -32,7 +31,6 @@ import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 		AvatarComponent,
 		ScrollPresetDirective,
 		SvgIconComponent,
-		MarkdownPipe,
 		SanitizerPipe,
 		DropdownComponent,
 		SkeletonDirective,

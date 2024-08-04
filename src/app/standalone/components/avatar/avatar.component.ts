@@ -5,14 +5,13 @@ import { toSvg } from 'jdenticon';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from '../../../core/services/platform.service';
 import { HelperService } from '../../../core/services/helper.service';
-import { FireStoragePipe } from '../../pipes/fire-storage.pipe';
+import { environment } from '../../../../environments/environment';
 import type { User } from '../../../core/models/user.model';
 
 @Component({
 	standalone: true,
 	selector: 'app-avatar, [appAvatar]',
 	templateUrl: './avatar.component.html',
-	providers: [FireStoragePipe],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AvatarComponent {
@@ -20,7 +19,6 @@ export class AvatarComponent {
 	private readonly elementRef: ElementRef = inject(ElementRef);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly fireStoragePipe: FireStoragePipe = inject(FireStoragePipe);
 
 	@Input({ required: true })
 	set appAvatarUser(user: Partial<User> | undefined) {
@@ -55,7 +53,11 @@ export class AvatarComponent {
 			const elementHTML: HTMLElement | null = this.document.getElementById(elementRefImage.id);
 			const elementHTMLImage: HTMLImageElement = elementHTML as HTMLImageElement;
 
-			elementHTMLImage.src = this.fireStoragePipe.transform(this.user.avatar);
+			if (this.user.avatar.includes(environment.firebase.storageBucket)) {
+				elementHTMLImage.src = this.helperService.getImageURLQueryParams(this.user.avatar);
+			} else {
+				elementHTMLImage.src = this.user.avatar;
+			}
 		}
 	}
 

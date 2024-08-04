@@ -13,7 +13,7 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { HelperService } from '../../../../core/services/helper.service';
 import { MarkdownRenderDirective } from '../../../directives/app-markdown-render.directive';
 import { MarkdownTimeToReadPipe } from '../../../pipes/markdown-time-to-read.pipe';
-import { FireStoragePipe } from '../../../pipes/fire-storage.pipe';
+import { FirebaseStoragePipe } from '../../../pipes/firebase-storage.pipe';
 import { MarkdownService } from '../../../../core/services/markdown.service';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import type { QRCodeComponent } from '../../qr-code/qr-code.component';
@@ -35,7 +35,7 @@ import type { Post } from '../../../../core/models/post.model';
 		CopyToClipboardDirective,
 		MarkdownRenderDirective,
 		MarkdownTimeToReadPipe,
-		FireStoragePipe
+		FirebaseStoragePipe
 	],
 	providers: [MarkdownService],
 	selector: 'app-post-prose, [appPostProse]',

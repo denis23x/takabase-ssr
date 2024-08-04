@@ -50,7 +50,7 @@ import { KbdPipe } from '../standalone/pipes/kbd.pipe';
 import { PlatformDirective } from '../standalone/directives/app-platform.directive';
 import { DeviceDirective } from '../standalone/directives/app-device.directive';
 import { AIService } from '../core/services/ai.service';
-import { FireStoragePipe } from '../standalone/pipes/fire-storage.pipe';
+import { FirebaseStoragePipe } from '../standalone/pipes/firebase-storage.pipe';
 import { BusService } from '../core/services/bus.service';
 import { SharpService } from '../core/services/sharp.service';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
@@ -99,7 +99,7 @@ interface PostForm {
 		KbdPipe,
 		PlatformDirective,
 		DeviceDirective,
-		FireStoragePipe
+		FirebaseStoragePipe
 	],
 	providers: [CategoryService, PostService, PostPrivateService, PostPasswordService, AIService, SharpService],
 	selector: 'app-create',

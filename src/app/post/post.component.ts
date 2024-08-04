@@ -11,7 +11,7 @@ import { MetaService } from '../core/services/meta.service';
 import { filter } from 'rxjs/operators';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
-import { FireStoragePipe } from '../standalone/pipes/fire-storage.pipe';
+import { HelperService } from '../core/services/helper.service';
 import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
 import type { Post } from '../core/models/post.model';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
@@ -19,7 +19,7 @@ import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 @Component({
 	standalone: true,
 	imports: [RouterModule, CommonModule, SvgIconComponent, SkeletonDirective],
-	providers: [PostStore, FireStoragePipe],
+	providers: [PostStore],
 	selector: 'app-post',
 	templateUrl: './post.component.html'
 })
@@ -28,8 +28,8 @@ export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postStore: PostStore = inject(PostStore);
-	private readonly fireStoragePipe: FireStoragePipe = inject(FireStoragePipe);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+	private readonly helperService: HelperService = inject(HelperService);
 
 	post: Post | undefined;
 	post$: Subscription | undefined;
@@ -92,6 +92,7 @@ export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 	setMetaTags(): void {
 		const title: string = this.post.name;
 		const description: string = this.post.description;
+		const image: string = this.helperService.getImageURLQueryParams(this.post.image);
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,
@@ -100,16 +101,16 @@ export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 			['article:published_time']: this.post.createdAt,
 			['article:modified_time']: this.post.updatedAt,
 			['article:author']: this.post.user.name,
-			['og:image']: this.fireStoragePipe.transform(this.post.image),
-			['og:image:alt']: this.post.name,
+			['og:image']: image,
+			['og:image:alt']: title,
 			['og:image:type']: 'image/webp'
 		};
 
 		const metaTwitter: MetaTwitter = {
 			['twitter:title']: title,
 			['twitter:description']: description,
-			['twitter:image']: this.fireStoragePipe.transform(this.post.image),
-			['twitter:image:alt']: this.post.name
+			['twitter:image']: image,
+			['twitter:image:alt']: title
 		};
 
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);

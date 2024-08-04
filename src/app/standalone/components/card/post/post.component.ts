@@ -5,12 +5,12 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
-import { FireStoragePipe } from '../../../pipes/fire-storage.pipe';
+import { FirebaseStoragePipe } from '../../../pipes/firebase-storage.pipe';
 import type { Post } from '../../../../core/models/post.model';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, DayjsPipe, NgOptimizedImage, SkeletonDirective, FireStoragePipe],
+	imports: [CommonModule, RouterModule, DayjsPipe, NgOptimizedImage, SkeletonDirective, FirebaseStoragePipe],
 	selector: 'app-card-post, [appCardPost]',
 	templateUrl: './post.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

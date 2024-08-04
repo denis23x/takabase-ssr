@@ -26,7 +26,7 @@ import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../avatar/avatar.component';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { PlatformService } from '../../../core/services/platform.service';
-import { FireStoragePipe } from '../../pipes/fire-storage.pipe';
+import { FirebaseStoragePipe } from '../../pipes/firebase-storage.pipe';
 import type { User } from '../../../core/models/user.model';
 import type { Post } from '../../../core/models/post.model';
 import type { ReportCreateDto } from '../../../core/dto/report/report-create.dto';
@@ -51,7 +51,7 @@ interface ReportForm {
 		BadgeErrorComponent,
 		AvatarComponent,
 		SkeletonDirective,
-		FireStoragePipe
+		FirebaseStoragePipe
 	],
 	providers: [ReportService],
 	selector: 'app-report, [appReport]',

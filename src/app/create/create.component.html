@@ -23,7 +23,7 @@
                       height="48"
                       [alt]="'Image'"
                       [priority]="true"
-                      [ngSrc]="image.value | fireStorage"
+                      [ngSrc]="image.value | firebaseStorage"
                     />
                   }
                   @case (!!image.value === false) {

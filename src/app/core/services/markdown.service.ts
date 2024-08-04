@@ -4,7 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { MarkdownItPlugins } from '../models/markdown.model';
 import { AppearanceService } from './appearance.service';
 import { DOCUMENT } from '@angular/common';
-import { environment } from '../../../environments/environment';
+import { HelperService } from './helper.service';
 import MarkdownIt from 'markdown-it';
 import morphdom from 'morphdom';
 import attrs from 'markdown-it-attrs';
@@ -18,6 +18,7 @@ import type { Token } from 'markdown-it';
 export class MarkdownService {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly document: Document = inject(DOCUMENT);
+	private readonly helperService: HelperService = inject(HelperService);
 
 	markdownItPlugins: string[] = [];
 	markdownIt: MarkdownIt;
@@ -76,18 +77,12 @@ export class MarkdownService {
 			token.attrs?.forEach(([key, value]: string[]) => {
 				switch (key) {
 					case 'class': {
-						const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
-
-						imageElement.classList.add(...classList);
+						imageElement.classList.add(...value.split(/\s/).filter((className: string) => !!className));
 
 						break;
 					}
 					case 'src': {
-						if (value.includes(environment.firebase.storageBucket)) {
-							imageElement.src = value + '?alt=media';
-						} else {
-							imageElement.src = value;
-						}
+						imageElement.src = this.helperService.getImageURLQueryParams(value);
 
 						break;
 					}

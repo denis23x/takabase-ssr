@@ -134,6 +134,18 @@ export class HelperService {
 		return new URL(this.document.URL, environment.appUrl);
 	}
 
+	getImageURLQueryParams(value: string): string {
+		if (String(value).includes(environment.firebase.storageBucket)) {
+			const url: URL = new URL(value);
+
+			url.searchParams.set('alt', 'media');
+
+			return url.toString();
+		} else {
+			return value;
+		}
+	}
+
 	setNavigationError(navigation: Navigation, error: any): void {
 		const navigationCurrent: string = navigation.finalUrl.toString();
 		const navigationPrevious: string | undefined = navigation.previousNavigation?.finalUrl.toString();
