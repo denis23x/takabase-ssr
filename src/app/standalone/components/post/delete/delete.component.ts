@@ -103,6 +103,7 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 
 		const postId: number = this.post.id;
 		const postDeleteDto: PostDeleteDto = {
+			image: this.post.image || undefined,
 			firebaseUid: this.post.firebaseUid
 		};
 
@@ -111,12 +112,6 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 			private: this.postPrivateService.delete(postId, postDeleteDto),
 			public: this.postService.delete(postId, postDeleteDto)
 		};
-
-		// Put field only if exists (querystring parse issue)
-
-		if (this.post.image) {
-			postDeleteDto.image = this.post.image;
-		}
 
 		this.postDeleteRequest$?.unsubscribe();
 		this.postDeleteRequest$ = postTypeMap[this.postType].subscribe({

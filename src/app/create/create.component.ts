@@ -634,6 +634,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 			};
 
 			const postDeleteDto: PostDeleteDto = {
+				image: this.postForm.value.image || undefined,
 				firebaseUid: this.post?.firebaseUid
 			};
 
