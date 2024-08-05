@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { PostProseComponent } from '../../standalone/components/post/prose/prose.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, filter, switchMap, tap } from 'rxjs/operators';
@@ -18,7 +18,8 @@ import type { HttpErrorResponse } from '@angular/common/http';
 	imports: [PostProseComponent],
 	providers: [PostPrivateService],
 	selector: 'app-post-private',
-	templateUrl: './private.component.html'
+	templateUrl: './private.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostPrivateComponent implements OnInit, OnDestroy {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
@@ -27,6 +28,7 @@ export class PostPrivateComponent implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly router: Router = inject(Router);
 	private readonly postStore: PostStore = inject(PostStore);
+	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
 	currentUserSkeletonToggle: boolean = true;
 	currentUserSkeletonToggle$: Subscription | undefined;
@@ -79,6 +81,10 @@ export class PostPrivateComponent implements OnInit, OnDestroy {
 							next: (postPrivate: Post) => {
 								this.postPrivate = postPrivate;
 								this.postPrivateSkeletonToggle = false;
+
+								//! Detect changes
+
+								this.changeDetectorRef.detectChanges();
 							},
 							error: (error: any) => console.error(error)
 						});

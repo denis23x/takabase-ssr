@@ -22,22 +22,25 @@ export class MarkdownRenderDirective {
 
 	@Input()
 	set appMarkdownRenderValue(value: string) {
-		if (this.platformService.isServer()) {
-			const markdownIt: MarkdownIt = this.markdownService.getMarkdownItDefault();
+		const markdownIt: MarkdownIt = this.markdownService.getMarkdownItDefault();
+		const markdownItElement: HTMLElement = this.elementRef.nativeElement.cloneNode(true) as HTMLElement;
+		const markdownItRender = (markdownItValue: string): void => {
+			markdownItElement.innerHTML = this.domSanitizer.sanitize(1, this.sanitizerPipe.transform(markdownItValue, 1));
 
-			this.elementRef.nativeElement.innerHTML = markdownIt.render(value);
-		} else {
-			this.markdownService.getMarkdownIt(value).then((markdownIt: MarkdownIt) => {
-				const cloneElement: HTMLElement = this.elementRef.nativeElement.cloneNode(true) as HTMLElement;
-				const cloneElementValue: string = markdownIt.render(value);
-				const cloneElementTrustHtml: string = this.sanitizerPipe.transform(cloneElementValue, 1) as string;
+			// Update DOM
 
-				cloneElement.innerHTML = this.domSanitizer.sanitize(1, cloneElementTrustHtml);
+			morphdom(this.elementRef.nativeElement, markdownItElement);
+		};
 
-				/** Set output */
+		// SSR
 
-				morphdom(this.elementRef.nativeElement, cloneElement);
-			});
+		markdownItRender(markdownIt.render(value));
+
+		if (this.platformService.isBrowser()) {
+			this.markdownService
+				.getMarkdownIt(value)
+				.then((markdownIt: MarkdownIt) => markdownItRender(markdownIt.render(value)))
+				.catch((error: any) => console.error(error));
 		}
 	}
 }

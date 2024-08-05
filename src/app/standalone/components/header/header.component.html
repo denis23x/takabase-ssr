@@ -2,7 +2,7 @@
 
 <ng-container>
 	<div class="navbar rounded-box border border-base-content/20 bg-base-100 shadow-xl !p-4">
-		<div class="navbar-start">
+		<nav class="navbar-start">
 			<a
 				class="flex items-center justify-center w-12 h-12"
 				title="Takabase"
@@ -13,60 +13,53 @@
 				[appSvgLogoSquare]="'48'"
 			>
 			</a>
-		</div>
-		<div class="navbar-end">
-			<nav
-				class="block"
-				appAuthenticated
-				appSkeleton
-				[ngClass]="{ 'h-12 w-12 overflow-hidden': currentUserSkeletonToggle }"
-				[appSkeletonToggle]="currentUserSkeletonToggle"
-			>
-				<div class="flex items-center justify-end gap-4" slot="public">
-					<a
-						class="btn-ghost btn-square btn fill-current text-base-content"
-						title="Search"
-						aria-label="Search"
-						appSvgIcon
-						[routerLink]="['/search']"
-						[routerLinkActive]="['btn-active']"
-						[appSvgIconIcon]="'search'"
-						[appSvgIconSquare]="'1.5em'"
-					>
-					</a>
-					<a
-						class="btn-ghost btn-square btn fill-current text-base-content"
-						title="Login"
-						aria-label="Login"
-						appSvgIcon
-						[routerLink]="['/login']"
-						[routerLinkActive]="['btn-active']"
-						[appSvgIconIcon]="'person-circle'"
-						[appSvgIconSquare]="'1.5em'"
-					>
-					</a>
-				</div>
-				<div class="flex items-center justify-end gap-4" slot="private">
-					<a
-						class="btn-ghost btn-square btn fill-current text-base-content"
-						title="Search"
-						aria-label="Search"
-						appSvgIcon
-						[routerLink]="['/search']"
-						[routerLinkActive]="['btn-active']"
-						[appSvgIconIcon]="'search'"
-						[appSvgIconSquare]="'1.5em'"
-					>
-					</a>
+		</nav>
+		<nav class="navbar-end">
+			<ul class="flex items-center justify-end gap-4">
+				<li class="block" appAuthenticated>
 					<a
 						class="btn-ghost btn-square btn fill-current text-base-content"
 						title="Create new post"
 						aria-label="Create new post"
 						appSvgIcon
+						slot="private"
 						[routerLink]="['/create']"
 						[routerLinkActive]="['btn-active']"
 						[routerLinkActiveOptions]="{ exact: true }"
-						[appSvgIconIcon]="'file-earmark-plus'"
+						[appSvgIconIcon]="'plus'"
+						[appSvgIconSquare]="'2em'"
+					>
+					</a>
+				</li>
+				<li class="block">
+					<a
+						class="btn-ghost btn-square btn fill-current text-base-content"
+						title="Search"
+						aria-label="Search"
+						appSvgIcon
+						[routerLink]="['/search']"
+						[routerLinkActive]="['btn-active']"
+						[appSvgIconIcon]="'search'"
+						[appSvgIconSquare]="'1.5em'"
+					>
+					</a>
+				</li>
+				<li
+					class="block"
+					appAuthenticated
+					appSkeleton
+					[ngClass]="{ 'h-12 w-12 overflow-hidden': currentUserSkeletonToggle }"
+					[appSkeletonToggle]="currentUserSkeletonToggle"
+				>
+					<a
+						class="btn-ghost btn-square btn fill-current text-base-content"
+						title="Login"
+						aria-label="Login"
+						appSvgIcon
+						slot="public"
+						[routerLink]="['/login']"
+						[routerLinkActive]="['btn-active']"
+						[appSvgIconIcon]="'person-circle'"
 						[appSvgIconSquare]="'1.5em'"
 					>
 					</a>
@@ -75,6 +68,7 @@
 							class="flex cursor-pointer relative"
 							data-pw="app-header-profile-dropdown"
 							appDropdown
+							slot="private"
 							[appDropdownPlacement]="'bottom-end'"
 						>
 							<div class="avatar" slot="target">
@@ -132,8 +126,8 @@
 							</ul>
 						</div>
 					}
-				</div>
-			</nav>
-		</div>
+				</li>
+			</ul>
+		</nav>
 	</div>
 </ng-container>

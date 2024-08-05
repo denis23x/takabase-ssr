@@ -1,7 +1,7 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { filter } from 'rxjs/operators';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { filter, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { AuthorizationService } from '../services/authorization.service';
 import { nanoid } from 'nanoid';
@@ -17,6 +17,7 @@ export function CurrentUserMixin<T extends new (...args: any[]) => any>(MasterCl
 	})
 	abstract class SlaveClass extends MasterClass implements OnInit, OnDestroy {
 		public readonly authorizationService: AuthorizationService = inject(AuthorizationService);
+		public readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
 		currentUser: CurrentUser | undefined;
 		currentUser$: Subscription | undefined;
@@ -37,9 +38,12 @@ export function CurrentUserMixin<T extends new (...args: any[]) => any>(MasterCl
 
 			this.currentUserSkeletonToggle$?.unsubscribe();
 			this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
-				.pipe(filter((currentUserIsPopulated: boolean) => currentUserIsPopulated))
+				.pipe(
+					filter((currentUserIsPopulated: boolean) => currentUserIsPopulated),
+					tap(() => (this.currentUserSkeletonToggle = false))
+				)
 				.subscribe({
-					next: () => (this.currentUserSkeletonToggle = false),
+					next: () => this.changeDetectorRef.markForCheck(),
 					error: (error: any) => console.error(error)
 				});
 		}
