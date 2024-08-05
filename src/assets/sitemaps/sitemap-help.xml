@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://takabase.com/help/markdown</loc>
+    <lastmod>2024-07-09T14:11:58+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://takabase.com/help/about</loc>
+    <lastmod>2024-07-09T14:11:58+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://takabase.com/help/code-highlight</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://takabase.com/help/diagrams</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://takabase.com/help/safe-list</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://takabase.com/help/compatibility</loc>
+    <lastmod>2024-07-09T14:12:03+01:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+</urlset>

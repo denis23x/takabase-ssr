@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://takabase.com/denis23x</loc>
+    <lastmod>2024-07-19T12:49:45.123Z</lastmod>
+    <priority>0.60</priority>
+    <changefreq>weekly</changefreq>
+    <image:image>
+      <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Favatar%2F1715534704358-FZ7Zb2uMqGol.webp?alt=media</image:loc>
+      <image:title>denis23x</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://takabase.com/Tipa</loc>
+    <lastmod>2024-06-27T11:09:36.398Z</lastmod>
+    <priority>0.50</priority>
+    <changefreq>monthly</changefreq>
+    <image:image>
+      <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2Frgpd0QfwrpaLXOxlBKFlRjAvNp43%2Favatar%2F1719486568104-qYiCFXQcxY1i.webp?alt=media</image:loc>
+      <image:title>Tipa</image:title>
+    </image:image>
+  </url>
+</urlset>
