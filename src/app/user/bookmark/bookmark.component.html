@@ -8,21 +8,21 @@
 				type="button"
 				appSvgIcon
 				appSkeleton
-				[title]="postPrivateListSearchFormToggle ? 'Hide' : 'Search'"
-				[attr.aria-label]="postPrivateListSearchFormToggle ? 'Hide' : 'Search'"
-				[disabled]="postPrivateListSkeletonToggle"
-				[appSkeletonToggle]="postPrivateListSkeletonToggle && !postPrivateListSearchFormToggle"
+				[title]="postBookmarkListSearchFormToggle ? 'Hide' : 'Search'"
+				[attr.aria-label]="postBookmarkListSearchFormToggle ? 'Hide' : 'Search'"
+				[disabled]="postBookmarkListSkeletonToggle"
+				[appSkeletonToggle]="postBookmarkListSkeletonToggle && !postBookmarkListSearchFormToggle"
 				[appSkeletonClassListElementRef]="['border-0']"
-				[appSvgIconIcon]="postPrivateListSearchFormToggle ? 'x-lg' : 'search'"
+				[appSvgIconIcon]="postBookmarkListSearchFormToggle ? 'x-lg' : 'search'"
 				[appSvgIconSquare]="'1.5em'"
-				(click)="onToggleSearchForm(!postPrivateListSearchFormToggle)"
+				(click)="onToggleSearchForm(!postBookmarkListSearchFormToggle)"
 			></button>
-			@switch (postPrivateListSearchFormToggle) {
+			@switch (postBookmarkListSearchFormToggle) {
 				@case (true) {
 					<div
 						class="relative flex items-end justify-between gap-4 w-full"
 						appSearchForm
-						[appSearchFormDisabled]="postPrivateListSkeletonToggle"
+						[appSearchFormDisabled]="postBookmarkListSkeletonToggle"
 					></div>
 				}
 				@case (false) {
@@ -31,14 +31,14 @@
 							<h2
 								class="block truncate text-xl leading-6 font-bold text-base-content max-w-full"
 								appSkeleton
-								[appSkeletonToggle]="postPrivateListSkeletonToggle"
+								[appSkeletonToggle]="postBookmarkListSkeletonToggle"
 							>
 								Bookmarks
 							</h2>
 							<span
 								class="text-sm text-base-content/50 leading-4 truncate max-w-full"
 								appSkeleton
-								[appSkeletonToggle]="postPrivateListSkeletonToggle"
+								[appSkeletonToggle]="postBookmarkListSkeletonToggle"
 							>
 								Symlinks to saved posts
 							</span>
@@ -48,26 +48,26 @@
 			}
 		</div>
 		<div class="grid gap-4">
-			@if (postPrivateList.length) {
+			@if (postBookmarkList.length) {
 				<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4">
-					@for (post of postPrivateList; track post.id) {
+					@for (post of postBookmarkList; track post.id; let i = $index) {
 						<li
 							class="block"
 							appCardPost
 							[ngClass]="post.image ? 'row-span-6' : 'row-span-3'"
 							[appCardPostPost]="post"
-							[appCardPostType]="'private'"
-							[appCardPostSkeletonToggle]="postPrivateListSkeletonToggle"
+							[appCardPostSkeletonToggle]="postBookmarkListSkeletonToggle"
+							[appCardPostImagePriority]="i <= 3"
 						></li>
 					}
 				</ul>
-				@if (!postPrivateListSkeletonToggle) {
+				@if (!postBookmarkListSkeletonToggle) {
 					<div
 						class="block empty:hidden"
 						appListLoadMore
-						[appListLoadMoreIsLoading]="postPrivateListIsLoading"
-						[appListLoadMoreSearchResponse]="postPrivateListSearchResponse"
-						(appLoadMoreToggle)="getPostPrivateList(true)"
+						[appListLoadMoreIsLoading]="postBookmarkListIsLoading"
+						[appListLoadMoreSearchResponse]="postBookmarkListSearchResponse"
+						(appLoadMoreToggle)="getPostBookmarkList(true)"
 					></div>
 				}
 			} @else {

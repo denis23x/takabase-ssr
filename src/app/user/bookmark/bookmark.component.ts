@@ -17,7 +17,7 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
-import { PostPrivateService } from '../../core/services/post-private.service';
+import { PostBookmarkService } from '../../core/services/post-bookmark.service';
 import { HelperService } from '../../core/services/helper.service';
 import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
 import type { Post } from '../../core/models/post.model';
@@ -40,30 +40,30 @@ import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 		ListMockComponent,
 		SearchFormComponent
 	],
-	providers: [PostPrivateService],
+	providers: [PostBookmarkService],
 	selector: 'app-user-bookmark',
 	templateUrl: './bookmark.component.html'
 })
 export class UserBookmarkComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
-	private readonly postPrivateService: PostPrivateService = inject(PostPrivateService);
+	private readonly postBookmarkService: PostBookmarkService = inject(PostBookmarkService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly router: Router = inject(Router);
 	private readonly helperService: HelperService = inject(HelperService);
 
 	activatedRouteQueryParams$: Subscription | undefined;
 
-	postPrivateList: Post[] = [];
-	postPrivateListSkeletonToggle: boolean = true;
-	postPrivateListIsLoading: boolean = false;
-	postPrivateListRequest$: Subscription | undefined;
-	postPrivateListGetAllDto: PostGetAllDto = {
+	postBookmarkList: Post[] = [];
+	postBookmarkListSkeletonToggle: boolean = true;
+	postBookmarkListIsLoading: boolean = false;
+	postBookmarkListRequest$: Subscription | undefined;
+	postBookmarkListGetAllDto: PostGetAllDto = {
 		page: 1,
 		size: 20
 	};
 
-	postPrivateListSearchFormToggle: boolean = false;
-	postPrivateListSearchResponse: any;
+	postBookmarkListSearchFormToggle: boolean = false;
+	postBookmarkListSearchResponse: any;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -87,12 +87,12 @@ export class UserBookmarkComponent extends CU(class {}) implements OnInit, OnDes
 
 		// Unsubscribe
 
-		[this.activatedRouteQueryParams$, this.postPrivateListRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.activatedRouteQueryParams$, this.postBookmarkListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
-		this.postPrivateList = this.skeletonService.getPostList();
-		this.postPrivateListSkeletonToggle = true;
+		this.postBookmarkList = this.skeletonService.getPostList();
+		this.postBookmarkListSkeletonToggle = true;
 	}
 
 	setResolver(): void {
@@ -103,7 +103,7 @@ export class UserBookmarkComponent extends CU(class {}) implements OnInit, OnDes
 				tap(() => this.setSkeleton())
 			)
 			.subscribe({
-				next: () => this.getPostPrivateList(),
+				next: () => this.getPostBookmarkList(),
 				error: (error: any) => console.error(error)
 			});
 	}
@@ -112,9 +112,9 @@ export class UserBookmarkComponent extends CU(class {}) implements OnInit, OnDes
 
 	onToggleSearchForm(toggle: boolean): void {
 		if (toggle) {
-			this.postPrivateListSearchFormToggle = true;
+			this.postBookmarkListSearchFormToggle = true;
 		} else {
-			this.postPrivateListSearchFormToggle = false;
+			this.postBookmarkListSearchFormToggle = false;
 
 			this.router
 				.navigate([], {
@@ -126,35 +126,35 @@ export class UserBookmarkComponent extends CU(class {}) implements OnInit, OnDes
 		}
 	}
 
-	/** PostPrivateList */
+	/** PostBookmarkList */
 
-	getPostPrivateList(postPrivateListLoadMore: boolean = false): void {
-		this.postPrivateListIsLoading = true;
+	getPostBookmarkList(postBookmarkListLoadMore: boolean = false): void {
+		this.postBookmarkListIsLoading = true;
 
 		// prettier-ignore
-		const postPasswordPage: number = (this.postPrivateListGetAllDto.page = postPrivateListLoadMore ? this.postPrivateListGetAllDto.page + 1 : 1);
-		const postPrivateQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
-		const postPrivateGetAllDto: PostGetAllDto = {
-			...this.postPrivateListGetAllDto,
-			page: postPasswordPage
+		const postBookmarkPage: number = (this.postBookmarkListGetAllDto.page = postBookmarkListLoadMore ? this.postBookmarkListGetAllDto.page + 1 : 1);
+		const postBookmarkQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
+		const postBookmarkGetAllDto: PostGetAllDto = {
+			...this.postBookmarkListGetAllDto,
+			page: postBookmarkPage
 		};
 
 		// Query
 
-		if (postPrivateQuery) {
-			postPrivateGetAllDto.query = postPrivateQuery;
+		if (postBookmarkQuery) {
+			postBookmarkGetAllDto.query = postBookmarkQuery;
 		}
 
-		this.postPrivateListRequest$?.unsubscribe();
-		this.postPrivateListRequest$ = this.postPrivateService.getAll(postPrivateGetAllDto).subscribe({
-			next: (postPrivateList: Post[]) => {
+		this.postBookmarkListRequest$?.unsubscribe();
+		this.postBookmarkListRequest$ = this.postBookmarkService.getAll(postBookmarkGetAllDto).subscribe({
+			next: (postBookmarkList: Post[]) => {
 				// prettier-ignore
-				this.postPrivateList = postPrivateGetAllDto.page > 1 ? this.postPrivateList.concat(postPrivateList) : postPrivateList;
-				this.postPrivateListSkeletonToggle = false;
-				this.postPrivateListIsLoading = false;
-				this.postPrivateListSearchResponse = {
-					isOnePage: postPrivateGetAllDto.page === 1 && postPrivateGetAllDto.size !== postPrivateList.length,
-					isEndPage: postPrivateGetAllDto.page !== 1 && postPrivateGetAllDto.size !== postPrivateList.length
+				this.postBookmarkList = postBookmarkGetAllDto.page > 1 ? this.postBookmarkList.concat(postBookmarkList) : postBookmarkList;
+				this.postBookmarkListSkeletonToggle = false;
+				this.postBookmarkListIsLoading = false;
+				this.postBookmarkListSearchResponse = {
+					isOnePage: postBookmarkGetAllDto.page === 1 && postBookmarkGetAllDto.size !== postBookmarkList.length,
+					isEndPage: postBookmarkGetAllDto.page !== 1 && postBookmarkGetAllDto.size !== postBookmarkList.length
 				};
 			},
 			error: (error: any) => console.error(error)

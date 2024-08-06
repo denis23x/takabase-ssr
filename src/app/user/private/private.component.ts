@@ -132,11 +132,11 @@ export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDest
 		this.postPrivateListIsLoading = true;
 
 		// prettier-ignore
-		const postPasswordPage: number = (this.postPrivateListGetAllDto.page = postPrivateListLoadMore ? this.postPrivateListGetAllDto.page + 1 : 1);
+		const postPrivatePage: number = (this.postPrivateListGetAllDto.page = postPrivateListLoadMore ? this.postPrivateListGetAllDto.page + 1 : 1);
 		const postPrivateQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
 		const postPrivateGetAllDto: PostGetAllDto = {
 			...this.postPrivateListGetAllDto,
-			page: postPasswordPage
+			page: postPrivatePage
 		};
 
 		// Query
