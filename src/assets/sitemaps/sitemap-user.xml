@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://takabase.com/denis23x</loc>
     <lastmod>2024-07-19T12:49:45.123Z</lastmod>
@@ -7,7 +7,6 @@
     <changefreq>weekly</changefreq>
     <image:image>
       <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Favatar%2F1715534704358-FZ7Zb2uMqGol.webp?alt=media</image:loc>
-      <image:title>denis23x</image:title>
     </image:image>
   </url>
   <url>
@@ -17,7 +16,6 @@
     <changefreq>monthly</changefreq>
     <image:image>
       <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2Frgpd0QfwrpaLXOxlBKFlRjAvNp43%2Favatar%2F1719486568104-qYiCFXQcxY1i.webp?alt=media</image:loc>
-      <image:title>Tipa</image:title>
     </image:image>
   </url>
 </urlset>

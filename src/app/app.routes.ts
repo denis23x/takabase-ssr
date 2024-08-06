@@ -266,111 +266,25 @@ export const APP_ROUTES: Route[] = [
 						// Check if the first URL segment matches the pattern for a username (e.g., denis23x)
 						if (usernameForbiddenList.every((usernameForbidden: string) => username !== usernameForbidden)) {
 							if (username.match(/(?![0-9]+$).*/i)) {
-								const isAll = (): boolean => urlSegment.length === 1 || urlSegment.length === 2;
-								const isAllDetails = (): boolean => urlSegment.length === 3 && urlSegment[1].path === 'post';
-
 								const isCategory = (): boolean => (urlSegment.length === 3 && urlSegment[1].path === 'category') || urlSegment.length === 4;
-								const isCategoryDetails = (): boolean => urlSegment.length === 5 && urlSegment[3].path === 'post';
-
-								const isPassword = (): boolean => urlSegment.length === 2 || urlSegment.length === 3;
-								const isPasswordDetails = (): boolean => urlSegment.length === 4 && urlSegment[1].path === 'password';
-
-								const isPrivate = (): boolean => urlSegment.length === 2 || urlSegment.length === 3;
-								const isPrivateDetails = (): boolean => urlSegment.length === 4 && urlSegment[1].path === 'private';
-
-								/** Params */
-
-								const categoryId = (): string | undefined => urlSegment[2].path;
-								const postId = (): string | undefined => {
-									if (isAllDetails()) {
-										return urlSegment[2].path
-									}
-
-									if (isCategoryDetails()) {
-										return urlSegment[4].path;
-									}
-
-									if (isPasswordDetails()) {
-										return urlSegment[3].path
-									}
-
-									if (isPrivateDetails()) {
-										return urlSegment[3].path
-									}
-
-									return undefined;
-								};
 
 								/** Switch */
 
 								switch (true) {
-									case isAll(): {
-										return {
-											consumed: urlSegment.slice(0, 1),
-											posParams: {
-												username: new UrlSegment(username, null),
-											}
-										};
-									}
-									case isAllDetails(): {
-										return {
-											consumed: urlSegment.slice(0, 1),
-											posParams: {
-												username: new UrlSegment(username, null),
-												postId: new UrlSegment(postId(), null),
-											}
-										};
-									}
 									case isCategory(): {
 										return {
 											consumed: urlSegment.slice(0, 1),
 											posParams: {
 												username: new UrlSegment(username, null),
-												categoryId: new UrlSegment(categoryId(), null),
+												categoryId: new UrlSegment(urlSegment[2].path, null),
 											}
 										}
 									}
-									case isCategoryDetails(): {
+									default: {
 										return {
 											consumed: urlSegment.slice(0, 1),
 											posParams: {
 												username: new UrlSegment(username, null),
-												categoryId: new UrlSegment(categoryId(), null),
-												postId: new UrlSegment(postId(), null),
-											}
-										}
-									}
-									case isPassword(): {
-										return {
-											consumed: urlSegment.slice(0, 1),
-											posParams: {
-												username: new UrlSegment(username, null),
-											}
-										}
-									}
-									case isPasswordDetails(): {
-										return {
-											consumed: urlSegment.slice(0, 1),
-											posParams: {
-												username: new UrlSegment(username, null),
-												postId: new UrlSegment(postId(), null),
-											}
-										}
-									}
-									case isPrivate(): {
-										return {
-											consumed: urlSegment.slice(0, 1),
-											posParams: {
-												username: new UrlSegment(username, null),
-											}
-										}
-									}
-									case isPrivateDetails(): {
-										return {
-											consumed: urlSegment.slice(0, 1),
-											posParams: {
-												username: new UrlSegment(username, null),
-												postId: new UrlSegment(postId(), null),
 											}
 										}
 									}
@@ -390,60 +304,34 @@ export const APP_ROUTES: Route[] = [
 						path: '',
 						loadComponent: async () => {
 							return import('./user/all/all.component').then(m => m.UserAllComponent);
-						},
-						children: [
-							{
-								path: 'post',
-								redirectTo: '',
-								pathMatch: 'full'
-							},
-							{
-								path: 'category',
-								redirectTo: '',
-								pathMatch: 'full'
-							}
-						]
+						}
+					},
+					{
+						path: 'bookmark',
+						canActivate: [redirectPasswordGuard()],
+						loadComponent: async () => {
+							return import('./user/bookmark/bookmark.component').then(m => m.UserBookmarkComponent);
+						}
 					},
 					{
 						path: 'password',
 						canActivate: [redirectPasswordGuard()],
 						loadComponent: async () => {
 							return import('./user/password/password.component').then(m => m.UserPasswordComponent);
-						},
-						children: [
-							{
-								path: 'post',
-								redirectTo: '',
-								pathMatch: 'full'
-							}
-						]
+						}
 					},
 					{
 						path: 'private',
 						canActivate: [redirectPrivateGuard()],
 						loadComponent: async () => {
 							return import('./user/private/private.component').then(m => m.UserPrivateComponent);
-						},
-						children: [
-							{
-								path: 'post',
-								redirectTo: '',
-								pathMatch: 'full'
-							}
-						]
+						}
 					},
 					{
 						path: 'category/:categoryId',
 						loadComponent: async () => {
 							return import('./user/category/category.component').then(m => m.UserCategoryComponent);
-						},
-						children: [
-							{
-								path: 'post',
-								redirectTo: '',
-								pathMatch: 'full'
-							}
-						]
+						}
 					}
 				]
 			},

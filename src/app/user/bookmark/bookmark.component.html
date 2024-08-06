@@ -33,14 +33,14 @@
 								appSkeleton
 								[appSkeletonToggle]="postPrivateListSkeletonToggle"
 							>
-								Private
+								Bookmarks
 							</h2>
 							<span
 								class="text-sm text-base-content/50 leading-4 truncate max-w-full"
 								appSkeleton
 								[appSkeletonToggle]="postPrivateListSkeletonToggle"
 							>
-								Available only for you
+								Symlinks to saved posts
 							</span>
 						</div>
 					</div>
@@ -71,7 +71,7 @@
 					></div>
 				}
 			} @else {
-				<div class="block" appListMock [appListMockTemplate]="'user-private-not-found'"></div>
+				<div class="block" appListMock [appListMockTemplate]="'user-bookmark-not-found'"></div>
 			}
 		</div>
 	</div>

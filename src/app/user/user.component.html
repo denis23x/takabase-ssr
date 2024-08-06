@@ -105,7 +105,7 @@
 			<nav class="flex items-end min-h-12 px-4">
 				<ul class="tabs tabs-lifted tabs-lg" role="tablist">
 					<!-- prettier-ignore -->
-					@if ({ isActive: !category && !routerLinkActivePassword?.isActive && !routerLinkActivePrivate?.isActive }; as routerLinkActiveAll) {
+					@if ({ isActive: !category && !routerLinkActiveBookmark?.isActive && !routerLinkActivePassword?.isActive && !routerLinkActivePrivate?.isActive }; as routerLinkActiveAll) {
             <li
               class="tab"
               role="tab"
@@ -133,6 +133,31 @@
 							class="tab"
 							role="tab"
 							appSkeleton
+							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActiveBookmark.isActive"
+							[appSkeletonToggle]="categoryListSkeletonToggle"
+							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
+							[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
+						>
+							<a
+								class="block fill-current text-base-content px-2"
+								title="Bookmarked posts"
+								aria-label="Bookmarked posts"
+								appSvgIcon
+								appScrollPreset
+								routerLinkActive
+								#routerLinkActiveBookmark="routerLinkActive"
+								[appScrollPresetActive]="routerLinkActiveBookmark.isActive"
+								[routerLink]="['/', user.name, 'bookmark']"
+								[queryParamsHandling]="'merge'"
+								[appSvgIconIcon]="'bookmark'"
+								[appSvgIconSquare]="'1.1em'"
+							>
+							</a>
+						</li>
+						<li
+							class="tab"
+							role="tab"
+							appSkeleton
 							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActivePassword.isActive"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -150,7 +175,7 @@
 								[routerLink]="['/', user.name, 'password']"
 								[queryParamsHandling]="'merge'"
 								[appSvgIconIcon]="'shield-lock'"
-								[appSvgIconSquare]="'1.25em'"
+								[appSvgIconSquare]="'1.15em'"
 							>
 							</a>
 						</li>
@@ -175,7 +200,7 @@
 								[routerLink]="['/', user.name, 'private']"
 								[queryParamsHandling]="'merge'"
 								[appSvgIconIcon]="'incognito'"
-								[appSvgIconSquare]="'1.25em'"
+								[appSvgIconSquare]="'1.15em'"
 							>
 							</a>
 						</li>

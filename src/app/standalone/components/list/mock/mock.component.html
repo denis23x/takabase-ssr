@@ -91,6 +91,26 @@
 					</a>
 				</div>
 			}
+			@case ("user-bookmark-not-found") {
+				<i
+					class="fill-current text-base-content"
+					appSvgIcon
+					[appSvgIconIcon]="'exclamation-circle'"
+					[appSvgIconSquare]="'2em'"
+				></i>
+				<div class="text-center text-base-content">
+					<p class="text-lg font-bold">Posts <span class="text-error"> not found </span></p>
+					<a
+						class="link text-sm"
+						title="Create new post"
+						aria-label="Create new post"
+						[routerLink]="['/create']"
+						[queryParamsHandling]="'merge'"
+					>
+						Create new post
+					</a>
+				</div>
+			}
 			@case ("user-password-not-found") {
 				<i
 					class="fill-current text-base-content"

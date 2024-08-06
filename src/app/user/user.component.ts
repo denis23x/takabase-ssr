@@ -64,6 +64,7 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 	private readonly helperService: HelperService = inject(HelperService);
 
+	@ViewChild('routerLinkActiveBookmark') routerLinkActiveBookmark: RouterLinkActive | undefined;
 	@ViewChild('routerLinkActivePassword') routerLinkActivePassword: RouterLinkActive | undefined;
 	@ViewChild('routerLinkActivePrivate') routerLinkActivePrivate: RouterLinkActive | undefined;
 
