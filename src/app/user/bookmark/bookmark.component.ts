@@ -21,6 +21,7 @@ import { PostBookmarkService } from '../../core/services/post-bookmark.service';
 import { HelperService } from '../../core/services/helper.service';
 import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
 import type { Post } from '../../core/models/post.model';
+import type { PostBookmark } from '../../core/models/post-bookmark.model';
 import type { PostBookmarkGetAllDto } from '../../core/dto/post-bookmark/post-bookmark-get-all.dto';
 
 @Component({
@@ -148,7 +149,9 @@ export class UserBookmarkComponent extends CU(class {}) implements OnInit, OnDes
 
 		this.postBookmarkListRequest$?.unsubscribe();
 		this.postBookmarkListRequest$ = this.postBookmarkService.getAll(postBookmarkGetAllDto).subscribe({
-			next: (postBookmarkList: Post[]) => {
+			next: (postList: (PostBookmark | Post)[]) => {
+				const postBookmarkList: Post[] = postList as Post[];
+
 				// prettier-ignore
 				this.postBookmarkList = postBookmarkGetAllDto.page > 1 ? this.postBookmarkList.concat(postBookmarkList) : postBookmarkList;
 				this.postBookmarkListSkeletonToggle = false;

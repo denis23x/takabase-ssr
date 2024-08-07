@@ -1,15 +1,6 @@
 /** @format */
 
-import {
-	ChangeDetectionStrategy,
-	ChangeDetectorRef,
-	Component,
-	ComponentRef,
-	inject,
-	OnDestroy,
-	OnInit,
-	ViewContainerRef
-} from '@angular/core';
+import { Component, ComponentRef, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { PostProseComponent } from '../../standalone/components/post/prose/prose.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, filter, switchMap, take, tap } from 'rxjs/operators';
@@ -29,8 +20,7 @@ import type { PostPasswordComponent as PostPasswordDialogComponent } from '../..
 	imports: [PostProseComponent],
 	providers: [PostPasswordService],
 	selector: 'app-post-password',
-	templateUrl: './password.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './password.component.html'
 })
 export class PostPasswordComponent implements OnInit, OnDestroy {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
@@ -41,7 +31,6 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 	private readonly router: Router = inject(Router);
 	private readonly postStore: PostStore = inject(PostStore);
-	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
 	currentUserSkeletonToggle: boolean = true;
 	currentUserSkeletonToggle$: Subscription | undefined;
@@ -116,10 +105,6 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 								if (postPasswordGetOneDto.password) {
 									this.snackbarService.success('Ok', 'Access granted');
 								}
-
-								//! Detect changes
-
-								this.changeDetectorRef.detectChanges();
 							},
 							error: (error: any) => console.error(error)
 						});

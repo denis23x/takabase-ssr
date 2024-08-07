@@ -1,6 +1,6 @@
 /** @format */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ShareComponent } from '../../standalone/components/share/share.component';
 import { PostProseComponent } from '../../standalone/components/post/prose/prose.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,8 +20,7 @@ import type { HttpErrorResponse } from '@angular/common/http';
 	imports: [PostProseComponent, ShareComponent],
 	providers: [PostService],
 	selector: 'app-post-all',
-	templateUrl: './all.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './all.component.html'
 })
 export class PostAllComponent implements OnInit, OnDestroy {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
@@ -31,7 +30,6 @@ export class PostAllComponent implements OnInit, OnDestroy {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly router: Router = inject(Router);
 	private readonly postStore: PostStore = inject(PostStore);
-	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
 	post: Post | undefined;
 	postRequest$: Subscription | undefined;
@@ -82,10 +80,6 @@ export class PostAllComponent implements OnInit, OnDestroy {
 				next: (post: Post) => {
 					this.post = post;
 					this.postSkeletonToggle = false;
-
-					//! Detect changes
-
-					this.changeDetectorRef.detectChanges();
 				},
 				error: (error: any) => console.error(error)
 			});

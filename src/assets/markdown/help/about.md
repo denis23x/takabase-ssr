@@ -11,8 +11,6 @@ Plans are in place to improve the app in the near future. Some of the expected i
 - [x] [Markdown]{.block}
   - [ ] [Download as .pdf file (rendered)]{.block}
   - [ ] [Download as .md file]{.block}
-- [x] [UX]{.block}
-  - [ ] [Private post]{.block}
 - [x] [Editor]{.block}
   - [ ] [Templates]{.block}
   - [ ] [Auto save]{.block}

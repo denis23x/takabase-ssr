@@ -16,6 +16,7 @@ import { MarkdownTimeToReadPipe } from '../../../pipes/markdown-time-to-read.pip
 import { FirebaseStoragePipe } from '../../../pipes/firebase-storage.pipe';
 import { MarkdownService } from '../../../../core/services/markdown.service';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
+import { BookmarkComponent } from '../bookmark/bookmark.component';
 import type { QRCodeComponent } from '../../qr-code/qr-code.component';
 import type { PostDeleteComponent } from '../delete/delete.component';
 import type { ReportComponent } from '../../report/report.component';
@@ -35,7 +36,8 @@ import type { Post } from '../../../../core/models/post.model';
 		CopyToClipboardDirective,
 		MarkdownRenderDirective,
 		MarkdownTimeToReadPipe,
-		FirebaseStoragePipe
+		FirebaseStoragePipe,
+		BookmarkComponent
 	],
 	providers: [MarkdownService],
 	selector: 'app-post-prose, [appPostProse]',
