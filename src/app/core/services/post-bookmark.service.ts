@@ -4,11 +4,10 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import type { Post } from '../models/post.model';
-import type { PostCreateDto } from '../dto/post/post-create.dto';
-import type { PostDeleteDto } from '../dto/post/post-delete.dto';
-import type { PostGetOneDto } from '../dto/post/post-get-one.dto';
-import type { PostGetAllDto } from '../dto/post/post-get-all.dto';
-import type { PostUpdateDto } from '../dto/post/post-update.dto';
+import type { PostBookmarkCreateDto } from '../dto/post-bookmark/post-bookmark-create.dto';
+import type { PostBookmarkGetAllDto } from '../dto/post-bookmark/post-bookmark-get-all.dto';
+import type { PostBookmarkGetOneDto } from '../dto/post-bookmark/post-bookmark-get-one.dto';
+import type { PostBookmarkUpdateDto } from '../dto/post-bookmark/post-bookmark-update.dto';
 
 @Injectable()
 export class PostBookmarkService {
@@ -16,23 +15,23 @@ export class PostBookmarkService {
 
 	/** REST */
 
-	create(postCreateDto: PostCreateDto): Observable<Post> {
-		return this.apiService.post('/v1/posts-bookmark', postCreateDto);
+	create(postBookmarkCreateDto: PostBookmarkCreateDto): Observable<Post> {
+		return this.apiService.post('/v1/posts-bookmark', postBookmarkCreateDto);
 	}
 
-	getAll(postGetAllDto: PostGetAllDto): Observable<Post[]> {
-		return this.apiService.get('/v1/posts-bookmark', postGetAllDto);
+	getAll(postBookmarkGetAllDto: PostBookmarkGetAllDto): Observable<Post[]> {
+		return this.apiService.get('/v1/posts-bookmark', postBookmarkGetAllDto);
 	}
 
-	getOne(postId: number, postGetOneDto?: PostGetOneDto): Observable<Post> {
-		return this.apiService.get('/v1/posts-bookmark/' + postId, postGetOneDto);
+	getOne(postId: number, postBookmarkGetOneDto: PostBookmarkGetOneDto): Observable<Post> {
+		return this.apiService.get('/v1/posts-bookmark/' + postId, postBookmarkGetOneDto);
 	}
 
-	update(postId: number, postUpdateDto: PostUpdateDto): Observable<Post> {
-		return this.apiService.put('/v1/posts-bookmark/' + postId, postUpdateDto);
+	update(postId: number, postBookmarkUpdateDto: PostBookmarkUpdateDto): Observable<Post> {
+		return this.apiService.put('/v1/posts-bookmark/' + postId, postBookmarkUpdateDto);
 	}
 
-	delete(postDeleteDto: PostDeleteDto): Observable<Partial<Post>> {
-		return this.apiService.delete('/v1/posts-bookmark', postDeleteDto);
+	delete(postId: number): Observable<Partial<Post>> {
+		return this.apiService.delete('/v1/posts-bookmark/' + postId);
 	}
 }

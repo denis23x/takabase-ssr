@@ -21,7 +21,7 @@ import { PostBookmarkService } from '../../core/services/post-bookmark.service';
 import { HelperService } from '../../core/services/helper.service';
 import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
 import type { Post } from '../../core/models/post.model';
-import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
+import type { PostBookmarkGetAllDto } from '../../core/dto/post-bookmark/post-bookmark-get-all.dto';
 
 @Component({
 	standalone: true,
@@ -57,7 +57,7 @@ export class UserBookmarkComponent extends CU(class {}) implements OnInit, OnDes
 	postBookmarkListSkeletonToggle: boolean = true;
 	postBookmarkListIsLoading: boolean = false;
 	postBookmarkListRequest$: Subscription | undefined;
-	postBookmarkListGetAllDto: PostGetAllDto = {
+	postBookmarkListGetAllDto: PostBookmarkGetAllDto = {
 		page: 1,
 		size: 20
 	};
@@ -134,9 +134,10 @@ export class UserBookmarkComponent extends CU(class {}) implements OnInit, OnDes
 		// prettier-ignore
 		const postBookmarkPage: number = (this.postBookmarkListGetAllDto.page = postBookmarkListLoadMore ? this.postBookmarkListGetAllDto.page + 1 : 1);
 		const postBookmarkQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
-		const postBookmarkGetAllDto: PostGetAllDto = {
+		const postBookmarkGetAllDto: PostBookmarkGetAllDto = {
 			...this.postBookmarkListGetAllDto,
-			page: postBookmarkPage
+			page: postBookmarkPage,
+			attachPost: true
 		};
 
 		// Query
