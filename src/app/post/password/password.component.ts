@@ -3,17 +3,18 @@
 import { Component, ComponentRef, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { PostProseComponent } from '../../standalone/components/post/prose/prose.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, filter, switchMap, take, tap } from 'rxjs/operators';
+import { catchError, filter, switchMap, tap } from 'rxjs/operators';
 import { from, Subscription, throwError } from 'rxjs';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { PostStore } from '../post.store';
 import { PostPasswordService } from '../../core/services/post-password.service';
 import { AuthorizationService } from '../../core/services/authorization.service';
-import { SnackbarService } from '../../core/services/snackbar.service';
+import { CookiesService } from '../../core/services/cookies.service';
+import { HelperService } from '../../core/services/helper.service';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetOneDto } from '../../core/dto/post/post-get-one.dto';
-import type { HttpErrorResponse } from '@angular/common/http';
 import type { PostPasswordComponent as PostPasswordDialogComponent } from '../../standalone/components/post/password/password.component';
+import type { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
 	standalone: true,
@@ -27,8 +28,9 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 	private readonly postPasswordService: PostPasswordService = inject(PostPasswordService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
-	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+	private readonly cookiesService: CookiesService = inject(CookiesService);
+	private readonly helperService: HelperService = inject(HelperService);
 	private readonly router: Router = inject(Router);
 	private readonly postStore: PostStore = inject(PostStore);
 
@@ -37,7 +39,6 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 
 	postPassword: Post | undefined;
 	postPasswordRequest$: Subscription | undefined;
-	postPasswordProvidedValue: string | undefined;
 	postPasswordSkeletonToggle: boolean = true;
 
 	// Lazy loading
@@ -67,44 +68,41 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 			.subscribe({
 				next: () => {
 					const postPasswordId: number = Number(this.activatedRoute.snapshot.paramMap.get('postPasswordId'));
+					const postPasswordCookieKey: string = 'post-password-' + postPasswordId;
+					const postPasswordCookieValue: string | undefined = this.cookiesService.getItem(postPasswordCookieKey);
+					const postPasswordDecrypt: string | undefined = this.helperService.getDecrypt(postPasswordCookieValue);
 					const postPasswordGetOneDto: PostGetOneDto = {
+						password: postPasswordDecrypt,
 						scope: ['user']
 					};
 
-					// Attach password
-
-					if (this.postPasswordProvidedValue) {
-						postPasswordGetOneDto.password = this.postPasswordProvidedValue;
-					}
-
-					// Request
-
 					this.postPasswordRequest$?.unsubscribe();
 					this.postPasswordRequest$ = this.postPasswordService
-						.getOne(postPasswordId, postPasswordGetOneDto)
+						.getOne(postPasswordId, this.helperService.setOmitUndefined(postPasswordGetOneDto))
 						.pipe(
 							catchError((httpErrorResponse: HttpErrorResponse) => {
-								// prettier-ignore
-								if (postPasswordGetOneDto.password) {
-									const redirect$: Promise<boolean> = this.router.navigate(['/error', 403], {
-										skipLocationChange: true
-									});
+								this.cookiesService.removeItem('post-password-' + postPasswordId);
 
-									return from(redirect$).pipe(switchMap(() => throwError(() => httpErrorResponse)));
-								} else {
-									return from(this.onTogglePostDeleteDialog()).pipe(switchMap(() => throwError(() => httpErrorResponse)));
-								}
+								// Show post password dialog
+
+								return from(this.onTogglePostDeleteDialog()).pipe(switchMap(() => throwError(() => httpErrorResponse)));
 							}),
+							tap((postPassword: Post | null) => {
+								if (!postPassword) {
+									this.onTogglePostDeleteDialog()
+										.then(() => console.debug('Prompt password'))
+										.catch((error: any) => console.error(error));
+								}
+
+								return postPassword;
+							}),
+							filter((postPassword: Post | null) => !!postPassword),
 							tap((postPassword: Post) => this.postStore.setPost(postPassword))
 						)
 						.subscribe({
 							next: (postPassword: Post) => {
 								this.postPassword = postPassword;
 								this.postPasswordSkeletonToggle = false;
-
-								if (postPasswordGetOneDto.password) {
-									this.snackbarService.success('Ok', 'Access granted');
-								}
 							},
 							error: (error: any) => console.error(error)
 						});
@@ -123,26 +121,21 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 				// Redirect when close without password
 
 				this.appPostPasswordComponent.instance.appPostPasswordToggle
-					.pipe(
-						filter((toggle: boolean) => !toggle && !this.postPasswordProvidedValue),
-						take(1)
-					)
+					.pipe(filter((toggle: boolean) => !toggle && this.postPasswordSkeletonToggle))
 					.subscribe({
 						next: () => this.router.navigate(['/error', 403], { skipLocationChange: true }),
 						error: (error: any) => console.error(error)
 					});
 
-				// Re-call resolver with password
+				// Receive post password
 
-				this.appPostPasswordComponent.instance.appPostPasswordSuccess
-					.pipe(
-						tap((password: string) => (this.postPasswordProvidedValue = password)),
-						tap(() => this.appPostPasswordComponent.instance.onTogglePostPasswordDialog(false))
-					)
-					.subscribe({
-						next: () => this.setResolver(),
-						error: (error: any) => console.error(error)
-					});
+				this.appPostPasswordComponent.instance.appPostPasswordSuccess.subscribe({
+					next: (postPassword: Post) => {
+						this.postPassword = postPassword;
+						this.postPasswordSkeletonToggle = false;
+					},
+					error: (error: any) => console.error(error)
+				});
 			});
 		}
 

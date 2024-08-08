@@ -134,9 +134,6 @@ export class ApiService {
 		/** IGNORE */
 
 		switch (true) {
-			case httpErrorResponse.method === 'GET' && /posts-password\/\d+/.test(httpErrorResponse.url): {
-				break;
-			}
 			default: {
 				this.snackbarService.error('Error', message, {
 					icon: 'bug',

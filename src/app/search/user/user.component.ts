@@ -89,7 +89,7 @@ export class SearchUserComponent implements OnInit, OnDestroy {
 
 		/** Set cookie for soft redirect */
 
-		this.cookiesService.setItem('pageRedirectSearch', 'users');
+		this.cookiesService.setItem('page-redirect-search', 'users');
 
 		/** Apply SEO meta tags */
 

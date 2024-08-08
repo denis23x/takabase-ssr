@@ -10,6 +10,7 @@ import { alphanumeric } from 'nanoid-dictionary';
 import { Navigation } from '@angular/router';
 import { CookiesService } from './cookies.service';
 import { from, Observable, of } from 'rxjs';
+import { AES, enc } from 'crypto-js';
 
 @Injectable({
 	providedIn: 'root'
@@ -155,5 +156,21 @@ export class HelperService {
 
 	setOmitUndefined(obj: any): any {
 		return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value !== undefined));
+	}
+
+	getEncrypt(value: string): string | undefined {
+		if (value) {
+			return AES.encrypt(value, environment.firebase.appId).toString();
+		} else {
+			return undefined;
+		}
+	}
+
+	getDecrypt(value: string): string | undefined {
+		if (value) {
+			return AES.decrypt(value, environment.firebase.appId).toString(enc.Utf8);
+		} else {
+			return undefined;
+		}
 	}
 }

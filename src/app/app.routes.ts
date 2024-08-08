@@ -149,7 +149,7 @@ export const APP_ROUTES: Route[] = [
 						pathMatch: 'full',
 						redirectTo: () => {
 							const cookiesService: CookiesService = inject(CookiesService);
-							const cookiesSearchRedirect: string = cookiesService.getItem("pageRedirectSearch");
+							const cookiesSearchRedirect: string = cookiesService.getItem("page-redirect-search");
 
 							return cookiesSearchRedirect || 'posts';
 						}

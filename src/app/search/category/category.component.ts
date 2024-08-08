@@ -83,7 +83,7 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
 
 		/** Set cookie for soft redirect */
 
-		this.cookiesService.setItem('pageRedirectSearch', 'categories');
+		this.cookiesService.setItem('page-redirect-search', 'categories');
 
 		/** Apply SEO meta tags */
 

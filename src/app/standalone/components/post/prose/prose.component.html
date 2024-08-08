@@ -184,7 +184,13 @@
 				</div>
 			</header>
 			<hr class="my-0 w-full border-base-content/20" />
-			<div appPostBookmark [appPostBookmarkPost]="post" [appPostBookmarkPostSkeletonToggle]="postSkeletonToggle"></div>
+			@if (currentUser && currentUser.id !== post.user.id) {
+				<div
+					appPostBookmark
+					[appPostBookmarkPost]="post"
+					[appPostBookmarkPostSkeletonToggle]="postSkeletonToggle"
+				></div>
+			}
 			<div
 				class="w-full"
 				appSkeleton
