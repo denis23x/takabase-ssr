@@ -2,10 +2,12 @@
 
 import { APP_INITIALIZER, ApplicationConfig, NgZone } from '@angular/core';
 import {
+	PreloadAllModules,
 	provideRouter,
 	TitleStrategy,
 	withComponentInputBinding,
 	withEnabledBlockingInitialNavigation,
+	withPreloading,
 	withRouterConfig
 } from '@angular/router';
 import { APP_ROUTES } from './app.routes';
@@ -35,7 +37,7 @@ export const appConfig: ApplicationConfig = {
 		}),
 		provideRouter(
 			APP_ROUTES,
-			// withPreloading(PreloadAllModules),
+			withPreloading(PreloadAllModules),
 			withEnabledBlockingInitialNavigation(),
 			withComponentInputBinding(),
 			withRouterConfig({

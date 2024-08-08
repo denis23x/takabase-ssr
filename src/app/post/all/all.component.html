@@ -2,12 +2,14 @@
 
 <ng-container>
 	<section class="flex flex-col gap-4">
-		<main
-			class="w-full h-full"
-			appPostProse
-			[appPostProsePost]="post"
-			[appPostProsePostSkeletonToggle]="postSkeletonToggle"
-		></main>
+		<div class="block">
+			<main
+				class="w-full h-full"
+				appPostProse
+				[appPostProsePost]="post"
+				[appPostProsePostSkeletonToggle]="postSkeletonToggle"
+			></main>
+		</div>
 		<footer class="flex overflow-auto">
 			<div class="block" appShare [appSharePost]="post" [appSharePostSkeletonToggle]="postSkeletonToggle"></div>
 		</footer>

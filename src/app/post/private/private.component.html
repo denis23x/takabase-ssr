@@ -2,12 +2,14 @@
 
 <ng-container>
 	<section class="flex flex-col gap-4">
-		<main
-			class="w-full h-full"
-			appPostProse
-			[appPostProsePostType]="'private'"
-			[appPostProsePost]="postPrivate"
-			[appPostProsePostSkeletonToggle]="postPrivateSkeletonToggle"
-		></main>
+		<div class="block">
+			<main
+				class="w-full h-full"
+				appPostProse
+				[appPostProsePostType]="'private'"
+				[appPostProsePost]="postPrivate"
+				[appPostProsePostSkeletonToggle]="postPrivateSkeletonToggle"
+			></main>
+		</div>
 	</section>
 </ng-container>
