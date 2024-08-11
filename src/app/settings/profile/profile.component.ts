@@ -217,7 +217,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 			const userUpdateDto: UserUpdateDto = {
 				...this.profileForm.value,
-				avatar: this.profileForm.value.avatar || undefined
+				avatar: this.profileForm.value.avatar || undefined,
+				description: this.profileForm.value.description || undefined
 			};
 
 			const aiModerateTextDto: AIModerateTextDto = {

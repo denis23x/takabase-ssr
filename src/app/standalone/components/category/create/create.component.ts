@@ -107,7 +107,8 @@ export class CategoryCreateComponent implements OnInit, OnDestroy {
 			this.categoryForm.disable();
 
 			const categoryCreateDto: CategoryCreateDto = {
-				...this.categoryForm.value
+				...this.categoryForm.value,
+				description: this.categoryForm.value.description || undefined
 			};
 
 			const aiModerateTextDto: AIModerateTextDto = {
