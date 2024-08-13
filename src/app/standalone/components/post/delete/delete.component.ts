@@ -105,7 +105,6 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 
 		const postId: number = this.post.id;
 		const postDeleteDto: PostDeleteDto = {
-			image: this.post.image || undefined,
 			firebaseUid: this.post.firebaseUid
 		};
 
