@@ -16,32 +16,53 @@
 		>
 			<div class="flex flex-col items-center justify-start gap-4 p-4" slot="content">
 				<figure class="flex flex-col bg-base-200 rounded-box border border-base-content/20 overflow-hidden w-full">
-					<canvas
-						class="aspect-square w-full border-b border-base-content/20"
-						data-pw="app-qr-code-image-qr-code"
-						#QRCodeCanvas
-					></canvas>
-					<figcaption class="flex text-center p-4">
-						<a
-							class="link text-sm text-base-content truncate w-full"
-							data-pw="app-qr-code-link-to-profile"
-							target="_blank"
-							[href]="QRCodeValue"
-						>
-							{{ QRCodeValue }}
-						</a>
-					</figcaption>
+					<canvas class="aspect-square w-full" data-pw="app-qr-code-image-qr-code" #QRCodeCanvas></canvas>
 				</figure>
-				<button
-					class="btn-success btn btn-md w-full"
-					data-pw="app-qr-code-button-download-qr-code"
-					type="button"
-					title="Download"
-					aria-label="Download"
-					(click)="onDownloadQRCode()"
-				>
-					Download
-				</button>
+				<form class="flex flex-col gap-4 w-full" autocomplete="off" [formGroup]="QRCodeForm">
+					@if (QRCodeForm.get("url"); as url) {
+						<fieldset class="form-control w-full">
+							<div class="flex items-center justify-between gap-4">
+								<div class="relative w-full">
+									<input
+										class="input input-bordered input-md w-full"
+										id="QRCodeFormUrl"
+										type="text"
+										title="Share link"
+										aria-label="Share link"
+										inputmode="none"
+										formControlName="url"
+										readonly
+										[class.input-success]="url.value && url.valid"
+										[class.input-error]="url.dirty && url.invalid"
+									/>
+								</div>
+								<button
+									class="btn-success btn-outline btn-md btn-square btn fill-current text-base-content"
+									type="button"
+									title="Copy share link"
+									aria-label="Copy share link"
+									slot="target"
+									appSvgIcon
+									appCopyToClipboard
+									[appSvgIconIcon]="'copy'"
+									[appSvgIconSquare]="'1.5em'"
+									[appCopyToClipboardValue]="url.value"
+								></button>
+							</div>
+						</fieldset>
+					}
+					<fieldset class="form-control">
+						<button
+							class="btn-success btn btn-md w-full"
+							type="button"
+							title="Download QR Code image"
+							aria-label="Download QR Code image"
+							(click)="onDownloadQRCode()"
+						>
+							Download
+						</button>
+					</fieldset>
+				</form>
 			</div>
 		</div>
 	</dialog>

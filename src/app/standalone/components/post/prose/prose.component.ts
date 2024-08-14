@@ -8,7 +8,6 @@ import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../../dropdown/dropdown.component';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { AdComponent } from '../../ad/ad.component';
-import { CopyToClipboardDirective } from '../../../directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { HelperService } from '../../../../core/services/helper.service';
 import { MarkdownRenderDirective } from '../../../directives/app-markdown-render.directive';
@@ -33,7 +32,6 @@ import type { Post } from '../../../../core/models/post.model';
 		DropdownComponent,
 		SvgIconComponent,
 		AdComponent,
-		CopyToClipboardDirective,
 		MarkdownRenderDirective,
 		MarkdownTimeToReadPipe,
 		FirebaseStoragePipe,
@@ -71,7 +69,6 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	post: Post | undefined;
 	postType: string = 'public';
 	postPreview: boolean = false;
-	postShareUrl: string | undefined;
 	postSkeletonToggle: boolean = true;
 
 	// Lazy loading
@@ -82,9 +79,6 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 
 	ngOnInit(): void {
 		super.ngOnInit();
-
-		// Get current url
-		this.postShareUrl = this.helperService.getURL().toString();
 	}
 
 	ngOnDestroy(): void {
@@ -117,8 +111,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 				.catch((error: any) => console.error(error));
 		}
 
-		this.appQRCodeComponent.setInput('appQRCodeData', this.postShareUrl);
-		this.appQRCodeComponent.setInput('appQRCodeOrigin', false);
+		this.appQRCodeComponent.setInput('appQRCodeData', this.helperService.getURL().toString());
 
 		this.appQRCodeComponent.changeDetectorRef.detectChanges();
 		this.appQRCodeComponent.instance.onToggleQRCodeDialog(true);

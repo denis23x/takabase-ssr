@@ -14,7 +14,6 @@ import { SkeletonService } from '../core/services/skeleton.service';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { TitleService } from '../core/services/title.service';
 import { MetaService } from '../core/services/meta.service';
-import { CopyToClipboardDirective } from '../standalone/directives/app-copy-to-clipboard.directive';
 import { SnackbarService } from '../core/services/snackbar.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -42,8 +41,7 @@ import type { CategoryGetAllDto } from '../core/dto/category/category-get-all.dt
 		ScrollPresetDirective,
 		SvgIconComponent,
 		DropdownComponent,
-		SkeletonDirective,
-		CopyToClipboardDirective
+		SkeletonDirective
 	],
 	providers: [CategoryService, UserService, UserStore],
 	selector: 'app-user',
@@ -298,7 +296,6 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 		}
 
 		this.appQRCodeComponent.setInput('appQRCodeData', this.user.name);
-		this.appQRCodeComponent.setInput('appQRCodeOrigin', true);
 
 		this.appQRCodeComponent.changeDetectorRef.detectChanges();
 		this.appQRCodeComponent.instance.onToggleQRCodeDialog(true);
