@@ -2,7 +2,10 @@
 
 <ng-container>
 	<section class="flex flex-col gap-4 rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl">
-		<header class="block">
+		<div class="block">
+			<router-outlet></router-outlet>
+		</div>
+		<footer class="block border-t border-base-content/20 pt-4">
 			<nav class="breadcrumbs text-base text-base-content p-0">
 				<ul class="flex items-center justify-start">
 					<li class="block">
@@ -127,10 +130,6 @@
 					}
 				</ul>
 			</nav>
-		</header>
-		<hr class="border-t border-base-content/20" />
-		<div class="block">
-			<router-outlet></router-outlet>
-		</div>
+		</footer>
 	</section>
 </ng-container>

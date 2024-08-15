@@ -4,45 +4,55 @@
 	@if (post) {
 		<section class="flex flex-col h-full w-full overflow-auto gap-4">
 			<header class="flex w-full flex-col items-start justify-start gap-4">
-				<div class="flex items-center justify-between w-full gap-4">
-					<div class="flex items-center justify-start gap-4 overflow-hidden">
-						@if (post.image) {
-							<div
-								class="flex rounded-btn relative overflow-hidden"
+				<h2
+					class="text-2xl leading-6 font-bold text-base-content max-w-full"
+					appSkeleton
+					[appSkeletonToggle]="postSkeletonToggle"
+				>
+					{{ post.name || "Name" }}
+				</h2>
+				<div class="flex items-center justify-start gap-4 w-full overflow-hidden">
+					@if (post.image) {
+						<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+							<figure class="h-32 w-32 rounded-btn relative overflow-hidden">
+								<img
+									class="object-cover object-center bg-base-300"
+									[fill]="true"
+									[priority]="true"
+									[ngSrc]="post.image | firebaseStorage"
+									[alt]="post.name"
+								/>
+							</figure>
+						</div>
+					}
+					<ul class="flex flex-col items-start justify-start overflow-hidden gap-2">
+						<li class="block max-w-full">
+							<a
+								class="block text-sm font-bold text-base-content link truncate"
 								appSkeleton
 								[appSkeletonToggle]="postSkeletonToggle"
+								[routerLink]="['/', post.user.name]"
+								[title]="'Go to ' + post.user.name"
+								[attr.aria-label]="'Go to ' + post.user.name"
 							>
-								<figure class="h-12 w-12 rounded-btn relative overflow-hidden">
-									<img
-										class="object-cover object-center bg-base-300"
-										[fill]="true"
-										[priority]="true"
-										[ngSrc]="post.image | firebaseStorage"
-										[alt]="post.name"
-									/>
-								</figure>
-							</div>
-						}
-						<div class="flex flex-1 flex-col gap-2 items-start overflow-hidden">
-							<h2
-								class="truncate text-xl leading-6 font-bold text-base-content max-w-full"
-								appSkeleton
-								[appSkeletonToggle]="postSkeletonToggle"
-							>
-								{{ post.name || "Name" }}
-							</h2>
-							@switch (postType) {
-								@case ("password") {
+								{{ post.user.name }}
+							</a>
+						</li>
+						@switch (postType) {
+							@case ("password") {
+								<li class="block max-w-full">
 									<span
 										class="badge badge-success badge-outline badge-sm"
 										appSkeleton
 										[class.border-transparent]="postSkeletonToggle"
 										[appSkeletonToggle]="postSkeletonToggle"
 									>
-										Protected with password
+										Protected by password
 									</span>
-								}
-								@case ("private") {
+								</li>
+							}
+							@case ("private") {
+								<li class="block max-w-full">
 									<span
 										class="badge badge-error badge-outline badge-sm"
 										appSkeleton
@@ -51,141 +61,101 @@
 									>
 										Private
 									</span>
-								}
-								@default {
+								</li>
+							}
+							@default {
+								<li class="block max-w-full">
 									<a
 										class="link text-sm text-base-content leading-4 truncate max-w-full"
 										appSkeleton
 										[target]="postPreview ? '_blank' : '_self'"
 										[appSkeletonToggle]="postSkeletonToggle"
 										[routerLink]="['/', post.user.name, 'category', post.category?.id]"
-										[title]="post.category?.name || 'Category'"
-										[attr.aria-label]="post.category?.name || 'Category'"
+										[title]="'Go to ' + post.category?.name || 'Category'"
+										[attr.aria-label]="'Go to ' + post.category?.name || 'Category'"
 									>
 										{{ post.category?.name || "Category" }}
 									</a>
-								}
+								</li>
 							}
-						</div>
-					</div>
-					@if (postPreview === false) {
-						<div
-							class="flex p-0"
-							appDropdown
-							appSkeleton
-							[appSkeletonToggle]="postSkeletonToggle || currentUserSkeletonToggle"
-							[appDropdownPlacement]="'bottom-end'"
-						>
+						}
+						<li class="block max-w-full">
+							<span class="block text-sm text-base-content" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+								{{ post.markdown | markdownTimeToRead }} min read
+							</span>
+						</li>
+						<li class="block max-w-full">
+							<time
+								class="block text-xs text-base-content/50"
+								appSkeleton
+								[appSkeletonToggle]="postSkeletonToggle"
+								[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
+							>
+								Created {{ post.createdAt | dayjs: "fromX" }}
+							</time>
+						</li>
+						<li class="block max-w-full">
+							<time
+								class="block text-xs text-base-content/50"
+								appSkeleton
+								[appSkeletonToggle]="postSkeletonToggle"
+								[attr.datetime]="post.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
+							>
+								Updated {{ post.updatedAt | dayjs: "fromX" }}
+							</time>
+						</li>
+					</ul>
+				</div>
+			</header>
+			@if (!postPreview) {
+				<nav class="border-y border-base-content/20 py-4">
+					<ul class="flex items-start justify-start overflow-hidden gap-2">
+						<li class="block">
 							<button
 								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
 								type="button"
-								title="Post menu"
-								aria-label="Post menu"
+								title="Show QR Code"
+								aria-label="Show QR Code"
 								appSvgIcon
-								slot="target"
-								[appSvgIconIcon]="'three-dots-vertical'"
+								appSkeleton
+								[appSvgIconIcon]="'qr-code'"
 								[appSvgIconSquare]="'1.5em'"
+								[appSkeletonToggle]="postSkeletonToggle"
+								(click)="onToggleQRCodeDialog()"
 							></button>
-							<ul class="menu menu-vertical menu-md" slot="content">
-								@if (postType !== "private") {
-									<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Share</li>
-									<li class="flex w-full snap-start scroll-my-2">
-										<button
-											class="rounded-btn block w-full truncate text-right"
-											type="button"
-											title="Show QR Code"
-											aria-label="Show QR Code"
-											(click)="onToggleQRCodeDialog()"
-										>
-											QR Code
-										</button>
-									</li>
-								}
-								@if (currentUser && currentUser.id === post.user.id) {
-									<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Post</li>
-									<li class="flex w-full snap-start scroll-my-2">
-										<a
-											class="rounded-btn block w-full truncate text-right"
-											[title]="'Update: ' + post.name"
-											[attr.aria-label]="'Update: ' + post.name"
-											[routerLink]="['/update', post.id]"
-											[queryParams]="{ postType }"
-											[queryParamsHandling]="'merge'"
-										>
-											Update
-										</a>
-									</li>
-									<li class="flex w-full snap-start scroll-my-2">
-										<button
-											class="rounded-btn block w-full truncate text-right"
-											type="button"
-											[title]="'Delete: ' + post.name"
-											[attr.aria-label]="'Delete: ' + post.name"
-											(click)="onTogglePostDeleteDialog()"
-										>
-											Delete
-										</button>
-									</li>
-								} @else {
-									@if (postType === "public") {
-										<li class="flex w-full snap-start scroll-my-2">
-											<button
-												class="rounded-btn block w-full truncate text-right"
-												type="button"
-												[title]="'Report: ' + post.name"
-												[attr.aria-label]="'Report: ' + post.name"
-												(click)="onToggleReportDialog()"
-											>
-												Report
-											</button>
-										</li>
-									}
-								}
-							</ul>
-						</div>
-					}
-				</div>
-				<div
-					class="w-full"
-					appSkeleton
-					[appSkeletonToggle]="postSkeletonToggle"
-					[appSkeletonClassListParent]="['!rounded-box']"
-					[appSkeletonClassList]="['!rounded-box']"
-				>
-					<p class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4">
-						{{ post.description || "Description" }}
-					</p>
-				</div>
-				<div class="flex flex-wrap items-center justify-between gap-4 w-full">
-					<time
-						class="block text-sm text-base-content/50"
-						appSkeleton
-						[appSkeletonToggle]="postSkeletonToggle"
-						[attr.datetime]="post.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
-					>
-						Updated {{ post.updatedAt | dayjs: "fromX" }}
-					</time>
-					@if (post.markdown) {
-						<span class="block text-sm text-base-content" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-							Time to read: {{ post?.markdown | markdownTimeToRead }} min.
-						</span>
-					}
-				</div>
-			</header>
-			<hr class="my-0 w-full border-base-content/20" />
-			@if (currentUser && currentUser.id !== post.user.id) {
-				<div
-					appPostBookmark
-					[appPostBookmarkPost]="post"
-					[appPostBookmarkPostSkeletonToggle]="postSkeletonToggle"
-				></div>
+						</li>
+						@if (currentUser?.id === post.user.id) {
+							<li class="block">
+								<a
+									class="btn-success btn-outline btn-md btn"
+									appSkeleton
+									[class.border-transparent]="postSkeletonToggle"
+									[appSkeletonToggle]="postSkeletonToggle"
+									[title]="'Update: ' + post.name"
+									[attr.aria-label]="'Update: ' + post.name"
+									[routerLink]="['/update', post.id]"
+									[queryParams]="{ postType }"
+									[queryParamsHandling]="'merge'"
+								>
+									Update
+								</a>
+							</li>
+						} @else {
+							<li class="block empty:hidden">
+								<ng-content select="[slot=bookmark]"></ng-content>
+							</li>
+							<li class="block empty:hidden">
+								<ng-content select="[slot=report]"></ng-content>
+							</li>
+						}
+					</ul>
+				</nav>
 			}
 			<div
 				class="w-full"
 				appSkeleton
+				[ngClass]="{ 'border-t border-base-content/20 pt-4': postPreview }"
 				[appSkeletonToggle]="postSkeletonToggle"
-				[appSkeletonClassListParent]="['!rounded-box']"
-				[appSkeletonClassList]="['!rounded-box']"
 			>
 				<article
 					class="prose w-full max-w-full flex-1"
@@ -193,10 +163,12 @@
 					[appMarkdownRenderValue]="post.markdown || 'Markdown'"
 				></article>
 			</div>
-			@if (!postPreview && !postSkeletonToggle) {
-				<hr class="my-0 w-full border-base-content/20" />
-				<footer class="block w-full gap-4" appAd></footer>
-			}
+			<nav class="block empty:hidden border-y border-base-content/20 py-4">
+				<ng-content select="[slot=share]"></ng-content>
+			</nav>
+			<footer class="block empty:hidden">
+				<ng-content select="[slot=ad]"></ng-content>
+			</footer>
 		</section>
 	}
 </ng-container>

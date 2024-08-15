@@ -31,10 +31,16 @@ export function CurrentUserMixin<T extends new (...args: any[]) => any>(MasterCl
 			// ngOnInit
 
 			this.currentUser$?.unsubscribe();
-			this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-				next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
-				error: (error: any) => console.error(error)
-			});
+			this.currentUser$ = this.authorizationService
+				.getCurrentUser()
+				.pipe(
+					tap((currentUser: CurrentUser | undefined) => (this.currentUser = currentUser)),
+					filter((currentUser: CurrentUser | undefined) => !!currentUser)
+				)
+				.subscribe({
+					next: () => this.ngOnCurrentUserIsReady && this.ngOnCurrentUserIsReady(),
+					error: (error: any) => console.error(error)
+				});
 
 			this.currentUserSkeletonToggle$?.unsubscribe();
 			this.currentUserSkeletonToggle$ = this.authorizationService.currentUserIsPopulated
