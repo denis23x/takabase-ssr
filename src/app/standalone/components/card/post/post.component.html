@@ -27,8 +27,24 @@
 			</figure>
 		}
 		<div class="flex h-full w-full flex-col items-start gap-2 p-4">
+			@if (!post.image) {
+				@if ((post.createdAt | dayjs: "diff" : "day") === 0) {
+					<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+						<span class="badge badge-secondary badge-sm"> New </span>
+					</div>
+				} @else if ((post.updatedAt | dayjs: "diff" : "day") === 0) {
+					<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+						<span class="badge badge-warning badge-sm"> Updated </span>
+					</div>
+				}
+				@if ((post.createdAt | dayjs: "diff" : "year") !== 0) {
+					<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+						<span class="badge badge-ghost badge-sm"> Outdated </span>
+					</div>
+				}
+			}
 			<a
-				class="link text-base-content text-base font-bold text-ellipsis max-w-full line-clamp-1 lg:line-clamp-2"
+				class="link link-hover text-base-content text-base font-medium text-ellipsis max-w-full"
 				appSkeleton
 				[appSkeletonToggle]="postSkeletonToggle"
 				[routerLink]="postRouterLink"
@@ -38,21 +54,42 @@
 			>
 				{{ post.name }}
 			</a>
-			<p
-				class="text-base-content text-ellipsis max-w-full line-clamp-2 lg:line-clamp-3"
-				appSkeleton
-				[appSkeletonToggle]="postSkeletonToggle"
-			>
-				{{ post.description }}
-			</p>
-			<time
-				class="!mt-auto text-sm text-base-content/50"
-				appSkeleton
-				[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
-				[appSkeletonToggle]="postSkeletonToggle"
-			>
-				{{ post.createdAt | dayjs: "fromX" }}
-			</time>
+			@switch (postType) {
+				@case ("test") {
+					<div class="flex items-center justify-between gap-2 !mt-auto text-base-content/50 w-full">
+						<div class="flex items-center justify-start gap-2" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+							<div class="flex items-center justify-start gap-1">
+								<i class="fill-current" appSvgIcon [appSvgIconIcon]="'bookmark'" [appSvgIconSquare]="'0.75em'"></i>
+								<span class="text-xs"> 11 </span>
+							</div>
+							<div class="flex items-center justify-start gap-1">
+								<i class="fill-current" appSvgIcon [appSvgIconIcon]="'eye'" [appSvgIconSquare]="'0.75em'"></i>
+								<span class="text-xs"> 11 </span>
+							</div>
+						</div>
+						<div class="flex items-center justify-end gap-2" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+							<time
+								class="!mt-auto text-xs text-base-content/50"
+								appSkeleton
+								[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
+								[appSkeletonToggle]="postSkeletonToggle"
+							>
+								{{ post.createdAt | dayjs: "fromNow" }}
+							</time>
+						</div>
+					</div>
+				}
+				@default {
+					<time
+						class="!mt-auto text-xs text-base-content/50"
+						appSkeleton
+						[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
+						[appSkeletonToggle]="postSkeletonToggle"
+					>
+						Published {{ post.createdAt | dayjs: "fromNow" }}
+					</time>
+				}
+			}
 		</div>
 	</article>
 </ng-container>

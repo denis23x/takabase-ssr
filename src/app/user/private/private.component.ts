@@ -2,8 +2,8 @@
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { distinctUntilKeyChanged, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { distinctUntilChanged, distinctUntilKeyChanged, fromEvent, Subscription } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -20,6 +20,7 @@ import { ListMockComponent } from '../../standalone/components/list/mock/mock.co
 import { PostPrivateService } from '../../core/services/post-private.service';
 import { HelperService } from '../../core/services/helper.service';
 import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
+import { PlatformService } from '../../core/services/platform.service';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 
@@ -50,8 +51,13 @@ export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDest
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly router: Router = inject(Router);
 	private readonly helperService: HelperService = inject(HelperService);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
 	activatedRouteQueryParams$: Subscription | undefined;
+	resize$: Subscription | undefined;
+
+	masonryColumns: Post[][] = [];
+	masonryColumnsWeights: number[] = [];
 
 	postPrivateList: Post[] = [];
 	postPrivateListSkeletonToggle: boolean = true;
@@ -80,19 +86,39 @@ export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDest
 		} else {
 			this.onToggleSearchForm(false);
 		}
+
+		/** Masonry re-render */
+
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
+			this.resize$?.unsubscribe();
+			this.resize$ = fromEvent(window, 'resize')
+				.pipe(
+					map(() => this.platformService.getBreakpoint()),
+					distinctUntilChanged()
+				)
+				.subscribe({
+					next: () => this.setPostListMasonry(this.postPrivateList),
+					error: (error: any) => console.error(error)
+				});
+		}
 	}
 
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		// Unsubscribe
-
-		[this.activatedRouteQueryParams$, this.postPrivateListRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.activatedRouteQueryParams$, this.postPrivateListRequest$, this.resize$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
 		this.postPrivateList = this.skeletonService.getPostList();
 		this.postPrivateListSkeletonToggle = true;
+
+		if (this.platformService.isBrowser()) {
+			this.setPostListMasonry(this.postPrivateList);
+		}
 	}
 
 	setResolver(): void {
@@ -157,7 +183,33 @@ export class UserPrivateComponent extends CU(class {}) implements OnInit, OnDest
 					isEndPage: postPrivateGetAllDto.page !== 1 && postPrivateGetAllDto.size !== postPrivateList.length
 				};
 			},
-			error: (error: any) => console.error(error)
+			error: (error: any) => console.error(error),
+			complete: () => this.setPostListMasonry(this.postPrivateList)
+		});
+	}
+
+	setPostListMasonry(postList: Post[]): void {
+		const breakpoint: string = this.platformService.getBreakpoint();
+		const breakpointMap: Record<string, number> = {
+			xs: 2,
+			sm: 3,
+			md: 4,
+			lg: 4,
+			xl: 4
+		};
+		const breakpointColumns: number = breakpointMap[breakpoint] || Math.max(...Object.values(breakpointMap));
+		const breakpointColumnsArray: null[] = Array(breakpointColumns).fill(null);
+
+		this.masonryColumns = [...breakpointColumnsArray.map(() => [])];
+		this.masonryColumnsWeights = breakpointColumnsArray.map(() => 0);
+
+		// Draw Masonry
+
+		postList.forEach((post: Post) => {
+			const index: number = this.masonryColumnsWeights.indexOf(Math.min(...this.masonryColumnsWeights));
+
+			this.masonryColumns[index].push(post);
+			this.masonryColumnsWeights[index] += post.image ? 2.5 : 1;
 		});
 	}
 }

@@ -34,7 +34,7 @@
 							class="truncate text-sm leading-4 text-base-content/50 max-w-full"
 							[attr.datetime]="currentUser.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 						>
-							Registered {{ currentUser.createdAt | dayjs: "fromX" }}
+							Registered {{ currentUser.createdAt | dayjs: "fromNow" }}
 						</time>
 					</div>
 				</div>

@@ -25,7 +25,7 @@
 							[appSkeletonToggle]="userSkeletonToggle"
 							[attr.datetime]="user.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 						>
-							Registered {{ user.createdAt | dayjs: "fromX" }}
+							Registered {{ user.createdAt | dayjs: "fromNow" }}
 						</time>
 					</div>
 				</div>

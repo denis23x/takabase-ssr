@@ -110,4 +110,24 @@ export class PlatformService {
 
 		return key;
 	}
+
+	getBreakpoint(): string {
+		if (this.isBrowser()) {
+			const window: Window = this.getWindow();
+
+			if (window.innerWidth >= 1280) {
+				return 'xl';
+			} else if (window.innerWidth >= 1024) {
+				return 'lg';
+			} else if (window.innerWidth >= 768) {
+				return 'md';
+			} else if (window.innerWidth >= 640) {
+				return 'sm';
+			} else {
+				return 'xs';
+			}
+		}
+
+		return '';
+	}
 }

@@ -6,11 +6,20 @@ import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { FirebaseStoragePipe } from '../../../pipes/firebase-storage.pipe';
+import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import type { Post } from '../../../../core/models/post.model';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, DayjsPipe, NgOptimizedImage, SkeletonDirective, FirebaseStoragePipe],
+	imports: [
+		CommonModule,
+		RouterModule,
+		DayjsPipe,
+		NgOptimizedImage,
+		SkeletonDirective,
+		FirebaseStoragePipe,
+		SvgIconComponent
+	],
 	selector: 'app-card-post, [appCardPost]',
 	templateUrl: './post.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
@@ -39,7 +48,7 @@ export class CardPostComponent {
 	}
 
 	post: Post | undefined;
-	postType: string | undefined;
+	postType: string = 'public';
 	postImagePriority: boolean = false;
 	postSkeletonToggle: boolean = true;
 	postRouterLink: string[] = ['/', 'post'];

@@ -41,7 +41,7 @@
 								[appSkeletonToggle]="categorySkeletonToggle || postListSkeletonToggle"
 								[attr.datetime]="category?.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
 							>
-								Updated {{ category?.updatedAt | dayjs: "fromX" }}
+								Updated {{ category?.updatedAt | dayjs: "fromNow" }}
 							</time>
 						</div>
 						@if (currentUser?.id === user?.id) {
@@ -117,18 +117,21 @@
 		}
 		<div class="grid gap-4">
 			@if (postList.length) {
-				<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4">
-					@for (post of postList; track post.id; let i = $index) {
-						<li
-							class="block"
-							appCardPost
-							[ngClass]="post.image ? 'row-span-6' : 'row-span-3'"
-							[appCardPostPost]="post"
-							[appCardPostSkeletonToggle]="postListSkeletonToggle"
-							[appCardPostImagePriority]="i <= 3"
-						></li>
+				<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+					@for (postColumn of masonryColumns; track $index) {
+						<ul class="flex flex-1 flex-col gap-4">
+							@for (post of postColumn; track post.id; let i = $index) {
+								<li
+									class="block"
+									appCardPost
+									[appCardPostPost]="post"
+									[appCardPostSkeletonToggle]="postListSkeletonToggle"
+									[appCardPostImagePriority]="i <= 1"
+								></li>
+							}
+						</ul>
 					}
-				</ul>
+				</div>
 				@if (!postListSkeletonToggle) {
 					<div
 						class="block empty:hidden"

@@ -2,8 +2,8 @@
 
 import { Component, ComponentRef, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
-import { distinctUntilKeyChanged, Subscription, switchMap } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { distinctUntilChanged, distinctUntilKeyChanged, fromEvent, Subscription, switchMap } from 'rxjs';
+import { filter, map, tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -21,6 +21,7 @@ import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { PostService } from '../../core/services/post.service';
+import { PlatformService } from '../../core/services/platform.service';
 import type { User } from '../../core/models/user.model';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
@@ -59,10 +60,15 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly userStore: UserStore = inject(UserStore);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
 	activatedRouteParamsUsername$: Subscription | undefined;
 	activatedRouteParamsCategoryId$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
+	resize$: Subscription | undefined;
+
+	masonryColumns: Post[][] = [];
+	masonryColumnsWeights: number[] = [];
 
 	user: User | undefined;
 	userSkeletonToggle: boolean = true;
@@ -124,6 +130,23 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 		} else {
 			this.onToggleSearchForm(false);
 		}
+
+		/** Masonry re-render */
+
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
+			this.resize$?.unsubscribe();
+			this.resize$ = fromEvent(window, 'resize')
+				.pipe(
+					map(() => this.platformService.getBreakpoint()),
+					distinctUntilChanged()
+				)
+				.subscribe({
+					next: () => this.setPostListMasonry(this.postList),
+					error: (error: any) => console.error(error)
+				});
+		}
 	}
 
 	ngOnDestroy(): void {
@@ -134,7 +157,8 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 			this.activatedRouteParamsCategoryId$,
 			this.activatedRouteQueryParams$,
 			this.category$,
-			this.postListRequest$
+			this.postListRequest$,
+			this.resize$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -144,6 +168,10 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 
 		this.postList = this.skeletonService.getPostList();
 		this.postListSkeletonToggle = true;
+
+		if (this.platformService.isBrowser()) {
+			this.setPostListMasonry(this.postList);
+		}
 	}
 
 	setResolver(): void {
@@ -286,7 +314,33 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 					isEndPage: postGetAllDto.page !== 1 && postGetAllDto.size !== postList.length
 				};
 			},
-			error: (error: any) => console.error(error)
+			error: (error: any) => console.error(error),
+			complete: () => this.setPostListMasonry(this.postList)
+		});
+	}
+
+	setPostListMasonry(postList: Post[]): void {
+		const breakpoint: string = this.platformService.getBreakpoint();
+		const breakpointMap: Record<string, number> = {
+			xs: 2,
+			sm: 3,
+			md: 4,
+			lg: 4,
+			xl: 4
+		};
+		const breakpointColumns: number = breakpointMap[breakpoint] || Math.max(...Object.values(breakpointMap));
+		const breakpointColumnsArray: null[] = Array(breakpointColumns).fill(null);
+
+		this.masonryColumns = [...breakpointColumnsArray.map(() => [])];
+		this.masonryColumnsWeights = breakpointColumnsArray.map(() => 0);
+
+		// Draw Masonry
+
+		postList.forEach((post: Post) => {
+			const index: number = this.masonryColumnsWeights.indexOf(Math.min(...this.masonryColumnsWeights));
+
+			this.masonryColumns[index].push(post);
+			this.masonryColumnsWeights[index] += post.image ? 2.5 : 1;
 		});
 	}
 

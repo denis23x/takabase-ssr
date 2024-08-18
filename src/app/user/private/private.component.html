@@ -49,19 +49,22 @@
 		</div>
 		<div class="grid gap-4">
 			@if (postPrivateList.length) {
-				<ul class="grid grid-cols-2 grid-rows-none gap-4 sm:grid-cols-3 md:grid-cols-4">
-					@for (post of postPrivateList; track post.id; let i = $index) {
-						<li
-							class="block"
-							appCardPost
-							[ngClass]="post.image ? 'row-span-6' : 'row-span-3'"
-							[appCardPostPost]="post"
-							[appCardPostType]="'private'"
-							[appCardPostSkeletonToggle]="postPrivateListSkeletonToggle"
-							[appCardPostImagePriority]="i <= 3"
-						></li>
+				<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+					@for (postPrivateColumn of masonryColumns; track $index) {
+						<ul class="flex flex-1 flex-col gap-4">
+							@for (postPrivate of postPrivateColumn; track postPrivate.id; let i = $index) {
+								<li
+									class="block"
+									appCardPost
+									[appCardPostPost]="postPrivate"
+									[appCardPostType]="'private'"
+									[appCardPostSkeletonToggle]="postPrivateListSkeletonToggle"
+									[appCardPostImagePriority]="i <= 1"
+								></li>
+							}
+						</ul>
 					}
-				</ul>
+				</div>
 				@if (!postPrivateListSkeletonToggle) {
 					<div
 						class="block empty:hidden"

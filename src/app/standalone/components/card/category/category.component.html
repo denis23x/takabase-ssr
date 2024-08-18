@@ -36,7 +36,7 @@
 					[appSkeletonToggle]="categorySkeletonToggle"
 					[attr.datetime]="category.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
 				>
-					Updated {{ category.updatedAt | dayjs: "fromX" }}
+					Updated {{ category.updatedAt | dayjs: "fromNow" }}
 				</time>
 			</div>
 		</div>

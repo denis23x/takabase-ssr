@@ -14,7 +14,7 @@
 				<div class="flex items-center justify-start gap-4 w-full overflow-hidden">
 					@if (post.image) {
 						<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-							<figure class="h-32 w-32 rounded-btn relative overflow-hidden">
+							<figure class="h-24 w-24 rounded-btn relative overflow-hidden">
 								<img
 									class="object-cover object-center bg-base-300"
 									[fill]="true"
@@ -26,11 +26,14 @@
 						</div>
 					}
 					<ul class="flex flex-col items-start justify-start overflow-hidden gap-2">
-						<li class="block max-w-full">
+						<li
+							class="flex items-center justify-start gap-2 text-base-content max-w-full"
+							appSkeleton
+							[appSkeletonToggle]="postSkeletonToggle"
+						>
+							<i class="block fill-current" appSvgIcon [appSvgIconIcon]="'person'" [appSvgIconSquare]="'1.15em'"></i>
 							<a
-								class="block text-sm font-bold text-base-content link truncate"
-								appSkeleton
-								[appSkeletonToggle]="postSkeletonToggle"
+								class="block text-sm font-bold link truncate"
 								[routerLink]="['/', post.user.name]"
 								[title]="'Go to ' + post.user.name"
 								[attr.aria-label]="'Go to ' + post.user.name"
@@ -64,12 +67,16 @@
 								</li>
 							}
 							@default {
-								<li class="block max-w-full">
+								<li
+									class="flex items-center justify-start gap-2 text-base-content max-w-full"
+									appSkeleton
+									[appSkeletonToggle]="postSkeletonToggle"
+								>
+									<!-- prettier-ignore -->
+									<i class="block fill-current" appSvgIcon [appSvgIconIcon]="'folder'" [appSvgIconSquare]="'1.15em'"></i>
 									<a
-										class="link text-sm text-base-content leading-4 truncate max-w-full"
-										appSkeleton
+										class="link text-sm leading-4 truncate"
 										[target]="postPreview ? '_blank' : '_self'"
-										[appSkeletonToggle]="postSkeletonToggle"
 										[routerLink]="['/', post.user.name, 'category', post.category?.id]"
 										[title]="'Go to ' + post.category?.name || 'Category'"
 										[attr.aria-label]="'Go to ' + post.category?.name || 'Category'"
@@ -91,17 +98,7 @@
 								[appSkeletonToggle]="postSkeletonToggle"
 								[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 							>
-								Created {{ post.createdAt | dayjs: "fromX" }}
-							</time>
-						</li>
-						<li class="block max-w-full">
-							<time
-								class="block text-xs text-base-content/50"
-								appSkeleton
-								[appSkeletonToggle]="postSkeletonToggle"
-								[attr.datetime]="post.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
-							>
-								Updated {{ post.updatedAt | dayjs: "fromX" }}
+								Created {{ post.createdAt | dayjs: "fromNow" }}
 							</time>
 						</li>
 					</ul>
