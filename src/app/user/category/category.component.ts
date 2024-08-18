@@ -2,8 +2,8 @@
 
 import { Component, ComponentRef, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
-import { distinctUntilChanged, distinctUntilKeyChanged, fromEvent, Subscription, switchMap } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { distinctUntilKeyChanged, Subscription, switchMap } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
@@ -18,10 +18,10 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 import { HelperService } from '../../core/services/helper.service';
 import { UserStore } from '../user.store';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
+import { MasonryPostsMixin as MP } from '../../core/mixins/masonry-posts.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { PostService } from '../../core/services/post.service';
-import { PlatformService } from '../../core/services/platform.service';
 import type { User } from '../../core/models/user.model';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
@@ -52,7 +52,7 @@ import type { CategoryDeleteDto } from '../../core/dto/category/category-delete.
 	selector: 'app-user-category',
 	templateUrl: './category.component.html'
 })
-export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDestroy {
+export class UserCategoryComponent extends CU(MP(class {})) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postService: PostService = inject(PostService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
@@ -60,15 +60,10 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly userStore: UserStore = inject(UserStore);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
-	private readonly platformService: PlatformService = inject(PlatformService);
 
 	activatedRouteParamsUsername$: Subscription | undefined;
 	activatedRouteParamsCategoryId$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
-	resize$: Subscription | undefined;
-
-	masonryColumns: Post[][] = [];
-	masonryColumnsWeights: number[] = [];
 
 	user: User | undefined;
 	userSkeletonToggle: boolean = true;
@@ -130,23 +125,6 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 		} else {
 			this.onToggleSearchForm(false);
 		}
-
-		/** Masonry re-render */
-
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			this.resize$?.unsubscribe();
-			this.resize$ = fromEvent(window, 'resize')
-				.pipe(
-					map(() => this.platformService.getBreakpoint()),
-					distinctUntilChanged()
-				)
-				.subscribe({
-					next: () => this.setPostListMasonry(this.postList),
-					error: (error: any) => console.error(error)
-				});
-		}
 	}
 
 	ngOnDestroy(): void {
@@ -157,8 +135,7 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 			this.activatedRouteParamsCategoryId$,
 			this.activatedRouteQueryParams$,
 			this.category$,
-			this.postListRequest$,
-			this.resize$
+			this.postListRequest$
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
@@ -170,7 +147,7 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 		this.postListSkeletonToggle = true;
 
 		if (this.platformService.isBrowser()) {
-			this.setPostListMasonry(this.postList);
+			this.setMasonry();
 		}
 	}
 
@@ -315,32 +292,7 @@ export class UserCategoryComponent extends CU(class {}) implements OnInit, OnDes
 				};
 			},
 			error: (error: any) => console.error(error),
-			complete: () => this.setPostListMasonry(this.postList)
-		});
-	}
-
-	setPostListMasonry(postList: Post[]): void {
-		const breakpoint: string = this.platformService.getBreakpoint();
-		const breakpointMap: Record<string, number> = {
-			xs: 2,
-			sm: 3,
-			md: 4,
-			lg: 4,
-			xl: 4
-		};
-		const breakpointColumns: number = breakpointMap[breakpoint] || Math.max(...Object.values(breakpointMap));
-		const breakpointColumnsArray: null[] = Array(breakpointColumns).fill(null);
-
-		this.masonryColumns = [...breakpointColumnsArray.map(() => [])];
-		this.masonryColumnsWeights = breakpointColumnsArray.map(() => 0);
-
-		// Draw Masonry
-
-		postList.forEach((post: Post) => {
-			const index: number = this.masonryColumnsWeights.indexOf(Math.min(...this.masonryColumnsWeights));
-
-			this.masonryColumns[index].push(post);
-			this.masonryColumnsWeights[index] += post.image ? 2.5 : 1;
+			complete: () => this.setMasonry()
 		});
 	}
 
