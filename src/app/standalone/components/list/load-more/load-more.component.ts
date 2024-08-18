@@ -23,11 +23,7 @@ import type { User } from '../../../../core/models/user.model';
 import type { Category } from '../../../../core/models/category.model';
 import type { Post } from '../../../../core/models/post.model';
 import type { SearchResponse } from '@algolia/client-search';
-
-interface Pagination {
-	isOnePage?: boolean;
-	isEndPage?: boolean;
-}
+import type { CustomSearchResponse } from '../../../../core/models/custom-search.model';
 
 @Component({
 	standalone: true,
@@ -48,9 +44,9 @@ export class ListLoadMoreComponent implements OnInit, OnDestroy {
 		this.isLoading = isLoading;
 	}
 
+	// prettier-ignore
 	@Input({ required: true })
-	set appListLoadMoreSearchResponse(searchResponse: Omit<SearchResponse<Post | Category | User>, 'hits'> & Pagination) {
-		// prettier-ignore
+	set appListLoadMoreSearchResponse(searchResponse: CustomSearchResponse & Partial<SearchResponse<Post | Category | User>>) {
 		if (searchResponse) {
 			this.searchResponseIsOnePage = searchResponse.isOnePage || (searchResponse.nbPages === 1 || searchResponse.nbPages === 0);
 			this.searchResponseIsEndPage = searchResponse.isEndPage || (searchResponse.nbPages === searchResponse.page + 1 || searchResponse.nbPages === 0);

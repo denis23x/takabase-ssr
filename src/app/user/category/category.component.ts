@@ -30,6 +30,7 @@ import type { CategoryCreateComponent } from '../../standalone/components/catego
 import type { CategoryUpdateComponent } from '../../standalone/components/category/update/update.component';
 import type { CategoryDeleteComponent } from '../../standalone/components/category/delete/delete.component';
 import type { CategoryDeleteDto } from '../../core/dto/category/category-delete.dto';
+import type { CustomSearchResponse } from '../../core/models/custom-search.model';
 
 @Component({
 	standalone: true,
@@ -77,6 +78,11 @@ export class UserCategoryComponent extends CU(MP(SP(class {}))) implements OnIni
 		page: 0,
 		size: 20
 	};
+
+	// Explicit types
+
+	searchFormToggle: boolean = false;
+	searchResponse: CustomSearchResponse;
 
 	// Lazy loading
 
@@ -318,4 +324,8 @@ export class UserCategoryComponent extends CU(MP(SP(class {}))) implements OnIni
 		this.appCategoryDeleteComponent.changeDetectorRef.detectChanges();
 		this.appCategoryDeleteComponent.instance.onToggleCategoryDeleteDialog(true);
 	}
+
+	// Explicit types
+	// @ts-ignore
+	onToggleSearchForm(toggle: boolean): void;
 }

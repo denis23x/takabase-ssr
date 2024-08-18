@@ -24,6 +24,7 @@ import { SearchFormComponent } from '../../standalone/components/search-form/sea
 import type { Post } from '../../core/models/post.model';
 import type { PostBookmark } from '../../core/models/post-bookmark.model';
 import type { PostBookmarkGetAllDto } from '../../core/dto/post-bookmark/post-bookmark-get-all.dto';
+import type { CustomSearchResponse } from '../../core/models/custom-search.model';
 
 @Component({
 	standalone: true,
@@ -60,6 +61,11 @@ export class UserBookmarkComponent extends CU(MP(SP(class {}))) implements OnIni
 		page: 1,
 		size: 20
 	};
+
+	// Explicit types
+
+	searchFormToggle: boolean = false;
+	searchResponse: CustomSearchResponse;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -140,4 +146,8 @@ export class UserBookmarkComponent extends CU(MP(SP(class {}))) implements OnIni
 			complete: () => this.setMasonry()
 		});
 	}
+
+	// Explicit types
+	// @ts-ignore
+	onToggleSearchForm(toggle: boolean): void;
 }

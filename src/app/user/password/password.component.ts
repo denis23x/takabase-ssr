@@ -23,6 +23,7 @@ import { SearchFormComponent } from '../../standalone/components/search-form/sea
 import { PostPasswordService } from '../../core/services/post-password.service';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
+import type { CustomSearchResponse } from '../../core/models/custom-search.model';
 
 @Component({
 	standalone: true,
@@ -59,6 +60,11 @@ export class UserPasswordComponent extends CU(MP(SP(class {}))) implements OnIni
 		page: 0,
 		size: 20
 	};
+
+	// Explicit types
+
+	searchFormToggle: boolean = false;
+	searchResponse: CustomSearchResponse;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -136,4 +142,8 @@ export class UserPasswordComponent extends CU(MP(SP(class {}))) implements OnIni
 			complete: () => this.setMasonry()
 		});
 	}
+
+	// Explicit types
+	// @ts-ignore
+	onToggleSearchForm(toggle: boolean): void;
 }

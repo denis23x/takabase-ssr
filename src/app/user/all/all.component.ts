@@ -22,6 +22,7 @@ import { SearchPostsMixin as SP } from '../../core/mixins/search-posts.mixin';
 import { PostService } from '../../core/services/post.service';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
+import type { CustomSearchResponse } from '../../core/models/custom-search.model';
 
 @Component({
 	standalone: true,
@@ -58,6 +59,11 @@ export class UserAllComponent extends CU(MP(SP(class {}))) implements OnInit, On
 		page: 0,
 		size: 20
 	};
+
+	// Explicit types
+
+	searchFormToggle: boolean = false;
+	searchResponse: CustomSearchResponse;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -143,4 +149,8 @@ export class UserAllComponent extends CU(MP(SP(class {}))) implements OnInit, On
 			complete: () => this.setMasonry()
 		});
 	}
+
+	// Explicit types
+	// @ts-ignore
+	onToggleSearchForm(toggle: boolean): void;
 }
