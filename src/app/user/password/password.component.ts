@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
@@ -16,11 +16,11 @@ import { CommonModule } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { MasonryPostsMixin as MP } from '../../core/mixins/masonry-posts.mixin';
+import { SearchPostsMixin as SP } from '../../core/mixins/search-posts.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
 import { PostPasswordService } from '../../core/services/post-password.service';
-import { HelperService } from '../../core/services/helper.service';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 
@@ -45,12 +45,9 @@ import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 	selector: 'app-user-password',
 	templateUrl: './password.component.html'
 })
-export class UserPasswordComponent extends CU(MP(class {})) implements OnInit, OnDestroy {
+export class UserPasswordComponent extends CU(MP(SP(class {}))) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postPasswordService: PostPasswordService = inject(PostPasswordService);
-	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	private readonly router: Router = inject(Router);
-	private readonly helperService: HelperService = inject(HelperService);
 
 	activatedRouteQueryParams$: Subscription | undefined;
 
@@ -63,9 +60,6 @@ export class UserPasswordComponent extends CU(MP(class {})) implements OnInit, O
 		size: 20
 	};
 
-	postPasswordListSearchFormToggle: boolean = false;
-	postPasswordListSearchResponse: any;
-
 	ngOnInit(): void {
 		super.ngOnInit();
 
@@ -73,14 +67,6 @@ export class UserPasswordComponent extends CU(MP(class {})) implements OnInit, O
 
 		this.setSkeleton();
 		this.setResolver();
-
-		/** Toggle SearchForm component */
-
-		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
-			this.onToggleSearchForm(true);
-		} else {
-			this.onToggleSearchForm(false);
-		}
 	}
 
 	ngOnDestroy(): void {
@@ -112,24 +98,6 @@ export class UserPasswordComponent extends CU(MP(class {})) implements OnInit, O
 			});
 	}
 
-	/** Search */
-
-	onToggleSearchForm(toggle: boolean): void {
-		if (toggle) {
-			this.postPasswordListSearchFormToggle = true;
-		} else {
-			this.postPasswordListSearchFormToggle = false;
-
-			this.router
-				.navigate([], {
-					relativeTo: this.activatedRoute,
-					queryParams: null,
-					replaceUrl: true
-				})
-				.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
-		}
-	}
-
 	/** PostPasswordList */
 
 	getPostPasswordList(postPasswordListLoadMore: boolean = false): void {
@@ -156,7 +124,10 @@ export class UserPasswordComponent extends CU(MP(class {})) implements OnInit, O
 				this.postPasswordList = postPasswordGetAllDto.page > 1 ? this.postPasswordList.concat(postPasswordList) : postPasswordList;
 				this.postPasswordListSkeletonToggle = false;
 				this.postPasswordListIsLoading = false;
-				this.postPasswordListSearchResponse = {
+
+				// Search
+
+				this.searchResponse = {
 					isOnePage: postPasswordGetAllDto.page === 1 && postPasswordGetAllDto.size !== postPasswordList.length,
 					isEndPage: postPasswordGetAllDto.page !== 1 && postPasswordGetAllDto.size !== postPasswordList.length
 				};

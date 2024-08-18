@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
@@ -16,10 +16,10 @@ import { CommonModule } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { MasonryPostsMixin as MP } from '../../core/mixins/masonry-posts.mixin';
+import { SearchPostsMixin as SP } from '../../core/mixins/search-posts.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { PostBookmarkService } from '../../core/services/post-bookmark.service';
-import { HelperService } from '../../core/services/helper.service';
 import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
 import type { Post } from '../../core/models/post.model';
 import type { PostBookmark } from '../../core/models/post-bookmark.model';
@@ -46,12 +46,9 @@ import type { PostBookmarkGetAllDto } from '../../core/dto/post-bookmark/post-bo
 	selector: 'app-user-bookmark',
 	templateUrl: './bookmark.component.html'
 })
-export class UserBookmarkComponent extends CU(MP(class {})) implements OnInit, OnDestroy {
+export class UserBookmarkComponent extends CU(MP(SP(class {}))) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postBookmarkService: PostBookmarkService = inject(PostBookmarkService);
-	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	private readonly router: Router = inject(Router);
-	private readonly helperService: HelperService = inject(HelperService);
 
 	activatedRouteQueryParams$: Subscription | undefined;
 
@@ -64,9 +61,6 @@ export class UserBookmarkComponent extends CU(MP(class {})) implements OnInit, O
 		size: 20
 	};
 
-	postBookmarkListSearchFormToggle: boolean = false;
-	postBookmarkListSearchResponse: any;
-
 	ngOnInit(): void {
 		super.ngOnInit();
 
@@ -74,14 +68,6 @@ export class UserBookmarkComponent extends CU(MP(class {})) implements OnInit, O
 
 		this.setSkeleton();
 		this.setResolver();
-
-		/** Toggle SearchForm component */
-
-		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
-			this.onToggleSearchForm(true);
-		} else {
-			this.onToggleSearchForm(false);
-		}
 	}
 
 	ngOnDestroy(): void {
@@ -113,24 +99,6 @@ export class UserBookmarkComponent extends CU(MP(class {})) implements OnInit, O
 			});
 	}
 
-	/** Search */
-
-	onToggleSearchForm(toggle: boolean): void {
-		if (toggle) {
-			this.postBookmarkListSearchFormToggle = true;
-		} else {
-			this.postBookmarkListSearchFormToggle = false;
-
-			this.router
-				.navigate([], {
-					relativeTo: this.activatedRoute,
-					queryParams: null,
-					replaceUrl: true
-				})
-				.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
-		}
-	}
-
 	/** PostBookmarkList */
 
 	getPostBookmarkList(postBookmarkListLoadMore: boolean = false): void {
@@ -160,7 +128,10 @@ export class UserBookmarkComponent extends CU(MP(class {})) implements OnInit, O
 				this.postBookmarkList = postBookmarkGetAllDto.page > 1 ? this.postBookmarkList.concat(postBookmarkList) : postBookmarkList;
 				this.postBookmarkListSkeletonToggle = false;
 				this.postBookmarkListIsLoading = false;
-				this.postBookmarkListSearchResponse = {
+
+				// Search
+
+				this.searchResponse = {
 					isOnePage: postBookmarkGetAllDto.page === 1 && postBookmarkGetAllDto.size !== postBookmarkList.length,
 					isEndPage: postBookmarkGetAllDto.page !== 1 && postBookmarkGetAllDto.size !== postBookmarkList.length
 				};

@@ -8,16 +8,16 @@
 				type="button"
 				appSvgIcon
 				appSkeleton
-				[title]="postListSearchFormToggle ? 'Hide' : 'Search'"
-				[attr.aria-label]="postListSearchFormToggle ? 'Hide' : 'Search'"
+				[title]="searchFormToggle ? 'Hide' : 'Search'"
+				[attr.aria-label]="searchFormToggle ? 'Hide' : 'Search'"
 				[disabled]="postListSkeletonToggle"
-				[appSkeletonToggle]="postListSkeletonToggle && !postListSearchFormToggle"
+				[appSkeletonToggle]="postListSkeletonToggle && !searchFormToggle"
 				[appSkeletonClassListElementRef]="['border-0']"
-				[appSvgIconIcon]="postListSearchFormToggle ? 'x-lg' : 'search'"
+				[appSvgIconIcon]="searchFormToggle ? 'x-lg' : 'search'"
 				[appSvgIconSquare]="'1.5em'"
-				(click)="onToggleSearchForm(!postListSearchFormToggle)"
+				(click)="onToggleSearchForm(!searchFormToggle)"
 			></button>
-			@switch (postListSearchFormToggle) {
+			@switch (searchFormToggle) {
 				@case (true) {
 					<div
 						class="relative flex items-end justify-between gap-4 w-full"
@@ -69,7 +69,7 @@
 						class="block empty:hidden"
 						appListLoadMore
 						[appListLoadMoreIsLoading]="postListIsLoading"
-						[appListLoadMoreSearchResponse]="postListSearchResponse"
+						[appListLoadMoreSearchResponse]="searchResponse"
 						(appLoadMoreToggle)="getPostList(true)"
 					></div>
 				}

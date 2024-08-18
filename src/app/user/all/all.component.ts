@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
@@ -14,11 +14,11 @@ import { SearchFormComponent } from '../../standalone/components/search-form/sea
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
 import { CommonModule } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { HelperService } from '../../core/services/helper.service';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { MasonryPostsMixin as MP } from '../../core/mixins/masonry-posts.mixin';
+import { SearchPostsMixin as SP } from '../../core/mixins/search-posts.mixin';
 import { PostService } from '../../core/services/post.service';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
@@ -43,12 +43,9 @@ import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 	selector: 'app-user-all',
 	templateUrl: './all.component.html'
 })
-export class UserAllComponent extends CU(MP(class {})) implements OnInit, OnDestroy {
-	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+export class UserAllComponent extends CU(MP(SP(class {}))) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postService: PostService = inject(PostService);
-	private readonly router: Router = inject(Router);
-	private readonly helperService: HelperService = inject(HelperService);
 
 	activatedRouteParamsUsername$: Subscription | undefined;
 	activatedRouteQueryParams$: Subscription | undefined;
@@ -61,9 +58,6 @@ export class UserAllComponent extends CU(MP(class {})) implements OnInit, OnDest
 		page: 0,
 		size: 20
 	};
-
-	postListSearchFormToggle: boolean = false;
-	postListSearchResponse: any;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -80,14 +74,6 @@ export class UserAllComponent extends CU(MP(class {})) implements OnInit, OnDest
 				},
 				error: (error: any) => console.error(error)
 			});
-
-		/** Toggle SearchForm component */
-
-		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
-			this.onToggleSearchForm(true);
-		} else {
-			this.onToggleSearchForm(false);
-		}
 	}
 
 	ngOnDestroy(): void {
@@ -119,24 +105,6 @@ export class UserAllComponent extends CU(MP(class {})) implements OnInit, OnDest
 			});
 	}
 
-	/** Search */
-
-	onToggleSearchForm(toggle: boolean): void {
-		if (toggle) {
-			this.postListSearchFormToggle = true;
-		} else {
-			this.postListSearchFormToggle = false;
-
-			this.router
-				.navigate([], {
-					relativeTo: this.activatedRoute,
-					queryParams: null,
-					replaceUrl: true
-				})
-				.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
-		}
-	}
-
 	/** PostList */
 
 	getPostList(postListLoadMore: boolean = false): void {
@@ -163,7 +131,10 @@ export class UserAllComponent extends CU(MP(class {})) implements OnInit, OnDest
 				this.postList = postGetAllDto.page > 1 ? this.postList.concat(postList) : postList;
 				this.postListSkeletonToggle = false;
 				this.postListIsLoading = false;
-				this.postListSearchResponse = {
+
+				// Search
+
+				this.searchResponse = {
 					isOnePage: postGetAllDto.page === 1 && postGetAllDto.size !== postList.length,
 					isEndPage: postGetAllDto.page !== 1 && postGetAllDto.size !== postList.length
 				};

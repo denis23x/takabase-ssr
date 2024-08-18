@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, ComponentRef, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router, RouterModule } from '@angular/router';
+import { NavigationExtras, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, Subscription, switchMap } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
@@ -15,10 +15,10 @@ import { SearchFormComponent } from '../../standalone/components/search-form/sea
 import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-to-clipboard.directive';
 import { CommonModule } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { HelperService } from '../../core/services/helper.service';
 import { UserStore } from '../user.store';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { MasonryPostsMixin as MP } from '../../core/mixins/masonry-posts.mixin';
+import { SearchPostsMixin as SP } from '../../core/mixins/search-posts.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { PostService } from '../../core/services/post.service';
@@ -52,12 +52,9 @@ import type { CategoryDeleteDto } from '../../core/dto/category/category-delete.
 	selector: 'app-user-category',
 	templateUrl: './category.component.html'
 })
-export class UserCategoryComponent extends CU(MP(class {})) implements OnInit, OnDestroy {
+export class UserCategoryComponent extends CU(MP(SP(class {}))) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postService: PostService = inject(PostService);
-	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	private readonly router: Router = inject(Router);
-	private readonly helperService: HelperService = inject(HelperService);
 	private readonly userStore: UserStore = inject(UserStore);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
@@ -80,9 +77,6 @@ export class UserCategoryComponent extends CU(MP(class {})) implements OnInit, O
 		page: 0,
 		size: 20
 	};
-
-	postListSearchFormToggle: boolean = false;
-	postListSearchResponse: any;
 
 	// Lazy loading
 
@@ -117,14 +111,6 @@ export class UserCategoryComponent extends CU(MP(class {})) implements OnInit, O
 				},
 				error: (error: any) => console.error(error)
 			});
-
-		/** Toggle SearchForm component */
-
-		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
-			this.onToggleSearchForm(true);
-		} else {
-			this.onToggleSearchForm(false);
-		}
 	}
 
 	ngOnDestroy(): void {
@@ -177,24 +163,6 @@ export class UserCategoryComponent extends CU(MP(class {})) implements OnInit, O
 				next: () => this.getPostList(),
 				error: (error: any) => console.error(error)
 			});
-	}
-
-	/** Search */
-
-	onToggleSearchForm(toggle: boolean): void {
-		if (toggle) {
-			this.postListSearchFormToggle = true;
-		} else {
-			this.postListSearchFormToggle = false;
-
-			this.router
-				.navigate([], {
-					relativeTo: this.activatedRoute,
-					queryParams: null,
-					replaceUrl: true
-				})
-				.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
-		}
 	}
 
 	/** Category */
@@ -286,7 +254,10 @@ export class UserCategoryComponent extends CU(MP(class {})) implements OnInit, O
 				this.postList = postGetAllDto.page > 1 ? this.postList.concat(postList) : postList;
 				this.postListSkeletonToggle = false;
 				this.postListIsLoading = false;
-				this.postListSearchResponse = {
+
+				// Search
+
+				this.searchResponse = {
 					isOnePage: postGetAllDto.page === 1 && postGetAllDto.size !== postList.length,
 					isEndPage: postGetAllDto.page !== 1 && postGetAllDto.size !== postList.length
 				};

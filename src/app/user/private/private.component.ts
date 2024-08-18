@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
@@ -16,10 +16,10 @@ import { CommonModule } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { MasonryPostsMixin as MP } from '../../core/mixins/masonry-posts.mixin';
+import { SearchPostsMixin as SP } from '../../core/mixins/search-posts.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { PostPrivateService } from '../../core/services/post-private.service';
-import { HelperService } from '../../core/services/helper.service';
 import { SearchFormComponent } from '../../standalone/components/search-form/search-form.component';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
@@ -45,12 +45,9 @@ import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 	selector: 'app-user-private',
 	templateUrl: './private.component.html'
 })
-export class UserPrivateComponent extends CU(MP(class {})) implements OnInit, OnDestroy {
+export class UserPrivateComponent extends CU(MP(SP(class {}))) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postPrivateService: PostPrivateService = inject(PostPrivateService);
-	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	private readonly router: Router = inject(Router);
-	private readonly helperService: HelperService = inject(HelperService);
 
 	activatedRouteQueryParams$: Subscription | undefined;
 
@@ -63,9 +60,6 @@ export class UserPrivateComponent extends CU(MP(class {})) implements OnInit, On
 		size: 20
 	};
 
-	postPrivateListSearchFormToggle: boolean = false;
-	postPrivateListSearchResponse: any;
-
 	ngOnInit(): void {
 		super.ngOnInit();
 
@@ -73,14 +67,6 @@ export class UserPrivateComponent extends CU(MP(class {})) implements OnInit, On
 
 		this.setSkeleton();
 		this.setResolver();
-
-		/** Toggle SearchForm component */
-
-		if (this.activatedRoute.snapshot.queryParamMap.get('query')) {
-			this.onToggleSearchForm(true);
-		} else {
-			this.onToggleSearchForm(false);
-		}
 	}
 
 	ngOnDestroy(): void {
@@ -112,24 +98,6 @@ export class UserPrivateComponent extends CU(MP(class {})) implements OnInit, On
 			});
 	}
 
-	/** Search */
-
-	onToggleSearchForm(toggle: boolean): void {
-		if (toggle) {
-			this.postPrivateListSearchFormToggle = true;
-		} else {
-			this.postPrivateListSearchFormToggle = false;
-
-			this.router
-				.navigate([], {
-					relativeTo: this.activatedRoute,
-					queryParams: null,
-					replaceUrl: true
-				})
-				.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
-		}
-	}
-
 	/** PostPrivateList */
 
 	getPostPrivateList(postPrivateListLoadMore: boolean = false): void {
@@ -156,7 +124,10 @@ export class UserPrivateComponent extends CU(MP(class {})) implements OnInit, On
 				this.postPrivateList = postPrivateGetAllDto.page > 1 ? this.postPrivateList.concat(postPrivateList) : postPrivateList;
 				this.postPrivateListSkeletonToggle = false;
 				this.postPrivateListIsLoading = false;
-				this.postPrivateListSearchResponse = {
+
+				// Search
+
+				this.searchResponse = {
 					isOnePage: postPrivateGetAllDto.page === 1 && postPrivateGetAllDto.size !== postPrivateList.length,
 					isEndPage: postPrivateGetAllDto.page !== 1 && postPrivateGetAllDto.size !== postPrivateList.length
 				};
