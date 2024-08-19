@@ -121,6 +121,8 @@ export class ShareComponent {
 		});
 	}
 
+	/** Native share */
+
 	getShareNative(shareData: ShareData): boolean {
 		if (this.platformService.isBrowser()) {
 			return navigator.share && navigator.canShare(shareData);

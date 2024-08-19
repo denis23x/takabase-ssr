@@ -24,11 +24,8 @@ export class SharpService {
 
 	/** Utility */
 
-	getFileFromBlob(blob: Blob): File {
-		const fileName: string = 'image';
-		const fileExtension: string = mime.getExtension(blob.type);
-
-		return new File([blob], [fileName, fileExtension].join('.'), {
+	getFileFromBlob(blob: Blob, fileName: string = 'image'): File {
+		return new File([blob], [fileName, mime.getExtension(blob.type)].join('.'), {
 			type: blob.type
 		});
 	}

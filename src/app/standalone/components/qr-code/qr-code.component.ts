@@ -11,9 +11,10 @@ import { filter, map, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import type { QRCodeRenderersOptions } from 'qrcode';
-import QRCode from 'qrcode';
 import { CopyToClipboardDirective } from '../../directives/app-copy-to-clipboard.directive';
+import { SharpService } from '../../../core/services/sharp.service';
+import { toCanvas, toDataURL } from 'qrcode';
+import type { QRCodeRenderersOptions } from 'qrcode';
 
 interface QRCodeForm {
 	url: FormControl<string>;
@@ -22,6 +23,7 @@ interface QRCodeForm {
 @Component({
 	standalone: true,
 	imports: [WindowComponent, FormsModule, ReactiveFormsModule, SvgIconComponent, CopyToClipboardDirective],
+	providers: [SharpService],
 	selector: 'app-qr-code, [appQRCode]',
 	templateUrl: './qr-code.component.html'
 })
@@ -32,6 +34,7 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly location: Location = inject(Location);
+	private readonly sharpService: SharpService = inject(SharpService);
 
 	@ViewChild('QRCodeDialog') QRCodeDialog: ElementRef<HTMLDialogElement> | undefined;
 	@ViewChild('QRCodeCanvas') QRCodeCanvas: ElementRef<HTMLCanvasElement> | undefined;
@@ -57,6 +60,9 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 			light: '#ffffffff'
 		}
 	};
+
+	shareData: ShareData | undefined;
+	shareDataCanShare: boolean = false;
 
 	ngOnInit(): void {
 		/** Extra toggle close when url change */
@@ -94,17 +100,39 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 	}
 
-	onDownloadQRCode(): void {
+	onSaveQRCode(): void {
 		if (this.platformService.isBrowser()) {
 			const abstractControl: AbstractControl | null = this.QRCodeForm.get('url');
+			const abstractControlValue = abstractControl.value.split('/').pop();
 
-			QRCode.toDataURL(abstractControl.value, this.QRCodeOptions, (error: Error, dataURL: string): void => {
-				if (error) {
-					this.snackbarService.error('Error', "Can't download your QR Code");
-				} else {
-					this.helperService.setDownload(dataURL, abstractControl.value.split('/').pop());
-				}
-			});
+			if (this.platformService.isMobile()) {
+				toCanvas(abstractControl.value, this.QRCodeOptions, (error: Error, canvas: HTMLCanvasElement) => {
+					if (error) {
+						this.snackbarService.error('Error', "Can't download your QR Code");
+					} else {
+						canvas.toBlob((blob: Blob) => {
+							const shareData: ShareData = {
+								files: [this.sharpService.getFileFromBlob(blob, abstractControlValue)]
+							};
+
+							this.shareDataCanShare = this.getShareNative(shareData);
+							this.shareData = this.shareDataCanShare ? shareData : undefined;
+
+							if (this.shareData) {
+								this.setShareNative();
+							}
+						});
+					}
+				});
+			} else {
+				toDataURL(abstractControl.value, this.QRCodeOptions, (error: Error, dataURL: string): void => {
+					if (error) {
+						this.snackbarService.error('Error', "Can't download your QR Code");
+					} else {
+						this.helperService.setDownload(dataURL, abstractControlValue);
+					}
+				});
+			}
 		}
 	}
 
@@ -130,7 +158,7 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 			const QRCodeToCanvas = (): void => {
 				this.setQRCodeOptions();
 
-				QRCode.toCanvas(this.QRCodeCanvas.nativeElement, value, this.QRCodeOptions, (error: Error): void => {
+				toCanvas(this.QRCodeCanvas.nativeElement, value, this.QRCodeOptions, (error: Error): void => {
 					if (error) {
 						this.snackbarService.error('Error', "Can't draw your QR Code");
 					} else {
@@ -148,6 +176,25 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 			// Initial call
 
 			QRCodeToCanvas();
+		}
+	}
+
+	/** Native share */
+
+	getShareNative(shareData: ShareData): boolean {
+		if (this.platformService.isBrowser()) {
+			return navigator.share && navigator.canShare(shareData);
+		} else {
+			return false;
+		}
+	}
+
+	setShareNative(): void {
+		if (this.platformService.isBrowser()) {
+			navigator
+				.share(this.shareData)
+				.then(() => console.debug('Shared through native share'))
+				.catch((error: any) => console.error(error));
 		}
 	}
 }
