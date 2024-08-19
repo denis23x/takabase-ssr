@@ -80,8 +80,7 @@ export class MetaService {
 		Object.keys(metaOpenGraph).forEach((key: string) => {
 			const metaDefinition: MetaDefinition = {
 				property: key,
-				// @ts-ignore
-				content: metaOpenGraph[key]
+				content: metaOpenGraph[key as keyof MetaOpenGraph]
 			};
 
 			if (key === 'og:description') {
@@ -141,17 +140,14 @@ export class MetaService {
 
 		// @ts-ignore
 		if (metaTwitterImage.some((tag: string) => !metaTwitter[tag])) {
-			// @ts-ignore
 			metaTwitter['twitter:image'] = url.origin + '/assets/images/placeholder-image-meta.png';
-			// @ts-ignore
 			metaTwitter['twitter:image:alt'] = 'Stay up to date with the latest posts and insights from Takabase';
 		}
 
 		Object.keys(metaTwitter).forEach((key: string) => {
 			const metaDefinition: MetaDefinition = {
 				name: key,
-				// @ts-ignore
-				content: metaTwitter[key]
+				content: metaTwitter[key as keyof MetaTwitter]
 			};
 
 			if (key === 'twitter:domain') {

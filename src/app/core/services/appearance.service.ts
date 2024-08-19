@@ -77,8 +77,7 @@ export class AppearanceService {
 
 		if (appearance) {
 			valueKeyList.forEach((key: string) => {
-				// @ts-ignore
-				const value: any = appearance[key];
+				const value: any = appearance[key as keyof Appearance];
 
 				const cookieKey: string = this.helperService.getCamelCaseToDashCase(key);
 				const cookieValue: any = typeof value === 'boolean' ? String(+value) : value;

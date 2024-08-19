@@ -1,7 +1,6 @@
 /** @format */
 
 import {
-	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
 	EventEmitter,
@@ -48,8 +47,7 @@ interface CategoryUpdateForm {
 	],
 	providers: [AIService, CategoryService],
 	selector: 'app-category-update, [appCategoryUpdate]',
-	templateUrl: './update.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './update.component.html'
 })
 export class CategoryUpdateComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
@@ -111,8 +109,7 @@ export class CategoryUpdateComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: (value: any) => {
 						this.categoryUpdateFormIsPristine = Object.keys(value).every((key: string) => {
-							// @ts-ignore
-							return value[key] === this.category[key];
+							return (value[key] || null) === this.category[key as keyof Category];
 						});
 					},
 					error: (error: any) => console.error(error)
@@ -135,7 +132,8 @@ export class CategoryUpdateComponent implements OnInit, OnDestroy {
 
 			const categoryId: number = this.category.id;
 			const categoryUpdateDto: CategoryUpdateDto = {
-				...this.categoryUpdateForm.value
+				...this.categoryUpdateForm.value,
+				description: this.categoryUpdateForm.value.description || null
 			};
 
 			const aiModerateTextDto: AIModerateTextDto = {

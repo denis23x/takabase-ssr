@@ -115,7 +115,7 @@
                                 [ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
                                 [title]="category.name"
                                 [attr.aria-label]="category.name"
-                                (click)="categoryId.patchValue(category.id)"
+                                (click)="isActive.value ? categoryId.reset() : categoryId.patchValue(category.id)"
                               >
                                 {{ category.name }}
                               </button>

@@ -143,8 +143,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 							.subscribe({
 								next: (value: any) => {
 									this.profileFormIsPristine = Object.keys(value).every((key: string) => {
-										// @ts-ignore
-										return value[key] === this.currentUser[key];
+										return (value[key] || null) === this.currentUser[key as keyof CurrentUser];
 									});
 								},
 								error: (error: any) => console.error(error)
@@ -217,8 +216,8 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 			const userUpdateDto: UserUpdateDto = {
 				...this.profileForm.value,
-				avatar: this.profileForm.value.avatar || undefined,
-				description: this.profileForm.value.description || undefined
+				avatar: this.profileForm.value.avatar || null,
+				description: this.profileForm.value.description || null
 			};
 
 			const aiModerateTextDto: AIModerateTextDto = {

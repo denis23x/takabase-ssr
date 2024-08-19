@@ -1,7 +1,6 @@
 /** @format */
 
 import {
-	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
 	EventEmitter,
@@ -53,8 +52,7 @@ interface CategoryDeleteForm {
 	],
 	providers: [CategoryService],
 	selector: 'app-category-delete, [appCategoryDelete]',
-	templateUrl: './delete.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './delete.component.html'
 })
 export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);

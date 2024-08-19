@@ -2,5 +2,5 @@
 
 export interface CategoryCreateDto {
 	name: string;
-	description?: string;
+	description: string | null;
 }

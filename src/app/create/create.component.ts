@@ -363,11 +363,11 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 									const postFormIsPristine: boolean = Object.keys(value).every((key: string) => {
 										switch (key) {
 											case 'categoryId':
-												return value[key] === this.post.category?.id;
+												return (value[key] || null) === this.post.category?.id;
 											case 'categoryName':
-												return value[key] === this.post.category?.name;
+												return (value[key] || null) === this.post.category?.name;
 											default:
-												return value[key] === this.post[key as keyof Post];
+												return (value[key] || null) === this.post[key as keyof Post];
 										}
 									});
 
