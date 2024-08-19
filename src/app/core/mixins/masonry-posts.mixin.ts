@@ -59,9 +59,7 @@ export function MasonryPostsMixin<T extends new (...args: any[]) => any>(MasterC
 			const breakpointMap: Record<string, number> = {
 				xs: 2,
 				sm: 3,
-				md: 4,
-				lg: 4,
-				xl: 4
+				md: 4
 			};
 
 			const breakpointColumns: number = breakpointMap[breakpoint] || Math.max(...Object.values(breakpointMap));

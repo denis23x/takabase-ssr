@@ -44,7 +44,7 @@
 				}
 			}
 			<a
-				class="link link-hover text-base-content text-base font-medium text-ellipsis max-w-full"
+				class="link link-hover text-base-content text-base font-bold text-ellipsis max-w-full"
 				appSkeleton
 				[appSkeletonToggle]="postSkeletonToggle"
 				[routerLink]="postRouterLink"
@@ -56,7 +56,7 @@
 			</a>
 			@switch (postType) {
 				@case ("test") {
-					<div class="flex items-center justify-between gap-2 !mt-auto text-base-content/50 w-full">
+					<div class="flex items-center justify-between gap-2 text-base-content/50 w-full">
 						<div class="flex items-center justify-start gap-2" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 							<div class="flex items-center justify-start gap-1">
 								<i class="fill-current" appSvgIcon [appSvgIconIcon]="'bookmark'" [appSvgIconSquare]="'0.75em'"></i>
@@ -69,7 +69,7 @@
 						</div>
 						<div class="flex items-center justify-end gap-2" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 							<time
-								class="!mt-auto text-xs text-base-content/50"
+								class="text-xs text-base-content/50"
 								appSkeleton
 								[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 								[appSkeletonToggle]="postSkeletonToggle"
@@ -81,7 +81,7 @@
 				}
 				@default {
 					<time
-						class="!mt-auto text-xs text-base-content/50"
+						class="text-xs text-base-content/50"
 						appSkeleton
 						[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 						[appSkeletonToggle]="postSkeletonToggle"

@@ -41,7 +41,7 @@
 								[appSkeletonToggle]="categorySkeletonToggle || postListSkeletonToggle"
 								[attr.datetime]="category?.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
 							>
-								Updated {{ category?.updatedAt | dayjs: "fromNow" }}
+								Created {{ category?.createdAt | dayjs: "fromNow" }}
 							</time>
 						</div>
 						@if (currentUser?.id === user?.id) {

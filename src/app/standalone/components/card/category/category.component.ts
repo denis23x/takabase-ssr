@@ -3,13 +3,13 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { RouterModule } from '@angular/router';
-import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { AvatarComponent } from '../../avatar/avatar.component';
+import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import type { Category } from '../../../../core/models/category.model';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, SkeletonDirective, DayjsPipe, AvatarComponent],
+	imports: [RouterModule, SkeletonDirective, AvatarComponent, SvgIconComponent],
 	selector: 'app-card-category, [appCardCategory]',
 	templateUrl: './category.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

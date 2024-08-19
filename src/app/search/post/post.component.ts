@@ -49,6 +49,10 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 	private readonly cookiesService: CookiesService = inject(CookiesService);
 
 	activatedRouteQueryParams$: Subscription | undefined;
+	resize$: Subscription | undefined;
+
+	masonryColumns: Post[][] = [];
+	masonryColumnsWeights: number[] = [];
 
 	postList: Post[] = [];
 	postListSkeletonToggle: boolean = true;
@@ -91,12 +95,17 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteQueryParams$, this.postListRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.activatedRouteQueryParams$, this.postListRequest$, this.resize$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
 		this.postList = this.skeletonService.getPostList();
 		this.postListSkeletonToggle = true;
+
+		if (this.platformService.isBrowser()) {
+			this.setPostListMasonry();
+		}
 	}
 
 	setResolver(): void {
@@ -157,5 +166,33 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 		this.postListSearchResponse = postListSearchResponse;
 		this.postListSkeletonToggle = false;
 		this.postListIsLoading$.next(false);
+
+		// Set Masonry
+
+		this.setPostListMasonry();
+	}
+
+	setPostListMasonry(): void {
+		const breakpoint: string = this.platformService.getBreakpoint();
+		const breakpointMap: Record<string, number> = {
+			xs: 2,
+			sm: 3,
+			md: 4
+		};
+
+		const breakpointColumns: number = breakpointMap[breakpoint] || Math.max(...Object.values(breakpointMap));
+		const breakpointColumnsArray: null[] = Array(breakpointColumns).fill(null);
+
+		this.masonryColumns = [...breakpointColumnsArray.map(() => [])];
+		this.masonryColumnsWeights = breakpointColumnsArray.map(() => 0);
+
+		// Draw Masonry
+
+		this.postList.forEach((post: Post) => {
+			const index: number = this.masonryColumnsWeights.indexOf(Math.min(...this.masonryColumnsWeights));
+
+			this.masonryColumns[index].push(post);
+			this.masonryColumnsWeights[index] += post.image ? 2.5 : 1;
+		});
 	}
 }

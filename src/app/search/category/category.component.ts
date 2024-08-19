@@ -49,6 +49,10 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
 	private readonly cookiesService: CookiesService = inject(CookiesService);
 
 	activatedRouteQueryParams$: Subscription | undefined;
+	resize$: Subscription | undefined;
+
+	masonryColumns: Category[][] = [];
+	masonryColumnsWeights: number[] = [];
 
 	categoryList: Category[] = [];
 	categoryListRequest$: Subscription | undefined;
@@ -91,12 +95,17 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteQueryParams$, this.categoryListRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.activatedRouteQueryParams$, this.categoryListRequest$, this.resize$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
 		this.categoryList = this.skeletonService.getCategoryList(['user']);
 		this.categoryListSkeletonToggle = true;
+
+		if (this.platformService.isBrowser()) {
+			this.setCategoryListMasonry();
+		}
 	}
 
 	setResolver(): void {
@@ -157,5 +166,33 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
 		this.categoryListSearchResponse = categoryListSearchResponse;
 		this.categoryListSkeletonToggle = false;
 		this.categoryListIsLoading$.next(false);
+
+		// Set Masonry
+
+		this.setCategoryListMasonry();
+	}
+
+	setCategoryListMasonry(): void {
+		const breakpoint: string = this.platformService.getBreakpoint();
+		const breakpointMap: Record<string, number> = {
+			xs: 1,
+			sm: 2,
+			md: 3
+		};
+
+		const breakpointColumns: number = breakpointMap[breakpoint] || Math.max(...Object.values(breakpointMap));
+		const breakpointColumnsArray: null[] = Array(breakpointColumns).fill(null);
+
+		this.masonryColumns = [...breakpointColumnsArray.map(() => [])];
+		this.masonryColumnsWeights = breakpointColumnsArray.map(() => 0);
+
+		// Draw Masonry
+
+		this.categoryList.forEach((category: Category) => {
+			const index: number = this.masonryColumnsWeights.indexOf(Math.min(...this.masonryColumnsWeights));
+
+			this.masonryColumns[index].push(category);
+			this.masonryColumnsWeights[index] += category.description ? 2.5 : 1;
+		});
 	}
 }
