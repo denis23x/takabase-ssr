@@ -158,6 +158,7 @@
 					class="prose w-full max-w-full flex-1"
 					appMarkdownRender
 					[appMarkdownRenderValue]="post.markdown || 'Markdown'"
+					(appMarkdownRenderClickExternalLink)="onTogglePostExternalLinkDialog($event)"
 				></article>
 			</div>
 			<nav class="block empty:hidden border-y border-base-content/20 py-4">

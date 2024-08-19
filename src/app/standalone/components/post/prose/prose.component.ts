@@ -12,9 +12,12 @@ import { MarkdownRenderDirective } from '../../../directives/app-markdown-render
 import { MarkdownTimeToReadPipe } from '../../../pipes/markdown-time-to-read.pipe';
 import { FirebaseStoragePipe } from '../../../pipes/firebase-storage.pipe';
 import { MarkdownService } from '../../../../core/services/markdown.service';
+import { PlatformService } from '../../../../core/services/platform.service';
+import { filter } from 'rxjs/operators';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import type { QRCodeComponent } from '../../qr-code/qr-code.component';
 import type { Post } from '../../../../core/models/post.model';
+import type { PostExternalLinkComponent } from '../external-link/external-link.component';
 
 @Component({
 	standalone: true,
@@ -36,6 +39,7 @@ import type { Post } from '../../../../core/models/post.model';
 })
 export class PostProseComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly helperService: HelperService = inject(HelperService);
+	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
 	@Input({ required: true })
@@ -66,6 +70,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	// Lazy loading
 
 	appQRCodeComponent: ComponentRef<QRCodeComponent>;
+	appPostExternalLinkComponent: ComponentRef<PostExternalLinkComponent>;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -86,5 +91,24 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 
 		this.appQRCodeComponent.changeDetectorRef.detectChanges();
 		this.appQRCodeComponent.instance.onToggleQRCodeDialog(true);
+	}
+
+	async onTogglePostExternalLinkDialog(href: string): Promise<void> {
+		if (!this.appPostExternalLinkComponent) {
+			await import('../../post/external-link/external-link.component')
+				.then(m => {
+					this.appPostExternalLinkComponent = this.viewContainerRef.createComponent(m.PostExternalLinkComponent);
+					this.appPostExternalLinkComponent.instance.appPostExternalLinkSubmit
+						.pipe(filter(() => this.postType === 'public'))
+						.subscribe({
+							next: () => this.platformService.getWindow().open(href, '_blank'),
+							error: (error: any) => console.error(error)
+						});
+				})
+				.catch((error: any) => console.error(error));
+		}
+
+		this.appPostExternalLinkComponent.changeDetectorRef.detectChanges();
+		this.appPostExternalLinkComponent.instance.onTogglePostExternalLinkDialog(true);
 	}
 }
