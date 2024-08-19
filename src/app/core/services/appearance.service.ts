@@ -18,7 +18,7 @@ import {
 	DocumentReference,
 	DocumentSnapshot,
 	getDoc,
-	updateDoc
+	setDoc
 } from 'firebase/firestore';
 import { ApiService } from './api.service';
 import { getValue, Value } from 'firebase/remote-config';
@@ -246,7 +246,7 @@ export class AppearanceService {
 		const userCollection: CollectionReference = collection(this.firebaseService.getFirestore(), '/users');
 		const userDoc: DocumentReference = doc(userCollection, firebaseUid);
 
-		return from(updateDoc(userDoc, { appearance })).pipe(
+		return from(setDoc(userDoc, { appearance })).pipe(
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
 			map(() => appearance)
 		);

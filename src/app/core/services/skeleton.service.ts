@@ -5,6 +5,7 @@ import { HelperService } from './helper.service';
 import { numbers } from 'nanoid-dictionary';
 import { customAlphabet } from 'nanoid';
 import { LoremIpsum } from 'lorem-ipsum';
+import dayjs from 'dayjs/esm';
 import type { User } from '../models/user.model';
 import type { Post } from '../models/post.model';
 import type { Category } from '../models/category.model';
@@ -33,8 +34,8 @@ export class SkeletonService {
 			description: this.loremIpsum.generateSentences(1),
 			user: scope.includes('user') ? this.getUser() : undefined,
 			posts: scope.includes('posts') ? this.getPostList() : [],
-			createdAt: new Date().toISOString(),
-			updatedAt: new Date().toISOString()
+			createdAt: dayjs().subtract(1, 'day').toISOString(),
+			updatedAt: dayjs().subtract(1, 'day').toISOString()
 		};
 	}
 
@@ -54,8 +55,8 @@ export class SkeletonService {
 			category: scope.includes('category') ? this.getCategory() : undefined,
 			user: scope.includes('user') ? this.getUser() : undefined,
 			markdown: this.loremIpsum.generateSentences(5),
-			createdAt: new Date().toISOString(),
-			updatedAt: new Date().toISOString()
+			createdAt: dayjs().subtract(1, 'day').toISOString(),
+			updatedAt: dayjs().subtract(1, 'day').toISOString()
 		};
 	}
 
@@ -73,8 +74,8 @@ export class SkeletonService {
 			avatar: +customAlphabet('01', 1)() ? './assets/images/placeholder-image.svg' : null,
 			categories: scope.includes('categories') ? this.getCategoryList() : [],
 			posts: scope.includes('posts') ? this.getPostList() : [],
-			createdAt: new Date().toISOString(),
-			updatedAt: new Date().toISOString()
+			createdAt: dayjs().subtract(1, 'day').toISOString(),
+			updatedAt: dayjs().subtract(1, 'day').toISOString()
 		};
 	}
 

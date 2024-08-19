@@ -13,14 +13,11 @@ import { SkeletonDirective } from '../standalone/directives/app-skeleton.directi
 import { SkeletonService } from '../core/services/skeleton.service';
 import homeHighlights from '../../assets/json/home-highlights.json';
 import dayjs from 'dayjs/esm';
-import relativeTime from 'dayjs/esm/plugin/relativeTime';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import type { ManipulateType } from 'dayjs/esm';
 import type { PWAComponent } from '../standalone/components/pwa/pwa.component';
 import type { Insight } from '../core/models/insight.model';
 import type { InsightGetAllDto } from '../core/dto/insight/insight-get-all.dto';
-
-dayjs.extend(relativeTime);
 
 @Component({
 	standalone: true,

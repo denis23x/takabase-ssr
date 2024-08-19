@@ -623,20 +623,24 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.postForm)) {
 			this.postForm.disable();
 
-			// Create or Update
+			// Create Dto or Update Dto
 
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-
+			const postTypeIsPristine: boolean = this.postTypeOriginal === this.postType;
 			const postDto: PostCreateDto & PostUpdateDto = {
 				...this.postForm.value,
 				firebaseUid: this.post?.firebaseUid || undefined
 			};
 
-			const postDeleteDto: PostDeleteDto = {
-				firebaseUid: this.post?.firebaseUid
-			};
+			// Delete Dto
 
-			const postTypeIsPristine: boolean = this.postTypeOriginal === this.postType;
+			const postDeleteDto: PostDeleteDto = {};
+
+			// Attach firebaseUid only if exists
+
+			if (this.post?.firebaseUid) {
+				postDeleteDto.firebaseUid = this.post.firebaseUid;
+			}
 
 			const postTypeMap = (): Observable<Partial<Post>> => {
 				const postService: Record<string, PostPasswordService | PostPrivateService | PostService> = {
@@ -652,7 +656,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 						// prettier-ignore
 						return postService[this.postType]
 							.create(postDto)
-							.pipe(switchMap(() => postService[this.postTypeOriginal].delete(postId, this.helperService.setOmitUndefined(postDeleteDto))));
+							.pipe(switchMap(() => postService[this.postTypeOriginal].delete(postId, postDeleteDto)));
 					}
 				} else {
 					return postService[this.postType].create(postDto);

@@ -32,7 +32,7 @@ import { EmailService } from '../../core/services/email.service';
 import { AuthorizationService } from '../../core/services/authorization.service';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { PlatformService } from '../../core/services/platform.service';
-import { filter } from 'rxjs/operators';
+import { catchError, filter } from 'rxjs/operators';
 import { WindowComponent } from '../../standalone/components/window/window.component';
 import {
 	UserInfo,
@@ -54,6 +54,8 @@ import type { CurrentUser, CurrentUserProviderData } from '../../core/models/cur
 import type { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
 import type { UserPasswordResetComponent } from '../../standalone/components/user/password-reset/password-reset.component';
 import type { UserDeleteComponent } from '../../standalone/components/user/delete/delete.component';
+import type { FirebaseError } from 'firebase/app';
+import { ApiService } from '../../core/services/api.service';
 
 interface EmailAuthProviderForm {
 	email: FormControl<string>;
@@ -99,6 +101,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly emailService: EmailService = inject(EmailService);
+	private readonly apiService: ApiService = inject(ApiService);
 	private readonly passwordService: PasswordService = inject(PasswordService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly router: Router = inject(Router);
@@ -285,33 +288,37 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	onProviderLink(currentUserProviderData: CurrentUserProviderData): void {
 		const authProvider: AuthProvider = this.authorizationService.getAuthProvider(currentUserProviderData.providerId);
 
-		from(linkWithPopup(this.currentUser.firebase, authProvider)).subscribe({
-			next: (userCredential: UserCredential) => {
-				this.authorizationService.setCurrentUser({
-					firebase: userCredential.user
-				});
+		from(linkWithPopup(this.currentUser.firebase, authProvider))
+			.pipe(catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)))
+			.subscribe({
+				next: (userCredential: UserCredential) => {
+					this.authorizationService.setCurrentUser({
+						firebase: userCredential.user
+					});
 
-				this.snackbarService.success('Done', 'This social account has been linked');
-			},
-			error: (error: any) => console.error(error)
-		});
+					this.snackbarService.success('Done', 'This social account has been linked');
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	onProviderUnlink(currentUserProviderData: CurrentUserProviderData): void {
 		this.currentUserProviderDataRequestIsSubmitted.set(currentUserProviderData.providerId);
 
-		from(unlink(this.currentUser.firebase, currentUserProviderData.providerId)).subscribe({
-			next: (firebaseUser: FirebaseUser) => {
-				this.currentUserProviderDataRequestIsSubmitted.set(undefined);
+		from(unlink(this.currentUser.firebase, currentUserProviderData.providerId))
+			.pipe(catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)))
+			.subscribe({
+				next: (firebaseUser: FirebaseUser) => {
+					this.currentUserProviderDataRequestIsSubmitted.set(undefined);
 
-				this.authorizationService.setCurrentUser({
-					firebase: firebaseUser
-				});
+					this.authorizationService.setCurrentUser({
+						firebase: firebaseUser
+					});
 
-				this.snackbarService.warning('Done', 'Sign-in method has been removed');
-			},
-			error: (error: any) => console.error(error)
-		});
+					this.snackbarService.warning('Done', 'Sign-in method has been removed');
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	/** EMAIL AUTH PROVIDER */
@@ -338,7 +345,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitEmailAuthProviderForm(): void {
-		// prettier-ignore
 		if (this.helperService.getFormValidation(this.emailAuthProviderForm)) {
 			this.emailAuthProviderForm.disable();
 
@@ -348,19 +354,21 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			const emailAuthCredential: EmailAuthCredential = EmailAuthProvider.credential(email, password);
 
 			this.emailAuthProviderFormRequest$?.unsubscribe();
-			this.emailAuthProviderFormRequest$ = from(linkWithCredential(this.currentUser.firebase, emailAuthCredential)).subscribe({
-				next: (userCredential: UserCredential) => {
-					this.authorizationService.setCurrentUser({
-						firebase: userCredential.user
-					});
+			this.emailAuthProviderFormRequest$ = from(linkWithCredential(this.currentUser.firebase, emailAuthCredential))
+				.pipe(catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)))
+				.subscribe({
+					next: (userCredential: UserCredential) => {
+						this.authorizationService.setCurrentUser({
+							firebase: userCredential.user
+						});
 
-					this.snackbarService.success('Nice', 'Your credentials have been applied');
+						this.snackbarService.success('Nice', 'Your credentials have been applied');
 
-					this.emailAuthProviderForm.enable();
-					this.emailAuthProviderForm.reset();
-				},
-				error: () => this.emailAuthProviderForm.enable()
-			});
+						this.emailAuthProviderForm.enable();
+						this.emailAuthProviderForm.reset();
+					},
+					error: () => this.emailAuthProviderForm.enable()
+				});
 		}
 	}
 

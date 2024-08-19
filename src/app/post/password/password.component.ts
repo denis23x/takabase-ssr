@@ -72,13 +72,18 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 					const postPasswordCookieValue: string | undefined = this.cookiesService.getItem(postPasswordCookieKey);
 					const postPasswordDecrypt: string | undefined = this.helperService.getDecrypt(postPasswordCookieValue);
 					const postPasswordGetOneDto: PostGetOneDto = {
-						password: postPasswordDecrypt,
 						scope: ['user']
 					};
 
+					// Attach password only if exists
+
+					if (postPasswordDecrypt) {
+						postPasswordGetOneDto.password = postPasswordDecrypt;
+					}
+
 					this.postPasswordRequest$?.unsubscribe();
 					this.postPasswordRequest$ = this.postPasswordService
-						.getOne(postPasswordId, this.helperService.setOmitUndefined(postPasswordGetOneDto))
+						.getOne(postPasswordId, postPasswordGetOneDto)
 						.pipe(
 							catchError((httpErrorResponse: HttpErrorResponse) => {
 								this.cookiesService.removeItem('post-password-' + postPasswordId);
@@ -129,13 +134,18 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 
 				// Receive post password
 
-				this.appPostPasswordComponent.instance.appPostPasswordSuccess.subscribe({
-					next: (postPassword: Post) => {
-						this.postPassword = postPassword;
-						this.postPasswordSkeletonToggle = false;
-					},
-					error: (error: any) => console.error(error)
-				});
+				this.appPostPasswordComponent.instance.appPostPasswordSuccess
+					.pipe(
+						filter((postPassword: Post | null) => !!postPassword),
+						tap((postPassword: Post) => this.postStore.setPost(postPassword))
+					)
+					.subscribe({
+						next: (postPassword: Post) => {
+							this.postPassword = postPassword;
+							this.postPasswordSkeletonToggle = false;
+						},
+						error: (error: any) => console.error(error)
+					});
 			});
 		}
 

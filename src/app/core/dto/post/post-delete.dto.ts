@@ -1,5 +1,5 @@
 /** @format */
 
 export interface PostDeleteDto {
-	firebaseUid: string;
+	firebaseUid?: string;
 }

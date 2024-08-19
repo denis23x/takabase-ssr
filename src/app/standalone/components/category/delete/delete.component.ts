@@ -138,7 +138,7 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 
 			const abstractControl: AbstractControl = this.categoryDeleteForm.get('categoryId');
 
-			// Move posts to another category
+			// Attach firebaseUid only if exists
 
 			if (abstractControl.value) {
 				categoryDeleteDto.categoryId = abstractControl.value;
