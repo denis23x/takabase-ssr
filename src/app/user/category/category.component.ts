@@ -26,7 +26,6 @@ import type { User } from '../../core/models/user.model';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import type { Category } from '../../core/models/category.model';
-import type { CategoryCreateComponent } from '../../standalone/components/category/create/create.component';
 import type { CategoryUpdateComponent } from '../../standalone/components/category/update/update.component';
 import type { CategoryDeleteComponent } from '../../standalone/components/category/delete/delete.component';
 import type { CategoryDeleteDto } from '../../core/dto/category/category-delete.dto';
@@ -86,7 +85,6 @@ export class UserCategoryComponent extends CU(MP(SP(class {}))) implements OnIni
 
 	// Lazy loading
 
-	appCategoryCreateComponent: ComponentRef<CategoryCreateComponent>;
 	appCategoryUpdateComponent: ComponentRef<CategoryUpdateComponent>;
 	appCategoryDeleteComponent: ComponentRef<CategoryDeleteComponent>;
 
@@ -274,21 +272,6 @@ export class UserCategoryComponent extends CU(MP(SP(class {}))) implements OnIni
 	}
 
 	/** LAZY */
-
-	async onToggleCategoryCreateDialog(): Promise<void> {
-		if (!this.appCategoryCreateComponent) {
-			await import('../../standalone/components/category/create/create.component').then(m => {
-				this.appCategoryCreateComponent = this.viewContainerRef.createComponent(m.CategoryCreateComponent);
-				this.appCategoryCreateComponent.instance.appCategoryCreateSuccess.subscribe({
-					next: (category: Category) => this.onCreateCategory(category),
-					error: (error: any) => console.error(error)
-				});
-			});
-		}
-
-		this.appCategoryCreateComponent.changeDetectorRef.detectChanges();
-		this.appCategoryCreateComponent.instance.onToggleCategoryCreateDialog(true);
-	}
 
 	async onToggleCategoryUpdateDialog(): Promise<void> {
 		if (!this.appCategoryUpdateComponent) {

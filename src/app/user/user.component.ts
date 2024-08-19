@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ComponentRef, inject, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -14,7 +14,6 @@ import { SkeletonService } from '../core/services/skeleton.service';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { TitleService } from '../core/services/title.service';
 import { MetaService } from '../core/services/meta.service';
-import { SnackbarService } from '../core/services/snackbar.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { PlatformService } from '../core/services/platform.service';
@@ -23,8 +22,6 @@ import { CategoryService } from '../core/services/category.service';
 import { UserStore } from './user.store';
 import { HelperService } from '../core/services/helper.service';
 import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
-import type { QRCodeComponent } from '../standalone/components/qr-code/qr-code.component';
-import type { ReportComponent } from '../standalone/components/report/report.component';
 import type { User } from '../core/models/user.model';
 import type { Category } from '../core/models/category.model';
 import type { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
@@ -50,7 +47,6 @@ import type { CategoryGetAllDto } from '../core/dto/category/category-get-all.dt
 export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly userService: UserService = inject(UserService);
 	private readonly titleService: TitleService = inject(TitleService);
-	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly platformService: PlatformService = inject(PlatformService);
@@ -59,7 +55,6 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly userStore: UserStore = inject(UserStore);
-	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 	private readonly helperService: HelperService = inject(HelperService);
 
 	@ViewChild('routerLinkActiveBookmark') routerLinkActiveBookmark: RouterLinkActive | undefined;
@@ -79,11 +74,6 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	categoryList: Category[] = [];
 	categoryListRequest$: Subscription | undefined;
 	categoryListSkeletonToggle: boolean = true;
-
-	// Lazy loading
-
-	appQRCodeComponent: ComponentRef<QRCodeComponent>;
-	appReportComponent: ComponentRef<ReportComponent>;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -267,37 +257,5 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 		}
 
 		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter as MetaTwitter);
-	}
-
-	/** LAZY */
-
-	async onToggleReportDialog(): Promise<void> {
-		if (this.currentUser) {
-			if (!this.appReportComponent) {
-				await import('../standalone/components/report/report.component')
-					.then(m => (this.appReportComponent = this.viewContainerRef.createComponent(m.ReportComponent)))
-					.catch((error: any) => console.error(error));
-			}
-
-			this.appReportComponent.setInput('appReportUser', this.user);
-
-			this.appReportComponent.changeDetectorRef.detectChanges();
-			this.appReportComponent.instance.onToggleReportDialog(true);
-		} else {
-			this.snackbarService.warning('Nope', 'Log in before reporting');
-		}
-	}
-
-	async onToggleQRCodeDialog(): Promise<void> {
-		if (!this.appQRCodeComponent) {
-			await import('../standalone/components/qr-code/qr-code.component')
-				.then(m => (this.appQRCodeComponent = this.viewContainerRef.createComponent(m.QRCodeComponent)))
-				.catch((error: any) => console.error(error));
-		}
-
-		this.appQRCodeComponent.setInput('appQRCodeData', this.user.name);
-
-		this.appQRCodeComponent.changeDetectorRef.detectChanges();
-		this.appQRCodeComponent.instance.onToggleQRCodeDialog(true);
 	}
 }

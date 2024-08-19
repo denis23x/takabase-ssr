@@ -68,17 +68,6 @@
 										<button
 											class="rounded-btn block w-full truncate text-right"
 											type="button"
-											title="Create new category"
-											aria-label="Create new category"
-											(click)="onToggleCategoryCreateDialog()"
-										>
-											Create
-										</button>
-									</li>
-									<li class="flex w-full snap-start scroll-my-2">
-										<button
-											class="rounded-btn block w-full truncate text-right"
-											type="button"
 											[title]="'Update: ' + category.name"
 											[attr.aria-label]="'Update: ' + category.name"
 											(click)="onToggleCategoryUpdateDialog()"
