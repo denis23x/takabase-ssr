@@ -137,6 +137,8 @@ export class SearchUserComponent implements OnInit, OnDestroy {
 		const userQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
 		const userIndex: SearchIndex = this.algoliaService.getSearchIndex('user');
 		const userIndexSearch: SearchOptions = {
+			highlightPreTag: '<mark class="bg-success/25 text-success-content">',
+			highlightPostTag: '</mark>',
 			page: (() => (this.userGetAllDto.page = userListLoadMore ? this.userGetAllDto.page + 1 : 0))(),
 			hitsPerPage: this.userGetAllDto.size
 		};

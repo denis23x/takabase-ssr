@@ -44,7 +44,7 @@
 				}
 			}
 			<a
-				class="link link-hover text-base-content text-base font-bold text-ellipsis max-w-full line-clamp-2 sm:line-clamp-none"
+				class="link link-hover text-base-content text-base font-bold text-ellipsis max-w-full"
 				appSkeleton
 				[appSkeletonToggle]="postSkeletonToggle"
 				[routerLink]="postRouterLink"
@@ -52,14 +52,18 @@
 				[title]="post.name"
 				[attr.aria-label]="post.name"
 			>
-				{{ post.name }}
+				@if (post._highlightResult?.name) {
+					<span class="block" [innerHTML]="post._highlightResult.name.value"></span>
+				} @else {
+					<span class="line-clamp-2 sm:line-clamp-none">{{ post.name }}</span>
+				}
 			</a>
-			<p
-				class="text-base-content text-sm line-clamp-3 sm:line-clamp-5"
-				appSkeleton
-				[appSkeletonToggle]="postSkeletonToggle"
-			>
-				{{ post.description }}
+			<p class="text-base-content text-sm" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+				@if (post._highlightResult?.description) {
+					<span class="block" [innerHTML]="post._highlightResult.description.value"></span>
+				} @else {
+					<span class="line-clamp-3 sm:line-clamp-5">{{ post.description }}</span>
+				}
 			</p>
 			@switch (postType) {
 				@case ("test") {

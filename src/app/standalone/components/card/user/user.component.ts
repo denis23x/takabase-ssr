@@ -6,6 +6,12 @@ import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../../avatar/avatar.component';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import type { User } from '../../../../core/models/user.model';
+import type { HighlightResult } from '@algolia/client-search';
+import type { Post } from '../../../../core/models/post.model';
+
+interface UserHighlightResult {
+	_highlightResult: HighlightResult<Pick<Post, 'name'>>;
+}
 
 @Component({
 	standalone: true,
@@ -16,7 +22,7 @@ import type { User } from '../../../../core/models/user.model';
 })
 export class CardUserComponent {
 	@Input({ required: true })
-	set appCardUserUser(user: User) {
+	set appCardUserUser(user: User & Partial<UserHighlightResult>) {
 		this.user = user;
 	}
 
@@ -25,6 +31,6 @@ export class CardUserComponent {
 		this.userSkeletonToggle = userSkeletonToggle;
 	}
 
-	user: User | undefined;
+	user: (User & Partial<UserHighlightResult>) | undefined;
 	userSkeletonToggle: boolean = true;
 }

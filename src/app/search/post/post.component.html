@@ -14,8 +14,10 @@
 								[appCardPostSkeletonToggle]="postListSkeletonToggle"
 								[appCardPostImagePriority]="i <= 1"
 							></li>
-							@if (i !== 0 && i % 8 === 0) {
-								<li class="block row-span-6" appAd></li>
+							@if (!postListSkeletonToggle) {
+								@if (i !== 0 && i % 8 === 0) {
+									<li class="block row-span-6" appAd></li>
+								}
 							}
 						}
 					</ul>

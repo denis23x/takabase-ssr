@@ -14,8 +14,10 @@
 								[appCardCategoryCategory]="category"
 								[appCardCategorySkeletonToggle]="categoryListSkeletonToggle"
 							></li>
-							@if (i !== 0 && i % 8 === 0) {
-								<li class="block row-span-6" appAd></li>
+							@if (!categoryListSkeletonToggle) {
+								@if (i !== 0 && i % 8 === 0) {
+									<li class="block row-span-6" appAd></li>
+								}
 							}
 						}
 					</ul>

@@ -6,6 +6,12 @@ import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../../avatar/avatar.component';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import type { Category } from '../../../../core/models/category.model';
+import type { HighlightResult } from '@algolia/client-search';
+import type { Post } from '../../../../core/models/post.model';
+
+interface CategoryHighlightResult {
+	_highlightResult: HighlightResult<Pick<Post, 'name' | 'description'>>;
+}
 
 @Component({
 	standalone: true,
@@ -16,7 +22,7 @@ import type { Category } from '../../../../core/models/category.model';
 })
 export class CardCategoryComponent {
 	@Input({ required: true })
-	set appCardCategoryCategory(category: Category) {
+	set appCardCategoryCategory(category: Category & Partial<CategoryHighlightResult>) {
 		this.category = category;
 	}
 
@@ -25,6 +31,6 @@ export class CardCategoryComponent {
 		this.categorySkeletonToggle = categorySkeletonToggle;
 	}
 
-	category: Category | undefined;
+	category: (Category & Partial<CategoryHighlightResult>) | undefined;
 	categorySkeletonToggle: boolean = true;
 }

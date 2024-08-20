@@ -11,8 +11,10 @@
 						[appCardUserUser]="user"
 						[appCardUserSkeletonToggle]="userListSkeletonToggle"
 					></li>
-					@if (i !== 0 && i % 8 === 0) {
-						<li class="block" appAd></li>
+					@if (!userListSkeletonToggle) {
+						@if (i !== 0 && i % 8 === 0) {
+							<li class="block" appAd></li>
+						}
 					}
 				}
 			</ul>

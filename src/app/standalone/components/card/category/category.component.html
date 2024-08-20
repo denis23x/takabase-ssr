@@ -36,11 +36,19 @@
 			[title]="category.name"
 			[attr.aria-label]="category.name"
 		>
-			{{ category.name }}
+			@if (category._highlightResult?.name) {
+				<span class="block" [innerHTML]="category._highlightResult.name.value"></span>
+			} @else {
+				<span class="block">{{ category.name }}</span>
+			}
 		</a>
-		@if (category.description) {
-			<p class="text-base-content" appSkeleton [appSkeletonToggle]="categorySkeletonToggle">
-				<span class="text-sm">{{ category.description }}</span>
+		@if (category._highlightResult?.description || category.description) {
+			<p class="text-base-content text-sm" appSkeleton [appSkeletonToggle]="categorySkeletonToggle">
+				@if (category._highlightResult?.description) {
+					<span class="block" [innerHTML]="category._highlightResult.description.value"></span>
+				} @else {
+					<span class="block">{{ category.description }}</span>
+				}
 			</p>
 		}
 	</div>

@@ -140,6 +140,8 @@ export class SearchCategoryComponent implements OnInit, OnDestroy {
 		const categoryQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
 		const categoryIndex: SearchIndex = this.algoliaService.getSearchIndex('category');
 		const categoryIndexSearch: SearchOptions = {
+			highlightPreTag: '<mark class="bg-success/25 text-success-content">',
+			highlightPostTag: '</mark>',
 			page: (() => (this.categoryGetAllDto.page = categoryListLoadMore ? this.categoryGetAllDto.page + 1 : 0))(),
 			hitsPerPage: this.categoryGetAllDto.size
 		};

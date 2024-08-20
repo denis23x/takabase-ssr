@@ -8,6 +8,11 @@ import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { FirebaseStoragePipe } from '../../../pipes/firebase-storage.pipe';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import type { Post } from '../../../../core/models/post.model';
+import type { HighlightResult } from '@algolia/client-search';
+
+interface PostHighlightResult {
+	_highlightResult: HighlightResult<Pick<Post, 'name' | 'description'>>;
+}
 
 @Component({
 	standalone: true,
@@ -26,7 +31,7 @@ import type { Post } from '../../../../core/models/post.model';
 })
 export class CardPostComponent {
 	@Input({ required: true })
-	set appCardPostPost(post: Post) {
+	set appCardPostPost(post: Post & Partial<PostHighlightResult>) {
 		this.post = post;
 		this.postRouterLink.push(String(this.post.id));
 	}
@@ -47,7 +52,7 @@ export class CardPostComponent {
 		this.postSkeletonToggle = postSkeletonToggle;
 	}
 
-	post: Post | undefined;
+	post: (Post & Partial<PostHighlightResult>) | undefined;
 	postType: string = 'public';
 	postImagePriority: boolean = false;
 	postSkeletonToggle: boolean = true;
