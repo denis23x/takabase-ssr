@@ -70,7 +70,7 @@ export class SkeletonService {
 		return {
 			id: Number(customAlphabet(numbers, 8)()),
 			name: this.loremIpsum.generateWords(1),
-			description: this.loremIpsum.generateSentences(1),
+			description: this.loremIpsum.generateWords(3),
 			avatar: +customAlphabet('01', 1)() ? './assets/images/placeholder-image.svg' : null,
 			categories: scope.includes('categories') ? this.getCategoryList() : [],
 			posts: scope.includes('posts') ? this.getPostList() : [],

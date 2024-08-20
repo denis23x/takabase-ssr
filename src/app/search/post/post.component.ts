@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { BehaviorSubject, distinctUntilKeyChanged, from, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, distinctUntilKeyChanged, from, fromEvent, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { SkeletonService } from '../../core/services/skeleton.service';
@@ -15,6 +15,7 @@ import { AlgoliaService } from '../../core/services/algolia.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { CookiesService } from '../../core/services/cookies.service';
+import { map } from 'rxjs/operators';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import type { SearchIndex } from 'algoliasearch/lite';
@@ -92,6 +93,23 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
+
+		/** Masonry re-render */
+
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
+			this.resize$?.unsubscribe();
+			this.resize$ = fromEvent(window, 'resize')
+				.pipe(
+					map(() => this.platformService.getBreakpoint()),
+					distinctUntilChanged()
+				)
+				.subscribe({
+					next: () => this.setPostListMasonry(),
+					error: (error: any) => console.error(error)
+				});
+		}
 	}
 
 	ngOnDestroy(): void {

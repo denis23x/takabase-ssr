@@ -4,18 +4,17 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { RouterModule } from '@angular/router';
 import { AvatarComponent } from '../../avatar/avatar.component';
-import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import type { User } from '../../../../core/models/user.model';
 import type { HighlightResult } from '@algolia/client-search';
 import type { Post } from '../../../../core/models/post.model';
 
 interface UserHighlightResult {
-	_highlightResult: HighlightResult<Pick<Post, 'name'>>;
+	_highlightResult: HighlightResult<Pick<Post, 'name' | 'description'>>;
 }
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, SkeletonDirective, AvatarComponent, DayjsPipe],
+	imports: [RouterModule, SkeletonDirective, AvatarComponent],
 	selector: 'app-card-user, [appCardUser]',
 	templateUrl: './user.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

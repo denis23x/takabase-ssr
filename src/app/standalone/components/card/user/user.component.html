@@ -18,7 +18,7 @@
 		</a>
 		<div class="flex flex-col items-start justify-start gap-2">
 			<a
-				class="link link-hover text-base-content leading-5 max-w-full text-base font-bold"
+				class="link link-hover text-base-content leading-6 max-w-full text-base font-bold"
 				appSkeleton
 				[appSkeletonToggle]="userSkeletonToggle"
 				[routerLink]="['/', user.name]"
@@ -26,19 +26,21 @@
 				[attr.aria-label]="user.name"
 			>
 				@if (user._highlightResult?.name) {
-					<span class="block" [innerHTML]="user._highlightResult.name.value"></span>
+					<span class="block overflow-hidden text-ellipsis" [innerHTML]="user._highlightResult.name.value"></span>
 				} @else {
-					<span class="block">{{ user.name }}</span>
+					<span class="block overflow-hidden text-ellipsis">{{ user.name }}</span>
 				}
 			</a>
-			<time
-				class="text-xs leading text-base-content/50"
-				appSkeleton
-				[appSkeletonToggle]="userSkeletonToggle"
-				[attr.datetime]="user.createdAt | dayjs: 'format' : 'YYYY-M-D'"
-			>
-				Registered {{ user.createdAt | dayjs: "fromNow" }}
-			</time>
+			@if (user._highlightResult?.description || user.description) {
+				<hr class="border-t border-base-content/20 w-full" />
+				<p class="text-base-content text-sm" appSkeleton [appSkeletonToggle]="userSkeletonToggle">
+					@if (user._highlightResult?.description) {
+						<span class="block" [innerHTML]="user._highlightResult.description.value"></span>
+					} @else {
+						<span class="block">{{ user.description }}</span>
+					}
+				</p>
+			}
 		</div>
 	</div>
 </ng-container>

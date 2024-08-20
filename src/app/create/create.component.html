@@ -2,440 +2,472 @@
 
 <ng-container>
 	<div class="flex flex-col gap-4 md:gap-8">
-		<div
-			class="rounded-box flex w-full flex-col items-stretch gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-		>
-			<div class="flex flex-row w-full items-center justify-between gap-4">
-				<div class="flex items-center justify-start gap-4 overflow-auto w-full">
-					<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle || postFormImageIsSubmitted()">
-						@if (postForm.get("image"); as image) {
+		<div class="flex flex-col gap-4 rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl">
+			<p class="alert" role="alert">
+				<i class="fill-current text-info" appSvgIcon [appSvgIconIcon]="'info-circle'" [appSvgIconSquare]="'1.5em'"></i>
+				<span class="block">
+					Please be respectful and follow good manners, post messages and images with good taste
+				</span>
+			</p>
+			<hr class="w-full border-base-content/20" />
+			<div class="flex flex-col sm:flex-row items-stretch sm:gap-x-4 sm:-mt-1 w-full">
+				@if (postForm.get("image"); as image) {
+					<div class="flex items-center justify-between gap-4 border-b border-base-content/20 pb-4 sm:pb-0 sm:border-0">
+						<fieldset class="form-control">
+							<label class="hidden sm:flex label">
+								<div
+									class="indicator"
+									appSkeleton
+									[appSkeletonToggle]="postSkeletonToggle || postFormImageIsSubmitted()"
+									[appSkeletonClassListElementRef]="['!-mx-1']"
+								>
+									<span class="label-text">Image</span>
+								</div>
+							</label>
 							<!-- prettier-ignore -->
 							<figure
-                class="block rounded-btn relative border border-base-content/20 h-12 w-12 overflow-hidden transition"
-                [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-300': postForm.disabled, 'cursor-pointer': postForm.enabled, 'border-success': image.value }"
-                (click)="postForm.enabled ? onToggleCropperDialog(true) : false"
+                appSkeleton
+                class="flex items-center justify-center border border-base-content/20 rounded-btn h-12 w-12 sm:h-36 sm:w-36 overflow-hidden"
+                [appSkeletonToggle]="postSkeletonToggle || postFormImageIsSubmitted()"
+                [appSkeletonClassListElementRef]="['border-transparent']"
+                [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-200': postForm.disabled, 'border-success': image.value }"
               >
-                @switch (true) {
-                  @case (!!image.value === true) {
+                @if (image.value) {
+                  <div class="relative w-full h-full group">
                     <img
-                      class="block bg-base-300 object-cover object-center"
-                      width="48"
-                      height="48"
+                      class="block bg-base-200 object-cover object-center"
+                      [fill]="true"
                       [alt]="'Image'"
                       [priority]="true"
                       [ngSrc]="image.value | firebaseStorage"
                     />
-                  }
-                  @case (!!image.value === false) {
-                    <i
-                      class="fill-current text-base-content absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                      appSvgIcon
-                      [appSvgIconIcon]="'plus'"
-                      [appSvgIconSquare]="'2em'"
-                    ></i>
-                  }
+                    @if (postForm.enabled) {
+                      <div class="opacity-0 group-hover:opacity-100 bg-base-100/75 absolute inset-0 backdrop-blur-sm hidden sm:flex items-center justify-center">
+                        <button
+                          class="btn-sm btn-circle btn btn-success fill-current"
+                          type="button"
+                          title="Delete image"
+                          aria-label="Delete image"
+                          appSvgIcon
+                          [disabled]="postForm.disabled"
+                          [appSvgIconIcon]="'x'"
+                          [appSvgIconSquare]="'2em'"
+                          (click)="onUpdateCropperImage(null)"
+                        ></button>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <button
+                    class="flex items-center justify-center w-12 h-12 sm:bg-base-200 sm:rounded-full sm:active:scale-95 sm:hover:bg-base-300 transition fill-current"
+                    type="button"
+                    title="Add image"
+                    aria-label="Add image"
+                    appSvgIcon
+                    [disabled]="postForm.disabled"
+                    [appSvgIconIcon]="'plus'"
+                    [appSvgIconSquare]="'2em'"
+                    (click)="postForm.enabled ? onToggleCropperDialog(true) : false"
+                  ></button>
                 }
               </figure>
-						}
-					</div>
-					<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
-						<span
-							class="truncate text-xl leading-6 font-bold text-base-content max-w-full"
+						</fieldset>
+						<div class="flex sm:hidden flex-col gap-2 items-start w-full overflow-hidden">
+							<span
+								class="truncate text-lg leading-6 font-bold text-base-content max-w-full"
+								appSkeleton
+								[appSkeletonToggle]="postSkeletonToggle"
+							>
+								Image
+							</span>
+							<p
+								class="truncate text-sm leading-4 text-base-content/50 max-w-full"
+								appSkeleton
+								[appSkeletonToggle]="postSkeletonToggle"
+							>
+								Not required
+							</p>
+						</div>
+						<div
+							class="flex sm:hidden items-center justify-end"
+							appDropdown
 							appSkeleton
 							[appSkeletonToggle]="postSkeletonToggle"
+							[appDropdownPlacement]="'bottom-end'"
 						>
-							Image
-						</span>
-						<p
-							class="truncate text-sm leading-4 text-base-content/50 max-w-full"
-							appSkeleton
-							[appSkeletonToggle]="postSkeletonToggle"
-						>
-							Upload post image
-						</p>
-					</div>
-				</div>
-				@if (postForm.get("image"); as image) {
-					<div
-						class="flex items-center justify-end"
-						appDropdown
-						appSkeleton
-						[appSkeletonToggle]="postSkeletonToggle"
-						[appDropdownPlacement]="'bottom-end'"
-					>
-						<button
-							class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
-							type="button"
-							title="Image menu"
-							aria-label="Image menu"
-							appSvgIcon
-							slot="target"
-							[disabled]="postForm.disabled"
-							[appSvgIconIcon]="'three-dots-vertical'"
-							[appSvgIconSquare]="'1.5em'"
-						></button>
-						<ul class="menu menu-vertical menu-md" slot="content">
-							<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Image</li>
-							<li class="flex w-full snap-start scroll-my-2">
-								<button
-									class="rounded-btn block w-full truncate text-right"
-									type="button"
-									[title]="(image.value ? 'Update' : 'Upload') + ' image'"
-									[attr.aria-label]="(image.value ? 'Update' : 'Upload') + ' image'"
-									(click)="onToggleCropperDialog(true)"
-								>
-									{{ image.value ? "Update" : "Upload" }}
-								</button>
-							</li>
-							@if (image.value) {
+							<button
+								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
+								type="button"
+								title="Image menu"
+								aria-label="Image menu"
+								appSvgIcon
+								slot="target"
+								[disabled]="postForm.disabled"
+								[appSvgIconIcon]="'three-dots-vertical'"
+								[appSvgIconSquare]="'1.5em'"
+							></button>
+							<ul class="menu menu-vertical menu-md" slot="content">
+								<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Image</li>
 								<li class="flex w-full snap-start scroll-my-2">
 									<button
 										class="rounded-btn block w-full truncate text-right"
 										type="button"
-										title="Delete image"
-										aria-label="Delete image"
-										(click)="onUpdateCropperImage(null)"
+										[title]="(image.value ? 'Update' : 'Upload') + ' image'"
+										[attr.aria-label]="(image.value ? 'Update' : 'Upload') + ' image'"
+										(click)="onToggleCropperDialog(true)"
 									>
-										Delete
+										{{ image.value ? "Update" : "Upload" }}
 									</button>
 								</li>
-							}
-						</ul>
+								@if (image.value) {
+									<li class="flex w-full snap-start scroll-my-2">
+										<button
+											class="rounded-btn block w-full truncate text-right"
+											type="button"
+											title="Delete image"
+											aria-label="Delete image"
+											(click)="onUpdateCropperImage(null)"
+										>
+											Delete
+										</button>
+									</li>
+								}
+							</ul>
+						</div>
 					</div>
 				}
-			</div>
-			<hr class="w-full border-base-content/20" />
-			<form class="grid flex-1 grid-cols-12 gap-x-4 gap-y-2" autocomplete="off" [formGroup]="postForm">
-				@if (postForm.get("name"); as name) {
-					<fieldset class="form-control items-start col-span-12 sm:col-span-6">
-						<label class="label" for="postFormName">
-							<div
-								class="indicator"
-								appSkeleton
-								[appSkeletonToggle]="postSkeletonToggle"
-								[appSkeletonClassListElementRef]="['!-mx-1']"
-							>
-								@if (name.touched && !!name.errors && postForm.enabled) {
-									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
+				<form class="grid flex-1 items-stretch grid-cols-12 gap-x-4" autocomplete="off" [formGroup]="postForm">
+					@if (postForm.get("name"); as name) {
+						<fieldset class="form-control items-start self-start col-span-12 sm:col-span-6">
+							<label class="label" for="postFormName">
+								<div
+									class="indicator"
+									appSkeleton
+									[appSkeletonToggle]="postSkeletonToggle"
+									[appSkeletonClassListElementRef]="['!-mx-1']"
+								>
+									@if (name.touched && !!name.errors && postForm.enabled) {
+										<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
+									}
+									<span class="label-text mr-2">Name</span>
+								</div>
+							</label>
+							<div class="relative w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+								<input
+									class="input-bordered input input-md w-full"
+									id="postFormName"
+									type="text"
+									title="Name"
+									aria-label="Name"
+									autocomplete="off"
+									placeholder="Type post name"
+									formControlName="name"
+									appInputTrimWhitespace
+									[class.input-success]="name.value && name.valid"
+									[class.input-error]="name.touched && name.invalid"
+								/>
+								@if (name.value) {
+									<button
+										class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+										type="button"
+										title="Clear input"
+										aria-label="Clear input"
+										appSvgIcon
+										[class.btn-success]="name.valid"
+										[class.btn-error]="name.touched && name.invalid"
+										[class.btn-ghost]="name.untouched && name.invalid"
+										[disabled]="postForm.disabled"
+										[appSvgIconIcon]="'x'"
+										[appSvgIconSquare]="'2em'"
+										(click)="name.setValue('')"
+									></button>
 								}
-								<span class="label-text mr-2">Name</span>
 							</div>
-						</label>
-						<div class="relative w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-							<input
-								class="input-bordered input input-md w-full"
-								id="postFormName"
-								type="text"
-								title="Name"
-								aria-label="Name"
-								autocomplete="off"
-								placeholder="Type post name"
-								formControlName="name"
-								appInputTrimWhitespace
-								[class.input-success]="name.value && name.valid"
-								[class.input-error]="name.touched && name.invalid"
-							/>
-							@if (name.value) {
-								<button
-									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-									type="button"
-									title="Clear input"
-									aria-label="Clear input"
-									appSvgIcon
-									[class.btn-success]="name.valid"
-									[class.btn-error]="name.touched && name.invalid"
-									[class.btn-ghost]="name.untouched && name.invalid"
-									[disabled]="postForm.disabled"
-									[appSvgIconIcon]="'x'"
-									[appSvgIconSquare]="'2em'"
-									(click)="name.setValue('')"
-								></button>
+						</fieldset>
+					}
+					<div class="col-span-12 flex self-start items-end justify-end gap-4 sm:col-span-6">
+						@switch (postType) {
+							@case ("password") {
+								@if (postForm.get("password"); as password) {
+									<fieldset class="form-control items-start w-full">
+										<label class="label" for="postFormPassword">
+											<div
+												class="indicator"
+												appSkeleton
+												[appSkeletonToggle]="postSkeletonToggle"
+												[appSkeletonClassListElementRef]="['!-mx-1']"
+											>
+												@if (password.touched && !!password.errors && postForm.enabled) {
+													<div class="block" appBadgeError [appBadgeErrorAbstractControl]="password"></div>
+												}
+												<span class="label-text mr-2">Password</span>
+											</div>
+										</label>
+										<div class="block w-full relative" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+											<input
+												class="input input-bordered input-md w-full truncate"
+												id="postFormPassword"
+												type="password"
+												title="Password"
+												aria-label="Password"
+												autocomplete="new-password"
+												formControlName="password"
+												placeholder="Type post password"
+												appInputTrimWhitespace
+												#postFormPassword
+												[class.input-success]="password.value && password.valid"
+												[class.input-error]="password.touched && password.invalid"
+											/>
+											@if (password.value) {
+												<button
+													class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+													type="button"
+													title="Show password"
+													aria-label="Show password"
+													appSvgIcon
+													[disabled]="postForm.disabled"
+													[class.btn-success]="password.valid"
+													[class.btn-error]="password.touched && password.invalid"
+													[class.btn-ghost]="password.untouched && password.invalid"
+													[appSvgIconIcon]="postFormPassword.type === 'text' ? 'eye-slash' : 'eye'"
+													[appSvgIconSquare]="'1.5em'"
+													(click)="postFormPassword.type = postFormPassword.type === 'text' ? 'password' : 'text'"
+												></button>
+											}
+										</div>
+									</fieldset>
+								}
 							}
-						</div>
-					</fieldset>
-				}
-				<div class="col-span-12 flex items-end justify-end gap-4 sm:col-span-6">
-					@switch (postType) {
-						@case ("password") {
-							@if (postForm.get("password"); as password) {
+							@case ("private") {
 								<fieldset class="form-control items-start w-full">
-									<label class="label" for="postFormPassword">
+									<label class="label" for="postFormPrivate">
 										<div
 											class="indicator"
 											appSkeleton
 											[appSkeletonToggle]="postSkeletonToggle"
 											[appSkeletonClassListElementRef]="['!-mx-1']"
 										>
-											@if (password.touched && !!password.errors && postForm.enabled) {
-												<div class="block" appBadgeError [appBadgeErrorAbstractControl]="password"></div>
-											}
-											<span class="label-text mr-2">Password</span>
+											<span class="label-text mr-2">Private</span>
 										</div>
 									</label>
 									<div class="block w-full relative" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 										<input
 											class="input input-bordered input-md w-full truncate"
-											id="postFormPassword"
-											type="password"
-											title="Password"
-											aria-label="Password"
-											autocomplete="new-password"
-											formControlName="password"
-											placeholder="Type post password"
-											appInputTrimWhitespace
-											#postFormPassword
-											[class.input-success]="password.value && password.valid"
-											[class.input-error]="password.touched && password.invalid"
-										/>
-										@if (password.value) {
-											<button
-												class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-												type="button"
-												title="Show password"
-												aria-label="Show password"
-												appSvgIcon
-												[disabled]="postForm.disabled"
-												[class.btn-success]="password.valid"
-												[class.btn-error]="password.touched && password.invalid"
-												[class.btn-ghost]="password.untouched && password.invalid"
-												[appSvgIconIcon]="postFormPassword.type === 'text' ? 'eye-slash' : 'eye'"
-												[appSvgIconSquare]="'1.5em'"
-												(click)="postFormPassword.type = postFormPassword.type === 'text' ? 'password' : 'text'"
-											></button>
-										}
-									</div>
-								</fieldset>
-							}
-						}
-						@case ("private") {
-							<fieldset class="form-control items-start w-full">
-								<label class="label" for="postFormPrivate">
-									<div
-										class="indicator"
-										appSkeleton
-										[appSkeletonToggle]="postSkeletonToggle"
-										[appSkeletonClassListElementRef]="['!-mx-1']"
-									>
-										<span class="label-text mr-2">Private</span>
-									</div>
-								</label>
-								<div class="block w-full relative" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-									<input
-										class="input input-bordered input-md w-full truncate"
-										id="postFormPrivate"
-										type="text"
-										title="Type"
-										aria-label="Type"
-										placeholder="Available only for you"
-										disabled
-									/>
-								</div>
-							</fieldset>
-						}
-						@default {
-							@if (postForm.get("categoryName"); as categoryName) {
-								<fieldset class="form-control items-start w-full">
-									<label class="label" for="postFormCategoryName">
-										<div
-											class="indicator"
-											appSkeleton
-											[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
-											[appSkeletonClassListElementRef]="['!-mx-1']"
-										>
-											@if (categoryName.touched && !!categoryName.errors && postForm.enabled) {
-												<div class="block" appBadgeError [appBadgeErrorAbstractControl]="categoryName"></div>
-											}
-											<span class="label-text mr-2">Category</span>
-										</div>
-									</label>
-									<div
-										class="block w-full relative"
-										appSkeleton
-										appDropdown
-										[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
-										[appDropdownFit]="true"
-										[class.cursor-not-allowed]="postForm.disabled"
-										(appDropdownToggle)="onToggleCategory($event)"
-									>
-										<input
-											class="input input-bordered input-md w-full cursor-pointer truncate"
-											id="postFormCategoryName"
+											id="postFormPrivate"
 											type="text"
-											title="Category"
-											aria-label="Category"
-											placeholder="Select post category"
-											formControlName="categoryName"
-											slot="target"
-											readonly
-											[class.input-success]="categoryName.touched && categoryName.value"
-											[class.input-error]="categoryName.touched && categoryName.invalid"
+											title="Type"
+											aria-label="Type"
+											placeholder="Available only for you"
+											disabled
 										/>
-										<div class="menu menu-vertical menu-md p-0" slot="content">
-											<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
-												<li class="flex w-full snap-start scroll-my-2">
-													<button
-														class="rounded-btn flex items-center justify-start gap-2 w-full text-base-content truncate"
-														type="button"
-														title="Create new category"
-														aria-label="Create new category"
-														(click)="onToggleCategoryCreateDialog()"
-													>
-														<i
-															class="fill-current"
-															appSvgIcon
-															[appSvgIconIcon]="'folder-plus'"
-															[appSvgIconSquare]="'1.5em'"
-														></i>
-														<span class="block text-sm">Create new</span>
-													</button>
-												</li>
-												<li class="flex w-full snap-start scroll-my-2 menu-title">
-													<hr class="my-0 border-base-content/20" />
-												</li>
-												@for (category of categoryList; track category.id) {
-													<li class="flex w-full snap-start scroll-my-2">
-														<button
-															class="rounded-btn block w-full truncate text-left"
-															type="button"
-															appScrollPreset
-															[appScrollPresetActive]="categoryName.value === category.name"
-															[class.active]="categoryName.value === category.name"
-															[title]="category.name"
-															[attr.aria-label]="category.name"
-															(click)="onSelectCategory(category)"
-														>
-															{{ category.name }}
-														</button>
-													</li>
-												} @empty {
-													<li class="flex w-full snap-start scroll-my-2">
-														<button
-															class="rounded-btn block w-full truncate pointer-events-none text-base-content/50"
-															type="button"
-															title="Categories not found"
-															aria-label="Categories not found"
-														>
-															Categories not found
-														</button>
-													</li>
-												}
-											</ul>
-										</div>
 									</div>
 								</fieldset>
 							}
-						}
-					}
-					<div
-						class="flex p-0 relative"
-						appDropdown
-						appSkeleton
-						[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
-						[appDropdownPlacement]="'bottom-end'"
-					>
-						<button
-							class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
-							type="button"
-							title="Category menu"
-							aria-label="Category menu"
-							appSvgIcon
-							slot="target"
-							[disabled]="postForm.disabled"
-							[appSvgIconIcon]="'gear'"
-							[appSvgIconSquare]="'1.5em'"
-						></button>
-						<ul class="menu menu-vertical menu-md" slot="content">
-							<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Type</li>
-							<li class="flex w-full snap-start scroll-my-2">
-								<button
-									class="rounded-btn block w-full truncate text-right"
-									type="button"
-									title="Public available post"
-									aria-label="Public available post"
-									[class.active]="postType === 'public'"
-									(click)="onChangePostType('public')"
-								>
-									Category
-								</button>
-							</li>
-							<li class="flex w-full snap-start scroll-my-2 menu-title">
-								<hr class="my-0 border-base-content/20" />
-							</li>
-							<li class="flex w-full snap-start scroll-my-2">
-								<button
-									class="rounded-btn block w-full truncate text-right"
-									type="button"
-									title="Hidden post available with password"
-									aria-label="Hidden post available with password"
-									[class.active]="postType === 'password'"
-									(click)="onChangePostType('password')"
-								>
-									Password
-								</button>
-							</li>
-							<li class="flex w-full snap-start scroll-my-2">
-								<button
-									class="rounded-btn block w-full truncate text-right"
-									type="button"
-									title="Private post"
-									aria-label="Private post"
-									[class.active]="postType === 'private'"
-									(click)="onChangePostType('private')"
-								>
-									Private
-								</button>
-							</li>
-						</ul>
-					</div>
-				</div>
-				@if (postForm.get("description"); as description) {
-					<fieldset class="form-control items-start col-span-12 sm:col-span-12">
-						<label class="label" for="postFormDescription">
-							<div
-								class="indicator"
-								appSkeleton
-								[appSkeletonToggle]="postSkeletonToggle"
-								[appSkeletonClassListElementRef]="['!-mx-1']"
-							>
-								@if (description.touched && !!description.errors && postForm.enabled) {
-									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
+							@default {
+								@if (postForm.get("categoryName"); as categoryName) {
+									<fieldset class="form-control items-start w-full">
+										<label class="label" for="postFormCategoryName">
+											<div
+												class="indicator"
+												appSkeleton
+												[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
+												[appSkeletonClassListElementRef]="['!-mx-1']"
+											>
+												@if (categoryName.touched && !!categoryName.errors && postForm.enabled) {
+													<div class="block" appBadgeError [appBadgeErrorAbstractControl]="categoryName"></div>
+												}
+												<span class="label-text mr-2">Category</span>
+											</div>
+										</label>
+										<div
+											class="block w-full relative"
+											appSkeleton
+											appDropdown
+											[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
+											[appDropdownFit]="true"
+											[class.cursor-not-allowed]="postForm.disabled"
+											(appDropdownToggle)="onToggleCategory($event)"
+										>
+											<input
+												class="input input-bordered input-md w-full cursor-pointer truncate"
+												id="postFormCategoryName"
+												type="text"
+												title="Category"
+												aria-label="Category"
+												placeholder="Select post category"
+												formControlName="categoryName"
+												slot="target"
+												readonly
+												[class.input-success]="categoryName.touched && categoryName.value"
+												[class.input-error]="categoryName.touched && categoryName.invalid"
+											/>
+											<div class="menu menu-vertical menu-md p-0" slot="content">
+												<ul class="flex max-h-76 flex-col overflow-y-auto w-full snap-mandatory snap-y p-2">
+													<li class="flex w-full snap-start scroll-my-2">
+														<button
+															class="rounded-btn flex items-center justify-start gap-2 w-full text-base-content truncate"
+															type="button"
+															title="Create new category"
+															aria-label="Create new category"
+															(click)="onToggleCategoryCreateDialog()"
+														>
+															<i
+																class="fill-current"
+																appSvgIcon
+																[appSvgIconIcon]="'folder-plus'"
+																[appSvgIconSquare]="'1.5em'"
+															></i>
+															<span class="block text-sm">Create new</span>
+														</button>
+													</li>
+													<li class="flex w-full snap-start scroll-my-2 menu-title">
+														<hr class="my-0 border-base-content/20" />
+													</li>
+													@for (category of categoryList; track category.id) {
+														<li class="flex w-full snap-start scroll-my-2">
+															<button
+																class="rounded-btn block w-full truncate text-left"
+																type="button"
+																appScrollPreset
+																[appScrollPresetActive]="categoryName.value === category.name"
+																[class.active]="categoryName.value === category.name"
+																[title]="category.name"
+																[attr.aria-label]="category.name"
+																(click)="onSelectCategory(category)"
+															>
+																{{ category.name }}
+															</button>
+														</li>
+													} @empty {
+														<li class="flex w-full snap-start scroll-my-2">
+															<button
+																class="rounded-btn block w-full truncate pointer-events-none text-base-content/50"
+																type="button"
+																title="Categories not found"
+																aria-label="Categories not found"
+															>
+																Categories not found
+															</button>
+														</li>
+													}
+												</ul>
+											</div>
+										</div>
+									</fieldset>
 								}
-								<span class="label-text mr-2">Description</span>
-							</div>
-						</label>
-						<div class="relative w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-							<input
-								class="input-bordered input input-md w-full"
-								id="postFormDescription"
-								type="text"
-								title="Description"
-								aria-label="Description"
-								placeholder="Type post description"
-								formControlName="description"
-								appInputTrimWhitespace
-								[class.input-success]="description.value && description.valid"
-								[class.input-error]="description.touched && description.invalid"
-							/>
-							@if (description.value) {
-								<button
-									class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
-									type="button"
-									title="Clear input"
-									aria-label="Clear input"
-									appSvgIcon
-									[class.btn-success]="description.valid"
-									[class.btn-error]="description.touched && description.invalid"
-									[class.btn-ghost]="description.untouched && description.invalid"
-									[disabled]="postForm.disabled"
-									[appSvgIconIcon]="'x'"
-									[appSvgIconSquare]="'2em'"
-									(click)="description.setValue('')"
-								></button>
 							}
+						}
+						<div
+							class="flex p-0 relative"
+							appDropdown
+							appSkeleton
+							[appSkeletonToggle]="postSkeletonToggle || categorySkeletonToggle || categoryListSkeletonToggle"
+							[appDropdownPlacement]="'bottom-end'"
+						>
+							<button
+								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
+								type="button"
+								title="Category menu"
+								aria-label="Category menu"
+								appSvgIcon
+								slot="target"
+								[disabled]="postForm.disabled"
+								[appSvgIconIcon]="'gear'"
+								[appSvgIconSquare]="'1.5em'"
+							></button>
+							<ul class="menu menu-vertical menu-md" slot="content">
+								<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Type</li>
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										type="button"
+										title="Public available post"
+										aria-label="Public available post"
+										[class.active]="postType === 'public'"
+										(click)="onChangePostType('public')"
+									>
+										Category
+									</button>
+								</li>
+								<li class="flex w-full snap-start scroll-my-2 menu-title">
+									<hr class="my-0 border-base-content/20" />
+								</li>
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										type="button"
+										title="Hidden post available with password"
+										aria-label="Hidden post available with password"
+										[class.active]="postType === 'password'"
+										(click)="onChangePostType('password')"
+									>
+										Password
+									</button>
+								</li>
+								<li class="flex w-full snap-start scroll-my-2">
+									<button
+										class="rounded-btn block w-full truncate text-right"
+										type="button"
+										title="Private post"
+										aria-label="Private post"
+										[class.active]="postType === 'private'"
+										(click)="onChangePostType('private')"
+									>
+										Private
+									</button>
+								</li>
+							</ul>
 						</div>
-					</fieldset>
-				}
-			</form>
+					</div>
+					@if (postForm.get("description"); as description) {
+						<fieldset class="form-control self-end items-start col-span-12 sm:col-span-12">
+							<label class="label" for="postFormDescription">
+								<div
+									class="indicator"
+									appSkeleton
+									[appSkeletonToggle]="postSkeletonToggle"
+									[appSkeletonClassListElementRef]="['!-mx-1']"
+								>
+									@if (description.touched && !!description.errors && postForm.enabled) {
+										<div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
+									}
+									<span class="label-text mr-2">Description</span>
+								</div>
+							</label>
+							<div class="relative w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+								<input
+									class="input-bordered input input-md w-full"
+									id="postFormDescription"
+									type="text"
+									title="Description"
+									aria-label="Description"
+									placeholder="Type post description"
+									formControlName="description"
+									appInputTrimWhitespace
+									[class.input-success]="description.value && description.valid"
+									[class.input-error]="description.touched && description.invalid"
+								/>
+								@if (description.value) {
+									<button
+										class="btn-sm btn-circle btn absolute right-2 top-2 fill-current"
+										type="button"
+										title="Clear input"
+										aria-label="Clear input"
+										appSvgIcon
+										[class.btn-success]="description.valid"
+										[class.btn-error]="description.touched && description.invalid"
+										[class.btn-ghost]="description.untouched && description.invalid"
+										[disabled]="postForm.disabled"
+										[appSvgIconIcon]="'x'"
+										[appSvgIconSquare]="'2em'"
+										(click)="description.setValue('')"
+									></button>
+								}
+							</div>
+						</fieldset>
+					}
+				</form>
+			</div>
 		</div>
 		<div
 			class="z-10 flex flex-col gap-4 bg-base-100 transition-all duration-200 p-4"

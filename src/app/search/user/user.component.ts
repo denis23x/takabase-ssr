@@ -8,7 +8,7 @@ import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { CardUserComponent } from '../../standalone/components/card/user/user.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
-import { BehaviorSubject, distinctUntilKeyChanged, from, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, distinctUntilKeyChanged, from, fromEvent, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { AuthenticatedComponent } from '../../standalone/components/authenticated/authenticated.component';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
@@ -18,6 +18,7 @@ import { AlgoliaService } from '../../core/services/algolia.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { CookiesService } from '../../core/services/cookies.service';
+import { map } from 'rxjs/operators';
 import type { User } from '../../core/models/user.model';
 import type { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 import type { SearchIndex } from 'algoliasearch/lite';
@@ -55,6 +56,10 @@ export class SearchUserComponent implements OnInit, OnDestroy {
 	private readonly cookiesService: CookiesService = inject(CookiesService);
 
 	activatedRouteQueryParams$: Subscription | undefined;
+	resize$: Subscription | undefined;
+
+	masonryColumns: User[][] = [];
+	masonryColumnsWeights: number[] = [];
 
 	userList: User[] = [];
 	userListSkeletonToggle: boolean = true;
@@ -94,15 +99,37 @@ export class SearchUserComponent implements OnInit, OnDestroy {
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
+
+		/** Masonry re-render */
+
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
+			this.resize$?.unsubscribe();
+			this.resize$ = fromEvent(window, 'resize')
+				.pipe(
+					map(() => this.platformService.getBreakpoint()),
+					distinctUntilChanged()
+				)
+				.subscribe({
+					next: () => this.setUserListMasonry(),
+					error: (error: any) => console.error(error)
+				});
+		}
 	}
 
 	ngOnDestroy(): void {
-		[this.activatedRouteQueryParams$, this.userListRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.activatedRouteQueryParams$, this.userListRequest$, this.resize$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {
 		this.userList = this.skeletonService.getUserList();
 		this.userListSkeletonToggle = true;
+
+		if (this.platformService.isBrowser()) {
+			this.setUserListMasonry();
+		}
 	}
 
 	setResolver(): void {
@@ -165,5 +192,34 @@ export class SearchUserComponent implements OnInit, OnDestroy {
 		this.userListSearchResponse = userListSearchResponse;
 		this.userListSkeletonToggle = false;
 		this.userListIsLoading$.next(false);
+
+		// Set Masonry
+
+		this.setUserListMasonry();
+	}
+
+	setUserListMasonry(): void {
+		const breakpoint: string = this.platformService.getBreakpoint();
+		const breakpointMap: Record<string, number> = {
+			xs: 2,
+			sm: 3,
+			md: 4,
+			lg: 5
+		};
+
+		const breakpointColumns: number = breakpointMap[breakpoint] || Math.max(...Object.values(breakpointMap));
+		const breakpointColumnsArray: null[] = Array(breakpointColumns).fill(null);
+
+		this.masonryColumns = [...breakpointColumnsArray.map(() => [])];
+		this.masonryColumnsWeights = breakpointColumnsArray.map(() => 0);
+
+		// Draw Masonry
+
+		this.userList.forEach((user: User) => {
+			const index: number = this.masonryColumnsWeights.indexOf(Math.min(...this.masonryColumnsWeights));
+
+			this.masonryColumns[index].push(user);
+			this.masonryColumnsWeights[index] += user.description ? 2.5 : 1;
+		});
 	}
 }
