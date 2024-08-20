@@ -15,7 +15,7 @@ import { CopyToClipboardDirective } from '../../standalone/directives/app-copy-t
 import { CommonModule } from '@angular/common';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
-import { MasonryPostsMixin as MP } from '../../core/mixins/masonry-posts.mixin';
+import { MasonryMixin as M } from '../../core/mixins/masonry.mixin';
 import { SearchPostsMixin as SP } from '../../core/mixins/search-posts.mixin';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
@@ -47,7 +47,7 @@ import type { CustomSearchResponse } from '../../core/models/custom-search.model
 	selector: 'app-user-bookmark',
 	templateUrl: './bookmark.component.html'
 })
-export class UserBookmarkComponent extends CU(MP(SP(class {}))) implements OnInit, OnDestroy {
+export class UserBookmarkComponent extends CU(M(SP(class {}))) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postBookmarkService: PostBookmarkService = inject(PostBookmarkService);
 
@@ -79,6 +79,7 @@ export class UserBookmarkComponent extends CU(MP(SP(class {}))) implements OnIni
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
+		// ngOnDestroy
 		// prettier-ignore
 		[this.activatedRouteQueryParams$, this.postBookmarkListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}

@@ -78,6 +78,8 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		super.ngOnInit();
 
+		// ngOnInit
+
 		this.activatedRouteParamsUsername$?.unsubscribe();
 		this.activatedRouteParamsUsername$ = this.activatedRoute.params
 			.pipe(distinctUntilKeyChanged('username'))
@@ -95,12 +97,9 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		[
-			this.activatedRouteParamsUsername$,
-			this.activatedRouteParamsCategoryId$,
-			this.userRequest$,
-			this.categoryListRequest$
-		].forEach(($: Subscription) => $?.unsubscribe());
+		// ngOnDestroy
+		// prettier-ignore
+		[this.activatedRouteParamsUsername$, this.activatedRouteParamsCategoryId$, this.userRequest$, this.categoryListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 
 		// Reset store
 

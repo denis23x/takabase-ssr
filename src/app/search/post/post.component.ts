@@ -6,16 +6,15 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { SkeletonDirective } from '../../standalone/directives/app-skeleton.directive';
 import { CardPostComponent } from '../../standalone/components/card/post/post.component';
-import { BehaviorSubject, distinctUntilChanged, distinctUntilKeyChanged, from, fromEvent, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilKeyChanged, from, Subscription } from 'rxjs';
 import { AdComponent } from '../../standalone/components/ad/ad.component';
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { SkeletonService } from '../../core/services/skeleton.service';
 import { MetaService } from '../../core/services/meta.service';
 import { AlgoliaService } from '../../core/services/algolia.service';
-import { PlatformService } from '../../core/services/platform.service';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { CookiesService } from '../../core/services/cookies.service';
-import { map } from 'rxjs/operators';
+import { MasonryMixin as M } from '../../core/mixins/masonry.mixin';
 import type { Post } from '../../core/models/post.model';
 import type { PostGetAllDto } from '../../core/dto/post/post-get-all.dto';
 import type { SearchIndex } from 'algoliasearch/lite';
@@ -40,20 +39,15 @@ const searchResponseKey: StateKey<SearchResponse<Post>> = makeStateKey<SearchRes
 	selector: 'app-search-post',
 	templateUrl: './post.component.html'
 })
-export class SearchPostComponent implements OnInit, OnDestroy {
+export class SearchPostComponent extends M(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly algoliaService: AlgoliaService = inject(AlgoliaService);
-	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly transferState: TransferState = inject(TransferState);
 	private readonly cookiesService: CookiesService = inject(CookiesService);
 
 	activatedRouteQueryParams$: Subscription | undefined;
-	resize$: Subscription | undefined;
-
-	masonryColumns: Post[][] = [];
-	masonryColumnsWeights: number[] = [];
 
 	postList: Post[] = [];
 	postListSkeletonToggle: boolean = true;
@@ -67,6 +61,10 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 	postListIsLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	ngOnInit(): void {
+		super.ngOnInit();
+
+		// ngOnInit
+
 		this.activatedRouteQueryParams$?.unsubscribe();
 		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.pipe(distinctUntilKeyChanged('query')).subscribe({
 			next: () => {
@@ -93,28 +91,14 @@ export class SearchPostComponent implements OnInit, OnDestroy {
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
-
-		/** Masonry re-render */
-
-		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			this.resize$?.unsubscribe();
-			this.resize$ = fromEvent(window, 'resize')
-				.pipe(
-					map(() => this.platformService.getBreakpoint()),
-					distinctUntilChanged()
-				)
-				.subscribe({
-					next: () => this.setPostListMasonry(),
-					error: (error: any) => console.error(error)
-				});
-		}
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.activatedRouteQueryParams$, this.postListRequest$, this.resize$].forEach(($: Subscription) => $?.unsubscribe());
+		super.ngOnDestroy();
+
+		// ngOnDestroy
+
+		[this.activatedRouteQueryParams$, this.postListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {

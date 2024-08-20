@@ -42,6 +42,8 @@ export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		super.ngOnInit();
 
+		// ngOnInit
+
 		this.postPasswordId = Number(this.activatedRoute.snapshot.firstChild.paramMap.get('postPasswordId'));
 		this.postPrivateId = Number(this.activatedRoute.snapshot.firstChild.paramMap.get('postPrivateId'));
 
@@ -54,7 +56,7 @@ export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		// Unsubscribe
+		// ngOnDestroy
 
 		[this.post$].forEach(($: Subscription) => $?.unsubscribe());
 

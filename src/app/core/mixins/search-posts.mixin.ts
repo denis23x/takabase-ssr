@@ -39,6 +39,7 @@ export function SearchPostsMixin<T extends new (...args: any[]) => any>(MasterCl
 			super.ngOnDestroy && super.ngOnDestroy();
 
 			// ngOnDestroy
+			// Nothing to destroy
 		}
 
 		onToggleSearchForm(toggle: boolean): void {

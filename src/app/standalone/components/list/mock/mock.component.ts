@@ -36,7 +36,7 @@ export class ListMockComponent extends CurrentUserMixin(class {}) implements OnI
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		// Get context
+		// ngOnInit
 
 		this.username = String(this.activatedRoute.snapshot.paramMap.get('username') || '');
 		this.categoryId = Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));

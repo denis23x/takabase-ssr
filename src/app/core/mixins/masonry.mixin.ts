@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 import { PlatformService } from '../services/platform.service';
 import type { Post } from '../models/post.model';
 
-export function MasonryPostsMixin<T extends new (...args: any[]) => any>(MasterClass: T) {
+export function MasonryMixin<T extends new (...args: any[]) => any>(MasterClass: T) {
 	@Component({
 		selector: 'app-masonry-posts-mixin',
 		template: '',
@@ -20,7 +20,7 @@ export function MasonryPostsMixin<T extends new (...args: any[]) => any>(MasterC
 
 		resize$: Subscription | undefined;
 
-		masonryColumns: Post[][] = [];
+		masonryColumns: any[][] = [];
 		masonryColumnsWeights: number[] = [];
 
 		ngOnInit(): void {
@@ -40,7 +40,17 @@ export function MasonryPostsMixin<T extends new (...args: any[]) => any>(MasterC
 						distinctUntilChanged()
 					)
 					.subscribe({
-						next: () => this.setMasonry(),
+						next: () => {
+							if (this.setCategoryListMasonry) {
+								this.setCategoryListMasonry();
+							} else if (this.setPostListMasonry) {
+								this.setPostListMasonry();
+							} else if (this.setUserListMasonry) {
+								this.setUserListMasonry();
+							} else {
+								this.setMasonry();
+							}
+						},
 						error: (error: any) => console.error(error)
 					});
 			}

@@ -17,7 +17,7 @@ import { CardPostComponent } from '../../standalone/components/card/post/post.co
 import { ListLoadMoreComponent } from '../../standalone/components/list/load-more/load-more.component';
 import { ListMockComponent } from '../../standalone/components/list/mock/mock.component';
 import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
-import { MasonryPostsMixin as MP } from '../../core/mixins/masonry-posts.mixin';
+import { MasonryMixin as M } from '../../core/mixins/masonry.mixin';
 import { SearchPostsMixin as SP } from '../../core/mixins/search-posts.mixin';
 import { PostService } from '../../core/services/post.service';
 import type { Post } from '../../core/models/post.model';
@@ -44,7 +44,7 @@ import type { CustomSearchResponse } from '../../core/models/custom-search.model
 	selector: 'app-user-all',
 	templateUrl: './all.component.html'
 })
-export class UserAllComponent extends CU(MP(SP(class {}))) implements OnInit, OnDestroy {
+export class UserAllComponent extends CU(M(SP(class {}))) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postService: PostService = inject(PostService);
 
@@ -68,6 +68,8 @@ export class UserAllComponent extends CU(MP(SP(class {}))) implements OnInit, On
 	ngOnInit(): void {
 		super.ngOnInit();
 
+		// ngOnInit
+
 		this.activatedRouteParamsUsername$?.unsubscribe();
 		this.activatedRouteParamsUsername$ = this.activatedRoute.params
 			.pipe(distinctUntilKeyChanged('username'))
@@ -85,6 +87,7 @@ export class UserAllComponent extends CU(MP(SP(class {}))) implements OnInit, On
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
+		// ngOnDestroy
 		// prettier-ignore
 		[this.activatedRouteParamsUsername$, this.activatedRouteQueryParams$, this.postListRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}

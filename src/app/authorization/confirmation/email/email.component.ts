@@ -48,7 +48,7 @@ export class AuthConfirmationEmailComponent extends CU(class {}) implements OnIn
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		// Unsubscribe
+		// ngOnDestroy
 
 		[this.confirmationRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}

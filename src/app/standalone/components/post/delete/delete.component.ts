@@ -79,7 +79,7 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		// Unsubscribe
+		// ngOnDestroy
 
 		[this.postDeleteRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}

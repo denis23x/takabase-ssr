@@ -44,7 +44,7 @@ export class HeaderComponent extends CU(class {}) implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
 
-		// Unsubscribe
+		// ngOnDestroy
 
 		[this.currentUserSignOutRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
