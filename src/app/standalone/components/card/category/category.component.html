@@ -2,34 +2,10 @@
 
 <ng-container>
 	<div
-		class="rounded-box flex h-full w-full flex-col items-start overflow-hidden gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+		class="rounded-box flex h-full w-full flex-col items-start overflow-hidden gap-2 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 	>
 		<div class="flex items-center justify-start gap-4 overflow-hidden w-full">
-			<a
-				class="avatar"
-				appSkeleton
-				[appSkeletonToggle]="categorySkeletonToggle"
-				[routerLink]="['/', category.user.name]"
-				[title]="category.user.name"
-				[attr.aria-label]="category.user.name"
-			>
-				<figure
-					class="h-12 w-12 rounded-btn relative overflow-hidden"
-					appAvatar
-					[appAvatarUser]="category.user"
-				></figure>
-			</a>
 			<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
-				<a
-					class="link link-hover text-base truncate font-bold leading-5 text-base-content max-w-full"
-					appSkeleton
-					[appSkeletonToggle]="categorySkeletonToggle"
-					[routerLink]="['/', category.user.name, 'category', category.id]"
-					[title]="category.name"
-					[attr.aria-label]="category.name"
-				>
-					{{ category.name }}
-				</a>
 				<a
 					class="flex items-center justify-start gap-2 text-base-content/50 w-full"
 					appSkeleton
@@ -38,16 +14,33 @@
 					[attr.aria-label]="'Go to ' + category.user.name"
 					[appSkeletonToggle]="categorySkeletonToggle"
 				>
-					<i class="block fill-current" appSvgIcon [appSvgIconIcon]="'person'" [appSvgIconSquare]="'1em'"></i>
-					<span class="link link-hover text-xs truncate leading max-w-full">
+					<div
+						class="avatar"
+						[routerLink]="['/', category.user.name]"
+						[title]="category.user.name"
+						[attr.aria-label]="category.user.name"
+					>
+						<figure class="h-4 w-4 rounded relative overflow-hidden" appAvatar [appAvatarUser]="category.user"></figure>
+					</div>
+					<span class="link link-hover text-sm truncate leading max-w-full">
 						{{ category.user.name }}
 					</span>
 				</a>
 			</div>
 		</div>
+		<a
+			class="link link-hover text-base font-bold leading-5 text-base-content max-w-full"
+			appSkeleton
+			[appSkeletonToggle]="categorySkeletonToggle"
+			[routerLink]="['/', category.user.name, 'category', category.id]"
+			[title]="category.name"
+			[attr.aria-label]="category.name"
+		>
+			{{ category.name }}
+		</a>
 		@if (category.description) {
 			<p class="text-base-content" appSkeleton [appSkeletonToggle]="categorySkeletonToggle">
-				<span class="text-base">{{ category.description }}</span>
+				<span class="text-sm">{{ category.description }}</span>
 			</p>
 		}
 	</div>

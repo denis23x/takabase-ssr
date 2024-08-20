@@ -18,6 +18,7 @@ import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mix
 import type { QRCodeComponent } from '../../qr-code/qr-code.component';
 import type { Post } from '../../../../core/models/post.model';
 import type { PostExternalLinkComponent } from '../external-link/external-link.component';
+import { AvatarComponent } from '../../avatar/avatar.component';
 
 @Component({
 	standalone: true,
@@ -31,7 +32,8 @@ import type { PostExternalLinkComponent } from '../external-link/external-link.c
 		SvgIconComponent,
 		MarkdownRenderDirective,
 		MarkdownTimeToReadPipe,
-		FirebaseStoragePipe
+		FirebaseStoragePipe,
+		AvatarComponent
 	],
 	providers: [MarkdownService],
 	selector: 'app-post-prose, [appPostProse]',

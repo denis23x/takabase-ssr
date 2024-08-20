@@ -15,10 +15,11 @@ import { HelperService } from '../core/services/helper.service';
 import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
 import type { Post } from '../core/models/post.model';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
+import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, CommonModule, SvgIconComponent, SkeletonDirective],
+	imports: [RouterModule, CommonModule, SvgIconComponent, SkeletonDirective, AvatarComponent],
 	providers: [PostStore],
 	selector: 'app-post',
 	templateUrl: './post.component.html'

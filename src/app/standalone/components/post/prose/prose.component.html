@@ -31,14 +31,28 @@
 							appSkeleton
 							[appSkeletonToggle]="postSkeletonToggle"
 						>
-							<i class="block fill-current" appSvgIcon [appSvgIconIcon]="'person'" [appSvgIconSquare]="'1.15em'"></i>
 							<a
-								class="block text-sm font-bold link truncate"
+								class="flex items-center justify-start gap-2"
+								[target]="postPreview ? '_blank' : '_self'"
 								[routerLink]="['/', post.user.name]"
 								[title]="'Go to ' + post.user.name"
 								[attr.aria-label]="'Go to ' + post.user.name"
 							>
-								{{ post.user.name }}
+								<div
+									class="avatar"
+									[routerLink]="['/', post.user.name]"
+									[title]="post.user.name"
+									[attr.aria-label]="post.user.name"
+								>
+									<figure
+										class="h-4 w-4 rounded relative overflow-hidden"
+										appAvatar
+										[appAvatarUser]="post.user"
+									></figure>
+								</div>
+								<span class="link link-hover block text-sm font-bold truncate">
+									{{ post.user.name }}
+								</span>
 							</a>
 						</li>
 						@switch (postType) {
@@ -72,16 +86,17 @@
 									appSkeleton
 									[appSkeletonToggle]="postSkeletonToggle"
 								>
-									<!-- prettier-ignore -->
-									<i class="block fill-current" appSvgIcon [appSvgIconIcon]="'folder'" [appSvgIconSquare]="'1.15em'"></i>
 									<a
-										class="link text-sm leading-4 truncate"
+										class="flex items-center justify-start gap-2"
 										[target]="postPreview ? '_blank' : '_self'"
 										[routerLink]="['/', post.user.name, 'category', post.category?.id]"
 										[title]="'Go to ' + post.category?.name || 'Category'"
 										[attr.aria-label]="'Go to ' + post.category?.name || 'Category'"
 									>
-										{{ post.category?.name || "Category" }}
+										<i class="block fill-current" appSvgIcon [appSvgIconIcon]="'folder'" [appSvgIconSquare]="'1em'"></i>
+										<span class="link link-hover text-sm leading-4 truncate">
+											{{ post.category?.name || "Category" }}
+										</span>
 									</a>
 								</li>
 							}
@@ -122,9 +137,9 @@
 							></button>
 						</li>
 						@if (currentUser?.id === post.user.id) {
-							<li class="block">
+							<li class="block w-full">
 								<a
-									class="btn-success btn-outline btn-md btn"
+									class="btn-success btn-outline btn-md btn w-full"
 									appSkeleton
 									[class.border-transparent]="postSkeletonToggle"
 									[appSkeletonToggle]="postSkeletonToggle"

@@ -296,4 +296,50 @@ export class MarkdownService {
 
 		return (this.markdownIt = markdownIt);
 	}
+
+	getMarkdownItStripText(value: string): string {
+		// Remove code blocks
+		// value = value.replace(/```[\s\S]*?```/g, '');
+
+		// Remove inline code
+		// value = value.replace(/`[^`]*`/g, '');
+
+		// Remove images
+		value = value.replace(/!\[.*?\]\(.*?\)/g, '');
+
+		// Remove links
+		value = value.replace(/\[(.*?)\]\((.*?)\)/g, '$2');
+
+		// Remove blockquotes
+		value = value.replace(/^>+\s?/gm, '');
+
+		// Remove headings
+		value = value.replace(/^#+\s/gm, '');
+
+		// Remove horizontal rules
+		value = value.replace(/^---$/gm, '');
+
+		// Remove horizontal rules
+		value = value.replace(/^___$/gm, '');
+
+		// Remove bold
+		value = value.replace(/(\*\*|__)(.*?)\1/g, '$2');
+
+		// Remove italic
+		value = value.replace(/(\*|_)(.*?)\1/g, '$2');
+
+		// Remove strikethrough
+		value = value.replace(/~~(.*?)~~/g, '$1');
+
+		// Remove unordered list markers
+		value = value.replace(/^[\*\-\+]\s/gm, '');
+
+		// Remove ordered list markers
+		value = value.replace(/^\d+\.\s/gm, '');
+
+		// Remove extra spaces and newlines
+		value = value.replace(/\s+/g, ' ').trim();
+
+		return value;
+	}
 }

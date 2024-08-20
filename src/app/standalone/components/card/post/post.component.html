@@ -44,7 +44,7 @@
 				}
 			}
 			<a
-				class="link link-hover text-base-content text-base font-bold text-ellipsis max-w-full"
+				class="link link-hover text-base-content text-base font-bold text-ellipsis max-w-full line-clamp-2 sm:line-clamp-none"
 				appSkeleton
 				[appSkeletonToggle]="postSkeletonToggle"
 				[routerLink]="postRouterLink"
@@ -54,6 +54,13 @@
 			>
 				{{ post.name }}
 			</a>
+			<p
+				class="text-base-content text-sm line-clamp-3 sm:line-clamp-5"
+				appSkeleton
+				[appSkeletonToggle]="postSkeletonToggle"
+			>
+				{{ post.description }}
+			</p>
 			@switch (postType) {
 				@case ("test") {
 					<div class="flex items-center justify-between gap-2 text-base-content/50 w-full">

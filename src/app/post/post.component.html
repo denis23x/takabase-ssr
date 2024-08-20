@@ -10,7 +10,7 @@
 				<ul class="flex items-center justify-start">
 					<li class="block">
 						<a
-							class="flex items-center justify-start gap-2 text-base-content"
+							class="flex items-center justify-start gap-2"
 							[routerLink]="['/']"
 							[title]="'Home'"
 							[attr.aria-label]="'Home'"
@@ -34,19 +34,20 @@
 					</li>
 					<li class="block">
 						<a
-							class="flex items-center justify-start gap-2 text-base-content"
+							class="flex items-center justify-start gap-2"
 							[routerLink]="['/', post.user.name]"
 							[title]="'Go to ' + post.user.name"
 							[attr.aria-label]="'Go to ' + post.user.name"
 						>
-							<i
-								class="block fill-current"
-								appSvgIcon
+							<div
+								class="avatar"
 								[class.sm:hidden]="postSkeletonToggle"
-								[appSvgIconIcon]="'person'"
-								[appSvgIconSquare]="'1.25em'"
+								[routerLink]="['/', post.user.name]"
+								[title]="post.user.name"
+								[attr.aria-label]="post.user.name"
 							>
-							</i>
+								<figure class="h-4 w-4 rounded relative overflow-hidden" appAvatar [appAvatarUser]="post.user"></figure>
+							</div>
 							<span
 								class="hidden sm:block link link-hover text-sm"
 								appSkeleton
@@ -61,7 +62,7 @@
 							@if (currentUser?.id === post.user.id) {
 								<li class="block">
 									<a
-										class="flex items-center justify-start gap-2 text-base-content"
+										class="flex items-center justify-start gap-2"
 										[routerLink]="['/', post.user.name, 'password']"
 										[title]="'Go to Password protected posts'"
 										[attr.aria-label]="'Go to Password protected posts'"
@@ -85,7 +86,7 @@
 							@if (currentUser?.id === post.user.id) {
 								<li class="block">
 									<a
-										class="flex items-center justify-start gap-2 text-base-content"
+										class="flex items-center justify-start gap-2"
 										[routerLink]="['/', post.user.name, 'private']"
 										[title]="'Go to Private posts'"
 										[attr.aria-label]="'Go to Private posts'"
@@ -108,7 +109,7 @@
 						@default {
 							<li class="block">
 								<a
-									class="flex items-center justify-start gap-2 text-base-content"
+									class="flex items-center justify-start gap-2"
 									[routerLink]="['/', post.user.name, 'category', post.category.id]"
 									[title]="'Go to ' + post.category.name"
 									[attr.aria-label]="'Go to ' + post.category.name"
