@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, ComponentRef, inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
@@ -11,24 +11,23 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
+import { PWAComponent } from '../standalone/components/pwa/pwa.component';
 import homeHighlights from '../../assets/json/home-highlights.json';
 import dayjs from 'dayjs/esm';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import type { ManipulateType } from 'dayjs/esm';
-import type { PWAComponent } from '../standalone/components/pwa/pwa.component';
 import type { Insight } from '../core/models/insight.model';
 import type { InsightGetAllDto } from '../core/dto/insight/insight-get-all.dto';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, SvgIconComponent, SvgLogoComponent, SkeletonDirective],
+	imports: [CommonModule, RouterModule, SvgIconComponent, SvgLogoComponent, SkeletonDirective, PWAComponent],
 	selector: 'app-home',
 	templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit, OnDestroy {
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly titleService: TitleService = inject(TitleService);
-	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 
@@ -57,10 +56,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 			character: '↘︎'
 		}
 	};
-
-	// Lazy loading
-
-	appPWAComponent: ComponentRef<PWAComponent>;
 
 	ngOnInit(): void {
 		/** Apply Data */
@@ -125,18 +120,5 @@ export class HomeComponent implements OnInit, OnDestroy {
 		};
 
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
-	}
-
-	/** LAZY */
-
-	async onTogglePWADialog(): Promise<void> {
-		if (!this.appPWAComponent) {
-			await import('../standalone/components/pwa/pwa.component')
-				.then(m => (this.appPWAComponent = this.viewContainerRef.createComponent(m.PWAComponent)))
-				.catch((error: any) => console.error(error));
-		}
-
-		this.appPWAComponent.changeDetectorRef.detectChanges();
-		this.appPWAComponent.instance.onTogglePWADialog(true);
 	}
 }
