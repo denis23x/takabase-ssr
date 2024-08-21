@@ -213,6 +213,12 @@
 
 					document.querySelector("[name=viewport]").setAttribute("content", value)
 				}
+
+				/** Attach PWA prompt event */
+
+				window.addEventListener("beforeinstallprompt", (event) => {
+					window.pwaInstallPrompt = event
+				})
 			}
 		</script>
 	</body>

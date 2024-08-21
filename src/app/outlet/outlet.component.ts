@@ -3,8 +3,8 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { AppearanceService } from '../core/services/appearance.service';
 import { AuthorizationService } from '../core/services/authorization.service';
-import { filter, first, switchMap, tap } from 'rxjs/operators';
-import { fromEvent, Subscription } from 'rxjs';
+import { filter, first, switchMap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { SnackbarComponent } from '../standalone/components/snackbar/snackbar.component';
 import { HeaderComponent } from '../standalone/components/header/header.component';
@@ -14,7 +14,6 @@ import { CookiesComponent } from '../standalone/components/cookies/cookies.compo
 import { version } from '../../versions/version';
 import { environment } from '../../environments/environment';
 import { Location } from '@angular/common';
-import { BusService } from '../core/services/bus.service';
 import type { CurrentUser } from '../core/models/current-user.model';
 
 @Component({
@@ -27,20 +26,13 @@ export class OutletComponent implements OnInit, OnDestroy {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly busService: BusService = inject(BusService);
 	private readonly location: Location = inject(Location);
 
 	currentUser: CurrentUser | undefined;
 	currentUser$: Subscription | undefined;
 
-	beforeInstallPrompt$: Subscription | undefined;
-
 	ngOnInit(): void {
 		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			/** Populate user */
-
 			this.currentUser$?.unsubscribe();
 			this.currentUser$ = this.authorizationService
 				.getPopulate()
@@ -51,16 +43,6 @@ export class OutletComponent implements OnInit, OnDestroy {
 				)
 				.subscribe({
 					next: () => console.debug('User populated'),
-					error: (error: any) => console.error(error)
-				});
-
-			/** Set PWA listener */
-
-			this.beforeInstallPrompt$?.unsubscribe();
-			this.beforeInstallPrompt$ = fromEvent(window, 'beforeinstallprompt')
-				.pipe(tap((event: Event) => event.preventDefault()))
-				.subscribe({
-					next: (event: Event) => this.busService.pwaPrompt$.next(event),
 					error: (error: any) => console.error(error)
 				});
 
@@ -77,6 +59,6 @@ export class OutletComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$, this.beforeInstallPrompt$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 }
