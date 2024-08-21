@@ -2,13 +2,9 @@
 
 <ng-container>
 	@if (post) {
-		<section class="flex flex-col h-full w-full overflow-auto gap-4">
+		<section class="flex flex-col h-full w-full overflow-auto gap-4 bg-base-100">
 			<header class="flex w-full flex-col items-start justify-start gap-4">
-				<h2
-					class="text-2xl leading-6 font-bold text-base-content max-w-full"
-					appSkeleton
-					[appSkeletonToggle]="postSkeletonToggle"
-				>
+				<h2 class="text-2xl font-bold text-base-content w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 					{{ post.name || "Name" }}
 				</h2>
 				<div class="flex items-center justify-start gap-4 w-full overflow-hidden">
@@ -122,6 +118,9 @@
 			@if (!postPreview) {
 				<nav class="border-y border-base-content/20 py-4">
 					<ul class="flex items-start justify-start overflow-hidden gap-2">
+						<li class="block">
+							<div appPostScreenshot [appScreenshotSkeletonToggle]="postSkeletonToggle"></div>
+						</li>
 						<li class="block">
 							<button
 								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"

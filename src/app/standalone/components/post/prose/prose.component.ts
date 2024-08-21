@@ -15,10 +15,11 @@ import { MarkdownService } from '../../../../core/services/markdown.service';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { filter } from 'rxjs/operators';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
+import { AvatarComponent } from '../../avatar/avatar.component';
+import { PostScreenshotComponent } from '../screenshot/screenshot.component';
 import type { QRCodeComponent } from '../../qr-code/qr-code.component';
 import type { Post } from '../../../../core/models/post.model';
 import type { PostExternalLinkComponent } from '../external-link/external-link.component';
-import { AvatarComponent } from '../../avatar/avatar.component';
 
 @Component({
 	standalone: true,
@@ -33,7 +34,8 @@ import { AvatarComponent } from '../../avatar/avatar.component';
 		MarkdownRenderDirective,
 		MarkdownTimeToReadPipe,
 		FirebaseStoragePipe,
-		AvatarComponent
+		AvatarComponent,
+		PostScreenshotComponent
 	],
 	providers: [MarkdownService],
 	selector: 'app-post-prose, [appPostProse]',

@@ -27,7 +27,8 @@ export class CopyToClipboardDirective {
 	clipboardValue: string | undefined;
 	clipboardMessage: string = 'Link has been copied';
 
-	@HostListener('click', ['$event']) onClick(): void {
+	@HostListener('click', ['$event'])
+	onClick(): void {
 		if (this.platformService.isBrowser()) {
 			const window: Window = this.platformService.getWindow();
 

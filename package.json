@@ -55,6 +55,7 @@
     "markdown-it-video": "^0.6.3",
     "mermaid": "^10.9.1",
     "mime": "^4.0.3",
+    "modern-screenshot": "^4.4.39",
     "morphdom": "^2.7.2",
     "nanoid": "^5.0.7",
     "nanoid-dictionary": "^4.3.0",
