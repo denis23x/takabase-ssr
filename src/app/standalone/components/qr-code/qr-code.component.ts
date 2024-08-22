@@ -61,9 +61,6 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 	};
 
-	shareData: ShareData | undefined;
-	shareDataCanShare: boolean = false;
-
 	ngOnInit(): void {
 		/** Extra toggle close when url change */
 
@@ -103,7 +100,7 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 	onSaveQRCode(): void {
 		if (this.platformService.isBrowser()) {
 			const abstractControl: AbstractControl | null = this.QRCodeForm.get('url');
-			const abstractControlValue = abstractControl.value.split('/').pop();
+			const abstractControlValueFileName: string = ['qr-code', abstractControl.value.split('/').pop()].join('-');
 
 			if (this.platformService.isMobile()) {
 				toCanvas(abstractControl.value, this.QRCodeOptions, (error: Error, canvas: HTMLCanvasElement) => {
@@ -111,15 +108,16 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 						this.snackbarService.error('Error', "Can't download your QR Code");
 					} else {
 						canvas.toBlob((blob: Blob) => {
+							const shareFile: File = this.sharpService.getFileFromBlob(blob, abstractControlValueFileName);
 							const shareData: ShareData = {
-								files: [this.sharpService.getFileFromBlob(blob, abstractControlValue)]
+								files: [shareFile]
 							};
 
-							this.shareDataCanShare = this.getShareNative(shareData);
-							this.shareData = this.shareDataCanShare ? shareData : undefined;
-
-							if (this.shareData) {
-								this.setShareNative();
+							if (this.platformService.isCanShare(shareData)) {
+								navigator
+									.share(shareData)
+									.then(() => console.debug('Shared through native share'))
+									.catch((error: any) => console.error(error));
 							}
 						});
 					}
@@ -129,7 +127,7 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 					if (error) {
 						this.snackbarService.error('Error', "Can't download your QR Code");
 					} else {
-						this.helperService.setDownload(dataURL, abstractControlValue);
+						this.helperService.setDownload(dataURL, abstractControlValueFileName);
 					}
 				});
 			}
@@ -176,25 +174,6 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 			// Initial call
 
 			QRCodeToCanvas();
-		}
-	}
-
-	/** Native share */
-
-	getShareNative(shareData: ShareData): boolean {
-		if (this.platformService.isBrowser()) {
-			return navigator.share && navigator.canShare(shareData);
-		} else {
-			return false;
-		}
-	}
-
-	setShareNative(): void {
-		if (this.platformService.isBrowser()) {
-			navigator
-				.share(this.shareData)
-				.then(() => console.debug('Shared through native share'))
-				.catch((error: any) => console.error(error));
 		}
 	}
 }

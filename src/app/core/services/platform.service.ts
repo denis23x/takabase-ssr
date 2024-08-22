@@ -40,6 +40,14 @@ export class PlatformService {
 		return false;
 	}
 
+	isCanShare(shareData: ShareData): boolean {
+		if (this.isBrowser()) {
+			return navigator.share && navigator.canShare(shareData);
+		} else {
+			return false;
+		}
+	}
+
 	getWindow(): Window {
 		return getWindow();
 	}

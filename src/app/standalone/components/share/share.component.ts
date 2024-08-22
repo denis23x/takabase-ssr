@@ -31,7 +31,7 @@ export class ShareComponent {
 				url: this.helperService.getURL().toString()
 			};
 
-			this.shareDataCanShare = this.getShareNative(shareData);
+			this.shareDataCanShare = this.platformService.isCanShare(shareData);
 			this.shareData = this.shareDataCanShare ? shareData : undefined;
 
 			this.setShareList();
@@ -119,16 +119,6 @@ export class ShareComponent {
 
 			this.shareList[shareKey] = [this.shareList[shareKey], encodedURI].join('?');
 		});
-	}
-
-	/** Native share */
-
-	getShareNative(shareData: ShareData): boolean {
-		if (this.platformService.isBrowser()) {
-			return navigator.share && navigator.canShare(shareData);
-		} else {
-			return false;
-		}
 	}
 
 	setShareNative(): void {
