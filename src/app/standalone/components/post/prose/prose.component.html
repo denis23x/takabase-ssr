@@ -119,7 +119,22 @@
 				<nav class="border-y border-base-content/20 py-4">
 					<ul class="flex items-start justify-start overflow-hidden gap-2">
 						<li class="block">
-							<div appPostScreenshot [appScreenshotSkeletonToggle]="postSkeletonToggle"></div>
+							<button
+								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
+								type="button"
+								title="Download Screenshot"
+								aria-label="Download Screenshot"
+								(click)="onClickDomToCanvas()"
+							>
+								@switch (domToCanvasIsLoading) {
+									@case (true) {
+										<span class="loading loading-spinner"></span>
+									}
+									@default {
+										<i class="block" appSvgIcon [appSvgIconIcon]="'download'" [appSvgIconSquare]="'1.5em'"> </i>
+									}
+								}
+							</button>
 						</li>
 						<li class="block">
 							<button

@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, ComponentRef, inject, Input, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
@@ -16,10 +16,10 @@ import { PlatformService } from '../../../../core/services/platform.service';
 import { filter } from 'rxjs/operators';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import { AvatarComponent } from '../../avatar/avatar.component';
-import { PostScreenshotComponent } from '../screenshot/screenshot.component';
 import type { QRCodeComponent } from '../../qr-code/qr-code.component';
 import type { Post } from '../../../../core/models/post.model';
 import type { PostExternalLinkComponent } from '../external-link/external-link.component';
+import type { domToCanvas, Options } from 'modern-screenshot';
 
 @Component({
 	standalone: true,
@@ -34,14 +34,14 @@ import type { PostExternalLinkComponent } from '../external-link/external-link.c
 		MarkdownRenderDirective,
 		MarkdownTimeToReadPipe,
 		FirebaseStoragePipe,
-		AvatarComponent,
-		PostScreenshotComponent
+		AvatarComponent
 	],
 	providers: [MarkdownService],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
 })
 export class PostProseComponent extends CU(class {}) implements OnInit, OnDestroy {
+	private readonly document: Document = inject(DOCUMENT);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
@@ -71,6 +71,10 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	postPreview: boolean = false;
 	postSkeletonToggle: boolean = true;
 
+	domToCanvas: typeof domToCanvas;
+	domToCanvasSelector: string = 'app-post section';
+	domToCanvasIsLoading: boolean = false;
+
 	// Lazy loading
 
 	appQRCodeComponent: ComponentRef<QRCodeComponent>;
@@ -82,6 +86,35 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
+	}
+
+	/** LAZY */
+
+	async onClickDomToCanvas(): Promise<void> {
+		if (!this.domToCanvas) {
+			await import('modern-screenshot')
+				.then(m => (this.domToCanvas = m.domToCanvas))
+				.catch((error: any) => console.error(error));
+		}
+
+		const htmlElement: HTMLElement = this.document.querySelector(this.domToCanvasSelector);
+		const htmlElementOptions: Options = {
+			font: false,
+			filter: (node: Node): boolean => true
+		};
+
+		this.domToCanvasIsLoading = true;
+
+		this.domToCanvas(htmlElement, htmlElementOptions)
+			.then((htmlCanvasElement: HTMLCanvasElement) => {
+				const dataURL: string = htmlCanvasElement.toDataURL('image/png');
+				const fileName: string = 'snapshot.png';
+
+				// TODO: download AND share
+				this.helperService.setDownload(dataURL, fileName);
+			})
+			.catch((error: any) => error)
+			.finally(() => (this.domToCanvasIsLoading = false));
 	}
 
 	async onToggleQRCodeDialog(): Promise<void> {
