@@ -19,7 +19,6 @@ import { AvatarComponent } from '../../avatar/avatar.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { Subscription } from 'rxjs';
 import { PostBookmarkService } from '../../../../core/services/post-bookmark.service';
-import { SharpService } from '../../../../core/services/sharp.service';
 import type { QRCodeComponent } from '../../qr-code/qr-code.component';
 import type { Post } from '../../../../core/models/post.model';
 import type { PostExternalLinkComponent } from '../external-link/external-link.component';
@@ -44,7 +43,7 @@ import type { PostBookmarkGetOneDto } from '../../../../core/dto/post-bookmark/p
 		FirebaseStoragePipe,
 		AvatarComponent
 	],
-	providers: [MarkdownService, PostBookmarkService, SharpService],
+	providers: [MarkdownService, PostBookmarkService],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
 })
@@ -55,7 +54,6 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
-	private readonly sharpService: SharpService = inject(SharpService);
 	private readonly postBookmarkService: PostBookmarkService = inject(PostBookmarkService);
 
 	@Input({ required: true })
@@ -186,7 +184,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 
 				if (this.platformService.isMobile()) {
 					canvas.toBlob((blob: Blob) => {
-						const shareFile: File = this.sharpService.getFileFromBlob(blob, fileName);
+						const shareFile: File = this.helperService.getFileFromBlob(blob, fileName);
 						const shareData: ShareData = {
 							files: [shareFile]
 						};

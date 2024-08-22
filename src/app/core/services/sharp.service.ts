@@ -24,12 +24,6 @@ export class SharpService {
 
 	/** Utility */
 
-	getFileFromBlob(blob: Blob, fileName: string = 'image'): File {
-		return new File([blob], [fileName, mime.getExtension(blob.type)].join('.'), {
-			type: blob.type
-		});
-	}
-
 	getFileName(file: File): string {
 		const fileDate: number = Date.now();
 		const fileId: string = this.helperService.getNanoId();
@@ -105,7 +99,7 @@ export class SharpService {
 				responseType: 'blob'
 			})
 			.pipe(
-				map((blob: Blob) => this.getFileFromBlob(blob)),
+				map((blob: Blob) => this.helperService.getFileFromBlob(blob)),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					return this.getError(httpErrorResponse).pipe(
 						switchMap((httpError: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpError))
@@ -135,7 +129,7 @@ export class SharpService {
 				responseType: 'blob'
 			})
 			.pipe(
-				map((blob: Blob) => this.getFileFromBlob(blob)),
+				map((blob: Blob) => this.helperService.getFileFromBlob(blob)),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					return this.getError(httpErrorResponse).pipe(
 						switchMap((httpError: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpError))

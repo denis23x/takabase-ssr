@@ -12,7 +12,6 @@ import { Location } from '@angular/common';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { CopyToClipboardDirective } from '../../directives/app-copy-to-clipboard.directive';
-import { SharpService } from '../../../core/services/sharp.service';
 import { toCanvas, toDataURL } from 'qrcode';
 import type { QRCodeRenderersOptions } from 'qrcode';
 
@@ -23,7 +22,6 @@ interface QRCodeForm {
 @Component({
 	standalone: true,
 	imports: [WindowComponent, FormsModule, ReactiveFormsModule, SvgIconComponent, CopyToClipboardDirective],
-	providers: [SharpService],
 	selector: 'app-qr-code, [appQRCode]',
 	templateUrl: './qr-code.component.html'
 })
@@ -34,7 +32,6 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly location: Location = inject(Location);
-	private readonly sharpService: SharpService = inject(SharpService);
 
 	@ViewChild('QRCodeDialog') QRCodeDialog: ElementRef<HTMLDialogElement> | undefined;
 	@ViewChild('QRCodeCanvas') QRCodeCanvas: ElementRef<HTMLCanvasElement> | undefined;
@@ -108,7 +105,7 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 						this.snackbarService.error('Error', "Can't download your QR Code");
 					} else {
 						canvas.toBlob((blob: Blob) => {
-							const shareFile: File = this.sharpService.getFileFromBlob(blob, abstractControlValueFileName);
+							const shareFile: File = this.helperService.getFileFromBlob(blob, abstractControlValueFileName);
 							const shareData: ShareData = {
 								files: [shareFile]
 							};

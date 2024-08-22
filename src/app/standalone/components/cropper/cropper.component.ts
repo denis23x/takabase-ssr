@@ -323,7 +323,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 						canvasElementContext.drawImage(event.target, dx, dy, width, height);
 
 						// prettier-ignore
-						canvasElement.toBlob((blob: Blob) => resolve(this.sharpService.getFileFromBlob(blob)), requiredType, 1);
+						canvasElement.toBlob((blob: Blob) => resolve(this.helperService.getFileFromBlob(blob)), requiredType, 1);
 					} else {
 						resolve(file);
 					}
@@ -451,7 +451,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		/** Get ready file */
 
-		const fileCropped: File = this.sharpService.getFileFromBlob(this.cropperBlob);
+		const fileCropped: File = this.helperService.getFileFromBlob(this.cropperBlob);
 
 		/** Moderate and make .webp image */
 

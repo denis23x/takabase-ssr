@@ -11,6 +11,7 @@ import { Navigation } from '@angular/router';
 import { CookiesService } from './cookies.service';
 import { from, Observable, of } from 'rxjs';
 import { AES, enc } from 'crypto-js';
+import mime from 'mime';
 
 @Injectable({
 	providedIn: 'root'
@@ -31,6 +32,12 @@ export class HelperService {
 		/** https://firebase.google.com/docs/hosting/manage-cache */
 
 		this.cookiesService.setItem('__session', btoa(JSON.stringify(cookieUpsert)));
+	}
+
+	getFileFromBlob(blob: Blob, fileName: string = 'image'): File {
+		return new File([blob], [fileName, mime.getExtension(blob.type)].join('.'), {
+			type: blob.type
+		});
 	}
 
 	getCamelCaseToDashCase(value: string): string {
