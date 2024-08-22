@@ -183,7 +183,7 @@
 									[attr.aria-label]="(postBookmark ? 'Remove from' : 'Add to') + ' bookmarks'"
 									[ngClass]="postBookmark && !postBookmarkIsLoading ? 'text-success' : 'text-base-content'"
 									[appSkeletonToggle]="postSkeletonToggle"
-									(click)="onToggleBookmark()"
+									(click)="onClickBookmark()"
 								>
 									@switch (postBookmarkIsLoading) {
 										@case (true) {

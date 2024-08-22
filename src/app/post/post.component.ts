@@ -79,6 +79,10 @@ export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 					this.post = post;
 					this.postSkeletonToggle = false;
 
+					// ExpressionChangedAfterItHasBeenCheckedError (PostComponent)
+
+					this.changeDetectorRef.detectChanges();
+
 					/** Apply SEO meta tags */
 
 					this.setMetaTags();

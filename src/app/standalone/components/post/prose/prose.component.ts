@@ -120,7 +120,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 		});
 	}
 
-	onToggleBookmark(): void {
+	onClickBookmark(): void {
 		if (this.currentUser) {
 			// Set loader
 
@@ -173,6 +173,8 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 
 		const htmlElement: HTMLElement = this.document.querySelector(this.domToCanvasSelector);
 		const htmlElementOptions: Options = {
+			type: 'image/png',
+			scale: 2,
 			font: false,
 			filter: (node: Node): boolean => true
 		};
