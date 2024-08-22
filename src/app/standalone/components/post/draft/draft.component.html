@@ -1,0 +1,146 @@
+<!-- @format -->
+
+<ng-container>
+	<dialog
+		class="modal"
+		#postDraftDialogElement
+		(keydown.escape)="$event.preventDefault(); onTogglePostDraftDialog(false)"
+		(click)="$event.target === $event.currentTarget ? onTogglePostDraftDialog(false) : $event"
+	>
+		<div
+			class="flex items-center justify-center w-full max-w-lg"
+			appWindow
+			[appWindowTitle]="'Draft'"
+			[appWindowButtons]="['close']"
+			(appWindowClose)="onTogglePostDraftDialog(false)"
+		>
+			<form
+				class="flex flex-col gap-4 p-4"
+				autocomplete="off"
+				slot="content"
+				[formGroup]="postDraftForm"
+				(ngSubmit)="onSubmitPostDraftForm()"
+			>
+				<p class="alert" role="alert">
+					<i
+						class="fill-current text-info"
+						appSvgIcon
+						[appSvgIconIcon]="'info-circle'"
+						[appSvgIconSquare]="'1.5em'"
+					></i>
+					<span class="block"> Drafts were found. Want to apply? </span>
+				</p>
+				@if (postDraftForm.get("name"); as name) {
+					<fieldset class="form-control grid">
+						<label class="label">
+							<div class="indicator">
+								<span class="label-text mr-2"> Name </span>
+								<span
+									class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
+									[class.badge-ghost]="!name.value"
+									[class.badge-success]="!!name.value && postDraftForm.enabled"
+									[class.opacity-25]="postDraftForm.disabled"
+								>
+									Optional
+								</span>
+							</div>
+						</label>
+						<div
+							class="menu menu-vertical !rounded-btn !shadow-none menu-md mt-2 p-0"
+							[class.!border-success]="name.value && postDraftForm.enabled"
+						>
+							<ul
+								class="flex max-h-58 flex-col flex-nowrap overflow-y-auto w-full snap-mandatory snap-y p-2"
+								[class.cursor-not-allowed]="postDraftForm.disabled"
+							>
+								@for (postDraft of postDraftList; track $index) {
+									<li
+										class="flex flex-row items-center justify-between gap-2 w-full snap-start scroll-my-2"
+										[ngClass]="{ 'disabled pointer-events-none': postDraftForm.disabled }"
+									>
+										<!-- prettier-ignore -->
+										@if ({ value: name.value === postDraft.id }; as isActive) {
+											<button
+                        class="flex flex-1 items-center justify-start gap-2 truncate"
+                        type="button"
+                        [ngClass]="{ 'active': isActive.value && postDraftForm.enabled, 'bg-base-content/10': isActive.value && postDraftForm.disabled }"
+                        [title]="postDraft.name"
+                        [attr.aria-label]="postDraft.name"
+                        (click)="isActive.value ? name.reset() : name.patchValue(postDraft.id)"
+                      >
+                        @switch (postDraft.postType) {
+                          @case ('password') {
+                            <i
+                              class="block fill-current"
+                              appSvgIcon
+                              [appSvgIconIcon]="'shield-lock'"
+                              [appSvgIconSquare]="'1.15em'"
+                              [appSvgIconViewBox]="'0 0 16 17'"
+                            >
+                            </i>
+                          }
+                          @case ('private') {
+                            <i
+                              class="block fill-current"
+                              appSvgIcon
+                              [appSvgIconIcon]="'incognito'"
+                              [appSvgIconSquare]="'1.15em'"
+                            >
+                            </i>
+                          }
+                          @default {
+                            <i
+                              class="block fill-current"
+                              appSvgIcon
+                              [appSvgIconIcon]="'folder'"
+                              [appSvgIconSquare]="'1.25em'"
+                            >
+                            </i>
+                          }
+                        }
+                        <span class="block">{{ postDraft.name }}</span>
+                      </button>
+										}
+										<!--
+                    <button
+											class="btn-sm btn-circle btn btn-error fill-current rounded-full p-0"
+											type="button"
+											appSvgIcon
+											[title]="postDraft.name"
+											[attr.aria-label]="postDraft.name"
+											[appSvgIconIcon]="'x'"
+											[appSvgIconSquare]="'1.5em'"
+										></button>
+										-->
+									</li>
+								}
+							</ul>
+						</div>
+					</fieldset>
+				}
+				<fieldset class="form-control">
+					<button
+						class="btn btn-md btn-success"
+						type="submit"
+						title="Submit"
+						aria-label="Submit"
+						[disabled]="postDraftForm.invalid || postDraftForm.disabled"
+					>
+						Submit
+					</button>
+				</fieldset>
+				<fieldset class="form-control">
+					<button
+						class="btn btn-success btn-outline w-full"
+						type="button"
+						title="Cancel"
+						aria-label="Cancel"
+						(click)="onTogglePostDraftDialog(false)"
+					>
+						Cancel
+					</button>
+				</fieldset>
+			</form>
+		</div>
+	</dialog>
+</ng-container>

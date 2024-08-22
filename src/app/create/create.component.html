@@ -18,7 +18,7 @@
 								<div
 									class="indicator"
 									appSkeleton
-									[appSkeletonToggle]="postSkeletonToggle || postFormImageIsSubmitted()"
+									[appSkeletonToggle]="postSkeletonToggle"
 									[appSkeletonClassListElementRef]="['!-mx-1']"
 								>
 									<span class="label-text">Image</span>
@@ -724,4 +724,10 @@
 		</div>
 	</div>
 	<div appShortcuts></div>
+	<div
+		appPostDraft
+		[appPostDraftPostForm]="postForm"
+		[appPostDraftPostType]="postType"
+		(appPostDraftSuccess)="onSubmitPostFormDraft($event)"
+	></div>
 </ng-container>

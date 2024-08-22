@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { from, fromEvent, Observable, Subscription, switchMap, throwError } from 'rxjs';
-import { catchError, filter, map, startWith, tap } from 'rxjs/operators';
+import { catchError, filter, map, startWith } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -35,7 +35,6 @@ import { PostService } from '../core/services/post.service';
 import { PostPrivateService } from '../core/services/post-private.service';
 import { PostPasswordService } from '../core/services/post-password.service';
 import { SnackbarService } from '../core/services/snackbar.service';
-import { AuthorizationService } from '../core/services/authorization.service';
 import { CategoryService } from '../core/services/category.service';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { CookiesService } from '../core/services/cookies.service';
@@ -53,8 +52,9 @@ import { AIService } from '../core/services/ai.service';
 import { FirebaseStoragePipe } from '../standalone/pipes/firebase-storage.pipe';
 import { BusService } from '../core/services/bus.service';
 import { SharpService } from '../core/services/sharp.service';
+import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
+import { PostDraftComponent } from '../standalone/components/post/draft/draft.component';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
-import type { CurrentUser } from '../core/models/current-user.model';
 import type { Category } from '../core/models/category.model';
 import type { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import type { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
@@ -99,13 +99,14 @@ interface PostForm {
 		KbdPipe,
 		PlatformDirective,
 		DeviceDirective,
-		FirebaseStoragePipe
+		FirebaseStoragePipe,
+		PostDraftComponent
 	],
 	providers: [CategoryService, PostService, PostPrivateService, PostPasswordService, AIService, SharpService],
 	selector: 'app-create',
 	templateUrl: './create.component.html'
 })
-export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CreateComponent extends CU(class {}) implements OnInit, AfterViewInit, OnDestroy {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
@@ -115,7 +116,6 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 	private readonly postPasswordService: PostPasswordService = inject(PostPasswordService);
 	private readonly postPrivateService: PostPrivateService = inject(PostPrivateService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly cookiesService: CookiesService = inject(CookiesService);
 	private readonly metaService: MetaService = inject(MetaService);
@@ -178,9 +178,6 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 	postFormPreviewId: string = 'postFormPreview';
 	postFormFullscreenId: string = 'postFormFullscreen';
 
-	currentUser: CurrentUser | undefined;
-	currentUser$: Subscription | undefined;
-
 	fullscreenToggle: boolean = false;
 	fullscreenClassList: string[] = ['border', 'border-base-content/20', 'rounded-box', 'shadow-xl'];
 	fullscreenScrollSync: boolean = false;
@@ -196,22 +193,7 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 	appPostDeleteComponent: ComponentRef<PostDeleteComponent>;
 
 	ngOnInit(): void {
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService
-			.getCurrentUser()
-			.pipe(
-				filter((currentUser: CurrentUser | undefined) => !!currentUser),
-				tap((currentUser: CurrentUser) => (this.currentUser = currentUser))
-			)
-			.subscribe({
-				next: () => {
-					/** Apply Data */
-
-					this.setSkeleton();
-					this.setResolver();
-				},
-				error: (error: any) => console.error(error)
-			});
+		super.ngOnInit();
 
 		/** Apply appearance settings */
 
@@ -245,8 +227,11 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
+		super.ngOnDestroy();
+
+		// ngOnDestroy
+
 		[
-			this.currentUser$,
 			this.categoryListRequest$,
 			this.postRequest$,
 			this.postFormRequest$,
@@ -255,6 +240,13 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.postFormTextareaMarkdownItCropperToggle$,
 			this.postFormTextareaMarkdownItCropperClipboard$
 		].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	ngOnCurrentUserIsReady(): void {
+		/** Apply Data */
+
+		this.setSkeleton();
+		this.setResolver();
 	}
 
 	setSkeleton(): void {
@@ -617,6 +609,13 @@ export class CreateComponent implements OnInit, AfterViewInit, OnDestroy {
 				throw new Error('Invalid post type specified: ' + this.postType);
 			}
 		}
+	}
+
+	onSubmitPostFormDraft(value: any): void {
+		this.onChangePostType(value.postType);
+
+		this.postForm.setValue(value.postForm);
+		this.postForm.markAllAsTouched();
 	}
 
 	onSubmitPostForm(): void {
