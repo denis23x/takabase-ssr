@@ -41,7 +41,7 @@
 									[attr.aria-label]="post.user.name"
 								>
 									<figure
-										class="h-4 w-4 rounded relative overflow-hidden"
+										class="h-5 w-5 rounded relative overflow-hidden"
 										appAvatar
 										[appAvatarUser]="post.user"
 									></figure>
@@ -89,7 +89,12 @@
 										[title]="'Go to ' + post.category?.name || 'Category'"
 										[attr.aria-label]="'Go to ' + post.category?.name || 'Category'"
 									>
-										<i class="block fill-current" appSvgIcon [appSvgIconIcon]="'folder'" [appSvgIconSquare]="'1em'"></i>
+										<i
+											class="block fill-current"
+											appSvgIcon
+											[appSvgIconIcon]="'folder'"
+											[appSvgIconSquare]="'1.25em'"
+										></i>
 										<span class="link link-hover text-sm leading-4 truncate">
 											{{ post.category?.name || "Category" }}
 										</span>
@@ -124,6 +129,8 @@
 								type="button"
 								title="Download Screenshot"
 								aria-label="Download Screenshot"
+								appSkeleton
+								[appSkeletonToggle]="postSkeletonToggle"
 								(click)="onClickDomToCanvas()"
 							>
 								@switch (domToCanvasIsLoading) {
@@ -167,11 +174,46 @@
 								</a>
 							</li>
 						} @else {
-							<li class="block empty:hidden">
-								<ng-content select="[slot=bookmark]"></ng-content>
+							<li class="block">
+								<button
+									class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
+									type="button"
+									appSkeleton
+									[title]="(postBookmark ? 'Remove from' : 'Add to') + ' bookmarks'"
+									[attr.aria-label]="(postBookmark ? 'Remove from' : 'Add to') + ' bookmarks'"
+									[ngClass]="postBookmark && !postBookmarkIsLoading ? 'text-success' : 'text-base-content'"
+									[appSkeletonToggle]="postSkeletonToggle"
+									(click)="onToggleBookmark()"
+								>
+									@switch (postBookmarkIsLoading) {
+										@case (true) {
+											<span class="loading loading-spinner"></span>
+										}
+										@default {
+											<i
+												class="block"
+												appSvgIcon
+												[appSvgIconIcon]="postBookmark ? 'bookmark-check-fill' : 'bookmark'"
+												[appSvgIconSquare]="'1.5em'"
+											>
+											</i>
+										}
+									}
+								</button>
 							</li>
-							<li class="block empty:hidden">
-								<ng-content select="[slot=report]"></ng-content>
+							<li class="block">
+								<button
+									class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
+									type="button"
+									appSvgIcon
+									appSkeleton
+									[appSkeletonToggle]="postSkeletonToggle"
+									[title]="'Report'"
+									[attr.aria-label]="'Report'"
+									[appSvgIconIcon]="'flag'"
+									[appSvgIconSquare]="'1.5em'"
+									(click)="onToggleReportDialog()"
+								></button>
 							</li>
 						}
 					</ul>

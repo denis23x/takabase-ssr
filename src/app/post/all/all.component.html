@@ -8,45 +8,6 @@
 			[appPostProsePost]="post"
 			[appPostProsePostSkeletonToggle]="postSkeletonToggle"
 		>
-			<button
-				class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
-				type="button"
-				slot="bookmark"
-				appSkeleton
-				[title]="(postBookmark ? 'Remove from' : 'Add to') + ' bookmarks'"
-				[attr.aria-label]="(postBookmark ? 'Remove from' : 'Add to') + ' bookmarks'"
-				[ngClass]="postBookmark && !postBookmarkIsLoading ? 'text-success' : 'text-base-content'"
-				[appSkeletonToggle]="postSkeletonToggle"
-				(click)="onToggleBookmark()"
-			>
-				@switch (postBookmarkIsLoading) {
-					@case (true) {
-						<span class="loading loading-spinner"></span>
-					}
-					@default {
-						<i
-							class="block"
-							appSvgIcon
-							[appSvgIconIcon]="postBookmark ? 'bookmark-check-fill' : 'bookmark'"
-							[appSvgIconSquare]="'1.5em'"
-						>
-						</i>
-					}
-				}
-			</button>
-			<button
-				class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
-				type="button"
-				slot="report"
-				appSvgIcon
-				appSkeleton
-				[appSkeletonToggle]="postSkeletonToggle"
-				[title]="'Report'"
-				[attr.aria-label]="'Report'"
-				[appSvgIconIcon]="'flag'"
-				[appSvgIconSquare]="'1.5em'"
-				(click)="onToggleReportDialog()"
-			></button>
 			<div class="block w-full gap-4" slot="ad" appAd></div>
 			<div
 				class="block"

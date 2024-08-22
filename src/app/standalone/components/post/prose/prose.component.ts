@@ -2,7 +2,7 @@
 
 import { Component, ComponentRef, inject, Input, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../../dropdown/dropdown.component';
@@ -16,10 +16,17 @@ import { PlatformService } from '../../../../core/services/platform.service';
 import { filter } from 'rxjs/operators';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import { AvatarComponent } from '../../avatar/avatar.component';
+import { SnackbarService } from '../../../../core/services/snackbar.service';
+import { Subscription } from 'rxjs';
+import { PostBookmarkService } from '../../../../core/services/post-bookmark.service';
 import type { QRCodeComponent } from '../../qr-code/qr-code.component';
 import type { Post } from '../../../../core/models/post.model';
 import type { PostExternalLinkComponent } from '../external-link/external-link.component';
 import type { domToCanvas, Options } from 'modern-screenshot';
+import type { ReportComponent } from '../../report/report.component';
+import type { PostBookmark } from '../../../../core/models/post-bookmark.model';
+import type { PostBookmarkCreateDto } from '../../../../core/dto/post-bookmark/post-bookmark-create.dto';
+import type { PostBookmarkGetOneDto } from '../../../../core/dto/post-bookmark/post-bookmark-get-one.dto';
 
 @Component({
 	standalone: true,
@@ -36,15 +43,18 @@ import type { domToCanvas, Options } from 'modern-screenshot';
 		FirebaseStoragePipe,
 		AvatarComponent
 	],
-	providers: [MarkdownService],
+	providers: [MarkdownService, PostBookmarkService],
 	selector: 'app-post-prose, [appPostProse]',
 	templateUrl: './prose.component.html'
 })
 export class PostProseComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly document: Document = inject(DOCUMENT);
+	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly postBookmarkService: PostBookmarkService = inject(PostBookmarkService);
 
 	@Input({ required: true })
 	set appPostProsePost(post: Post) {
@@ -75,9 +85,14 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	domToCanvasSelector: string = 'app-post section';
 	domToCanvasIsLoading: boolean = false;
 
+	postBookmark: PostBookmark | undefined;
+	postBookmarkRequest$: Subscription | undefined;
+	postBookmarkIsLoading: boolean = false;
+
 	// Lazy loading
 
 	appQRCodeComponent: ComponentRef<QRCodeComponent>;
+	appReportComponent: ComponentRef<ReportComponent>;
 	appPostExternalLinkComponent: ComponentRef<PostExternalLinkComponent>;
 
 	ngOnInit(): void {
@@ -86,6 +101,65 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 
 	ngOnDestroy(): void {
 		super.ngOnDestroy();
+
+		// ngOnDestroy
+
+		[this.postBookmarkRequest$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	ngOnCurrentUserIsReady(): void {
+		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+		const postBookmarkGetOneDto: PostBookmarkGetOneDto = {
+			attachPost: false
+		};
+
+		this.postBookmarkRequest$?.unsubscribe();
+		this.postBookmarkRequest$ = this.postBookmarkService.getOne(postId, postBookmarkGetOneDto).subscribe({
+			next: (postBookmark: PostBookmark | Post | null) => (this.postBookmark = postBookmark as PostBookmark),
+			error: (error: any) => console.error(error)
+		});
+	}
+
+	onToggleBookmark(): void {
+		if (this.currentUser) {
+			// Set loader
+
+			this.postBookmarkIsLoading = true;
+
+			// Do request
+
+			if (this.postBookmark) {
+				this.postBookmarkRequest$?.unsubscribe();
+				this.postBookmarkRequest$ = this.postBookmarkService.delete(this.post.id).subscribe({
+					next: () => {
+						this.postBookmark = undefined;
+						this.postBookmarkIsLoading = false;
+
+						this.snackbarService.warning('Oh.. ok', 'Removed from your bookmarks');
+					},
+					error: () => (this.postBookmarkIsLoading = false)
+				});
+			} else {
+				this.postBookmarkIsLoading = true;
+
+				const postBookmarkCreateDto: PostBookmarkCreateDto = {
+					postId: this.post.id
+				};
+
+				this.postBookmarkRequest$?.unsubscribe();
+				this.postBookmarkRequest$ = this.postBookmarkService.create(postBookmarkCreateDto).subscribe({
+					next: (postBookmark: PostBookmark) => {
+						this.postBookmark = postBookmark;
+						this.postBookmarkIsLoading = false;
+
+						this.snackbarService.success('Good choice!', 'Added to your bookmarks');
+					},
+					error: () => (this.postBookmarkIsLoading = false)
+				});
+			}
+		} else {
+			this.snackbarService.warning('Nope', 'Log in before add to bookmarks');
+		}
 	}
 
 	/** LAZY */
@@ -128,6 +202,23 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 
 		this.appQRCodeComponent.changeDetectorRef.detectChanges();
 		this.appQRCodeComponent.instance.onToggleQRCodeDialog(true);
+	}
+
+	async onToggleReportDialog(): Promise<void> {
+		if (this.currentUser) {
+			if (!this.appReportComponent) {
+				await import('../../report/report.component')
+					.then(m => (this.appReportComponent = this.viewContainerRef.createComponent(m.ReportComponent)))
+					.catch((error: any) => console.error(error));
+			}
+
+			this.appReportComponent.setInput('appReportPost', this.post);
+
+			this.appReportComponent.changeDetectorRef.detectChanges();
+			this.appReportComponent.instance.onToggleReportDialog(true);
+		} else {
+			this.snackbarService.warning('Nope', 'Log in before reporting');
+		}
 	}
 
 	async onTogglePostExternalLinkDialog(href: string): Promise<void> {
