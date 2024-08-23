@@ -8,7 +8,7 @@
 		<footer class="block border-t border-base-content/20 pt-4">
 			<nav class="breadcrumbs text-base text-base-content p-0">
 				<ul class="flex items-center justify-start">
-					<li class="block">
+					<li class="flex">
 						<a
 							class="flex items-center justify-start gap-2"
 							appSkeleton
@@ -28,7 +28,7 @@
 							<span class="hidden sm:block link link-hover text-sm"> Home </span>
 						</a>
 					</li>
-					<li class="block">
+					<li class="flex">
 						<a
 							class="flex items-center justify-start gap-2"
 							appSkeleton
@@ -54,7 +54,7 @@
 					@switch (true) {
 						@case (!!postPasswordId) {
 							@if (currentUser?.id === post.user.id) {
-								<li class="block">
+								<li class="flex">
 									<a
 										class="flex items-center justify-start gap-2"
 										appSkeleton
@@ -79,7 +79,7 @@
 						}
 						@case (!!postPrivateId) {
 							@if (currentUser?.id === post.user.id) {
-								<li class="block">
+								<li class="flex">
 									<a
 										class="flex items-center justify-start gap-2"
 										appSkeleton
@@ -102,9 +102,9 @@
 							}
 						}
 						@default {
-							<li class="block">
+							<li class="flex overflow-hidden before:min-w-1.5 before:min-h-1.5">
 								<a
-									class="flex items-center justify-start gap-2"
+									class="flex items-center justify-start gap-2 max-w-full pr-7"
 									appSkeleton
 									[appSkeletonToggle]="postSkeletonToggle"
 									[routerLink]="['/', post.user.name, 'category', post.category.id]"
@@ -119,7 +119,7 @@
 										[appSvgIconSquare]="'1.25em'"
 									>
 									</i>
-									<span class="block link link-hover text-sm">
+									<span class="block link link-hover text-sm truncate">
 										{{ post.category.name }}
 									</span>
 								</a>
