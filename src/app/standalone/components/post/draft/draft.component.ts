@@ -21,11 +21,13 @@ import { PlatformService } from '../../../../core/services/platform.service';
 import { ActivatedRoute } from '@angular/router';
 import { LocalStorageService } from '../../../../core/services/local-storage.service';
 import { HelperService } from '../../../../core/services/helper.service';
-import { debounceTime } from 'rxjs/operators';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
+import { DayjsPipe } from '../../../pipes/dayjs.pipe';
+import dayjs from 'dayjs/esm';
+import type { PostDraft } from '../../../../core/models/post-draft.model';
 
 interface PostDraftForm {
-	name: FormControl<string>;
+	key: FormControl<string>;
 }
 
 @Component({
@@ -36,7 +38,8 @@ interface PostDraftForm {
 		WindowComponent,
 		ReactiveFormsModule,
 		BadgeErrorComponent,
-		SkeletonDirective
+		SkeletonDirective,
+		DayjsPipe
 	],
 	selector: 'app-post-draft, [appPostDraft]',
 	templateUrl: './draft.component.html'
@@ -67,9 +70,9 @@ export class PostDraftComponent implements AfterViewInit, OnDestroy {
 	postForm: FormGroup | undefined;
 	postForm$: Subscription | undefined;
 
-	postDraftList: any[] = [];
+	postDraftList: PostDraft[] = [];
 	postDraftForm: FormGroup = this.formBuilder.group<PostDraftForm>({
-		name: this.formBuilder.nonNullable.control('', [Validators.required])
+		key: this.formBuilder.nonNullable.control('', [Validators.required])
 	});
 	postDraftDialogToggle: boolean = false;
 
@@ -82,16 +85,22 @@ export class PostDraftComponent implements AfterViewInit, OnDestroy {
 			if (!postId) {
 				const window: Window = this.platformService.getWindow();
 
-				this.postDraftList = Object.keys(window.localStorage)
-					.filter((key: string) => key.startsWith('draft'))
-					.map((key: string) => {
-						const postDraftName: string[] = key.split('-');
+				// Getter
 
-						return {
-							id: key,
-							name: postDraftName.slice(2).join(' '),
-							postType: postDraftName.slice(1, 2).pop()
-						};
+				Object.keys(window.localStorage)
+					.filter((key: string) => key.startsWith('draft'))
+					.forEach((key: string) => {
+						const lsValue: string = this.localStorageService.getItem(key);
+						const lsValueDecrypted: string = this.helperService.getDecrypt(lsValue);
+
+						const postDraft: PostDraft = JSON.parse(lsValueDecrypted);
+						const postDraftIsExpired: boolean = dayjs().isAfter(dayjs(postDraft.expiredAt));
+
+						if (postDraftIsExpired) {
+							this.onDeletePostDraft(key);
+						} else {
+							this.postDraftList.push({ key, ...postDraft });
+						}
 					});
 
 				// Show dialog
@@ -101,19 +110,19 @@ export class PostDraftComponent implements AfterViewInit, OnDestroy {
 				// Start watcher
 
 				this.postForm$?.unsubscribe();
-				this.postForm$ = this.postForm.valueChanges.pipe(pairwise(), debounceTime(1000)).subscribe({
+				this.postForm$ = this.postForm.valueChanges.pipe(pairwise()).subscribe({
 					next: ([previousValue, nextValue]: any[]) => {
-						const abstractControl: AbstractControl = this.postForm.get('name');
-						const abstractControlIsValid: boolean = !abstractControl.invalid;
+						const postDraft: PostDraft = {
+							postForm: nextValue,
+							postType: this.postType,
+							expiredAt: dayjs().add(15, 'minute').toString()
+						};
 
-						const lsKey = (value: string): string => ['draft', this.postType, ...value.split(' ')].join('-');
-						const lsValue: string = JSON.stringify(nextValue);
-						const lsValueEncrypted: string = this.helperService.getEncrypt(lsValue);
+						const lsKey = (value: string): string => ['draft', ...value.split(' ')].join('-');
+						const lsValueEncrypted: string = this.helperService.getEncrypt(JSON.stringify(postDraft));
 
-						if (abstractControlIsValid) {
-							this.localStorageService.removeItem(lsKey(previousValue.name));
-							this.localStorageService.setItem(lsKey(nextValue.name), lsValueEncrypted);
-						}
+						this.localStorageService.removeItem(lsKey(previousValue.name));
+						this.localStorageService.setItem(lsKey(nextValue.name), lsValueEncrypted);
 					},
 					error: (error: any) => console.error(error)
 				});
@@ -123,6 +132,21 @@ export class PostDraftComponent implements AfterViewInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		[this.postForm$].forEach(($: Subscription) => $?.unsubscribe());
+	}
+
+	onDeletePostDraft(key: any): void {
+		this.postDraftForm.reset();
+		this.postDraftList = this.postDraftList.filter((postDraft: PostDraft) => {
+			return postDraft.key !== key;
+		});
+
+		// Update localStorage
+
+		this.localStorageService.removeItem(key);
+
+		// Close dialog
+
+		this.onTogglePostDraftDialog(!!this.postDraftList.length);
 	}
 
 	onTogglePostDraftDialog(toggle: boolean): void {
@@ -139,23 +163,15 @@ export class PostDraftComponent implements AfterViewInit, OnDestroy {
 
 	onSubmitPostDraftForm(): void {
 		if (this.helperService.getFormValidation(this.postDraftForm)) {
-			const abstractControl: AbstractControl = this.postDraftForm.get('name');
+			const abstractControl: AbstractControl = this.postDraftForm.get('key');
+			const abstractControlValue: string = abstractControl.value;
 
-			const draftId: string = abstractControl.value;
-			const draft: any = this.postDraftList.find((draft: any) => draft.id === draftId);
-
-			const lsValue: string = this.localStorageService.getItem(draftId);
+			const lsValue: string = this.localStorageService.getItem(abstractControlValue);
 			const lsValueDecrypted: string = this.helperService.getDecrypt(lsValue);
-
-			const postType: string = draft.postType;
-			const postForm: any = JSON.parse(lsValueDecrypted);
 
 			// Emit to parent
 
-			this.appPostDraftSuccess.emit({
-				postType,
-				postForm
-			});
+			this.appPostDraftSuccess.emit(JSON.parse(lsValueDecrypted));
 
 			this.onTogglePostDraftDialog(false);
 		}

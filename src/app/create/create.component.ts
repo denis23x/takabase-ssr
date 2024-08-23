@@ -54,6 +54,7 @@ import { BusService } from '../core/services/bus.service';
 import { SharpService } from '../core/services/sharp.service';
 import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
 import { PostDraftComponent } from '../standalone/components/post/draft/draft.component';
+import { LocalStorageService } from '../core/services/local-storage.service';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import type { Category } from '../core/models/category.model';
 import type { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
@@ -118,6 +119,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly cookiesService: CookiesService = inject(CookiesService);
+	private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly sharpService: SharpService = inject(SharpService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
@@ -614,8 +616,33 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	onSubmitPostFormDraft(value: any): void {
 		this.onChangePostType(value.postType);
 
-		this.postForm.setValue(value.postForm);
-		this.postForm.markAllAsTouched();
+		switch (value.postType) {
+			case 'password':
+			case 'private': {
+				break;
+			}
+			case 'public': {
+				const category: Category = this.categoryList.find((category: Category) => {
+					return category.id === value.postForm.categoryId;
+				});
+
+				if (category) {
+					this.onSelectCategory(category);
+				}
+
+				// Avoid duplicating
+
+				delete value.postForm.categoryId;
+				delete value.postForm.categoryName;
+
+				break;
+			}
+			default: {
+				throw new Error('Invalid post type specified: ' + this.postType);
+			}
+		}
+
+		this.postForm.patchValue(value.postForm);
 	}
 
 	onSubmitPostForm(): void {
@@ -684,6 +711,16 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 						this.router
 							.navigate(['/', this.currentUser.name, ...postTypeRedirectMap[this.postType]])
 							.then(() => this.snackbarService.success('Cheers!', 'Post has been ' + (postId ? 'updated' : 'saved')));
+
+						// Remove post drafts
+
+						if (this.platformService.isBrowser()) {
+							const window: Window = this.platformService.getWindow();
+
+							Object.keys(window.localStorage)
+								.filter((key: string) => key.startsWith('draft'))
+								.forEach((key: string) => this.localStorageService.removeItem(key));
+						}
 					},
 					error: () => this.postForm.enable()
 				});

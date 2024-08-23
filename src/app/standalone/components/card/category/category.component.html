@@ -37,17 +37,19 @@
 			[attr.aria-label]="category.name"
 		>
 			@if (category._highlightResult?.name) {
-				<span class="block" [innerHTML]="category._highlightResult.name.value"></span>
+				<!-- prettier-ignore -->
+				<span class="block text-ellipsis overflow-hidden max-w-full" [innerHTML]="category._highlightResult.name.value"></span>
 			} @else {
-				<span class="block">{{ category.name }}</span>
+				<span class="block text-ellipsis overflow-hidden max-w-full">{{ category.name }}</span>
 			}
 		</a>
 		@if (category._highlightResult?.description || category.description) {
-			<p class="text-base-content text-sm" appSkeleton [appSkeletonToggle]="categorySkeletonToggle">
+			<p class="text-base-content text-sm max-w-full" appSkeleton [appSkeletonToggle]="categorySkeletonToggle">
 				@if (category._highlightResult?.description) {
-					<span class="block" [innerHTML]="category._highlightResult.description.value"></span>
+					<!-- prettier-ignore -->
+					<span class="block text-ellipsis overflow-hidden max-w-full" [innerHTML]="category._highlightResult.description.value"></span>
 				} @else {
-					<span class="block">{{ category.description }}</span>
+					<span class="block text-ellipsis overflow-hidden max-w-full">{{ category.description }}</span>
 				}
 			</p>
 		}

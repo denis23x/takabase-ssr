@@ -175,7 +175,6 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 		const htmlElementOptions: Options = {
 			type: 'image/png',
 			scale: 2,
-			font: false,
 			filter: (node: Node): boolean => true
 		};
 

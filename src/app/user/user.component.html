@@ -32,13 +32,13 @@
 			</div>
 			@if (user.description) {
 				<div
-					class="w-full"
+					class="block w-full max-w-full"
 					appSkeleton
 					[appSkeletonToggle]="userSkeletonToggle"
 					[appSkeletonClassListParent]="['!rounded-box']"
 					[appSkeletonClassList]="['!rounded-box']"
 				>
-					<p class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4">
+					<p class="rounded-box w-full max-w-full text-ellipsis overflow-hidden bg-base-200 p-4">
 						{{ user.description }}
 					</p>
 				</div>

@@ -95,13 +95,15 @@
 		</div>
 		@if (category?.description) {
 			<div
-				class="block"
+				class="block w-full max-w-full"
 				appSkeleton
 				[appSkeletonToggle]="categorySkeletonToggle || postListSkeletonToggle"
 				[appSkeletonClassListParent]="['!rounded-box']"
 				[appSkeletonClassList]="['!rounded-box']"
 			>
-				<p class="prose rounded-box w-full max-w-none overflow-auto bg-base-200 p-4">{{ category?.description }}</p>
+				<p class="rounded-box w-full max-w-full text-ellipsis overflow-hidden bg-base-200 p-4">
+					{{ category?.description }}
+				</p>
 			</div>
 		}
 		<div class="grid gap-4">
