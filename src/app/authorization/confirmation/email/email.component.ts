@@ -91,8 +91,10 @@ export class AuthConfirmationEmailComponent extends CU(class {}) implements OnIn
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Email confirmation';
-		const description: string = 'Thank you for verifying your email address';
+		const title: string = 'Email Confirmation - Almost There!';
+
+		// prettier-ignore
+		const description: string = 'Thanks for confirming your email with Takabase! Takabase if processing your verification and soon you will be all set to enjoy with full range of features. Please hold on for just a moment, appreciate your patience';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

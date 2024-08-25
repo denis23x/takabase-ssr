@@ -115,8 +115,10 @@ export class SearchCategoryComponent extends M(class {}) implements OnInit, OnDe
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Search categories';
-		const description: string = "Use the search to find what you're looking for";
+		const title: string = 'Discover Categories with Search Tool';
+
+		// prettier-ignore
+		const description: string = 'Use Takabase search feature to explore a wide range of categories. Find the perfect category that fits your needs and start exploring content relevant to your interests';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

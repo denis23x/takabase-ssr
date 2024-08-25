@@ -65,8 +65,10 @@ export class AuthConfirmationRecoveryComponent implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Email recovery';
-		const description: string = 'Follow the simple steps to regain access to your account';
+		const title: string = 'Email Recovery - Get Back In Now';
+
+		// prettier-ignore
+		const description: string = 'Regain access to your account through Takabase is secure and simple recovery process. Just follow the easy steps provided, and you will be back in control of your account in no time, with the highest level of security';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

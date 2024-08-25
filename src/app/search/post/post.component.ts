@@ -115,8 +115,10 @@ export class SearchPostComponent extends M(class {}) implements OnInit, OnDestro
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Search posts';
-		const description: string = "Use the search to find what you're looking for";
+		const title: string = 'Discover Posts with Search Tool';
+
+		// prettier-ignore
+		const description: string = 'Use Takabase search feature to discover posts that match your interests. Find and engage with content that resonates with you for a more engaging experience';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

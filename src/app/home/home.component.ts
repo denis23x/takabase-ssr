@@ -105,8 +105,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Takabase';
-		const description: string = 'Stay up to date with the latest posts and insights from Takabase';
+		const title: string = 'Discover the Latest Posts and Insights on Takabase';
+
+		// prettier-ignore
+		const description: string = 'Explore the latest posts, categories and insights on Takabase. Stay updated with what is trending and connected with vibrant community. Discover fresh content and engage with like-minded individuals every day';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

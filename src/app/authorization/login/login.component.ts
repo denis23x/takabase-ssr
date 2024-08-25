@@ -110,8 +110,10 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Login';
-		const description: string = 'Not an user yet? Sign up for free';
+		const title: string = 'Login - Start Managing Your Account';
+
+		// prettier-ignore
+		const description: string = 'Log in to manage your account and access your personalized settings. If you are new here, don’t worry—creating an account is quick, easy and free. Join Takabase today and start enjoying personalized services and content';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

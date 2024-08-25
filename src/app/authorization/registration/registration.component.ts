@@ -172,8 +172,10 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Registration';
-		const description: string = 'Creating an account with us is quick and easy';
+		const title: string = 'Create Your Free Account - Quick Registration';
+
+		// prettier-ignore
+		const description: string = 'Register for free and become a valued member of Takabase ever-growing community. Creating your account is quick and straightforward, taking just a minute. Start exploring Takabase and connect with others today';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

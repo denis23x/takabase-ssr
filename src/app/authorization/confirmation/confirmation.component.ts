@@ -63,8 +63,10 @@ export class AuthConfirmationComponent implements OnInit {
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Confirmation page';
-		const description: string = 'Please wait a moment for redirect';
+		const title: string = 'Confirmation in process please stand by';
+
+		// prettier-ignore
+		const description: string = 'Please wait just a moment. Takabase is redirecting you to the next page. Takabase is processing your request to ensure everything is ready. You will be on your way shortly, thank you for your patience';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

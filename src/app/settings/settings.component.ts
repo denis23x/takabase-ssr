@@ -27,10 +27,10 @@ export class SettingsComponent implements OnInit {
 	}
 
 	setMetaTags(): void {
-		const title: string = 'User settings';
+		const title: string = 'Customize Your Takabase Experience';
 
 		// prettier-ignore
-		const description: string = 'Adjust preferences, update account information, and tailor your interactions to match your preferences';
+		const description: string = 'Tailor your Takabase experience by adjusting your user settings. Manage your account, preferences and interactions seamlessly to make the most of your personalized experience';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

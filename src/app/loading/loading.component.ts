@@ -22,8 +22,10 @@ export class LoadingComponent implements OnInit {
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Loading';
-		const description: string = 'Loading something exciting just for you. Stay tuned!';
+		const title: string = 'Loading. Your Content is on the Way';
+
+		// prettier-ignore
+		const description: string = 'Please wait while Takabase loads something exciting and tailored just for you. Takabase is getting everything ready, so hold tight and prepare for a fabulous experience that will keep you engaged and coming back for more';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

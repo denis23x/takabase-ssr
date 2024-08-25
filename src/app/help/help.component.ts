@@ -61,8 +61,10 @@ export class HelpComponent implements OnInit {
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Help & Support';
-		const description: string = 'Find answers to commonly asked questions';
+		const title: string = 'Need Support? Answers and Help Found Here';
+
+		// prettier-ignore
+		const description: string = 'Get the answers you need with this Help & Support section. Whether you have questions or need guidance, Takabase is here to assist you every step of the way. Explore these resources and find the support you need right now';
 
 		const metaOpenGraph: Partial<MetaOpenGraph> = {
 			['og:title']: title,

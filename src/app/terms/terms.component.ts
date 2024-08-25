@@ -55,8 +55,10 @@ export class TermsComponent implements OnInit {
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Terms of Service';
-		const description: string = 'Read the Terms of Service to understand the rules and guidelines for using Takabase';
+		const title: string = 'Takabase Terms of Service';
+
+		// prettier-ignore
+		const description: string = 'Familiarize yourself with Takabase rules by reading our comprehensive Terms of Service. Stay informed about your rights and responsibilities to ensure a smooth and compliant experience';
 
 		const metaOpenGraph: Partial<MetaOpenGraph> = {
 			['og:title']: title,

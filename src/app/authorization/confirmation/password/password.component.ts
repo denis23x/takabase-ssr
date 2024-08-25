@@ -67,8 +67,10 @@ export class AuthConfirmationPasswordComponent implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Password reset';
-		const description: string = 'Follow the simple steps to regain access to your account';
+		const title: string = 'Create New Password – Safe and Secure';
+
+		// prettier-ignore
+		const description: string = 'Follow the simple steps to set a new password and regain access to your account. It’s essential to pick a strong and secure password to protect your account. Your security is in priority and Takabase is here to help you every step of the way';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

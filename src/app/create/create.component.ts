@@ -389,8 +389,10 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Create post';
-		const description: string = 'Create and share your thoughts with a new post on the platform';
+		const title: string = 'Create and Share Your Ideas';
+
+		// prettier-ignore
+		const description: string = 'Unleash your creativity today by starting a new journey with a post. Share your thoughts, engage with others, and become a vital part of the Takabase community. Start posting and interacting now';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

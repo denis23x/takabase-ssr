@@ -121,8 +121,10 @@ export class SearchUserComponent extends M(class {}) implements OnInit, OnDestro
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Search users';
-		const description: string = "Use the search to find what you're looking for";
+		const title: string = 'Discover Users with Search Tool';
+
+		// prettier-ignore
+		const description: string = 'Use Takabase search feature to connect with users. Discover new profiles, expand your community, and engage with like-minded individuals for a richer social experience';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

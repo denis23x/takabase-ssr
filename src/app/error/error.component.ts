@@ -81,7 +81,9 @@ export class ErrorComponent implements OnInit {
 
 	setMetaTags(): void {
 		const title: string = this.message;
-		const description: string = "Oops! It looks like you've landed on an error page";
+
+		// prettier-ignore
+		const description: string = 'Oops! It seems like you have landed on an error page. But don’t worry — Takabase will help you get back on track. Try heading back to the homepage or using the menu to find what you are looking for. Takabase is here to assist you';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

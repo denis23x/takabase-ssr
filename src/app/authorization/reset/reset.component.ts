@@ -60,8 +60,10 @@ export class AuthResetComponent implements OnInit, OnDestroy {
 	}
 
 	setMetaTags(): void {
-		const title: string = 'Reset password';
-		const description: string = 'To reset your password, please enter your email address below';
+		const title: string = 'Reset Password - Safely Regain Access';
+
+		// prettier-ignore
+		const description: string = 'Reset your password with ease and security. Just provide your email and receive a fast and secure link to reset your password. Takabase makes it simple to regain control of your account quickly and safely';
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,
