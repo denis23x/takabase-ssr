@@ -16,6 +16,12 @@ import { inject } from '@angular/core';
 // prettier-ignore
 export const APP_ROUTES: Route[] = [
 	{
+		path: '404',
+		loadComponent: async () => {
+			return import('./error/error.component').then(m => m.ErrorComponent);
+		}
+	},
+	{
 		path: '',
 		loadComponent: async () => {
 			return import('./outlet/outlet.component').then(m => m.OutletComponent);

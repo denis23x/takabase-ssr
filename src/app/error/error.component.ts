@@ -40,8 +40,8 @@ export class ErrorComponent implements OnInit {
 	ngOnInit(): void {
 		/** Status response SEO correction */
 
+		//! Works only in production build
 		if (this.platformService.isServer()) {
-			//! Works only in production build
 			if (this.response) {
 				this.response.status(Number(this.activatedRoute.snapshot.paramMap.get('status')));
 			}
@@ -58,7 +58,11 @@ export class ErrorComponent implements OnInit {
 	}
 
 	setResolver(): void {
-		const statusCode: number = Number(this.activatedRoute.snapshot.paramMap.get('status'));
+		const isCustom404: boolean = this.activatedRoute.snapshot.url[0].path === '404';
+
+		// error/:status
+
+		const statusCode: number = isCustom404 ? 404 : Number(this.activatedRoute.snapshot.paramMap.get('status'));
 		const message: string = this.getMessageMap(statusCode);
 
 		if (!statusCode || !message) {
