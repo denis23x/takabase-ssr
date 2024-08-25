@@ -28,9 +28,8 @@
 						[appSvgIconIcon]="'info-circle'"
 						[appSvgIconSquare]="'1.5em'"
 					></i>
-					<span class="block">
-						Drafts detected. They’ll be deleted in 15 minutes, so save your work to avoid losing changes
-					</span>
+					<!-- prettier-ignore -->
+					<span class="block"> Drafts detected. They’ll be deleted in <strong class="inline font-bold"> 15 minutes </strong>, so save your work to avoid losing changes </span>
 				</p>
 				@if (postDraftForm.get("key"); as key) {
 					<fieldset class="form-control grid">

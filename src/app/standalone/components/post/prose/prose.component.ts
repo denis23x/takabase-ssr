@@ -108,16 +108,18 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	}
 
 	ngOnCurrentUserIsReady(): void {
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-		const postBookmarkGetOneDto: PostBookmarkGetOneDto = {
-			attachPost: false
-		};
+		if (!this.postPreview) {
+			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+			const postBookmarkGetOneDto: PostBookmarkGetOneDto = {
+				attachPost: false
+			};
 
-		this.postBookmarkRequest$?.unsubscribe();
-		this.postBookmarkRequest$ = this.postBookmarkService.getOne(postId, postBookmarkGetOneDto).subscribe({
-			next: (postBookmark: PostBookmark | Post | null) => (this.postBookmark = postBookmark as PostBookmark),
-			error: (error: any) => console.error(error)
-		});
+			this.postBookmarkRequest$?.unsubscribe();
+			this.postBookmarkRequest$ = this.postBookmarkService.getOne(postId, postBookmarkGetOneDto).subscribe({
+				next: (postBookmark: PostBookmark | Post | null) => (this.postBookmark = postBookmark as PostBookmark),
+				error: (error: any) => console.error(error)
+			});
+		}
 	}
 
 	onClickBookmark(): void {

@@ -148,6 +148,12 @@
 								>
 									@if (name.touched && !!name.errors && postForm.enabled) {
 										<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
+									} @else if (name.valid && postForm.enabled) {
+										@if (!post) {
+											<span class="badge-success badge indicator-item w-max translate-x-full translate-y-0 text-xs">
+												Draft
+											</span>
+										}
 									}
 									<span class="label-text mr-2">Name</span>
 								</div>
@@ -723,11 +729,7 @@
 			</div>
 		</div>
 	</div>
+	<!-- prettier-ignore -->
+	<div appPostDraft [appPostDraftPostForm]="postForm" [appPostDraftPostType]="postType" (appPostDraftSuccess)="onSubmitPostFormDraft($event)"></div>
 	<div appShortcuts></div>
-	<div
-		appPostDraft
-		[appPostDraftPostForm]="postForm"
-		[appPostDraftPostType]="postType"
-		(appPostDraftSuccess)="onSubmitPostFormDraft($event)"
-	></div>
 </ng-container>

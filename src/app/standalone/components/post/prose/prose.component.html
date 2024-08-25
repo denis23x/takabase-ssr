@@ -82,12 +82,13 @@
 									appSkeleton
 									[appSkeletonToggle]="postSkeletonToggle"
 								>
+									<!-- prettier-ignore -->
 									<a
 										class="flex items-center justify-start gap-2 max-w-full"
 										[target]="postPreview ? '_blank' : '_self'"
-										[routerLink]="['/', post.user.name, 'category', post.category?.id]"
-										[title]="'Go to ' + post.category?.name || 'Category'"
-										[attr.aria-label]="'Go to ' + post.category?.name || 'Category'"
+										[routerLink]="post.category ? ['/', post.user.name, 'category', post.category.id] : ['/', post.user.name]"
+										[title]="'Go to ' + post.category?.name || 'category'"
+										[attr.aria-label]="'Go to ' + post.category?.name || 'category'"
 									>
 										<i
 											class="block fill-current"

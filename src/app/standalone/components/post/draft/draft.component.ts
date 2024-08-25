@@ -2,6 +2,7 @@
 
 import {
 	AfterViewInit,
+	ChangeDetectorRef,
 	Component,
 	ElementRef,
 	EventEmitter,
@@ -23,6 +24,7 @@ import { LocalStorageService } from '../../../../core/services/local-storage.ser
 import { HelperService } from '../../../../core/services/helper.service';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
+import { filter } from 'rxjs/operators';
 import dayjs from 'dayjs/esm';
 import type { PostDraft } from '../../../../core/models/post-draft.model';
 
@@ -50,6 +52,7 @@ export class PostDraftComponent implements AfterViewInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
+	private readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
 	@ViewChild('postDraftDialogElement') postDraftDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
@@ -110,22 +113,31 @@ export class PostDraftComponent implements AfterViewInit, OnDestroy {
 				// Start watcher
 
 				this.postForm$?.unsubscribe();
-				this.postForm$ = this.postForm.valueChanges.pipe(pairwise()).subscribe({
-					next: ([previousValue, nextValue]: any[]) => {
-						const postDraft: PostDraft = {
-							postForm: nextValue,
-							postType: this.postType,
-							expiredAt: dayjs().add(15, 'minute').toString()
-						};
+				this.postForm$ = this.postForm.valueChanges
+					.pipe(
+						pairwise(),
+						filter(() => this.postForm.get('name').valid)
+					)
+					.subscribe({
+						next: ([previousValue, nextValue]: any[]) => {
+							const postDraft: PostDraft = {
+								postForm: nextValue,
+								postType: this.postType,
+								expiredAt: dayjs().add(15, 'minute').toString()
+							};
 
-						const lsKey = (value: string): string => ['draft', ...value.split(' ')].join('-');
-						const lsValueEncrypted: string = this.helperService.getEncrypt(JSON.stringify(postDraft));
+							const lsKey = (value: string): string => ['draft', ...value.split(' ')].join('-');
+							const lsValueEncrypted: string = this.helperService.getEncrypt(JSON.stringify(postDraft));
 
-						this.localStorageService.removeItem(lsKey(previousValue.name));
-						this.localStorageService.setItem(lsKey(nextValue.name), lsValueEncrypted);
-					},
-					error: (error: any) => console.error(error)
-				});
+							this.localStorageService.removeItem(lsKey(previousValue.name));
+							this.localStorageService.setItem(lsKey(nextValue.name), lsValueEncrypted);
+						},
+						error: (error: any) => console.error(error)
+					});
+
+				// ExpressionChangedAfterItHasBeenCheckedError (PostDraftComponent)
+
+				this.changeDetectorRef.detectChanges();
 			}
 		}
 	}

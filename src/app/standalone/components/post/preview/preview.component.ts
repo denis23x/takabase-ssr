@@ -39,6 +39,11 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 	}
 
 	@Input({ required: true })
+	set appPostPreviewPostType(postType: string) {
+		this.postType = postType;
+	}
+
+	@Input({ required: true })
 	set appPostPreviewCategory(category: Category) {
 		this.category = category;
 	}
@@ -49,6 +54,7 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 	category: Category | undefined;
 
 	post: Post | undefined;
+	postType: string = 'public';
 	postPreview: Post | undefined;
 	postPreviewDialogToggle: boolean = false;
 

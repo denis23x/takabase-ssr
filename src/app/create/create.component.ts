@@ -767,6 +767,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 		}
 
 		this.appPostPreviewComponent.setInput('appPostPreviewPost', this.postForm.value);
+		this.appPostPreviewComponent.setInput('appPostPreviewPostType', this.postType);
 		this.appPostPreviewComponent.setInput('appPostPreviewCategory', this.category);
 
 		this.appPostPreviewComponent.changeDetectorRef.detectChanges();
