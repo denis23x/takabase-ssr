@@ -3,6 +3,8 @@
 <ng-container>
 	<ul
 		class="flex items-center justify-start gap-4 overflow-auto"
+		itemscope
+		itemtype="http://schema.org/Action"
 		[ngClass]="{ 'grayscale cursor-not-allowed': signInDisabled }"
 	>
 		<li class="block" [ngClass]="{ 'pointer-events-none': signInDisabled }">
@@ -11,6 +13,7 @@
 				type="button"
 				title="Redirect to Google to continue"
 				aria-label="Redirect to Google to continue"
+				itemprop="target"
 				(click)="onSignInWithProvider('google.com')"
 			>
 				<i
@@ -20,7 +23,7 @@
 					[appSvgLogoWidth]="'20'"
 					[appSvgLogoHeight]="'20'"
 				></i>
-				<span class="font-roboto text-sm whitespace-nowrap">Continue with Google</span>
+				<span class="font-roboto text-sm whitespace-nowrap" itemprop="name">Continue with Google</span>
 			</button>
 		</li>
 		<li class="hidden" [ngClass]="{ 'pointer-events-none': signInDisabled }">
@@ -30,6 +33,7 @@
 				title="Redirect to Facebook to continue"
 				aria-label="Redirect to Facebook to continue"
 				appSvgLogo
+				itemprop="target"
 				[appSvgLogoViewBox]="'0 0 256 256'"
 				[appSvgLogoIcon]="'facebook'"
 				[appSvgLogoWidth]="'32'"
@@ -44,6 +48,7 @@
 				title="Redirect to Github to continue"
 				aria-label="Redirect to Github to continue"
 				appSvgLogo
+				itemprop="target"
 				[appSvgLogoViewBox]="'0 0 97.6 96'"
 				[appSvgLogoIcon]="'github'"
 				[appSvgLogoWidth]="'32'"

@@ -1,13 +1,18 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="navbar rounded-box border border-base-content/20 bg-base-100 shadow-xl !p-4">
+	<div
+		class="navbar rounded-box border border-base-content/20 bg-base-100 shadow-xl !p-4"
+		itemscope
+		itemtype="http://schema.org/SiteNavigationElement"
+	>
 		<nav class="navbar-start">
 			<a
 				class="flex items-center justify-center w-12 h-12"
 				title="Takabase"
 				aria-label="Takabase"
 				appSvgLogo
+				itemprop="url image"
 				[routerLink]="['/']"
 				[appSvgLogoIcon]="'takabase'"
 				[appSvgLogoSquare]="'48'"
@@ -15,14 +20,15 @@
 			</a>
 		</nav>
 		<nav class="navbar-end">
-			<ul class="flex items-center justify-end gap-4">
-				<li class="block" appAuthenticated>
+			<ul class="flex items-center justify-end gap-4" itemscope itemtype="http://schema.org/ItemList">
+				<li class="block" appAuthenticated itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 					<a
 						class="btn-ghost btn-square btn fill-current text-base-content"
 						title="Create new post"
 						aria-label="Create new post"
 						appSvgIcon
 						slot="private"
+						itemprop="url"
 						[routerLink]="['/create']"
 						[routerLinkActive]="['btn-active']"
 						[routerLinkActiveOptions]="{ exact: true }"
@@ -30,24 +36,30 @@
 						[appSvgIconSquare]="'2em'"
 					>
 					</a>
+					<meta itemprop="position" content="1" />
 				</li>
-				<li class="block">
+				<li class="block" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 					<a
 						class="btn-ghost btn-square btn fill-current text-base-content"
 						title="Search"
 						aria-label="Search"
 						appSvgIcon
+						itemprop="url"
 						[routerLink]="['/search']"
 						[routerLinkActive]="['btn-active']"
 						[appSvgIconIcon]="'search'"
 						[appSvgIconSquare]="'1.5em'"
 					>
 					</a>
+					<meta itemprop="position" content="2" />
 				</li>
 				<li
 					class="block"
 					appAuthenticated
 					appSkeleton
+					itemprop="itemListElement"
+					itemscope
+					itemtype="https://schema.org/ListItem"
 					[ngClass]="{ 'h-12 w-12 overflow-hidden': currentUserSkeletonToggle }"
 					[appSkeletonToggle]="currentUserSkeletonToggle"
 				>
@@ -57,12 +69,14 @@
 						aria-label="Login"
 						appSvgIcon
 						slot="public"
+						itemprop="url"
 						[routerLink]="['/login']"
 						[routerLinkActive]="['btn-active']"
 						[appSvgIconIcon]="'person-circle'"
 						[appSvgIconSquare]="'1.5em'"
 					>
 					</a>
+					<meta itemprop="position" content="3" />
 					@if (currentUser) {
 						<div
 							class="flex cursor-pointer relative"
@@ -78,50 +92,78 @@
 									[appAvatarUser]="currentUser"
 								></figure>
 							</div>
-							<ul class="menu menu-vertical menu-md" slot="content">
-								<li class="flex w-full snap-start scroll-my-2">
+							<ul class="menu menu-vertical menu-md" slot="content" itemscope itemtype="http://schema.org/ItemList">
+								<li
+									class="flex w-full snap-start scroll-my-2"
+									itemprop="itemListElement"
+									itemscope
+									itemtype="https://schema.org/ListItem"
+								>
 									<a
 										class="rounded-btn block w-full truncate text-right"
+										itemprop="url name"
 										[title]="currentUser.name"
 										[attr.aria-label]="currentUser.name"
 										[routerLink]="['/', currentUser.name]"
 									>
 										My Profile
 									</a>
+									<meta itemprop="position" content="1" />
 								</li>
-								<li class="flex w-full snap-start scroll-my-2">
+								<li
+									class="flex w-full snap-start scroll-my-2"
+									itemprop="itemListElement"
+									itemscope
+									itemtype="https://schema.org/ListItem"
+								>
 									<a
 										class="rounded-btn block w-full truncate text-right"
 										title="Settings"
 										aria-label="Settings"
+										itemprop="url name"
 										[routerLink]="['/settings']"
 									>
 										Settings
 									</a>
+									<meta itemprop="position" content="2" />
 								</li>
-								<li class="flex w-full snap-start scroll-my-2">
+								<li
+									class="flex w-full snap-start scroll-my-2"
+									itemprop="itemListElement"
+									itemscope
+									itemtype="https://schema.org/ListItem"
+								>
 									<a
 										class="rounded-btn block w-full truncate text-right"
 										title="About"
 										aria-label="About"
+										itemprop="url name"
 										[routerLink]="['/help/about']"
 									>
 										About
 									</a>
+									<meta itemprop="position" content="3" />
 								</li>
 								<li class="flex w-full snap-start scroll-my-2 menu-title">
 									<hr class="my-0 border-base-content/20" />
 								</li>
-								<li class="flex w-full snap-start scroll-my-2">
+								<li
+									class="flex w-full snap-start scroll-my-2"
+									itemprop="itemListElement"
+									itemscope
+									itemtype="https://schema.org/ListItem"
+								>
 									<button
 										class="rounded-btn block w-full truncate text-right"
 										type="button"
 										title="Logout"
 										aria-label="Logout"
+										itemprop="name"
 										(click)="onLogout()"
 									>
 										Logout
 									</button>
+									<meta itemprop="position" content="4" />
 								</li>
 							</ul>
 						</div>
