@@ -4,30 +4,32 @@
 	<section class="flex flex-col gap-4">
 		<header
 			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+			itemprop="mainEntity"
+			itemscope
+			itemtype="https://schema.org/Person"
 		>
-			<div class="flex w-full items-center justify-between gap-4">
-				<div class="flex items-center justify-start gap-4 overflow-hidden">
-					<div class="avatar" appSkeleton [appSkeletonToggle]="userSkeletonToggle">
-						<figure class="h-12 w-12 rounded-btn relative overflow-hidden" appAvatar [appAvatarUser]="user"></figure>
-					</div>
-					<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
-						<h1
-							class="truncate text-xl leading-6 font-bold text-base-content max-w-full"
-							data-pw="app-user-heading-user-name"
-							appSkeleton
-							[appSkeletonToggle]="userSkeletonToggle"
-						>
-							{{ user.name }}
-						</h1>
-						<time
-							class="truncate text-sm leading-4 text-base-content/50 max-w-full"
-							appSkeleton
-							[appSkeletonToggle]="userSkeletonToggle"
-							[attr.datetime]="user.createdAt | dayjs: 'format' : 'YYYY-M-D'"
-						>
-							Registered {{ user.createdAt | dayjs: "fromNow" }}
-						</time>
-					</div>
+			<div class="flex items-center justify-start gap-4 overflow-hidden w-full">
+				<div class="avatar" appSkeleton [appSkeletonToggle]="userSkeletonToggle">
+					<figure class="h-12 w-12 rounded-btn relative overflow-hidden" appAvatar [appAvatarUser]="user"></figure>
+				</div>
+				<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
+					<h1
+						class="truncate text-xl leading-6 font-bold text-base-content max-w-full"
+						data-pw="app-user-heading-user-name"
+						appSkeleton
+						itemprop="name"
+						[appSkeletonToggle]="userSkeletonToggle"
+					>
+						{{ user.name }}
+					</h1>
+					<time
+						class="truncate text-sm leading-4 text-base-content/50 max-w-full"
+						appSkeleton
+						[appSkeletonToggle]="userSkeletonToggle"
+						[attr.datetime]="user.createdAt | dayjs: 'format' : 'YYYY-M-D'"
+					>
+						Registered {{ user.createdAt | dayjs: "fromNow" }}
+					</time>
 				</div>
 			</div>
 			@if (user.description) {
@@ -38,7 +40,7 @@
 					[appSkeletonClassListParent]="['!rounded-box']"
 					[appSkeletonClassList]="['!rounded-box']"
 				>
-					<p class="rounded-box w-full max-w-full text-ellipsis overflow-hidden bg-base-200 p-4">
+					<p class="rounded-box w-full max-w-full text-ellipsis overflow-hidden bg-base-200 p-4" itemprop="description">
 						{{ user.description }}
 					</p>
 				</div>
@@ -46,13 +48,20 @@
 		</header>
 		<div class="flex flex-col">
 			<nav class="flex items-end min-h-12 px-4">
-				<ul class="tabs tabs-lifted tabs-lg" role="tablist">
+				<ul
+					class="tabs tabs-lifted tabs-lg"
+					role="tablist"
+					itemprop="mainContentOfPage"
+					itemscope
+					itemtype="http://schema.org/ItemList"
+				>
 					<!-- prettier-ignore -->
 					@if ({ isActive: !category && !routerLinkActiveBookmark?.isActive && !routerLinkActivePassword?.isActive && !routerLinkActivePrivate?.isActive }; as routerLinkActiveAll) {
             <li
               class="tab"
               role="tab"
               appSkeleton
+              itemprop="itemListElement"
               [class.tab-active]="!categoryListSkeletonToggle && routerLinkActiveAll.isActive"
               [appSkeletonToggle]="categoryListSkeletonToggle"
               [appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -63,11 +72,12 @@
                 title="All posts"
                 aria-label="All posts"
                 appScrollPreset
+                itemprop="url"
                 [appScrollPresetActive]="!categoryListSkeletonToggle && routerLinkActiveAll.isActive"
                 [routerLink]="['/', user.name]"
                 [queryParamsHandling]="'merge'"
               >
-                All
+                <span class="block" itemprop="name"> All </span>
               </a>
             </li>
           }
@@ -76,6 +86,7 @@
 							class="tab"
 							role="tab"
 							appSkeleton
+							itemprop="itemListElement"
 							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActiveBookmark.isActive"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -88,6 +99,7 @@
 								appSvgIcon
 								appScrollPreset
 								routerLinkActive
+								itemprop="url"
 								#routerLinkActiveBookmark="routerLinkActive"
 								[appScrollPresetActive]="routerLinkActiveBookmark.isActive"
 								[routerLink]="['/', user.name, 'bookmark']"
@@ -101,6 +113,7 @@
 							class="tab"
 							role="tab"
 							appSkeleton
+							itemprop="itemListElement"
 							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActivePassword.isActive"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -113,6 +126,7 @@
 								appSvgIcon
 								appScrollPreset
 								routerLinkActive
+								itemprop="url"
 								#routerLinkActivePassword="routerLinkActive"
 								[appScrollPresetActive]="routerLinkActivePassword.isActive"
 								[routerLink]="['/', user.name, 'password']"
@@ -127,6 +141,7 @@
 							class="tab"
 							role="tab"
 							appSkeleton
+							itemprop="itemListElement"
 							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActivePrivate.isActive"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -139,6 +154,7 @@
 								appSvgIcon
 								appScrollPreset
 								routerLinkActive
+								itemprop="url"
 								#routerLinkActivePrivate="routerLinkActive"
 								[appScrollPresetActive]="routerLinkActivePrivate.isActive"
 								[routerLink]="['/', user.name, 'private']"
@@ -154,6 +170,7 @@
 							class="tab"
 							role="tab"
 							appSkeleton
+							itemprop="itemListElement"
 							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActiveCategory.isActive && category"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -163,6 +180,7 @@
 								class="flex h-full items-center justify-center whitespace-nowrap px-4"
 								appScrollPreset
 								routerLinkActive
+								itemprop="url"
 								#routerLinkActiveCategory="routerLinkActive"
 								[appScrollPresetActive]="routerLinkActiveCategory.isActive"
 								[routerLink]="['/', user.name, 'category', category.id]"
@@ -170,7 +188,7 @@
 								[title]="category.name"
 								[attr.aria-label]="category.name"
 							>
-								<span class="block truncate max-w-[192px] sm:max-w-full">{{ category.name }}</span>
+								<span class="block truncate max-w-[192px] sm:max-w-full" itemprop="name">{{ category.name }}</span>
 							</a>
 						</li>
 					}

@@ -40,6 +40,8 @@ export class AvatarComponent {
 			const elementRef: HTMLElement = this.elementRef.nativeElement;
 			const elementRefImage: HTMLImageElement = this.document.createElement('img');
 
+			// @ts-ignore
+			elementRefImage.itemprop = 'image';
 			elementRefImage.id = this.helperService.getNanoId(12);
 			elementRefImage.classList.add(...['bg-base-300', 'object-cover', 'object-center']);
 			elementRefImage.src = './assets/images/placeholder-image.svg';

@@ -7,11 +7,13 @@
 		</div>
 		<footer class="block border-t border-base-content/20 pt-4">
 			<nav class="breadcrumbs text-base text-base-content p-0">
-				<ul class="flex items-center justify-start">
-					<li class="flex">
+				<!-- https://schema.org/BreadcrumbList -->
+				<ul class="flex items-center justify-start" itemscope itemtype="https://schema.org/BreadcrumbList">
+					<li class="flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 						<a
 							class="flex items-center justify-start gap-2"
 							appSkeleton
+							itemprop="item url"
 							[appSkeletonToggle]="postSkeletonToggle"
 							[routerLink]="['/']"
 							[title]="'Home'"
@@ -25,13 +27,15 @@
 								[appSvgIconSquare]="'1.25em'"
 							>
 							</i>
-							<span class="hidden sm:block link link-hover text-sm"> Home </span>
+							<span class="hidden sm:block link link-hover text-sm" itemprop="name"> Home </span>
 						</a>
+						<meta itemprop="position" content="1" />
 					</li>
-					<li class="flex">
+					<li class="flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 						<a
 							class="flex items-center justify-start gap-2"
 							appSkeleton
+							itemprop="item url"
 							[appSkeletonToggle]="postSkeletonToggle"
 							[routerLink]="['/', post.user.name]"
 							[title]="'Go to ' + post.user.name"
@@ -46,18 +50,20 @@
 							>
 								<figure class="h-5 w-5 rounded relative overflow-hidden" appAvatar [appAvatarUser]="post.user"></figure>
 							</div>
-							<span class="hidden sm:block link link-hover text-sm">
+							<span class="hidden sm:block link link-hover text-sm" itemprop="name">
 								{{ post.user.name }}
 							</span>
 						</a>
+						<meta itemprop="position" content="2" />
 					</li>
 					@switch (true) {
 						@case (!!postPasswordId) {
 							@if (currentUser?.id === post.user.id) {
-								<li class="flex">
+								<li class="flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 									<a
 										class="flex items-center justify-start gap-2"
 										appSkeleton
+										itemprop="item url"
 										[appSkeletonToggle]="postSkeletonToggle"
 										[routerLink]="['/', post.user.name, 'password']"
 										[title]="'Go to Password protected posts'"
@@ -72,17 +78,19 @@
 											[appSvgIconViewBox]="'0 0 16 17'"
 										>
 										</i>
-										<span class="block link link-hover text-sm"> Password </span>
+										<span class="block link link-hover text-sm" itemprop="name"> Password </span>
 									</a>
+									<meta itemprop="position" content="3" />
 								</li>
 							}
 						}
 						@case (!!postPrivateId) {
 							@if (currentUser?.id === post.user.id) {
-								<li class="flex">
+								<li class="flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 									<a
 										class="flex items-center justify-start gap-2"
 										appSkeleton
+										itemprop="item url"
 										[appSkeletonToggle]="postSkeletonToggle"
 										[routerLink]="['/', post.user.name, 'private']"
 										[title]="'Go to Private posts'"
@@ -96,16 +104,23 @@
 											[appSvgIconSquare]="'1.15em'"
 										>
 										</i>
-										<span class="block link link-hover text-sm"> Private </span>
+										<span class="block link link-hover text-sm" itemprop="name"> Private </span>
 									</a>
+									<meta itemprop="position" content="3" />
 								</li>
 							}
 						}
 						@default {
-							<li class="flex overflow-hidden before:min-w-1.5 before:min-h-1.5">
+							<li
+								class="flex overflow-hidden before:min-w-1.5 before:min-h-1.5"
+								itemprop="itemListElement"
+								itemscope
+								itemtype="https://schema.org/ListItem"
+							>
 								<a
 									class="flex items-center justify-start gap-2 max-w-full pr-7"
 									appSkeleton
+									itemprop="item"
 									[appSkeletonToggle]="postSkeletonToggle"
 									[routerLink]="['/', post.user.name, 'category', post.category.id]"
 									[title]="'Go to ' + post.category.name"
@@ -119,10 +134,11 @@
 										[appSvgIconSquare]="'1.25em'"
 									>
 									</i>
-									<span class="block link link-hover text-sm truncate">
+									<span class="block link link-hover text-sm truncate" itemprop="name">
 										{{ post.category.name }}
 									</span>
 								</a>
+								<meta itemprop="position" content="3" />
 							</li>
 						}
 					}

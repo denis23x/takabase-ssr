@@ -1,7 +1,12 @@
 <!-- @format -->
 
 <ng-container>
-	<ul class="flex items-center justify-start gap-3">
+	<ul
+		class="flex items-center justify-start gap-3"
+		itemprop="sharedContent"
+		itemscope
+		itemtype="http://schema.org/WebPageElement"
+	>
 		@if (shareDataCanShare) {
 			<li class="block">
 				<button
@@ -17,6 +22,8 @@
 					[appSvgIconSquare]="'1.25em'"
 					(click)="setShareNative()"
 				></button>
+				<meta itemprop="name" content="Share" />
+				<meta itemprop="position" content="1" />
 			</li>
 		}
 		<li class="block">
@@ -35,6 +42,8 @@
 				[href]="shareList.facebook"
 			>
 			</a>
+			<meta itemprop="name" content="Facebook" />
+			<meta itemprop="position" content="2" />
 		</li>
 		<li class="block">
 			<a
@@ -52,6 +61,8 @@
 				[href]="shareList.linkedin"
 			>
 			</a>
+			<meta itemprop="name" content="LinkedIn" />
+			<meta itemprop="position" content="3" />
 		</li>
 		<li class="block">
 			<a
@@ -69,6 +80,8 @@
 				[href]="shareList.pinterest"
 			>
 			</a>
+			<meta itemprop="name" content="Pinterest" />
+			<meta itemprop="position" content="4" />
 		</li>
 		<li class="block">
 			<a
@@ -88,6 +101,8 @@
 				[href]="shareList.twitter"
 			>
 			</a>
+			<meta itemprop="name" content="X" />
+			<meta itemprop="position" content="5" />
 		</li>
 	</ul>
 </ng-container>

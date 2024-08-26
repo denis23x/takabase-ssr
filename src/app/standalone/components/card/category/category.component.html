@@ -1,14 +1,19 @@
 <!-- @format -->
 
 <ng-container>
+	<!-- https://schema.org/Collection -->
 	<div
 		class="rounded-box flex h-full w-full flex-col items-start overflow-hidden gap-2 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+		itemprop="itemListElement"
+		itemscope
+		itemtype="https://schema.org/Collection"
 	>
 		<div class="flex items-center justify-start gap-4 overflow-hidden w-full">
 			<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
 				<a
 					class="flex items-center justify-start gap-2 text-base-content/50 w-full"
 					appSkeleton
+					itemprop="url"
 					[routerLink]="['/', category.user.name]"
 					[title]="'Go to ' + category.user.name"
 					[attr.aria-label]="'Go to ' + category.user.name"
@@ -22,34 +27,35 @@
 					>
 						<figure class="h-4 w-4 rounded relative overflow-hidden" appAvatar [appAvatarUser]="category.user"></figure>
 					</div>
-					<span class="link link-hover text-sm truncate leading max-w-full">
+					<span class="link link-hover text-sm truncate leading max-w-full" itemprop="creator">
 						{{ category.user.name }}
 					</span>
 				</a>
 			</div>
 		</div>
+		<!-- prettier-ignore -->
 		<a
 			class="link link-hover text-base font-bold leading-6 text-base-content max-w-full"
 			appSkeleton
+			itemprop="url"
 			[appSkeletonToggle]="categorySkeletonToggle"
 			[routerLink]="['/', category.user.name, 'category', category.id]"
 			[title]="category.name"
 			[attr.aria-label]="category.name"
 		>
 			@if (category._highlightResult?.name) {
-				<!-- prettier-ignore -->
-				<span class="block text-ellipsis overflow-hidden max-w-full" [innerHTML]="category._highlightResult.name.value"></span>
+				<span class="block text-ellipsis overflow-hidden max-w-full" itemprop="headline" [innerHTML]="category._highlightResult.name.value"></span>
 			} @else {
-				<span class="block text-ellipsis overflow-hidden max-w-full">{{ category.name }}</span>
+				<span class="block text-ellipsis overflow-hidden max-w-full" itemprop="headline">{{ category.name }}</span>
 			}
 		</a>
 		@if (category._highlightResult?.description || category.description) {
+			<!-- prettier-ignore -->
 			<p class="text-base-content text-sm max-w-full" appSkeleton [appSkeletonToggle]="categorySkeletonToggle">
 				@if (category._highlightResult?.description) {
-					<!-- prettier-ignore -->
-					<span class="block text-ellipsis overflow-hidden max-w-full" [innerHTML]="category._highlightResult.description.value"></span>
+					<span class="block text-ellipsis overflow-hidden max-w-full" itemprop="description" [innerHTML]="category._highlightResult.description.value"></span>
 				} @else {
-					<span class="block text-ellipsis overflow-hidden max-w-full">{{ category.description }}</span>
+					<span class="block text-ellipsis overflow-hidden max-w-full" itemprop="description">{{ category.description }}</span>
 				}
 			</p>
 		}

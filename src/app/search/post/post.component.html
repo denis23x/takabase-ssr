@@ -3,9 +3,15 @@
 <ng-container>
 	<div class="grid gap-4">
 		@if (postList.length) {
+			<meta itemprop="totalResults" [content]="postList.length" />
 			<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
 				@for (postColumn of masonryColumns; track $index) {
-					<ul class="flex flex-1 flex-col gap-4">
+					<ul
+						class="flex flex-1 flex-col gap-4"
+						itemprop="mainContentOfPage"
+						itemscope
+						itemtype="http://schema.org/ItemList"
+					>
 						@for (post of postColumn; track post.id; let i = $index) {
 							<li
 								class="block"

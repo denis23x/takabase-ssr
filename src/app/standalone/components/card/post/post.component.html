@@ -1,14 +1,19 @@
 <!-- @format -->
 
 <ng-container>
+	<!-- https://schema.org/Article -->
 	<article
 		class="rounded-box flex h-full w-full flex-col overflow-hidden border border-base-content/20 bg-base-100 shadow-xl"
+		itemprop="itemListElement"
+		itemscope
+		itemtype="https://schema.org/Article"
 	>
 		@if (post.image) {
 			<figure class="block">
 				<a
 					class="relative block aspect-square"
 					appSkeleton
+					itemprop="url"
 					[appSkeletonToggle]="postSkeletonToggle"
 					[appSkeletonClassList]="['!rounded-none']"
 					[routerLink]="postRouterLink"
@@ -18,6 +23,7 @@
 				>
 					<img
 						class="object-cover object-center bg-base-300"
+						itemprop="image"
 						[fill]="true"
 						[priority]="postImagePriority"
 						[ngSrc]="post.image | firebaseStorage"
@@ -30,11 +36,23 @@
 			@if (!post.image) {
 				@if ((post.createdAt | dayjs: "diff" : "day") === 0) {
 					<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-						<span class="badge badge-secondary badge-sm"> New </span>
+						<span
+							class="badge badge-secondary badge-sm"
+							itemprop="dateCreated"
+							[attr.content]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
+						>
+							New
+						</span>
 					</div>
 				} @else if ((post.updatedAt | dayjs: "diff" : "day") === 0) {
 					<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-						<span class="badge badge-warning badge-sm"> Updated </span>
+						<span
+							class="badge badge-warning badge-sm"
+							itemprop="dateModified"
+							[attr.content]="post.updatedAt | dayjs: 'format' : 'YYYY-M-D'"
+						>
+							Updated
+						</span>
 					</div>
 				}
 				@if ((post.createdAt | dayjs: "diff" : "year") !== 0) {
@@ -43,9 +61,11 @@
 					</div>
 				}
 			}
+			<!-- prettier-ignore -->
 			<a
 				class="link link-hover text-base-content text-base font-bold max-w-full"
 				appSkeleton
+				itemprop="url"
 				[appSkeletonToggle]="postSkeletonToggle"
 				[routerLink]="postRouterLink"
 				[queryParamsHandling]="'preserve'"
@@ -53,21 +73,21 @@
 				[attr.aria-label]="post.name"
 			>
 				@if (post._highlightResult?.name) {
-					<!-- prettier-ignore -->
-					<span class="line-clamp-2 sm:line-clamp-none sm:overflow-hidden text-ellipsis" [innerHTML]="post._highlightResult.name.value"></span>
+					<span class="line-clamp-2 sm:line-clamp-none sm:overflow-hidden text-ellipsis" itemprop="headline" [innerHTML]="post._highlightResult.name.value"></span>
 				} @else {
-					<span class="line-clamp-2 sm:line-clamp-none sm:overflow-hidden text-ellipsis">{{ post.name }}</span>
+					<span class="line-clamp-2 sm:line-clamp-none sm:overflow-hidden text-ellipsis" itemprop="headline">{{ post.name }}</span>
 				}
 			</a>
+			<!-- prettier-ignore -->
 			<p class="text-base-content text-sm max-w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 				@if (post._highlightResult?.description) {
-					<!-- prettier-ignore -->
-					<span class="line-clamp-3 sm:line-clamp-5 text-ellipsis" [innerHTML]="post._highlightResult.description.value"></span>
+					<span class="line-clamp-3 sm:line-clamp-5 text-ellipsis" itemprop="description" [innerHTML]="post._highlightResult.description.value"></span>
 				} @else {
-					<span class="line-clamp-3 sm:line-clamp-5 text-ellipsis">{{ post.description }}</span>
+					<span class="line-clamp-3 sm:line-clamp-5 text-ellipsis" itemprop="description">{{ post.description }}</span>
 				}
 			</p>
 			@switch (postType) {
+				<!--
 				@case ("test") {
 					<div class="flex items-center justify-between gap-2 text-base-content/50 w-full">
 						<div class="flex items-center justify-start gap-2" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
@@ -84,7 +104,9 @@
 							<time
 								class="text-xs text-base-content/50"
 								appSkeleton
+								itemprop="dateCreated"
 								[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
+								[attr.content]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 								[appSkeletonToggle]="postSkeletonToggle"
 							>
 								{{ post.createdAt | dayjs: "fromNow" }}
@@ -92,14 +114,17 @@
 						</div>
 					</div>
 				}
+				-->
 				@default {
 					<time
 						class="text-xs text-base-content/50"
 						appSkeleton
+						itemprop="dateCreated"
 						[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
+						[attr.content]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 						[appSkeletonToggle]="postSkeletonToggle"
 					>
-						Published {{ post.createdAt | dayjs: "fromNow" }}
+						{{ post.createdAt | dayjs: "fromNow" }}
 					</time>
 				}
 			}

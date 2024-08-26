@@ -2,9 +2,20 @@
 
 <ng-container>
 	@if (post) {
-		<section class="flex flex-col h-full w-full overflow-auto gap-4 bg-base-100">
+		<!-- https://schema.org/Article -->
+		<section
+			class="flex flex-col h-full w-full overflow-auto gap-4 bg-base-100"
+			itemprop="mainEntity"
+			itemscope
+			itemtype="https://schema.org/Article"
+		>
 			<header class="flex w-full flex-col items-start justify-start gap-4">
-				<h2 class="text-2xl font-bold text-base-content" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+				<h2
+					class="text-2xl font-bold text-base-content"
+					itemprop="headline"
+					appSkeleton
+					[appSkeletonToggle]="postSkeletonToggle"
+				>
 					{{ post.name || "Name" }}
 				</h2>
 				<div class="flex items-center justify-start gap-4 w-full overflow-hidden">
@@ -13,6 +24,7 @@
 							<figure class="h-24 w-24 rounded-btn relative overflow-hidden">
 								<img
 									class="object-cover object-center bg-base-300"
+									itemprop="image"
 									[fill]="true"
 									[priority]="true"
 									[ngSrc]="post.image | firebaseStorage"
@@ -25,10 +37,14 @@
 						<li
 							class="flex items-center justify-start gap-2 text-base-content max-w-full"
 							appSkeleton
+							itemprop="author"
+							itemscope
+							itemtype="http://schema.org/Person"
 							[appSkeletonToggle]="postSkeletonToggle"
 						>
 							<a
 								class="flex items-center justify-start gap-2 max-w-full"
+								itemprop="url"
 								[target]="postPreview ? '_blank' : '_self'"
 								[routerLink]="['/', post.user.name]"
 								[title]="'Go to ' + post.user.name"
@@ -46,7 +62,7 @@
 										[appAvatarUser]="post.user"
 									></figure>
 								</div>
-								<span class="link link-hover block text-sm font-bold truncate">
+								<span class="link link-hover block text-sm font-bold truncate" itemprop="name">
 									{{ post.user.name }}
 								</span>
 							</a>
@@ -57,6 +73,7 @@
 									<span
 										class="badge badge-success badge-outline badge-sm"
 										appSkeleton
+										itemprop="articleSection"
 										[class.border-transparent]="postSkeletonToggle"
 										[appSkeletonToggle]="postSkeletonToggle"
 									>
@@ -69,6 +86,7 @@
 									<span
 										class="badge badge-error badge-outline badge-sm"
 										appSkeleton
+										itemprop="articleSection"
 										[class.border-transparent]="postSkeletonToggle"
 										[appSkeletonToggle]="postSkeletonToggle"
 									>
@@ -85,6 +103,7 @@
 									<!-- prettier-ignore -->
 									<a
 										class="flex items-center justify-start gap-2 max-w-full"
+                    itemprop="url"
 										[target]="postPreview ? '_blank' : '_self'"
 										[routerLink]="post.category ? ['/', post.user.name, 'category', post.category.id] : ['/', post.user.name]"
 										[title]="'Go to ' + post.category?.name || 'category'"
@@ -96,7 +115,7 @@
 											[appSvgIconIcon]="'folder'"
 											[appSvgIconSquare]="'1.25em'"
 										></i>
-										<span class="link link-hover text-sm leading-4 truncate">
+										<span class="link link-hover text-sm leading-4 truncate" itemprop="articleSection">
 											{{ post.category?.name || "Category" }}
 										</span>
 									</a>
@@ -105,13 +124,14 @@
 						}
 						<li class="block max-w-full">
 							<span class="block text-xs text-base-content" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-								{{ post.markdown | markdownTimeToRead }} min read
+								<span itemprop="timeRequired">{{ post.markdown | markdownTimeToRead }}</span> min read
 							</span>
 						</li>
 						<li class="block max-w-full">
 							<time
 								class="block text-xs text-base-content/50"
 								appSkeleton
+								itemprop="dateCreated"
 								[appSkeletonToggle]="postSkeletonToggle"
 								[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
 							>
@@ -229,6 +249,7 @@
 				<article
 					class="prose w-full max-w-full flex-1"
 					appMarkdownRender
+					itemprop="articleBody"
 					[appMarkdownRenderValue]="post.markdown || 'Markdown'"
 					(appMarkdownRenderClickExternalLink)="onTogglePostExternalLinkDialog($event)"
 				></article>
