@@ -1,13 +1,9 @@
 <!-- @format -->
 
 <ng-container>
-	<section
-		class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-		itemscope
-		itemtype="http://schema.org/Action"
-	>
+	<section class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
 		<div class="flex flex-col border-b border-base-content/20 pb-4">
-			<h1 class="text-2xl font-bold" itemprop="name">Email recovery</h1>
+			<h1 class="text-2xl font-bold">Email recovery</h1>
 		</div>
 		@switch (true) {
 			@case (!recoveryIsSubmitted() && !recoveryIsSucceed()) {
@@ -19,7 +15,7 @@
 							[appSvgIconIcon]="'info-circle'"
 							[appSvgIconSquare]="'1.5em'"
 						></i>
-						<span class="block" itemprop="description">
+						<span class="block">
 							Apologies, but your password cannot be restored at the moment due to a server error. Please try again
 							later. If the issue persists, you can contact the support for assistance.
 						</span>
@@ -36,28 +32,16 @@
 							[appSvgIconSquare]="'1.5em'"
 						></i>
 						<!-- prettier-ignore -->
-						<span class="block" itemprop="description"> Your email address has been successfully restored. <strong class="inline font-bold"> For security purposes, it is recommended to change your password now. </strong> Please check your email and proceed to update your password to ensure the safety of your account </span>
+						<span class="block"> Your email address has been successfully restored. <strong class="inline font-bold"> For security purposes, it is recommended to change your password now. </strong> Please check your email and proceed to update your password to ensure the safety of your account </span>
 					</p>
 					@switch (recoveryIsSucceed()) {
 						@case (true) {
-							<a
-								class="btn-success btn-outline btn w-full"
-								title="Success"
-								aria-label="Success"
-								itemprop="url"
-								[routerLink]="'/'"
-							>
+							<a class="btn-success btn-outline btn w-full" title="Success" aria-label="Success" [routerLink]="'/'">
 								Success
 							</a>
 						}
 						@default {
-							<button
-								class="btn-success btn-md btn w-full"
-								title="Recovery"
-								aria-label="Recovery"
-								itemprop="url"
-								[disabled]="true"
-							>
+							<button class="btn-success btn-md btn w-full" title="Recovery" aria-label="Recovery" [disabled]="true">
 								<span class="loading loading-spinner"></span>
 								Recovery
 							</button>

@@ -4,7 +4,7 @@
 	<ul
 		class="flex items-center justify-start gap-4 overflow-auto"
 		itemscope
-		itemtype="http://schema.org/Action"
+		itemtype="http://schema.org/ItemList"
 		[ngClass]="{ 'grayscale cursor-not-allowed': signInDisabled }"
 	>
 		<li class="block" [ngClass]="{ 'pointer-events-none': signInDisabled }">
@@ -13,7 +13,9 @@
 				type="button"
 				title="Redirect to Google to continue"
 				aria-label="Redirect to Google to continue"
-				itemprop="target"
+				itemprop="itemListElement"
+				itemscope
+				itemtype="http://schema.org/ListItem"
 				(click)="onSignInWithProvider('google.com')"
 			>
 				<i
@@ -26,35 +28,49 @@
 				<span class="font-roboto text-sm whitespace-nowrap" itemprop="name">Continue with Google</span>
 			</button>
 		</li>
+		<!--
 		<li class="hidden" [ngClass]="{ 'pointer-events-none': signInDisabled }">
 			<button
 				class="block logo-facebook"
 				type="button"
 				title="Redirect to Facebook to continue"
 				aria-label="Redirect to Facebook to continue"
-				appSvgLogo
-				itemprop="target"
-				[appSvgLogoViewBox]="'0 0 256 256'"
-				[appSvgLogoIcon]="'facebook'"
-				[appSvgLogoWidth]="'32'"
-				[appSvgLogoHeight]="'32'"
+				itemprop="itemListElement"
+				itemscope
+				itemtype="http://schema.org/ListItem"
 				(click)="onSignInWithProvider('facebook.com')"
-			></button>
+			>
+				<i
+					appSvgLogo
+					[appSvgLogoViewBox]="'0 0 256 256'"
+					[appSvgLogoIcon]="'facebook'"
+					[appSvgLogoWidth]="'32'"
+					[appSvgLogoHeight]="'32'"
+				></i>
+				<meta itemprop="name" content="Facebook" />
+			</button>
 		</li>
+		-->
 		<li class="block" [ngClass]="{ 'pointer-events-none': signInDisabled }">
 			<button
 				class="block logo-github"
 				type="button"
 				title="Redirect to Github to continue"
 				aria-label="Redirect to Github to continue"
-				appSvgLogo
-				itemprop="target"
-				[appSvgLogoViewBox]="'0 0 97.6 96'"
-				[appSvgLogoIcon]="'github'"
-				[appSvgLogoWidth]="'32'"
-				[appSvgLogoHeight]="'32'"
+				itemprop="itemListElement"
+				itemscope
+				itemtype="http://schema.org/ListItem"
 				(click)="onSignInWithProvider('github.com')"
-			></button>
+			>
+				<i
+					appSvgLogo
+					[appSvgLogoViewBox]="'0 0 97.6 96'"
+					[appSvgLogoIcon]="'github'"
+					[appSvgLogoWidth]="'32'"
+					[appSvgLogoHeight]="'32'"
+				></i>
+				<meta itemprop="name" content="Github" />
+			</button>
 		</li>
 	</ul>
 </ng-container>

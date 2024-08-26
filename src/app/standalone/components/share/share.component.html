@@ -1,12 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<ul
-		class="flex items-center justify-start gap-3"
-		itemprop="sharedContent"
-		itemscope
-		itemtype="http://schema.org/WebPageElement"
-	>
+	<ul class="flex items-center justify-start gap-3" itemscope itemtype="http://schema.org/ItemList">
 		@if (shareDataCanShare) {
 			<li class="block">
 				<button
@@ -22,10 +17,9 @@
 					[appSvgIconSquare]="'1.25em'"
 					(click)="setShareNative()"
 				></button>
-				<meta itemprop="name" content="Share" />
 			</li>
 		}
-		<li class="block">
+		<li class="block" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 			<a
 				class="flex items-center justify-center logo-facebook w-10 h-10"
 				title="Facebook"
@@ -34,6 +28,7 @@
 				rel="noopener noreferrer"
 				appSvgLogo
 				appSkeleton
+				itemprop="url"
 				[appSvgLogoIcon]="'facebook'"
 				[appSvgLogoSquare]="'24'"
 				[appSkeletonToggle]="postSkeletonToggle"
@@ -43,7 +38,7 @@
 			</a>
 			<meta itemprop="name" content="Facebook" />
 		</li>
-		<li class="block">
+		<li class="block" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 			<a
 				class="flex items-center justify-center logo-linkedin w-10 h-10"
 				title="Linkedin"
@@ -52,6 +47,7 @@
 				rel="noopener noreferrer"
 				appSvgLogo
 				appSkeleton
+				itemprop="url"
 				[appSvgLogoIcon]="'linkedin'"
 				[appSvgLogoSquare]="'24'"
 				[appSkeletonToggle]="postSkeletonToggle"
@@ -61,7 +57,7 @@
 			</a>
 			<meta itemprop="name" content="LinkedIn" />
 		</li>
-		<li class="block">
+		<li class="block" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 			<a
 				class="flex items-center justify-center logo-pinterest w-10 h-10"
 				title="Pinterest"
@@ -70,6 +66,7 @@
 				rel="noopener noreferrer"
 				appSvgLogo
 				appSkeleton
+				itemprop="url"
 				[appSvgLogoIcon]="'pinterest'"
 				[appSvgLogoSquare]="'24'"
 				[appSkeletonToggle]="postSkeletonToggle"
@@ -79,7 +76,7 @@
 			</a>
 			<meta itemprop="name" content="Pinterest" />
 		</li>
-		<li class="block">
+		<li class="block" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 			<a
 				class="flex items-center justify-center logo-twitter-x w-10 h-10"
 				title="X"
@@ -88,6 +85,7 @@
 				rel="noopener noreferrer"
 				appSvgLogo
 				appSkeleton
+				itemprop="url"
 				[appSvgLogoIcon]="'twitter-x'"
 				[appSvgLogoWidth]="'23.47'"
 				[appSvgLogoHeight]="'24'"

@@ -1,18 +1,13 @@
 <!-- @format -->
 
 <ng-container>
-	<div
-		class="navbar rounded-box border border-base-content/20 bg-base-100 shadow-xl !p-4"
-		itemscope
-		itemtype="http://schema.org/SiteNavigationElement"
-	>
+	<div class="navbar rounded-box border border-base-content/20 bg-base-100 shadow-xl !p-4">
 		<nav class="navbar-start">
 			<a
 				class="flex items-center justify-center w-12 h-12"
 				title="Takabase"
 				aria-label="Takabase"
 				appSvgLogo
-				itemprop="url image"
 				[routerLink]="['/']"
 				[appSvgLogoIcon]="'takabase'"
 				[appSvgLogoSquare]="'48'"
@@ -20,15 +15,14 @@
 			</a>
 		</nav>
 		<nav class="navbar-end">
-			<ul class="flex items-center justify-end gap-4" itemscope itemtype="http://schema.org/ItemList">
-				<li class="block" appAuthenticated itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+			<ul class="flex items-center justify-end gap-4" itemscope itemtype="http://schema.org/SiteNavigationElement">
+				<li class="block" appAuthenticated>
 					<a
 						class="btn-ghost btn-square btn fill-current text-base-content"
 						title="Create new post"
 						aria-label="Create new post"
 						appSvgIcon
 						slot="private"
-						itemprop="url"
 						[routerLink]="['/create']"
 						[routerLinkActive]="['btn-active']"
 						[routerLinkActiveOptions]="{ exact: true }"
@@ -37,7 +31,7 @@
 					>
 					</a>
 				</li>
-				<li class="block" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<li class="block">
 					<a
 						class="btn-ghost btn-square btn fill-current text-base-content"
 						title="Search"
@@ -55,9 +49,6 @@
 					class="block"
 					appAuthenticated
 					appSkeleton
-					itemprop="itemListElement"
-					itemscope
-					itemtype="https://schema.org/ListItem"
 					[ngClass]="{ 'h-12 w-12 overflow-hidden': currentUserSkeletonToggle }"
 					[appSkeletonToggle]="currentUserSkeletonToggle"
 				>
@@ -89,13 +80,8 @@
 									[appAvatarUser]="currentUser"
 								></figure>
 							</div>
-							<ul class="menu menu-vertical menu-md" slot="content" itemscope itemtype="http://schema.org/ItemList">
-								<li
-									class="flex w-full snap-start scroll-my-2"
-									itemprop="itemListElement"
-									itemscope
-									itemtype="https://schema.org/ListItem"
-								>
+							<ul class="menu menu-vertical menu-md" slot="content">
+								<li class="flex w-full snap-start scroll-my-2">
 									<a
 										class="rounded-btn block w-full truncate text-right"
 										itemprop="url name"
@@ -106,12 +92,7 @@
 										My Profile
 									</a>
 								</li>
-								<li
-									class="flex w-full snap-start scroll-my-2"
-									itemprop="itemListElement"
-									itemscope
-									itemtype="https://schema.org/ListItem"
-								>
+								<li class="flex w-full snap-start scroll-my-2">
 									<a
 										class="rounded-btn block w-full truncate text-right"
 										title="Settings"
@@ -122,12 +103,7 @@
 										Settings
 									</a>
 								</li>
-								<li
-									class="flex w-full snap-start scroll-my-2"
-									itemprop="itemListElement"
-									itemscope
-									itemtype="https://schema.org/ListItem"
-								>
+								<li class="flex w-full snap-start scroll-my-2">
 									<a
 										class="rounded-btn block w-full truncate text-right"
 										title="About"
@@ -141,18 +117,12 @@
 								<li class="flex w-full snap-start scroll-my-2 menu-title">
 									<hr class="my-0 border-base-content/20" />
 								</li>
-								<li
-									class="flex w-full snap-start scroll-my-2"
-									itemprop="itemListElement"
-									itemscope
-									itemtype="https://schema.org/ListItem"
-								>
+								<li class="flex w-full snap-start scroll-my-2">
 									<button
 										class="rounded-btn block w-full truncate text-right"
 										type="button"
 										title="Logout"
 										aria-label="Logout"
-										itemprop="name"
 										(click)="onLogout()"
 									>
 										Logout

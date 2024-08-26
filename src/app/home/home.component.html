@@ -4,11 +4,9 @@
 	<section class="flex flex-col gap-4">
 		<header
 			class="rounded-box flex flex-col items-stretch justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-			itemscope
-			itemtype="http://schema.org/Thing"
 		>
 			<div class="relative sm:divider sm:divider-start sm:mt-2">
-				<h1 class="text-3xl text-base-content font-bold" itemprop="headline">The new post platform</h1>
+				<h1 class="text-3xl text-base-content font-bold" itemprop="name">The new post platform</h1>
 			</div>
 			<div class="flex items-start justify-start gap-4">
 				<p class="text-base text-base-content/50" itemprop="description">
@@ -39,60 +37,54 @@
 					class="btn btn-outline btn-success btn-md flex-1"
 					title="Registration"
 					aria-label="Registration"
-					itemprop="url name"
+					itemprop="url"
 					[routerLink]="'/registration'"
 				>
-					Registration
+					<span class="block" itemprop="name">Registration</span>
 				</a>
 				<a
 					class="btn btn-outline btn-info btn-md flex-1"
 					title="Search"
 					aria-label="Search"
-					itemprop="url name"
+					itemprop="url"
 					[routerLink]="'/search'"
 				>
-					Search
+					<span class="block" itemprop="name">Search</span>
 				</a>
 				<a
 					class="btn btn-outline btn-primary btn-md flex-1"
 					title="Markdown guide"
 					aria-label="Markdown guide"
-					itemprop="url name"
+					itemprop="url"
 					[routerLink]="'/help/markdown'"
 				>
-					Markdown
+					<span class="block" itemprop="name">Markdown</span>
 				</a>
 				<button
 					class="btn btn-outline btn-warning btn-md flex-1"
 					type="button"
 					title="Progressive Web Application"
 					aria-label="Progressive Web Application"
-					itemprop="url name"
 					(click)="appPWAElement.onClick()"
 				>
-					PWA
+					<span class="block">PWA</span>
 				</button>
 				<a
 					class="btn btn-outline btn-error btn-md flex-1"
 					title="Work In Progress"
 					aria-label="Work In Progress"
-					itemprop="url name"
+					itemprop="url"
 					[routerLink]="'/help/about'"
 				>
-					WIP
+					<span class="block" itemprop="name">WIP</span>
 				</a>
 			</nav>
 		</header>
-		<ul
-			class="rounded-box grid grid-cols-12 border border-base-content/20 bg-base-100 shadow-xl"
-			itemscope
-			itemtype="http://schema.org/ItemList"
-		>
+		<ul class="rounded-box grid grid-cols-12 border border-base-content/20 bg-base-100 shadow-xl">
 			<li
 				class="flex flex-col col-span-12 lg:col-span-6 gap-2 border-b lg:border-b-0 lg:border-r border-base-content/20 p-4"
-				itemprop="itemListElement"
 				itemscope
-				itemtype="http://schema.org/ListItem"
+				itemtype="http://schema.org/Thing"
 			>
 				<div class="flex items-center justify-between">
 					<h4 class="text-2xl font-bold text-base-content" itemprop="name">Insights</h4>
@@ -115,11 +107,8 @@
 			@for (appInsight of appInsightList; track appInsight.id) {
 				<li
 					class="flex flex-col items-center justify-center gap-1 text-center col-span-4 lg:col-span-2 border-r last:border-0 border-base-content/20 p-4"
-					itemprop="itemListElement"
-					itemscope
-					itemtype="http://schema.org/ListItem"
 				>
-					<h4 class="text-sm uppercase text-base-content" itemprop="name">{{ appInsight.value }}</h4>
+					<h4 class="text-sm uppercase text-base-content">{{ appInsight.value }}</h4>
 					<div class="flex flex-col items-center justify-center gap-1">
 						<span
 							class="text-3xl text-base-content font-bold"
@@ -146,11 +135,9 @@
 		</ul>
 		<main
 			class="rounded-box sm:rounded-none border sm:border-none border-base-content/20 w-full overflow-auto sm:overflow-visible"
-			itemscope
-			itemtype="http://schema.org/Thing"
 		>
 			<div class="flex items-center justify-between sm:hidden bg-base-100 border-b border-base-content/20 p-4">
-				<h4 class="text-2xl font-bold text-base-content" itemprop="name">Highlights</h4>
+				<h4 class="text-2xl font-bold text-base-content">Highlights</h4>
 				<nav class="join">
 					@for (appHighlight of [1, 2, 3]; track $index) {
 						<button

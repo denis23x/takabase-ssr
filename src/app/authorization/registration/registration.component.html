@@ -1,11 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<section
-		class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-		itemscope
-		itemtype="http://schema.org/RegisterAction"
-	>
+	<section class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
 		<header class="flex flex-col gap-4">
 			@if (invitedByUser) {
 				<span class="block text-xl font-bold">You have been invited by</span>
@@ -48,7 +44,13 @@
 			<hr class="border-t border-base-content/20" />
 		</header>
 		<div class="flex flex-col gap-4">
-			<form class="flex flex-col gap-4" [formGroup]="registrationForm" (ngSubmit)="onSubmitRegistrationForm()">
+			<form
+				class="flex flex-col gap-4"
+				itemscope
+				itemtype="http://schema.org/RegisterAction"
+				[formGroup]="registrationForm"
+				(ngSubmit)="onSubmitRegistrationForm()"
+			>
 				@if (registrationForm.get("name"); as name) {
 					<fieldset class="form-control">
 						<label class="label" for="registrationFormName">
@@ -206,7 +208,7 @@
 								[class.checkbox-error]="terms.invalid"
 							/>
 							<!-- prettier-ignore -->
-							<span class="label-text inline"> I have read and agree to the <a class="link inline-block" target="_blank" itemprop="url" [routerLink]="['/terms/terms-of-service']"> Terms of Service </a> and <a class="link inline-block" target="_blank" [routerLink]="['/terms/cookie-policy']"> Cookie Policy </a></span>
+							<span class="label-text inline" itemscope itemtype="http://schema.org/SiteNavigationElement"> I have read and agree to the <a class="link inline-block" target="_blank" itemprop="url" [routerLink]="['/terms/terms-of-service']"> <span itemprop="name">Terms of Service</span> </a> and <a class="link inline-block" target="_blank" itemprop="url" [routerLink]="['/terms/cookie-policy']"> <span itemprop="name">Cookie Policy</span> </a></span>
 						</label>
 					</fieldset>
 				}
@@ -226,17 +228,19 @@
 					</button>
 				</fieldset>
 			</form>
-			<a
-				class="btn-primary btn w-full"
-				title="Login"
-				aria-label="Login"
-				itemprop="url"
-				[routerLink]="registrationForm.enabled ? '/login' : null"
-				[class.btn-outline]="registrationForm.enabled"
-				[class.btn-disabled]="registrationForm.disabled"
-			>
-				Login
-			</a>
+			<div class="block" itemscope itemtype="http://schema.org/SiteNavigationElement">
+				<a
+					class="btn-primary btn w-full"
+					title="Login"
+					aria-label="Login"
+					itemprop="url"
+					[routerLink]="registrationForm.enabled ? '/login' : null"
+					[class.btn-outline]="registrationForm.enabled"
+					[class.btn-disabled]="registrationForm.disabled"
+				>
+					<span class="block" itemprop="name">Login</span>
+				</a>
+			</div>
 		</div>
 	</section>
 </ng-container>

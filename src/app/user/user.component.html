@@ -51,9 +51,8 @@
 				<ul
 					class="tabs tabs-lifted tabs-lg"
 					role="tablist"
-					itemprop="mainContentOfPage"
 					itemscope
-					itemtype="http://schema.org/ItemList"
+					itemtype="http://schema.org/SiteNavigationElement"
 				>
 					<!-- prettier-ignore -->
 					@if ({ isActive: !category && !routerLinkActiveBookmark?.isActive && !routerLinkActivePassword?.isActive && !routerLinkActivePrivate?.isActive }; as routerLinkActiveAll) {
@@ -61,9 +60,6 @@
               class="tab"
               role="tab"
               appSkeleton
-              itemprop="itemListElement"
-              itemscope
-              itemtype="http://schema.org/ListItem"
               [class.tab-active]="!categoryListSkeletonToggle && routerLinkActiveAll.isActive"
               [appSkeletonToggle]="categoryListSkeletonToggle"
               [appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -88,9 +84,6 @@
 							class="tab"
 							role="tab"
 							appSkeleton
-							itemprop="itemListElement"
-							itemscope
-							itemtype="http://schema.org/ListItem"
 							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActiveBookmark.isActive"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -117,9 +110,6 @@
 							class="tab"
 							role="tab"
 							appSkeleton
-							itemprop="itemListElement"
-							itemscope
-							itemtype="http://schema.org/ListItem"
 							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActivePassword.isActive"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -147,9 +137,6 @@
 							class="tab"
 							role="tab"
 							appSkeleton
-							itemprop="itemListElement"
-							itemscope
-							itemtype="http://schema.org/ListItem"
 							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActivePrivate.isActive"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -178,9 +165,6 @@
 							class="tab"
 							role="tab"
 							appSkeleton
-							itemprop="itemListElement"
-							itemscope
-							itemtype="http://schema.org/ListItem"
 							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActiveCategory.isActive && category"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"

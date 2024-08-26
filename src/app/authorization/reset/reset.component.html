@@ -1,17 +1,19 @@
 <!-- @format -->
 
 <ng-container>
-	<section
-		class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-		itemscope
-		itemtype="http://schema.org/Action"
-	>
+	<section class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
 		<header class="flex flex-col gap-4">
 			<h1 class="text-2xl font-bold" itemprop="name">Password reset</h1>
 			<hr class="border-t border-base-content/20" />
 		</header>
 		<div class="flex flex-col gap-4">
-			<form class="flex flex-col gap-4" [formGroup]="resetForm" (ngSubmit)="onSubmitResetForm()">
+			<form
+				class="flex flex-col gap-4"
+				itemscope
+				itemtype="http://schema.org/Action"
+				[formGroup]="resetForm"
+				(ngSubmit)="onSubmitResetForm()"
+			>
 				<p class="alert" role="alert">
 					<i
 						class="fill-current text-info"
@@ -82,17 +84,19 @@
 					</button>
 				</fieldset>
 			</form>
-			<a
-				class="btn-primary btn w-full"
-				title="Login"
-				aria-label="Login"
-				itemprop="url"
-				[routerLink]="resetForm.enabled ? '/login' : null"
-				[class.btn-outline]="resetForm.enabled"
-				[class.btn-disabled]="resetForm.disabled"
-			>
-				Login
-			</a>
+			<div class="block" itemscope itemtype="http://schema.org/SiteNavigationElement">
+				<a
+					class="btn-primary btn w-full"
+					title="Login"
+					aria-label="Login"
+					itemprop="url"
+					[routerLink]="resetForm.enabled ? '/login' : null"
+					[class.btn-outline]="resetForm.enabled"
+					[class.btn-disabled]="resetForm.disabled"
+				>
+					<span class="block" itemprop="name">Login</span>
+				</a>
+			</div>
 		</div>
 	</section>
 </ng-container>

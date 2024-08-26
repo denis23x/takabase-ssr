@@ -1,11 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<section
-		class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
-		itemscope
-		itemtype="http://schema.org/Action"
-	>
+	<section class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
 		<header class="flex flex-col gap-4">
 			<h1 class="text-2xl font-bold" itemprop="name">Login</h1>
 			<hr class="border-t border-base-content/20" />
@@ -13,7 +9,13 @@
 			<hr class="border-t border-base-content/20" />
 		</header>
 		<div class="flex flex-col gap-4">
-			<form class="flex flex-col gap-4" [formGroup]="loginForm" (ngSubmit)="onSubmitLoginForm()">
+			<form
+				class="flex flex-col gap-4"
+				itemscope
+				itemtype="http://schema.org/Action"
+				[formGroup]="loginForm"
+				(ngSubmit)="onSubmitLoginForm()"
+			>
 				@if (loginForm.get("email"); as email) {
 					<fieldset class="form-control">
 						<label class="label" for="loginFormEmail">
@@ -101,7 +103,7 @@
 								></button>
 							}
 						</div>
-						<div class="label">
+						<div class="label" itemscope itemtype="http://schema.org/SiteNavigationElement">
 							<a
 								class="label-text-alt link"
 								title="Forgot password"
@@ -109,7 +111,7 @@
 								itemprop="url"
 								[routerLink]="['../reset']"
 							>
-								Forgot password?
+								<span class="block" itemprop="name">Forgot password?</span>
 							</a>
 						</div>
 					</fieldset>
@@ -122,7 +124,7 @@
 						[appSvgIconSquare]="'1.5em'"
 					></i>
 					<!-- prettier-ignore -->
-					<span class="block"> By continuing, you agree to the <a class="link inline-block" target="_blank" itemprop="url" [routerLink]="['/terms/terms-of-service']"> Terms of Service </a> and <a class="link inline-block" target="_blank" [routerLink]="['/terms/cookie-policy']"> Cookie Policy </a></span>
+					<span class="block" itemscope itemtype="http://schema.org/SiteNavigationElement"> By continuing, you agree to the <a class="link inline-block" target="_blank" itemprop="url" [routerLink]="['/terms/terms-of-service']"> <span itemprop="name">Terms of Service</span> </a> and <a class="link inline-block" target="_blank" itemprop="url" [routerLink]="['/terms/cookie-policy']"> <span itemprop="name">Cookie Policy</span> </a></span>
 				</p>
 				<fieldset class="form-control">
 					<button
@@ -140,17 +142,19 @@
 					</button>
 				</fieldset>
 			</form>
-			<a
-				class="btn-primary btn w-full"
-				title="Registration"
-				aria-label="Registration"
-				itemprop="url"
-				[routerLink]="loginForm.enabled ? '/registration' : null"
-				[class.btn-outline]="loginForm.enabled"
-				[class.btn-disabled]="loginForm.disabled"
-			>
-				Registration
-			</a>
+			<div class="block" itemscope itemtype="http://schema.org/SiteNavigationElement">
+				<a
+					class="btn-primary btn w-full"
+					title="Registration"
+					aria-label="Registration"
+					itemprop="url"
+					[routerLink]="loginForm.enabled ? '/registration' : null"
+					[class.btn-outline]="loginForm.enabled"
+					[class.btn-disabled]="loginForm.disabled"
+				>
+					<span class="block" itemprop="name">Registration</span>
+				</a>
+			</div>
 		</div>
 	</section>
 </ng-container>

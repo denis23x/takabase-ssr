@@ -1,14 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<form
-		class="flex items-end justify-between gap-4 w-full"
-		autocomplete="off"
-		itemprop="potentialAction"
-		itemscope
-		itemtype="http://schema.org/SearchAction"
-		[formGroup]="searchForm"
-	>
+	<form class="flex items-end justify-between gap-4 w-full" autocomplete="off" [formGroup]="searchForm">
 		@if (searchForm.get("query"); as query) {
 			<fieldset class="form-control flex-1">
 				<div class="relative">
@@ -18,7 +11,6 @@
 						type="search"
 						title="Search"
 						aria-label="Search"
-						itemprop="query"
 						inputmode="search"
 						enterkeyhint="search"
 						formControlName="query"
