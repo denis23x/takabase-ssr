@@ -1,13 +1,17 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
-		<div class="flex flex-col gap-4">
-			<h1 class="text-2xl font-bold">Login</h1>
+	<section
+		class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+		itemscope
+		itemtype="http://schema.org/Action"
+	>
+		<header class="flex flex-col gap-4">
+			<h1 class="text-2xl font-bold" itemprop="name">Login</h1>
 			<hr class="border-t border-base-content/20" />
 			<nav class="block w-full" appSignIn [appSignInDisabled]="loginForm.disabled"></nav>
 			<hr class="border-t border-base-content/20" />
-		</div>
+		</header>
 		<div class="flex flex-col gap-4">
 			<form class="flex flex-col gap-4" [formGroup]="loginForm" (ngSubmit)="onSubmitLoginForm()">
 				@if (loginForm.get("email"); as email) {
@@ -102,6 +106,7 @@
 								class="label-text-alt link"
 								title="Forgot password"
 								aria-label="Forgot password"
+								itemprop="url"
 								[routerLink]="['../reset']"
 							>
 								Forgot password?
@@ -117,7 +122,7 @@
 						[appSvgIconSquare]="'1.5em'"
 					></i>
 					<!-- prettier-ignore -->
-					<span class="block"> By continuing, you agree to the <a class="link inline-block" target="_blank" [routerLink]="['/terms/terms-of-service']"> Terms of Service </a> and <a class="link inline-block" target="_blank" [routerLink]="['/terms/cookie-policy']"> Cookie Policy </a></span>
+					<span class="block"> By continuing, you agree to the <a class="link inline-block" target="_blank" itemprop="url" [routerLink]="['/terms/terms-of-service']"> Terms of Service </a> and <a class="link inline-block" target="_blank" [routerLink]="['/terms/cookie-policy']"> Cookie Policy </a></span>
 				</p>
 				<fieldset class="form-control">
 					<button
@@ -125,6 +130,7 @@
 						type="submit"
 						title="Login"
 						aria-label="Login"
+						itemprop="target"
 						[disabled]="loginForm.invalid || loginForm.disabled"
 					>
 						@if (loginForm.disabled) {
@@ -138,6 +144,7 @@
 				class="btn-primary btn w-full"
 				title="Registration"
 				aria-label="Registration"
+				itemprop="url"
 				[routerLink]="loginForm.enabled ? '/registration' : null"
 				[class.btn-outline]="loginForm.enabled"
 				[class.btn-disabled]="loginForm.disabled"
@@ -145,5 +152,5 @@
 				Registration
 			</a>
 		</div>
-	</div>
+	</section>
 </ng-container>

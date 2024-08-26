@@ -1,7 +1,7 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="flex flex-col gap-4">
+	<section class="flex flex-col gap-4">
 		<div class="flex flex-col gap-4 rounded-box border border-base-content/20 bg-base-100 p-4 shadow-xl">
 			<p class="alert" role="alert">
 				<i class="fill-current text-info" appSvgIcon [appSvgIconIcon]="'info-circle'" [appSvgIconSquare]="'1.5em'"></i>
@@ -728,7 +728,7 @@
 				}
 			</div>
 		</div>
-	</div>
+	</section>
 	<!-- prettier-ignore -->
 	<div appPostDraft [appPostDraftPostForm]="postForm" [appPostDraftPostType]="postType" (appPostDraftSuccess)="onSubmitPostFormDraft($event)"></div>
 	<div appShortcuts></div>

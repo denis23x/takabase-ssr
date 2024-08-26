@@ -1,12 +1,12 @@
 <!-- @format -->
 
 <ng-container>
-	<section class="flex flex-col gap-4">
+	<section class="flex flex-col gap-4" itemscope itemtype="http://schema.org/Thing">
 		<header
 			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
 			<div class="flex w-full flex-col items-stretch justify-between gap-4">
-				<h1 class="block truncate text-2xl font-bold text-base-content">Terms and conditions of use</h1>
+				<h1 class="block truncate text-2xl font-bold text-base-content" itemprop="name">Terms and conditions of use</h1>
 				<hr class="my-0 border-base-content/20" />
 				<p class="alert" role="alert">
 					<i
@@ -15,7 +15,7 @@
 						[appSvgIconIcon]="'info-circle'"
 						[appSvgIconSquare]="'1.5em'"
 					></i>
-					<span class="block">
+					<span class="block" itemprop="description">
 						By accessing and using this website, you agree to comply with and be bound by the following terms and
 						conditions of use. Please read these terms carefully before using this website
 					</span>
@@ -24,12 +24,20 @@
 		</header>
 		<div class="flex flex-col">
 			<nav class="block px-4">
-				<ul class="tabs tabs-lifted tabs-lg" role="tablist">
+				<ul class="tabs tabs-lifted tabs-lg" role="tablist" itemscope itemtype="http://schema.org/ItemList">
 					@for (termsNavigation of termsNavigationList; track termsNavigation.id) {
-						<li class="tab" role="tab" [class.tab-active]="routerLinkActive.isActive">
+						<li
+							class="tab"
+							role="tab"
+							itemprop="itemListElement"
+							itemscope
+							itemtype="http://schema.org/ListItem"
+							[class.tab-active]="routerLinkActive.isActive"
+						>
 							<a
 								class="flex h-full items-center justify-center whitespace-nowrap px-4"
 								appScrollPreset
+								itemprop="url"
 								#routerLinkActive="routerLinkActive"
 								[appScrollPresetActive]="routerLinkActive.isActive"
 								[routerLink]="[termsNavigation.path]"
@@ -37,7 +45,9 @@
 								[title]="termsNavigation.name"
 								[attr.aria-label]="termsNavigation.name"
 							>
-								<span class="block truncate max-w-[192px] sm:max-w-full">{{ termsNavigation.name }}</span>
+								<span class="block truncate max-w-[192px] sm:max-w-full" itemprop="name">
+									{{ termsNavigation.name }}
+								</span>
 							</a>
 						</li>
 					}

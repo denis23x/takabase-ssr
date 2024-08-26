@@ -1,12 +1,12 @@
 <!-- @format -->
 
 <ng-container>
-	<section class="flex flex-col gap-4">
+	<section class="flex flex-col gap-4" itemscope itemtype="http://schema.org/Thing">
 		<header
 			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 		>
 			<div class="flex w-full flex-col items-stretch justify-between gap-4">
-				<h1 class="block truncate text-2xl font-bold text-base-content">Help & Support</h1>
+				<h1 class="block truncate text-2xl font-bold text-base-content" itemprop="name">Help & Support</h1>
 				<hr class="my-0 border-base-content/20" />
 				<p class="alert" role="alert">
 					<i
@@ -15,7 +15,7 @@
 						[appSvgIconIcon]="'info-circle'"
 						[appSvgIconSquare]="'1.5em'"
 					></i>
-					<span class="block">
+					<span class="block" itemprop="description">
 						Get the assistance you need to navigate the website and make the most of the services available. Browse
 						through the helpful resources to find answers to your queries
 					</span>
@@ -24,12 +24,20 @@
 		</header>
 		<div class="flex flex-col">
 			<nav class="block px-4">
-				<ul class="tabs tabs-lifted tabs-lg" role="tablist">
+				<ul class="tabs tabs-lifted tabs-lg" role="tablist" itemscope itemtype="http://schema.org/ItemList">
 					@for (helpNavigation of helpNavigationList; track helpNavigation.id) {
-						<li class="tab" role="tab" [class.tab-active]="routerLinkActive.isActive">
+						<li
+							class="tab"
+							role="tab"
+							itemprop="itemListElement"
+							itemscope
+							itemtype="http://schema.org/ListItem"
+							[class.tab-active]="routerLinkActive.isActive"
+						>
 							<a
 								class="flex h-full items-center justify-center whitespace-nowrap px-4"
 								appScrollPreset
+								itemprop="url"
 								#routerLinkActive="routerLinkActive"
 								[appScrollPresetActive]="routerLinkActive.isActive"
 								[routerLink]="[helpNavigation.path]"
@@ -37,7 +45,9 @@
 								[title]="helpNavigation.name"
 								[attr.aria-label]="helpNavigation.name"
 							>
-								<span class="block truncate max-w-[192px] sm:max-w-full">{{ helpNavigation.name }}</span>
+								<span class="block truncate max-w-[192px] sm:max-w-full" itemprop="name">
+									{{ helpNavigation.name }}
+								</span>
 							</a>
 						</li>
 					}

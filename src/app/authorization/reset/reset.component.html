@@ -1,11 +1,15 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
-		<div class="flex flex-col gap-4">
-			<h1 class="text-2xl font-bold">Password reset</h1>
+	<section
+		class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+		itemscope
+		itemtype="http://schema.org/Action"
+	>
+		<header class="flex flex-col gap-4">
+			<h1 class="text-2xl font-bold" itemprop="name">Password reset</h1>
 			<hr class="border-t border-base-content/20" />
-		</div>
+		</header>
 		<div class="flex flex-col gap-4">
 			<form class="flex flex-col gap-4" [formGroup]="resetForm" (ngSubmit)="onSubmitResetForm()">
 				<p class="alert" role="alert">
@@ -15,7 +19,7 @@
 						[appSvgIconIcon]="'info-circle'"
 						[appSvgIconSquare]="'1.5em'"
 					></i>
-					<span class="block"> You will receive an email with further instructions </span>
+					<span class="block" itemprop="description"> You will receive an email with further instructions </span>
 				</p>
 				@if (resetForm.get("email"); as email) {
 					<fieldset class="form-control">
@@ -68,6 +72,7 @@
 						type="submit"
 						title="Submit"
 						aria-label="Submit"
+						itemprop="target"
 						[disabled]="resetForm.invalid || resetForm.disabled"
 					>
 						@if (resetForm.disabled) {
@@ -81,6 +86,7 @@
 				class="btn-primary btn w-full"
 				title="Login"
 				aria-label="Login"
+				itemprop="url"
 				[routerLink]="resetForm.enabled ? '/login' : null"
 				[class.btn-outline]="resetForm.enabled"
 				[class.btn-disabled]="resetForm.disabled"
@@ -88,5 +94,5 @@
 				Login
 			</a>
 		</div>
-	</div>
+	</section>
 </ng-container>

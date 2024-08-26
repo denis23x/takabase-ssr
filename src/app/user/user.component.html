@@ -6,7 +6,7 @@
 			class="rounded-box flex flex-col items-start justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
 			itemprop="mainEntity"
 			itemscope
-			itemtype="https://schema.org/Person"
+			itemtype="http://schema.org/Person"
 		>
 			<div class="flex items-center justify-start gap-4 overflow-hidden w-full">
 				<div class="avatar" appSkeleton [appSkeletonToggle]="userSkeletonToggle">
@@ -62,6 +62,8 @@
               role="tab"
               appSkeleton
               itemprop="itemListElement"
+              itemscope
+              itemtype="http://schema.org/ListItem"
               [class.tab-active]="!categoryListSkeletonToggle && routerLinkActiveAll.isActive"
               [appSkeletonToggle]="categoryListSkeletonToggle"
               [appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -87,6 +89,8 @@
 							role="tab"
 							appSkeleton
 							itemprop="itemListElement"
+							itemscope
+							itemtype="http://schema.org/ListItem"
 							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActiveBookmark.isActive"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -114,6 +118,8 @@
 							role="tab"
 							appSkeleton
 							itemprop="itemListElement"
+							itemscope
+							itemtype="http://schema.org/ListItem"
 							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActivePassword.isActive"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -142,6 +148,8 @@
 							role="tab"
 							appSkeleton
 							itemprop="itemListElement"
+							itemscope
+							itemtype="http://schema.org/ListItem"
 							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActivePrivate.isActive"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
@@ -171,6 +179,8 @@
 							role="tab"
 							appSkeleton
 							itemprop="itemListElement"
+							itemscope
+							itemtype="http://schema.org/ListItem"
 							[class.tab-active]="!categoryListSkeletonToggle && routerLinkActiveCategory.isActive && category"
 							[appSkeletonToggle]="categoryListSkeletonToggle"
 							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"

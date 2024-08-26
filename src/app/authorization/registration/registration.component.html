@@ -1,8 +1,12 @@
 <!-- @format -->
 
 <ng-container>
-	<div class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
-		<div class="flex flex-col gap-4">
+	<section
+		class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+		itemscope
+		itemtype="http://schema.org/RegisterAction"
+	>
+		<header class="flex flex-col gap-4">
 			@if (invitedByUser) {
 				<span class="block text-xl font-bold">You have been invited by</span>
 				<div class="flex items-center justify-start gap-4 overflow-hidden">
@@ -38,11 +42,11 @@
 					</div>
 				</div>
 			}
-			<h1 class="text-2xl font-bold">Registration</h1>
+			<h1 class="text-2xl font-bold" itemprop="name">Registration</h1>
 			<hr class="border-t border-base-content/20" />
 			<nav class="block w-full" appSignIn [appSignInDisabled]="registrationForm.disabled"></nav>
 			<hr class="border-t border-base-content/20" />
-		</div>
+		</header>
 		<div class="flex flex-col gap-4">
 			<form class="flex flex-col gap-4" [formGroup]="registrationForm" (ngSubmit)="onSubmitRegistrationForm()">
 				@if (registrationForm.get("name"); as name) {
@@ -202,7 +206,7 @@
 								[class.checkbox-error]="terms.invalid"
 							/>
 							<!-- prettier-ignore -->
-							<span class="label-text inline"> I have read and agree to the <a class="link inline-block" target="_blank" [routerLink]="['/terms/terms-of-service']"> Terms of Service </a> and <a class="link inline-block" target="_blank" [routerLink]="['/terms/cookie-policy']"> Cookie Policy </a></span>
+							<span class="label-text inline"> I have read and agree to the <a class="link inline-block" target="_blank" itemprop="url" [routerLink]="['/terms/terms-of-service']"> Terms of Service </a> and <a class="link inline-block" target="_blank" [routerLink]="['/terms/cookie-policy']"> Cookie Policy </a></span>
 						</label>
 					</fieldset>
 				}
@@ -212,6 +216,7 @@
 						type="submit"
 						title="Registration"
 						aria-label="Registration"
+						itemprop="target"
 						[disabled]="registrationForm.invalid || registrationForm.disabled"
 					>
 						@if (registrationForm.disabled) {
@@ -225,6 +230,7 @@
 				class="btn-primary btn w-full"
 				title="Login"
 				aria-label="Login"
+				itemprop="url"
 				[routerLink]="registrationForm.enabled ? '/login' : null"
 				[class.btn-outline]="registrationForm.enabled"
 				[class.btn-disabled]="registrationForm.disabled"
@@ -232,5 +238,5 @@
 				Login
 			</a>
 		</div>
-	</div>
+	</section>
 </ng-container>

@@ -8,8 +8,8 @@
 		<footer class="block border-t border-base-content/20 pt-4">
 			<nav class="breadcrumbs text-base text-base-content p-0">
 				<!-- https://schema.org/BreadcrumbList -->
-				<ul class="flex items-center justify-start" itemscope itemtype="https://schema.org/BreadcrumbList">
-					<li class="flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+				<ul class="flex items-center justify-start" itemscope itemtype="http://schema.org/BreadcrumbList">
+					<li class="flex" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 						<a
 							class="flex items-center justify-start gap-2"
 							appSkeleton
@@ -31,7 +31,7 @@
 						</a>
 						<meta itemprop="position" content="1" />
 					</li>
-					<li class="flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+					<li class="flex" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 						<a
 							class="flex items-center justify-start gap-2"
 							appSkeleton
@@ -59,7 +59,7 @@
 					@switch (true) {
 						@case (!!postPasswordId) {
 							@if (currentUser?.id === post.user.id) {
-								<li class="flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+								<li class="flex" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 									<a
 										class="flex items-center justify-start gap-2"
 										appSkeleton
@@ -86,7 +86,7 @@
 						}
 						@case (!!postPrivateId) {
 							@if (currentUser?.id === post.user.id) {
-								<li class="flex" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+								<li class="flex" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 									<a
 										class="flex items-center justify-start gap-2"
 										appSkeleton
@@ -115,7 +115,7 @@
 								class="flex overflow-hidden before:min-w-1.5 before:min-h-1.5"
 								itemprop="itemListElement"
 								itemscope
-								itemtype="https://schema.org/ListItem"
+								itemtype="http://schema.org/ListItem"
 							>
 								<a
 									class="flex items-center justify-start gap-2 max-w-full pr-7"
