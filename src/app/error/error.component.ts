@@ -58,11 +58,7 @@ export class ErrorComponent implements OnInit {
 	}
 
 	setResolver(): void {
-		const isCustom404: boolean = this.activatedRoute.snapshot.url[0].path === '404';
-
-		// error/:status
-
-		const statusCode: number = isCustom404 ? 404 : Number(this.activatedRoute.snapshot.paramMap.get('status'));
+		const statusCode: number = Number(this.activatedRoute.snapshot.paramMap.get('status'));
 		const message: string = this.getMessageMap(statusCode);
 
 		if (!statusCode || !message) {

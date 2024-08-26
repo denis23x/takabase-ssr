@@ -11,6 +11,6 @@ Disallow: /post/private/*
 Disallow: /post/password/*
 
 User-agent: *
-Disallow:
+Allow:
 
 Sitemap: https://takabase.com/sitemap.xml

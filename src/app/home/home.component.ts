@@ -101,7 +101,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	setTitle(): void {
-		this.titleService.setTitle('Home');
+		this.titleService.setTitle('Discover the Latest Posts and Insights on Takabase');
 	}
 
 	setMetaTags(): void {
