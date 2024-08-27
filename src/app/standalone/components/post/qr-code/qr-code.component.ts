@@ -1,17 +1,17 @@
 /** @format */
 
 import { AfterViewInit, Component, ElementRef, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { WindowComponent } from '../window/window.component';
-import { PlatformService } from '../../../core/services/platform.service';
+import { WindowComponent } from '../../window/window.component';
+import { PlatformService } from '../../../../core/services/platform.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { AppearanceService } from '../../../core/services/appearance.service';
-import { SnackbarService } from '../../../core/services/snackbar.service';
-import { HelperService } from '../../../core/services/helper.service';
+import { AppearanceService } from '../../../../core/services/appearance.service';
+import { SnackbarService } from '../../../../core/services/snackbar.service';
+import { HelperService } from '../../../../core/services/helper.service';
 import { filter, map, tap } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { CopyToClipboardDirective } from '../../directives/app-copy-to-clipboard.directive';
+import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
+import { CopyToClipboardDirective } from '../../../directives/app-copy-to-clipboard.directive';
 import { toCanvas, toDataURL } from 'qrcode';
 import type { QRCodeRenderersOptions } from 'qrcode';
 
@@ -22,10 +22,10 @@ interface QRCodeForm {
 @Component({
 	standalone: true,
 	imports: [WindowComponent, FormsModule, ReactiveFormsModule, SvgIconComponent, CopyToClipboardDirective],
-	selector: 'app-qr-code, [appQRCode]',
+	selector: 'app-post-qr-code, [appPostQRCode]',
 	templateUrl: './qr-code.component.html'
 })
-export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PostQRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
@@ -37,16 +37,16 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 	@ViewChild('QRCodeCanvas') QRCodeCanvas: ElementRef<HTMLCanvasElement> | undefined;
 
 	@Input({ required: true })
-	set appQRCodeData(QRCodeData: string) {
-		this.QRCodeDataSubject$.next(QRCodeData);
+	set appPostQRCodeData(QRCodeData: string) {
+		this.postQRCodeDataSubject$.next(QRCodeData);
 	}
 
-	QRCodeDataSubject$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-	QRCodeData$: Subscription | undefined;
+	postQRCodeDataSubject$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+	postQRCodeData$: Subscription | undefined;
+
 	QRCodeForm: FormGroup = this.formBuilder.group<QRCodeForm>({
 		url: this.formBuilder.nonNullable.control('', [])
 	});
-
 	QRCodeOptionsColorScheme$: Subscription | undefined;
 	QRCodeOptions: QRCodeRenderersOptions = {
 		margin: 2,
@@ -67,23 +67,25 @@ export class QRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	ngAfterViewInit(): void {
-		this.QRCodeData$ = this.QRCodeDataSubject$.pipe(
-			filter((value: string) => !!value && !!this.QRCodeCanvas?.nativeElement),
-			map((value: string) => value.replace(/^(https?:\/\/)/, '')),
-			tap((value: string) => this.setQRCodeToCanvas(value))
-		).subscribe({
-			next: (value: string) => {
-				const abstractControl: AbstractControl | null = this.QRCodeForm.get('url');
+		this.postQRCodeData$ = this.postQRCodeDataSubject$
+			.pipe(
+				filter((value: string) => !!value && !!this.QRCodeCanvas?.nativeElement),
+				map((value: string) => value.replace(/^(https?:\/\/)/, '')),
+				tap((value: string) => this.setQRCodeToCanvas(value))
+			)
+			.subscribe({
+				next: (value: string) => {
+					const abstractControl: AbstractControl | null = this.QRCodeForm.get('url');
 
-				abstractControl.setValue(value);
-				abstractControl.markAsTouched();
-			},
-			error: (error: any) => console.error(error)
-		});
+					abstractControl.setValue(value);
+					abstractControl.markAsTouched();
+				},
+				error: (error: any) => console.error(error)
+			});
 	}
 
 	ngOnDestroy(): void {
-		[this.QRCodeData$, this.QRCodeOptionsColorScheme$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.postQRCodeData$, this.QRCodeOptionsColorScheme$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleQRCodeDialog(toggle: boolean): void {

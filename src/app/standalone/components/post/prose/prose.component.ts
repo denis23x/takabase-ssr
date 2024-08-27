@@ -19,11 +19,11 @@ import { AvatarComponent } from '../../avatar/avatar.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { Subscription } from 'rxjs';
 import { PostBookmarkService } from '../../../../core/services/post-bookmark.service';
-import type { QRCodeComponent } from '../../qr-code/qr-code.component';
 import type { Post } from '../../../../core/models/post.model';
-import type { PostExternalLinkComponent } from '../external-link/external-link.component';
 import type { domToCanvas, Options } from 'modern-screenshot';
-import type { ReportComponent } from '../../report/report.component';
+import type { PostExternalLinkComponent } from '../external-link/external-link.component';
+import type { PostReportComponent } from '../report/report.component';
+import type { PostQRCodeComponent } from '../qr-code/qr-code.component';
 import type { PostBookmark } from '../../../../core/models/post-bookmark.model';
 import type { PostBookmarkCreateDto } from '../../../../core/dto/post-bookmark/post-bookmark-create.dto';
 import type { PostBookmarkGetOneDto } from '../../../../core/dto/post-bookmark/post-bookmark-get-one.dto';
@@ -91,8 +91,8 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 
 	// Lazy loading
 
-	appQRCodeComponent: ComponentRef<QRCodeComponent>;
-	appReportComponent: ComponentRef<ReportComponent>;
+	appPostQRCodeComponent: ComponentRef<PostQRCodeComponent>;
+	appPostReportComponent: ComponentRef<PostReportComponent>;
 	appPostExternalLinkComponent: ComponentRef<PostExternalLinkComponent>;
 
 	ngOnInit(): void {
@@ -177,7 +177,10 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 		const htmlElementOptions: Options = {
 			type: 'image/png',
 			scale: 2,
-			filter: (node: Node): boolean => true
+			filter: (node: Node): boolean => true,
+			features: {
+				removeControlCharacter: false
+			}
 		};
 
 		this.domToCanvasIsLoading = true;
@@ -208,30 +211,30 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	}
 
 	async onToggleQRCodeDialog(): Promise<void> {
-		if (!this.appQRCodeComponent) {
-			await import('../../qr-code/qr-code.component')
-				.then(m => (this.appQRCodeComponent = this.viewContainerRef.createComponent(m.QRCodeComponent)))
+		if (!this.appPostQRCodeComponent) {
+			await import('../qr-code/qr-code.component')
+				.then(m => (this.appPostQRCodeComponent = this.viewContainerRef.createComponent(m.PostQRCodeComponent)))
 				.catch((error: any) => console.error(error));
 		}
 
-		this.appQRCodeComponent.setInput('appQRCodeData', this.helperService.getURL().toString());
+		this.appPostQRCodeComponent.setInput('appPostQRCodeData', this.helperService.getURL().toString());
 
-		this.appQRCodeComponent.changeDetectorRef.detectChanges();
-		this.appQRCodeComponent.instance.onToggleQRCodeDialog(true);
+		this.appPostQRCodeComponent.changeDetectorRef.detectChanges();
+		this.appPostQRCodeComponent.instance.onToggleQRCodeDialog(true);
 	}
 
 	async onToggleReportDialog(): Promise<void> {
 		if (this.currentUser) {
-			if (!this.appReportComponent) {
-				await import('../../report/report.component')
-					.then(m => (this.appReportComponent = this.viewContainerRef.createComponent(m.ReportComponent)))
+			if (!this.appPostReportComponent) {
+				await import('../report/report.component')
+					.then(m => (this.appPostReportComponent = this.viewContainerRef.createComponent(m.PostReportComponent)))
 					.catch((error: any) => console.error(error));
 			}
 
-			this.appReportComponent.setInput('appReportPost', this.post);
+			this.appPostReportComponent.setInput('appPostReportPost', this.post);
 
-			this.appReportComponent.changeDetectorRef.detectChanges();
-			this.appReportComponent.instance.onToggleReportDialog(true);
+			this.appPostReportComponent.changeDetectorRef.detectChanges();
+			this.appPostReportComponent.instance.onToggleReportDialog(true);
 		} else {
 			this.snackbarService.warning('Nope', 'Log in before reporting');
 		}

@@ -22,16 +22,7 @@
 				(ngSubmit)="onSubmitReportForm()"
 			>
 				<div class="flex items-center justify-start gap-4 bg-base-200 p-4 rounded-btn overflow-hidden">
-					@if (!!reportUser) {
-						<div class="avatar">
-							<figure
-								class="h-12 w-12 rounded-btn relative overflow-hidden"
-								appAvatar
-								[appAvatarUser]="reportUser"
-							></figure>
-						</div>
-					}
-					@if (!!reportPost && !!reportPost.image) {
+					@if (!!reportPost.image) {
 						<div class="flex rounded-btn relative overflow-hidden">
 							<figure class="h-12 w-12 rounded-btn relative overflow-hidden">
 								<img

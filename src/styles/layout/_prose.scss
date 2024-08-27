@@ -60,7 +60,7 @@
   }
 
   blockquote {
-    @apply my-4 border-primary bg-primary/10;
+    @apply border-primary bg-primary/10 my-4 px-4;
 
     p {
       @apply before:content-none after:content-none not-italic m-0 py-2;

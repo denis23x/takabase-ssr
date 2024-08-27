@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ShareComponent } from '../../standalone/components/share/share.component';
+import { PostShareComponent } from '../../standalone/components/post/share/share.component';
 import { PostProseComponent } from '../../standalone/components/post/prose/prose.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, switchMap, tap } from 'rxjs/operators';
@@ -21,7 +21,7 @@ import type { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, PostProseComponent, ShareComponent, SkeletonDirective, SvgIconComponent, AdComponent],
+	imports: [CommonModule, PostProseComponent, PostShareComponent, SkeletonDirective, SvgIconComponent, AdComponent],
 	providers: [PostService],
 	selector: 'app-post-all',
 	templateUrl: './all.component.html'

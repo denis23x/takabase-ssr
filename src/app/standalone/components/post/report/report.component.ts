@@ -11,25 +11,23 @@ import {
 	ViewChild
 } from '@angular/core';
 import { CommonModule, Location, NgOptimizedImage } from '@angular/common';
-import { WindowComponent } from '../window/window.component';
+import { WindowComponent } from '../../window/window.component';
 import { Subscription } from 'rxjs';
-import { InputTrimWhitespaceDirective } from '../../directives/app-input-trim-whitespace.directive';
-import { TextareaAutosizeDirective } from '../../directives/app-textarea-autosize.directive';
-import { DropdownComponent } from '../dropdown/dropdown.component';
+import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
+import { TextareaAutosizeDirective } from '../../../directives/app-textarea-autosize.directive';
+import { DropdownComponent } from '../../dropdown/dropdown.component';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { HelperService } from '../../../core/services/helper.service';
-import { SnackbarService } from '../../../core/services/snackbar.service';
-import { ReportService } from '../../../core/services/report.service';
-import { BadgeErrorComponent } from '../badge-error/badge-error.component';
+import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
+import { HelperService } from '../../../../core/services/helper.service';
+import { SnackbarService } from '../../../../core/services/snackbar.service';
+import { ReportService } from '../../../../core/services/report.service';
+import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { RouterModule } from '@angular/router';
-import { AvatarComponent } from '../avatar/avatar.component';
-import { SkeletonDirective } from '../../directives/app-skeleton.directive';
-import { PlatformService } from '../../../core/services/platform.service';
-import { FirebaseStoragePipe } from '../../pipes/firebase-storage.pipe';
-import type { User } from '../../../core/models/user.model';
-import type { Post } from '../../../core/models/post.model';
-import type { ReportCreateDto } from '../../../core/dto/report/report-create.dto';
+import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
+import { PlatformService } from '../../../../core/services/platform.service';
+import { FirebaseStoragePipe } from '../../../pipes/firebase-storage.pipe';
+import type { Post } from '../../../../core/models/post.model';
+import type { ReportCreateDto } from '../../../../core/dto/report/report-create.dto';
 
 interface ReportForm {
 	name: FormControl<string>;
@@ -49,16 +47,15 @@ interface ReportForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		BadgeErrorComponent,
-		AvatarComponent,
 		SkeletonDirective,
 		FirebaseStoragePipe
 	],
 	providers: [ReportService],
-	selector: 'app-report, [appReport]',
+	selector: 'app-post-report, [appPostReport]',
 	templateUrl: './report.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ReportComponent implements OnInit, OnDestroy {
+export class PostReportComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly reportService: ReportService = inject(ReportService);
@@ -68,13 +65,8 @@ export class ReportComponent implements OnInit, OnDestroy {
 
 	@ViewChild('reportDialog') reportDialog: ElementRef<HTMLDialogElement> | undefined;
 
-	@Input()
-	set appReportUser(user: User) {
-		this.reportUser = user;
-	}
-
-	@Input()
-	set appReportPost(post: Post) {
+	@Input({ required: true })
+	set appPostReportPost(post: Post) {
 		this.reportPost = post;
 	}
 
@@ -96,13 +88,12 @@ export class ReportComponent implements OnInit, OnDestroy {
 	reportFormRequest$: Subscription | undefined;
 	reportFormNameList: string[] = ['Terms and conditions', 'Sex, sexuality and nudity', 'Technical glitch', 'Spam'];
 
-	reportUser: User | undefined;
 	reportPost: Post | undefined;
 	reportDialogToggle: boolean = false;
 
 	ngOnInit(): void {
 		this.reportSubjectUrl = this.helperService.getURL().toString();
-		this.reportSubjectName = this.reportUser?.name || this.reportPost?.name;
+		this.reportSubjectName = this.reportPost.name;
 
 		/** Extra toggle close when url change */
 
@@ -140,13 +131,15 @@ export class ReportComponent implements OnInit, OnDestroy {
 
 			const reportCreateDto: ReportCreateDto = {
 				...this.reportForm.value,
-				subject: this.reportUser || this.reportPost
+				subject: this.reportPost
 			};
 
 			this.reportFormRequest$?.unsubscribe();
 			this.reportFormRequest$ = this.reportService.create(reportCreateDto).subscribe({
 				next: () => {
 					this.snackbarService.success('Sent', 'Thanks for your report');
+
+					// Close dialog
 
 					this.onToggleReportDialog(false);
 				},

@@ -10,14 +10,14 @@
 			itemtype="http://schema.org/Article"
 		>
 			<header class="flex w-full flex-col items-start justify-start gap-4">
-				<h2
+				<h1
 					class="text-2xl font-bold text-base-content"
 					itemprop="headline"
 					appSkeleton
 					[appSkeletonToggle]="postSkeletonToggle"
 				>
 					{{ post.name || "Name" }}
-				</h2>
+				</h1>
 				<div class="flex items-center justify-start gap-4 w-full overflow-hidden">
 					@if (post.image) {
 						<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle">

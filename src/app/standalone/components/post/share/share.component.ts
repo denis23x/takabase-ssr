@@ -1,27 +1,27 @@
 /** @format */
 
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
-import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { HelperService } from '../../../core/services/helper.service';
-import { SkeletonDirective } from '../../directives/app-skeleton.directive';
-import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
-import { PlatformService } from '../../../core/services/platform.service';
-import type { Post } from '../../../core/models/post.model';
+import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
+import { HelperService } from '../../../../core/services/helper.service';
+import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
+import { SvgLogoComponent } from '../../svg-logo/svg-logo.component';
+import { PlatformService } from '../../../../core/services/platform.service';
+import type { Post } from '../../../../core/models/post.model';
 import type { Params } from '@angular/router';
 
 @Component({
 	standalone: true,
 	imports: [SvgIconComponent, SkeletonDirective, SvgLogoComponent],
-	selector: 'app-share, [appShare]',
+	selector: 'app-post-share, [appPostShare]',
 	templateUrl: './share.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ShareComponent {
+export class PostShareComponent {
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 
 	@Input({ required: true })
-	set appSharePost(post: Post | undefined) {
+	set appPostSharePost(post: Post | undefined) {
 		if (post) {
 			this.post = post;
 
@@ -39,7 +39,7 @@ export class ShareComponent {
 	}
 
 	@Input()
-	set appSharePostSkeletonToggle(postSkeletonToggle: boolean) {
+	set appPostSharePostSkeletonToggle(postSkeletonToggle: boolean) {
 		this.postSkeletonToggle = postSkeletonToggle;
 	}
 

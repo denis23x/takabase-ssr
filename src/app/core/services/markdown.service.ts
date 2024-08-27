@@ -131,7 +131,7 @@ export class MarkdownService {
 			prism: /```\s?(?!mermaid)([\w-]+)\n[\s\S]*?```/gm.test(value),
 			mermaid: /```\s?(mermaid)\n[\s\S]*?```/gm.test(value),
 			collapsible: /\+\+\+\s?\S[^\n]*\n[\s\S]*?\n\+\+\+/gim.test(value),
-			emoji: /:\w+:/gm.test(value),
+			emoji: /:([\+\-\w]+):/gm.test(value),
 			smartArrows: /(-->|<--|<-->|==>|<==|<==>)/gm.test(value),
 			video: /@\[(youtube|vimeo|vine|prezi|osf)]\(\s*https?:\/\/[^\s)]+\s*\)/gm.test(value)
 		};

@@ -3,10 +3,10 @@
 <ng-container>
 	<section class="flex flex-col gap-4">
 		<header class="rounded-box flex flex-col border border-base-content/20 bg-base-100 p-4 shadow-xl">
-			<label class="label pt-0" for="searchFormSearch">
-				<span class="label-text" itemprop="name">Lookup</span>
+			<div class="flex items-center justify-between pb-2">
+				<h1 class="text-xl font-bold text-base-content" itemprop="name">Search Now</h1>
 				<a
-					class="label-text-alt link logo-algolia"
+					class="link logo-algolia"
 					href="https://www.algolia.com"
 					rel="noopener noreferrer"
 					target="_blank"
@@ -17,7 +17,7 @@
 					[appSvgLogoHeight]="'19'"
 				>
 				</a>
-			</label>
+			</div>
 			<div class="relative" appSearchForm [appSearchFormDisabled]="searchListIsLoading"></div>
 		</header>
 		<div class="flex flex-col">
