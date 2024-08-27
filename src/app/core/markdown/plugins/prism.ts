@@ -4,6 +4,7 @@ import Prism from 'prismjs';
 import 'prismjs/plugins/autolinker/prism-autolinker.min.js';
 import 'prismjs/plugins/autoloader/prism-autoloader.min.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
+import 'prismjs/plugins/treeview/prism-treeview.min.js';
 import 'prismjs/plugins/match-braces/prism-match-braces.min.js';
 import type MarkdownIt from 'markdown-it';
 import type { Token } from 'markdown-it';
@@ -45,6 +46,13 @@ export default function PrismPlugin(md: MarkdownIt): void {
 			}
 		}
 
-		return `<pre id="${tokenSelectorId}" class="language-${tokenInfo} line-numbers"><code class="language-${tokenInfo} match-braces rainbow-braces">${md.utils.escapeHtml(tokenContent)}</code></pre>`;
+		switch (tokenInfo) {
+			case 'treeview': {
+				return `<pre id="${tokenSelectorId}" class="language-${tokenInfo}"><code class="language-${tokenInfo}">${tokenContent}</code></pre>`;
+			}
+			default: {
+				return `<pre id="${tokenSelectorId}" class="language-${tokenInfo} line-numbers"><code class="language-${tokenInfo} match-braces rainbow-braces">${md.utils.escapeHtml(tokenContent)}</code></pre>`;
+			}
+		}
 	};
 }

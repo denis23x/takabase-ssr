@@ -84,10 +84,10 @@
   }
 
   pre.mermaid {
-    @apply bg-base-200 p-4;
+    @apply bg-base-200/50 p-4;
 
     &:not(:has(svg)) {
-      @apply aspect-[32/9] text-transparent;
+      @apply text-base-content;
     }
 
     svg {

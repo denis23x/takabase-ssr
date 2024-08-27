@@ -33,10 +33,16 @@ export class MarkdownService {
 			typographer: true,
 			quotes: '“”‘’',
 			highlight: (value: string, language: string) => {
-				if (language === 'mermaid') {
-					return `<pre class="mermaid">${value}</pre>`;
-				} else {
-					return `<pre class="language-${language} line-numbers"><code class="language-${language} match-braces rainbow-braces">${markdownIt.utils.escapeHtml(value)}</code></pre>`;
+				switch (language) {
+					case 'mermaid': {
+						return `<pre class="mermaid">${value}</pre>`;
+					}
+					case 'treeview': {
+						return `<pre class="language-${language}"><code class="language-${language}">${value}</code></pre>`;
+					}
+					default: {
+						return `<pre class="language-${language} line-numbers"><code class="language-${language} match-braces rainbow-braces">${markdownIt.utils.escapeHtml(value)}</code></pre>`;
+					}
 				}
 			}
 		})

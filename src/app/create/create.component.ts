@@ -338,7 +338,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 							this.post = post;
 							this.postSkeletonToggle = false;
 
-							this.category = this.post.category || undefined;
+							this.category = this.post?.category || undefined;
 							this.categorySkeletonToggle = false;
 
 							this.postForm.patchValue({
@@ -657,6 +657,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			const postTypeIsPristine: boolean = this.postTypeOriginal === this.postType;
 			const postDto: PostCreateDto & PostUpdateDto = {
 				...this.postForm.value,
+				image: this.postForm.value.image || null,
 				firebaseUid: this.post?.firebaseUid || undefined
 			};
 
