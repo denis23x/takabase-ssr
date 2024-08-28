@@ -18,14 +18,17 @@ _HTML_
 </div>
 ```
 
-_SCSS_
+..even _Treeview_
 
-``` scss
-.scrollbar {
-  @screen mouse {
-    $color-track: hsl(var(--b1));
-  }
-}
+``` treeview
+src/
+├── documents/
+|   ├── spreadsheet.xls
+|   ├── manual.pdf
+|   ├── document.docx
+|   └── presentation.ppt
+├── .gitignore
+└── README.md
 ```
 
 Support every **297 languages** currently provided by [Prism](https://prismjs.com/) and pack of awesome color schemes for it. With customizable layout, you can also easily visualize and create keyboards with custom buttons that suit your needs, for example press [modifierKey]{.kbd .kbd-sm .uppercase} + [D]{.kbd .kbd-sm} to add this website to your browser favorites.

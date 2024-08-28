@@ -36,11 +36,11 @@ export default function PrismPlugin(md: MarkdownIt): void {
 			if (typeof window !== 'undefined') {
 				// Required timeout to run after return
 				setTimeout(() => {
-					Array.from(document.querySelectorAll('code[class^="language"]')).forEach((element: Element) => {
-						Prism.highlightElement(element, false, () => {
-							tokenListRendered[idx] = token;
-							tokenListRendered[idx].meta = document.getElementById(tokenSelectorId);
-						});
+					const element: Element = document.getElementById(tokenSelectorId).querySelector('code');
+
+					Prism.highlightElement(element, false, () => {
+						tokenListRendered[idx] = token;
+						tokenListRendered[idx].meta = document.getElementById(tokenSelectorId);
 					});
 				});
 			}
