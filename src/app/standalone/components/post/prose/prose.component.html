@@ -144,14 +144,12 @@
 			@if (!postPreview) {
 				<nav class="border-y border-base-content/20 py-4">
 					<ul class="flex items-start justify-start overflow-hidden gap-2">
-						<li class="block">
+						<li class="block" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 							<button
-								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
+								class="btn-ghost btn-md btn-square btn bg-base-200"
 								type="button"
 								title="Download Screenshot"
 								aria-label="Download Screenshot"
-								appSkeleton
-								[appSkeletonToggle]="postSkeletonToggle"
 								(click)="onClickDomToCanvas()"
 							>
 								@switch (domToCanvasIsLoading) {
@@ -159,32 +157,35 @@
 										<span class="loading loading-spinner"></span>
 									}
 									@default {
-										<i class="block" appSvgIcon [appSvgIconIcon]="'download'" [appSvgIconSquare]="'1.5em'"> </i>
+										<!-- prettier-ignore -->
+										<i
+                      class="block fill-current"
+                      appSvgIcon
+                      [appSvgIconIcon]="'download'"
+                      [appSvgIconSquare]="'1.5em'"
+                    >
+										</i>
 									}
 								}
 							</button>
 						</li>
-						<li class="block">
+						<li class="block" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 							<button
-								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
+								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
 								type="button"
 								title="Show QR Code"
 								aria-label="Show QR Code"
 								appSvgIcon
-								appSkeleton
 								[appSvgIconIcon]="'qr-code'"
 								[appSvgIconSquare]="'1.5em'"
-								[appSkeletonToggle]="postSkeletonToggle"
 								(click)="onToggleQRCodeDialog()"
 							></button>
 						</li>
 						@if (currentUser?.id === post.user.id) {
-							<li class="block w-full">
+							<li class="block w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 								<a
 									class="btn-success btn-outline btn-md btn w-full"
-									appSkeleton
 									[class.border-transparent]="postSkeletonToggle"
-									[appSkeletonToggle]="postSkeletonToggle"
 									[title]="'Update: ' + post.name"
 									[attr.aria-label]="'Update: ' + post.name"
 									[routerLink]="['/update', post.id]"
@@ -195,15 +196,13 @@
 								</a>
 							</li>
 						} @else {
-							<li class="block">
+							<li class="block" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 								<button
-									class="btn-ghost btn-md btn-square btn bg-base-200 fill-current"
+									class="btn-ghost btn-md btn-square btn bg-base-200"
 									type="button"
-									appSkeleton
 									[title]="(postBookmark ? 'Remove from' : 'Add to') + ' bookmarks'"
 									[attr.aria-label]="(postBookmark ? 'Remove from' : 'Add to') + ' bookmarks'"
 									[ngClass]="postBookmark && !postBookmarkIsLoading ? 'text-success' : 'text-base-content'"
-									[appSkeletonToggle]="postSkeletonToggle"
 									(click)="onClickBookmark()"
 								>
 									@switch (postBookmarkIsLoading) {
@@ -212,7 +211,7 @@
 										}
 										@default {
 											<i
-												class="block"
+												class="block fill-current"
 												appSvgIcon
 												[appSvgIconIcon]="postBookmark ? 'bookmark-check-fill' : 'bookmark'"
 												[appSvgIconSquare]="'1.5em'"
@@ -222,13 +221,11 @@
 									}
 								</button>
 							</li>
-							<li class="block">
+							<li class="block" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 								<button
 									class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
 									type="button"
 									appSvgIcon
-									appSkeleton
-									[appSkeletonToggle]="postSkeletonToggle"
 									[title]="'Report'"
 									[attr.aria-label]="'Report'"
 									[appSvgIconIcon]="'flag'"

@@ -121,7 +121,7 @@ export const environment = {
 			language: 'en-US',
 			markdownMonospace: true,
 			pageRedirectHome: false,
-			pageScrollToTop: false,
+			pageScrollUp: false,
 			pageScrollInfinite: false,
 			theme: 'auto',
 			themeBackground: 'cosy-creatures',

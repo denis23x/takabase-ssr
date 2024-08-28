@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { SnackbarComponent } from '../standalone/components/snackbar/snackbar.component';
 import { HeaderComponent } from '../standalone/components/header/header.component';
-import { ScrollToTopComponent } from '../standalone/components/scroll-to-top/scroll-to-top.component';
+import { ScrollUpComponent } from '../standalone/components/scroll-up/scroll-up.component';
 import { PlatformService } from '../core/services/platform.service';
 import { CookiesComponent } from '../standalone/components/cookies/cookies.component';
 import { version } from '../../versions/version';
@@ -18,7 +18,7 @@ import type { CurrentUser } from '../core/models/current-user.model';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, SnackbarComponent, HeaderComponent, ScrollToTopComponent, CookiesComponent],
+	imports: [RouterModule, SnackbarComponent, HeaderComponent, ScrollUpComponent, CookiesComponent],
 	selector: 'app-outlet',
 	templateUrl: './outlet.component.html'
 })

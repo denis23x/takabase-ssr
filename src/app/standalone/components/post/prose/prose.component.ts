@@ -108,7 +108,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	}
 
 	ngOnCurrentUserIsReady(): void {
-		if (!this.postPreview) {
+		if (!this.postPreview && this.postType === 'public') {
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 			const postBookmarkGetOneDto: PostBookmarkGetOneDto = {
 				attachPost: false

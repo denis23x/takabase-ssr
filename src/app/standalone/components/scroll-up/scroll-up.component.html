@@ -1,0 +1,20 @@
+<!-- @format -->
+
+<ng-container>
+	<button
+		class="flex items-center justify-center backdrop-blur-sm bg-base-100/30 z-10 min-h-16 min-w-16 rounded-2xl border border-base-content/20 fixed rotate-45 top-2/3 -right-8"
+		type="button"
+		title="Scroll Up"
+		aria-label="Scroll Up"
+		[class.invisible]="!windowScrollUpToggle"
+		(click)="onScrollUp()"
+	>
+		<i
+			class="block fill-current text-base-content -rotate-45 translate-y-3 -translate-x-3"
+			appSvgIcon
+			[appSvgIconIcon]="'arrow-up-short'"
+			[appSvgIconSquare]="'1.35em'"
+		>
+		</i>
+	</button>
+</ng-container>

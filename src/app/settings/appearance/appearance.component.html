@@ -240,10 +240,10 @@
 				</div>
 			}
 			<div class="flex w-full flex-col">
-				@if (appearanceForm.get("pageScrollToTop"); as pageScrollToTop) {
+				@if (appearanceForm.get("pageScrollUp"); as pageScrollUp) {
 					<fieldset class="form-control">
-						<label class="label gap-4" for="appearanceFormPageScrollToTop">
-							<span class="label-text"> Enable scroll to top </span>
+						<label class="label gap-4" for="appearanceFormPageScrollUp">
+							<span class="label-text"> Enable scroll up </span>
 							<div
 								class="flex"
 								appSkeleton
@@ -252,12 +252,12 @@
 							>
 								<input
 									class="toggle toggle-md"
-									id="appearanceFormPageScrollToTop"
+									id="appearanceFormPageScrollUp"
 									type="checkbox"
 									title="Enable Scroll to top"
 									aria-label="Enable Scroll to top"
-									formControlName="pageScrollToTop"
-									[class.toggle-success]="pageScrollToTop.touched && pageScrollToTop.value"
+									formControlName="pageScrollUp"
+									[class.toggle-success]="pageScrollUp.touched && pageScrollUp.value"
 								/>
 							</div>
 						</label>

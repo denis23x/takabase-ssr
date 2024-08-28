@@ -2,74 +2,54 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://takabase.com/post/30001</loc>
-    <lastmod>2024-06-07T12:35:24.071Z</lastmod>
-    <priority>0.40</priority>
-    <changefreq>monthly</changefreq>
+    <lastmod>2024-08-27T08:49:33.908Z</lastmod>
+    <priority>0.50</priority>
+    <changefreq>hourly</changefreq>
     <image:image>
       <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Fposts%2F1025lZFSdtlBbYQ94HwY%2Fimage%2F1716577355087-K0MR6mrhVA35.webp?alt=media</image:loc>
-      <image:title>Dive into Mermaid.js</image:title>
+      <image:title>Mermaid.js for what?</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://takabase.com/post/30002</loc>
-    <lastmod>2024-06-17T12:12:12.366Z</lastmod>
-    <priority>0.40</priority>
-    <changefreq>monthly</changefreq>
+    <lastmod>2024-08-27T09:45:27.028Z</lastmod>
+    <priority>0.50</priority>
+    <changefreq>hourly</changefreq>
     <image:image>
       <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Fposts%2F7zA5jNVjyOW4e2aoT7GK%2Fimage%2F1716577191073-LetaJnazjan7.webp?alt=media</image:loc>
-      <image:title>Algolia</image:title>
+      <image:title>Algolia: AI search that understands</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://takabase.com/post/30003</loc>
-    <lastmod>2024-05-25T10:56:33.469Z</lastmod>
-    <priority>0.30</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://takabase.com/post/120001</loc>
-    <lastmod>2024-08-25T11:28:08.557Z</lastmod>
+    <lastmod>2024-08-27T08:47:18.105Z</lastmod>
     <priority>0.50</priority>
     <changefreq>hourly</changefreq>
-    <image:image>
-      <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Fposts%2FqLILDckderHYbXnLLQOg%2Fimage%2F1717764016070-zLevBsu6QS0k.webp?alt=media</image:loc>
-      <image:title>Bun: The Node.js Killer?</image:title>
-    </image:image>
   </url>
   <url>
     <loc>https://takabase.com/post/210001</loc>
-    <lastmod>2024-06-18T03:41:46.654Z</lastmod>
-    <priority>0.40</priority>
-    <changefreq>monthly</changefreq>
+    <lastmod>2024-08-28T05:41:16.587Z</lastmod>
+    <priority>0.50</priority>
+    <changefreq>hourly</changefreq>
     <image:image>
       <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Fposts%2FqG13NNoxqkM0S5ZOAjJq%2Fimage%2F1718682084381-57fWKi3MVTuA.webp?alt=media</image:loc>
-      <image:title>Fastify: A High-Performance Node.js Framework</image:title>
+      <image:title>Why use Nest if there is a Fastify?</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://takabase.com/post/210002</loc>
-    <lastmod>2024-06-18T03:51:01.132Z</lastmod>
-    <priority>0.40</priority>
-    <changefreq>monthly</changefreq>
+    <lastmod>2024-08-28T07:27:07.002Z</lastmod>
+    <priority>0.50</priority>
+    <changefreq>hourly</changefreq>
   </url>
   <url>
     <loc>https://takabase.com/post/240001</loc>
-    <lastmod>2024-08-25T12:09:23.650Z</lastmod>
+    <lastmod>2024-08-27T08:47:50.204Z</lastmod>
     <priority>0.50</priority>
     <changefreq>hourly</changefreq>
     <image:image>
       <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Fposts%2FAFIKniYQvfl3dFhP4mfI%2Fimage%2F1718687787341-HqyUTeyoir1V.webp?alt=media</image:loc>
       <image:title>A few CSS tips and tricks with Tailwind CSS</image:title>
-    </image:image>
-  </url>
-  <url>
-    <loc>https://takabase.com/post/270001</loc>
-    <lastmod>2024-08-25T11:28:08.557Z</lastmod>
-    <priority>0.50</priority>
-    <changefreq>hourly</changefreq>
-    <image:image>
-      <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Fposts%2Fy2JKGkVMdaPdq3I4a1eD%2Fimage%2F1719206609121-FN0ANw3TJPfU.webp?alt=media</image:loc>
-      <image:title>Nextgen CLI tools</image:title>
     </image:image>
   </url>
   <url>

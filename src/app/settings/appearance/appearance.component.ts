@@ -25,7 +25,7 @@ interface AppearanceForm {
 	themeBackground: FormControl<string>;
 	themePrism: FormControl<string>;
 	language: FormControl<string>;
-	pageScrollToTop: FormControl<boolean>;
+	pageScrollUp: FormControl<boolean>;
 	pageScrollInfinite: FormControl<boolean>;
 	pageRedirectHome: FormControl<boolean>;
 	markdownMonospace: FormControl<boolean>;
@@ -67,7 +67,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 		themeBackground: this.formBuilder.nonNullable.control('', [Validators.required]),
 		themePrism: this.formBuilder.nonNullable.control('', [Validators.required]),
 		language: this.formBuilder.nonNullable.control('', [Validators.required]),
-		pageScrollToTop: this.formBuilder.control(null, [Validators.required]),
+		pageScrollUp: this.formBuilder.control(null, [Validators.required]),
 		pageScrollInfinite: this.formBuilder.control(null, [Validators.required]),
 		pageRedirectHome: this.formBuilder.control(null, [Validators.required]),
 		markdownMonospace: this.formBuilder.control(null, [Validators.required]),
