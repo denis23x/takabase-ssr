@@ -2,7 +2,7 @@
 
 App bundle comes with a wide range of CSS classes that you can use to style your layout in any way you want. Additionally, bundle provide a comprehensive safe list of classes that you can use with confidence, ensuring that your layout looks great and functions perfectly.
 
-You can read much more information about classes and advanced layout in [DaisyUI](https://daisyui.com/) and [Tailwind CSS](https://tailwindcss.com/) documentation, take a look there to write effective materials.
+You will find a lot more information on classes and advanced layout in the [DaisyUI](https://daisyui.com/) and [Tailwind CSS](https://tailwindcss.com/) documentation. Go there to make useful stuff.
 
 ``` scss
 // Prose (turn on/off all default styles)

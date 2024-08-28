@@ -1,8 +1,8 @@
 ## Compatibility
 
-The Markdown implementation encompasses a broad spectrum of features extending beyond the conventional Markdown syntax. While basic Markdown serves as a valuable tool for straightforward formatting, acknowledging that many users seek more sophisticated functionality to articulate their ideas and creativity comprehensively. Hence, a bespoke Markdown implementation has been devised that accommodates an array of features, including advanced tables, attributes, media embedding, diagrams, syntax highlighting, and more.
+In all cases, basic Markdown is a great tool for someone who wants to do common formatting, but most people in fairness want more to really express themselves and their imagination. Markdown implementation has been done which supports a plenitude of features including, but not limited to, advance attributes, embedding media, diagrams, and syntax highlighting.
 
-Please note that while utilizing integrated plugins, seamless compatibility with third-party editors cannot be ensured. It's advisable to adhere to the [basic syntax](https://www.markdownguide.org/basic-syntax/) to ensure optimal compatibility
+Please note that while utilizing integrated plugins, seamless compatibility with third-party editors cannot be ensured. It's advisable to adhere to the [basic syntax](https://www.markdownguide.org/basic-syntax/) to ensure optimal compatibility.
 
 **Markdown plugins**
 
