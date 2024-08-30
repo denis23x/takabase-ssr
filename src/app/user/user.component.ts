@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router, RouterLinkActive, RouterModule } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
@@ -192,7 +192,7 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 					this.activatedRouteParamsCategoryId$ = this.activatedRoute.params
 						.pipe(
 							distinctUntilKeyChanged('categoryId'),
-							map(() => Number(this.activatedRoute.snapshot.paramMap.get('categoryId'))),
+							map((params: Params) => Number(params.categoryId)),
 							map((categoryId: number) => this.categoryList.find((category: Category) => category.id === categoryId)),
 							tap((category: Category | undefined) => this.userStore.setCategory(category))
 						)
@@ -201,10 +201,34 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 								this.category = category;
 								this.categorySkeletonToggle = false;
 
-								/** Apply SEO meta tags */
+								if (!category) {
+									const isHasCategoryId: boolean = !!Number(this.activatedRoute.snapshot.paramMap.get('categoryId'));
+									const isSkeletonDisabled: boolean = this.categoryListSkeletonToggle === false;
 
-								this.setTitle();
-								this.setMetaTags();
+									if (isHasCategoryId && isSkeletonDisabled) {
+										const httpErrorResponse: HttpErrorResponse = new HttpErrorResponse({
+											status: 404
+										});
+
+										/** Set Transfer State */
+
+										if (this.platformService.isServer()) {
+											this.apiService.setHttpErrorResponseKey(httpErrorResponse);
+										}
+
+										/** Redirect */
+
+										// prettier-ignore
+										this.router
+											.navigate(['/error', httpErrorResponse.status], { skipLocationChange: true })
+											.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
+									}
+								} else {
+									/** Apply SEO meta tags */
+
+									this.setTitle();
+									this.setMetaTags();
+								}
 							},
 							error: (error: any) => console.error(error)
 						});

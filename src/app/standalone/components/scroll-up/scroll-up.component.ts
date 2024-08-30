@@ -3,7 +3,7 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ViewportScroller } from '@angular/common';
 import { distinctUntilChanged, fromEvent, of, Subscription, switchMap } from 'rxjs';
-import { debounceTime, map, tap } from 'rxjs/operators';
+import { debounceTime, map } from 'rxjs/operators';
 import { PlatformService } from '../../../core/services/platform.service';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { CookiesService } from '../../../core/services/cookies.service';
@@ -20,8 +20,7 @@ export class ScrollUpComponent implements OnInit, OnDestroy {
 	private readonly cookiesService: CookiesService = inject(CookiesService);
 
 	windowScroll$: Subscription | undefined;
-
-	windowScrollUpToggleValue: number = 100;
+	windowScrollUpToggleValue: number = 800;
 	windowScrollUpToggle: boolean = false;
 
 	ngOnInit(): void {
@@ -33,7 +32,6 @@ export class ScrollUpComponent implements OnInit, OnDestroy {
 				this.windowScroll$ = fromEvent(window, 'scroll')
 					.pipe(
 						debounceTime(10),
-						tap(() => (this.windowScrollUpToggleValue = window.innerHeight * 2)),
 						map(() => this.viewportScroller.getScrollPosition().pop()),
 						switchMap((y: number) => of(y > this.windowScrollUpToggleValue)),
 						distinctUntilChanged()
