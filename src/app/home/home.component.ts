@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { PWAComponent } from '../standalone/components/pwa/pwa.component';
+import { MathPipe } from '../standalone/pipes/math.pipe';
 import homeHighlights from '../../assets/json/home-highlights.json';
 import dayjs from 'dayjs/esm';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
@@ -21,7 +22,7 @@ import type { InsightGetAllDto } from '../core/dto/insight/insight-get-all.dto';
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, SvgIconComponent, SvgLogoComponent, SkeletonDirective, PWAComponent],
+	imports: [CommonModule, RouterModule, SvgIconComponent, SvgLogoComponent, SkeletonDirective, PWAComponent, MathPipe],
 	selector: 'app-home',
 	templateUrl: './home.component.html'
 })
