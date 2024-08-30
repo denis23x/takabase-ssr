@@ -2,19 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://takabase.com/post/30001</loc>
-    <lastmod>2024-08-27T08:49:33.908Z</lastmod>
+    <lastmod>2024-08-28T11:43:18.135Z</lastmod>
     <priority>0.50</priority>
     <changefreq>hourly</changefreq>
     <image:image>
       <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Fposts%2F1025lZFSdtlBbYQ94HwY%2Fimage%2F1716577355087-K0MR6mrhVA35.webp?alt=media</image:loc>
-      <image:title>Mermaid.js for what?</image:title>
+      <image:title>Mermaid to depict complex things using a diagram</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://takabase.com/post/30002</loc>
     <lastmod>2024-08-27T09:45:27.028Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>hourly</changefreq>
+    <changefreq>daily</changefreq>
     <image:image>
       <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Fposts%2F7zA5jNVjyOW4e2aoT7GK%2Fimage%2F1716577191073-LetaJnazjan7.webp?alt=media</image:loc>
       <image:title>Algolia: AI search that understands</image:title>
@@ -24,13 +24,13 @@
     <loc>https://takabase.com/post/30003</loc>
     <lastmod>2024-08-27T08:47:18.105Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>hourly</changefreq>
+    <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://takabase.com/post/210001</loc>
-    <lastmod>2024-08-28T05:41:16.587Z</lastmod>
+    <lastmod>2024-08-28T11:35:14.842Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>hourly</changefreq>
+    <changefreq>daily</changefreq>
     <image:image>
       <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Fposts%2FqG13NNoxqkM0S5ZOAjJq%2Fimage%2F1718682084381-57fWKi3MVTuA.webp?alt=media</image:loc>
       <image:title>Why use Nest if there is a Fastify?</image:title>
@@ -40,13 +40,13 @@
     <loc>https://takabase.com/post/210002</loc>
     <lastmod>2024-08-28T07:27:07.002Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>hourly</changefreq>
+    <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://takabase.com/post/240001</loc>
-    <lastmod>2024-08-27T08:47:50.204Z</lastmod>
+    <lastmod>2024-08-28T11:21:53.566Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>hourly</changefreq>
+    <changefreq>daily</changefreq>
     <image:image>
       <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Fposts%2FAFIKniYQvfl3dFhP4mfI%2Fimage%2F1718687787341-HqyUTeyoir1V.webp?alt=media</image:loc>
       <image:title>A few CSS tips and tricks with Tailwind CSS</image:title>
@@ -61,5 +61,17 @@
       <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2Frgpd0QfwrpaLXOxlBKFlRjAvNp43%2Fposts%2FZ0aZh7u5ARPf3vwIQX6u%2Fimage%2F1719486031287-9N3Eik58DWpR.webp?alt=media</image:loc>
       <image:title>แมวมงคล</image:title>
     </image:image>
+  </url>
+  <url>
+    <loc>https://takabase.com/post/360001</loc>
+    <lastmod>2024-08-29T08:34:14.743Z</lastmod>
+    <priority>0.50</priority>
+    <changefreq>hourly</changefreq>
+  </url>
+  <url>
+    <loc>https://takabase.com/post/390001</loc>
+    <lastmod>2024-08-29T09:29:05.087Z</lastmod>
+    <priority>0.50</priority>
+    <changefreq>hourly</changefreq>
   </url>
 </urlset>

@@ -19,9 +19,9 @@ export class DayjsPipe implements PipeTransform {
 			case 'fromNow':
 				return dayjs(value).fromNow(options as boolean);
 			case 'format':
-				return dayjs(value).format(options);
+				return dayjs(value).format(options as string);
 			default:
-				throw new Error('Invalid action specified: ' + type);
+				throw new Error('Invalid type specified: ' + type);
 		}
 	}
 }

@@ -247,6 +247,7 @@
 					class="prose w-full max-w-full flex-1"
 					appMarkdownRender
 					itemprop="articleBody"
+					[appMarkdownRenderPostType]="postType"
 					[appMarkdownRenderValue]="post.markdown || 'Markdown'"
 					(appMarkdownRenderClickExternalLink)="onTogglePostExternalLinkDialog($event)"
 				></article>

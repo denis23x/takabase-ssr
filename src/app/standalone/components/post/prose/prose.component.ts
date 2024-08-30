@@ -13,7 +13,6 @@ import { MarkdownTimeToReadPipe } from '../../../pipes/markdown-time-to-read.pip
 import { FirebaseStoragePipe } from '../../../pipes/firebase-storage.pipe';
 import { MarkdownService } from '../../../../core/services/markdown.service';
 import { PlatformService } from '../../../../core/services/platform.service';
-import { filter } from 'rxjs/operators';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import { AvatarComponent } from '../../avatar/avatar.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
@@ -240,20 +239,15 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 		}
 	}
 
-	async onTogglePostExternalLinkDialog(href: string): Promise<void> {
+	async onTogglePostExternalLinkDialog(value: string): Promise<void> {
 		if (!this.appPostExternalLinkComponent) {
+			// prettier-ignore
 			await import('../../post/external-link/external-link.component')
-				.then(m => {
-					this.appPostExternalLinkComponent = this.viewContainerRef.createComponent(m.PostExternalLinkComponent);
-					this.appPostExternalLinkComponent.instance.appPostExternalLinkSubmit
-						.pipe(filter(() => this.postType === 'public'))
-						.subscribe({
-							next: () => this.platformService.getWindow().open(href, '_blank'),
-							error: (error: any) => console.error(error)
-						});
-				})
+				.then(m => this.appPostExternalLinkComponent = this.viewContainerRef.createComponent(m.PostExternalLinkComponent))
 				.catch((error: any) => console.error(error));
 		}
+
+		this.appPostExternalLinkComponent.setInput('appPostExternalLinkValue', value);
 
 		this.appPostExternalLinkComponent.changeDetectorRef.detectChanges();
 		this.appPostExternalLinkComponent.instance.onTogglePostExternalLinkDialog(true);

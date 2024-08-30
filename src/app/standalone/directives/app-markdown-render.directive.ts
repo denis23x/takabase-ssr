@@ -26,21 +26,23 @@ export class MarkdownRenderDirective {
 
 	@HostListener('click', ['$event'])
 	onClick(event: Event): void {
-		const target: HTMLAnchorElement = event.target as HTMLAnchorElement;
+		if (this.postType === 'public') {
+			const target: HTMLAnchorElement = event.target as HTMLAnchorElement;
 
-		const url: URL = this.helperService.getURL();
+			const url: URL = this.helperService.getURL();
 
-		// Check if the clicked element is a link and it's external
-		if (target.tagName === 'A' && !target.href.startsWith(url.origin)) {
-			event.preventDefault();
+			// Check if the clicked element is a link and it's external
+			if (target.tagName === 'A' && !target.href.startsWith(url.origin)) {
+				event.preventDefault();
 
-			/** Emit to parent */
+				/** Emit to parent */
 
-			this.appMarkdownRenderClickExternalLink.emit(target.href);
+				this.appMarkdownRenderClickExternalLink.emit(target.href);
+			}
 		}
 	}
 
-	@Input()
+	@Input({ required: true })
 	set appMarkdownRenderValue(value: string) {
 		const markdownIt: MarkdownIt = this.markdownService.getMarkdownItDefault();
 		const markdownItElement: HTMLElement = this.elementRef.nativeElement.cloneNode(true) as HTMLElement;
@@ -63,4 +65,11 @@ export class MarkdownRenderDirective {
 				.catch((error: any) => console.error(error));
 		}
 	}
+
+	@Input()
+	set appMarkdownRenderPostType(postType: string) {
+		this.postType = postType;
+	}
+
+	postType: string = 'public';
 }

@@ -6,6 +6,7 @@ import {
 	ElementRef,
 	EventEmitter,
 	inject,
+	Input,
 	OnInit,
 	Output,
 	ViewChild
@@ -31,7 +32,13 @@ export class PostExternalLinkComponent implements OnInit {
 	@Output() appPostExternalLinkSubmit: EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() appPostExternalLinkToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+	@Input({ required: true })
+	set appPostExternalLinkValue(postExternalLinkValue: string) {
+		this.postExternalLinkValue = postExternalLinkValue;
+	}
+
 	postExternalLinkDialogToggle: boolean = false;
+	postExternalLinkValue: string | undefined;
 
 	ngOnInit(): void {
 		/** Extra toggle close when url change */
@@ -54,7 +61,13 @@ export class PostExternalLinkComponent implements OnInit {
 	}
 
 	onSubmitPostExternalLink(): void {
-		this.appPostExternalLinkSubmit.emit(true);
+		if (this.platformService.isBrowser()) {
+			const window: Window = this.platformService.getWindow();
+
+			// Redirect
+
+			window.open(this.postExternalLinkValue, '_blank');
+		}
 
 		/** Close */
 
