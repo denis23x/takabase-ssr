@@ -1,0 +1,66 @@
+<!-- @format -->
+
+<ng-container>
+	<section class="flex flex-col gap-4">
+		<p class="alert" role="alert">
+			<i class="fill-current text-info" appSvgIcon [appSvgIconIcon]="'info-circle'" [appSvgIconSquare]="'1.5em'"></i>
+			<span class="block"> Admin functions only. If you're here by accident, here is nothing to do for you </span>
+		</p>
+		<div class="flex flex-col items-start justify-start gap-4">
+			@if (!!syncList.length) {
+				@for (sync of syncList; track sync.id) {
+					<details class="collapse collapse-arrow bg-base-200 border border-base-content/20" open>
+						<summary class="collapse-title text-xl font-medium gap-4">
+							{{ sync.name }} <small class="text-base-content/50 truncate">{{ sync.description }}</small>
+						</summary>
+						<div class="collapse-content bg-base-100 p-4">
+							<ul class="flex flex-col gap-2">
+								@for (endpoint of sync.endpointList; track endpoint.id) {
+									<!-- prettier-ignore -->
+									<li
+										class="flex items-center justify-between gap-2 border w-full rounded-xl p-2"
+										[ngClass]="{ 'bg-info/10 border-info/50': endpoint.method === 'GET', 'bg-success/10 border-success/50': endpoint.method === 'POST' }"
+									>
+										<button
+											class="btn btn-sm gap-0 pointer-events-none w-8 sm:w-20 h-8"
+											type="button"
+											[ngClass]="{ 'btn-info': endpoint.method === 'GET', 'btn-success': endpoint.method === 'POST' }"
+											[title]="endpoint.method"
+											[attr.aria-label]="endpoint.method"
+										>
+											@switch (endpoint.method) {
+												@case ("GET") {
+													G<span class="hidden sm:inline">ET</span>
+												}
+												@case ("POST") {
+													P<span class="hidden sm:inline">OST</span>
+												}
+												@default {
+													?
+												}
+											}
+										</button>
+										<span class="font-mono text-base flex-1 truncate">{{ endpoint.url }}</span>
+										<button
+											class="btn btn-sm bg-base-100 border-0"
+											type="button"
+											title="Try it out"
+											aria-label="Try it out"
+											[disabled]="endpoint.isLoading"
+                      (click)="onClickSync(endpoint)"
+										>
+											@if (endpoint.isLoading) {
+												<span class="loading loading-spinner loading-sm"></span>
+											}
+											Try it out
+										</button>
+									</li>
+								}
+							</ul>
+						</div>
+					</details>
+				}
+			}
+		</div>
+	</section>
+</ng-container>

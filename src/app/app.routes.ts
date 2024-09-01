@@ -209,6 +209,13 @@ export const APP_ROUTES: Route[] = [
 						loadComponent: async () => {
 							return import('./settings/profile/profile.component').then(m => m.SettingsProfileComponent);
 						}
+					},
+					{
+						path: 'sync',
+						title: 'Sync settings',
+						loadComponent: async () => {
+							return import('./settings/sync/sync.component').then(m => m.SettingsSyncComponent);
+						}
 					}
 				]
 			},

@@ -14,11 +14,19 @@ export const httpAuthorizationInterceptor: HttpInterceptorFn = (request: HttpReq
 	const isMethodMatch: boolean = ['POST', 'PUT', 'DELETE'].includes(request.method);
 	const isUrlMatch: boolean = request.url.startsWith(environment.apiUrl);
 
+	// User authenticated area
+
 	const isPostBookmark: boolean = request.url.includes('posts-bookmark');
 	const isPostPassword: boolean = request.url.includes('posts-password');
 	const isPostPrivate: boolean = request.url.includes('posts-private');
 
-	if ((isMethodMatch && isUrlMatch) || (isPostBookmark || isPostPassword || isPostPrivate)) {
+	// Admin functions
+
+	const isAlgolia: boolean = request.url.includes('algolia');
+	const isInsights: boolean = request.url.includes('insights');
+	const isSitemap: boolean = request.url.includes('sitemap');
+
+	if ((isMethodMatch && isUrlMatch) || (isPostBookmark || isPostPassword || isPostPrivate) || (isAlgolia || isInsights || isSitemap)) {
 		const firebaseUser: FirebaseUser = firebaseService.auth.currentUser;
 
 		if (firebaseUser) {
