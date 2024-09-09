@@ -7,6 +7,8 @@ import { ApiService } from '../../core/services/api.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { HelperService } from '../../core/services/helper.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
+import { tap } from 'rxjs/operators';
 
 interface Sync {
 	id: number;
@@ -32,6 +34,7 @@ export class SettingsSyncComponent {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly httpClient: HttpClient = inject(HttpClient);
 	private readonly helperService: HelperService = inject(HelperService);
+	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
 	syncList: Sync[] = [
 		{
@@ -110,11 +113,14 @@ export class SettingsSyncComponent {
 
 		switch (true) {
 			case syncEndpoint.url.includes('/algolia'): {
-				this.apiService.get(syncEndpoint.url, { addRecords: 'Use the API' }).subscribe({
-					next: (data: any) => console.debug(data),
-					error: (error: any) => console.error(error),
-					complete: () => (syncEndpoint.isLoading = false)
-				});
+				this.apiService
+					.get(syncEndpoint.url, { addRecords: 'Use the API' })
+					.pipe(tap(() => this.snackbarService.success('Sync', 'Algolia synced')))
+					.subscribe({
+						next: (data: any) => console.debug(data),
+						error: (error: any) => console.error(error),
+						complete: () => (syncEndpoint.isLoading = false)
+					});
 
 				break;
 			}
@@ -125,11 +131,13 @@ export class SettingsSyncComponent {
 				};
 
 				// @ts-ignore
-				this.apiService[syncEndpoint.method.toLowerCase()](syncEndpoint.url, insightsDto).subscribe({
-					next: (data: any) => console.debug(data),
-					error: (error: any) => console.error(error),
-					complete: () => (syncEndpoint.isLoading = false)
-				});
+				this.apiService[syncEndpoint.method.toLowerCase()](syncEndpoint.url, insightsDto)
+					.pipe(tap(() => this.snackbarService.success('Sync', 'Insights synced')))
+					.subscribe({
+						next: (data: any) => console.debug(data),
+						error: (error: any) => console.error(error),
+						complete: () => (syncEndpoint.isLoading = false)
+					});
 
 				break;
 			}
@@ -137,11 +145,12 @@ export class SettingsSyncComponent {
 				// prettier-ignore
 				this.httpClient
 					.get(environment.apiUrl + syncEndpoint.url, { responseType: 'blob' })
+					.pipe(tap(() => this.snackbarService.success('Sync', 'Sitemap generated successfully')))
 					.subscribe({
 						next: (blob: Blob) => {
 							const file: File = this.helperService.getFileFromBlob(blob);
 							const fileReader: FileReader = new FileReader();
-							const fileName: string = syncEndpoint.url.split('/').pop() + '.xml';
+							const fileName: string = ['sitemap', syncEndpoint.url.split('/').pop()].join('-') + '.xml';
 
 							fileReader.addEventListener('load', () => this.helperService.setDownload(fileReader.result as string, fileName));
 							fileReader.readAsDataURL(file);

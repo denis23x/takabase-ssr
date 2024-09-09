@@ -647,7 +647,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 		this.postForm.patchValue(value.postForm);
 	}
 
-	onSubmitPostForm(): void {
+	onSubmitPostForm(redirect: boolean = false): void {
 		if (this.helperService.getFormValidation(this.postForm)) {
 			this.postForm.disable();
 
@@ -711,9 +711,16 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 							public: ['category', String(this.category?.id)]
 						};
 
-						this.router
-							.navigate(['/', this.currentUser.name, ...postTypeRedirectMap[this.postType]])
-							.then(() => this.snackbarService.success('Cheers!', 'Post has been ' + (postId ? 'updated' : 'saved')));
+						// prettier-ignore
+						if (redirect) {
+							this.router
+								.navigate(['/', this.currentUser.name, ...postTypeRedirectMap[this.postType]])
+								.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
+						}
+
+						// Message
+
+						this.snackbarService.success('Cheers!', 'Post has been ' + (postId ? 'updated' : 'saved'));
 
 						// Remove post drafts
 
@@ -725,7 +732,8 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 								.forEach((key: string) => this.localStorageService.removeItem(key));
 						}
 					},
-					error: () => this.postForm.enable()
+					error: (error: any) => console.error(error),
+					complete: () => this.postForm.enable()
 				});
 		}
 	}

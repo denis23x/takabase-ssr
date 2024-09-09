@@ -496,31 +496,39 @@
 						(appMarkdownUploadToggle)="postFormTextareaIsSubmitted.set($event)"
 					></div>
 					<div class="flex items-start justify-end gap-4">
-						<button
-							class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
-							type="button"
-							appSkeleton
-							appSvgIcon
-							[title]="(fullscreenToggle ? 'Exit' : 'Enter') + ' Full Screen'"
-							[attr.aria-label]="(fullscreenToggle ? 'Exit' : 'Enter') + ' Full Screen'"
-							[appSkeletonToggle]="postSkeletonToggle"
-							[appSkeletonClassListElementRef]="['border-0']"
-							[disabled]="postForm.disabled"
-							[appSvgIconIcon]="fullscreenToggle ? 'fullscreen-exit' : 'fullscreen'"
-							[appSvgIconSquare]="'1.5em'"
-							(click)="onFullscreen(!fullscreenToggle)"
-						></button>
 						@if (fullscreenToggle) {
-							<div class="flex p-0" appDropdown [appDropdownPlacement]="'bottom-end'" [appDropdownClose]="false">
+							<button
+								class="hidden sm:flex btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
+								type="button"
+								title="Save"
+								aria-label="Save"
+								appSkeleton
+								[appSkeletonToggle]="postSkeletonToggle"
+								[appSkeletonClassListElementRef]="['border-0']"
+								[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine || postFormImageIsSubmitted()"
+								(click)="onSubmitPostForm()"
+							>
+								@if (postForm.disabled) {
+									<span class="loading loading-spinner"></span>
+								} @else {
+									<i class="block" appSvgIcon [appSvgIconIcon]="'floppy'" [appSvgIconSquare]="'1.5em'"> </i>
+								}
+							</button>
+							<div
+								class="hidden sm:flex p-0"
+								appDropdown
+								[appDropdownPlacement]="'bottom-end'"
+								[appDropdownClose]="false"
+							>
 								<button
 									class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
 									type="button"
-									title="Full Screen menu"
-									aria-label="Full Screen menu"
+									title="Fullscreen settings"
+									aria-label="Fullscreen settings"
 									appSvgIcon
 									slot="target"
 									[disabled]="postForm.disabled"
-									[appSvgIconIcon]="'three-dots-vertical'"
+									[appSvgIconIcon]="'gear'"
 									[appSvgIconSquare]="'1.5em'"
 								></button>
 								<ul class="menu menu-vertical menu-md" slot="content">
@@ -529,12 +537,12 @@
 										<label class="label cursor-pointer justify-end gap-4">
 											<span class="label-text">Scroll Sync</span>
 											<input
-												class="checkbox checkbox-md"
+												class="toggle toggle-md"
 												type="checkbox"
 												title="Scroll Sync"
 												aria-label="Scroll Sync"
 												[checked]="fullscreenScrollSync"
-												[class.checkbox-success]="fullscreenScrollSync"
+												[class.toggle-success]="fullscreenMarkdown"
 												(change)="fullscreenScrollSync = !fullscreenScrollSync"
 											/>
 										</label>
@@ -543,18 +551,15 @@
 										<label class="label cursor-pointer justify-end gap-4">
 											<span class="label-text">Text Wrap</span>
 											<input
-												class="checkbox checkbox-md"
+												class="toggle toggle-md"
 												type="checkbox"
 												title="Text Wrap"
 												aria-label="Text Wrap"
 												[checked]="fullscreenTextWrapping"
-												[class.checkbox-success]="fullscreenTextWrapping"
+												[class.toggle-success]="fullscreenMarkdown"
 												(change)="fullscreenTextWrapping = !fullscreenTextWrapping"
 											/>
 										</label>
-									</li>
-									<li class="flex w-full snap-start scroll-my-2 menu-title">
-										<hr class="my-0 border-base-content/20" />
 									</li>
 									<li class="flex w-full snap-start scroll-my-2">
 										<label class="label cursor-pointer justify-end gap-4">
@@ -587,6 +592,20 @@
 								</ul>
 							</div>
 						}
+						<button
+							class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
+							type="button"
+							title="Fullscreen toggle"
+							aria-label="Fullscreen toggle"
+							appSkeleton
+							appSvgIcon
+							[appSkeletonToggle]="postSkeletonToggle"
+							[appSkeletonClassListElementRef]="['border-0']"
+							[disabled]="postForm.disabled"
+							[appSvgIconIcon]="fullscreenToggle ? 'fullscreen-exit' : 'fullscreen'"
+							[appSvgIconSquare]="'1.5em'"
+							(click)="onFullscreen(!fullscreenToggle)"
+						></button>
 					</div>
 				</div>
 				<div class="flex h-full flex-col gap-4 overflow-auto sm:flex-row">
@@ -704,7 +723,7 @@
 					[appSkeletonToggle]="postSkeletonToggle"
 					[appSkeletonClassListElementRef]="['border-0']"
 					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine || postFormImageIsSubmitted()"
-					(click)="onSubmitPostForm()"
+					(click)="onSubmitPostForm(true)"
 				>
 					@if (postForm.disabled) {
 						<span class="loading loading-spinner"></span>

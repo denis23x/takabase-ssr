@@ -152,20 +152,15 @@
 								aria-label="Download Screenshot"
 								(click)="onClickDomToCanvas()"
 							>
-								@switch (domToCanvasIsLoading) {
-									@case (true) {
-										<span class="loading loading-spinner"></span>
-									}
-									@default {
-										<!-- prettier-ignore -->
-										<i
-                      class="block fill-current"
-                      appSvgIcon
-                      [appSvgIconIcon]="'download'"
-                      [appSvgIconSquare]="'1.5em'"
-                    >
-										</i>
-									}
+								@if (domToCanvasIsLoading) {
+									<span class="loading loading-spinner"></span>
+								} @else {
+									<i
+										class="block fill-current"
+										appSvgIcon
+										[appSvgIconIcon]="'download'"
+										[appSvgIconSquare]="'1.5em'"
+									></i>
 								}
 							</button>
 						</li>
@@ -205,19 +200,15 @@
 									[ngClass]="postBookmark && !postBookmarkIsLoading ? 'text-success' : 'text-base-content'"
 									(click)="onClickBookmark()"
 								>
-									@switch (postBookmarkIsLoading) {
-										@case (true) {
-											<span class="loading loading-spinner"></span>
-										}
-										@default {
-											<i
-												class="block fill-current"
-												appSvgIcon
-												[appSvgIconIcon]="postBookmark ? 'bookmark-check-fill' : 'bookmark'"
-												[appSvgIconSquare]="'1.5em'"
-											>
-											</i>
-										}
+									@if (postBookmarkIsLoading) {
+										<span class="loading loading-spinner"></span>
+									} @else {
+										<i
+											class="block fill-current"
+											appSvgIcon
+											[appSvgIconIcon]="postBookmark ? 'bookmark-check-fill' : 'bookmark'"
+											[appSvgIconSquare]="'1.5em'"
+										></i>
 									}
 								</button>
 							</li>

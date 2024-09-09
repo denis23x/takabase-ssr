@@ -89,13 +89,10 @@
 									[disabled]="imageForm.disabled"
 									(click)="imageFormFile.click()"
 								>
-									@switch (imageForm.disabled && !cropperFile) {
-										@case (true) {
-											<span class="loading loading-spinner"></span>
-										}
-										@default {
-											<i class="block" appSvgIcon [appSvgIconIcon]="'folder'" [appSvgIconSquare]="'1.75em'"> </i>
-										}
+									@if (imageForm.disabled && !cropperFile) {
+										<span class="loading loading-spinner"></span>
+									} @else {
+										<i class="block" appSvgIcon [appSvgIconIcon]="'folder'" [appSvgIconSquare]="'1.75em'"> </i>
 									}
 								</button>
 							</div>

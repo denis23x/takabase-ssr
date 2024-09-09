@@ -10,6 +10,7 @@
 				<!-- https://schema.org/BreadcrumbList -->
 				<ul class="flex items-center justify-start" itemscope itemtype="http://schema.org/BreadcrumbList">
 					<li class="flex" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+						<meta itemprop="position" content="1" />
 						<a
 							class="flex items-center justify-start gap-2"
 							appSkeleton
@@ -31,6 +32,7 @@
 						</a>
 					</li>
 					<li class="flex" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+						<meta itemprop="position" content="2" />
 						<a
 							class="flex items-center justify-start gap-2"
 							appSkeleton
@@ -58,6 +60,7 @@
 						@case (!!postPasswordId) {
 							@if (currentUser?.id === post.user.id) {
 								<li class="flex" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+									<meta itemprop="position" content="3" />
 									<a
 										class="flex items-center justify-start gap-2"
 										appSkeleton
@@ -84,6 +87,7 @@
 						@case (!!postPrivateId) {
 							@if (currentUser?.id === post.user.id) {
 								<li class="flex" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+									<meta itemprop="position" content="3" />
 									<a
 										class="flex items-center justify-start gap-2"
 										appSkeleton
@@ -113,6 +117,7 @@
 								itemscope
 								itemtype="http://schema.org/ListItem"
 							>
+								<meta itemprop="position" content="3" />
 								<a
 									class="flex items-center justify-start gap-2 max-w-full pr-7"
 									appSkeleton

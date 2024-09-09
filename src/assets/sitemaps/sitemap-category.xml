@@ -10,7 +10,7 @@
     <loc>https://takabase.com/denis23x/category/30001</loc>
     <lastmod>2024-08-25T12:11:37.354Z</lastmod>
     <priority>0.40</priority>
-    <changefreq>daily</changefreq>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://takabase.com/Tipa/category/90001</loc>
@@ -23,5 +23,11 @@
     <lastmod>2024-08-17T13:27:21.005Z</lastmod>
     <priority>0.40</priority>
     <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://takabase.com/denis23x/category/210001</loc>
+    <lastmod>2024-09-05T04:21:23.706Z</lastmod>
+    <priority>0.40</priority>
+    <changefreq>daily</changefreq>
   </url>
 </urlset>
