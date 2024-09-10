@@ -14,7 +14,7 @@
 						<a
 							class="flex items-center justify-start gap-2"
 							appSkeleton
-							itemprop="url"
+							itemprop="item url"
 							[appSkeletonToggle]="postSkeletonToggle"
 							[routerLink]="['/']"
 							[title]="'Home'"
@@ -36,7 +36,7 @@
 						<a
 							class="flex items-center justify-start gap-2"
 							appSkeleton
-							itemprop="url"
+							itemprop="item url"
 							[appSkeletonToggle]="postSkeletonToggle"
 							[routerLink]="['/', post.user.name]"
 							[title]="'Go to ' + post.user.name"
@@ -64,7 +64,7 @@
 									<a
 										class="flex items-center justify-start gap-2"
 										appSkeleton
-										itemprop="url"
+										itemprop="item url"
 										[appSkeletonToggle]="postSkeletonToggle"
 										[routerLink]="['/', post.user.name, 'password']"
 										[title]="'Go to Password protected posts'"
@@ -91,7 +91,7 @@
 									<a
 										class="flex items-center justify-start gap-2"
 										appSkeleton
-										itemprop="url"
+										itemprop="item url"
 										[appSkeletonToggle]="postSkeletonToggle"
 										[routerLink]="['/', post.user.name, 'private']"
 										[title]="'Go to Private posts'"
@@ -121,7 +121,7 @@
 								<a
 									class="flex items-center justify-start gap-2 max-w-full pr-7"
 									appSkeleton
-									itemprop="url"
+									itemprop="item url"
 									[appSkeletonToggle]="postSkeletonToggle"
 									[routerLink]="['/', post.user.name, 'category', post.category.id]"
 									[title]="'Go to ' + post.category.name"
