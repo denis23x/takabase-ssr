@@ -72,7 +72,7 @@ export class AuthConfirmationEmailComponent extends CU(class {}) implements OnIn
 						if (currentUser) {
 							// Update state
 
-							return from(currentUser.firebase.reload());
+							return from(currentUser.reload());
 						}
 
 						return of(null);

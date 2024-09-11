@@ -19,7 +19,7 @@ export const redirectPasswordGuard = (): CanActivateFn => {
 		if (platformService.isBrowser()) {
 			return authorizationService.getPopulate().pipe(
 				map((currentUser: CurrentUser | null) => {
-					return currentUser.firebase.displayName === activatedRouteSnapshot.paramMap.get('username') || router.createUrlTree(['/', currentUser.firebase.displayName]);
+					return currentUser.displayName === activatedRouteSnapshot.paramMap.get('username') || router.createUrlTree(['/', currentUser.displayName]);
 				}),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					return from(router.navigate(['/error', 401])).pipe(switchMap(() => throwError(() => httpErrorResponse)));

@@ -50,7 +50,7 @@
 								enterkeyhint="done"
 								formControlName="name"
 								appInputTrimWhitespace
-								[placeholder]="currentUser?.name"
+								[placeholder]="currentUser?.displayName"
 								[class.input-success]="name.dirty && name.valid"
 								[class.input-error]="name.touched && name.invalid"
 							/>

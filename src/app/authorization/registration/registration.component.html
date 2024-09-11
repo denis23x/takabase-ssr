@@ -4,7 +4,6 @@
 	<section class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
 		<header class="flex flex-col gap-4">
 			@if (invitedByUser) {
-				<span class="block text-xl font-bold">You have been invited by</span>
 				<div class="flex items-center justify-start gap-4 overflow-hidden">
 					<a
 						class="avatar"
@@ -30,16 +29,12 @@
 						>
 							{{ invitedByUser.name }}
 						</a>
-						<time
-							class="truncate text-sm leading-4 text-base-content/50 max-w-full"
-							[attr.datetime]="invitedByUser.createdAt | dayjs: 'format' : 'YYYY-M-D'"
-						>
-							Registered {{ invitedByUser.createdAt | dayjs: "fromNow" }}
-						</time>
+						<span class="truncate text-sm leading-4 text-base-content/50 max-w-full"> The user who invited you </span>
 					</div>
 				</div>
+			} @else {
+				<h1 class="text-2xl font-bold" itemprop="name">Registration</h1>
 			}
-			<h1 class="text-2xl font-bold" itemprop="name">Registration</h1>
 			<hr class="border-t border-base-content/20" />
 			<nav class="block w-full" appSignIn [appSignInDisabled]="registrationForm.disabled"></nav>
 			<hr class="border-t border-base-content/20" />

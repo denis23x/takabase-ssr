@@ -116,17 +116,15 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 				/** Firestore */
 
 				this.currentUserAppearance$?.unsubscribe();
-				this.currentUserAppearance$ = this.appearanceService
-					.setAppearance(this.currentUser.firebase.uid, appearance)
-					.subscribe({
-						next: () => {
-							this.appearanceService.setSettings(appearance);
-							this.appearanceForm.enable({ emitEvent: false });
+				this.currentUserAppearance$ = this.appearanceService.setAppearance(this.currentUser.uid, appearance).subscribe({
+					next: () => {
+						this.appearanceService.setSettings(appearance);
+						this.appearanceForm.enable({ emitEvent: false });
 
-							this.snackbarService.success('Done', 'Appearance settings updated');
-						},
-						error: () => this.appearanceForm.enable({ emitEvent: false })
-					});
+						this.snackbarService.success('Done', 'Appearance settings updated');
+					},
+					error: () => this.appearanceForm.enable({ emitEvent: false })
+				});
 			},
 			error: (error: any) => console.error(error)
 		});
@@ -167,21 +165,19 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 				.subscribe({
 					next: () => {
 						this.currentUserAppearance$?.unsubscribe();
-						this.currentUserAppearance$ = this.appearanceService
-							.getAppearance(this.currentUser.firebase.uid)
-							.subscribe({
-								next: (appearance: Appearance) => {
-									this.appearanceTransformList.forEach((key: string) => {
-										// @ts-ignore
-										appearance[key] = this.getTransformListValue(appearance[key], key);
-									});
+						this.currentUserAppearance$ = this.appearanceService.getAppearance(this.currentUser.uid).subscribe({
+							next: (appearance: Appearance) => {
+								this.appearanceTransformList.forEach((key: string) => {
+									// @ts-ignore
+									appearance[key] = this.getTransformListValue(appearance[key], key);
+								});
 
-									this.appearanceForm.patchValue(appearance, { emitEvent: false });
-									this.appearanceForm.markAllAsTouched();
-									this.appearanceFormSkeletonToggle = false;
-								},
-								error: (error: any) => console.error(error)
-							});
+								this.appearanceForm.patchValue(appearance, { emitEvent: false });
+								this.appearanceForm.markAllAsTouched();
+								this.appearanceFormSkeletonToggle = false;
+							},
+							error: (error: any) => console.error(error)
+						});
 					},
 					error: (error: any) => console.error(error)
 				});

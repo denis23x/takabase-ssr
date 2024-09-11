@@ -23,7 +23,7 @@ export const redirectAuthGuard = (): CanMatchFn => {
 		// prettier-ignore
 		if (platformService.isBrowser()) {
 			return authorizationService.getPopulate().pipe(
-				map((currentUser: CurrentUser | null) => !currentUser || router.createUrlTree(['/', currentUser.firebase.displayName])),
+				map((currentUser: CurrentUser | null) => !currentUser || router.createUrlTree(['/', currentUser.displayName])),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					return from(router.navigate(['/error', 500])).pipe(switchMap(() => throwError(() => httpErrorResponse)));
 				})

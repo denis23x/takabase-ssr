@@ -23,7 +23,7 @@ export const redirectHomeGuard = (): CanMatchFn => {
 				map((currentUser: CurrentUser | null) => {
 					if (currentUser) {
 						if (!!Number(cookiesService.getItem('page-redirect-home'))) {
-							return router.createUrlTree(['/', currentUser.firebase.displayName]);
+							return router.createUrlTree(['/', currentUser.displayName]);
 						}
 					}
 

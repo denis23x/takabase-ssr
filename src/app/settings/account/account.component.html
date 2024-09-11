@@ -36,7 +36,7 @@
 						@if (emailAuthProviderFormToggle) {
 							<hr class="w-full border-base-content/20" />
 							@if (providerData.linked) {
-								@if (currentUser.firebase.emailVerified) {
+								@if (currentUser.emailVerified) {
 									@if (currentUserPasswordFormFormToggle) {
 										<form
 											class="flex w-full flex-col gap-4"

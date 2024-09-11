@@ -85,7 +85,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 							.pipe(filter((currentUser: CurrentUser | null) => !!currentUser))
 							.subscribe({
 								next: (currentUser: CurrentUser | null) => {
-									this.router.navigate(['/', currentUser.firebase.displayName]).catch((error: any) => {
+									this.router.navigate(['/', currentUser.displayName]).catch((error: any) => {
 										this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
 									});
 								},

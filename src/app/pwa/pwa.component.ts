@@ -34,8 +34,8 @@ export class PwaComponent implements OnInit, OnDestroy {
 					switchMap((currentUser: CurrentUser | null) => {
 						if (currentUser) {
 							return this.appearanceService
-								.getAppearance(currentUser.firebase.uid)
-								.pipe(switchMap(() => from(this.router.navigate(['/', currentUser.firebase.displayName]))));
+								.getAppearance(currentUser.uid)
+								.pipe(switchMap(() => from(this.router.navigate(['/', currentUser.displayName]))));
 						} else {
 							return from(this.router.navigate(['/login']));
 						}

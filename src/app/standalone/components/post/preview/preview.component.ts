@@ -1,24 +1,12 @@
 /** @format */
 
-import {
-	Component,
-	ElementRef,
-	EventEmitter,
-	inject,
-	Input,
-	OnDestroy,
-	OnInit,
-	Output,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { PostProseComponent } from '../prose/prose.component';
-import { Subscription } from 'rxjs';
-import { AuthorizationService } from '../../../../core/services/authorization.service';
+import { CurrentUserMixin } from '../../../../core/mixins/current-user.mixin';
 import type { Category } from '../../../../core/models/category.model';
 import type { Post } from '../../../../core/models/post.model';
-import type { CurrentUser } from '../../../../core/models/current-user.model';
 
 @Component({
 	standalone: true,
@@ -26,9 +14,7 @@ import type { CurrentUser } from '../../../../core/models/current-user.model';
 	selector: 'app-post-preview, [appPostPreview]',
 	templateUrl: './preview.component.html'
 })
-export class PostPreviewComponent implements OnInit, OnDestroy {
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
-
+export class PostPreviewComponent extends CurrentUserMixin(class {}) implements OnInit, OnDestroy {
 	@ViewChild('postPreviewDialogElement') postPreviewDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() appPostPreviewToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -48,9 +34,6 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 		this.category = category;
 	}
 
-	currentUser: CurrentUser | null;
-	currentUser$: Subscription | undefined;
-
 	category: Category | undefined;
 
 	post: Post | undefined;
@@ -59,15 +42,11 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 	postPreviewDialogToggle: boolean = false;
 
 	ngOnInit(): void {
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | null) => (this.currentUser = currentUser),
-			error: (error: any) => console.error(error)
-		});
+		super.ngOnInit();
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$].forEach(($: Subscription) => $?.unsubscribe());
+		super.ngOnDestroy();
 	}
 
 	onTogglePostPreviewDialog(toggle: boolean): void {
@@ -77,7 +56,14 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 			this.postPreviewDialogElement.nativeElement.showModal();
 			this.postPreview = {
 				...this.post,
-				user: this.currentUser,
+				user: {
+					id: 0,
+					name: this.currentUser.displayName,
+					description: null,
+					avatar: this.currentUser.photoURL,
+					createdAt: new Date().toISOString(),
+					updatedAt: new Date().toISOString()
+				},
 				category: this.category
 			};
 		} else {

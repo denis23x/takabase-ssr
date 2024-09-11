@@ -63,7 +63,7 @@
 					</li>
 					@switch (true) {
 						@case (!!postPasswordId) {
-							@if (currentUser?.id === post.user.id) {
+							@if (currentUser?.displayName === post.user.name) {
 								<li class="flex" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 									<meta itemprop="position" content="3" />
 									<a
@@ -90,7 +90,7 @@
 							}
 						}
 						@case (!!postPrivateId) {
-							@if (currentUser?.id === post.user.id) {
+							@if (currentUser?.displayName === post.user.name) {
 								<li class="flex" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 									<meta itemprop="position" content="3" />
 									<a

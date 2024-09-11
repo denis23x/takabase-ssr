@@ -23,7 +23,7 @@ export class ReportService {
 
 	create(reportCreateDto: ReportCreateDto): Observable<DocumentReference> {
 		const currentUser: CurrentUser | null = this.authorizationService.currentUser.getValue();
-		const currentUsername: string = currentUser.firebase.displayName;
+		const currentUsername: string = currentUser.displayName;
 
 		const url: URL = this.helperService.getURL();
 		const urlUsername: string = [url.origin, currentUsername].join('/');

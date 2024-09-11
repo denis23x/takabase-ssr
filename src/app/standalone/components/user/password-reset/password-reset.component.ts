@@ -95,7 +95,7 @@ export class UserPasswordResetComponent implements OnInit, OnDestroy {
 		this.userPasswordResetDialogIsSubmitted.set(true);
 
 		const passwordResetGetDto: PasswordResetGetDto = {
-			email: this.currentUser.firebase.email
+			email: this.currentUser.email
 		};
 
 		this.userPasswordResetRequest$?.unsubscribe();

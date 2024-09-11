@@ -212,16 +212,16 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 
 						// Set email for verification
 
-						if (!this.currentUser.firebase.emailVerified) {
+						if (!this.currentUser.emailVerified) {
 							const abstractControl: AbstractControl = this.currentUserEmailForm.get('email');
 
-							abstractControl.setValue(this.currentUser.firebase.email);
+							abstractControl.setValue(this.currentUser.email);
 							abstractControl.disable();
 						}
 
 						// Set provider data
 
-						this.onProviderDataChange(this.currentUser.firebase);
+						this.onProviderDataChange(this.currentUser);
 					},
 					error: (error: any) => console.error(error)
 				});
@@ -288,13 +288,11 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	onProviderLink(currentUserProviderData: CurrentUserProviderData): void {
 		const authProvider: AuthProvider = this.authorizationService.getAuthProvider(currentUserProviderData.providerId);
 
-		from(linkWithPopup(this.currentUser.firebase, authProvider))
+		from(linkWithPopup(this.currentUser, authProvider))
 			.pipe(catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)))
 			.subscribe({
 				next: (userCredential: UserCredential) => {
-					this.authorizationService.setCurrentUser({
-						firebase: userCredential.user
-					});
+					this.authorizationService.setCurrentUser(userCredential.user);
 
 					this.snackbarService.success('Done', 'This social account has been linked');
 				},
@@ -305,15 +303,13 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	onProviderUnlink(currentUserProviderData: CurrentUserProviderData): void {
 		this.currentUserProviderDataRequestIsSubmitted.set(currentUserProviderData.providerId);
 
-		from(unlink(this.currentUser.firebase, currentUserProviderData.providerId))
+		from(unlink(this.currentUser, currentUserProviderData.providerId))
 			.pipe(catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)))
 			.subscribe({
 				next: (firebaseUser: FirebaseUser) => {
 					this.currentUserProviderDataRequestIsSubmitted.set(undefined);
 
-					this.authorizationService.setCurrentUser({
-						firebase: firebaseUser
-					});
+					this.authorizationService.setCurrentUser(firebaseUser);
 
 					this.snackbarService.warning('Done', 'Sign-in method has been removed');
 				},
@@ -354,13 +350,11 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			const emailAuthCredential: EmailAuthCredential = EmailAuthProvider.credential(email, password);
 
 			this.emailAuthProviderFormRequest$?.unsubscribe();
-			this.emailAuthProviderFormRequest$ = from(linkWithCredential(this.currentUser.firebase, emailAuthCredential))
+			this.emailAuthProviderFormRequest$ = from(linkWithCredential(this.currentUser, emailAuthCredential))
 				.pipe(catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)))
 				.subscribe({
 					next: (userCredential: UserCredential) => {
-						this.authorizationService.setCurrentUser({
-							firebase: userCredential.user
-						});
+						this.authorizationService.setCurrentUser(userCredential.user);
 
 						this.snackbarService.success('Nice', 'Your credentials have been applied');
 

@@ -50,7 +50,7 @@
 								Created {{ category?.createdAt | dayjs: "fromNow" }}
 							</time>
 						</div>
-						@if (currentUser?.id === user?.id) {
+						@if (currentUser?.displayName === user?.name) {
 							<div
 								class="flex p-0"
 								appDropdown

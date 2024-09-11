@@ -26,10 +26,8 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
-import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { HelperService } from '../../core/services/helper.service';
 import { UserService } from '../../core/services/user.service';
-import { AuthorizationService } from '../../core/services/authorization.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { TextareaAutosizeDirective } from '../../standalone/directives/app-textarea-autosize.directive';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
@@ -40,6 +38,7 @@ import { AIService } from '../../core/services/ai.service';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { getValue, Value } from 'firebase/remote-config';
 import { SharpService } from '../../core/services/sharp.service';
+import { CurrentUserMixin } from '../../core/mixins/current-user.mixin';
 import type { User } from '../../core/models/user.model';
 import type { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import type { CropperComponent } from '../../standalone/components/cropper/cropper.component';
@@ -60,7 +59,6 @@ interface ProfileForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		AvatarComponent,
-		DayjsPipe,
 		InputTrimWhitespaceDirective,
 		TextareaAutosizeDirective,
 		DropdownComponent,
@@ -71,11 +69,10 @@ interface ProfileForm {
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'
 })
-export class SettingsProfileComponent implements OnInit, OnDestroy {
+export class SettingsProfileComponent extends CurrentUserMixin(class {}) implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly userService: UserService = inject(UserService);
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly sharpService: SharpService = inject(SharpService);
@@ -83,8 +80,6 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
-	currentUser: CurrentUser | null;
-	currentUser$: Subscription | undefined;
 	currentUserRequest$: Subscription | undefined;
 	currentUserUrl: string | undefined;
 
@@ -109,53 +104,38 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	appCropperComponent: ComponentRef<CropperComponent>;
 
 	ngOnInit(): void {
+		super.ngOnInit();
+
 		/** Set not allowed values */
 
 		this.onUpdateProfileForm();
-
-		/** Apply Data */
-
-		this.setResolver();
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.currentUser$, this.currentUserRequest$, this.profileFormIsPristine$].forEach(($: Subscription) => $?.unsubscribe());
+		super.ngOnDestroy();
+
+		// ngOnDestroy
+
+		[this.currentUserRequest$, this.profileFormIsPristine$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	setResolver(): void {
-		if (this.platformService.isBrowser()) {
-			this.currentUser$?.unsubscribe();
-			this.currentUser$ = this.authorizationService
-				.getCurrentUser()
-				.pipe(
-					filter((currentUser: CurrentUser | null) => !!currentUser),
-					tap((currentUser: CurrentUser) => (this.currentUser = currentUser))
-				)
-				.subscribe({
-					next: () => {
-						this.profileForm.patchValue(this.currentUser);
-						this.profileForm.markAllAsTouched();
+	ngOnCurrentUserIsReady(): void {
+		this.profileForm.patchValue(this.currentUser);
+		this.profileForm.markAllAsTouched();
 
-						this.profileFormIsPristine$?.unsubscribe();
-						this.profileFormIsPristine$ = this.profileForm.valueChanges
-							.pipe(startWith(this.profileForm.value))
-							.subscribe({
-								next: (value: any) => {
-									this.profileFormIsPristine = Object.keys(value).every((key: string) => {
-										return (value[key] || null) === this.currentUser[key as keyof CurrentUser];
-									});
-								},
-								error: (error: any) => console.error(error)
-							});
-
-						/** Make currentUserUrl */
-
-						this.currentUserUrl = [this.helperService.getURL().origin, this.currentUser.firebase.displayName].join('/');
-					},
-					error: (error: any) => console.error(error)
+		this.profileFormIsPristine$?.unsubscribe();
+		this.profileFormIsPristine$ = this.profileForm.valueChanges.pipe(startWith(this.profileForm.value)).subscribe({
+			next: (value: any) => {
+				this.profileFormIsPristine = Object.keys(value).every((key: string) => {
+					return (value[key] || null) === this.currentUser[key as keyof CurrentUser];
 				});
-		}
+			},
+			error: (error: any) => console.error(error)
+		});
+
+		/** Make currentUserUrl */
+
+		this.currentUserUrl = [this.helperService.getURL().origin, this.currentUser.displayName].join('/');
 	}
 
 	/** Avatar Cropper */
@@ -227,24 +207,25 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 			/** Moderate and update */
 
-			this.currentUserRequest$?.unsubscribe();
-			this.currentUserRequest$ = this.aiService
-				.moderateText(aiModerateTextDto)
-				.pipe(switchMap(() => this.userService.update(this.currentUser.id, userUpdateDto)))
-				.subscribe({
-					next: (user: User) => {
-						this.authorizationService.setCurrentUser({
-							...this.currentUser,
-							...user
-						});
-
-						this.snackbarService.success('Success', 'Information has been updated');
-
-						this.profileFormIsPristine = true;
-						this.profileForm.enable();
-					},
-					error: () => this.profileForm.enable()
-				});
+			// TODO: remake user update
+			// this.currentUserRequest$?.unsubscribe();
+			// this.currentUserRequest$ = this.aiService
+			// 	.moderateText(aiModerateTextDto)
+			// 	.pipe(switchMap(() => this.userService.update(this.currentUser.id, userUpdateDto)))
+			// 	.subscribe({
+			// 		next: (user: User) => {
+			// 			this.authorizationService.setCurrentUser({
+			// 				...this.currentUser,
+			// 				...user
+			// 			});
+			//
+			// 			this.snackbarService.success('Success', 'Information has been updated');
+			//
+			// 			this.profileFormIsPristine = true;
+			// 			this.profileForm.enable();
+			// 		},
+			// 		error: () => this.profileForm.enable()
+			// 	});
 		}
 	}
 

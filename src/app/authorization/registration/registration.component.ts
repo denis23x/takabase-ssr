@@ -24,7 +24,6 @@ import { BadgeErrorComponent } from '../../standalone/components/badge-error/bad
 import { CommonModule } from '@angular/common';
 import { AIService } from '../../core/services/ai.service';
 import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
-import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { getValue, Value } from 'firebase/remote-config';
@@ -54,8 +53,7 @@ interface RegistrationForm {
 		InputTrimWhitespaceDirective,
 		SignInComponent,
 		BadgeErrorComponent,
-		AvatarComponent,
-		DayjsPipe
+		AvatarComponent
 	],
 	providers: [AIService, UserService],
 	selector: 'app-authorization-registration',
@@ -130,7 +128,7 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 							.pipe(filter((currentUser: CurrentUser | null) => !!currentUser))
 							.subscribe({
 								next: (currentUser: CurrentUser | null) => {
-									this.router.navigate(['/', currentUser.firebase.displayName]).catch((error: any) => {
+									this.router.navigate(['/', currentUser.displayName]).catch((error: any) => {
 										this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
 									});
 								},
@@ -160,12 +158,18 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
-		const invitedId: number = Number(this.activatedRoute.snapshot.queryParamMap.get('invited') || '');
+		const invitedBy: string = String(this.activatedRoute.snapshot.queryParamMap.get('invitedBy') || '');
 
-		if (invitedId) {
+		if (invitedBy) {
+			const userGetAllDto: UserGetAllDto = {
+				username: invitedBy,
+				page: 1,
+				size: 10
+			};
+
 			this.invitedByUserRequest$?.unsubscribe();
-			this.invitedByUserRequest$ = this.userService.getOne(invitedId).subscribe({
-				next: (user: User) => (this.invitedByUser = user),
+			this.invitedByUserRequest$ = this.userService.getAll(userGetAllDto).subscribe({
+				next: (userList: User[]) => (this.invitedByUser = userList[0]),
 				error: (error: any) => console.error(error)
 			});
 		}

@@ -107,8 +107,8 @@
                     itemprop="url"
 										[target]="postPreview ? '_blank' : '_self'"
 										[routerLink]="post.category ? ['/', post.user.name, 'category', post.category.id] : ['/', post.user.name]"
-										[title]="'Go to ' + post.category?.name || 'category'"
-										[attr.aria-label]="'Go to ' + post.category?.name || 'category'"
+										[title]="'Go to ' + (post.category?.name || 'category')"
+										[attr.aria-label]="'Go to ' + (post.category?.name || 'category')"
 									>
 										<i
 											class="block fill-current"
@@ -177,7 +177,7 @@
 								(click)="onToggleQRCodeDialog()"
 							></button>
 						</li>
-						@if (currentUser?.id === post.user.id) {
+						@if (currentUser?.displayName === post.user.name) {
 							<li class="block w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 								<a
 									class="btn-success btn-outline btn-md btn w-full"

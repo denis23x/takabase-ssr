@@ -77,8 +77,8 @@
 								<figure
 									class="h-12 w-12 rounded-btn relative overflow-hidden"
 									appAvatar
-									[appAvatarPhotoUrl]="currentUser.firebase.photoURL"
-									[appAvatarName]="currentUser.firebase.displayName"
+									[appAvatarPhotoUrl]="currentUser.photoURL"
+									[appAvatarName]="currentUser.displayName"
 								></figure>
 							</div>
 							<ul class="menu menu-vertical menu-md" slot="content">
@@ -86,9 +86,9 @@
 									<a
 										class="rounded-btn block w-full truncate text-right"
 										itemprop="url name"
-										[title]="currentUser.firebase.displayName"
-										[attr.aria-label]="currentUser.firebase.displayName"
-										[routerLink]="['/', currentUser.firebase.displayName]"
+										[title]="currentUser.displayName"
+										[attr.aria-label]="currentUser.displayName"
+										[routerLink]="['/', currentUser.displayName]"
 									>
 										My Profile
 									</a>

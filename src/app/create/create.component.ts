@@ -277,7 +277,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			const categoryGetAllDto: CategoryGetAllDto = {
 				page: 1,
 				size: 100,
-				username: this.currentUser.firebase.displayName
+				username: this.currentUser.displayName
 			};
 
 			// Get categories
@@ -302,7 +302,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 			if (postId && postType) {
 				const postGetOneDto: PostGetOneDto = {
-					userFirebaseUid: this.currentUser.firebase.uid,
+					userFirebaseUid: this.currentUser.uid,
 					scope: ['category']
 				};
 
@@ -714,7 +714,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 						// prettier-ignore
 						if (redirect) {
 							this.router
-								.navigate(['/', this.currentUser.firebase.displayName, ...postTypeRedirectMap[this.postType]])
+								.navigate(['/', this.currentUser.displayName, ...postTypeRedirectMap[this.postType]])
 								.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
 						}
 

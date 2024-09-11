@@ -48,7 +48,7 @@ export class ListMockComponent extends CurrentUserMixin(class {}) implements OnI
 		super.ngOnDestroy();
 	}
 
-	getInviteURL(): void {
+	onClickCopyInviteURL(): void {
 		const url: URL = this.helperService.getURL();
 
 		// Clear search params
@@ -58,7 +58,7 @@ export class ListMockComponent extends CurrentUserMixin(class {}) implements OnI
 		}
 
 		url.pathname = 'registration';
-		url.searchParams.set('invited', String(this.currentUser.id));
+		url.searchParams.set('invitedBy', String(this.currentUser.displayName));
 
 		this.helperService.getNavigatorClipboard(url.toString()).subscribe({
 			next: () => this.snackbarService.success('Easy', 'Invite link has been copied'),
