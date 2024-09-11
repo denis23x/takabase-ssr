@@ -77,7 +77,8 @@
 								<figure
 									class="h-12 w-12 rounded-btn relative overflow-hidden"
 									appAvatar
-									[appAvatarUser]="currentUser"
+									[appAvatarPhotoUrl]="currentUser.firebase.photoURL"
+									[appAvatarName]="currentUser.firebase.displayName"
 								></figure>
 							</div>
 							<ul class="menu menu-vertical menu-md" slot="content">

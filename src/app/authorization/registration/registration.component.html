@@ -16,7 +16,8 @@
 						<figure
 							class="h-12 w-12 rounded-btn relative overflow-hidden"
 							appAvatar
-							[appAvatarUser]="invitedByUser"
+							[appAvatarPhotoUrl]="invitedByUser.avatar"
+							[appAvatarName]="invitedByUser.name"
 						></figure>
 					</a>
 					<div class="flex flex-1 flex-col gap-2 items-start overflow-hidden">

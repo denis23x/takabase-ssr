@@ -6,7 +6,6 @@ import { DOCUMENT } from '@angular/common';
 import { PlatformService } from '../../../core/services/platform.service';
 import { HelperService } from '../../../core/services/helper.service';
 import { environment } from '../../../../environments/environment';
-import type { User } from '../../../core/models/user.model';
 
 @Component({
 	standalone: true,
@@ -21,11 +20,11 @@ export class AvatarComponent {
 	private readonly helperService: HelperService = inject(HelperService);
 
 	@Input({ required: true })
-	set appAvatarUser(user: Partial<User> | undefined) {
-		this.user = user;
+	set appAvatarPhotoUrl(photoUrl: string | null) {
+		this.avatarPhotoUrl = photoUrl;
 
 		setTimeout(() => {
-			if (this.user?.avatar) {
+			if (this.avatarPhotoUrl) {
 				this.setImage();
 			} else {
 				this.setIcon();
@@ -33,7 +32,13 @@ export class AvatarComponent {
 		});
 	}
 
-	user: Partial<User> | undefined;
+	@Input({ required: true })
+	set appAvatarName(name: string) {
+		this.avatarName = name;
+	}
+
+	avatarPhotoUrl: string | null;
+	avatarName: string | undefined;
 
 	setImage(): void {
 		if (this.platformService.isBrowser()) {
@@ -45,7 +50,7 @@ export class AvatarComponent {
 			elementRefImage.id = this.helperService.getNanoId(12);
 			elementRefImage.classList.add(...['bg-base-300', 'object-cover', 'object-center']);
 			elementRefImage.src = './assets/images/placeholder-image.svg';
-			elementRefImage.alt = this.user.name;
+			elementRefImage.alt = this.avatarName;
 			elementRefImage.loading = 'eager';
 
 			/** Insert HTML */
@@ -55,10 +60,10 @@ export class AvatarComponent {
 			const elementHTML: HTMLElement | null = this.document.getElementById(elementRefImage.id);
 			const elementHTMLImage: HTMLImageElement = elementHTML as HTMLImageElement;
 
-			if (this.user.avatar.includes(environment.firebase.storageBucket)) {
-				elementHTMLImage.src = this.helperService.getImageURLQueryParams(this.user.avatar);
+			if (this.avatarPhotoUrl.includes(environment.firebase.storageBucket)) {
+				elementHTMLImage.src = this.helperService.getImageURLQueryParams(this.avatarPhotoUrl);
 			} else {
-				elementHTMLImage.src = this.user.avatar;
+				elementHTMLImage.src = this.avatarPhotoUrl;
 			}
 		}
 	}
@@ -68,7 +73,7 @@ export class AvatarComponent {
 			const elementRef: HTMLElement = this.elementRef.nativeElement;
 			const elementRefDOMRect: DOMRect = elementRef.getBoundingClientRect();
 
-			elementRef.innerHTML = toSvg(this.user.name, elementRefDOMRect.width, {
+			elementRef.innerHTML = toSvg(this.avatarName, elementRefDOMRect.width, {
 				backColor: '#00000000',
 				padding: 0,
 				replaceMode: 'observe'

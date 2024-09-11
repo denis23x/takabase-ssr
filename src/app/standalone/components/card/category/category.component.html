@@ -30,7 +30,12 @@
 						[title]="category.user.name"
 						[attr.aria-label]="category.user.name"
 					>
-						<figure class="h-4 w-4 rounded relative overflow-hidden" appAvatar [appAvatarUser]="category.user"></figure>
+						<figure
+							class="h-4 w-4 rounded relative overflow-hidden"
+							appAvatar
+							[appAvatarPhotoUrl]="category.user.avatar"
+							[appAvatarName]="category.user.name"
+						></figure>
 					</div>
 					<span class="link link-hover text-sm truncate leading max-w-full" itemprop="name">
 						{{ category.user.name }}

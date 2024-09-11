@@ -59,7 +59,8 @@
 									<figure
 										class="h-5 w-5 rounded relative overflow-hidden"
 										appAvatar
-										[appAvatarUser]="post.user"
+										[appAvatarPhotoUrl]="post.user.avatar"
+										[appAvatarName]="post.user.name"
 									></figure>
 								</div>
 								<span class="link link-hover block text-sm font-bold truncate" itemprop="name">

@@ -49,7 +49,12 @@
 								[title]="post.user.name"
 								[attr.aria-label]="post.user.name"
 							>
-								<figure class="h-5 w-5 rounded relative overflow-hidden" appAvatar [appAvatarUser]="post.user"></figure>
+								<figure
+									class="h-5 w-5 rounded relative overflow-hidden"
+									appAvatar
+									[appAvatarPhotoUrl]="post.user.avatar"
+									[appAvatarName]="post.user.name"
+								></figure>
 							</div>
 							<span class="hidden sm:block link link-hover text-sm" itemprop="name">
 								{{ post.user.name }}

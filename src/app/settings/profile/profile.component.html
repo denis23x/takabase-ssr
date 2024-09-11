@@ -18,7 +18,8 @@
                 data-pw="app-settings-profile-image-avatar"
                 appAvatar
                 [ngClass]="{ 'cursor-not-allowed border border-transparent opacity-50 grayscale bg-base-200': profileForm.disabled, 'cursor-pointer': profileForm.enabled, 'border border-success': avatar.value }"
-                [appAvatarUser]="currentUser"
+                [appAvatarPhotoUrl]="currentUser.firebase.photoURL"
+                [appAvatarName]="currentUser.firebase.displayName"
                 (click)="onToggleCropperDialog()"
               ></figure>
 						}
