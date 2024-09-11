@@ -57,7 +57,7 @@ export class UserPasswordResetComponent implements OnInit, OnDestroy {
 	@Output() appUserPasswordResetSuccess: EventEmitter<void> = new EventEmitter<void>();
 	@Output() appUserPasswordResetToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	currentUser: CurrentUser | undefined;
+	currentUser: CurrentUser | null;
 	currentUser$: Subscription | undefined;
 
 	userPasswordResetRequest$: Subscription | undefined;
@@ -66,7 +66,7 @@ export class UserPasswordResetComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
+			next: (currentUser: CurrentUser | null) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
 

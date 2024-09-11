@@ -126,7 +126,7 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 				};
 
 				this.router
-					.navigate(['/', this.currentUser.name, ...postTypeRedirectMap[this.postType]])
+					.navigate(['/', this.currentUser.firebase.displayName, ...postTypeRedirectMap[this.postType]])
 					.then(() => this.snackbarService.success('Sadly..', 'Post has been deleted'));
 			},
 			error: () => this.postDeleteIsSubmitted.set(false)

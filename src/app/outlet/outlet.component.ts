@@ -28,7 +28,7 @@ export class OutletComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly location: Location = inject(Location);
 
-	currentUser: CurrentUser | undefined;
+	currentUser: CurrentUser | null;
 	currentUser$: Subscription | undefined;
 
 	ngOnInit(): void {
@@ -38,7 +38,7 @@ export class OutletComponent implements OnInit, OnDestroy {
 				.getPopulate()
 				.pipe(
 					first(),
-					filter((currentUser: CurrentUser | undefined) => !!currentUser),
+					filter((currentUser: CurrentUser | null) => !!currentUser),
 					switchMap((currentUser: CurrentUser) => this.appearanceService.getAppearance(currentUser.firebase.uid))
 				)
 				.subscribe({

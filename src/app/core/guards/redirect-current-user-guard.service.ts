@@ -17,7 +17,7 @@ export const redirectCurrentUserGuard = (): CanMatchFn => {
 
 		if (platformService.isBrowser()) {
 			return authorizationService.getPopulate().pipe(
-				map((currentUser: CurrentUser | undefined) => !!currentUser || router.createUrlTree(['/login'])),
+				map((currentUser: CurrentUser | null) => !!currentUser || router.createUrlTree(['/login'])),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					return from(router.navigate(['/error', 401])).pipe(switchMap(() => throwError(() => httpErrorResponse)));
 				})

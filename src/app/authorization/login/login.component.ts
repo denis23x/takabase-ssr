@@ -48,7 +48,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 
-	currentUser: CurrentUser | undefined;
+	currentUser: CurrentUser | null;
 	currentUser$: Subscription | undefined;
 
 	loginAuthStateChanged$: Subscription | undefined;
@@ -82,10 +82,10 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 						this.currentUser$?.unsubscribe();
 						this.currentUser$ = this.authorizationService
 							.getCurrentUser()
-							.pipe(filter((currentUser: CurrentUser | undefined) => !!currentUser))
+							.pipe(filter((currentUser: CurrentUser | null) => !!currentUser))
 							.subscribe({
-								next: (currentUser: CurrentUser | undefined) => {
-									this.router.navigate(['/', currentUser.name]).catch((error: any) => {
+								next: (currentUser: CurrentUser | null) => {
+									this.router.navigate(['/', currentUser.firebase.displayName]).catch((error: any) => {
 										this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
 									});
 								},

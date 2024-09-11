@@ -83,7 +83,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
-	currentUser: CurrentUser | undefined;
+	currentUser: CurrentUser | null;
 	currentUser$: Subscription | undefined;
 	currentUserRequest$: Subscription | undefined;
 	currentUserUrl: string | undefined;
@@ -129,7 +129,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 			this.currentUser$ = this.authorizationService
 				.getCurrentUser()
 				.pipe(
-					filter((currentUser: CurrentUser | undefined) => !!currentUser),
+					filter((currentUser: CurrentUser | null) => !!currentUser),
 					tap((currentUser: CurrentUser) => (this.currentUser = currentUser))
 				)
 				.subscribe({
@@ -151,7 +151,7 @@ export class SettingsProfileComponent implements OnInit, OnDestroy {
 
 						/** Make currentUserUrl */
 
-						this.currentUserUrl = [this.helperService.getURL().origin, this.currentUser.name].join('/');
+						this.currentUserUrl = [this.helperService.getURL().origin, this.currentUser.firebase.displayName].join('/');
 					},
 					error: (error: any) => console.error(error)
 				});

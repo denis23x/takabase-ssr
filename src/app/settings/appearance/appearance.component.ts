@@ -56,7 +56,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 
-	currentUser: CurrentUser | undefined;
+	currentUser: CurrentUser | null;
 	currentUser$: Subscription | undefined;
 
 	currentUserAppearance$: Subscription | undefined;
@@ -161,7 +161,7 @@ export class SettingsAppearanceComponent implements OnInit, OnDestroy {
 			this.currentUser$ = this.authorizationService
 				.getCurrentUser()
 				.pipe(
-					filter((currentUser: CurrentUser | undefined) => !!currentUser),
+					filter((currentUser: CurrentUser | null) => !!currentUser),
 					tap((currentUser: CurrentUser) => (this.currentUser = currentUser))
 				)
 				.subscribe({

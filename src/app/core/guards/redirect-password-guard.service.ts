@@ -18,8 +18,8 @@ export const redirectPasswordGuard = (): CanActivateFn => {
 		// prettier-ignore
 		if (platformService.isBrowser()) {
 			return authorizationService.getPopulate().pipe(
-				map((currentUser: CurrentUser | undefined) => {
-					return currentUser.name === activatedRouteSnapshot.paramMap.get('username') || router.createUrlTree(['/', currentUser.name]);
+				map((currentUser: CurrentUser | null) => {
+					return currentUser.firebase.displayName === activatedRouteSnapshot.paramMap.get('username') || router.createUrlTree(['/', currentUser.firebase.displayName]);
 				}),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					return from(router.navigate(['/error', 401])).pipe(switchMap(() => throwError(() => httpErrorResponse)));

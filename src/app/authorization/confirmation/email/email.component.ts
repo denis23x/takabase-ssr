@@ -68,7 +68,7 @@ export class AuthConfirmationEmailComponent extends CU(class {}) implements OnIn
 				.onConfirmationUpdate(emailConfirmationUpdateDto)
 				.pipe(
 					switchMap(() => this.authorizationService.getPopulate()),
-					switchMap((currentUser: CurrentUser | undefined) => {
+					switchMap((currentUser: CurrentUser | null) => {
 						if (currentUser) {
 							// Update state
 

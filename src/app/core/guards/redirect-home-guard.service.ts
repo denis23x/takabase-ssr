@@ -20,10 +20,10 @@ export const redirectHomeGuard = (): CanMatchFn => {
 		//! Browser only redirect
 		if (platformService.isBrowser()) {
 			return authorizationService.getPopulate().pipe(
-				map((currentUser: CurrentUser | undefined) => {
+				map((currentUser: CurrentUser | null) => {
 					if (currentUser) {
 						if (!!Number(cookiesService.getItem('page-redirect-home'))) {
-							return router.createUrlTree(['/', currentUser.name]);
+							return router.createUrlTree(['/', currentUser.firebase.displayName]);
 						}
 					}
 

@@ -65,7 +65,7 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 	@Output() appUserDeleteSuccess: EventEmitter<void> = new EventEmitter<void>();
 	@Output() appUserDeleteToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	currentUser: CurrentUser | undefined;
+	currentUser: CurrentUser | null;
 	currentUser$: Subscription | undefined;
 	currentUserSignOutRequest$: Subscription | undefined;
 
@@ -78,7 +78,7 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
+			next: (currentUser: CurrentUser | null) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
 
@@ -97,6 +97,7 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 	onToggleUserDeleteDialog(toggle: boolean): void {
 		this.userDeleteDialogToggle = toggle;
 
+		// prettier-ignore
 		if (toggle) {
 			this.userDeleteForm.reset();
 			this.userDeleteDialogElement.nativeElement.showModal();
@@ -104,19 +105,18 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 			const abstractControlName: AbstractControl = this.userDeleteForm.get('name');
 			const abstractControlValidator: (...args: any) => ValidatorFn = this.helperService.getCustomValidator('match');
 
-			abstractControlName.setValidators([Validators.required, abstractControlValidator(this.currentUser.name)]);
+			abstractControlName.setValidators([Validators.required, abstractControlValidator(this.currentUser.firebase.displayName)]);
 			abstractControlName.updateValueAndValidity();
 
-			// prettier-ignore
 			const passwordProvider: UserInfo | undefined = this.currentUser.firebase.providerData.find((userInfo: UserInfo) => {
 				return userInfo.providerId === 'password';
 			});
 
-			// Remove control if already exists
+			/** Remove control if already exists */
+
 			this.userDeleteForm.removeControl('password');
 
 			if (passwordProvider) {
-				// prettier-ignore
 				this.userDeleteForm.addControl('password', this.formBuilder.nonNullable.control('', [
 					Validators.required,
 					Validators.minLength(6),

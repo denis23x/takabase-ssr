@@ -20,9 +20,10 @@ export const redirectAuthGuard = (): CanMatchFn => {
 		const cookiesService: CookiesService = inject(CookiesService);
 		const request: Request | null = inject(REQUEST, { optional: true });
 
+		// prettier-ignore
 		if (platformService.isBrowser()) {
 			return authorizationService.getPopulate().pipe(
-				map((currentUser: CurrentUser | undefined) => !currentUser || router.createUrlTree(['/', currentUser.name])),
+				map((currentUser: CurrentUser | null) => !currentUser || router.createUrlTree(['/', currentUser.firebase.displayName])),
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					return from(router.navigate(['/error', 500])).pipe(switchMap(() => throwError(() => httpErrorResponse)));
 				})

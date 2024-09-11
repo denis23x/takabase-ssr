@@ -21,7 +21,7 @@ export class AuthenticatedComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.authenticated$?.unsubscribe();
 		this.authenticated$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | undefined) => (this.authenticated = !!currentUser),
+			next: (currentUser: CurrentUser | null) => (this.authenticated = !!currentUser),
 			error: (error: any) => console.error(error)
 		});
 	}

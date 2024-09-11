@@ -19,7 +19,7 @@ export class CookiesComponent implements OnInit, OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly cookiesService: CookiesService = inject(CookiesService);
 
-	currentUser: CurrentUser | undefined;
+	currentUser: CurrentUser | null;
 	currentUser$: Subscription | undefined;
 
 	currentUserIsPopulatedToggle: boolean = false;
@@ -30,7 +30,7 @@ export class CookiesComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
+			next: (currentUser: CurrentUser | null) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
 

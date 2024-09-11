@@ -121,7 +121,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		return isSubmittedSuspect.some((isSubmitted: boolean) => !!isSubmitted);
 	});
 
-	currentUser: CurrentUser | undefined;
+	currentUser: CurrentUser | null;
 	currentUser$: Subscription | undefined;
 	currentUserProviderData: CurrentUserProviderData[] = [];
 	currentUserProviderDataRequestIsSubmitted: WritableSignal<string | undefined> = signal(undefined);
@@ -205,9 +205,9 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			this.currentUser$?.unsubscribe();
 			this.currentUser$ = this.authorizationService
 				.getCurrentUser()
-				.pipe(filter((currentUser: CurrentUser | undefined) => !!currentUser))
+				.pipe(filter((currentUser: CurrentUser | null) => !!currentUser))
 				.subscribe({
-					next: (currentUser: CurrentUser | undefined) => {
+					next: (currentUser: CurrentUser | null) => {
 						this.currentUser = currentUser;
 
 						// Set email for verification

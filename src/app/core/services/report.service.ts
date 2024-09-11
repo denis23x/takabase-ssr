@@ -22,8 +22,8 @@ export class ReportService {
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 
 	create(reportCreateDto: ReportCreateDto): Observable<DocumentReference> {
-		const currentUser: CurrentUser | undefined = this.authorizationService.currentUser.getValue();
-		const currentUsername: string = currentUser.name;
+		const currentUser: CurrentUser | null = this.authorizationService.currentUser.getValue();
+		const currentUsername: string = currentUser.firebase.displayName;
 
 		const url: URL = this.helperService.getURL();
 		const urlUsername: string = [url.origin, currentUsername].join('/');

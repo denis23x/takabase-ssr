@@ -85,9 +85,9 @@
 									<a
 										class="rounded-btn block w-full truncate text-right"
 										itemprop="url name"
-										[title]="currentUser.name"
-										[attr.aria-label]="currentUser.name"
-										[routerLink]="['/', currentUser.name]"
+										[title]="currentUser.firebase.displayName"
+										[attr.aria-label]="currentUser.firebase.displayName"
+										[routerLink]="['/', currentUser.firebase.displayName]"
 									>
 										My Profile
 									</a>

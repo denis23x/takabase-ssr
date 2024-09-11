@@ -19,7 +19,7 @@ export function CurrentUserMixin<T extends new (...args: any[]) => any>(MasterCl
 		public readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 		public readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-		currentUser: CurrentUser | undefined;
+		currentUser: CurrentUser | null;
 		currentUser$: Subscription | undefined;
 
 		currentUserSkeletonToggle: boolean = true;
@@ -34,8 +34,8 @@ export function CurrentUserMixin<T extends new (...args: any[]) => any>(MasterCl
 			this.currentUser$ = this.authorizationService
 				.getCurrentUser()
 				.pipe(
-					tap((currentUser: CurrentUser | undefined) => (this.currentUser = currentUser)),
-					filter((currentUser: CurrentUser | undefined) => !!currentUser)
+					tap((currentUser: CurrentUser | null) => (this.currentUser = currentUser)),
+					filter((currentUser: CurrentUser | null) => !!currentUser)
 				)
 				.subscribe({
 					next: () => this.ngOnCurrentUserIsReady && this.ngOnCurrentUserIsReady(),

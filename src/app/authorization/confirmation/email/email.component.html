@@ -58,8 +58,8 @@
 							<a
 								class="btn-success btn-outline btn w-full no-animation"
 								slot="private"
-								[title]="currentUser.name"
-								[attr.aria-label]="currentUser.name"
+								[title]="currentUser.firebase.displayName"
+								[attr.aria-label]="currentUser.firebase.displayName"
 								[routerLink]="['/', currentUser]"
 							>
 								My Profile

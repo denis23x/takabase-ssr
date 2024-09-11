@@ -22,7 +22,7 @@ export class PwaComponent implements OnInit, OnDestroy {
 	private readonly router: Router = inject(Router);
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 
-	currentUser: CurrentUser | undefined;
+	currentUser: CurrentUser | null;
 	currentUser$: Subscription | undefined;
 
 	ngOnInit(): void {
@@ -31,11 +31,11 @@ export class PwaComponent implements OnInit, OnDestroy {
 			this.currentUser$ = this.authorizationService
 				.getPopulate()
 				.pipe(
-					switchMap((currentUser: CurrentUser | undefined) => {
+					switchMap((currentUser: CurrentUser | null) => {
 						if (currentUser) {
 							return this.appearanceService
 								.getAppearance(currentUser.firebase.uid)
-								.pipe(switchMap(() => from(this.router.navigate(['/', currentUser.name]))));
+								.pipe(switchMap(() => from(this.router.navigate(['/', currentUser.firebase.displayName]))));
 						} else {
 							return from(this.router.navigate(['/login']));
 						}

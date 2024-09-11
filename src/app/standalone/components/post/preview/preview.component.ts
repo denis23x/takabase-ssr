@@ -48,7 +48,7 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 		this.category = category;
 	}
 
-	currentUser: CurrentUser | undefined;
+	currentUser: CurrentUser | null;
 	currentUser$: Subscription | undefined;
 
 	category: Category | undefined;
@@ -61,7 +61,7 @@ export class PostPreviewComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.currentUser$?.unsubscribe();
 		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | undefined) => (this.currentUser = currentUser),
+			next: (currentUser: CurrentUser | null) => (this.currentUser = currentUser),
 			error: (error: any) => console.error(error)
 		});
 	}
