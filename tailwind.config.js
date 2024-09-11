@@ -10,6 +10,7 @@ module.exports = {
     "!mr-4",
     "!m-0",
     "!rounded",
+    "!bg-transparent",
     "bg-success/25",
 
     /** ANIMATIONS  */

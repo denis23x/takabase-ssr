@@ -136,59 +136,58 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 		if (this.helperService.getFormValidation(this.userDeleteForm)) {
 			this.userDeleteForm.disable();
 
-			// TODO: remake user delete
-			// const userId: number = this.currentUser.id;
-			// const userDeleteDto: UserDeleteDto = {
-			// 	...this.userDeleteForm.value
-			// };
-			//
-			// const userDeleteRequest$: Observable<User> = this.userService.delete(userId, userDeleteDto).pipe(
-			// 	catchError((httpErrorResponse: HttpErrorResponse) => {
-			// 		this.currentUserSignOutRequest$?.unsubscribe();
-			// 		this.currentUserSignOutRequest$ = this.authorizationService.onSignOut().subscribe({
-			// 			next: () => {
-			// 				this.router.navigateByUrl('/').then(() => {
-			// 					this.snackbarService.warning(null, 'Something goes wrong');
-			// 				});
-			// 			},
-			// 			error: (error: any) => console.error(error)
-			// 		});
-			//
-			// 		return throwError(() => httpErrorResponse);
-			// 	})
-			// );
-			//
-			// const userDeleteFormRequest$ = (): Observable<User> => {
-			// 	if (userDeleteDto.password) {
-			// 		const passwordValidateGetDto: PasswordValidateGetDto = {
-			// 			...this.userDeleteForm.value
-			// 		};
-			//
-			// 		return this.passwordService.onValidate(passwordValidateGetDto).pipe(switchMap(() => userDeleteRequest$));
-			// 	}
-			//
-			// 	return userDeleteRequest$;
-			// };
-			//
-			// /** Request */
-			//
-			// this.userDeleteFormRequest$?.unsubscribe();
-			// this.userDeleteFormRequest$ = userDeleteFormRequest$()
-			// 	.pipe(switchMap(() => this.authorizationService.onSignOut()))
-			// 	.subscribe({
-			// 		next: () => {
-			// 			this.appUserDeleteSuccess.emit();
-			//
-			// 			this.userDeleteForm.enable();
-			//
-			// 			this.onToggleUserDeleteDialog(false);
-			//
-			// 			this.router.navigateByUrl('/').then(() => {
-			// 				this.snackbarService.success('Ciao', 'You will not be missed <3');
-			// 			});
-			// 		},
-			// 		error: () => this.userDeleteForm.enable()
-			// 	});
+			const userUid: string = this.currentUser.uid;
+			const userDeleteDto: UserDeleteDto = {
+				...this.userDeleteForm.value
+			};
+
+			const userDeleteRequest$: Observable<User> = this.userService.delete(userUid, userDeleteDto).pipe(
+				catchError((httpErrorResponse: HttpErrorResponse) => {
+					this.currentUserSignOutRequest$?.unsubscribe();
+					this.currentUserSignOutRequest$ = this.authorizationService.onSignOut().subscribe({
+						next: () => {
+							this.router.navigateByUrl('/').then(() => {
+								this.snackbarService.warning(null, 'Something goes wrong');
+							});
+						},
+						error: (error: any) => console.error(error)
+					});
+
+					return throwError(() => httpErrorResponse);
+				})
+			);
+
+			const userDeleteFormRequest$ = (): Observable<User> => {
+				if (userDeleteDto.password) {
+					const passwordValidateGetDto: PasswordValidateGetDto = {
+						...this.userDeleteForm.value
+					};
+
+					return this.passwordService.onValidate(passwordValidateGetDto).pipe(switchMap(() => userDeleteRequest$));
+				}
+
+				return userDeleteRequest$;
+			};
+
+			/** Request */
+
+			this.userDeleteFormRequest$?.unsubscribe();
+			this.userDeleteFormRequest$ = userDeleteFormRequest$()
+				.pipe(switchMap(() => this.authorizationService.onSignOut()))
+				.subscribe({
+					next: () => {
+						this.appUserDeleteSuccess.emit();
+
+						this.userDeleteForm.enable();
+
+						this.onToggleUserDeleteDialog(false);
+
+						this.router.navigateByUrl('/').then(() => {
+							this.snackbarService.success('Ciao', 'You will not be missed <3');
+						});
+					},
+					error: () => this.userDeleteForm.enable()
+				});
 		}
 	}
 }

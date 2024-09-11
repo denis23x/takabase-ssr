@@ -4,8 +4,17 @@
 	<section class="flex flex-col gap-4">
 		<p class="alert" role="alert">
 			<i class="fill-current text-info" appSvgIcon [appSvgIconIcon]="'info-circle'" [appSvgIconSquare]="'1.5em'"></i>
-			<span class="block"> Admin functions only. If you're here by accident, here is nothing to do for you </span>
+			<span class="block truncate max-w-full">{{ currentUser.uid }}</span>
 		</p>
+		<button
+			class="btn btn-success btn-outline"
+			type="button"
+			title="Firebase Token"
+			aria-label="Firebase Token"
+			(click)="onClickGetToken()"
+		>
+			Get Auth Token
+		</button>
 		<div class="flex flex-col items-start justify-start gap-4">
 			@if (!!syncList.length) {
 				@for (sync of syncList; track sync.id) {

@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { ApiService } from '../../core/services/api.service';
@@ -9,6 +9,9 @@ import { environment } from '../../../environments/environment';
 import { HelperService } from '../../core/services/helper.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { tap } from 'rxjs/operators';
+import { CurrentUserMixin } from '../../core/mixins/current-user.mixin';
+import { FirebaseService } from '../../core/services/firebase.service';
+import type { Auth } from 'firebase/auth';
 
 interface Sync {
 	id: number;
@@ -30,11 +33,12 @@ interface SyncEndpoint {
 	selector: 'app-settings-sync',
 	templateUrl: './sync.component.html'
 })
-export class SettingsSyncComponent {
+export class SettingsSyncComponent extends CurrentUserMixin(class {}) implements OnInit, OnDestroy {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly httpClient: HttpClient = inject(HttpClient);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 
 	syncList: Sync[] = [
 		{
@@ -107,6 +111,24 @@ export class SettingsSyncComponent {
 			]
 		}
 	];
+
+	ngOnInit(): void {
+		super.ngOnInit();
+	}
+
+	ngOnDestroy(): void {
+		super.ngOnDestroy();
+	}
+
+	onClickGetToken(): void {
+		const auth: Auth = this.firebaseService.getAuth();
+
+		auth.currentUser
+			.getIdToken()
+			.then((token: string) => this.helperService.getNavigatorClipboard(token))
+			.catch((error: any) => console.error(error))
+			.finally(() => this.snackbarService.success('Ok', 'Token was copied'));
+	}
 
 	onClickSync(syncEndpoint: SyncEndpoint): void {
 		syncEndpoint.isLoading = true;

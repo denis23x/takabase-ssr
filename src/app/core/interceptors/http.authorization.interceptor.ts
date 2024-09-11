@@ -16,20 +16,11 @@ export const httpAuthorizationInterceptor: HttpInterceptorFn = (request: HttpReq
 	const isMethodMatch: boolean = ['POST', 'PUT', 'DELETE'].includes(request.method);
 	const isUrlMatch: boolean = request.url.startsWith(environment.apiUrl);
 
-	// User authenticated area
-
-	const isPostBookmark: boolean = request.url.includes('posts-bookmark');
-	const isPostPassword: boolean = request.url.includes('posts-password');
-	const isPostPrivate: boolean = request.url.includes('posts-private');
-
-	// Admin functions
-
-	const isAlgolia: boolean = request.url.includes('algolia');
-	const isInsights: boolean = request.url.includes('insights');
-	const isSitemap: boolean = request.url.includes('sitemap');
+	const isAuthenticatedArea: boolean = ['posts-bookmark', 'posts-password', 'posts-private'].some((url: string) => request.url.includes(url));
+	const isAdminFunctions: boolean = ['algolia', 'insights', 'sitemap'].some((url: string) => request.url.includes(url));
 
 	if (platformService.isBrowser()) {
-		if ((isMethodMatch && isUrlMatch) || (isPostBookmark || isPostPassword || isPostPrivate) || (isAlgolia || isInsights || isSitemap)) {
+		if ((isMethodMatch && isUrlMatch) || isAuthenticatedArea || isAdminFunctions) {
 			const firebaseUser: FirebaseUser = firebaseService.auth.currentUser;
 
 			if (firebaseUser) {

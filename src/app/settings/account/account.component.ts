@@ -29,10 +29,8 @@ import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-in
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { PasswordService } from '../../core/services/password.service';
 import { EmailService } from '../../core/services/email.service';
-import { AuthorizationService } from '../../core/services/authorization.service';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
-import { PlatformService } from '../../core/services/platform.service';
-import { catchError, filter } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { WindowComponent } from '../../standalone/components/window/window.component';
 import {
 	UserInfo,
@@ -48,14 +46,16 @@ import {
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SvgLogoComponent } from '../../standalone/components/svg-logo/svg-logo.component';
+import { ApiService } from '../../core/services/api.service';
+import { CurrentUserMixin } from '../../core/mixins/current-user.mixin';
+import { FirebaseService } from '../../core/services/firebase.service';
 import type { PasswordValidateGetDto } from '../../core/dto/password/password-validate-get.dto';
 import type { PasswordUpdateDto } from '../../core/dto/password/password-update.dto';
-import type { CurrentUser, CurrentUserProviderData } from '../../core/models/current-user.model';
+import type { CurrentUserProviderData } from '../../core/models/current-user.model';
 import type { EmailUpdateDto } from '../../core/dto/email/email-update.dto';
 import type { UserPasswordResetComponent } from '../../standalone/components/user/password-reset/password-reset.component';
 import type { UserDeleteComponent } from '../../standalone/components/user/delete/delete.component';
 import type { FirebaseError } from 'firebase/app';
-import { ApiService } from '../../core/services/api.service';
 
 interface EmailAuthProviderForm {
 	email: FormControl<string>;
@@ -95,15 +95,14 @@ interface NewPasswordForm {
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'
 })
-export class SettingsAccountComponent implements OnInit, OnDestroy {
+export class SettingsAccountComponent extends CurrentUserMixin(class {}) implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly emailService: EmailService = inject(EmailService);
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly passwordService: PasswordService = inject(PasswordService);
-	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 	private readonly router: Router = inject(Router);
 	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
@@ -121,8 +120,6 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		return isSubmittedSuspect.some((isSubmitted: boolean) => !!isSubmitted);
 	});
 
-	currentUser: CurrentUser | null;
-	currentUser$: Subscription | undefined;
 	currentUserProviderData: CurrentUserProviderData[] = [];
 	currentUserProviderDataRequestIsSubmitted: WritableSignal<string | undefined> = signal(undefined);
 
@@ -183,15 +180,16 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	appUserDeleteComponent: ComponentRef<UserDeleteComponent>;
 
 	ngOnInit(): void {
-		/** Apply Data */
-
-		this.setResolver();
+		super.ngOnInit();
 	}
 
 	ngOnDestroy(): void {
+		super.ngOnDestroy();
+
+		// ngOnDestroy
+
 		[
 			this.emailAuthProviderFormRequest$,
-			this.currentUser$,
 			this.currentUserEmailFormRequest$,
 			this.currentUserPasswordFormRequest$,
 			this.currentUserLogoutRevokeRequest$,
@@ -200,32 +198,17 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 		].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
-	setResolver(): void {
-		if (this.platformService.isBrowser()) {
-			this.currentUser$?.unsubscribe();
-			this.currentUser$ = this.authorizationService
-				.getCurrentUser()
-				.pipe(filter((currentUser: CurrentUser | null) => !!currentUser))
-				.subscribe({
-					next: (currentUser: CurrentUser | null) => {
-						this.currentUser = currentUser;
+	ngOnCurrentUserIsReady(): void {
+		if (!this.currentUser.emailVerified) {
+			const abstractControl: AbstractControl = this.currentUserEmailForm.get('email');
 
-						// Set email for verification
-
-						if (!this.currentUser.emailVerified) {
-							const abstractControl: AbstractControl = this.currentUserEmailForm.get('email');
-
-							abstractControl.setValue(this.currentUser.email);
-							abstractControl.disable();
-						}
-
-						// Set provider data
-
-						this.onProviderDataChange(this.currentUser);
-					},
-					error: (error: any) => console.error(error)
-				});
+			abstractControl.setValue(this.currentUser.email);
+			abstractControl.disable();
 		}
+
+		/** Set provider data */
+
+		this.onProviderDataChange(this.currentUser);
 	}
 
 	/** PROVIDER */
@@ -243,7 +226,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				providerId: 'google.com',
 				providerLabel: 'Google',
 				providerIcon: 'google',
-				providerIconClass: 'logo-google',
+				providerIconClass: ['logo-google', '!bg-transparent'],
 				providerIconViewBox: '0 0 48 48',
 				providerLink: 'https://google.com',
 				linked: false
@@ -252,7 +235,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 			// 	providerId: 'facebook.com',
 			// 	providerLabel: 'Facebook',
 			// 	providerIcon: 'facebook',
-			// 	providerIconClass: 'logo-facebook',
+			// 	providerIconClass: ['logo-facebook'],
 			// 	providerIconViewBox: '0 0 256 256',
 			// 	providerLink: 'https://facebook.com',
 			// 	linked: false
@@ -262,7 +245,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 				providerLabel: 'Github',
 				providerLink: 'https://github.com',
 				providerIcon: 'github',
-				providerIconClass: 'logo-github',
+				providerIconClass: ['logo-github'],
 				providerIconViewBox: '0 0 97.6 96',
 				linked: false
 			}
@@ -288,7 +271,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	onProviderLink(currentUserProviderData: CurrentUserProviderData): void {
 		const authProvider: AuthProvider = this.authorizationService.getAuthProvider(currentUserProviderData.providerId);
 
-		from(linkWithPopup(this.currentUser, authProvider))
+		from(linkWithPopup(this.firebaseService.getAuth().currentUser, authProvider))
 			.pipe(catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)))
 			.subscribe({
 				next: (userCredential: UserCredential) => {
@@ -303,7 +286,7 @@ export class SettingsAccountComponent implements OnInit, OnDestroy {
 	onProviderUnlink(currentUserProviderData: CurrentUserProviderData): void {
 		this.currentUserProviderDataRequestIsSubmitted.set(currentUserProviderData.providerId);
 
-		from(unlink(this.currentUser, currentUserProviderData.providerId))
+		from(unlink(this.firebaseService.getAuth().currentUser, currentUserProviderData.providerId))
 			.pipe(catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)))
 			.subscribe({
 				next: (firebaseUser: FirebaseUser) => {
