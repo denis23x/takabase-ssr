@@ -1,28 +1,29 @@
 /** @format */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnDestroy, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { AuthorizationService } from '../../../core/services/authorization.service';
-import { from, Subscription, switchMap } from 'rxjs';
+import { from, of, Subscription, switchMap } from 'rxjs';
 import { SvgLogoComponent } from '../svg-logo/svg-logo.component';
-import { AuthProvider, signInWithPopup, UserCredential } from 'firebase/auth';
+import { AuthProvider, signInWithPopup, getAdditionalUserInfo, updateProfile, UserCredential } from 'firebase/auth';
 import { UserService } from '../../../core/services/user.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { FirebaseService } from '../../../core/services/firebase.service';
 import { ApiService } from '../../../core/services/api.service';
 import { Router } from '@angular/router';
 import { SnackbarService } from '../../../core/services/snackbar.service';
 import type { CurrentUser } from '../../../core/models/current-user.model';
 import type { FirebaseError } from 'firebase/app';
+import type { AdditionalUserInfo } from 'firebase/auth';
+import type { User } from '../../../core/models/user.model';
 
 @Component({
 	standalone: true,
 	selector: 'app-sign-in, [appSignIn]',
 	imports: [CommonModule, SvgIconComponent, SvgLogoComponent],
 	providers: [UserService],
-	templateUrl: './sign-in.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './sign-in.component.html'
 })
 export class SignInComponent implements OnDestroy {
 	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
@@ -72,11 +73,49 @@ export class SignInComponent implements OnDestroy {
 					return this.apiService.setFirebaseError(firebaseError);
 				}),
 				switchMap((userCredential: UserCredential) => {
-					return this.userService.create().pipe(
-						switchMap(() => userCredential.user.reload()),
-						switchMap(() => this.authorizationService.setPopulate(userCredential))
-					);
-				})
+					const additionalUserInfo: AdditionalUserInfo = getAdditionalUserInfo(userCredential);
+
+					if (additionalUserInfo.isNewUser) {
+						this.snackbarService.success('Just a moment', 'Redirecting, please wait...');
+
+						return this.userService
+							.create()
+							.pipe(switchMap(() => from(userCredential.user.reload()).pipe(map(() => userCredential))));
+					} else {
+						// Prevent unnecessary user update
+
+						const isGoogle: boolean = userCredential.providerId === 'google.com';
+						const isGoogleAsSingleProvider: boolean = userCredential.user.providerData.length === 1;
+
+						/** https://firebase.google.com/docs/auth/android/email-link-auth#security_concerns */
+
+						if (isGoogle && isGoogleAsSingleProvider) {
+							return this.userService.getOne(userCredential.user.uid).pipe(
+								switchMap((user: User) => {
+									const isSameName: boolean = user.name === userCredential.user.displayName;
+									const isSameAvatar: boolean = user.avatar === userCredential.user.photoURL;
+
+									if (!isSameName || !isSameAvatar) {
+										const updateProfileDto: any = {
+											displayName: user.name,
+											photoURL: user.avatar || ''
+										};
+
+										return from(updateProfile(userCredential.user, updateProfileDto)).pipe(
+											switchMap(() => from(userCredential.user.reload())),
+											map(() => userCredential)
+										);
+									} else {
+										return of(userCredential);
+									}
+								})
+							);
+						} else {
+							return of(userCredential);
+						}
+					}
+				}),
+				switchMap((userCredential: UserCredential) => this.authorizationService.setPopulate(userCredential))
 			)
 			.subscribe({
 				next: (currentUser: CurrentUser) => {
@@ -84,8 +123,7 @@ export class SignInComponent implements OnDestroy {
 						.navigate(['/', currentUser.displayName])
 						.then(() => this.snackbarService.success('Success', 'Sign-in via social is successful'));
 				},
-				error: (error: any) => console.error(error),
-				complete: () => this.onSignInIsBusyToggle(false)
+				error: () => this.onSignInIsBusyToggle(false)
 			});
 	}
 }

@@ -36,6 +36,7 @@ import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import type { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
 import type { UserCreateDto } from '../../core/dto/user/user-create.dto';
 import type { FirebaseError } from 'firebase/app';
+import type { CurrentUser } from '../../core/models/current-user.model';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -166,6 +167,7 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitRegistrationForm(): void {
+		// prettier-ignore
 		if (this.helperService.getFormValidation(this.registrationForm)) {
 			this.registrationForm.disable();
 
@@ -184,7 +186,6 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 			this.registrationRequest$ = this.aiService
 				.moderateText(aiModerateTextDto)
 				.pipe(
-					// prettier-ignore
 					switchMap(() => from(createUserWithEmailAndPassword(this.firebaseService.getAuth(), userCreateDto.email, userCreateDto.password))),
 					catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
 					switchMap((userCredential: UserCredential) => {
@@ -195,9 +196,9 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 					})
 				)
 				.subscribe({
-					next: () => {
+					next: (currentUser: CurrentUser) => {
 						this.router
-							.navigate(['/', userCreateDto.name])
+							.navigate(['/', currentUser.displayName])
 							.then(() => this.snackbarService.success('Success', 'Welcome aboard!'));
 					},
 					error: () => this.registrationForm.enable()

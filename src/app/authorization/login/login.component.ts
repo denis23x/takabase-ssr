@@ -9,13 +9,18 @@ import { HelperService } from '../../core/services/helper.service';
 import { MetaService } from '../../core/services/meta.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SignInComponent } from '../../standalone/components/sign-in/sign-in.component';
-import { Subscription } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
 import { SnackbarService } from '../../core/services/snackbar.service';
+import { FirebaseService } from '../../core/services/firebase.service';
+import { ApiService } from '../../core/services/api.service';
+import { signInWithEmailAndPassword, UserCredential } from 'firebase/auth';
+import { catchError, switchMap } from 'rxjs/operators';
 import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import type { CurrentUser } from '../../core/models/current-user.model';
 import type { SignInDto } from '../../core/dto/authorization/sign-in.dto';
+import type { FirebaseError } from 'firebase/app';
 
 interface LoginForm {
 	email: FormControl<string>;
@@ -43,6 +48,8 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
+	private readonly firebaseService: FirebaseService = inject(FirebaseService);
+	private readonly apiService: ApiService = inject(ApiService);
 
 	loginRequest$: Subscription | undefined;
 	loginForm: FormGroup = this.formBuilder.group<LoginForm>({
@@ -86,6 +93,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	}
 
 	onSubmitLoginForm(): void {
+		// prettier-ignore
 		if (this.helperService.getFormValidation(this.loginForm)) {
 			this.loginForm.disable();
 
@@ -94,14 +102,19 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 			};
 
 			this.loginRequest$?.unsubscribe();
-			this.loginRequest$ = this.authorizationService.onSignInWithEmailAndPassword(signInDto).subscribe({
-				next: (currentUser: CurrentUser) => {
-					this.router
-						.navigate(['/', currentUser.displayName])
-						.then(() => this.snackbarService.success('Success', 'Welcome back!'));
-				},
-				error: () => this.loginForm.enable()
-			});
+			this.loginRequest$ = from(signInWithEmailAndPassword(this.firebaseService.getAuth(), signInDto.email, signInDto.password))
+				.pipe(
+					catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
+					switchMap((userCredential: UserCredential) => this.authorizationService.setPopulate(userCredential))
+				)
+				.subscribe({
+					next: (currentUser: CurrentUser) => {
+						this.router
+							.navigate(['/', currentUser.displayName])
+							.then(() => this.snackbarService.success('Success', 'Welcome back!'));
+					},
+					error: () => this.loginForm.enable()
+				});
 		}
 	}
 }
