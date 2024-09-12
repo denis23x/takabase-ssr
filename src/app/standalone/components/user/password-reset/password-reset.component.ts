@@ -25,6 +25,7 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { PasswordService } from '../../../../core/services/password.service';
 import { PlatformService } from '../../../../core/services/platform.service';
+import { ApiService } from '../../../../core/services/api.service';
 import type { CurrentUser } from '../../../../core/models/current-user.model';
 import type { PasswordResetGetDto } from '../../../../core/dto/password/password-reset-get.dto';
 
@@ -50,6 +51,7 @@ export class UserPasswordResetComponent implements OnInit, OnDestroy {
 	private readonly passwordService: PasswordService = inject(PasswordService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly location: Location = inject(Location);
+	private readonly apiService: ApiService = inject(ApiService);
 
 	// prettier-ignore
 	@ViewChild('userPasswordResetDialogElement') userPasswordResetDialogElement: ElementRef<HTMLDialogElement> | undefined;
@@ -101,7 +103,10 @@ export class UserPasswordResetComponent implements OnInit, OnDestroy {
 		this.userPasswordResetRequest$?.unsubscribe();
 		this.userPasswordResetRequest$ = this.passwordService
 			.onResetSendEmail(passwordResetGetDto)
-			.pipe(switchMap(() => this.authorizationService.onLogoutRevoke()))
+			.pipe(
+				switchMap(() => this.apiService.post('/v1/authorization/logout/revoke')),
+				switchMap(() => this.authorizationService.getSignOut())
+			)
 			.subscribe({
 				next: () => {
 					this.appUserPasswordResetSuccess.emit();

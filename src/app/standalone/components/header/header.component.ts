@@ -54,7 +54,7 @@ export class HeaderComponent extends CU(class {}) implements OnInit, OnDestroy {
 		const pathRestrictedList: string[] = ['/settings', '/create', '/update'];
 
 		this.currentUserSignOutRequest$?.unsubscribe();
-		this.currentUserSignOutRequest$ = this.authorizationService.onSignOut().subscribe({
+		this.currentUserSignOutRequest$ = this.authorizationService.getSignOut().subscribe({
 			next: () => {
 				if (pathRestrictedList.some((pathRestricted: string) => path.startsWith(pathRestricted))) {
 					this.router.navigateByUrl('/').catch((error: any) => {

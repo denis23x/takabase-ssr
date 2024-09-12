@@ -144,7 +144,7 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 			const userDeleteRequest$: Observable<User> = this.userService.delete(userUid, userDeleteDto).pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
 					this.currentUserSignOutRequest$?.unsubscribe();
-					this.currentUserSignOutRequest$ = this.authorizationService.onSignOut().subscribe({
+					this.currentUserSignOutRequest$ = this.authorizationService.getSignOut().subscribe({
 						next: () => {
 							this.router.navigateByUrl('/').then(() => {
 								this.snackbarService.warning(null, 'Something goes wrong');
@@ -173,7 +173,7 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 
 			this.userDeleteFormRequest$?.unsubscribe();
 			this.userDeleteFormRequest$ = userDeleteFormRequest$()
-				.pipe(switchMap(() => this.authorizationService.onSignOut()))
+				.pipe(switchMap(() => this.authorizationService.getSignOut()))
 				.subscribe({
 					next: () => {
 						this.appUserDeleteSuccess.emit();

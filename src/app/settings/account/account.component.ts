@@ -30,7 +30,7 @@ import { SnackbarService } from '../../core/services/snackbar.service';
 import { PasswordService } from '../../core/services/password.service';
 import { EmailService } from '../../core/services/email.service';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { WindowComponent } from '../../standalone/components/window/window.component';
 import {
 	UserInfo,
@@ -440,14 +440,17 @@ export class SettingsAccountComponent extends CurrentUserMixin(class {}) impleme
 		this.currentUserLogoutRevokeRequestIsSubmitted.set(true);
 
 		this.currentUserLogoutRevokeRequest$?.unsubscribe();
-		this.currentUserLogoutRevokeRequest$ = this.authorizationService.onLogoutRevoke().subscribe({
-			next: () => {
-				this.router.navigateByUrl('/').then(() => {
-					this.snackbarService.success('As you wish..', 'All tokens has been revoked');
-				});
-			},
-			error: () => this.currentUserLogoutRevokeRequestIsSubmitted.set(false)
-		});
+		this.currentUserLogoutRevokeRequest$ = this.apiService
+			.post('/v1/authorization/logout/revoke')
+			.pipe(switchMap(() => this.authorizationService.getSignOut()))
+			.subscribe({
+				next: () => {
+					this.router.navigateByUrl('/').then(() => {
+						this.snackbarService.success('As you wish..', 'All tokens has been revoked');
+					});
+				},
+				error: () => this.currentUserLogoutRevokeRequestIsSubmitted.set(false)
+			});
 	}
 
 	/** LAZY */

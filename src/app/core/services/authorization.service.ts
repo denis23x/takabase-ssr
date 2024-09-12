@@ -9,8 +9,6 @@ import { FirebaseService } from './firebase.service';
 import {
 	FacebookAuthProvider,
 	onAuthStateChanged,
-	signInWithEmailAndPassword,
-	signInWithPopup,
 	signOut,
 	linkWithCredential,
 	UserCredential,
@@ -24,7 +22,6 @@ import { CookiesService } from './cookies.service';
 import { HelperService } from './helper.service';
 import type { CurrentUser } from '../models/current-user.model';
 import type { FirebaseError } from 'firebase/app';
-import type { SignInDto } from '../dto/authorization/sign-in.dto';
 
 @Injectable({
 	providedIn: 'root'
@@ -69,42 +66,13 @@ export class AuthorizationService {
 		);
 	}
 
-	/** Authorization API */
-
-	onLogoutRevoke(): Observable<void> {
-		return this.apiService.post('/v1/authorization/logout/revoke').pipe(switchMap(() => this.onSignOut()));
-	}
-
 	/** Firebase API */
 
-	onSignInWithEmailAndPassword(signInDto: SignInDto): Observable<CurrentUser> {
-		return from(signInWithEmailAndPassword(this.firebaseService.getAuth(), signInDto.email, signInDto.password)).pipe(
-			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
-			switchMap((userCredential: UserCredential) => this.setPopulate(userCredential))
-		);
-	}
-
-	onSignInWithPopup(authProvider: AuthProvider): Observable<CurrentUser> {
-		return from(signInWithPopup(this.firebaseService.getAuth(), authProvider)).pipe(
-			catchError((firebaseError: FirebaseError) => {
-				/** Save the pending credential */
-
-				if (firebaseError.code === 'auth/account-exists-with-different-credential') {
-					this.currentUserPendingOAuthCredential = this.getCredentialFromError(authProvider, firebaseError);
-				}
-
-				return this.apiService.setFirebaseError(firebaseError);
-			}),
-			switchMap((userCredential: UserCredential) => this.setPopulate(userCredential))
-		);
-	}
-
-	onSignOut(): Observable<void> {
+	getSignOut(): Observable<void> {
 		return from(signOut(this.firebaseService.getAuth())).pipe(
 			catchError((firebaseError: FirebaseError) => {
-				return from(this.router.navigate(['/error', 500])).pipe(
-					switchMap(() => this.apiService.setFirebaseError(firebaseError))
-				);
+				// prettier-ignore
+				return from(this.router.navigate(['/error', 500])).pipe(switchMap(() => this.apiService.setFirebaseError(firebaseError)));
 			}),
 			tap(() => this.appearanceService.setSettings(null)),
 			tap(() => this.currentUser.next(undefined)),
