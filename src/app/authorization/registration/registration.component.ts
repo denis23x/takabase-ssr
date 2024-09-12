@@ -19,7 +19,7 @@ import { MetaService } from '../../core/services/meta.service';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { SignInComponent } from '../../standalone/components/sign-in/sign-in.component';
-import { of, Subscription, switchMap, throwError } from 'rxjs';
+import { from, Subscription, switchMap } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
 import { AIService } from '../../core/services/ai.service';
@@ -27,14 +27,16 @@ import { AvatarComponent } from '../../standalone/components/avatar/avatar.compo
 import { FirebaseService } from '../../core/services/firebase.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { getValue, Value } from 'firebase/remote-config';
-import { filter } from 'rxjs/operators';
-import type { User as FirebaseUser } from 'firebase/auth';
-import type { CurrentUser } from '../../core/models/current-user.model';
+import { catchError, filter } from 'rxjs/operators';
+import { createUserWithEmailAndPassword, UserCredential } from 'firebase/auth';
+import { ApiService } from '../../core/services/api.service';
 import type { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 import type { User } from '../../core/models/user.model';
 import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import type { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
 import type { UserCreateDto } from '../../core/dto/user/user-create.dto';
+import type { CurrentUser } from '../../core/models/current-user.model';
+import type { FirebaseError } from 'firebase/app';
 
 interface RegistrationForm {
 	name: FormControl<string>;
@@ -71,9 +73,7 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly firebaseService: FirebaseService = inject(FirebaseService);
 	private readonly platformService: PlatformService = inject(PlatformService);
-
-	currentUser: CurrentUser | null;
-	currentUser$: Subscription | undefined;
+	private readonly apiService: ApiService = inject(ApiService);
 
 	registrationAuthStateChanged$: Subscription | undefined;
 	registrationRequest$: Subscription | undefined;
@@ -99,41 +99,26 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	invitedByUserRequest$: Subscription | undefined;
 
 	ngOnInit(): void {
-		/** Set not allowed values */
-
-		this.onUpdateRegistrationForm();
-
-		/** Listen Auth State Changed */
-
 		if (this.platformService.isBrowser()) {
 			this.registrationAuthStateChanged$?.unsubscribe();
 			this.registrationAuthStateChanged$ = this.authorizationService
 				.getAuthState()
-				.pipe(filter((firebaseUser: FirebaseUser | null) => !!firebaseUser))
+				.pipe(filter((currentUser: CurrentUser | null) => !!currentUser))
 				.subscribe({
-					next: () => {
-						this.snackbarService.success('Success', 'Redirecting, please wait...', {
-							duration: 8000
-						});
+					next: (currentUser: CurrentUser) => {
+						console.log({ ...currentUser });
 
-						/** Disable form for interact */
-
-						this.registrationForm.disable();
-
-						/** Get user and redirect */
-
-						this.currentUser$?.unsubscribe();
-						this.currentUser$ = this.authorizationService
-							.getCurrentUser()
-							.pipe(filter((currentUser: CurrentUser | null) => !!currentUser))
-							.subscribe({
-								next: (currentUser: CurrentUser | null) => {
-									this.router.navigate(['/', currentUser.displayName]).catch((error: any) => {
-										this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
-									});
-								},
-								error: (error: any) => console.error(error)
-							});
+						// this.snackbarService.success('Success', 'Redirecting, please wait...');
+						//
+						// /** Disable form for interact */
+						//
+						// this.registrationForm.disable();
+						//
+						// /** Redirect to user page */
+						//
+						// this.router.navigate(['/', currentUser.displayName]).catch((error: any) => {
+						// 	this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
+						// });
 					},
 					error: () => this.registrationForm.enable()
 				});
@@ -146,15 +131,15 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
+
+		/** Set not allowed values */
+
+		this.onUpdateRegistrationForm();
 	}
 
 	ngOnDestroy(): void {
-		[
-			this.currentUser$,
-			this.invitedByUserRequest$,
-			this.registrationAuthStateChanged$,
-			this.registrationRequest$
-		].forEach(($: Subscription) => $?.unsubscribe());
+		// prettier-ignore
+		[this.invitedByUserRequest$, this.registrationAuthStateChanged$, this.registrationRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setResolver(): void {
@@ -221,32 +206,28 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 				input: userCreateDto.name
 			};
 
-			const userGetAllDto: UserGetAllDto = {
-				username: userCreateDto.name,
-				page: 1,
-				size: 10
-			};
-
 			/** Moderate and registration */
 
 			this.registrationRequest$?.unsubscribe();
 			this.registrationRequest$ = this.aiService
 				.moderateText(aiModerateTextDto)
 				.pipe(
-					switchMap(() => this.userService.getAll(userGetAllDto)),
-					switchMap((userList: User[]) => {
-						if (userList.length) {
-							this.snackbarService.error('Nope', 'The name "' + userGetAllDto.username + '" is already in use');
-
-							return throwError(() => new Error());
-						} else {
-							return of([]);
-						}
-					}),
-					switchMap(() => this.authorizationService.onRegistration(userCreateDto))
+					// prettier-ignore
+					switchMap(() => from(createUserWithEmailAndPassword(this.firebaseService.getAuth(), userCreateDto.email, userCreateDto.password))),
+					catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
+					switchMap((userCredential: UserCredential) => {
+						return this.userService.create(userCreateDto).pipe(
+							switchMap(() => userCredential.user.reload()),
+							switchMap(() => this.authorizationService.setPopulate(userCredential))
+						);
+					})
 				)
 				.subscribe({
-					next: () => console.debug('Signed up with email and password'),
+					next: () => {
+						this.router
+							.navigate(['/', userCreateDto.name])
+							.then(() => this.snackbarService.success('Success', 'Welcome aboard!'));
+					},
 					error: () => this.registrationForm.enable()
 				});
 		}

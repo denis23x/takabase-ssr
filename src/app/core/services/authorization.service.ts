@@ -2,32 +2,28 @@
 
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable, Observer, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { AppearanceService } from './appearance.service';
 import { FirebaseService } from './firebase.service';
 import {
 	FacebookAuthProvider,
 	onAuthStateChanged,
-	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	signInWithPopup,
 	signOut,
 	linkWithCredential,
-	User as FirebaseUser,
 	UserCredential,
 	GithubAuthProvider,
 	GoogleAuthProvider,
 	AuthProvider,
-	OAuthCredential,
-	Auth
+	OAuthCredential
 } from 'firebase/auth';
 import { Router } from '@angular/router';
 import { CookiesService } from './cookies.service';
 import { HelperService } from './helper.service';
 import type { CurrentUser } from '../models/current-user.model';
 import type { FirebaseError } from 'firebase/app';
-import type { UserCreateDto } from '../dto/user/user-create.dto';
 import type { SignInDto } from '../dto/authorization/sign-in.dto';
 
 @Injectable({
@@ -41,83 +37,39 @@ export class AuthorizationService {
 	private readonly cookiesService: CookiesService = inject(CookiesService);
 	private readonly helperService: HelperService = inject(HelperService);
 
-	currentUser: BehaviorSubject<CurrentUser | undefined> = new BehaviorSubject<CurrentUser | undefined>(undefined);
+	currentUser: BehaviorSubject<CurrentUser | null> = new BehaviorSubject<CurrentUser | null>(null);
 	currentUserIsPopulated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	currentUserPendingOAuthCredential: OAuthCredential | undefined;
 
-	getPopulate(): Observable<CurrentUser | undefined> {
+	getPopulate(): Observable<CurrentUser | null> {
 		return this.getCurrentUser().pipe(
-			switchMap((currentUser: CurrentUser | undefined) => {
+			switchMap((currentUser: CurrentUser | null) => {
 				if (currentUser) {
 					return of(currentUser);
+				} else {
+					return this.getAuthState().pipe(
+						switchMap((currentUser: CurrentUser | null) => {
+							if (currentUser) {
+								return this.setCurrentUser(currentUser);
+							} else {
+								return of(null);
+							}
+						})
+					);
 				}
-
-				return this.getAuthState().pipe(
-					switchMap((firebaseUser: FirebaseUser | null) => {
-						if (firebaseUser) {
-							return this.onProfile().pipe(
-								switchMap((currentUser: CurrentUser) => {
-									return this.setCurrentUser({
-										firebase: firebaseUser,
-										...currentUser
-									});
-								})
-							);
-						}
-
-						return of(undefined);
-					})
-				);
 			}),
 			tap(() => this.currentUserIsPopulated.next(true))
 		);
 	}
 
 	setPopulate(userCredential: UserCredential): Observable<CurrentUser> {
-		const getObservable = (): Observable<UserCredential> => {
-			const pendingCredential: OAuthCredential | undefined = this.currentUserPendingOAuthCredential;
-
-			// prettier-ignore
-			if (!!pendingCredential) {
-				return from(linkWithCredential(userCredential.user, pendingCredential)).pipe(tap(() => (this.currentUserPendingOAuthCredential = undefined)));
-			} else {
-				return of(userCredential);
-			}
-		};
-
-		// prettier-ignore
-		return getObservable().pipe(
-			switchMap(() => this.onProfile()),
-			switchMap((user: Partial<CurrentUser>) => this.appearanceService.getAppearance(userCredential.user.uid).pipe(map(() => user))),
-			switchMap((user: Partial<CurrentUser>) => {
-				return this.setCurrentUser({
-					firebase: userCredential.user,
-					...user
-				});
-			})
+		return this.getCredentialPending(userCredential).pipe(
+			switchMap(() => this.appearanceService.getAppearance(userCredential.user.uid)),
+			switchMap(() => this.setCurrentUser(userCredential.user))
 		);
 	}
 
 	/** Authorization API */
-
-	onRegistration(userCreateDto: UserCreateDto): Observable<CurrentUser> {
-		const auth: Auth = this.firebaseService.getAuth();
-
-		const signInDto: SignInDto = {
-			email: userCreateDto.email,
-			password: userCreateDto.password
-		};
-
-		return from(createUserWithEmailAndPassword(auth, signInDto.email, signInDto.password)).pipe(
-			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
-			switchMap(() => this.apiService.post('/v1/users', userCreateDto)),
-			switchMap(() => this.onSignInWithEmailAndPassword(signInDto))
-		);
-	}
-
-	onProfile(): Observable<CurrentUser> {
-		return this.apiService.post('/v1/authorization/profile');
-	}
 
 	onLogoutRevoke(): Observable<void> {
 		return this.apiService.post('/v1/authorization/logout/revoke').pipe(switchMap(() => this.onSignOut()));
@@ -135,7 +87,8 @@ export class AuthorizationService {
 	onSignInWithPopup(authProvider: AuthProvider): Observable<CurrentUser> {
 		return from(signInWithPopup(this.firebaseService.getAuth(), authProvider)).pipe(
 			catchError((firebaseError: FirebaseError) => {
-				// Save the pending credential
+				/** Save the pending credential */
+
 				if (firebaseError.code === 'auth/account-exists-with-different-credential') {
 					this.currentUserPendingOAuthCredential = this.getCredentialFromError(authProvider, firebaseError);
 				}
@@ -157,6 +110,17 @@ export class AuthorizationService {
 			tap(() => this.currentUser.next(undefined)),
 			tap(() => this.cookiesService.removeItem('__session'))
 		);
+	}
+
+	getCredentialPending(userCredential: UserCredential): Observable<UserCredential> {
+		const pendingCredential: OAuthCredential | undefined = this.currentUserPendingOAuthCredential;
+
+		// prettier-ignore
+		if (!!pendingCredential) {
+			return from(linkWithCredential(userCredential.user, pendingCredential)).pipe(tap(() => (this.currentUserPendingOAuthCredential = undefined)));
+		} else {
+			return of(userCredential);
+		}
 	}
 
 	getCredentialFromError = (authProvider: AuthProvider, firebaseError: FirebaseError): OAuthCredential => {
@@ -204,11 +168,11 @@ export class AuthorizationService {
 		}
 	}
 
-	getAuthState(): Observable<FirebaseUser | null> {
-		return new Observable<FirebaseUser | null>((observer: Observer<FirebaseUser | null>) => {
+	getAuthState(): Observable<CurrentUser | null> {
+		return new Observable<CurrentUser | null>((observer: Observer<CurrentUser | null>) => {
 			onAuthStateChanged(
 				this.firebaseService.getAuth(),
-				(firebaseUser: FirebaseUser | null) => observer.next(firebaseUser),
+				(currentUser: CurrentUser | null) => observer.next(currentUser),
 				(error: any) => observer.error(error),
 				() => observer.complete()
 			);
@@ -217,20 +181,20 @@ export class AuthorizationService {
 
 	/** Current User */
 
-	getCurrentUser(): Observable<CurrentUser | undefined> {
+	getCurrentUser(): Observable<CurrentUser | null> {
 		return this.currentUser.asObservable();
 	}
 
-	setCurrentUser(user: Partial<CurrentUser>): Observable<CurrentUser> {
+	setCurrentUser(currentUserNext: Partial<CurrentUser>): Observable<CurrentUser> {
 		const currentUser: CurrentUser = this.currentUser.getValue();
 
 		this.currentUser.next({
 			...currentUser,
-			...user
+			...currentUserNext
 		});
 
 		this.helperService.upsertSessionCookie({
-			userAuthed: user.name
+			userAuthed: (currentUserNext || currentUser)?.displayName
 		});
 
 		return this.currentUser.asObservable();

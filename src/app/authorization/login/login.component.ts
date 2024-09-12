@@ -17,7 +17,6 @@ import { PlatformService } from '../../core/services/platform.service';
 import { filter } from 'rxjs/operators';
 import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import type { CurrentUser } from '../../core/models/current-user.model';
-import type { User as FirebaseUser } from 'firebase/auth';
 import type { SignInDto } from '../../core/dto/authorization/sign-in.dto';
 
 interface LoginForm {
@@ -48,9 +47,6 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly platformService: PlatformService = inject(PlatformService);
 
-	currentUser: CurrentUser | null;
-	currentUser$: Subscription | undefined;
-
 	loginAuthStateChanged$: Subscription | undefined;
 	loginRequest$: Subscription | undefined;
 	loginForm: FormGroup = this.formBuilder.group<LoginForm>({
@@ -68,29 +64,22 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 			this.loginAuthStateChanged$?.unsubscribe();
 			this.loginAuthStateChanged$ = this.authorizationService
 				.getAuthState()
-				.pipe(filter((firebaseUser: FirebaseUser | null) => !!firebaseUser))
+				.pipe(filter((currentUser: CurrentUser | null) => !!currentUser))
 				.subscribe({
-					next: () => {
-						this.snackbarService.success('Welcome back', 'Redirecting, please wait...');
+					next: (currentUser: CurrentUser) => {
+						console.log({ ...currentUser });
 
-						/** Disable form for interact */
-
-						this.loginForm.disable();
-
-						/** Get user and redirect */
-
-						this.currentUser$?.unsubscribe();
-						this.currentUser$ = this.authorizationService
-							.getCurrentUser()
-							.pipe(filter((currentUser: CurrentUser | null) => !!currentUser))
-							.subscribe({
-								next: (currentUser: CurrentUser | null) => {
-									this.router.navigate(['/', currentUser.displayName]).catch((error: any) => {
-										this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
-									});
-								},
-								error: (error: any) => console.error(error)
-							});
+						// this.snackbarService.success('Welcome back', 'Redirecting, please wait...');
+						//
+						// /** Disable form for interact */
+						//
+						// this.loginForm.disable();
+						//
+						// /** Get user and redirect */
+						//
+						// this.router.navigate(['/', currentUser.displayName]).catch((error: any) => {
+						// 	this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
+						// });
 					},
 					error: () => this.loginForm.enable()
 				});
@@ -106,7 +95,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.currentUser$, this.loginAuthStateChanged$, this.loginRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.loginAuthStateChanged$, this.loginRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setMetaTags(): void {
@@ -139,7 +128,11 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 
 			this.loginRequest$?.unsubscribe();
 			this.loginRequest$ = this.authorizationService.onSignInWithEmailAndPassword(signInDto).subscribe({
-				next: () => console.debug('Signed in with email and password'),
+				next: (currentUser: CurrentUser) => {
+					this.router
+						.navigate(['/', currentUser.displayName])
+						.then(() => this.snackbarService.success('Success', 'Welcome back!'));
+				},
 				error: () => this.loginForm.enable()
 			});
 		}
