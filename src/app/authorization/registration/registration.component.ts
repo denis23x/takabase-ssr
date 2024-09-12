@@ -27,7 +27,7 @@ import { AvatarComponent } from '../../standalone/components/avatar/avatar.compo
 import { FirebaseService } from '../../core/services/firebase.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { getValue, Value } from 'firebase/remote-config';
-import { catchError, filter } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { createUserWithEmailAndPassword, UserCredential } from 'firebase/auth';
 import { ApiService } from '../../core/services/api.service';
 import type { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
@@ -35,7 +35,6 @@ import type { User } from '../../core/models/user.model';
 import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import type { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
 import type { UserCreateDto } from '../../core/dto/user/user-create.dto';
-import type { CurrentUser } from '../../core/models/current-user.model';
 import type { FirebaseError } from 'firebase/app';
 
 interface RegistrationForm {
@@ -75,7 +74,6 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly apiService: ApiService = inject(ApiService);
 
-	registrationAuthStateChanged$: Subscription | undefined;
 	registrationRequest$: Subscription | undefined;
 	registrationForm: FormGroup = this.formBuilder.group<RegistrationForm>({
 		name: this.formBuilder.nonNullable.control('', [
@@ -99,31 +97,6 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	invitedByUserRequest$: Subscription | undefined;
 
 	ngOnInit(): void {
-		if (this.platformService.isBrowser()) {
-			this.registrationAuthStateChanged$?.unsubscribe();
-			this.registrationAuthStateChanged$ = this.authorizationService
-				.getAuthState()
-				.pipe(filter((currentUser: CurrentUser | null) => !!currentUser))
-				.subscribe({
-					next: (currentUser: CurrentUser) => {
-						console.log({ ...currentUser });
-
-						// this.snackbarService.success('Success', 'Redirecting, please wait...');
-						//
-						// /** Disable form for interact */
-						//
-						// this.registrationForm.disable();
-						//
-						// /** Redirect to user page */
-						//
-						// this.router.navigate(['/', currentUser.displayName]).catch((error: any) => {
-						// 	this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
-						// });
-					},
-					error: () => this.registrationForm.enable()
-				});
-		}
-
 		/** Apply Data */
 
 		this.setResolver();
@@ -138,8 +111,7 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.invitedByUserRequest$, this.registrationAuthStateChanged$, this.registrationRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.invitedByUserRequest$, this.registrationRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setResolver(): void {

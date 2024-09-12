@@ -5,14 +5,14 @@
 		class="flex items-center justify-start gap-4 overflow-auto"
 		itemscope
 		itemtype="http://schema.org/ItemList"
-		[ngClass]="{ 'grayscale cursor-not-allowed': signInDisabled }"
+		[ngClass]="{ 'grayscale cursor-not-allowed': signInIsBusy }"
 	>
-		<li class="block" [ngClass]="{ 'pointer-events-none': signInDisabled }">
+		<li class="block" [ngClass]="{ 'pointer-events-none': signInIsBusy }">
 			<button
 				class="flex items-center justify-start gap-3 px-3 rounded-full h-10 logo-google"
 				type="button"
-				title="Redirect to Google to continue"
-				aria-label="Redirect to Google to continue"
+				title="Redirect to Google"
+				aria-label="Redirect to Google"
 				itemprop="itemListElement"
 				itemscope
 				itemtype="http://schema.org/ListItem"
@@ -29,12 +29,12 @@
 			</button>
 		</li>
 		<!--
-		<li class="hidden" [ngClass]="{ 'pointer-events-none': signInDisabled }">
+		<li class="hidden" [ngClass]="{ 'pointer-events-none': signInIsBusy }">
 			<button
 				class="block logo-facebook"
 				type="button"
-				title="Redirect to Facebook to continue"
-				aria-label="Redirect to Facebook to continue"
+				title="Redirect to Facebook"
+				aria-label="Redirect to Facebook"
 				itemprop="itemListElement"
 				itemscope
 				itemtype="http://schema.org/ListItem"
@@ -51,12 +51,12 @@
 			</button>
 		</li>
 		-->
-		<li class="block" [ngClass]="{ 'pointer-events-none': signInDisabled }">
+		<li class="block" [ngClass]="{ 'pointer-events-none': signInIsBusy }">
 			<button
 				class="block logo-github"
 				type="button"
-				title="Redirect to Github to continue"
-				aria-label="Redirect to Github to continue"
+				title="Redirect to Github"
+				aria-label="Redirect to Github"
 				itemprop="itemListElement"
 				itemscope
 				itemtype="http://schema.org/ListItem"

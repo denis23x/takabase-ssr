@@ -16,7 +16,7 @@ export class UserService {
 
 	/** REST */
 
-	create(userCreateDto: UserCreateDto): Observable<User> {
+	create(userCreateDto?: UserCreateDto): Observable<User> {
 		return this.apiService.post('/v1/users', userCreateDto);
 	}
 

@@ -5,7 +5,12 @@
 		<header class="flex flex-col gap-4">
 			<h1 class="text-2xl font-bold" itemprop="name">Login</h1>
 			<hr class="border-t border-base-content/20" />
-			<nav class="block w-full" appSignIn [appSignInDisabled]="loginForm.disabled"></nav>
+			<!-- prettier-ignore -->
+			<nav
+        class="block w-full"
+        appSignIn
+        (appSignInBusy)="$event ? loginForm.disable() : loginForm.enable()"
+      ></nav>
 			<hr class="border-t border-base-content/20" />
 		</header>
 		<div class="flex flex-col gap-4">

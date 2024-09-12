@@ -13,8 +13,6 @@ import { Subscription } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
 import { SnackbarService } from '../../core/services/snackbar.service';
-import { PlatformService } from '../../core/services/platform.service';
-import { filter } from 'rxjs/operators';
 import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
 import type { CurrentUser } from '../../core/models/current-user.model';
 import type { SignInDto } from '../../core/dto/authorization/sign-in.dto';
@@ -45,9 +43,7 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly metaService: MetaService = inject(MetaService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
-	private readonly platformService: PlatformService = inject(PlatformService);
 
-	loginAuthStateChanged$: Subscription | undefined;
 	loginRequest$: Subscription | undefined;
 	loginForm: FormGroup = this.formBuilder.group<LoginForm>({
 		email: this.formBuilder.nonNullable.control('', [Validators.required, Validators.email]),
@@ -60,42 +56,13 @@ export class AuthLoginComponent implements OnInit, OnDestroy {
 	});
 
 	ngOnInit(): void {
-		if (this.platformService.isBrowser()) {
-			this.loginAuthStateChanged$?.unsubscribe();
-			this.loginAuthStateChanged$ = this.authorizationService
-				.getAuthState()
-				.pipe(filter((currentUser: CurrentUser | null) => !!currentUser))
-				.subscribe({
-					next: (currentUser: CurrentUser) => {
-						console.log({ ...currentUser });
-
-						// this.snackbarService.success('Welcome back', 'Redirecting, please wait...');
-						//
-						// /** Disable form for interact */
-						//
-						// this.loginForm.disable();
-						//
-						// /** Get user and redirect */
-						//
-						// this.router.navigate(['/', currentUser.displayName]).catch((error: any) => {
-						// 	this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
-						// });
-					},
-					error: () => this.loginForm.enable()
-				});
-		}
-
-		/** Apply Data */
-
-		// Nothing to apply
-
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
 	}
 
 	ngOnDestroy(): void {
-		[this.loginAuthStateChanged$, this.loginRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.loginRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setMetaTags(): void {

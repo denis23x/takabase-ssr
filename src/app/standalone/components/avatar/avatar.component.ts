@@ -1,19 +1,20 @@
 /** @format */
 
-import { ChangeDetectionStrategy, Component, ElementRef, inject, Input } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { toSvg } from 'jdenticon';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from '../../../core/services/platform.service';
 import { HelperService } from '../../../core/services/helper.service';
 import { environment } from '../../../../environments/environment';
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
 	standalone: true,
 	selector: 'app-avatar, [appAvatar]',
-	templateUrl: './avatar.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './avatar.component.html'
 })
-export class AvatarComponent {
+export class AvatarComponent implements OnInit, OnDestroy {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly elementRef: ElementRef = inject(ElementRef);
 	private readonly platformService: PlatformService = inject(PlatformService);
@@ -22,23 +23,29 @@ export class AvatarComponent {
 	@Input({ required: true })
 	set appAvatarPhotoUrl(photoUrl: string | null) {
 		this.avatarPhotoUrl = photoUrl;
-
-		setTimeout(() => {
-			if (this.avatarPhotoUrl) {
-				this.setImage();
-			} else {
-				this.setIcon();
-			}
-		});
+		this.avatar$.next(this.avatarPhotoUrl);
 	}
 
 	@Input({ required: true })
 	set appAvatarName(name: string) {
 		this.avatarName = name;
+		this.avatar$.next(this.avatarPhotoUrl);
 	}
 
 	avatarPhotoUrl: string | null;
 	avatarName: string | undefined;
+	avatar$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+
+	ngOnInit(): void {
+		this.avatar$.pipe(debounceTime(10)).subscribe({
+			next: () => (this.avatarPhotoUrl ? this.setImage() : this.setIcon()),
+			error: (error: any) => console.error(error)
+		});
+	}
+
+	ngOnDestroy(): void {
+		this.avatar$.complete();
+	}
 
 	setImage(): void {
 		if (this.platformService.isBrowser()) {

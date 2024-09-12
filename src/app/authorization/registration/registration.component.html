@@ -36,7 +36,12 @@
 				<h1 class="text-2xl font-bold" itemprop="name">Registration</h1>
 			}
 			<hr class="border-t border-base-content/20" />
-			<nav class="block w-full" appSignIn [appSignInDisabled]="registrationForm.disabled"></nav>
+			<!-- prettier-ignore -->
+			<nav
+				class="block w-full"
+				appSignIn
+				(appSignInBusy)="$event ? registrationForm.disable() : registrationForm.enable()"
+			></nav>
 			<hr class="border-t border-base-content/20" />
 		</header>
 		<div class="flex flex-col gap-4">
