@@ -142,9 +142,12 @@ export class UserBookmarkComponent extends CU(M(SP(class {}))) implements OnInit
 					isOnePage: postBookmarkGetAllDto.page === 1 && postBookmarkGetAllDto.size !== postBookmarkList.length,
 					isEndPage: postBookmarkGetAllDto.page !== 1 && postBookmarkGetAllDto.size !== postBookmarkList.length
 				};
+
+				// Masonry
+
+				this.setMasonry();
 			},
-			error: (error: any) => console.error(error),
-			complete: () => this.setMasonry()
+			error: (error: any) => console.error(error)
 		});
 	}
 

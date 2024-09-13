@@ -263,9 +263,12 @@ export class UserCategoryComponent extends CU(M(SP(class {}))) implements OnInit
 					isOnePage: postGetAllDto.page === 1 && postGetAllDto.size !== postList.length,
 					isEndPage: postGetAllDto.page !== 1 && postGetAllDto.size !== postList.length
 				};
+
+				// Masonry
+
+				this.setMasonry();
 			},
-			error: (error: any) => console.error(error),
-			complete: () => this.setMasonry()
+			error: (error: any) => console.error(error)
 		});
 	}
 

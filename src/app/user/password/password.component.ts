@@ -138,9 +138,12 @@ export class UserPasswordComponent extends CU(M(SP(class {}))) implements OnInit
 					isOnePage: postPasswordGetAllDto.page === 1 && postPasswordGetAllDto.size !== postPasswordList.length,
 					isEndPage: postPasswordGetAllDto.page !== 1 && postPasswordGetAllDto.size !== postPasswordList.length
 				};
+
+				// Masonry
+
+				this.setMasonry();
 			},
-			error: (error: any) => console.error(error),
-			complete: () => this.setMasonry()
+			error: (error: any) => console.error(error)
 		});
 	}
 

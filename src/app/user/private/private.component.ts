@@ -138,9 +138,12 @@ export class UserPrivateComponent extends CU(M(SP(class {}))) implements OnInit,
 					isOnePage: postPrivateGetAllDto.page === 1 && postPrivateGetAllDto.size !== postPrivateList.length,
 					isEndPage: postPrivateGetAllDto.page !== 1 && postPrivateGetAllDto.size !== postPrivateList.length
 				};
+
+				// Masonry
+
+				this.setMasonry();
 			},
-			error: (error: any) => console.error(error),
-			complete: () => this.setMasonry()
+			error: (error: any) => console.error(error)
 		});
 	}
 
