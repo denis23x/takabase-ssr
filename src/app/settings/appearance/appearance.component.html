@@ -7,15 +7,24 @@
 				@if (appearanceForm.get("theme"); as theme) {
 					<fieldset class="form-control w-full">
 						<label class="label" for="appearanceFormTheme">
-							<span class="label-text">Theme</span>
-							<a
-								class="label-text-alt link"
-								href="https://daisyui.com/docs/themes/"
-								rel="noopener noreferrer"
-								target="_blank"
+							<span
+								class="label-text"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassListElementRef]="['!-mx-1']"
 							>
-								daisyui.com
-							</a>
+								Theme
+							</span>
+							@if (!appearanceFormSkeletonToggle) {
+								<a
+									class="label-text-alt link"
+									href="https://daisyui.com/docs/themes/"
+									rel="noopener noreferrer"
+									target="_blank"
+								>
+									daisyui.com
+								</a>
+							}
 						</label>
 						<div
 							class="block"
@@ -64,7 +73,14 @@
 				@if (appearanceForm.get("themeBackground"); as themeBackground) {
 					<fieldset class="form-control w-full">
 						<label class="label" for="appearanceFormBackground">
-							<span class="label-text">Background</span>
+							<span
+								class="label-text"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassListElementRef]="['!-mx-1']"
+							>
+								Background
+							</span>
 						</label>
 						<div
 							class="block"
@@ -115,7 +131,14 @@
 				@if (appearanceForm.get("language"); as language) {
 					<fieldset class="form-control w-full">
 						<label class="label" for="appearanceFormLanguage">
-							<span class="label-text">Language</span>
+							<span
+								class="label-text"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassListElementRef]="['!-mx-1']"
+							>
+								Language
+							</span>
 						</label>
 						<div
 							class="block"
@@ -164,10 +187,19 @@
 				@if (appearanceForm.get("themePrism"); as themePrism) {
 					<fieldset class="form-control w-full">
 						<label class="label" for="appearanceFormPrism">
-							<span class="label-text">Prism</span>
-							<a class="label-text-alt link" href="https://prismjs.com/" rel="noopener noreferrer" target="_blank">
-								prismjs.com
-							</a>
+							<span
+								class="label-text"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassListElementRef]="['!-mx-1']"
+							>
+								Prism
+							</span>
+							@if (!appearanceFormSkeletonToggle) {
+								<a class="label-text-alt link" href="https://prismjs.com/" rel="noopener noreferrer" target="_blank">
+									prismjs.com
+								</a>
+							}
 						</label>
 						<div class="flex items-center justify-between gap-4">
 							<div
@@ -243,7 +275,14 @@
 				@if (appearanceForm.get("pageScrollUp"); as pageScrollUp) {
 					<fieldset class="form-control">
 						<label class="label gap-4" for="appearanceFormPageScrollUp">
-							<span class="label-text"> Enable scroll up </span>
+							<span
+								class="label-text"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassListElementRef]="['!-mx-1']"
+							>
+								Enable scroll up
+							</span>
 							<div
 								class="flex"
 								appSkeleton
@@ -267,7 +306,14 @@
 				@if (appearanceForm.get("pageScrollInfinite"); as pageScrollInfinite) {
 					<fieldset class="form-control">
 						<label class="label gap-4" for="appearanceFormPageScrollInfinite">
-							<span class="label-text"> Enable infinite scroll </span>
+							<span
+								class="label-text"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassListElementRef]="['!-mx-1']"
+							>
+								Enable infinite scroll
+							</span>
 							<div
 								class="flex"
 								appSkeleton
@@ -291,7 +337,14 @@
 				@if (appearanceForm.get("pageRedirectHome"); as pageRedirectHome) {
 					<fieldset class="form-control">
 						<label class="label gap-4" for="appearanceFormPageRedirectHome">
-							<span class="label-text"> Enable redirect from home page </span>
+							<span
+								class="label-text"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassListElementRef]="['!-mx-1']"
+							>
+								Enable redirect from home page
+							</span>
 							<div
 								class="flex"
 								appSkeleton
@@ -315,7 +368,14 @@
 				@if (appearanceForm.get("markdownMonospace"); as markdownMonospace) {
 					<fieldset class="form-control">
 						<label class="label gap-4" for="appearanceFormMarkdownMonospace">
-							<span class="label-text"> Enable a monospace font when editing markdown </span>
+							<span
+								class="label-text"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassListElementRef]="['!-mx-1']"
+							>
+								Enable a monospace font when editing markdown
+							</span>
 							<div
 								class="flex"
 								appSkeleton
@@ -339,7 +399,14 @@
 				@if (appearanceForm.get("dropdownBackdrop"); as dropdownBackdrop) {
 					<fieldset class="form-control">
 						<label class="label gap-4" for="appearanceFormDropdownBackdrop">
-							<span class="label-text"> Enable a dropdown backdrop </span>
+							<span
+								class="label-text"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassListElementRef]="['!-mx-1']"
+							>
+								Enable a dropdown backdrop
+							</span>
 							<div
 								class="flex"
 								appSkeleton
@@ -363,7 +430,14 @@
 				@if (appearanceForm.get("windowButtonPosition"); as windowButtonPosition) {
 					<fieldset class="form-control flex-row items-center gap-4 justify-between">
 						<div class="label">
-							<span class="label-text"> Position of caption buttons (close, minimize, maximize) </span>
+							<span
+								class="label-text"
+								appSkeleton
+								[appSkeletonToggle]="appearanceFormSkeletonToggle"
+								[appSkeletonClassListElementRef]="['!-mx-1']"
+							>
+								Position of caption buttons (close, minimize, maximize)
+							</span>
 						</div>
 						<div class="flex" appSkeleton [appSkeletonToggle]="appearanceFormSkeletonToggle">
 							<ul class="join join-horizontal">

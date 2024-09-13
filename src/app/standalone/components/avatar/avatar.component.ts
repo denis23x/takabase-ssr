@@ -37,9 +37,11 @@ export class AvatarComponent implements OnInit, OnDestroy {
 	avatar$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
 	ngOnInit(): void {
-		this.avatar$.pipe(debounceTime(10)).subscribe({
-			next: () => (this.avatarPhotoUrl ? this.setImage() : this.setIcon()),
-			error: (error: any) => console.error(error)
+		setTimeout(() => {
+			this.avatar$.subscribe({
+				next: () => (this.avatarPhotoUrl ? this.setImage() : this.setIcon()),
+				error: (error: any) => console.error(error)
+			});
 		});
 	}
 

@@ -10,7 +10,11 @@
 		>
 			<div class="flex flex-row w-full items-center justify-between gap-4">
 				<div class="flex items-center justify-start gap-4 overflow-auto w-full">
-					<div class="avatar" appSkeleton [appSkeletonToggle]="profileFormAvatarIsSubmitted()">
+					<div
+						class="avatar"
+						appSkeleton
+						[appSkeletonToggle]="profileFormUserSkeletonToggle || profileFormAvatarIsSubmitted()"
+					>
 						@if (profileForm.get("avatar"); as avatar) {
 							<!-- prettier-ignore -->
 							<figure
@@ -18,8 +22,8 @@
                 data-pw="app-settings-profile-image-avatar"
                 appAvatar
                 [ngClass]="{ 'cursor-not-allowed border border-transparent opacity-50 grayscale bg-base-200': profileForm.disabled, 'cursor-pointer': profileForm.enabled, 'border border-success': avatar.value }"
-                [appAvatarPhotoUrl]="currentUser.photoURL"
-                [appAvatarName]="currentUser.displayName"
+                [appAvatarPhotoUrl]="profileFormUser?.avatar"
+                [appAvatarName]="profileFormUser?.name"
                 (click)="onToggleCropperDialog()"
               ></figure>
 						}
@@ -28,14 +32,28 @@
 						<h1
 							class="truncate text-xl leading-6 font-bold text-base-content max-w-full"
 							data-pw="app-settings-profile-heading-user-name"
+							appSkeleton
+							[appSkeletonToggle]="profileFormUserSkeletonToggle"
 						>
 							{{ currentUser.displayName }}
 						</h1>
-						<span class="truncate text-sm leading-4 text-base-content/50 max-w-full"> Yep, that's you </span>
+						<span
+							class="truncate text-sm leading-4 text-base-content/50 max-w-full"
+							appSkeleton
+							[appSkeletonToggle]="profileFormUserSkeletonToggle"
+						>
+							Yep, that's you
+						</span>
 					</div>
 				</div>
 				@if (profileForm.get("avatar"); as avatar) {
-					<div class="flex items-center justify-end" appDropdown [appDropdownPlacement]="'bottom-end'">
+					<div
+						class="flex items-center justify-end"
+						appDropdown
+						appSkeleton
+						[appDropdownPlacement]="'bottom-end'"
+						[appSkeletonToggle]="profileFormUserSkeletonToggle"
+					>
 						<button
 							class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
 							type="button"
@@ -81,15 +99,20 @@
 			<hr class="w-full border-base-content/20" />
 			@if (profileForm.get("name"); as name) {
 				<fieldset class="form-control">
-					<label class="label" for="profileFormName">
-						<div class="indicator">
+					<label class="label pt-0" for="profileFormName">
+						<div
+							class="indicator"
+							appSkeleton
+							[appSkeletonToggle]="profileFormUserSkeletonToggle"
+							[appSkeletonClassListElementRef]="['!-mx-1']"
+						>
 							@if (name.touched && !!name.errors && profileForm.enabled) {
 								<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
 							}
 							<span class="label-text mr-2">Name</span>
 						</div>
 					</label>
-					<div class="relative">
+					<div class="relative" appSkeleton [appSkeletonToggle]="profileFormUserSkeletonToggle">
 						<input
 							class="input-bordered input input-md w-full"
 							id="profileFormName"
@@ -123,19 +146,30 @@
 					</div>
 				</fieldset>
 			}
-			<p class="alert" data-pw="app-settings-profile-alert-change-name" role="alert">
+			<p
+				class="alert"
+				data-pw="app-settings-profile-alert-change-name"
+				role="alert"
+				appSkeleton
+				[appSkeletonToggle]="profileFormUserSkeletonToggle"
+			>
 				<i class="fill-current text-info" appSvgIcon [appSvgIconIcon]="'info-circle'" [appSvgIconSquare]="'1.5em'"></i>
 				<!-- prettier-ignore -->
-				<span class="block"> The name change will make the user profile <a class="inline font-bold link" target="_blank" [href]="currentUserUrl" [title]="currentUser.displayName" [attr.aria-label]="currentUser.displayName">{{ currentUserUrl }}</a> no longer accessible via a direct link </span>
+				<span class="block"> The name change will make the user profile <a class="inline font-bold link" target="_blank" [routerLink]="['/', currentUser.displayName]" [title]="currentUser.displayName" [attr.aria-label]="currentUser.displayName">{{ currentUser.displayName }}</a> no longer accessible via a direct link </span>
 			</p>
 			@if (profileForm.get("description"); as description) {
 				<fieldset class="form-control">
 					<label class="label" for="profileFormDescription">
-						<div class="indicator">
+						<div
+							class="indicator"
+							appSkeleton
+							[appSkeletonToggle]="profileFormUserSkeletonToggle"
+							[appSkeletonClassListElementRef]="['!-mx-1']"
+						>
 							@if (!!description.value && !!description.errors && profileForm.enabled) {
 								<div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
 							}
-							@if (!description.errors) {
+							@if (!description.errors && !profileFormUserSkeletonToggle) {
 								<span
 									class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 									[class.badge-ghost]="!description.value"
@@ -147,17 +181,22 @@
 							}
 							<span class="label-text mr-2">Description</span>
 						</div>
-						<span
-							class="label-text-alt"
-							[class.text-base-content]="profileForm.disabled"
-							[class.text-success]="profileForm.enabled && !!description.value && description.valid"
-							[class.text-error]="profileForm.enabled && !!description.value && description.invalid"
-						>
-							{{ description.value?.length || 0 }}/192
-						</span>
+						@if (!profileFormUserSkeletonToggle) {
+							<span
+								class="label-text-alt"
+								[class.text-base-content]="profileForm.disabled"
+								[class.text-success]="profileForm.enabled && !!description.value && description.valid"
+								[class.text-error]="profileForm.enabled && !!description.value && description.invalid"
+							>
+								{{ description.value?.length || 0 }}/192
+							</span>
+						}
 					</label>
 					<div
 						class="textarea-autosize w-full"
+						appSkeleton
+						[appSkeletonToggle]="profileFormUserSkeletonToggle"
+						[appSkeletonClassListElementRef]="['!border-0']"
 						[ngClass]="{ 'border-base-content/20': profileForm.enabled, 'border-transparent': profileForm.disabled }"
 						[class.textarea-autosize-success]="description.value && description.valid"
 						[class.textarea-autosize-error]="description.value && description.invalid"
@@ -185,6 +224,9 @@
 					type="submit"
 					title="Submit"
 					aria-label="Submit"
+          appSkeleton
+          [appSkeletonToggle]="profileFormUserSkeletonToggle"
+          [appSkeletonClassListElementRef]="['border-0']"
 					[disabled]="profileForm.invalid || profileForm.disabled || profileFormIsPristine || profileFormAvatarIsSubmitted()"
 				>
 					@if (profileForm.disabled) {

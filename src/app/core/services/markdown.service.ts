@@ -74,28 +74,18 @@ export class MarkdownService {
 		/** Update default rules */
 
 		markdownIt.renderer.rules.image = (tokenList: Token[], idx: number): string => {
+			const linkElement: HTMLAnchorElement = this.document.createElement('a');
 			const imageElement: HTMLImageElement = this.document.createElement('img');
 
 			const token: Token = tokenList[idx];
 
 			token.attrs?.forEach(([key, value]: string[]) => {
-				switch (key) {
-					case 'class': {
-						imageElement.classList.add(...value.split(/\s/).filter((className: string) => !!className));
+				if (key === 'class') {
+					imageElement.classList.add(...value.split(/\s/).filter((className: string) => !!className));
+				}
 
-						break;
-					}
-					case 'src': {
-						imageElement.src = this.helperService.getImageURLQueryParams(value);
-
-						break;
-					}
-					default: {
-						// @ts-ignore
-						imageElement[key] = value;
-
-						break;
-					}
+				if (key === 'src') {
+					imageElement.src = this.helperService.getImageURLQueryParams(value);
 				}
 			});
 
@@ -103,7 +93,11 @@ export class MarkdownService {
 			imageElement.alt = token.content;
 			imageElement.title = token.content;
 
-			return imageElement.outerHTML;
+			linkElement.href = imageElement.src;
+			linkElement.target = '_blank';
+			linkElement.appendChild(imageElement);
+
+			return linkElement.outerHTML;
 		};
 
 		markdownIt.renderer.rules.table_open = (tokenList: Token[], idx: number): string => {
