@@ -24,7 +24,7 @@ import { LocalStorageService } from '../../../../core/services/local-storage.ser
 import { HelperService } from '../../../../core/services/helper.service';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
-import { filter } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
 import dayjs from 'dayjs/esm';
 import type { PostDraft } from '../../../../core/models/post-draft.model';
 
@@ -116,7 +116,9 @@ export class PostDraftComponent implements AfterViewInit, OnDestroy {
 				this.postForm$ = this.postForm.valueChanges
 					.pipe(
 						pairwise(),
-						filter(() => this.postForm.get('name').valid)
+						filter(() => this.postForm.get('name').valid),
+						filter(([previousValue, nextValue]: any[]) => JSON.stringify(previousValue) !== JSON.stringify(nextValue)),
+						debounceTime(500)
 					)
 					.subscribe({
 						next: ([previousValue, nextValue]: any[]) => {

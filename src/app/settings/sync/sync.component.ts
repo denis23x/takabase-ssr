@@ -139,9 +139,8 @@ export class SettingsSyncComponent extends CurrentUserMixin(class {}) implements
 					.get(syncEndpoint.url, { addRecords: 'Use the API' })
 					.pipe(tap(() => this.snackbarService.success('Sync', 'Algolia synced')))
 					.subscribe({
-						next: (data: any) => console.debug(data),
-						error: (error: any) => console.error(error),
-						complete: () => (syncEndpoint.isLoading = false)
+						next: () => (syncEndpoint.isLoading = false),
+						error: () => (syncEndpoint.isLoading = false)
 					});
 
 				break;
@@ -156,9 +155,8 @@ export class SettingsSyncComponent extends CurrentUserMixin(class {}) implements
 				this.apiService[syncEndpoint.method.toLowerCase()](syncEndpoint.url, insightsDto)
 					.pipe(tap(() => this.snackbarService.success('Sync', 'Insights synced')))
 					.subscribe({
-						next: (data: any) => console.debug(data),
-						error: (error: any) => console.error(error),
-						complete: () => (syncEndpoint.isLoading = false)
+						next: () => (syncEndpoint.isLoading = false),
+						error: () => (syncEndpoint.isLoading = false)
 					});
 
 				break;
@@ -176,9 +174,12 @@ export class SettingsSyncComponent extends CurrentUserMixin(class {}) implements
 
 							fileReader.addEventListener('load', () => this.helperService.setDownload(fileReader.result as string, fileName));
 							fileReader.readAsDataURL(file);
+
+							// Remove disable
+
+							syncEndpoint.isLoading = false;
 						},
-						error: (error: any) => console.error(error),
-						complete: () => syncEndpoint.isLoading = false,
+						error: () => (syncEndpoint.isLoading = false)
 					});
 
 				break;

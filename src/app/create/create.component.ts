@@ -651,25 +651,29 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 		if (this.helperService.getFormValidation(this.postForm)) {
 			this.postForm.disable();
 
-			// Create Dto or Update Dto
+			const aiModerateTextDto: AIModerateTextDto = {
+				model: 'text-moderation-stable',
+				input: this.aiService.setInput(this.postForm.value)
+			};
+
+			// Dto
 
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 			const postTypeIsPristine: boolean = this.postTypeOriginal === this.postType;
+			const postDeleteDto: PostDeleteDto = {};
 			const postDto: PostCreateDto & PostUpdateDto = {
 				...this.postForm.value,
 				image: this.postForm.value.image || null,
 				firebaseUid: this.post?.firebaseUid || undefined
 			};
 
-			// Delete Dto
-
-			const postDeleteDto: PostDeleteDto = {};
-
 			// Attach firebaseUid only if exists
 
 			if (this.post?.firebaseUid) {
 				postDeleteDto.firebaseUid = this.post.firebaseUid;
 			}
+
+			// Maps
 
 			const postTypeMap = (): Observable<Partial<Post>> => {
 				const postService: Record<string, PostPasswordService | PostPrivateService | PostService> = {
@@ -692,11 +696,10 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 				}
 			};
 
-			// Moderate
-
-			const aiModerateTextDto: AIModerateTextDto = {
-				model: 'text-moderation-stable',
-				input: this.aiService.setInput(this.postForm.value)
+			const postTypeRedirectMap: Record<string, string[]> = {
+				password: ['password'],
+				private: ['private'],
+				public: ['category', String(this.category?.id)]
 			};
 
 			this.postFormRequest$?.unsubscribe();
@@ -705,21 +708,6 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 				.pipe(switchMap(() => postTypeMap()))
 				.subscribe({
 					next: () => {
-						const postTypeRedirectMap: Record<string, string[]> = {
-							password: ['password'],
-							private: ['private'],
-							public: ['category', String(this.category?.id)]
-						};
-
-						// prettier-ignore
-						if (redirect) {
-							this.router
-								.navigate(['/', this.currentUser.displayName, ...postTypeRedirectMap[this.postType]])
-								.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
-						}
-
-						// Message
-
 						this.snackbarService.success('Cheers!', 'Post has been ' + (postId ? 'updated' : 'saved'));
 
 						// Remove post drafts
@@ -731,9 +719,19 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 								.filter((key: string) => key.startsWith('draft'))
 								.forEach((key: string) => this.localStorageService.removeItem(key));
 						}
+
+						// prettier-ignore
+						if (redirect) {
+							this.router
+								.navigate(['/', this.currentUser.displayName, ...postTypeRedirectMap[this.postType]])
+								.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
+						}
+
+						// Remove disable
+
+						this.postForm.enable();
 					},
-					error: (error: any) => console.error(error),
-					complete: () => this.postForm.enable()
+					error: () => this.postForm.enable()
 				});
 		}
 	}
