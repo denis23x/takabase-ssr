@@ -53,7 +53,6 @@ import { FirebaseStoragePipe } from '../standalone/pipes/firebase-storage.pipe';
 import { BusService } from '../core/services/bus.service';
 import { SharpService } from '../core/services/sharp.service';
 import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
-import { PostDraftComponent } from '../standalone/components/post/draft/draft.component';
 import { LocalStorageService } from '../core/services/local-storage.service';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import type { Category } from '../core/models/category.model';
@@ -68,6 +67,7 @@ import type { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
 import type { CropperComponent } from '../standalone/components/cropper/cropper.component';
 import type { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
 import type { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
+import type { PostDraftComponent } from '../standalone/components/post/draft/draft.component';
 import type { HttpErrorResponse } from '@angular/common/http';
 
 interface PostForm {
@@ -100,8 +100,7 @@ interface PostForm {
 		KbdPipe,
 		PlatformDirective,
 		DeviceDirective,
-		FirebaseStoragePipe,
-		PostDraftComponent
+		FirebaseStoragePipe
 	],
 	providers: [CategoryService, PostService, PostPrivateService, PostPasswordService, AIService, SharpService],
 	selector: 'app-create',
@@ -193,6 +192,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	appCategoryCreateComponent: ComponentRef<CategoryCreateComponent>;
 	appPostPreviewComponent: ComponentRef<PostPreviewComponent>;
 	appPostDeleteComponent: ComponentRef<PostDeleteComponent>;
+	appPostDraftComponent: ComponentRef<PostDraftComponent>;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -378,6 +378,10 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 				this.category = undefined;
 				this.categorySkeletonToggle = false;
+
+				this.onTogglePostDraftDialog(true)
+					.then(() => console.debug('Post draft initialized'))
+					.catch((error: any) => console.error(error));
 			}
 		}
 	}
@@ -613,6 +617,10 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 				throw new Error('Invalid post type specified: ' + this.postType);
 			}
 		}
+
+		this.onTogglePostDraftDialog(false)
+			.then(() => console.debug('Post draft updated'))
+			.catch((error: any) => console.error(error));
 	}
 
 	onSubmitPostFormDraft(value: any): void {
@@ -718,6 +726,10 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 							Object.keys(window.localStorage)
 								.filter((key: string) => key.startsWith('draft'))
 								.forEach((key: string) => this.localStorageService.removeItem(key));
+
+							// Unsubscribe postForm.valueChanges
+
+							this.appPostDraftComponent.instance.postForm$.unsubscribe();
 						}
 
 						// prettier-ignore
@@ -795,5 +807,25 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 		this.appPostDeleteComponent.changeDetectorRef.detectChanges();
 		this.appPostDeleteComponent.instance.onTogglePostDeleteDialog(true);
+	}
+
+	async onTogglePostDraftDialog(toggle: boolean): Promise<void> {
+		if (!this.appPostDraftComponent) {
+			await import('../standalone/components/post/draft/draft.component')
+				.then(m => {
+					this.appPostDraftComponent = this.viewContainerRef.createComponent(m.PostDraftComponent);
+					this.appPostDraftComponent.instance.appPostDraftSuccess.subscribe({
+						next: (value: any) => this.onSubmitPostFormDraft(value),
+						error: (error: any) => console.error(error)
+					});
+				})
+				.catch((error: any) => console.error(error));
+		}
+
+		this.appPostDraftComponent.setInput('appPostDraftPostType', this.postType);
+		this.appPostDraftComponent.setInput('appPostDraftPostForm', this.postForm);
+
+		this.appPostDraftComponent.changeDetectorRef.detectChanges();
+		this.appPostDraftComponent.instance.onTogglePostDraftDialog(toggle);
 	}
 }
