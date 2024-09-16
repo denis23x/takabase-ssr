@@ -25,13 +25,13 @@
   },
   {
     "id": 5,
-    "title": "Touch-Friendly Interactions",
+    "title": "Touch-Friendly",
     "description": "Touch devices interact with the website's interactive components",
     "icon": "hand-index-thumb"
   },
   {
     "id": 6,
-    "title": "Image and Media Optimization",
+    "title": "Media Optimization",
     "description": "Visuals load quickly without compromising quality",
     "icon": "play-circle"
   },

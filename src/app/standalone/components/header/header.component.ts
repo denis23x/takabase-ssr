@@ -27,7 +27,10 @@ import { CurrentUserMixin as CU } from '../../../core/mixins/current-user.mixin'
 		AuthenticatedComponent,
 		SvgLogoComponent
 	],
-	templateUrl: './header.component.html'
+	templateUrl: './header.component.html',
+	host: {
+		ngSkipHydration: 'true'
+	}
 })
 export class HeaderComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly router: Router = inject(Router);
