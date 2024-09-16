@@ -91,28 +91,28 @@ export class SkeletonService {
 				id: Number(customAlphabet(numbers, 8)()),
 				key: 'categories',
 				value: 'Categories',
-				countPreceding: 10,
-				countFollowing: 5,
-				changeState: 'positive',
-				changePercent: 50
+				countPreceding: 0,
+				countFollowing: 0,
+				changeState: 'stasis',
+				changePercent: 0
 			},
 			{
 				id: Number(customAlphabet(numbers, 8)()),
 				key: 'posts',
 				value: 'Posts',
-				countPreceding: 10,
-				countFollowing: 5,
-				changeState: 'positive',
-				changePercent: 50
+				countPreceding: 0,
+				countFollowing: 0,
+				changeState: 'stasis',
+				changePercent: 0
 			},
 			{
 				id: Number(customAlphabet(numbers, 8)()),
 				key: 'users',
 				value: 'Users',
-				countPreceding: 10,
-				countFollowing: 5,
-				changeState: 'positive',
-				changePercent: 50
+				countPreceding: 0,
+				countFollowing: 0,
+				changeState: 'stasis',
+				changePercent: 0
 			}
 		];
 	}

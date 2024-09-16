@@ -3,6 +3,7 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { HelperService } from './helper.service';
+import dayjs from 'dayjs/esm';
 import type { Snack, SnackOptions } from '../models/snack.model';
 
 @Injectable({
@@ -22,7 +23,7 @@ export class SnackbarService {
 
 		const getProgressValue = (): number => {
 			const timestampDifference: number = timestampFinish - timestampStart;
-			const timestampCurrent: number = timestampFinish - new Date().getTime();
+			const timestampCurrent: number = timestampFinish - dayjs().valueOf();
 
 			return 100 - (timestampCurrent / timestampDifference) * 100;
 		};

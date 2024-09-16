@@ -5,6 +5,7 @@ import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { PostProseComponent } from '../prose/prose.component';
 import { CurrentUserMixin } from '../../../../core/mixins/current-user.mixin';
+import dayjs from 'dayjs/esm';
 import type { Category } from '../../../../core/models/category.model';
 import type { Post } from '../../../../core/models/post.model';
 
@@ -61,8 +62,8 @@ export class PostPreviewComponent extends CurrentUserMixin(class {}) implements 
 					name: this.currentUser.displayName,
 					description: null,
 					avatar: this.currentUser.photoURL,
-					createdAt: new Date().toISOString(),
-					updatedAt: new Date().toISOString()
+					createdAt: dayjs().toISOString(),
+					updatedAt: dayjs().toISOString()
 				},
 				category: this.category
 			};

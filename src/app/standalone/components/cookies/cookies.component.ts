@@ -7,6 +7,7 @@ import { AuthorizationService } from '../../../core/services/authorization.servi
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { CookiesService } from '../../../core/services/cookies.service';
+import dayjs from 'dayjs/esm';
 import type { CurrentUser } from '../../../core/models/current-user.model';
 
 @Component({
@@ -51,7 +52,7 @@ export class CookiesComponent implements OnInit, OnDestroy {
 
 	onSubmit(): void {
 		this.cookiesService.setItem('cookies-accepted', '1', {
-			expires: new Date('2077-06-12')
+			expires: dayjs('2077-06-12').toDate()
 		});
 
 		this.currentUserIsAcceptedCookies = true;
