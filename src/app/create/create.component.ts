@@ -618,9 +618,13 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			}
 		}
 
-		this.onTogglePostDraftDialog(false)
-			.then(() => console.debug('Post draft updated'))
-			.catch((error: any) => console.error(error));
+		// Update drafts
+
+		if (!this.post) {
+			this.onTogglePostDraftDialog(false)
+				.then(() => console.debug('Post draft updated'))
+				.catch((error: any) => console.error(error));
+		}
 	}
 
 	onSubmitPostFormDraft(value: any): void {
@@ -718,18 +722,23 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 					next: () => {
 						this.snackbarService.success('Cheers!', 'Post has been ' + (postId ? 'updated' : 'saved'));
 
-						// Remove post drafts
+						// Start only if there is no post to update
 
-						if (this.platformService.isBrowser()) {
-							const window: Window = this.platformService.getWindow();
+						if (!this.post) {
+							if (this.platformService.isBrowser()) {
+								const window: Window = this.platformService.getWindow();
 
-							Object.keys(window.localStorage)
-								.filter((key: string) => key.startsWith('draft'))
-								.forEach((key: string) => this.localStorageService.removeItem(key));
+								Object.keys(window.localStorage)
+									.filter((key: string) => key.startsWith('draft'))
+									.forEach((key: string) => this.localStorageService.removeItem(key));
 
-							// Unsubscribe postForm.valueChanges
+								this.post = postDto as any;
 
-							this.appPostDraftComponent.instance.postForm$.unsubscribe();
+								// Unsubscribe postForm.valueChanges
+
+								this.appPostDraftComponent.destroy();
+								this.appPostDraftComponent.changeDetectorRef.detectChanges();
+							}
 						}
 
 						// prettier-ignore

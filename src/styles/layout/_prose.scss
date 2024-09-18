@@ -53,7 +53,7 @@
 
   a {
     &[href]:not(:where([href^="#"],[href^="/"]:not([href^="//"]),[href*="//localhost"])) {
-      &:not(.not-prose):not(.token.url-link):not(.btn) {
+      &:not(.not-prose):not(.token.url-link):not(.btn):not(:has(img)) {
         @apply link inline-block after:content-['\279A'] after:inline-block after:px-1;
       }
     }
