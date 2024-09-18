@@ -244,6 +244,32 @@
 					(appMarkdownRenderClickExternalLink)="onTogglePostExternalLinkDialog($event)"
 				></article>
 			</div>
+			<nav class="block empty:hidden">
+				<ul
+					class="flex items-center justify-start flex-wrap gap-2"
+					itemscope
+					itemtype="http://schema.org/SiteNavigationElement"
+				>
+					@for (postTag of post.markdown | markdownTags: 5; track $index) {
+						<li class="block">
+							<a
+								class="btn btn-outline btn-sm"
+								appSkeleton
+								target="_blank"
+								itemprop="url"
+								[appSkeletonToggle]="postSkeletonToggle"
+								[appSkeletonClassListElementRef]="['border-0']"
+								[title]="'Search: ' + postTag"
+								[attr.aria-label]="'Search: ' + postTag"
+								[routerLink]="['/', 'search', 'posts']"
+								[queryParams]="{ query: postTag }"
+							>
+								<span class="block" itemprop="name">{{ postTag }}</span>
+							</a>
+						</li>
+					}
+				</ul>
+			</nav>
 			<nav class="block empty:hidden border-y border-base-content/20 py-4">
 				<ng-content select="[slot=share]"></ng-content>
 			</nav>

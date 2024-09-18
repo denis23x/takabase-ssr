@@ -298,11 +298,14 @@ export class MarkdownService {
 	}
 
 	getMarkdownItStripText(value: string): string {
+		// Remove arbitrary classes
+		value = value.replace(/\{[^}]*\}/g, '');
+
 		// Remove code blocks
-		// value = value.replace(/```[\s\S]*?```/g, '');
+		value = value.replace(/```[\s\S]*?```/g, '');
 
 		// Remove inline code
-		// value = value.replace(/`[^`]*`/g, '');
+		value = value.replace(/`([^`]*)`/g, '$1');
 
 		// Remove images
 		value = value.replace(/!\[.*?\]\(.*?\)/g, '');
@@ -341,5 +344,65 @@ export class MarkdownService {
 		value = value.replace(/\s+/g, ' ').trim();
 
 		return value;
+	}
+
+	getMarkdownItTags(stripText: string, tagsLimit: number = 10): string[] {
+		const stopWords: Set<string> = new Set([
+			'in',
+			'me',
+			'and',
+			'the',
+			'a',
+			'an',
+			'of',
+			'on',
+			'for',
+			'to',
+			'is',
+			'with',
+			'that',
+			'by',
+			'this',
+			'when',
+			'then',
+			'use',
+			'it',
+			'or',
+			'as',
+			'at',
+			'but',
+			'be',
+			'are',
+			'not',
+			'we',
+			'will',
+			'was',
+			'from',
+			'has',
+			'end',
+			'you',
+			'have'
+		]);
+
+		// Helper to get frequency of words in the originalText
+		const getWordFrequency = (text: string): Map<string, number> => {
+			const wordMap: Map<string, number> = new Map();
+			const words: string[] = text.toLowerCase().match(/\b(\w+)\b/g) || [];
+
+			words
+				.filter((word: string) => !stopWords.has(word))
+				.filter((word: string) => !Number(word))
+				.forEach((word: string) => wordMap.set(word, (wordMap.get(word) || 0) + 1));
+
+			return wordMap;
+		};
+
+		const wordFrequency: Map<string, number> = getWordFrequency(stripText);
+
+		// Sort words by frequency and filter out less meaningful ones
+		return Array.from(wordFrequency.entries())
+			.sort((a: any[], b: any[]) => b[1] - a[1])
+			.slice(0, tagsLimit)
+			.map(([word]: [string, number]) => word);
 	}
 }

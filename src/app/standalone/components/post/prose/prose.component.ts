@@ -18,6 +18,7 @@ import { AvatarComponent } from '../../avatar/avatar.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { Subscription } from 'rxjs';
 import { PostBookmarkService } from '../../../../core/services/post-bookmark.service';
+import { MarkdownTagsPipe } from '../../../pipes/markdown-tags.pipe';
 import type { Post } from '../../../../core/models/post.model';
 import type { domToCanvas, Options } from 'modern-screenshot';
 import type { PostExternalLinkComponent } from '../external-link/external-link.component';
@@ -40,7 +41,8 @@ import type { PostBookmarkGetOneDto } from '../../../../core/dto/post-bookmark/p
 		MarkdownRenderDirective,
 		MarkdownTimeToReadPipe,
 		FirebaseStoragePipe,
-		AvatarComponent
+		AvatarComponent,
+		MarkdownTagsPipe
 	],
 	providers: [MarkdownService, PostBookmarkService],
 	selector: 'app-post-prose, [appPostProse]',
