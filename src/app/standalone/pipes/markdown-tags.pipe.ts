@@ -11,6 +11,6 @@ export class MarkdownTagsPipe implements PipeTransform {
 	private readonly markdownService: MarkdownService = inject(MarkdownService);
 
 	transform(value: string, tagsLimit: number = 10): string[] {
-		return this.markdownService.getMarkdownItTags(this.markdownService.getMarkdownItStripText(value), tagsLimit);
+		return this.markdownService.getMarkdownItTags(this.markdownService.getMarkdownItRawText(value), tagsLimit);
 	}
 }

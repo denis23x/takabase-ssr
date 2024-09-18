@@ -297,7 +297,10 @@ export class MarkdownService {
 		return (this.markdownIt = markdownIt);
 	}
 
-	getMarkdownItStripText(value: string): string {
+	getMarkdownItRawText(value: string): string {
+		// Remove emoji
+		value = value.replace(/:([\+\-\w]+):/gm, '');
+
 		// Remove arbitrary classes
 		value = value.replace(/\{[^}]*\}/g, '');
 
@@ -346,61 +349,111 @@ export class MarkdownService {
 		return value;
 	}
 
-	getMarkdownItTags(stripText: string, tagsLimit: number = 10): string[] {
+	getMarkdownItTags(stripedText: string, tagsLimit: number = 10): string[] {
 		const stopWords: Set<string> = new Set([
-			'in',
-			'me',
-			'and',
-			'the',
-			'a',
+			'all',
+			'also',
 			'an',
-			'of',
-			'on',
-			'for',
-			'to',
-			'is',
-			'with',
-			'that',
-			'by',
-			'this',
-			'when',
-			'then',
-			'use',
-			'it',
-			'or',
+			'and',
+			'are',
 			'as',
 			'at',
-			'but',
 			'be',
-			'are',
-			'not',
-			'we',
-			'will',
-			'was',
+			'below',
+			'but',
+			'by',
+			'can',
+			'do',
+			'does',
+			'end',
+			'for',
 			'from',
 			'has',
-			'end',
+			'have',
+			'in',
+			'io',
+			'is',
+			'it',
+			'just',
+			'many',
+			'me',
+			'much',
+			'my',
+			'need',
+			'not',
+			'of',
+			'on',
+			'or',
+			'should',
+			'such',
+			'that',
+			'the',
+			'then',
+			'there',
+			'this',
+			'to',
+			'use',
+			'was',
+			'we',
+			'when',
+			'which',
+			'why',
+			'will',
+			'with',
+			'would',
 			'you',
-			'have'
+			'your'
 		]);
+
+		const irregularPlurals: Record<string, string> = {
+			children: 'child',
+			men: 'man',
+			women: 'woman',
+			feet: 'foot',
+			teeth: 'tooth',
+			mice: 'mouse',
+			geese: 'goose',
+			oxen: 'ox',
+			people: 'person'
+		};
+
+		// Helper to get for singular
+		const getWordSingular = (word: string): string => {
+			if (irregularPlurals[word.toLowerCase()]) {
+				return irregularPlurals[word.toLowerCase()];
+			} else if (word.length > 2) {
+				if (word.endsWith('ies') && word.length > 4) {
+					return word.slice(0, -3) + 'y'; // e.g., 'cities' -> 'city'
+				} else if (word.endsWith('ves')) {
+					return word.slice(0, -3) + 'f'; // e.g., 'leaves' -> 'leaf'
+				} else if (word.endsWith('es') && /(?:sh|ch|ss|x|z)es$/.test(word)) {
+					return word.slice(0, -2); // e.g., 'boxes' -> 'box', 'wishes' -> 'wish'
+				} else if (word.endsWith('s') && !word.endsWith('ss')) {
+					return word.slice(0, -1); // e.g., 'cats' -> 'cat', 'cases' -> 'case'
+				}
+			}
+
+			return word;
+		};
 
 		// Helper to get frequency of words in the originalText
 		const getWordFrequency = (text: string): Map<string, number> => {
 			const wordMap: Map<string, number> = new Map();
-			const words: string[] = text.toLowerCase().match(/\b(\w+)\b/g) || [];
+			const words: string[] = text.toLowerCase().match(/\b\w+\b(?!')(?<!')/g) || [];
 
 			words
-				.filter((word: string) => !stopWords.has(word))
+				.filter((word: string) => word.length >= 2)
 				.filter((word: string) => !Number(word))
+				.filter((word: string) => !word.endsWith('ing'))
+				.filter((word: string) => !stopWords.has(word))
+				.map((word: string) => getWordSingular(word))
 				.forEach((word: string) => wordMap.set(word, (wordMap.get(word) || 0) + 1));
 
 			return wordMap;
 		};
 
-		const wordFrequency: Map<string, number> = getWordFrequency(stripText);
-
 		// Sort words by frequency and filter out less meaningful ones
-		return Array.from(wordFrequency.entries())
+		return Array.from(getWordFrequency(stripedText).entries())
 			.sort((a: any[], b: any[]) => b[1] - a[1])
 			.slice(0, tagsLimit)
 			.map(([word]: [string, number]) => word);

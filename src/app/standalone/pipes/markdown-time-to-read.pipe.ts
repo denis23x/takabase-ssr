@@ -12,7 +12,7 @@ export class MarkdownTimeToReadPipe implements PipeTransform {
 
 	transform(value: string): string {
 		const wordsPerMinute: number = 200;
-		const wordsCount: number = this.markdownService.getMarkdownItStripText(value).trim().split(/\s+/).length;
+		const wordsCount: number = this.markdownService.getMarkdownItRawText(value).trim().split(/\s+/).length;
 
 		return String(Math.ceil(wordsCount / wordsPerMinute));
 	}
