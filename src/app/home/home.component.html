@@ -146,8 +146,8 @@
 							class="join-item btn btn-sm"
 							[title]="'Go to ' + appHighlight"
 							[attr.aria-label]="'Go to ' + appHighlight"
-							[class.btn-active]="appHighlightListIndex === appHighlight"
-							(click)="appHighlightListIndex = appHighlight"
+							[class.btn-active]="appHighlightListActive === appHighlight"
+							(click)="appHighlightListActive = appHighlight"
 						>
 							{{ appHighlight }}
 						</button>
@@ -161,7 +161,7 @@
 						itemprop="itemListElement"
 						itemscope
 						itemtype="http://schema.org/ListItem"
-						[class.!flex]="i + 1 <= 3 * appHighlightListIndex && i + 1 > 3 * appHighlightListIndex - 3"
+						[class.!flex]="i + 1 <= 3 * appHighlightListActive && i + 1 > 3 * appHighlightListActive - 3"
 					>
 						<div class="flex items-center justify-start gap-4">
 							<i

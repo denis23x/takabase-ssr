@@ -33,13 +33,3 @@ export interface MarkdownShortcut {
 	key: string;
 	shortcut: string[];
 }
-
-export interface MarkdownItPlugins {
-	prism?: boolean;
-	mermaid?: boolean;
-	collapsible?: boolean;
-	emoji?: boolean;
-	smartArrows?: boolean;
-	tasks?: boolean;
-	video?: boolean;
-}

@@ -1,7 +1,6 @@
 /** @format */
 
 import { inject, Injectable } from '@angular/core';
-import { MarkdownItPlugins } from '../models/markdown.model';
 import { AppearanceService } from './appearance.service';
 import { DOCUMENT } from '@angular/common';
 import { HelperService } from './helper.service';
@@ -19,204 +18,135 @@ export class MarkdownService {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly helperService: HelperService = inject(HelperService);
 
-	markdownItPlugins: string[] = [];
-	markdownIt: MarkdownIt;
+	markdownItServer: MarkdownIt | undefined;
+	markdownItBrowser: MarkdownIt | undefined;
 
-	getMarkdownItDefault(): MarkdownIt {
-		/** Create new instance */
-
-		const markdownIt: MarkdownIt = new MarkdownIt({
-			html: false,
-			xhtmlOut: false,
-			linkify: true,
-			breaks: true,
-			typographer: true,
-			quotes: '“”‘’',
-			highlight: (value: string, language: string) => {
-				switch (language) {
-					case 'mermaid': {
-						return `<pre class="mermaid">${value}</pre>`;
-					}
-					case 'treeview': {
-						return `<pre class="language-${language}"><code class="language-${language}">${value}</code></pre>`;
-					}
-					default: {
-						return `<pre class="language-${language} line-numbers"><code class="language-${language} match-braces rainbow-braces">${markdownIt.utils.escapeHtml(value)}</code></pre>`;
+	getMarkdownItServer(): MarkdownIt {
+		if (this.markdownItServer) {
+			return this.markdownItServer;
+		} else {
+			const markdownIt: MarkdownIt = new MarkdownIt({
+				html: false,
+				xhtmlOut: false,
+				linkify: true,
+				breaks: true,
+				typographer: true,
+				quotes: '“”‘’',
+				highlight: (value: string, language: string) => {
+					switch (language) {
+						case 'mermaid': {
+							return `<pre class="mermaid">${value}</pre>`;
+						}
+						case 'treeview': {
+							return `<pre class="language-${language}"><code class="language-${language}">${value}</code></pre>`;
+						}
+						default: {
+							return `<pre class="language-${language} line-numbers"><code class="language-${language} match-braces rainbow-braces">${markdownIt.utils.escapeHtml(value)}</code></pre>`;
+						}
 					}
 				}
-			}
-		})
-			.use(attrs, {
-				allowedAttributes: ['class', 'style', 'width', 'height']
 			})
-			.use(bracketedSpans)
-			.use(ins)
-			.use(linkAttributes, [
-				{
-					matcher(href: string) {
-						return href.match(/^https?:\/\//);
-					},
-					attrs: {
-						target: '_blank',
-						rel: 'ugc noopener noreferrer'
+				.use(attrs, {
+					allowedAttributes: ['class', 'style', 'width', 'height']
+				})
+				.use(bracketedSpans)
+				.use(ins)
+				.use(linkAttributes, [
+					{
+						matcher(href: string) {
+							return href.match(/^https?:\/\//);
+						},
+						attrs: {
+							target: '_blank',
+							rel: 'ugc noopener noreferrer'
+						}
 					}
-				}
-			])
-			.use(tasks, {
-				enabled: true,
-				label: true,
-				labelAfter: false,
-				itemClass: 'form-control',
-				inputClass: 'checkbox checkbox-success mr-4',
-				labelClass: 'label cursor-pointer'
-			});
+				])
+				.use(tasks, {
+					enabled: true,
+					label: true,
+					labelAfter: false,
+					itemClass: 'form-control',
+					inputClass: 'checkbox checkbox-success mr-4',
+					labelClass: 'label cursor-pointer'
+				});
 
-		/** Update default rules */
+			/** Update default rules */
 
-		markdownIt.renderer.rules.image = (tokenList: Token[], idx: number): string => {
-			const linkElement: HTMLAnchorElement = this.document.createElement('a');
-			const imageElement: HTMLImageElement = this.document.createElement('img');
+			markdownIt.renderer.rules.image = (tokenList: Token[], idx: number): string => {
+				const linkElement: HTMLAnchorElement = this.document.createElement('a');
+				const imageElement: HTMLImageElement = this.document.createElement('img');
 
-			const token: Token = tokenList[idx];
+				const token: Token = tokenList[idx];
 
-			token.attrs?.forEach(([key, value]: string[]) => {
-				if (key === 'class') {
-					imageElement.classList.add(...value.split(/\s/).filter((className: string) => !!className));
-				}
+				token.attrs?.forEach(([key, value]: string[]) => {
+					if (key === 'class') {
+						imageElement.classList.add(...value.split(/\s/).filter((className: string) => !!className));
+					}
 
-				if (key === 'src') {
-					imageElement.src = this.helperService.getImageURLQueryParams(value);
-				}
-			});
+					if (key === 'src') {
+						imageElement.src = this.helperService.getImageURLQueryParams(value);
+					}
+				});
 
-			imageElement.loading = 'eager';
-			imageElement.alt = token.content;
-			imageElement.title = token.content;
+				imageElement.loading = 'eager';
+				imageElement.alt = token.content;
+				imageElement.title = token.content;
 
-			linkElement.href = imageElement.src;
-			linkElement.target = '_blank';
-			linkElement.appendChild(imageElement);
+				linkElement.href = imageElement.src;
+				linkElement.target = '_blank';
+				linkElement.appendChild(imageElement);
 
-			return linkElement.outerHTML;
-		};
+				return linkElement.outerHTML;
+			};
 
-		markdownIt.renderer.rules.table_open = (tokenList: Token[], idx: number): string => {
-			const tableElement: HTMLTableElement = this.document.createElement('table');
+			markdownIt.renderer.rules.table_open = (tokenList: Token[], idx: number): string => {
+				const tableElement: HTMLTableElement = this.document.createElement('table');
 
-			const token: Token = tokenList[idx];
+				const token: Token = tokenList[idx];
 
-			token.attrs?.forEach(([key, value]: string[]) => {
-				if (key === 'class') {
-					const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
+				token.attrs?.forEach(([key, value]: string[]) => {
+					if (key === 'class') {
+						const classList: string[] = value.split(/\s/).filter((className: string) => !!className);
 
-					tableElement.classList.add(...classList);
-				} else {
-					// @ts-ignore
-					tableElement[key] = value;
-				}
-			});
+						tableElement.classList.add(...classList);
+					} else {
+						// @ts-ignore
+						tableElement[key] = value;
+					}
+				});
 
-			return `<div class="overflow-auto my-4">${tableElement.outerHTML.replace('</table>', '')}`;
-		};
+				return `<div class="overflow-auto my-4">${tableElement.outerHTML.replace('</table>', '')}`;
+			};
 
-		markdownIt.renderer.rules.table_close = (): string => {
-			return `</table></div>`;
-		};
+			markdownIt.renderer.rules.table_close = (): string => {
+				return `</table></div>`;
+			};
 
-		return markdownIt;
+			return (this.markdownItServer = markdownIt);
+		}
 	}
 
-	async getMarkdownIt(value: string): Promise<MarkdownIt> {
-		const markdownItPlugins: MarkdownItPlugins = {
-			prism: /```\s?(?!mermaid)([\w-]+)\n[\s\S]*?```/gm.test(value),
-			mermaid: /```\s?(mermaid)\n[\s\S]*?```/gm.test(value),
-			collapsible: /\+\+\+\s?\S[^\n]*\n[\s\S]*?\n\+\+\+/gim.test(value),
-			emoji: /:([\+\-\w]+):/gm.test(value),
-			smartArrows: /(-->|<--|<-->|==>|<==|<==>)/gm.test(value),
-			video: /@\[(youtube|vimeo|vine|prezi|osf)]\(\s*https?:\/\/[^\s)]+\s*\)/gm.test(value)
-		};
+	async getMarkdownItBrowser(): Promise<MarkdownIt> {
+		if (this.markdownItBrowser) {
+			return this.markdownItBrowser;
+		} else {
+			const markdownIt: MarkdownIt = this.getMarkdownItServer();
+			const markdownItPlugins: any[] = [
+				import('../markdown/plugins/prism'),
+				import('../markdown/plugins/mermaid'),
+				import('markdown-it-collapsible'),
+				import('markdown-it-emoji'),
+				import('markdown-it-smartarrows'),
+				import('markdown-it-video')
+			];
 
-		// prettier-ignore
-		const markdownItPluginsFiltered: any = Object.fromEntries(Object.entries(markdownItPlugins).filter(([key, value]) => value));
-		const markdownItPluginsFilteredIsEqual = (arr1: string[], arr2: string[]): boolean => {
-			if (arr1.length !== arr2.length) {
-				return false;
-			}
+			/** Lazy load */
 
-			const sortedArr1: string[] = arr1.slice().sort();
-			const sortedArr2: string[] = arr2.slice().sort();
+			return Promise.all(markdownItPlugins).then((plugins: any[]) => {
+				markdownIt.use(plugins[0].default);
 
-			for (let i = 0; i < sortedArr1.length; i++) {
-				if (sortedArr1[i] !== sortedArr2[i]) {
-					return false;
-				}
-			}
-
-			return true;
-		};
-
-		const arr1: string[] = Object.keys(markdownItPluginsFiltered);
-		const arr2: string[] = this.markdownItPlugins;
-
-		// Avoid unnecessary re-init
-		if (markdownItPluginsFilteredIsEqual(arr1, arr2)) {
-			if (this.markdownIt) {
-				return this.markdownIt;
-			}
-		}
-
-		// Save list for next logic
-		this.markdownItPlugins = Object.keys(markdownItPluginsFiltered);
-
-		/** Markdown instance */
-
-		const markdownIt: MarkdownIt = this.getMarkdownItDefault();
-
-		/** Lazy load prepare */
-
-		const markdownItModules: any[] = [];
-
-		Object.keys(markdownItPluginsFiltered).forEach((key: string) => {
-			if (key === 'prism') {
-				markdownItModules.push(import('../markdown/plugins/prism'));
-			}
-
-			if (key === 'mermaid') {
-				markdownItModules.push(import('../markdown/plugins/mermaid'));
-			}
-
-			if (key === 'collapsible') {
-				markdownItModules.push(import('markdown-it-collapsible'));
-			}
-
-			if (key === 'emoji') {
-				markdownItModules.push(import('markdown-it-emoji'));
-			}
-
-			if (key === 'smartArrows') {
-				markdownItModules.push(import('markdown-it-smartarrows'));
-			}
-
-			if (key === 'video') {
-				markdownItModules.push(import('markdown-it-video'));
-			}
-		});
-
-		/** Lazy load */
-
-		const markdownItModulesLoaded: any[] = await Promise.all(markdownItModules);
-
-		/** Lazy load apply */
-
-		Object.keys(markdownItPluginsFiltered).forEach((key: string, i: number) => {
-			if (key === 'prism') {
-				markdownIt.use(markdownItModulesLoaded[i].default);
-			}
-
-			if (key === 'mermaid') {
-				/** https://mermaid.js.org/config/theming.html#customizing-themes-with-themevariables */
-
-				markdownIt.use(markdownItModulesLoaded[i].default, {
+				markdownIt.use(plugins[1].default, {
 					theme: 'base',
 					themeVariables: {
 						darkMode: false,
@@ -237,12 +167,8 @@ export class MarkdownService {
 						pie6: this.appearanceService.getCSSColor('--er', 'hex')
 					}
 				});
-			}
 
-			if (key === 'collapsible') {
-				markdownIt.use(markdownItModulesLoaded[i].default);
-
-				/** Update rules */
+				markdownIt.use(plugins[2].default);
 
 				markdownIt.renderer.rules.collapsible_open = (): string => {
 					return '<details class="collapse collapse-arrow bg-base-200 border border-base-content/20">';
@@ -255,20 +181,12 @@ export class MarkdownService {
 				markdownIt.renderer.rules.collapsible_close = (): string => {
 					return '</div></details>';
 				};
-			}
 
-			if (key === 'emoji') {
-				markdownIt.use(markdownItModulesLoaded[i].full);
-			}
+				markdownIt.use(plugins[3].full);
 
-			if (key === 'smartArrows') {
-				markdownIt.use(markdownItModulesLoaded[i].default);
-			}
+				markdownIt.use(plugins[4].default);
 
-			if (key === 'video') {
-				markdownIt.use(markdownItModulesLoaded[i].default);
-
-				/** Update rules */
+				markdownIt.use(plugins[5].default);
 
 				markdownIt.renderer.rules.video = (tokenList: Token[], idx: number): string => {
 					const iframeSrc: string = 'https://www.youtube-nocookie.com/embed/';
@@ -291,10 +209,10 @@ export class MarkdownService {
 
 					return iframeElement.outerHTML;
 				};
-			}
-		});
 
-		return (this.markdownIt = markdownIt);
+				return (this.markdownItBrowser = markdownIt);
+			});
+		}
 	}
 
 	getMarkdownItRawText(value: string): string {
@@ -314,7 +232,7 @@ export class MarkdownService {
 		value = value.replace(/!\[.*?\]\(.*?\)/g, '');
 
 		// Remove links
-		value = value.replace(/\[(.*?)\]\((.*?)\)/g, '$2');
+		value = value.replace(/\[(.*?)\]\((.*?)\)/g, '');
 
 		// Remove blockquotes
 		value = value.replace(/^>+\s?/gm, '');
@@ -365,11 +283,13 @@ export class MarkdownService {
 			'can',
 			'do',
 			'does',
+			'else',
 			'end',
 			'for',
 			'from',
 			'has',
 			'have',
+			'if',
 			'in',
 			'io',
 			'is',
@@ -385,6 +305,7 @@ export class MarkdownService {
 			'on',
 			'or',
 			'should',
+			'so',
 			'such',
 			'that',
 			'the',

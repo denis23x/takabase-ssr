@@ -63,7 +63,7 @@ export class SearchCategoryComponent extends M(class {}) implements OnInit, OnDe
 	ngOnInit(): void {
 		super.ngOnInit();
 
-		// ngOnInit
+		/** Apply Data */
 
 		this.activatedRouteQueryParams$?.unsubscribe();
 		this.activatedRouteQueryParams$ = this.activatedRoute.queryParams.pipe(distinctUntilKeyChanged('query')).subscribe({
@@ -75,8 +75,6 @@ export class SearchCategoryComponent extends M(class {}) implements OnInit, OnDe
 						this.transferState.remove(searchResponseKey);
 					}
 				} else {
-					/** Apply Data */
-
 					this.setSkeleton();
 					this.setResolver();
 				}

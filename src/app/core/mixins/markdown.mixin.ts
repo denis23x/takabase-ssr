@@ -31,14 +31,12 @@ export function MarkdownMixin<T extends new (...args: any[]) => any>(MasterClass
 		ngOnInit(): void {
 			super.ngOnInit && super.ngOnInit();
 
-			// ngOnInit
+			/** Apply Data */
 
 			this.activatedRouteParams$ = this.activatedRoute.params
 				.pipe(filter((params: Params) => !!params.details))
 				.subscribe({
 					next: () => {
-						/** Apply Data */
-
 						this.setSkeleton();
 						this.setResolver();
 					},

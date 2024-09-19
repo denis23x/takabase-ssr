@@ -180,7 +180,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 							const cloneElement: HTMLElement = this.preview.cloneNode(true) as HTMLElement;
 
 							this.markdownService
-								.getMarkdownIt(this.textarea.value)
+								.getMarkdownItBrowser()
 								.then((markdownIt: MarkdownIt) => (cloneElement.innerHTML = markdownIt.render(this.textarea.value)))
 								.then(() => morphdom(this.preview, cloneElement))
 								.catch((error: any) => console.error(error))

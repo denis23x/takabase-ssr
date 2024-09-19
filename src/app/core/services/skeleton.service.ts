@@ -88,7 +88,7 @@ export class SkeletonService {
 	getInsightList(): any {
 		return [
 			{
-				id: Number(customAlphabet(numbers, 8)()),
+				id: 1,
 				key: 'categories',
 				value: 'Categories',
 				countPreceding: 0,
@@ -97,7 +97,7 @@ export class SkeletonService {
 				changePercent: 0
 			},
 			{
-				id: Number(customAlphabet(numbers, 8)()),
+				id: 2,
 				key: 'posts',
 				value: 'Posts',
 				countPreceding: 0,
@@ -106,7 +106,7 @@ export class SkeletonService {
 				changePercent: 0
 			},
 			{
-				id: Number(customAlphabet(numbers, 8)()),
+				id: 2,
 				key: 'users',
 				value: 'Users',
 				countPreceding: 0,

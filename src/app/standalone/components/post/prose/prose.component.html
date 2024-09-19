@@ -251,9 +251,9 @@
 					itemtype="http://schema.org/SiteNavigationElement"
 				>
 					@for (postTag of post.markdown | markdownTags: 5; track $index) {
-						<li class="block">
+						<li class="block max-w-full">
 							<a
-								class="btn btn-outline btn-sm"
+								class="btn btn-outline btn-sm max-w-full"
 								appSkeleton
 								target="_blank"
 								itemprop="url"
@@ -264,7 +264,7 @@
 								[routerLink]="['/', 'search', 'posts']"
 								[queryParams]="{ query: postTag }"
 							>
-								<span class="block" itemprop="name">{{ postTag }}</span>
+								<span class="block truncate" itemprop="name">{{ postTag }}</span>
 							</a>
 						</li>
 					}

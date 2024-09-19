@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, makeStateKey, OnDestroy, OnInit, StateKey, TransferState } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { MetaService } from '../core/services/meta.service';
@@ -13,12 +13,15 @@ import { SkeletonDirective } from '../standalone/directives/app-skeleton.directi
 import { SkeletonService } from '../core/services/skeleton.service';
 import { PWAComponent } from '../standalone/components/pwa/pwa.component';
 import { MathPipe } from '../standalone/pipes/math.pipe';
+import { PlatformService } from '../core/services/platform.service';
 import homeHighlights from '../../assets/json/home-highlights.json';
 import dayjs from 'dayjs/esm';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import type { ManipulateType } from 'dayjs/esm';
 import type { Insight } from '../core/models/insight.model';
 import type { InsightGetAllDto } from '../core/dto/insight/insight-get-all.dto';
+
+const insightResponse: StateKey<any> = makeStateKey<any>('insightResponse');
 
 @Component({
 	standalone: true,
@@ -31,9 +34,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 	private readonly titleService: TitleService = inject(TitleService);
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
-
-	appHighlightList: Record<string, string | number>[] = homeHighlights;
-	appHighlightListIndex: number = 1;
+	private readonly transferState: TransferState = inject(TransferState);
+	private readonly platformService: PlatformService = inject(PlatformService);
 
 	appInsightValue: number = 1;
 	appInsightUnit: ManipulateType = 'week';
@@ -42,7 +44,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 	appInsightListSkeletonToggle: boolean = true;
 	appInsightList$: Subscription | undefined;
 	appInsightListTime: string | undefined;
-	appInsightListTimeFormat: string = 'MMM D';
 	appInsightListChangeState: any = {
 		stasis: {
 			classList: 'text-base-content/50',
@@ -58,11 +59,27 @@ export class HomeComponent implements OnInit, OnDestroy {
 		}
 	};
 
+	appHighlightList: Record<string, string | number>[] = homeHighlights;
+	appHighlightListActive: number = 1;
+
 	ngOnInit(): void {
+		const from: string = dayjs().subtract(this.appInsightValue, this.appInsightUnit).format('MMM D');
+		const to: string = dayjs().format('MMM D');
+
+		this.appInsightListTime = from + ' - ' + to;
+
 		/** Apply Data */
 
-		this.setSkeleton();
-		this.setResolver();
+		if (this.transferState.hasKey(insightResponse)) {
+			this.setInsightResponse(this.transferState.get(insightResponse, null));
+
+			if (this.platformService.isBrowser()) {
+				this.transferState.remove(insightResponse);
+			}
+		} else {
+			this.setSkeleton();
+			this.setResolver();
+		}
 
 		/** Apply SEO meta tags */
 
@@ -80,9 +97,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	setResolver(): void {
-		// prettier-ignore
-		this.appInsightListTime = dayjs().subtract(this.appInsightValue, this.appInsightUnit).format(this.appInsightListTimeFormat) + ' - ' + dayjs().format(this.appInsightListTimeFormat);
-
 		const insightGetAllDto: InsightGetAllDto = {
 			value: this.appInsightValue,
 			unit: this.appInsightUnit
@@ -91,11 +105,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 		this.appInsightList$?.unsubscribe();
 		this.appInsightList$ = this.apiService.get('/v1/insights', insightGetAllDto).subscribe({
 			next: (insightList: any) => {
-				this.appInsightListSkeletonToggle = false;
-				this.appInsightList = this.appInsightList.map((insight: Insight) => ({
-					...insight,
-					...insightList[insight.key]
-				}));
+				this.setInsightResponse(insightList);
+
+				if (this.platformService.isServer()) {
+					this.transferState.set(insightResponse, insightList);
+				}
 			},
 			error: (error: any) => console.error(error)
 		});
@@ -123,5 +137,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 		};
 
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
+	}
+
+	setInsightResponse(insightList: any): void {
+		this.appInsightListSkeletonToggle = false;
+		this.appInsightList = Object.entries(insightList).map(([key, value]: [string, any], i: number) => ({
+			...value,
+			id: i + 1,
+			key: key,
+			value: key.toUpperCase()
+		}));
 	}
 }

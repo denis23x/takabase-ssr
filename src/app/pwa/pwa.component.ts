@@ -47,10 +47,6 @@ export class PwaComponent implements OnInit, OnDestroy {
 				});
 		}
 
-		/** Apply Data */
-
-		// Nothing to apply
-
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();

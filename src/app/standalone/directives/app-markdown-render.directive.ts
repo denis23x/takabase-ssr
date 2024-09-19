@@ -44,7 +44,7 @@ export class MarkdownRenderDirective {
 
 	@Input({ required: true })
 	set appMarkdownRenderValue(value: string) {
-		const markdownIt: MarkdownIt = this.markdownService.getMarkdownItDefault();
+		const markdownIt: MarkdownIt = this.markdownService.getMarkdownItServer();
 		const markdownItElement: HTMLElement = this.elementRef.nativeElement.cloneNode(true) as HTMLElement;
 		const markdownItRender = (markdownItValue: string): void => {
 			markdownItElement.innerHTML = this.domSanitizer.sanitize(1, this.sanitizerPipe.transform(markdownItValue, 1));
@@ -60,7 +60,7 @@ export class MarkdownRenderDirective {
 
 		if (this.platformService.isBrowser()) {
 			this.markdownService
-				.getMarkdownIt(value)
+				.getMarkdownItBrowser()
 				.then((markdownIt: MarkdownIt) => markdownItRender(markdownIt.render(value)))
 				.catch((error: any) => console.error(error));
 		}
