@@ -27,9 +27,8 @@
 							<figure class="h-12 w-12 rounded-btn relative overflow-hidden">
 								<img
 									class="object-cover object-center bg-base-300"
-									[fill]="true"
-									[priority]="true"
-									[ngSrc]="reportPost.image | firebaseStorage"
+									loading="eager"
+									[src]="reportPost.image | firebaseStorage"
 									[alt]="reportPost.name"
 								/>
 							</figure>

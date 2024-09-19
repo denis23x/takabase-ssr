@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, ComponentRef, inject, Input, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
-import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
@@ -34,7 +34,6 @@ import type { PostBookmarkGetOneDto } from '../../../../core/dto/post-bookmark/p
 		CommonModule,
 		RouterModule,
 		DayjsPipe,
-		NgOptimizedImage,
 		SkeletonDirective,
 		DropdownComponent,
 		SvgIconComponent,

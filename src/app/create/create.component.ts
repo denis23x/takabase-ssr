@@ -25,7 +25,7 @@ import {
 	ReactiveFormsModule,
 	Validators
 } from '@angular/forms';
-import { CommonModule, DOCUMENT, NgOptimizedImage } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { InputTrimWhitespaceDirective } from '../standalone/directives/app-input-trim-whitespace.directive';
 import { DropdownComponent } from '../standalone/components/dropdown/dropdown.component';
@@ -91,7 +91,6 @@ interface PostForm {
 		InputTrimWhitespaceDirective,
 		DropdownComponent,
 		MarkdownComponent,
-		NgOptimizedImage,
 		ScrollPresetDirective,
 		TextareaAutosizeDirective,
 		SkeletonDirective,

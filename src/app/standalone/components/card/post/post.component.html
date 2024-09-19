@@ -23,9 +23,8 @@
 					<img
 						class="object-cover object-center bg-base-300"
 						itemprop="image"
-						[fill]="true"
-						[priority]="postImagePriority"
-						[ngSrc]="post.image | firebaseStorage"
+						[attr.loading]="postImagePriority ? 'eager' : 'lazy'"
+						[src]="post.image | firebaseStorage"
 						[alt]="post.name"
 					/>
 				</a>

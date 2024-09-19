@@ -10,7 +10,7 @@ import {
 	OnInit,
 	ViewChild
 } from '@angular/core';
-import { CommonModule, Location, NgOptimizedImage } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { WindowComponent } from '../../window/window.component';
 import { Subscription } from 'rxjs';
 import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
@@ -39,7 +39,6 @@ interface ReportForm {
 	imports: [
 		CommonModule,
 		RouterModule,
-		NgOptimizedImage,
 		WindowComponent,
 		InputTrimWhitespaceDirective,
 		TextareaAutosizeDirective,

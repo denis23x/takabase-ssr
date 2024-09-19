@@ -527,9 +527,8 @@
 								@if (providerData.linked) {
 									<img
 										class="object-cover object-center bg-base-300"
-										[fill]="true"
-										[priority]="true"
-										[ngSrc]="providerData.photoURL"
+										loading="eager"
+										[src]="providerData.photoURL"
 										[alt]="providerData.providerLabel"
 									/>
 								} @else {

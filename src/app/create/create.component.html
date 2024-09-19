@@ -36,10 +36,9 @@
                   <div class="relative w-full h-full group">
                     <img
                       class="block bg-base-200 object-cover object-center"
-                      [fill]="true"
+                      loading="eager"
+                      [src]="image.value | firebaseStorage"
                       [alt]="'Image'"
-                      [priority]="true"
-                      [ngSrc]="image.value | firebaseStorage"
                     />
                     @if (postForm.enabled) {
                       <div class="opacity-0 group-hover:opacity-100 bg-base-100/75 absolute inset-0 backdrop-blur-sm hidden sm:flex items-center justify-center">

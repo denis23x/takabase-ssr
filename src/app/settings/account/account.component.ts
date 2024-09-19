@@ -43,7 +43,7 @@ import {
 	EmailAuthCredential,
 	linkWithCredential
 } from 'firebase/auth';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SvgLogoComponent } from '../../standalone/components/svg-logo/svg-logo.component';
 import { ApiService } from '../../core/services/api.service';
@@ -88,8 +88,7 @@ interface NewPasswordForm {
 		InputTrimWhitespaceDirective,
 		BadgeErrorComponent,
 		WindowComponent,
-		SvgLogoComponent,
-		NgOptimizedImage
+		SvgLogoComponent
 	],
 	providers: [EmailService, PasswordService],
 	selector: 'app-settings-account',

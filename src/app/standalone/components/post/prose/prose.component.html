@@ -25,9 +25,8 @@
 								<img
 									class="object-cover object-center bg-base-300"
 									itemprop="image"
-									[fill]="true"
-									[priority]="true"
-									[ngSrc]="post.image | firebaseStorage"
+									loading="eager"
+									[src]="post.image | firebaseStorage"
 									[alt]="post.name"
 								/>
 							</figure>
@@ -253,12 +252,12 @@
 					@for (postTag of post.markdown | markdownTags: 5; track $index) {
 						<li class="block max-w-full">
 							<a
-								class="btn btn-outline btn-sm max-w-full"
+								class="btn btn-sm max-w-full"
 								appSkeleton
 								target="_blank"
 								itemprop="url"
 								[appSkeletonToggle]="postSkeletonToggle"
-								[appSkeletonClassListElementRef]="['border-0']"
+								[appSkeletonClassListElementRef]="['border-0', 'shadow-none']"
 								[title]="'Search: ' + postTag"
 								[attr.aria-label]="'Search: ' + postTag"
 								[routerLink]="['/', 'search', 'posts']"
