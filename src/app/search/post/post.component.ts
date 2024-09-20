@@ -144,7 +144,7 @@ export class SearchPostComponent extends M(class {}) implements OnInit, OnDestro
 		const postQuery: string = String(this.activatedRoute.snapshot.queryParamMap.get('query') || '');
 		const postIndex: SearchIndex = this.algoliaService.getSearchIndex('post');
 		const postIndexSearch: SearchOptions = {
-			highlightPreTag: '<mark class="bg-success/25 text-success-content">',
+			highlightPreTag: '<mark class="bg-success text-success-content">',
 			highlightPostTag: '</mark>',
 			page: (() => (this.postGetAllDto.page = postListLoadMore ? this.postGetAllDto.page + 1 : 0))(),
 			hitsPerPage: this.postGetAllDto.size
