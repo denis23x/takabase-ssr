@@ -2,12 +2,12 @@
 
 export const environment = {
 	appUrl: 'https://takabase.com',
-	apiUrl: 'https://api.takabase.com/api',
+	apiUrl: 'https://api.takabase.com',
 	ai: {
-		url: 'https://ai.takabase.com/api'
+		url: 'https://ai.takabase.com'
 	},
 	sharp: {
-		url: 'https://sharp.takabase.com/api'
+		url: 'https://sharp.takabase.com'
 	},
 	mailer: {
 		to: 'damage.23x@gmail.com',

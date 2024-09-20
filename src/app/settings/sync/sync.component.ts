@@ -49,19 +49,19 @@ export class SettingsSyncComponent extends CurrentUserMixin(class {}) implements
 				{
 					id: 1,
 					method: 'GET',
-					url: '/v1/algolia/category',
+					url: '/api/v1/algolia/category',
 					isLoading: false
 				},
 				{
 					id: 2,
 					method: 'GET',
-					url: '/v1/algolia/post',
+					url: '/api/v1/algolia/post',
 					isLoading: false
 				},
 				{
 					id: 3,
 					method: 'GET',
-					url: '/v1/algolia/user',
+					url: '/api/v1/algolia/user',
 					isLoading: false
 				}
 			]
@@ -74,13 +74,13 @@ export class SettingsSyncComponent extends CurrentUserMixin(class {}) implements
 				{
 					id: 1,
 					method: 'POST',
-					url: '/v1/insights',
+					url: '/api/v1/insights',
 					isLoading: false
 				},
 				{
 					id: 2,
 					method: 'GET',
-					url: '/v1/insights',
+					url: '/api/v1/insights',
 					isLoading: false
 				}
 			]
@@ -93,19 +93,19 @@ export class SettingsSyncComponent extends CurrentUserMixin(class {}) implements
 				{
 					id: 1,
 					method: 'GET',
-					url: '/v1/sitemap/category',
+					url: '/api/v1/sitemap/category',
 					isLoading: false
 				},
 				{
 					id: 2,
 					method: 'GET',
-					url: '/v1/sitemap/post',
+					url: '/api/v1/sitemap/post',
 					isLoading: false
 				},
 				{
 					id: 3,
 					method: 'GET',
-					url: '/v1/sitemap/user',
+					url: '/api/v1/sitemap/user',
 					isLoading: false
 				}
 			]

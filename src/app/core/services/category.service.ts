@@ -17,22 +17,22 @@ export class CategoryService {
 	/** REST */
 
 	create(categoryCreateDto: CategoryCreateDto): Observable<Category> {
-		return this.apiService.post('/v1/categories', categoryCreateDto);
+		return this.apiService.post('/api/v1/categories', categoryCreateDto);
 	}
 
 	getAll(categoryGetAllDto: CategoryGetAllDto): Observable<Category[]> {
-		return this.apiService.get('/v1/categories', categoryGetAllDto);
+		return this.apiService.get('/api/v1/categories', categoryGetAllDto);
 	}
 
 	getOne(categoryId: number, categoryGetOneDto?: CategoryGetOneDto): Observable<Category> {
-		return this.apiService.get('/v1/categories/' + categoryId, categoryGetOneDto);
+		return this.apiService.get('/api/v1/categories/' + categoryId, categoryGetOneDto);
 	}
 
 	update(categoryId: number, categoryUpdateDto: CategoryUpdateDto): Observable<Category> {
-		return this.apiService.put('/v1/categories/' + categoryId, categoryUpdateDto);
+		return this.apiService.put('/api/v1/categories/' + categoryId, categoryUpdateDto);
 	}
 
 	delete(categoryId: number, categoryDeleteDto: CategoryDeleteDto): Observable<Category> {
-		return this.apiService.delete('/v1/categories/' + categoryId, categoryDeleteDto);
+		return this.apiService.delete('/api/v1/categories/' + categoryId, categoryDeleteDto);
 	}
 }

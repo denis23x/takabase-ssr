@@ -6,12 +6,12 @@
 
 export const environment = {
 	appUrl: 'http://localhost:4200',
-	apiUrl: 'http://localhost:8080/api',
+	apiUrl: 'http://localhost:8080',
 	ai: {
-		url: 'https://takabase-local-ai.web.app/api'
+		url: 'https://takabase-local-ai.web.app'
 	},
 	sharp: {
-		url: 'https://takabase-local-sharp.web.app/api'
+		url: 'https://takabase-local-sharp.web.app'
 	},
 	mailer: {
 		to: 'damage.23x@gmail.com',

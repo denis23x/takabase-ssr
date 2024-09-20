@@ -103,7 +103,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 		};
 
 		this.appInsightList$?.unsubscribe();
-		this.appInsightList$ = this.apiService.get('/v1/insights', insightGetAllDto).subscribe({
+		this.appInsightList$ = this.apiService.get('/api/v1/insights', insightGetAllDto).subscribe({
 			next: (insightList: any) => {
 				this.setInsightResponse(insightList);
 

@@ -440,7 +440,7 @@ export class SettingsAccountComponent extends CurrentUserMixin(class {}) impleme
 
 		this.currentUserLogoutRevokeRequest$?.unsubscribe();
 		this.currentUserLogoutRevokeRequest$ = this.apiService
-			.post('/v1/authorization/logout/revoke')
+			.post('/api/v1/authorization/logout/revoke')
 			.pipe(switchMap(() => this.authorizationService.getSignOut()))
 			.subscribe({
 				next: () => {

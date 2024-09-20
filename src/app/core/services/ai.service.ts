@@ -68,7 +68,7 @@ export class AIService {
 
 	moderateText(aiModerateTextDto: AIModerateTextDto): Observable<boolean> {
 		// prettier-ignore
-		return this.httpClient.post(this.setUrl('/v1/moderation/text'), aiModerateTextDto).pipe(
+		return this.httpClient.post(this.setUrl('/api/v1/moderation/text'), aiModerateTextDto).pipe(
 			catchError((httpErrorResponse: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpErrorResponse)),
 			map((response: any) => response.data),
 			switchMap((aiModerateTextResult: AIModerateTextResult) => {
@@ -90,7 +90,7 @@ export class AIService {
 
 	moderateImage(formData: FormData): Observable<boolean> {
 		// prettier-ignore
-		return this.httpClient.post(this.setUrl('/v1/moderation/image'), formData).pipe(
+		return this.httpClient.post(this.setUrl('/api/v1/moderation/image'), formData).pipe(
 			catchError((httpErrorResponse: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpErrorResponse)),
 			map((response: any) => response.data),
 			switchMap((aiModerateImageResult: AIModerateImageResult[]) => {

@@ -12,7 +12,6 @@ import { FirebaseService } from './firebase.service';
 import mime from 'mime';
 import dayjs from 'dayjs/esm';
 import type { SharpFetchDto } from '../dto/sharp/sharp-fetch.dto';
-import type { SharpOutputDownloadUrlDto } from '../dto/sharp/sharp-output-download-url.dto';
 import type { FirebaseError } from 'firebase/app';
 
 @Injectable()
@@ -92,7 +91,7 @@ export class SharpService {
 
 	getFetch(sharpFetchDto: SharpFetchDto): Observable<File> {
 		return this.httpClient
-			.get(this.setUrl('/v1/utilities/fetch'), {
+			.get(this.setUrl('/api/v1/utilities/fetch'), {
 				params: {
 					...sharpFetchDto
 				},
@@ -108,24 +107,9 @@ export class SharpService {
 			);
 	}
 
-	getOutputDownloadUrl(sharpOutputDownloadUrlDto: SharpOutputDownloadUrlDto): Observable<any> {
-		return this.httpClient
-			.get(this.setUrl('/v1/output/download-url'), {
-				params: {
-					...sharpOutputDownloadUrlDto
-				}
-			})
-			.pipe(
-				map((response: any) => response.data),
-				catchError((httpErrorResponse: HttpErrorResponse) => {
-					return this.apiService.setHttpErrorResponse(httpErrorResponse);
-				})
-			);
-	}
-
 	getOutputWebP(formData: FormData): Observable<File> {
 		return this.httpClient
-			.post(this.setUrl('/v1/output/webp'), formData, {
+			.post(this.setUrl('/api/v1/output/webp'), formData, {
 				responseType: 'blob'
 			})
 			.pipe(

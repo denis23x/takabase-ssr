@@ -104,7 +104,7 @@ export class UserPasswordResetComponent implements OnInit, OnDestroy {
 		this.userPasswordResetRequest$ = this.passwordService
 			.onResetSendEmail(passwordResetGetDto)
 			.pipe(
-				switchMap(() => this.apiService.post('/v1/authorization/logout/revoke')),
+				switchMap(() => this.apiService.post('/api/v1/authorization/logout/revoke')),
 				switchMap(() => this.authorizationService.getSignOut())
 			)
 			.subscribe({

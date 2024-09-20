@@ -17,22 +17,22 @@ export class PostBookmarkService {
 	/** REST */
 
 	create(postBookmarkCreateDto: PostBookmarkCreateDto): Observable<PostBookmark> {
-		return this.apiService.post('/v1/posts-bookmark', postBookmarkCreateDto);
+		return this.apiService.post('/api/v1/posts-bookmark', postBookmarkCreateDto);
 	}
 
 	getAll(postBookmarkGetAllDto: PostBookmarkGetAllDto): Observable<(PostBookmark | Post)[]> {
-		return this.apiService.get('/v1/posts-bookmark', postBookmarkGetAllDto);
+		return this.apiService.get('/api/v1/posts-bookmark', postBookmarkGetAllDto);
 	}
 
 	getOne(postId: number, postBookmarkGetOneDto: PostBookmarkGetOneDto): Observable<PostBookmark | Post | null> {
-		return this.apiService.get('/v1/posts-bookmark/' + postId, postBookmarkGetOneDto);
+		return this.apiService.get('/api/v1/posts-bookmark/' + postId, postBookmarkGetOneDto);
 	}
 
 	update(postId: number, postBookmarkUpdateDto: PostBookmarkUpdateDto): Observable<PostBookmark> {
-		return this.apiService.put('/v1/posts-bookmark/' + postId, postBookmarkUpdateDto);
+		return this.apiService.put('/api/v1/posts-bookmark/' + postId, postBookmarkUpdateDto);
 	}
 
 	delete(postId: number): Observable<Partial<PostBookmark>> {
-		return this.apiService.delete('/v1/posts-bookmark/' + postId);
+		return this.apiService.delete('/api/v1/posts-bookmark/' + postId);
 	}
 }
