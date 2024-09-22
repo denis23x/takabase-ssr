@@ -16,7 +16,7 @@ export class SnackbarService {
 
 	setSnack(snack: Partial<Snack>): void {
 		snack.id = this.helperService.getNanoId();
-		snack.timestamp = Date.now();
+		snack.timestamp = dayjs().valueOf();
 
 		const timestampStart: number = snack.timestamp;
 		const timestampFinish: number = snack.timestamp + snack.options.duration;

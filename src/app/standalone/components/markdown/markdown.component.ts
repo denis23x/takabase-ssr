@@ -225,7 +225,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 						.subscribe({
 							next: (fileUrl: string) => {
 								const params: any = {
-									title: Date.now(),
+									title: 'Markdown',
 									url: fileUrl
 								};
 
