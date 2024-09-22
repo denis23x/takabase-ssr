@@ -41,9 +41,14 @@ export function app(): express.Express {
 	server.set('views', browserDistFolder);
 
 	// prettier-ignore
-	server.use(['/avatars', '/covers', '/images', '/seed', '/temp'], proxy(environment.sharp.url, {
+	server.use('/(post-covers|post-images|post-password-covers|post-password-images|post-private-covers|post-private-images|user-avatars|seed|temp)/*', proxy('https://firebasestorage.googleapis.com', {
 		filter: (req) => req.method === 'GET',
-		proxyReqPathResolver: (req) => '/api/v1/output/storage/' + req.originalUrl.substring(1)
+		proxyReqPathResolver: (req) => {
+			const storageBucket: string = ['/v0/b', environment.firebase.storageBucket, 'o'].join('/');
+			const storageBucketFile: string = req.originalUrl.replace(/\/(?=[^\/]*\.webp$)/, '%2F') + '?alt=media';
+
+			return storageBucket + storageBucketFile;
+		}
 	}));
 
 	// prettier-ignore

@@ -122,13 +122,13 @@
 					<p class="text-lg font-bold">Posts <span class="text-error"> not found </span></p>
 					<a
 						class="link text-sm"
-						title="Create new post"
-						aria-label="Create new post"
+						title="Create new post with password"
+						aria-label="Create new post with password"
 						[routerLink]="['/create']"
 						[queryParams]="{ postType: 'password' }"
 						[queryParamsHandling]="'merge'"
 					>
-						Create new hidden post
+						Create new post with password
 					</a>
 				</div>
 			}
@@ -143,8 +143,8 @@
 					<p class="text-lg font-bold">Posts <span class="text-error"> not found </span></p>
 					<a
 						class="link text-sm"
-						title="Create new post"
-						aria-label="Create new post"
+						title="Create new private post"
+						aria-label="Create new private post"
 						[routerLink]="['/create']"
 						[queryParams]="{ postType: 'private' }"
 						[queryParamsHandling]="'merge'"

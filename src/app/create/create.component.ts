@@ -689,7 +689,6 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 					if (postTypeIsPristine) {
 						return postService[this.postType].update(postId, postDto);
 					} else {
-						// prettier-ignore
 						return postService[this.postType]
 							.create(postDto)
 							.pipe(switchMap(() => postService[this.postTypeOriginal].delete(postId, postDeleteDto)));
