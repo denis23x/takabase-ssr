@@ -47,7 +47,7 @@ export class PostPrivateComponent implements OnInit, OnDestroy {
 	}
 
 	setSkeleton(): void {
-		this.postPrivate = this.skeletonService.getPost(['user']);
+		this.postPrivate = this.skeletonService.getPost();
 		this.postPrivateSkeletonToggle = true;
 	}
 
@@ -58,9 +58,7 @@ export class PostPrivateComponent implements OnInit, OnDestroy {
 			.subscribe({
 				next: () => {
 					const postPrivateId: number = Number(this.activatedRoute.snapshot.paramMap.get('postPrivateId'));
-					const postPrivateGetOneDto: PostGetOneDto = {
-						scope: ['user']
-					};
+					const postPrivateGetOneDto: PostGetOneDto = {};
 
 					this.postPrivateRequest$?.unsubscribe();
 					this.postPrivateRequest$ = this.postPrivateService

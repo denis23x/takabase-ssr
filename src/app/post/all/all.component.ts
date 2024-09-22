@@ -51,15 +51,13 @@ export class PostAllComponent implements OnInit, OnDestroy {
 	}
 
 	setSkeleton(): void {
-		this.post = this.skeletonService.getPost(['category', 'user']);
+		this.post = this.skeletonService.getPost();
 		this.postSkeletonToggle = true;
 	}
 
 	setResolver(): void {
 		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-		const postGetOneDto: PostGetOneDto = {
-			scope: ['user', 'category']
-		};
+		const postGetOneDto: PostGetOneDto = {};
 
 		this.postRequest$?.unsubscribe();
 		this.postRequest$ = this.postService

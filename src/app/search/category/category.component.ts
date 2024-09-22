@@ -100,7 +100,7 @@ export class SearchCategoryComponent extends M(class {}) implements OnInit, OnDe
 	}
 
 	setSkeleton(): void {
-		this.categoryList = this.skeletonService.getCategoryList(['user']);
+		this.categoryList = this.skeletonService.getCategoryList();
 		this.categoryListSkeletonToggle = true;
 
 		if (this.platformService.isBrowser()) {

@@ -27,62 +27,62 @@ export class SkeletonService {
 		}
 	});
 
-	getCategory(scope: string[] = []): Category {
+	getCategory(): Category {
 		return {
 			id: Number(customAlphabet(numbers, 8)()),
 			name: this.loremIpsum.generateWords(2),
 			description: this.loremIpsum.generateSentences(1),
-			user: scope.includes('user') ? this.getUser() : undefined,
-			posts: scope.includes('posts') ? this.getPostList() : [],
+			user: this.getUser(),
+			posts: this.getPostList(),
 			createdAt: dayjs().subtract(1, 'day').toISOString(),
 			updatedAt: dayjs().subtract(1, 'day').toISOString()
 		};
 	}
 
-	getCategoryList(scope: string[] = []): Category[] {
+	getCategoryList(): Category[] {
 		return Array(10)
 			.fill(null)
-			.map(() => this.getCategory(scope));
+			.map(() => this.getCategory());
 	}
 
-	getPost(scope: string[] = []): Post {
+	getPost(): Post {
 		return {
 			id: Number(customAlphabet(numbers, 8)()),
 			name: this.loremIpsum.generateWords(2),
 			firebaseUid: this.helperService.getNanoId(4),
 			description: this.loremIpsum.generateSentences(1),
 			image: +customAlphabet('01', 1)() ? './assets/images/placeholder-image.svg' : null,
-			category: scope.includes('category') ? this.getCategory() : undefined,
-			user: scope.includes('user') ? this.getUser() : undefined,
+			category: this.getCategory(),
+			user: this.getUser(),
 			markdown: this.loremIpsum.generateSentences(5),
 			createdAt: dayjs().subtract(1, 'day').toISOString(),
 			updatedAt: dayjs().subtract(1, 'day').toISOString()
 		};
 	}
 
-	getPostList(scope: string[] = []): Post[] {
+	getPostList(): Post[] {
 		return Array(10)
 			.fill(null)
-			.map(() => this.getPost(scope));
+			.map(() => this.getPost());
 	}
 
-	getUser(scope: string[] = []): User {
+	getUser(): User {
 		return {
 			id: Number(customAlphabet(numbers, 8)()),
 			name: this.loremIpsum.generateWords(1),
 			description: this.loremIpsum.generateWords(3),
 			avatar: +customAlphabet('01', 1)() ? './assets/images/placeholder-image.svg' : null,
-			categories: scope.includes('categories') ? this.getCategoryList() : [],
-			posts: scope.includes('posts') ? this.getPostList() : [],
+			categories: this.getCategoryList(),
+			posts: this.getPostList(),
 			createdAt: dayjs().subtract(1, 'day').toISOString(),
 			updatedAt: dayjs().subtract(1, 'day').toISOString()
 		};
 	}
 
-	getUserList(scope: string[] = []): User[] {
+	getUserList(): User[] {
 		return Array(10)
 			.fill(null)
-			.map(() => this.getUser(scope));
+			.map(() => this.getUser());
 	}
 
 	getInsightList(): any {

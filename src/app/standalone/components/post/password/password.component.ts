@@ -95,8 +95,7 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 
 			const postPasswordId: number = Number(this.activatedRoute.snapshot.paramMap.get('postPasswordId'));
 			const postPasswordGetOneDto: PostGetOneDto = {
-				...this.postPasswordForm.value,
-				scope: ['user']
+				...this.postPasswordForm.value
 			};
 
 			this.postPasswordRequest$?.unsubscribe();

@@ -266,7 +266,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 
 		if (postId) {
-			this.post = this.skeletonService.getPost(['category']);
+			this.post = this.skeletonService.getPost();
 			this.postSkeletonToggle = true;
 		}
 	}
@@ -301,8 +301,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 			if (postId && postType) {
 				const postGetOneDto: PostGetOneDto = {
-					userFirebaseUid: this.currentUser.uid,
-					scope: ['category']
+					userFirebaseUid: this.currentUser.uid
 				};
 
 				const postTypeMap: Record<string, Observable<Post>> = {

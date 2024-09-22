@@ -1,5 +1,3 @@
 /** @format */
 
-export interface UserGetOneDto {
-	scope?: string[];
-}
+export interface UserGetOneDto {}

@@ -7,5 +7,4 @@ export interface PostGetAllDto {
 	query?: string;
 	page: number;
 	size: number;
-	scope?: string[];
 }

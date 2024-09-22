@@ -57,7 +57,7 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 	}
 
 	setSkeleton(): void {
-		this.postPassword = this.skeletonService.getPost(['user']);
+		this.postPassword = this.skeletonService.getPost();
 		this.postPasswordSkeletonToggle = true;
 	}
 
@@ -71,9 +71,7 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 					const postPasswordCookieKey: string = 'post-password-' + postPasswordId;
 					const postPasswordCookieValue: string | undefined = this.cookiesService.getItem(postPasswordCookieKey);
 					const postPasswordDecrypt: string | undefined = this.helperService.getDecrypt(postPasswordCookieValue);
-					const postPasswordGetOneDto: PostGetOneDto = {
-						scope: ['user']
-					};
+					const postPasswordGetOneDto: PostGetOneDto = {};
 
 					// Attach password only if exists
 

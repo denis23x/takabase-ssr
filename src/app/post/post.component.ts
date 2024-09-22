@@ -66,7 +66,7 @@ export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 	}
 
 	setSkeleton(): void {
-		this.post = this.skeletonService.getPost(['user', 'category']);
+		this.post = this.skeletonService.getPost();
 		this.postSkeletonToggle = true;
 	}
 

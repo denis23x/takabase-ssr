@@ -6,5 +6,4 @@ export interface CategoryGetAllDto {
 	query?: string;
 	page: number;
 	size: number;
-	scope?: string[];
 }
