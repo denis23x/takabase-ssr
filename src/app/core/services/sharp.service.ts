@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 import { catchError, map } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { FirebaseStorage, getDownloadURL, ref, StorageReference, uploadBytes, UploadMetadata } from 'firebase/storage';
+import { FirebaseStorage, ref, StorageReference, uploadBytes, UploadMetadata } from 'firebase/storage';
 import { HelperService } from './helper.service';
 import { FirebaseService } from './firebase.service';
 import mime from 'mime';
@@ -23,13 +23,11 @@ export class SharpService {
 
 	/** Utility */
 
-	getFileName(file: File): string {
-		const fileDate: number = Date.now();
-		const fileId: string = this.helperService.getNanoId();
+	getFileNameUid(file: File): string {
+		const fileUid: string = this.helperService.getNanoId();
 		const fileExtension: string = mime.getExtension(file.type);
-		const fileName: string = [fileDate, fileId].join('-');
 
-		return fileName + '.' + fileExtension;
+		return fileUid + '.' + fileExtension;
 	}
 
 	getFileValidationMime(file: File, mimeTypes: string[]): boolean {
@@ -67,11 +65,14 @@ export class SharpService {
 	/** Firebase storage */
 
 	create(file: File): Observable<string> {
-		const fileName: string = this.getFileName(file);
-		const filePath: string = ['temp', fileName].join('/');
+		const url: URL = this.helperService.getURL();
+
+		const fileName: string = this.getFileNameUid(file);
+		const filePathDestination: string = ['temp', fileName].join('/');
+		const filePath: string = [url.origin, filePathDestination].join('/');
 
 		const storage: FirebaseStorage = this.firebaseService.getStorage();
-		const storageRef: StorageReference = ref(storage, filePath);
+		const storageRef: StorageReference = ref(storage, filePathDestination);
 		const storageRefMetadata: UploadMetadata = {
 			cacheControl: 'public, max-age=31536000, immutable',
 			contentDisposition: 'inline',
@@ -82,7 +83,7 @@ export class SharpService {
 		};
 
 		return from(uploadBytes(storageRef, file, storageRefMetadata)).pipe(
-			switchMap(() => getDownloadURL(storageRef)),
+			map(() => filePath),
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))
 		);
 	}

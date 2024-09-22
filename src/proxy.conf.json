@@ -1,0 +1,8 @@
+{
+  "/(avatars|covers|images|seed|temp)/*": {
+    "target": "http://localhost:9000/api/v1/output/storage",
+    "secure": false,
+    "changeOrigin": true,
+    "cookieDomainRewrite": "localhost:4200"
+  }
+}

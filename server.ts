@@ -5,10 +5,12 @@ import { CommonEngine } from '@angular/ssr';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import { REQUEST, RESPONSE } from './src/app/core/tokens/express.tokens';
+import { environment } from './src/environments/environment';
 import express from 'express';
 import bootstrap from './src/main.server';
 import expressStaticGzip from 'express-static-gzip';
 import compression from 'compression';
+import proxy from 'express-http-proxy';
 
 // Function to get the value of a specific cookie
 function getCookie(cookieString: string, cookieName: string) {
@@ -37,6 +39,12 @@ export function app(): express.Express {
 
 	server.set('view engine', 'html');
 	server.set('views', browserDistFolder);
+
+	// prettier-ignore
+	server.use(['/avatars', '/covers', '/images', '/seed', '/temp'], proxy(environment.sharp.url, {
+		filter: (req) => req.method === 'GET',
+		proxyReqPathResolver: (req) => '/api/v1/output/storage/' + req.originalUrl.substring(1)
+	}));
 
 	// prettier-ignore
 	server.get(['/search/posts/:postId', '/:username/post/:postId', '/:username/category/:categoryId/post/:postId'], (req, res) => {
