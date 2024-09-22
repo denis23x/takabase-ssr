@@ -49,7 +49,6 @@ export class SkeletonService {
 		return {
 			id: Number(customAlphabet(numbers, 8)()),
 			name: this.loremIpsum.generateWords(2),
-			firebaseUid: this.helperService.getNanoId(4),
 			description: this.loremIpsum.generateSentences(1),
 			image: +customAlphabet('01', 1)() ? './assets/images/placeholder-image.svg' : null,
 			category: this.getCategory(),

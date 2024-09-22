@@ -673,15 +673,8 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			const postDeleteDto: PostDeleteDto = {};
 			const postDto: PostCreateDto & PostUpdateDto = {
 				...this.postForm.value,
-				image: this.postForm.value.image || null,
-				firebaseUid: this.post?.firebaseUid || undefined
+				image: this.postForm.value.image || null
 			};
-
-			// Attach firebaseUid only if exists
-
-			if (this.post?.firebaseUid) {
-				postDeleteDto.firebaseUid = this.post.firebaseUid;
-			}
 
 			// Maps
 

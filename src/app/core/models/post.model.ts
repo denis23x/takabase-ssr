@@ -5,7 +5,6 @@ import type { Category } from './category.model';
 
 export interface Post {
 	id: number;
-	firebaseUid: string;
 	name: string;
 	description: string;
 	markdown?: string;

@@ -104,12 +104,6 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 		const postId: number = this.post.id;
 		const postDeleteDto: PostDeleteDto = {};
 
-		// Attach firebaseUid only if exists
-
-		if (this.post.firebaseUid) {
-			postDeleteDto.firebaseUid = this.post.firebaseUid;
-		}
-
 		const postTypeMap: Record<string, Observable<Partial<Post>>> = {
 			password: this.postPasswordService.delete(postId, postDeleteDto),
 			private: this.postPrivateService.delete(postId, postDeleteDto),
