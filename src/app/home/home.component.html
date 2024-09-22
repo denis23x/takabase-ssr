@@ -105,7 +105,7 @@
 					></i>
 				</div>
 			</li>
-			@for (appInsight of appInsightList; track appInsight.id) {
+			@for (appInsight of appInsightList; track $index) {
 				<li
 					class="flex flex-col items-center justify-center gap-1 text-center col-span-4 lg:col-span-2 border-r last:border-0 border-base-content/20 p-4"
 				>

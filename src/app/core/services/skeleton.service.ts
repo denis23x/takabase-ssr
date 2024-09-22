@@ -1,7 +1,6 @@
 /** @format */
 
-import { inject, Injectable } from '@angular/core';
-import { HelperService } from './helper.service';
+import { Injectable } from '@angular/core';
 import { numbers } from 'nanoid-dictionary';
 import { customAlphabet } from 'nanoid';
 import { LoremIpsum } from 'lorem-ipsum';
@@ -14,8 +13,6 @@ import type { Category } from '../models/category.model';
 	providedIn: 'root'
 })
 export class SkeletonService {
-	private readonly helperService: HelperService = inject(HelperService);
-
 	loremIpsum: LoremIpsum = new LoremIpsum({
 		sentencesPerParagraph: {
 			max: 8,
@@ -33,7 +30,7 @@ export class SkeletonService {
 			name: this.loremIpsum.generateWords(2),
 			description: this.loremIpsum.generateSentences(1),
 			user: this.getUser(),
-			posts: this.getPostList(),
+			posts: [],
 			createdAt: dayjs().subtract(1, 'day').toISOString(),
 			updatedAt: dayjs().subtract(1, 'day').toISOString()
 		};
@@ -71,8 +68,8 @@ export class SkeletonService {
 			name: this.loremIpsum.generateWords(1),
 			description: this.loremIpsum.generateWords(3),
 			avatar: +customAlphabet('01', 1)() ? './assets/images/placeholder-image.svg' : null,
-			categories: this.getCategoryList(),
-			posts: this.getPostList(),
+			categories: [],
+			posts: [],
 			createdAt: dayjs().subtract(1, 'day').toISOString(),
 			updatedAt: dayjs().subtract(1, 'day').toISOString()
 		};

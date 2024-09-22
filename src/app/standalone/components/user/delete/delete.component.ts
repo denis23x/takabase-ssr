@@ -137,9 +137,13 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 			this.userDeleteForm.disable();
 
 			const userUid: string = this.currentUser.uid;
-			const userDeleteDto: UserDeleteDto = {
-				...this.userDeleteForm.value
-			};
+			const userDeleteDto: UserDeleteDto = {};
+
+			// Attach password only if provided
+
+			if (this.userDeleteForm.value.password) {
+				userDeleteDto.password = this.userDeleteForm.value.password;
+			}
 
 			const userDeleteRequest$: Observable<User> = this.userService.delete(userUid, userDeleteDto).pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {

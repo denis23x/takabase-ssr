@@ -136,12 +136,10 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 			const categoryId: number = this.category.id;
 			const categoryDeleteDto: CategoryDeleteDto = {};
 
-			const abstractControl: AbstractControl = this.categoryDeleteForm.get('categoryId');
-
 			// Attach categoryId only if provided
 
-			if (abstractControl.value) {
-				categoryDeleteDto.categoryId = abstractControl.value;
+			if (this.categoryDeleteForm.value.categoryId) {
+				categoryDeleteDto.categoryId = this.categoryDeleteForm.value.categoryId;
 			}
 
 			this.categoryDeleteFormRequest$?.unsubscribe();
