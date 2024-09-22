@@ -41,7 +41,7 @@ export function app(): express.Express {
 	server.set('views', browserDistFolder);
 
 	// prettier-ignore
-	server.use('/(post-covers|post-images|post-password-covers|post-password-images|post-private-covers|post-private-images|user-avatars|seed|temp)/*', proxy('https://firebasestorage.googleapis.com', {
+	server.use(['/post-covers/*', '/post-images/*', '/post-password-covers/*', '/post-password-images/*', '/post-private-covers/*', '/post-private-images/*', '/user-avatars/*', '/seed/*', '/temp/*'], proxy('https://firebasestorage.googleapis.com', {
 		filter: (req) => req.method === 'GET',
 		proxyReqPathResolver: (req) => {
 			const storageBucket: string = ['/v0/b', environment.firebase.storageBucket, 'o'].join('/');
