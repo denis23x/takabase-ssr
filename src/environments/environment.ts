@@ -114,7 +114,16 @@ export const environment = {
 			'registration',
 			'reset',
 			'terms',
-			'help'
+			'help',
+			'post-covers',
+			'post-images',
+			'post-password-covers',
+			'post-password-images',
+			'post-private-covers',
+			'post-private-images',
+			'user-avatars',
+			'seed',
+			'temp'
 		],
 		appearance: {
 			dropdownBackdrop: false,

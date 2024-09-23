@@ -80,7 +80,7 @@
 			<p class="text-base-content text-sm max-w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 				@if (post._highlightResult?.description) {
 					<span class="line-clamp-3 sm:line-clamp-5 text-ellipsis" itemprop="description" [innerHTML]="post._highlightResult.description.value"></span>
-				} @else {
+				} @else if (post.description) {
 					<span class="line-clamp-3 sm:line-clamp-5 text-ellipsis" itemprop="description">{{ post.description }}</span>
 				}
 			</p>

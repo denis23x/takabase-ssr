@@ -23,6 +23,7 @@ import {
 	FormGroup,
 	FormsModule,
 	ReactiveFormsModule,
+	ValidatorFn,
 	Validators
 } from '@angular/forms';
 import { CommonModule, DOCUMENT } from '@angular/common';
@@ -73,7 +74,7 @@ import type { HttpErrorResponse } from '@angular/common/http';
 interface PostForm {
 	name: FormControl<string>;
 	cover: FormControl<string | null>;
-	description: FormControl<string>;
+	description: FormControl<string | null>;
 	categoryId?: FormControl<number>;
 	categoryName?: FormControl<string>;
 	password?: FormControl<string>;
@@ -146,13 +147,13 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			Validators.maxLength(48)
 		]),
 		cover: this.formBuilder.control(null, []),
-		description: this.formBuilder.nonNullable.control('', [
+		description: this.formBuilder.control(null, [
 			Validators.required,
 			Validators.minLength(16),
 			Validators.maxLength(192)
 		]),
 		categoryId: this.formBuilder.control(null, [Validators.required]),
-		categoryName: this.formBuilder.nonNullable.control('', []),
+		categoryName: this.formBuilder.nonNullable.control('', [Validators.required]),
 		markdown: this.formBuilder.nonNullable.control('', [
 			Validators.required,
 			Validators.minLength(64),
@@ -377,9 +378,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 				this.category = undefined;
 				this.categorySkeletonToggle = false;
 
-				this.onTogglePostDraftDialog(true)
-					.then(() => console.debug('Post draft initialized'))
-					.catch((error: any) => console.error(error));
+				this.onTogglePostDraftDialog(true).catch((error: any) => console.error(error));
 			}
 		}
 	}
@@ -465,11 +464,9 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	/** Category */
 
 	onToggleCategory(toggle: boolean): void {
-		const abstractControl: AbstractControl = this.postForm.get('categoryName');
-
 		if (this.categoryList.length) {
-			if (!toggle && !abstractControl.value) {
-				abstractControl.setErrors({ required: true });
+			if (!toggle) {
+				this.postForm.get('categoryName').markAsTouched();
 			}
 		}
 	}
@@ -478,14 +475,6 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 		this.categoryList.unshift(categoryCreate);
 
 		this.onSelectCategory(categoryCreate);
-	}
-
-	onUpdateCategory(categoryUpdate: Category): void {
-		this.categoryList = this.categoryList.map((category: Category) => {
-			return category.id === categoryUpdate.id ? categoryUpdate : category;
-		});
-
-		this.onSelectCategory(categoryUpdate);
 	}
 
 	onSelectCategory(categorySelect: Category): void {
@@ -564,64 +553,59 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	onChangePostType(postType: string): void {
 		this.postType = postType;
 
-		switch (this.postType) {
-			case 'password': {
-				const password: string = this.post?.password || '';
+		const formControlsRemove = (): void => {
+			if (this.postType === 'password' || this.postType === 'private') {
+				this.postForm.removeControl('categoryId');
+				this.postForm.removeControl('categoryName');
+			}
 
+			if (this.postType === 'private' || this.postType === 'public') {
+				this.postForm.removeControl('password');
+			}
+		};
+
+		const formControlsModify = (): void => {
+			const postFormDescriptionValidators: ValidatorFn[] = [Validators.minLength(16), Validators.maxLength(192)];
+
+			if (this.postType === 'password' || this.postType === 'private') {
+				this.postForm.get('description').setValidators(postFormDescriptionValidators);
+			} else {
+				this.postForm.get('description').setValidators([Validators.required, ...postFormDescriptionValidators]);
+				this.postForm.get('description').markAsUntouched();
+			}
+		};
+
+		const formControlsAppend = (): void => {
+			if (this.postType === 'password') {
 				// prettier-ignore
-				this.postForm.addControl('password', this.formBuilder.nonNullable.control(password, [
+				this.postForm.addControl('password', this.formBuilder.nonNullable.control('', [
 					Validators.required,
 					Validators.minLength(6),
 					Validators.maxLength(48),
 					Validators.pattern(this.helperService.getRegex('password'))
 				]));
-
-				if (password) {
-					this.postForm.get('password').markAsTouched();
-				}
-
-				// Remove unnecessary controls for this postType
-				this.postForm.removeControl('categoryId');
-				this.postForm.removeControl('categoryName');
-
-				break;
 			}
-			case 'private': {
-				// Remove unnecessary controls for this postType
-				this.postForm.removeControl('categoryId');
-				this.postForm.removeControl('categoryName');
-				this.postForm.removeControl('password');
 
-				break;
+			if (this.postType === 'public') {
+				this.postForm.addControl('categoryId', this.formBuilder.control('', [Validators.required]));
+				this.postForm.addControl('categoryName', this.formBuilder.nonNullable.control('', []));
 			}
-			case 'public': {
-				const categoryId: number | null = this.category?.id || null;
-				const categoryName: string = this.category?.name || '';
+		};
 
-				this.postForm.addControl('categoryId', this.formBuilder.control(categoryId, [Validators.required]));
-				this.postForm.addControl('categoryName', this.formBuilder.nonNullable.control(categoryName, []));
+		// Update postForm
 
-				if (categoryId && categoryName) {
-					this.postForm.get('categoryId').markAsTouched();
-					this.postForm.get('categoryName').markAsTouched();
-				}
+		formControlsRemove();
+		formControlsModify();
+		formControlsAppend();
 
-				// Remove unnecessary controls for this postType
-				this.postForm.removeControl('password');
-
-				break;
-			}
-			default: {
-				throw new Error('Invalid post type specified: ' + this.postType);
-			}
-		}
+		Object.keys(this.postForm.controls)
+			.filter((control: string) => this.postForm.get(control).value)
+			.forEach((control: string) => this.postForm.get(control).markAsTouched());
 
 		// Update drafts
 
 		if (!this.post) {
-			this.onTogglePostDraftDialog(false)
-				.then(() => console.debug('Post draft updated'))
-				.catch((error: any) => console.error(error));
+			this.onTogglePostDraftDialog(false).catch((error: any) => console.error(error));
 		}
 	}
 
@@ -655,6 +639,12 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 		}
 
 		this.postForm.patchValue(value.postForm);
+
+		// Update postForm
+
+		Object.keys(this.postForm.controls)
+			.filter((control: string) => this.postForm.get(control).value)
+			.forEach((control: string) => this.postForm.get(control).markAsTouched());
 	}
 
 	onSubmitPostForm(redirect: boolean = false): void {
@@ -673,7 +663,8 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			const postDeleteDto: PostDeleteDto = {};
 			const postDto: PostCreateDto & PostUpdateDto = {
 				...this.postForm.value,
-				cover: this.postForm.value.cover || null
+				cover: this.postForm.value.cover || null,
+				description: this.postForm.value.description || null
 			};
 
 			// Maps
