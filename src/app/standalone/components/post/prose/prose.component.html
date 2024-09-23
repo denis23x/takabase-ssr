@@ -19,14 +19,14 @@
 					{{ post.name || "Name" }}
 				</h1>
 				<div class="flex items-center justify-start gap-4 w-full overflow-hidden">
-					@if (post.image) {
+					@if (post.cover) {
 						<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 							<figure class="h-24 w-24 rounded-btn relative overflow-hidden">
 								<img
 									class="object-cover object-center bg-base-300"
 									itemprop="image"
 									loading="eager"
-									[src]="post.image | firebaseStorage"
+									[src]="post.cover | firebaseStorage"
 									[alt]="post.name"
 								/>
 							</figure>

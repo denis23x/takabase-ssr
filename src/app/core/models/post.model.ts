@@ -8,7 +8,7 @@ export interface Post {
 	name: string;
 	description: string;
 	markdown?: string;
-	image: string | null;
+	cover: string | null;
 	user?: User;
 	category?: Category;
 	password?: string;

@@ -99,7 +99,7 @@ export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 	setMetaTags(): void {
 		const title: string = this.post.name;
 		const description: string = this.post.description;
-		const image: string = this.helperService.getImageURLQueryParams(this.post.image);
+		const cover: string = this.helperService.getImageURLQueryParams(this.post.cover);
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,
@@ -108,7 +108,7 @@ export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 			['article:published_time']: this.post.createdAt,
 			['article:modified_time']: this.post.updatedAt,
 			['article:author']: this.post.user.name,
-			['og:image']: image,
+			['og:image']: cover,
 			['og:image:alt']: title,
 			['og:image:type']: 'image/webp'
 		};
@@ -116,7 +116,7 @@ export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 		const metaTwitter: MetaTwitter = {
 			['twitter:title']: title,
 			['twitter:description']: description,
-			['twitter:image']: image,
+			['twitter:image']: cover,
 			['twitter:image:alt']: title
 		};
 

@@ -8,7 +8,7 @@
 		itemscope
 		itemtype="http://schema.org/Article"
 	>
-		@if (post.image) {
+		@if (post.cover) {
 			<figure class="block">
 				<a
 					class="relative block aspect-square"
@@ -24,14 +24,14 @@
 						class="object-cover object-center bg-base-300"
 						itemprop="image"
 						[attr.loading]="postImagePriority ? 'eager' : 'lazy'"
-						[src]="post.image | firebaseStorage"
+						[src]="post.cover | firebaseStorage"
 						[alt]="post.name"
 					/>
 				</a>
 			</figure>
 		}
 		<div class="flex h-full w-full flex-col items-start gap-2 p-4">
-			@if (!post.image) {
+			@if (!post.cover) {
 				@if ((post.createdAt | dayjs: "diff" : "day") === 0) {
 					<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 						<span

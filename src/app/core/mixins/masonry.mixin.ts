@@ -86,7 +86,7 @@ export function MasonryMixin<T extends new (...args: any[]) => any>(MasterClass:
 				const index: number = this.masonryColumnsWeights.indexOf(Math.min(...this.masonryColumnsWeights));
 
 				this.masonryColumns[index].push(post);
-				this.masonryColumnsWeights[index] += post.image ? 2.5 : 1;
+				this.masonryColumnsWeights[index] += post.cover ? 2.5 : 1;
 			});
 		}
 	}

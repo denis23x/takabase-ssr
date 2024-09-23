@@ -47,7 +47,7 @@ export class SkeletonService {
 			id: Number(customAlphabet(numbers, 8)()),
 			name: this.loremIpsum.generateWords(2),
 			description: this.loremIpsum.generateSentences(1),
-			image: +customAlphabet('01', 1)() ? './assets/images/placeholder-image.svg' : null,
+			cover: +customAlphabet('01', 1)() ? './assets/images/placeholder-image.svg' : null,
 			category: this.getCategory(),
 			user: this.getUser(),
 			markdown: this.loremIpsum.generateSentences(5),

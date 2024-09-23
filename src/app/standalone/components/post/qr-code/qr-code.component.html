@@ -16,7 +16,7 @@
 		>
 			<div class="flex flex-col items-center justify-start gap-4 p-4" slot="content">
 				<figure class="flex flex-col bg-base-200 rounded-box border border-base-content/20 overflow-hidden w-full">
-					<canvas class="aspect-square w-full" data-pw="app-qr-code-image-qr-code" #QRCodeCanvas></canvas>
+					<canvas class="aspect-square w-full" #QRCodeCanvas></canvas>
 				</figure>
 				<form class="flex flex-col gap-4 w-full" autocomplete="off" [formGroup]="QRCodeForm">
 					@if (QRCodeForm.get("url"); as url) {
@@ -55,8 +55,8 @@
 						<button
 							class="btn-success btn btn-md w-full"
 							type="button"
-							title="Save QR Code image"
-							aria-label="Save QR Code image"
+							title="Save QR Code"
+							aria-label="Save QR Code"
 							(click)="onSaveQRCode()"
 						>
 							Save

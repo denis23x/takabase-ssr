@@ -11,7 +11,7 @@
 			</p>
 			<hr class="w-full border-base-content/20" />
 			<div class="flex flex-col sm:flex-row items-stretch sm:gap-x-4 sm:-mt-1 w-full">
-				@if (postForm.get("image"); as image) {
+				@if (postForm.get("cover"); as cover) {
 					<div class="flex items-center justify-between gap-4 border-b border-base-content/20 pb-4 sm:pb-0 sm:border-0">
 						<fieldset class="form-control">
 							<label class="hidden sm:flex label">
@@ -30,14 +30,14 @@
                 class="flex items-center justify-center border border-base-content/20 rounded-btn h-12 w-12 sm:h-36 sm:w-36 overflow-hidden"
                 [appSkeletonToggle]="postSkeletonToggle || postFormImageIsSubmitted()"
                 [appSkeletonClassListElementRef]="['border-transparent']"
-                [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-200': postForm.disabled, 'border-success': image.value }"
+                [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-200': postForm.disabled, 'border-success': cover.value }"
               >
-                @if (image.value) {
+                @if (cover.value) {
                   <div class="relative w-full h-full group">
                     <img
                       class="block bg-base-200 object-cover object-center"
                       loading="eager"
-                      [src]="image.value | firebaseStorage"
+                      [src]="cover.value | firebaseStorage"
                       [alt]="'Image'"
                     />
                     @if (postForm.enabled) {
@@ -45,8 +45,8 @@
                         <button
                           class="btn-sm btn-circle btn btn-success fill-current"
                           type="button"
-                          title="Delete image"
-                          aria-label="Delete image"
+                          title="Delete cover"
+                          aria-label="Delete cover"
                           appSvgIcon
                           [disabled]="postForm.disabled"
                           [appSvgIconIcon]="'x'"
@@ -60,8 +60,8 @@
                   <button
                     class="flex items-center justify-center w-12 h-12 sm:bg-base-200 sm:rounded-full sm:active:scale-95 sm:hover:bg-base-300 transition fill-current"
                     type="button"
-                    title="Add image"
-                    aria-label="Add image"
+                    title="Add cover"
+                    aria-label="Add cover"
                     appSvgIcon
                     [disabled]="postForm.disabled"
                     [appSvgIconIcon]="'plus'"
@@ -111,20 +111,20 @@
 									<button
 										class="rounded-btn block w-full truncate text-right"
 										type="button"
-										[title]="(image.value ? 'Update' : 'Upload') + ' image'"
-										[attr.aria-label]="(image.value ? 'Update' : 'Upload') + ' image'"
+										[title]="(cover.value ? 'Update' : 'Upload') + ' cover'"
+										[attr.aria-label]="(cover.value ? 'Update' : 'Upload') + ' cover'"
 										(click)="onToggleCropperDialog(true)"
 									>
-										{{ image.value ? "Update" : "Upload" }}
+										{{ cover.value ? "Update" : "Upload" }}
 									</button>
 								</li>
-								@if (image.value) {
+								@if (cover.value) {
 									<li class="flex w-full snap-start scroll-my-2">
 										<button
 											class="rounded-btn block w-full truncate text-right"
 											type="button"
-											title="Delete image"
-											aria-label="Delete image"
+											title="Delete cover"
+											aria-label="Delete cover"
 											(click)="onUpdateCropperImage(null)"
 										>
 											Delete

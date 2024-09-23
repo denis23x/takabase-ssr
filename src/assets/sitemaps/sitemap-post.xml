@@ -40,13 +40,13 @@
     <loc>https://takabase.com/post/210002</loc>
     <lastmod>2024-09-18T06:12:10.500Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>hourly</changefreq>
+    <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://takabase.com/post/240001</loc>
     <lastmod>2024-09-18T06:11:07.810Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>hourly</changefreq>
+    <changefreq>daily</changefreq>
     <image:image>
       <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Fposts%2FAFIKniYQvfl3dFhP4mfI%2Fimage%2F1718687787341-HqyUTeyoir1V.webp?alt=media</image:loc>
       <image:title>A few CSS tips and tricks with Tailwind CSS</image:title>
@@ -72,25 +72,25 @@
     <loc>https://takabase.com/post/390001</loc>
     <lastmod>2024-09-18T06:09:43.870Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>hourly</changefreq>
+    <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://takabase.com/post/420001</loc>
-    <lastmod>2024-09-18T06:16:06.956Z</lastmod>
+    <lastmod>2024-09-22T12:11:28.732Z</lastmod>
     <priority>0.50</priority>
     <changefreq>hourly</changefreq>
     <image:image>
-      <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Fposts%2FvtRmRqEHLji2jr2EfZzx%2Fimage%2F1725523671524-tAKffcE3wZP3.webp?alt=media</image:loc>
+      <image:loc>https://takabase.com/post-covers/b7NtZExAzwF6.webp?alt=media</image:loc>
       <image:title>Emulation made easy on Steam Deck</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://takabase.com/post/450001</loc>
-    <lastmod>2024-09-18T05:40:32.481Z</lastmod>
+    <lastmod>2024-09-22T12:22:44.739Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>daily</changefreq>
+    <changefreq>hourly</changefreq>
     <image:image>
-      <image:loc>https://firebasestorage.googleapis.com/v0/b/takabase-prod.appspot.com/o/users%2F5J8viYLJbgUSefnhceYcsoQIm9T2%2Fposts%2Fe6V6Wjtam5YlSJEMR3fM%2Fimage%2F1725524178335-mKfGGwSYrF4j.webp?alt=media</image:loc>
+      <image:loc>https://takabase.com/post-covers/Vnqfvok7HMew.webp?alt=media</image:loc>
       <image:title>RPCS3 - The PlayStation 3 emulator</image:title>
     </image:image>
   </url>
@@ -104,6 +104,6 @@
     <loc>https://takabase.com/post/510001</loc>
     <lastmod>2024-09-19T05:57:12.704Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>hourly</changefreq>
+    <changefreq>daily</changefreq>
   </url>
 </urlset>

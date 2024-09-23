@@ -72,7 +72,7 @@ import type { HttpErrorResponse } from '@angular/common/http';
 
 interface PostForm {
 	name: FormControl<string>;
-	image: FormControl<string | null>;
+	cover: FormControl<string | null>;
 	description: FormControl<string>;
 	categoryId?: FormControl<number>;
 	categoryName?: FormControl<string>;
@@ -145,7 +145,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			Validators.minLength(4),
 			Validators.maxLength(48)
 		]),
-		image: this.formBuilder.control(null, []),
+		cover: this.formBuilder.control(null, []),
 		description: this.formBuilder.nonNullable.control('', [
 			Validators.required,
 			Validators.minLength(16),
@@ -503,12 +503,12 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	/** Image Cropper */
 
 	onUpdateCropperImage(fileUrl: string | null): void {
-		this.postForm.get('image').setValue(fileUrl, { emitEvent: true });
+		this.postForm.get('cover').setValue(fileUrl, { emitEvent: true });
 		this.postFormImageIsSubmitted.set(false);
 	}
 
 	onSubmitCropperImage(file: File): void {
-		this.postForm.get('image').setValue(null, { emitEvent: false });
+		this.postForm.get('cover').setValue(null, { emitEvent: false });
 		this.postFormImageIsSubmitted.set(true);
 
 		this.postFormImageRequest$?.unsubscribe();
@@ -673,7 +673,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			const postDeleteDto: PostDeleteDto = {};
 			const postDto: PostCreateDto & PostUpdateDto = {
 				...this.postForm.value,
-				image: this.postForm.value.image || null
+				cover: this.postForm.value.cover || null
 			};
 
 			// Maps
