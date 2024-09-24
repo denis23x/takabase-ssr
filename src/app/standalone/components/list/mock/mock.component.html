@@ -16,6 +16,7 @@
 						class="link text-sm"
 						title="Create new post"
 						aria-label="Create new post"
+						rel="nofollow"
 						[routerLink]="['/create']"
 						[queryParamsHandling]="'merge'"
 					>
@@ -36,6 +37,7 @@
 						class="link text-sm"
 						title="Create new category"
 						aria-label="Create new category"
+						rel="nofollow"
 						[routerLink]="['/create']"
 						[queryParams]="{ categoryName: query }"
 					>
@@ -57,6 +59,7 @@
 							class="link text-sm"
 							title="Create account"
 							aria-label="Create account"
+							rel="nofollow"
 							slot="public"
 							[routerLink]="['/registration']"
 						>
@@ -84,6 +87,7 @@
 						class="link text-sm"
 						title="Create new post"
 						aria-label="Create new post"
+						rel="nofollow"
 						[routerLink]="['/create']"
 						[queryParamsHandling]="'merge'"
 					>
@@ -104,6 +108,7 @@
 						class="link text-sm"
 						title="Create new post"
 						aria-label="Create new post"
+						rel="nofollow"
 						[routerLink]="['/create']"
 						[queryParamsHandling]="'merge'"
 					>
@@ -124,6 +129,7 @@
 						class="link text-sm"
 						title="Create new post with password"
 						aria-label="Create new post with password"
+						rel="nofollow"
 						[routerLink]="['/create']"
 						[queryParams]="{ postType: 'password' }"
 						[queryParamsHandling]="'merge'"
@@ -145,6 +151,7 @@
 						class="link text-sm"
 						title="Create new private post"
 						aria-label="Create new private post"
+						rel="nofollow"
 						[routerLink]="['/create']"
 						[queryParams]="{ postType: 'private' }"
 						[queryParamsHandling]="'merge'"
@@ -167,6 +174,7 @@
 						class="link text-sm"
 						title="Create new post"
 						aria-label="Create new post"
+            rel="nofollow"
 						[routerLink]="['/create']"
 						[queryParams]="{ postType: 'category', categoryId: currentUser?.displayName === username ? categoryId : null }"
 						[queryParamsHandling]="'merge'"

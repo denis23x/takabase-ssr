@@ -159,6 +159,10 @@ export class UserCategoryComponent extends CU(M(SP(class {}))) implements OnInit
 				tap(() => {
 					this.postList = this.skeletonService.getPostList();
 					this.postListSkeletonToggle = true;
+
+					if (this.platformService.isBrowser()) {
+						this.setMasonry();
+					}
 				})
 			)
 			.subscribe({
