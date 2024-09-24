@@ -10,10 +10,10 @@ import { MarkdownService } from '../../core/services/markdown.service';
 export class MarkdownTimeToReadPipe implements PipeTransform {
 	private readonly markdownService: MarkdownService = inject(MarkdownService);
 
-	transform(value: string): string {
+	transform(value: string): number {
 		const wordsPerMinute: number = 200;
 		const wordsCount: number = this.markdownService.getMarkdownItRawText(value).trim().split(/\s+/).length;
 
-		return String(Math.ceil(wordsCount / wordsPerMinute));
+		return Math.ceil(wordsCount / wordsPerMinute);
 	}
 }

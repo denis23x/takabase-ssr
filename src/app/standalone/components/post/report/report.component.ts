@@ -25,7 +25,6 @@ import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { RouterModule } from '@angular/router';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { PlatformService } from '../../../../core/services/platform.service';
-import { FirebaseStoragePipe } from '../../../pipes/firebase-storage.pipe';
 import type { Post } from '../../../../core/models/post.model';
 import type { ReportCreateDto } from '../../../../core/dto/report/report-create.dto';
 
@@ -46,8 +45,7 @@ interface ReportForm {
 		ReactiveFormsModule,
 		SvgIconComponent,
 		BadgeErrorComponent,
-		SkeletonDirective,
-		FirebaseStoragePipe
+		SkeletonDirective
 	],
 	providers: [ReportService],
 	selector: 'app-post-report, [appPostReport]',

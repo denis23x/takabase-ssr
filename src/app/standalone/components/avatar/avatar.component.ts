@@ -5,9 +5,7 @@ import { toSvg } from 'jdenticon';
 import { DOCUMENT } from '@angular/common';
 import { PlatformService } from '../../../core/services/platform.service';
 import { HelperService } from '../../../core/services/helper.service';
-import { environment } from '../../../../environments/environment';
 import { BehaviorSubject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 
 @Component({
 	standalone: true,
@@ -58,22 +56,13 @@ export class AvatarComponent implements OnInit, OnDestroy {
 			elementRefImage.itemprop = 'image';
 			elementRefImage.id = this.helperService.getNanoId(12);
 			elementRefImage.classList.add(...['bg-base-300', 'object-cover', 'object-center']);
-			elementRefImage.src = './assets/images/placeholder-image.svg';
+			elementRefImage.src = this.avatarPhotoUrl;
 			elementRefImage.alt = this.avatarName;
 			elementRefImage.loading = 'eager';
 
 			/** Insert HTML */
 
 			elementRef.innerHTML = elementRefImage.outerHTML;
-
-			const elementHTML: HTMLElement | null = this.document.getElementById(elementRefImage.id);
-			const elementHTMLImage: HTMLImageElement = elementHTML as HTMLImageElement;
-
-			if (this.avatarPhotoUrl.includes(environment.firebase.storageBucket)) {
-				elementHTMLImage.src = this.helperService.getImageURLQueryParams(this.avatarPhotoUrl);
-			} else {
-				elementHTMLImage.src = this.avatarPhotoUrl;
-			}
 		}
 	}
 

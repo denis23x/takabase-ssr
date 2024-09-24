@@ -3,7 +3,6 @@
 import { inject, Injectable } from '@angular/core';
 import { AppearanceService } from './appearance.service';
 import { DOCUMENT } from '@angular/common';
-import { HelperService } from './helper.service';
 import MarkdownIt from 'markdown-it';
 import attrs from 'markdown-it-attrs';
 import bracketedSpans from 'markdown-it-bracketed-spans';
@@ -16,7 +15,6 @@ import type { Token } from 'markdown-it';
 export class MarkdownService {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly document: Document = inject(DOCUMENT);
-	private readonly helperService: HelperService = inject(HelperService);
 
 	markdownItServer: MarkdownIt | undefined;
 	markdownItBrowser: MarkdownIt | undefined;
@@ -85,7 +83,7 @@ export class MarkdownService {
 					}
 
 					if (key === 'src') {
-						imageElement.src = this.helperService.getImageURLQueryParams(value);
+						imageElement.src = value;
 					}
 				});
 

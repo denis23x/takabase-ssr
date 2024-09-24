@@ -50,7 +50,6 @@ import { KbdPipe } from '../standalone/pipes/kbd.pipe';
 import { PlatformDirective } from '../standalone/directives/app-platform.directive';
 import { DeviceDirective } from '../standalone/directives/app-device.directive';
 import { AIService } from '../core/services/ai.service';
-import { FirebaseStoragePipe } from '../standalone/pipes/firebase-storage.pipe';
 import { BusService } from '../core/services/bus.service';
 import { SharpService } from '../core/services/sharp.service';
 import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
@@ -99,8 +98,7 @@ interface PostForm {
 		ShortcutsComponent,
 		KbdPipe,
 		PlatformDirective,
-		DeviceDirective,
-		FirebaseStoragePipe
+		DeviceDirective
 	],
 	providers: [CategoryService, PostService, PostPrivateService, PostPasswordService, AIService, SharpService],
 	selector: 'app-create',

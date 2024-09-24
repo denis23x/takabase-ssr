@@ -10,7 +10,6 @@ import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { HelperService } from '../../../../core/services/helper.service';
 import { MarkdownRenderDirective } from '../../../directives/app-markdown-render.directive';
 import { MarkdownTimeToReadPipe } from '../../../pipes/markdown-time-to-read.pipe';
-import { FirebaseStoragePipe } from '../../../pipes/firebase-storage.pipe';
 import { MarkdownService } from '../../../../core/services/markdown.service';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
@@ -39,7 +38,6 @@ import type { PostBookmarkGetOneDto } from '../../../../core/dto/post-bookmark/p
 		SvgIconComponent,
 		MarkdownRenderDirective,
 		MarkdownTimeToReadPipe,
-		FirebaseStoragePipe,
 		AvatarComponent,
 		MarkdownTagsPipe
 	],

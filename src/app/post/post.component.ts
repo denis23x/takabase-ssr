@@ -13,9 +13,9 @@ import { SkeletonDirective } from '../standalone/directives/app-skeleton.directi
 import { SkeletonService } from '../core/services/skeleton.service';
 import { HelperService } from '../core/services/helper.service';
 import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
+import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 import type { Post } from '../core/models/post.model';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
-import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
 
 @Component({
 	standalone: true,
@@ -99,7 +99,7 @@ export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 	setMetaTags(): void {
 		const title: string = this.post.name;
 		const description: string = this.post.description;
-		const cover: string = this.helperService.getImageURLQueryParams(this.post.cover);
+		const cover: string = this.post.cover;
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

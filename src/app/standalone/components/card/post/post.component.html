@@ -24,7 +24,7 @@
 						class="object-cover object-center bg-base-300"
 						itemprop="image"
 						[attr.loading]="postImagePriority ? 'eager' : 'lazy'"
-						[src]="post.cover | firebaseStorage"
+						[src]="post.cover"
 						[alt]="post.name"
 					/>
 				</a>

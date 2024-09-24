@@ -247,13 +247,13 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 
 	setMetaTags(): void {
 		const metaOpenGraph: Partial<MetaOpenGraph> = {
-			['og:image']: this.helperService.getImageURLQueryParams(this.user.avatar),
+			['og:image']: this.user.avatar,
 			['og:image:alt']: this.user.name,
 			['og:image:type']: 'image/webp'
 		};
 
 		const metaTwitter: Partial<MetaTwitter> = {
-			['twitter:image']: this.helperService.getImageURLQueryParams(this.user.avatar),
+			['twitter:image']: this.user.avatar,
 			['twitter:image:alt']: this.user.name
 		};
 

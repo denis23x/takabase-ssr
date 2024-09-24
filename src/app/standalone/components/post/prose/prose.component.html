@@ -20,17 +20,25 @@
 				</h1>
 				<div class="flex items-center justify-start gap-4 w-full overflow-hidden">
 					@if (post.cover) {
-						<div class="flex" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
+						<a
+							class="flex"
+							appSkeleton
+							target="_blank"
+							[appSkeletonToggle]="postSkeletonToggle"
+							[href]="post.cover"
+							[title]="post.user.name"
+							[attr.aria-label]="post.user.name"
+						>
 							<figure class="h-24 w-24 rounded-btn relative overflow-hidden">
 								<img
 									class="object-cover object-center bg-base-300"
 									itemprop="image"
 									loading="eager"
-									[src]="post.cover | firebaseStorage"
+									[src]="post.cover"
 									[alt]="post.name"
 								/>
 							</figure>
-						</div>
+						</a>
 					}
 					<ul class="flex flex-col items-start justify-start overflow-hidden gap-2">
 						<li
@@ -70,28 +78,36 @@
 						@switch (postType) {
 							@case ("password") {
 								<li class="block max-w-full">
-									<span
+									<a
 										class="badge badge-success badge-outline badge-sm"
+										title="Go to password protected posts"
+										aria-label="Go to password protected posts"
 										appSkeleton
-										itemprop="articleSection"
+										itemprop="url"
+										target="_self"
+										[routerLink]="['/', post.user.name, 'password']"
 										[class.border-transparent]="postSkeletonToggle"
 										[appSkeletonToggle]="postSkeletonToggle"
 									>
 										Protected by password
-									</span>
+									</a>
 								</li>
 							}
 							@case ("private") {
 								<li class="block max-w-full">
-									<span
+									<a
 										class="badge badge-error badge-outline badge-sm"
+										title="Go to private posts"
+										aria-label="Go to private posts"
 										appSkeleton
-										itemprop="articleSection"
+										itemprop="url"
+										target="_self"
+										[routerLink]="['/', post.user.name, 'private']"
 										[class.border-transparent]="postSkeletonToggle"
 										[appSkeletonToggle]="postSkeletonToggle"
 									>
 										Private
-									</span>
+									</a>
 								</li>
 							}
 							@default {
@@ -123,8 +139,13 @@
 							}
 						}
 						<li class="block max-w-full">
-							<span class="block text-xs text-base-content" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
-								<span itemprop="timeRequired">{{ post.markdown | markdownTimeToRead }}</span> min read
+							<span
+								class="block text-xs text-base-content"
+								itemprop="timeRequired"
+								appSkeleton
+								[appSkeletonToggle]="postSkeletonToggle"
+							>
+								{{ post.markdown | markdownTimeToRead | i18nPlural: { "=1": "1 minute", other: "# minutes" } }} read
 							</span>
 						</li>
 						<li class="block max-w-full">

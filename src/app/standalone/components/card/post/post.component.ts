@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
-import { FirebaseStoragePipe } from '../../../pipes/firebase-storage.pipe';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import type { Post, PostType } from '../../../../core/models/post.model';
 import type { HighlightResult } from '@algolia/client-search';
@@ -16,7 +15,7 @@ interface PostHighlightResult {
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, DayjsPipe, SkeletonDirective, FirebaseStoragePipe, SvgIconComponent],
+	imports: [CommonModule, RouterModule, DayjsPipe, SkeletonDirective, SvgIconComponent],
 	selector: 'app-card-post, [appCardPost]',
 	templateUrl: './post.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
