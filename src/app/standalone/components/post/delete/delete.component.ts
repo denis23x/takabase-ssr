@@ -61,7 +61,7 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 	}
 
 	post: Post | undefined;
-	postType: string = 'public';
+	postType: string = 'category';
 	postDeleteRequest$: Subscription | undefined;
 	postDeleteDialogToggle: boolean = false;
 	postDeleteIsSubmitted: WritableSignal<boolean> = signal(false);

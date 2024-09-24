@@ -137,7 +137,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	post: Post | undefined;
 	postRequest$: Subscription | undefined;
 	postSkeletonToggle: boolean = true;
-	postType: string = 'public';
+	postType: string = 'category';
 	postTypeOriginal: string | undefined;
 
 	postForm: FormGroup = this.formBuilder.group<PostForm>({
@@ -298,7 +298,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			// Get post
 
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-			const postType: string = String(this.activatedRoute.snapshot.queryParamMap.get('postType') || 'public');
+			const postType: string = String(this.activatedRoute.snapshot.queryParamMap.get('postType') || 'category');
 
 			if (postId && postType) {
 				const postGetOneDto: PostGetOneDto = {
@@ -551,61 +551,81 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	/** postForm */
 
 	onChangePostType(postType: string): void {
-		this.postType = postType;
+		if (this.postType !== postType) {
+			this.postType = postType;
 
-		const formControlsRemove = (): void => {
-			if (this.postType === 'password' || this.postType === 'private') {
-				this.postForm.removeControl('categoryId');
-				this.postForm.removeControl('categoryName');
-			}
+			const formControlsRemove = (): void => {
+				if (this.postType === 'password' || this.postType === 'private') {
+					this.postForm.removeControl('categoryId');
+					this.postForm.removeControl('categoryName');
+				}
 
-			if (this.postType === 'private' || this.postType === 'public') {
-				this.postForm.removeControl('password');
-			}
-		};
+				if (this.postType === 'private' || this.postType === 'category') {
+					this.postForm.removeControl('password');
+				}
+			};
 
-		const formControlsModify = (): void => {
-			const postFormDescriptionValidators: ValidatorFn[] = [Validators.minLength(16), Validators.maxLength(192)];
+			const formControlsModify = (): void => {
+				const postFormDescriptionValidators: ValidatorFn[] = [Validators.minLength(16), Validators.maxLength(192)];
 
-			if (this.postType === 'password' || this.postType === 'private') {
-				this.postForm.get('description').setValidators(postFormDescriptionValidators);
-			} else {
-				this.postForm.get('description').setValidators([Validators.required, ...postFormDescriptionValidators]);
-				this.postForm.get('description').markAsUntouched();
-			}
-		};
+				if (this.postType === 'password' || this.postType === 'private') {
+					this.postForm.get('description').setValidators(postFormDescriptionValidators);
+				} else {
+					this.postForm.get('description').setValidators([Validators.required, ...postFormDescriptionValidators]);
+					this.postForm.get('description').markAsUntouched();
+				}
+			};
 
-		const formControlsAppend = (): void => {
-			if (this.postType === 'password') {
-				// prettier-ignore
-				this.postForm.addControl('password', this.formBuilder.nonNullable.control('', [
-					Validators.required,
-					Validators.minLength(6),
-					Validators.maxLength(48),
-					Validators.pattern(this.helperService.getRegex('password'))
-				]));
-			}
+			const formControlsAppend = (): void => {
+				if (this.postType === 'password') {
+					// prettier-ignore
+					this.postForm.addControl('password', this.formBuilder.nonNullable.control('', [
+						Validators.required,
+						Validators.minLength(6),
+						Validators.maxLength(48),
+						Validators.pattern(this.helperService.getRegex('password'))
+					]));
+				}
 
-			if (this.postType === 'public') {
-				this.postForm.addControl('categoryId', this.formBuilder.control('', [Validators.required]));
-				this.postForm.addControl('categoryName', this.formBuilder.nonNullable.control('', []));
-			}
-		};
+				if (this.postType === 'category') {
+					this.postForm.addControl('categoryId', this.formBuilder.control('', [Validators.required]));
+					this.postForm.addControl('categoryName', this.formBuilder.nonNullable.control('', []));
+				}
+			};
 
-		// Update postForm
+			const formControls = (): void => {
+				if (this.post) {
+					const postPassword: string = String(this.post.password || '');
+					const postCategoryId: number | null = this.post.category?.id || null;
+					const postCategoryName: string = String(this.post.category?.name || '');
 
-		formControlsRemove();
-		formControlsModify();
-		formControlsAppend();
+					if (this.postType === 'password') {
+						if (postPassword) {
+							this.postForm.get('password').setValue(postPassword);
+						}
+					}
 
-		Object.keys(this.postForm.controls)
-			.filter((control: string) => this.postForm.get(control).value)
-			.forEach((control: string) => this.postForm.get(control).markAsTouched());
+					if (this.postType === 'category') {
+						if (postCategoryId && postCategoryName) {
+							this.postForm.get('categoryId').setValue(postCategoryId);
+							this.postForm.get('categoryName').setValue(postCategoryName);
+						}
+					}
+				} else {
+					this.onTogglePostDraftDialog(false).catch((error: any) => console.error(error));
+				}
+			};
 
-		// Update drafts
+			// Update postForm
 
-		if (!this.post) {
-			this.onTogglePostDraftDialog(false).catch((error: any) => console.error(error));
+			formControlsRemove();
+			formControlsModify();
+			formControlsAppend();
+			formControls();
+
+			Object.keys(this.postForm.controls)
+				.filter((control: string) => this.postForm.get(control).value)
+				.forEach((control: string) => this.postForm.get(control).markAsTouched());
 		}
 	}
 
@@ -617,7 +637,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			case 'private': {
 				break;
 			}
-			case 'public': {
+			case 'category': {
 				const category: Category = this.categoryList.find((category: Category) => {
 					return category.id === value.postForm.categoryId;
 				});

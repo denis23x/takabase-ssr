@@ -38,7 +38,7 @@ export class PostPreviewComponent extends CurrentUserMixin(class {}) implements 
 	category: Category | undefined;
 
 	post: Post | undefined;
-	postType: string = 'public';
+	postType: string = 'category';
 	postPreview: Post | undefined;
 	postPreviewDialogToggle: boolean = false;
 

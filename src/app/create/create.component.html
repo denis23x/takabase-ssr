@@ -21,7 +21,7 @@
 									[appSkeletonToggle]="postSkeletonToggle"
 									[appSkeletonClassListElementRef]="['!-mx-1']"
 								>
-									<span class="label-text">Image</span>
+									<span class="label-text">Cover</span>
 								</div>
 							</label>
 							<!-- prettier-ignore -->
@@ -38,12 +38,12 @@
                       class="block bg-base-200 object-cover object-center"
                       loading="eager"
                       [src]="cover.value | firebaseStorage"
-                      [alt]="'Image'"
+                      [alt]="'Cover'"
                     />
                     @if (postForm.enabled) {
-                      <div class="opacity-0 group-hover:opacity-100 bg-base-100/75 absolute inset-0 backdrop-blur-sm hidden sm:flex items-center justify-center">
+                      <div class="opacity-0 group-hover:opacity-100 sm:bg-base-100/75 absolute inset-0 sm:backdrop-blur-sm flex items-center justify-center">
                         <button
-                          class="btn-sm btn-circle btn btn-success fill-current"
+                          class="btn-sm btn-circle btn btn-success fill-current hidden sm:flex"
                           type="button"
                           title="Delete cover"
                           aria-label="Delete cover"
@@ -53,6 +53,14 @@
                           [appSvgIconSquare]="'2em'"
                           (click)="onUpdateCropperImage(null)"
                         ></button>
+                        <button
+                          class="btn-md btn-square btn opacity-0 flex sm:hidden"
+                          type="button"
+                          title="Update cover"
+                          aria-label="Update cover"
+                          [disabled]="postForm.disabled"
+                          (click)="postForm.enabled ? onToggleCropperDialog(true) : false"
+                        ></button>
                       </div>
                     }
                   </div>
@@ -60,8 +68,8 @@
                   <button
                     class="flex items-center justify-center w-12 h-12 sm:bg-base-200 sm:rounded-full sm:active:scale-95 sm:hover:bg-base-300 transition fill-current"
                     type="button"
-                    title="Add cover"
-                    aria-label="Add cover"
+                    title="Upload cover"
+                    aria-label="Upload cover"
                     appSvgIcon
                     [disabled]="postForm.disabled"
                     [appSvgIconIcon]="'plus'"
@@ -77,7 +85,7 @@
 								appSkeleton
 								[appSkeletonToggle]="postSkeletonToggle"
 							>
-								Image
+								Cover
 							</span>
 							<p
 								class="truncate text-sm leading-4 text-base-content/50 max-w-full"
@@ -97,8 +105,8 @@
 							<button
 								class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
 								type="button"
-								title="Image menu"
-								aria-label="Image menu"
+								title="Cover menu"
+								aria-label="Cover menu"
 								appSvgIcon
 								slot="target"
 								[disabled]="postForm.disabled"
@@ -106,7 +114,7 @@
 								[appSvgIconSquare]="'1.5em'"
 							></button>
 							<ul class="menu menu-vertical menu-md" slot="content">
-								<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Image</li>
+								<li class="flex w-full snap-start scroll-my-2 menu-title text-right text-xs">Cover</li>
 								<li class="flex w-full snap-start scroll-my-2">
 									<button
 										class="rounded-btn block w-full truncate text-right"
@@ -399,8 +407,8 @@
 										type="button"
 										title="Public available post"
 										aria-label="Public available post"
-										[class.active]="postType === 'public'"
-										(click)="onChangePostType('public')"
+										[class.active]="postType === 'category'"
+										(click)="onChangePostType('category')"
 									>
 										Category
 									</button>

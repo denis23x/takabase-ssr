@@ -77,7 +77,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	}
 
 	post: Post | undefined;
-	postType: string = 'public';
+	postType: string = 'category';
 	postPreview: boolean = false;
 	postSkeletonToggle: boolean = true;
 
@@ -108,7 +108,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	}
 
 	ngOnCurrentUserIsReady(): void {
-		if (!this.postPreview && this.postType === 'public') {
+		if (!this.postPreview && this.postType === 'category') {
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 			const postBookmarkGetOneDto: PostBookmarkGetOneDto = {
 				attachPost: false

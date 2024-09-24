@@ -20,6 +20,8 @@
 							<figure
                 class="block rounded-btn relative h-12 w-12 overflow-hidden transition"
                 appAvatar
+                [title]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
+                [attr.aria-label]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
                 [ngClass]="{ 'cursor-not-allowed border border-transparent opacity-50 grayscale bg-base-200': profileForm.disabled, 'cursor-pointer': profileForm.enabled, 'border border-success': avatar.value }"
                 [appAvatarPhotoUrl]="profileForm.value['avatar']"
                 [appAvatarName]="profileForm.value['name']"
@@ -30,7 +32,6 @@
 					<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
 						<h1
 							class="truncate text-xl leading-6 font-bold text-base-content max-w-full"
-							data-pw="app-settings-profile-heading-user-name"
 							appSkeleton
 							[appSkeletonToggle]="profileFormUserSkeletonToggle"
 						>

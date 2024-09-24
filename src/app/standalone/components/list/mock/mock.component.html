@@ -168,7 +168,7 @@
 						title="Create new post"
 						aria-label="Create new post"
 						[routerLink]="['/create']"
-						[queryParams]="{ postType: 'public', categoryId: currentUser?.displayName === username ? categoryId : null }"
+						[queryParams]="{ postType: 'category', categoryId: currentUser?.displayName === username ? categoryId : null }"
 						[queryParamsHandling]="'merge'"
 					>
 						Create new post

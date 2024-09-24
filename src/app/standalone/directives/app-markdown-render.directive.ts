@@ -26,7 +26,7 @@ export class MarkdownRenderDirective {
 
 	@HostListener('click', ['$event'])
 	onClick(event: Event): void {
-		if (this.postType === 'public') {
+		if (this.postType === 'category') {
 			const target: HTMLAnchorElement = event.target as HTMLAnchorElement;
 
 			const url: URL = this.helperService.getURL();
@@ -71,5 +71,5 @@ export class MarkdownRenderDirective {
 		this.postType = postType;
 	}
 
-	postType: string = 'public';
+	postType: string = 'category';
 }

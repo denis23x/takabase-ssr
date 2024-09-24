@@ -45,7 +45,7 @@ export class CardPostComponent {
 	}
 
 	post: (Post & Partial<PostHighlightResult>) | undefined;
-	postType: string = 'public';
+	postType: string = 'category';
 	postImagePriority: boolean = false;
 	postSkeletonToggle: boolean = true;
 	postRouterLink: string[] = ['/', 'post'];
