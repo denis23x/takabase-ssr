@@ -19,7 +19,7 @@ import {
 	ValidatorFn,
 	Validators
 } from '@angular/forms';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { map, startWith, switchMap, tap } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -96,6 +96,7 @@ export class SettingsProfileComponent extends CurrentUserMixin(class {}) impleme
 		]),
 		description: this.formBuilder.control(null, [Validators.minLength(16), Validators.maxLength(192)])
 	});
+	profileFormStage: string = 'Submit';
 	profileFormIsPristine: boolean = false;
 	profileFormIsPristine$: Subscription | undefined;
 	profileFormAvatarRequest$: Subscription | undefined;
@@ -194,6 +195,7 @@ export class SettingsProfileComponent extends CurrentUserMixin(class {}) impleme
 	onSubmitProfileForm(): void {
 		if (this.helperService.getFormValidation(this.profileForm)) {
 			this.profileForm.disable();
+			this.profileFormStage = 'Moderation';
 
 			const userUpdateDto: UserUpdateDto = {
 				...this.profileForm.value,
@@ -211,7 +213,10 @@ export class SettingsProfileComponent extends CurrentUserMixin(class {}) impleme
 			this.profileFormUpdateRequest$?.unsubscribe();
 			this.profileFormUpdateRequest$ = this.aiService
 				.moderateText(aiModerateTextDto)
-				.pipe(switchMap(() => this.userService.update(this.currentUser.uid, userUpdateDto)))
+				.pipe(
+					tap(() => (this.profileFormStage = 'Saving')),
+					switchMap(() => this.userService.update(this.currentUser.uid, userUpdateDto))
+				)
 				.subscribe({
 					next: (user: User) => {
 						this.authorizationService.setCurrentUser({
@@ -226,7 +231,10 @@ export class SettingsProfileComponent extends CurrentUserMixin(class {}) impleme
 						this.profileForm.enable();
 						this.profileForm.patchValue(user);
 					},
-					error: () => this.profileForm.enable()
+					error: () => {
+						this.profileForm.enable();
+						this.profileFormStage = 'Moderation';
+					}
 				});
 		}
 	}

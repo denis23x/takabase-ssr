@@ -222,8 +222,8 @@
 					class="btn btn-md btn-success w-full"
 					data-pw="app-settings-profile-form-submit"
 					type="submit"
-					title="Submit"
-					aria-label="Submit"
+					[title]="profileFormStage"
+					[attr.aria-label]="profileFormStage"
           appSkeleton
           [appSkeletonToggle]="profileFormUserSkeletonToggle"
           [appSkeletonClassListElementRef]="['border-0']"
@@ -232,7 +232,7 @@
 					@if (profileForm.disabled) {
 						<span class="loading loading-spinner"></span>
 					}
-					Submit
+					{{ profileFormStage }}
 				</button>
 			</fieldset>
 		</form>

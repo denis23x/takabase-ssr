@@ -21,7 +21,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { HelperService } from '../../../../core/services/helper.service';
 import { CategoryService } from '../../../../core/services/category.service';
 import { Subscription, switchMap } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { startWith, tap } from 'rxjs/operators';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { AIService } from '../../../../core/services/ai.service';
@@ -78,6 +78,7 @@ export class CategoryUpdateComponent implements OnInit, OnDestroy {
 		]),
 		description: this.formBuilder.control(null, [Validators.minLength(16), Validators.maxLength(192)])
 	});
+	categoryUpdateFormStage: string = 'Submit';
 	categoryUpdateFormRequest$: Subscription | undefined;
 
 	categoryUpdateFormIsPristine$: Subscription | undefined;
@@ -129,6 +130,7 @@ export class CategoryUpdateComponent implements OnInit, OnDestroy {
 	onSubmitCategoryUpdateForm(): void {
 		if (this.helperService.getFormValidation(this.categoryUpdateForm)) {
 			this.categoryUpdateForm.disable();
+			this.categoryUpdateFormStage = 'Moderation';
 
 			const categoryId: number = this.category.id;
 			const categoryUpdateDto: CategoryUpdateDto = {
@@ -146,7 +148,10 @@ export class CategoryUpdateComponent implements OnInit, OnDestroy {
 			this.categoryUpdateFormRequest$?.unsubscribe();
 			this.categoryUpdateFormRequest$ = this.aiService
 				.moderateText(aiModerateTextDto)
-				.pipe(switchMap(() => this.categoryService.update(categoryId, categoryUpdateDto)))
+				.pipe(
+					tap(() => (this.categoryUpdateFormStage = 'Saving')),
+					switchMap(() => this.categoryService.update(categoryId, categoryUpdateDto))
+				)
 				.subscribe({
 					next: (category: Category) => {
 						this.snackbarService.success(null, 'Category updated');
@@ -157,7 +162,10 @@ export class CategoryUpdateComponent implements OnInit, OnDestroy {
 
 						this.onToggleCategoryUpdateDialog(false);
 					},
-					error: () => this.categoryUpdateForm.enable()
+					error: () => {
+						this.categoryUpdateForm.enable();
+						this.categoryUpdateFormStage = 'Submit';
+					}
 				});
 		}
 	}

@@ -757,9 +757,9 @@
 				<button
 					class="btn btn-success btn-md col-span-8 sm:col-span-9"
 					type="button"
-					title="Submit"
-					aria-label="Submit"
 					appSkeleton
+					[title]="postFormStage"
+					[attr.aria-label]="postFormStage"
 					[appSkeletonToggle]="postSkeletonToggle"
 					[appSkeletonClassListElementRef]="['border-0']"
 					[disabled]="postForm.invalid || postForm.disabled || postFormIsPristine || postFormImageIsSubmitted()"
@@ -768,7 +768,7 @@
 					@if (postForm.disabled) {
 						<span class="loading loading-spinner"></span>
 					}
-					Submit
+					{{ postFormStage }}
 				</button>
 				@if (post) {
 					<button

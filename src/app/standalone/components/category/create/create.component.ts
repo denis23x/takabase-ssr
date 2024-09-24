@@ -1,16 +1,6 @@
 /** @format */
 
-import {
-	ChangeDetectionStrategy,
-	Component,
-	ElementRef,
-	EventEmitter,
-	inject,
-	OnDestroy,
-	OnInit,
-	Output,
-	ViewChild
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
@@ -24,6 +14,7 @@ import { Subscription, switchMap } from 'rxjs';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { AIService } from '../../../../core/services/ai.service';
+import { tap } from 'rxjs/operators';
 import type { Category } from '../../../../core/models/category.model';
 import type { CategoryCreateDto } from '../../../../core/dto/category/category-create.dto';
 import type { AIModerateTextDto } from '../../../../core/dto/ai/ai-moderate-text.dto';
@@ -46,8 +37,7 @@ interface CategoryForm {
 	],
 	providers: [AIService, CategoryService],
 	selector: 'app-category-create, [appCategoryCreate]',
-	templateUrl: './create.component.html',
-	changeDetection: ChangeDetectionStrategy.OnPush
+	templateUrl: './create.component.html'
 })
 export class CategoryCreateComponent implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
@@ -71,6 +61,7 @@ export class CategoryCreateComponent implements OnInit, OnDestroy {
 		]),
 		description: this.formBuilder.control(null, [Validators.minLength(16), Validators.maxLength(192)])
 	});
+	categoryFormStage: string = 'Submit';
 	categoryFormRequest$: Subscription | undefined;
 	categoryCreateDialogToggle: boolean = false;
 
@@ -105,6 +96,7 @@ export class CategoryCreateComponent implements OnInit, OnDestroy {
 	onSubmitCategoryForm(): void {
 		if (this.helperService.getFormValidation(this.categoryForm)) {
 			this.categoryForm.disable();
+			this.categoryFormStage = 'Moderation';
 
 			const categoryCreateDto: CategoryCreateDto = {
 				...this.categoryForm.value,
@@ -121,7 +113,10 @@ export class CategoryCreateComponent implements OnInit, OnDestroy {
 			this.categoryFormRequest$?.unsubscribe();
 			this.categoryFormRequest$ = this.aiService
 				.moderateText(aiModerateTextDto)
-				.pipe(switchMap(() => this.categoryService.create(categoryCreateDto)))
+				.pipe(
+					tap(() => (this.categoryFormStage = 'Saving')),
+					switchMap(() => this.categoryService.create(categoryCreateDto))
+				)
 				.subscribe({
 					next: (category: Category) => {
 						this.snackbarService.success('Cheers!', 'Category created');
@@ -132,7 +127,10 @@ export class CategoryCreateComponent implements OnInit, OnDestroy {
 
 						this.onToggleCategoryCreateDialog(false);
 					},
-					error: () => this.categoryForm.enable()
+					error: () => {
+						this.categoryForm.enable();
+						this.categoryFormStage = 'Submit';
+					}
 				});
 		}
 	}

@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { from, fromEvent, Observable, Subscription, switchMap, throwError } from 'rxjs';
-import { catchError, filter, map, startWith } from 'rxjs/operators';
+import { catchError, filter, map, startWith, tap } from 'rxjs/operators';
 import {
 	AbstractControl,
 	FormBuilder,
@@ -160,6 +160,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			Validators.maxLength(8192)
 		])
 	});
+	postFormStage: string = 'Submit';
 	postFormRequest$: Subscription | undefined;
 	postFormIsPristine: boolean = false;
 	postFormIsPristine$: Subscription | undefined;
@@ -670,6 +671,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	onSubmitPostForm(redirect: boolean = false): void {
 		if (this.helperService.getFormValidation(this.postForm)) {
 			this.postForm.disable();
+			this.postFormStage = 'Moderation';
 
 			const aiModerateTextDto: AIModerateTextDto = {
 				model: 'text-moderation-stable',
@@ -712,7 +714,10 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			this.postFormRequest$?.unsubscribe();
 			this.postFormRequest$ = this.aiService
 				.moderateText(aiModerateTextDto)
-				.pipe(switchMap(() => postTypeMap()))
+				.pipe(
+					tap(() => (this.postFormStage = this.postType === 'category' ? 'Publication' : 'Saving')),
+					switchMap(() => postTypeMap())
+				)
 				.subscribe({
 					next: () => {
 						this.snackbarService.success('Cheers!', 'Post has been ' + (postId ? 'updated' : 'saved'));
@@ -747,7 +752,10 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 						this.postForm.enable();
 					},
-					error: () => this.postForm.enable()
+					error: () => {
+						this.postForm.enable();
+						this.postFormStage = 'Submit';
+					}
 				});
 		}
 	}

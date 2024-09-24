@@ -125,14 +125,14 @@
 					<button
 						class="btn-success btn-md btn w-full"
 						type="submit"
-						title="Submit"
-						aria-label="Submit"
+						[title]="categoryFormStage"
+						[attr.aria-label]="categoryFormStage"
 						[disabled]="categoryForm.invalid || categoryForm.disabled"
 					>
 						@if (categoryForm.disabled) {
 							<span class="loading loading-spinner"></span>
 						}
-						Submit
+						{{ categoryFormStage }}
 					</button>
 				</fieldset>
 			</form>
