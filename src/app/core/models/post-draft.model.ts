@@ -1,8 +1,10 @@
 /** @format */
 
+import type { PostType } from './post.model';
+
 export interface PostDraft {
 	key?: string;
 	postForm: any;
-	postType: string;
+	postType: PostType;
 	expiredAt: string;
 }

@@ -59,7 +59,7 @@ import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import type { Category } from '../core/models/category.model';
 import type { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import type { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
-import type { Post } from '../core/models/post.model';
+import type { Post, PostType } from '../core/models/post.model';
 import type { PostCreateDto } from '../core/dto/post/post-create.dto';
 import type { PostDeleteDto } from '../core/dto/post/post-delete.dto';
 import type { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
@@ -137,8 +137,8 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	post: Post | undefined;
 	postRequest$: Subscription | undefined;
 	postSkeletonToggle: boolean = true;
-	postType: string = 'category';
-	postTypeOriginal: string | undefined;
+	postType: PostType = 'category';
+	postTypeOriginal: PostType | undefined;
 
 	postForm: FormGroup = this.formBuilder.group<PostForm>({
 		name: this.formBuilder.nonNullable.control('', [
@@ -296,19 +296,19 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			});
 
 			// Get post
-
+			// prettier-ignore
+			const postType: PostType = String(this.activatedRoute.snapshot.queryParamMap.get('postType') || 'category') as PostType;
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-			const postType: string = String(this.activatedRoute.snapshot.queryParamMap.get('postType') || 'category');
 
 			if (postId && postType) {
 				const postGetOneDto: PostGetOneDto = {
 					userFirebaseUid: this.currentUser.uid
 				};
 
-				const postTypeMap: Record<string, Observable<Post>> = {
+				const postTypeMap: Record<PostType, Observable<Post>> = {
+					category: this.postService.getOne(postId, postGetOneDto),
 					password: this.postPasswordService.getOne(postId),
-					private: this.postPrivateService.getOne(postId),
-					public: this.postService.getOne(postId, postGetOneDto)
+					private: this.postPrivateService.getOne(postId)
 				};
 
 				// Set postType
@@ -452,7 +452,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 						break;
 					}
 					case 'postType': {
-						this.onChangePostType(value);
+						this.onChangePostType(value as PostType);
 
 						break;
 					}
@@ -550,7 +550,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 	/** postForm */
 
-	onChangePostType(postType: string): void {
+	onChangePostType(postType: PostType): void {
 		if (this.postType !== postType) {
 			this.postType = postType;
 
@@ -690,10 +690,10 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			// Maps
 
 			const postTypeMap = (): Observable<Partial<Post>> => {
-				const postService: Record<string, PostPasswordService | PostPrivateService | PostService> = {
+				const postService: Record<PostType, PostPasswordService | PostPrivateService | PostService> = {
+					category: this.postService,
 					password: this.postPasswordService,
-					private: this.postPrivateService,
-					public: this.postService
+					private: this.postPrivateService
 				};
 
 				if (postId) {
@@ -707,12 +707,6 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 				} else {
 					return postService[this.postType].create(postDto);
 				}
-			};
-
-			const postTypeRedirectMap: Record<string, string[]> = {
-				password: ['password'],
-				private: ['private'],
-				public: ['category', String(this.category?.id)]
 			};
 
 			this.postFormRequest$?.unsubscribe();
@@ -745,7 +739,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 						// prettier-ignore
 						if (redirect) {
 							this.router
-								.navigate(['/', this.currentUser.displayName, ...postTypeRedirectMap[this.postType]])
+								.navigate(['/', this.currentUser.displayName, this.postType, String(postDto.categoryId || '')].filter((command: string) => !!command))
 								.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
 						}
 

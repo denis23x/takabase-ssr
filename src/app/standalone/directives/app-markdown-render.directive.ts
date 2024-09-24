@@ -8,6 +8,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { HelperService } from '../../core/services/helper.service';
 import morphdom from 'morphdom';
 import type MarkdownIt from 'markdown-it';
+import type { PostType } from '../../core/models/post.model';
 
 @Directive({
 	standalone: true,
@@ -67,9 +68,9 @@ export class MarkdownRenderDirective {
 	}
 
 	@Input()
-	set appMarkdownRenderPostType(postType: string) {
+	set appMarkdownRenderPostType(postType: PostType) {
 		this.postType = postType;
 	}
 
-	postType: string = 'category';
+	postType: PostType = 'category';
 }

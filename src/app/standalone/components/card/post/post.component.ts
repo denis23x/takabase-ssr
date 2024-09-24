@@ -7,7 +7,7 @@ import { DayjsPipe } from '../../../pipes/dayjs.pipe';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { FirebaseStoragePipe } from '../../../pipes/firebase-storage.pipe';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
-import type { Post } from '../../../../core/models/post.model';
+import type { Post, PostType } from '../../../../core/models/post.model';
 import type { HighlightResult } from '@algolia/client-search';
 
 interface PostHighlightResult {
@@ -29,7 +29,7 @@ export class CardPostComponent {
 	}
 
 	@Input()
-	set appCardPostType(postType: string) {
+	set appCardPostType(postType: PostType) {
 		this.postType = postType;
 		this.postRouterLink.splice(this.postRouterLink.length - 1, 0, this.postType);
 	}
@@ -45,7 +45,7 @@ export class CardPostComponent {
 	}
 
 	post: (Post & Partial<PostHighlightResult>) | undefined;
-	postType: string = 'category';
+	postType: PostType = 'category';
 	postImagePriority: boolean = false;
 	postSkeletonToggle: boolean = true;
 	postRouterLink: string[] = ['/', 'post'];

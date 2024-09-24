@@ -26,6 +26,7 @@ import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { debounceTime, filter } from 'rxjs/operators';
 import dayjs from 'dayjs/esm';
 import type { PostDraft } from '../../../../core/models/post-draft.model';
+import type { PostType } from '../../../../core/models/post.model';
 
 interface PostDraftForm {
 	key: FormControl<string>;
@@ -58,7 +59,7 @@ export class PostDraftComponent implements OnInit, OnDestroy {
 	@Output() appPostDraftToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input({ required: true })
-	set appPostDraftPostType(postType: string) {
+	set appPostDraftPostType(postType: PostType) {
 		this.postType = postType;
 	}
 
@@ -67,7 +68,7 @@ export class PostDraftComponent implements OnInit, OnDestroy {
 		this.postForm = postForm;
 	}
 
-	postType: string | undefined;
+	postType: PostType | undefined;
 	postForm: FormGroup | undefined;
 	postForm$: Subscription | undefined;
 

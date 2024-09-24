@@ -19,7 +19,7 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { Subscription } from 'rxjs';
 import { PostBookmarkService } from '../../../../core/services/post-bookmark.service';
 import { MarkdownTagsPipe } from '../../../pipes/markdown-tags.pipe';
-import type { Post } from '../../../../core/models/post.model';
+import type { Post, PostType } from '../../../../core/models/post.model';
 import type { domToCanvas, Options } from 'modern-screenshot';
 import type { PostExternalLinkComponent } from '../external-link/external-link.component';
 import type { PostReportComponent } from '../report/report.component';
@@ -62,7 +62,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	}
 
 	@Input()
-	set appPostProsePostType(postType: string) {
+	set appPostProsePostType(postType: PostType) {
 		this.postType = postType;
 	}
 
@@ -77,7 +77,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	}
 
 	post: Post | undefined;
-	postType: string = 'category';
+	postType: PostType = 'category';
 	postPreview: boolean = false;
 	postSkeletonToggle: boolean = true;
 

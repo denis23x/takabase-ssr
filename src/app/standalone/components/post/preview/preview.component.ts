@@ -7,7 +7,7 @@ import { PostProseComponent } from '../prose/prose.component';
 import { CurrentUserMixin } from '../../../../core/mixins/current-user.mixin';
 import dayjs from 'dayjs/esm';
 import type { Category } from '../../../../core/models/category.model';
-import type { Post } from '../../../../core/models/post.model';
+import type { Post, PostType } from '../../../../core/models/post.model';
 
 @Component({
 	standalone: true,
@@ -26,7 +26,7 @@ export class PostPreviewComponent extends CurrentUserMixin(class {}) implements 
 	}
 
 	@Input({ required: true })
-	set appPostPreviewPostType(postType: string) {
+	set appPostPreviewPostType(postType: PostType) {
 		this.postType = postType;
 	}
 
@@ -38,7 +38,7 @@ export class PostPreviewComponent extends CurrentUserMixin(class {}) implements 
 	category: Category | undefined;
 
 	post: Post | undefined;
-	postType: string = 'category';
+	postType: PostType = 'category';
 	postPreview: Post | undefined;
 	postPreviewDialogToggle: boolean = false;
 

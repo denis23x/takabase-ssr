@@ -25,7 +25,7 @@ import { Observable, Subscription } from 'rxjs';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { Location } from '@angular/common';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
-import type { Post } from '../../../../core/models/post.model';
+import type { Post, PostType } from '../../../../core/models/post.model';
 import type { PostDeleteDto } from '../../../../core/dto/post/post-delete.dto';
 
 @Component({
@@ -56,12 +56,12 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 	}
 
 	@Input({ required: true })
-	set appPostDeletePostType(postType: string) {
+	set appPostDeletePostType(postType: PostType) {
 		this.postType = postType;
 	}
 
 	post: Post | undefined;
-	postType: string = 'category';
+	postType: PostType = 'category';
 	postDeleteRequest$: Subscription | undefined;
 	postDeleteDialogToggle: boolean = false;
 	postDeleteIsSubmitted: WritableSignal<boolean> = signal(false);
@@ -104,23 +104,18 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 		const postId: number = this.post.id;
 		const postDeleteDto: PostDeleteDto = {};
 
-		const postTypeMap: Record<string, Observable<Partial<Post>>> = {
+		const postTypeMap: Record<PostType, Observable<Partial<Post>>> = {
+			category: this.postService.delete(postId, postDeleteDto),
 			password: this.postPasswordService.delete(postId, postDeleteDto),
-			private: this.postPrivateService.delete(postId, postDeleteDto),
-			public: this.postService.delete(postId, postDeleteDto)
+			private: this.postPrivateService.delete(postId, postDeleteDto)
 		};
 
 		this.postDeleteRequest$?.unsubscribe();
 		this.postDeleteRequest$ = postTypeMap[this.postType].subscribe({
 			next: () => {
-				const postTypeRedirectMap: Record<string, string[]> = {
-					password: ['password'],
-					private: ['private'],
-					public: ['category', String(this.post.category?.id)]
-				};
-
+				// prettier-ignore
 				this.router
-					.navigate(['/', this.currentUser.displayName, ...postTypeRedirectMap[this.postType]])
+					.navigate(['/', this.currentUser.displayName, this.postType, String(this.post.category?.id || '')].filter((command: string) => !!command))
 					.then(() => this.snackbarService.success('Sadly..', 'Post has been deleted'));
 			},
 			error: () => this.postDeleteIsSubmitted.set(false)
