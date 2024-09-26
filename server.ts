@@ -53,7 +53,7 @@ export function app(): express.Express {
 
 	// prettier-ignore
 	server.get(['/search/posts/:postId', '/:username/post/:postId', '/:username/category/:categoryId/post/:postId'], (req, res) => {
-		res.status(301).redirect('/post/' + req.params.postId);
+		res.set('Cache-Control', 'no-store').redirect(301, '/post/' + req.params.postId);
 	});
 
 	// prettier-ignore

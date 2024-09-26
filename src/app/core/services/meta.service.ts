@@ -18,11 +18,12 @@ export class MetaService {
 	setCanonicalURL(): void {
 		const url: URL = this.helperService.getURL();
 		const urlCanonical: HTMLLinkElement = this.document.querySelector("link[rel='canonical']");
+		const urlCanonicalHref: string = url.href.replace(url.search, '');
 
 		if (url.pathname.startsWith('/search')) {
-			urlCanonical?.setAttribute('href', url.href.replace(url.pathname, '/search'));
+			urlCanonical?.setAttribute('href', urlCanonicalHref.replace(url.pathname, '/search'));
 		} else {
-			urlCanonical?.setAttribute('href', url.href);
+			urlCanonical?.setAttribute('href', urlCanonicalHref);
 		}
 	}
 

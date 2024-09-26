@@ -54,7 +54,7 @@ export class HelperService {
 			case 'username':
 				return new RegExp('^\\w[\\w\\d\\-]*$', 'm');
 			case 'password':
-				return new RegExp('^(?=.*[\\d!@#$%^&*]).+$', 'm');
+				return new RegExp('^(?=.*[a-zA-Z])(?=.*[\\d!@#$%^&*]).{6,}$', 'm');
 			case 'url':
 				return new RegExp('^([a-zA-Z][a-zA-Z0-9+.\\-]{1,31}):([^<>\x00-\x20]*)$', 'm');
 			case 'youtube':
