@@ -156,10 +156,11 @@
 									@if (name.touched && !!name.errors && postForm.enabled) {
 										<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
 									} @else if (name.valid && postForm.enabled) {
-										@if (!post) {
+										<!--
+                    @if (!post) {
 											<div class="flex items-center gap-2 indicator-item w-max translate-x-full translate-y-0">
 												<span class="badge-success badge text-xs">Draft</span>
-												<!-- TODO: tooltips
+												&lt;!&ndash; TODO: tooltips
 												<div class="tooltip" data-tip="Autosave expires in 15 minutes">
 													<i
 														class="fill-current text-base-content/50 hover:text-base-content"
@@ -168,9 +169,10 @@
 														[appSvgIconSquare]="'1.25em'"
 													></i>
 												</div>
-                        -->
+                        &ndash;&gt;
 											</div>
 										}
+										-->
 									}
 									<span class="label-text mr-2">Name</span>
 								</div>

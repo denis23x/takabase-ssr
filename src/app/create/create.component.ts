@@ -286,10 +286,6 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 				next: (categoryList: Category[]) => {
 					this.categoryList = categoryList;
 					this.categoryListSkeletonToggle = false;
-
-					/** Apply target */
-
-					this.setTarget();
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -299,11 +295,11 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			const postType: PostType = String(this.activatedRoute.snapshot.queryParamMap.get('postType') || 'category') as PostType;
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 
+			// prettier-ignore
 			if (postId && postType) {
 				const postGetOneDto: PostGetOneDto = {
 					userFirebaseUid: this.currentUser.uid
 				};
-
 				const postTypeMap: Record<PostType, Observable<Post>> = {
 					category: this.postService.getOne(postId, postGetOneDto),
 					password: this.postPasswordService.getOne(postId),
@@ -322,15 +318,13 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 				this.postRequest$?.unsubscribe();
 				this.postRequest$ = postTypeMap[this.postType]
-					.pipe(
-						catchError((httpErrorResponse: HttpErrorResponse) => {
-							const redirect$: Promise<boolean> = this.router.navigate(['/error', httpErrorResponse.status], {
-								skipLocationChange: true
-							});
+					.pipe(catchError((httpErrorResponse: HttpErrorResponse) => {
+						const redirect$: Promise<boolean> = this.router.navigate(['/error', httpErrorResponse.status], {
+							skipLocationChange: true
+						});
 
-							return from(redirect$).pipe(switchMap(() => throwError(() => httpErrorResponse)));
-						})
-					)
+						return from(redirect$).pipe(switchMap(() => throwError(() => httpErrorResponse)));
+					}))
 					.subscribe({
 						next: (post: Post) => {
 							this.post = post;
@@ -377,7 +371,14 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 				this.category = undefined;
 				this.categorySkeletonToggle = false;
 
-				this.onTogglePostDraftDialog(true).catch((error: any) => console.error(error));
+				/** Apply Share target */
+
+				this.setShareTarget();
+
+				/** Toggle drafts dialog (only if exists) */
+
+				// TODO: remake drafts
+				// this.onTogglePostDraftDialog(true).catch((error: any) => console.error(error));
 			}
 		}
 	}
@@ -408,56 +409,53 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 		this.metaService.setMeta(metaOpenGraph, metaTwitter);
 	}
 
-	setTarget(): void {
-		const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+	setShareTarget(): void {
+		Object.entries(this.activatedRoute.snapshot.queryParams).forEach(([key, value]: string[]) => {
+			switch (key) {
+				case 'categoryId': {
+					const category: Category = this.categoryList.find((category: Category) => category.id === Number(value));
 
-		// Set only if there is no post to update
-
-		if (!postId) {
-			Object.entries(this.activatedRoute.snapshot.queryParams).forEach(([key, value]: string[]) => {
-				switch (key) {
-					case 'categoryId': {
-						const category: Category = this.categoryList.find((category: Category) => category.id === Number(value));
-
-						if (category) {
-							this.onSelectCategory(category);
-						}
-
-						break;
+					if (category) {
+						this.onSelectCategory(category);
 					}
-					case 'categoryName': {
-						this.onToggleCategoryCreateDialog()
-							.then(() => this.appCategoryCreateComponent.instance.categoryForm.get('name').setValue(value))
-							.catch((error: any) => console.error(error));
 
-						break;
-					}
-					case 'url':
-					case 'text': {
-						const abstractControl: AbstractControl | null = this.postForm.get('markdown');
-
-						abstractControl.patchValue(value + '\n\n' + abstractControl.value);
-						abstractControl.markAsTouched();
-
-						break;
-					}
-					case 'query':
-					case 'title': {
-						const abstractControl: AbstractControl | null = this.postForm.get('name');
-
-						abstractControl.setValue(value);
-						abstractControl.markAsTouched();
-
-						break;
-					}
-					case 'postType': {
-						this.onChangePostType(value as PostType);
-
-						break;
-					}
+					break;
 				}
-			});
-		}
+				case 'categoryName': {
+					this.onToggleCategoryCreateDialog()
+						.then(() => this.appCategoryCreateComponent.instance.categoryForm.get('name').setValue(value))
+						.catch((error: any) => console.error(error));
+
+					break;
+				}
+				case 'url':
+				case 'text': {
+					const abstractControl: AbstractControl | null = this.postForm.get('markdown');
+
+					abstractControl.patchValue(value + '\n\n' + abstractControl.value);
+					abstractControl.markAsTouched();
+
+					break;
+				}
+				case 'query':
+				case 'title': {
+					const abstractControl: AbstractControl | null = this.postForm.get('name');
+
+					abstractControl.setValue(value);
+					abstractControl.markAsTouched();
+
+					break;
+				}
+				case 'postType': {
+					this.onChangePostType(value as PostType);
+
+					break;
+				}
+				default: {
+					break;
+				}
+			}
+		});
 	}
 
 	/** Category */
@@ -592,7 +590,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 				}
 			};
 
-			const formControls = (): void => {
+			const formControlsBackup = (): void => {
 				if (this.post) {
 					const postPassword: string = String(this.post.password || '');
 					const postCategoryId: number | null = this.post.category?.id || null;
@@ -610,8 +608,6 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 							this.postForm.get('categoryName').setValue(postCategoryName);
 						}
 					}
-				} else {
-					this.onTogglePostDraftDialog(false).catch((error: any) => console.error(error));
 				}
 			};
 
@@ -620,7 +616,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			formControlsRemove();
 			formControlsModify();
 			formControlsAppend();
-			formControls();
+			formControlsBackup();
 
 			Object.keys(this.postForm.controls)
 				.filter((control: string) => this.postForm.get(control).value)
@@ -632,10 +628,6 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 		this.onChangePostType(value.postType);
 
 		switch (value.postType) {
-			case 'password':
-			case 'private': {
-				break;
-			}
 			case 'category': {
 				const category: Category = this.categoryList.find((category: Category) => {
 					return category.id === value.postForm.categoryId;
@@ -650,6 +642,10 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 				delete value.postForm.categoryId;
 				delete value.postForm.categoryName;
 
+				break;
+			}
+			case 'password':
+			case 'private': {
 				break;
 			}
 			default: {
