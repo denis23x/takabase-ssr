@@ -44,8 +44,11 @@ export function app(): express.Express {
 	server.use(['/post-covers/*', '/post-images/*', '/post-password-covers/*', '/post-password-images/*', '/post-private-covers/*', '/post-private-images/*', '/user-avatars/*', '/seed/*', '/temp/*'], proxy('https://firebasestorage.googleapis.com', {
 		filter: (req) => req.method === 'GET',
 		proxyReqPathResolver: (req) => {
-			const storageBucket: string = ['/v0/b', environment.firebase.storageBucket, 'o'].join('/');
-			const storageBucketFile: string = req.originalUrl.replace(/\/(?=[^\/]*\.webp$)/, '%2F') + '?alt=media';
+			const filename: string = req.originalUrl.split('/').pop();
+			const filenameUid: string = filename.split('-').pop();
+
+			const storageBucket: string = ['/v0/b', environment.firebase.storageBucket, 'o'].join('/') + '/';
+			const storageBucketFile: string = encodeURIComponent(req.originalUrl.replace(filename, filenameUid).substring(1)) + '?alt=media';
 
 			return storageBucket + storageBucketFile;
 		}
@@ -113,7 +116,6 @@ export function app(): express.Express {
 	return server;
 }
 
-/*
 function run(): void {
 	const port = process.env['PORT'] || 4000;
 
@@ -125,4 +127,3 @@ function run(): void {
 }
 
 run();
-*/
