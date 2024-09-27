@@ -72,30 +72,26 @@ export class MarkdownService {
 			/** Update default rules */
 
 			markdownIt.renderer.rules.image = (tokenList: Token[], idx: number): string => {
-				const linkElement: HTMLAnchorElement = this.document.createElement('a');
-				const imageElement: HTMLImageElement = this.document.createElement('img');
-
 				const token: Token = tokenList[idx];
+				const tokenGetValueByKey = (attrList: [string, string][], key: string): string | undefined => {
+					return attrList.find(([k]: string[]) => k === key)?.[1] || undefined;
+				};
 
-				token.attrs?.forEach(([key, value]: string[]) => {
-					if (key === 'class') {
-						imageElement.classList.add(...value.split(/\s/).filter((className: string) => !!className));
-					}
+				const imageSrc: string | undefined = tokenGetValueByKey(token.attrs, 'src');
+				const imageAlt: string = token.content;
+				const imageWidth: string = tokenGetValueByKey(token.attrs, 'width') || 'auto';
+				const imageHeight: string = tokenGetValueByKey(token.attrs, 'height') || 'auto';
+				const imageClass: string = tokenGetValueByKey(token.attrs, 'class') || '';
 
-					if (key === 'src') {
-						imageElement.src = value;
-					}
-				});
+				const elementImg: string = `<img src="${imageSrc}" width="${imageWidth}" height="${imageHeight}" loading="eager" alt="${imageAlt}">`;
+				const elementLink: string = `<a class="flex items-center justify-center" href="${imageSrc}" target="_blank" rel="nofollow ugc" title="Open Image" aria-label="Open Image">${elementImg}</a>`;
+				const elementFigCaption: string = `<figcaption>${imageAlt}</figcaption>`;
 
-				imageElement.loading = 'eager';
-				imageElement.alt = token.content;
-				imageElement.title = token.content;
-
-				linkElement.href = imageElement.src;
-				linkElement.target = '_blank';
-				linkElement.appendChild(imageElement);
-
-				return linkElement.outerHTML;
+				if (imageClass) {
+					return `<figure class="${imageClass}">${elementLink}</figure>`;
+				} else {
+					return `<figure class="${imageClass}">${elementLink}${elementFigCaption}</figure>`;
+				}
 			};
 
 			markdownIt.renderer.rules.table_open = (tokenList: Token[], idx: number): string => {

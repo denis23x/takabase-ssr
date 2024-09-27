@@ -106,7 +106,7 @@
 				<div class="flex flex-col gap-4" [ngClass]="{ 'invisible opacity-0 !m-0 !h-0': !cropperIsReady }">
 					<div class="block -m-4" [class.cursor-not-allowed]="cropperImageForm.disabled">
 						<image-cropper
-							class="ngx-cropper aspect-square !p-4"
+							class="ngx-cropper aspect-square bg-base-200 !opacity-100 !p-4"
 							*appPlatform="'browser'"
 							[(transform)]="cropperImageTransform"
 							[class.ngx-cropper-disabled]="cropperImageForm.disabled"

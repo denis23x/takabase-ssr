@@ -10,6 +10,7 @@
   }
 }
 
+/*
 @mixin shared-styles-pseudo-loader() {
   @apply relative rounded-btn pointer-events-none;
 
@@ -21,6 +22,7 @@
     @apply content-[''] bg-base-300 animate-pulse absolute inset-0;
   }
 }
+*/
 
 /* Update prose */
 
@@ -34,12 +36,13 @@
   }
 
   iframe {
-    @apply rounded-box aspect-video w-full h-auto bg-base-300;
+    @apply rounded-box aspect-video w-full h-auto bg-base-200;
   }
 
   img {
     @apply bg-base-200 m-0;
 
+    /*
     &:not(.mask) {
       @apply rounded-box;
     }
@@ -47,6 +50,7 @@
     &:not([width]):not([height]) {
       @apply w-full;
     }
+    */
   }
 
   /* https://stackoverflow.com/questions/5379752/css-style-external-links */
@@ -83,6 +87,20 @@
     }
   }
 
+  figure {
+    @apply bg-base-200 rounded-xl overflow-hidden w-fit my-4;
+
+    a {
+      img {
+        @apply rounded-none #{!important};
+      }
+    }
+
+    figcaption {
+      @apply text-center m-0 px-4 py-2;
+    }
+  }
+
   pre.mermaid {
     @apply bg-base-200/50 p-4;
 
@@ -100,7 +118,7 @@
   }
 
   code:not(pre code) {
-    @apply inline bg-base-300 text-base-content font-normal rounded p-1;
+    @apply inline bg-base-200 text-base-content font-normal rounded p-1;
   }
 
   ul {

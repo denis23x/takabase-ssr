@@ -50,6 +50,7 @@ import type {
 } from '../../../core/models/markdown.model';
 import type MarkdownIt from 'markdown-it';
 import morphdom from 'morphdom';
+import dayjs from 'dayjs/esm';
 
 interface UrlForm {
 	title?: FormControl<string>;
@@ -225,7 +226,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 						.subscribe({
 							next: (fileUrl: string) => {
 								const params: any = {
-									title: 'Markdown',
+									title: 'Uploaded on ' + dayjs().format('MMMM D, YYYY'),
 									url: fileUrl
 								};
 
