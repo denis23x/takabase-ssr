@@ -4,7 +4,7 @@ import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
+import { UserAvatarComponent } from '../standalone/components/user/avatar/avatar.component';
 import { ScrollPresetDirective } from '../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../standalone/components/svg-icon/svg-icon.component';
 import { DayjsPipe } from '../standalone/pipes/dayjs.pipe';
@@ -33,7 +33,7 @@ import type { CategoryGetAllDto } from '../core/dto/category/category-get-all.dt
 	imports: [
 		RouterModule,
 		CommonModule,
-		AvatarComponent,
+		UserAvatarComponent,
 		DayjsPipe,
 		ScrollPresetDirective,
 		SvgIconComponent,

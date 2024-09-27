@@ -4,7 +4,7 @@ import { Component, ComponentRef, inject, OnDestroy, OnInit, ViewContainerRef } 
 import { NavigationExtras, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, Subscription, switchMap } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
-import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
+import { UserAvatarComponent } from '../../standalone/components/user/avatar/avatar.component';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
@@ -36,7 +36,7 @@ import type { CustomSearchResponse } from '../../core/models/custom-search.model
 	imports: [
 		RouterModule,
 		CommonModule,
-		AvatarComponent,
+		UserAvatarComponent,
 		DayjsPipe,
 		ScrollPresetDirective,
 		SvgIconComponent,

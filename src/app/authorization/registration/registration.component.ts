@@ -23,7 +23,7 @@ import { from, Subscription, switchMap } from 'rxjs';
 import { BadgeErrorComponent } from '../../standalone/components/badge-error/badge-error.component';
 import { CommonModule } from '@angular/common';
 import { AIService } from '../../core/services/ai.service';
-import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
+import { UserAvatarComponent } from '../../standalone/components/user/avatar/avatar.component';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { getValue, Value } from 'firebase/remote-config';
@@ -55,7 +55,7 @@ interface RegistrationForm {
 		InputTrimWhitespaceDirective,
 		SignInComponent,
 		BadgeErrorComponent,
-		AvatarComponent
+		UserAvatarComponent
 	],
 	providers: [AIService, UserService],
 	selector: 'app-authorization-registration',

@@ -13,13 +13,13 @@ import { SkeletonDirective } from '../standalone/directives/app-skeleton.directi
 import { SkeletonService } from '../core/services/skeleton.service';
 import { HelperService } from '../core/services/helper.service';
 import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
-import { AvatarComponent } from '../standalone/components/avatar/avatar.component';
+import { UserAvatarComponent } from '../standalone/components/user/avatar/avatar.component';
 import type { Post } from '../core/models/post.model';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, CommonModule, SvgIconComponent, SkeletonDirective, AvatarComponent],
+	imports: [RouterModule, CommonModule, SvgIconComponent, SkeletonDirective, UserAvatarComponent],
 	providers: [PostStore],
 	selector: 'app-post',
 	templateUrl: './post.component.html'

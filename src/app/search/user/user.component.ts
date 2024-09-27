@@ -3,7 +3,7 @@
 import { Component, inject, makeStateKey, OnDestroy, OnInit, StateKey, TransferState } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
+import { UserAvatarComponent } from '../../standalone/components/user/avatar/avatar.component';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { DayjsPipe } from '../../standalone/pipes/dayjs.pipe';
 import { CardUserComponent } from '../../standalone/components/card/user/user.component';
@@ -31,7 +31,7 @@ const searchResponseKey: StateKey<SearchResponse<User>> = makeStateKey<SearchRes
 	imports: [
 		CommonModule,
 		RouterModule,
-		AvatarComponent,
+		UserAvatarComponent,
 		SvgIconComponent,
 		DayjsPipe,
 		CardUserComponent,

@@ -3,7 +3,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
 import { RouterModule } from '@angular/router';
-import { AvatarComponent } from '../../avatar/avatar.component';
+import { UserAvatarComponent } from '../../user/avatar/avatar.component';
 import type { User } from '../../../../core/models/user.model';
 import type { HighlightResult } from '@algolia/client-search';
 import type { Post } from '../../../../core/models/post.model';
@@ -14,7 +14,7 @@ interface UserHighlightResult {
 
 @Component({
 	standalone: true,
-	imports: [RouterModule, SkeletonDirective, AvatarComponent],
+	imports: [RouterModule, SkeletonDirective, UserAvatarComponent],
 	selector: 'app-card-user, [appCardUser]',
 	templateUrl: './user.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush

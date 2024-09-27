@@ -12,9 +12,9 @@
 				<div class="avatar" appSkeleton [appSkeletonToggle]="userSkeletonToggle">
 					<figure
 						class="h-12 w-12 rounded-btn relative overflow-hidden"
-						appAvatar
-						[appAvatarPhotoUrl]="user.avatar"
-						[appAvatarName]="user.name"
+						appUserAvatar
+						[appUserAvatarPhotoUrl]="user.avatar"
+						[appUserAvatarName]="user.name"
 					></figure>
 				</div>
 				<div class="flex flex-col gap-2 items-start w-full overflow-hidden">

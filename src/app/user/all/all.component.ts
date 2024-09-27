@@ -4,7 +4,7 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
+import { UserAvatarComponent } from '../../standalone/components/user/avatar/avatar.component';
 import { ScrollPresetDirective } from '../../standalone/directives/app-scroll-preset.directive';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { DropdownComponent } from '../../standalone/components/dropdown/dropdown.component';
@@ -29,7 +29,7 @@ import type { CustomSearchResponse } from '../../core/models/custom-search.model
 	imports: [
 		RouterModule,
 		CommonModule,
-		AvatarComponent,
+		UserAvatarComponent,
 		ScrollPresetDirective,
 		SvgIconComponent,
 		DropdownComponent,

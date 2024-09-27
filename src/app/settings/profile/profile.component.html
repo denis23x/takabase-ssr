@@ -19,12 +19,12 @@
 							<!-- prettier-ignore -->
 							<figure
                 class="block rounded-btn relative h-12 w-12 overflow-hidden transition"
-                appAvatar
+                appUserAvatar
                 [title]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
                 [attr.aria-label]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
                 [ngClass]="{ 'cursor-not-allowed border border-transparent opacity-50 grayscale bg-base-200': profileForm.disabled, 'cursor-pointer': profileForm.enabled, 'border border-success': avatar.value }"
-                [appAvatarPhotoUrl]="profileForm.value['avatar']"
-                [appAvatarName]="profileForm.value['name']"
+                [appUserAvatarPhotoUrl]="profileForm.value['avatar']"
+                [appUserAvatarName]="profileForm.value['name']"
                 (click)="onToggleCropperDialog()"
               ></figure>
 						}

@@ -3,29 +3,29 @@
 import { Component, ElementRef, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { toSvg } from 'jdenticon';
 import { DOCUMENT } from '@angular/common';
-import { PlatformService } from '../../../core/services/platform.service';
-import { HelperService } from '../../../core/services/helper.service';
+import { PlatformService } from '../../../../core/services/platform.service';
+import { HelperService } from '../../../../core/services/helper.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
 	standalone: true,
-	selector: 'app-avatar, [appAvatar]',
+	selector: 'app-user-avatar, [appUserAvatar]',
 	templateUrl: './avatar.component.html'
 })
-export class AvatarComponent implements OnInit, OnDestroy {
+export class UserAvatarComponent implements OnInit, OnDestroy {
 	private readonly document: Document = inject(DOCUMENT);
 	private readonly elementRef: ElementRef = inject(ElementRef);
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly helperService: HelperService = inject(HelperService);
 
 	@Input({ required: true })
-	set appAvatarPhotoUrl(photoUrl: string | null) {
+	set appUserAvatarPhotoUrl(photoUrl: string | null) {
 		this.avatarPhotoUrl = photoUrl;
 		this.avatar$.next(this.avatarPhotoUrl);
 	}
 
 	@Input({ required: true })
-	set appAvatarName(name: string) {
+	set appUserAvatarName(name: string) {
 		this.avatarName = name;
 		this.avatar$.next(this.avatarPhotoUrl);
 	}

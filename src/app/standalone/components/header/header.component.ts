@@ -4,7 +4,7 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { AvatarComponent } from '../avatar/avatar.component';
+import { UserAvatarComponent } from '../user/avatar/avatar.component';
 import { SkeletonDirective } from '../../directives/app-skeleton.directive';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { SnackbarService } from '../../../core/services/snackbar.service';
@@ -21,7 +21,7 @@ import { CurrentUserMixin as CU } from '../../../core/mixins/current-user.mixin'
 		CommonModule,
 		RouterModule,
 		SvgIconComponent,
-		AvatarComponent,
+		UserAvatarComponent,
 		SkeletonDirective,
 		DropdownComponent,
 		AuthenticatedComponent,

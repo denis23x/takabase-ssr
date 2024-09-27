@@ -13,7 +13,7 @@ import { MarkdownTimeToReadPipe } from '../../../pipes/markdown-time-to-read.pip
 import { MarkdownService } from '../../../../core/services/markdown.service';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
-import { AvatarComponent } from '../../avatar/avatar.component';
+import { UserAvatarComponent } from '../../user/avatar/avatar.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { Subscription } from 'rxjs';
 import { PostBookmarkService } from '../../../../core/services/post-bookmark.service';
@@ -38,7 +38,7 @@ import type { PostBookmarkGetOneDto } from '../../../../core/dto/post-bookmark/p
 		SvgIconComponent,
 		MarkdownRenderDirective,
 		MarkdownTimeToReadPipe,
-		AvatarComponent,
+		UserAvatarComponent,
 		MarkdownTagsPipe
 	],
 	providers: [MarkdownService, PostBookmarkService],

@@ -24,7 +24,7 @@ import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
-import { AvatarComponent } from '../../standalone/components/avatar/avatar.component';
+import { UserAvatarComponent } from '../../standalone/components/user/avatar/avatar.component';
 import { InputTrimWhitespaceDirective } from '../../standalone/directives/app-input-trim-whitespace.directive';
 import { HelperService } from '../../core/services/helper.service';
 import { UserService } from '../../core/services/user.service';
@@ -57,7 +57,7 @@ interface ProfileForm {
 		RouterModule,
 		ReactiveFormsModule,
 		SvgIconComponent,
-		AvatarComponent,
+		UserAvatarComponent,
 		InputTrimWhitespaceDirective,
 		TextareaAutosizeDirective,
 		DropdownComponent,
