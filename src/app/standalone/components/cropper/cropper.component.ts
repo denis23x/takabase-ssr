@@ -99,6 +99,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 	markdownItToggle: boolean = false;
 	markdownItToggle$: Subscription | undefined;
 
+	cropperImageFormStage: string = 'Submit';
 	cropperImageForm: FormGroup = this.formBuilder.group<CropperImageForm>({
 		scale: this.formBuilder.nonNullable.control(1, [Validators.required, Validators.min(1), Validators.max(5)]),
 		rotate: this.formBuilder.nonNullable.control(0, [Validators.required, Validators.min(0), Validators.max(360)]),
@@ -448,6 +449,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	onSubmitCropper(): void {
 		this.cropperImageForm.disable();
+		this.cropperImageFormStage = 'Moderation';
 
 		/** Get ready file */
 
@@ -464,6 +466,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		this.imageFormRequest$ = this.aiService
 			.moderateImage(formDataModeration)
 			.pipe(
+				tap(() => (this.cropperImageFormStage = 'Uploading')),
 				switchMap(() => {
 					const formDataOutput: FormData = new FormData();
 
@@ -483,7 +486,10 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			)
 			.subscribe({
 				next: () => this.onToggleCropperDialog(false),
-				error: () => this.cropperImageForm.enable()
+				error: () => {
+					this.cropperImageForm.enable();
+					this.cropperImageFormStage = 'Submit';
+				}
 			});
 	}
 }

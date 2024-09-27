@@ -372,15 +372,15 @@
 						<button
 							class="btn btn-success w-full"
 							type="button"
-							title="Submit crop"
-							aria-label="Submit crop"
+							[title]="cropperImageFormStage"
+							[attr.aria-label]="cropperImageFormStage"
 							[disabled]="cropperImageForm.disabled"
 							(click)="onSubmitCropper()"
 						>
 							@if (cropperImageForm.disabled) {
 								<span class="loading loading-spinner"></span>
 							}
-							Submit
+							{{ cropperImageFormStage }}
 						</button>
 						<button
 							class="btn btn-success btn-outline w-full"
