@@ -1,6 +1,6 @@
 /** @format */
 
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ComponentRef, inject, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Params, Router, RouterLinkActive, RouterModule } from '@angular/router';
 import { distinctUntilKeyChanged, from, Subscription, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -27,6 +27,7 @@ import type { Category } from '../core/models/category.model';
 import type { UserGetAllDto } from '../core/dto/user/user-get-all.dto';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import type { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
+import type { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 
 @Component({
 	standalone: true,
@@ -56,6 +57,7 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly userStore: UserStore = inject(UserStore);
 	private readonly helperService: HelperService = inject(HelperService);
+	private readonly viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
 	@ViewChild('routerLinkActiveBookmark') routerLinkActiveBookmark: RouterLinkActive | undefined;
 	@ViewChild('routerLinkActivePassword') routerLinkActivePassword: RouterLinkActive | undefined;
@@ -74,6 +76,10 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 	categoryList: Category[] = [];
 	categoryListRequest$: Subscription | undefined;
 	categoryListSkeletonToggle: boolean = true;
+
+	// Lazy loading
+
+	appCategoryCreateComponent: ComponentRef<CategoryCreateComponent>;
 
 	ngOnInit(): void {
 		super.ngOnInit();
@@ -280,5 +286,29 @@ export class UserComponent extends CU(class {}) implements OnInit, OnDestroy {
 		}
 
 		this.metaService.setMeta(metaOpenGraph as MetaOpenGraph, metaTwitter as MetaTwitter);
+	}
+
+	/** LAZY */
+
+	async onToggleCategoryCreateDialog(): Promise<void> {
+		if (!this.appCategoryCreateComponent) {
+			await import('../standalone/components/category/create/create.component').then(m => {
+				this.appCategoryCreateComponent = this.viewContainerRef.createComponent(m.CategoryCreateComponent);
+				this.appCategoryCreateComponent.instance.appCategoryCreateSuccess.subscribe({
+					next: (category: Category) => {
+						this.categoryList.unshift(category);
+
+						// prettier-ignore
+						this.router
+							.navigate(['/', this.currentUser.displayName, 'category', category.id])
+							.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
+					},
+					error: (error: any) => console.error(error)
+				});
+			});
+		}
+
+		this.appCategoryCreateComponent.changeDetectorRef.detectChanges();
+		this.appCategoryCreateComponent.instance.onToggleCategoryCreateDialog(true);
 	}
 }

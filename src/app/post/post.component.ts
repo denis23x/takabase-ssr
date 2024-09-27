@@ -11,7 +11,6 @@ import { MetaService } from '../core/services/meta.service';
 import { filter } from 'rxjs/operators';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
-import { HelperService } from '../core/services/helper.service';
 import { CurrentUserMixin as CU } from '../core/mixins/current-user.mixin';
 import { UserAvatarComponent } from '../standalone/components/user/avatar/avatar.component';
 import type { Post } from '../core/models/post.model';
@@ -30,7 +29,6 @@ export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly postStore: PostStore = inject(PostStore);
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-	private readonly helperService: HelperService = inject(HelperService);
 
 	post: Post | undefined;
 	post$: Subscription | undefined;
@@ -99,7 +97,7 @@ export class PostComponent extends CU(class {}) implements OnInit, OnDestroy {
 	setMetaTags(): void {
 		const title: string = this.post.name;
 		const description: string = this.post.description;
-		const cover: string = this.post.cover;
+		const cover: string = this.post.cover || this.post.user.avatar;
 
 		const metaOpenGraph: MetaOpenGraph = {
 			['og:title']: title,

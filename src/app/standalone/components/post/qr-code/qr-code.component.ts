@@ -96,7 +96,7 @@ export class PostQRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 		}
 	}
 
-	onSaveQRCode(): void {
+	onDownloadQRCode(): void {
 		if (this.platformService.isBrowser()) {
 			const abstractControl: AbstractControl | null = this.QRCodeForm.get('url');
 			const abstractControlValueFileName: string = ['qr-code', abstractControl.value.split('/').pop()].join('-');

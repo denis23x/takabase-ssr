@@ -286,6 +286,10 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 				next: (categoryList: Category[]) => {
 					this.categoryList = categoryList;
 					this.categoryListSkeletonToggle = false;
+
+					/** Apply Share target */
+
+					this.setShareTarget();
 				},
 				error: (error: any) => console.error(error)
 			});
@@ -370,10 +374,6 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 				this.category = undefined;
 				this.categorySkeletonToggle = false;
-
-				/** Apply Share target */
-
-				this.setShareTarget();
 
 				/** Toggle drafts dialog (only if exists) */
 

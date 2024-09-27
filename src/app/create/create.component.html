@@ -420,26 +420,41 @@
 								</li>
 								<li class="flex w-full snap-start scroll-my-2">
 									<button
-										class="rounded-btn block w-full truncate text-right"
+										class="rounded-btn flex justify-end flex-row gap-2 w-full truncate text-right"
 										type="button"
 										title="Post protected by password"
 										aria-label="Post protected by password"
 										[class.active]="postType === 'password'"
 										(click)="onChangePostType('password')"
 									>
-										Password
+										<span class="block">Password</span>
+										<i
+											class="block fill-current"
+											appSvgIcon
+											[appSvgIconIcon]="'shield-lock'"
+											[appSvgIconSquare]="'1.25em'"
+											[appSvgIconViewBox]="'0 0 16 17'"
+										>
+										</i>
 									</button>
 								</li>
 								<li class="flex w-full snap-start scroll-my-2">
 									<button
-										class="rounded-btn block w-full truncate text-right"
+										class="rounded-btn flex justify-end flex-row gap-2 w-full truncate text-right"
 										type="button"
 										title="Private post"
 										aria-label="Private post"
 										[class.active]="postType === 'private'"
 										(click)="onChangePostType('private')"
 									>
-										Private
+										<span class="block">Private</span>
+										<i
+											class="block fill-current"
+											appSvgIcon
+											[appSvgIconIcon]="'incognito'"
+											[appSvgIconSquare]="'1.25em'"
+										>
+										</i>
 									</button>
 								</li>
 							</ul>

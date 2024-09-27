@@ -74,9 +74,7 @@
                 class="block whitespace-nowrap px-4"
                 title="All posts"
                 aria-label="All posts"
-                appScrollPreset
                 itemprop="url"
-                [appScrollPresetActive]="!categoryListSkeletonToggle && routerLinkActiveAll.isActive"
                 [routerLink]="['/', user.name]"
                 [queryParamsHandling]="'merge'"
               >
@@ -99,11 +97,10 @@
 								title="Bookmarked posts"
 								aria-label="Bookmarked posts"
 								appSvgIcon
-								appScrollPreset
 								routerLinkActive
 								itemprop="url"
+								rel="nofollow"
 								#routerLinkActiveBookmark="routerLinkActive"
-								[appScrollPresetActive]="routerLinkActiveBookmark.isActive"
 								[routerLink]="['/', currentUser.displayName, 'bookmark']"
 								[queryParamsHandling]="'merge'"
 								[appSvgIconIcon]="'bookmark'"
@@ -125,11 +122,10 @@
 								title="Password protected posts"
 								aria-label="Password protected posts"
 								appSvgIcon
-								appScrollPreset
 								routerLinkActive
 								itemprop="url"
+								rel="nofollow"
 								#routerLinkActivePassword="routerLinkActive"
-								[appScrollPresetActive]="routerLinkActivePassword.isActive"
 								[routerLink]="['/', currentUser.displayName, 'password']"
 								[queryParamsHandling]="'merge'"
 								[appSvgIconIcon]="'shield-lock'"
@@ -152,11 +148,10 @@
 								title="Private posts"
 								aria-label="Private posts"
 								appSvgIcon
-								appScrollPreset
 								routerLinkActive
 								itemprop="url"
+								rel="nofollow"
 								#routerLinkActivePrivate="routerLinkActive"
-								[appScrollPresetActive]="routerLinkActivePrivate.isActive"
 								[routerLink]="['/', currentUser.displayName, 'private']"
 								[queryParamsHandling]="'merge'"
 								[appSvgIconIcon]="'incognito'"
@@ -191,9 +186,32 @@
 							</a>
 						</li>
 					}
+					@if (currentUser?.displayName === user.name) {
+						<li
+							class="tab"
+							role="tab"
+							appSkeleton
+							[appSkeletonToggle]="categoryListSkeletonToggle"
+							[appSkeletonClassListParent]="['rounded-t-[var(--tab-radius)]']"
+							[appSkeletonClassList]="['rounded-t-[var(--tab-radius)]', 'rounded-b-none']"
+						>
+							<button
+								class="block fill-current text-base-content px-2"
+								type="button"
+								title="Create new category"
+								aria-label="Create new category"
+								appSvgIcon
+								itemprop="url"
+								rel="nofollow"
+								[appSvgIconIcon]="'plus'"
+								[appSvgIconSquare]="'1.25em'"
+								(click)="onToggleCategoryCreateDialog()"
+							></button>
+						</li>
+					}
 				</ul>
 			</nav>
-			<div class="block">
+			<div class="block" role="tabpanel">
 				<router-outlet></router-outlet>
 			</div>
 		</div>
