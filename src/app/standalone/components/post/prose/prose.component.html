@@ -22,12 +22,12 @@
 					@if (post.cover) {
 						<a
 							class="flex"
+							title="Open Image"
+							aria-label="Open Image"
 							appSkeleton
 							target="_blank"
 							[appSkeletonToggle]="postSkeletonToggle"
 							[href]="post.cover"
-							[title]="post.user.name"
-							[attr.aria-label]="post.user.name"
 						>
 							<figure class="h-24 w-24 rounded-btn relative overflow-hidden">
 								<img

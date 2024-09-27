@@ -273,36 +273,44 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 	setResolver(): void {
 		if (this.platformService.isBrowser()) {
+			const username: string = this.currentUser.displayName;
+			const userFirebaseUid: string = this.currentUser.uid;
+
+			// prettier-ignore
+			const postType: PostType = String(this.activatedRoute.snapshot.queryParamMap.get('postType') || 'category') as PostType;
+			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
+
 			const categoryGetAllDto: CategoryGetAllDto = {
 				page: 1,
 				size: 100,
-				username: this.currentUser.displayName
+				username
 			};
 
 			// Get categories
-
 			this.categoryListRequest$?.unsubscribe();
 			this.categoryListRequest$ = this.categoryService.getAll(categoryGetAllDto).subscribe({
 				next: (categoryList: Category[]) => {
 					this.categoryList = categoryList;
 					this.categoryListSkeletonToggle = false;
 
-					/** Apply Share target */
+					if (!postId) {
+						/** Apply Share target */
 
-					this.setShareTarget();
+						this.setShareTarget();
+
+						/** Toggle drafts dialog (only if exists) */
+
+						this.onTogglePostDraftDialog(true).catch((error: any) => console.error(error));
+					}
 				},
 				error: (error: any) => console.error(error)
 			});
 
 			// Get post
 			// prettier-ignore
-			const postType: PostType = String(this.activatedRoute.snapshot.queryParamMap.get('postType') || 'category') as PostType;
-			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
-
-			// prettier-ignore
 			if (postId && postType) {
 				const postGetOneDto: PostGetOneDto = {
-					userFirebaseUid: this.currentUser.uid
+					userFirebaseUid
 				};
 				const postTypeMap: Record<PostType, Observable<Post>> = {
 					category: this.postService.getOne(postId, postGetOneDto),
@@ -374,11 +382,6 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 				this.category = undefined;
 				this.categorySkeletonToggle = false;
-
-				/** Toggle drafts dialog (only if exists) */
-
-				// TODO: remake drafts
-				// this.onTogglePostDraftDialog(true).catch((error: any) => console.error(error));
 			}
 		}
 	}
@@ -621,6 +624,11 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			Object.keys(this.postForm.controls)
 				.filter((control: string) => this.postForm.get(control).value)
 				.forEach((control: string) => this.postForm.get(control).markAsTouched());
+
+			// Update post draft
+
+			this.appPostDraftComponent?.setInput('appPostDraftPostType', this.postType);
+			this.appPostDraftComponent?.setInput('appPostDraftPostForm', this.postForm);
 		}
 	}
 
@@ -730,8 +738,8 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 								// Unsubscribe postForm.valueChanges
 
-								this.appPostDraftComponent.destroy();
-								this.appPostDraftComponent.changeDetectorRef.detectChanges();
+								this.appPostDraftComponent?.destroy();
+								this.appPostDraftComponent?.changeDetectorRef.detectChanges();
 							}
 						}
 

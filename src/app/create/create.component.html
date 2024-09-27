@@ -156,23 +156,11 @@
 									@if (name.touched && !!name.errors && postForm.enabled) {
 										<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
 									} @else if (name.valid && postForm.enabled) {
-										<!--
-                    @if (!post) {
-											<div class="flex items-center gap-2 indicator-item w-max translate-x-full translate-y-0">
-												<span class="badge-success badge text-xs">Draft</span>
-												&lt;!&ndash; TODO: tooltips
-												<div class="tooltip" data-tip="Autosave expires in 15 minutes">
-													<i
-														class="fill-current text-base-content/50 hover:text-base-content"
-														appSvgIcon
-														[appSvgIconIcon]="'question-circle'"
-														[appSvgIconSquare]="'1.25em'"
-													></i>
-												</div>
-                        &ndash;&gt;
-											</div>
+										@if (!post) {
+											<span class="badge-warning badge indicator-item w-max translate-x-full translate-y-0 text-xs">
+												Draft
+											</span>
 										}
-										-->
 									}
 									<span class="label-text mr-2">Name</span>
 								</div>
@@ -472,20 +460,6 @@
 									@if (description.touched && !!description.errors && postForm.enabled) {
 										<div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
 									}
-									<!-- TODO: tooltips
-									@if (description.touched && description.valid && postForm.enabled) {
-										<div class="indicator-item w-max translate-x-full translate-y-0">
-											<div class="tooltip" data-tip="It will be used in Algolia search">
-												<i
-													class="fill-current text-base-content/50 hover:text-base-content"
-													appSvgIcon
-													[appSvgIconIcon]="'question-circle'"
-													[appSvgIconSquare]="'1.25em'"
-												></i>
-											</div>
-										</div>
-									}
-									-->
 									@if (!description.errors && !postSkeletonToggle && postType !== "category") {
 										<span
 											class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
