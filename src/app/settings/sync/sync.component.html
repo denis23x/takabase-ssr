@@ -18,7 +18,7 @@
 		<div class="flex flex-col items-start justify-start gap-4">
 			@if (!!syncList.length) {
 				@for (sync of syncList; track sync.id) {
-					<details class="collapse collapse-arrow bg-base-200 border border-base-content/20" open>
+					<details class="collapse collapse-arrow bg-base-200 border border-base-300" open>
 						<summary class="collapse-title text-xl font-medium gap-4">{{ sync.name }}</summary>
 						<div class="collapse-content bg-base-100 p-4">
 							<ul class="flex flex-col gap-2">

@@ -39,7 +39,7 @@
 							{{ reportSubjectName }}
 						</span>
 						<a
-							class="link text-sm text-base-content/50 leading-4 truncate max-w-full"
+							class="link text-sm text-base-content/60 leading-4 truncate max-w-full"
 							title="Report link"
 							aria-label="Report link"
 							target="_blank"
@@ -143,7 +143,7 @@
 						</label>
 						<div
 							class="textarea-autosize w-full"
-							[ngClass]="{ 'border-base-content/20': reportForm.enabled, 'border-transparent': reportForm.disabled }"
+							[ngClass]="{ 'border-base-300': reportForm.enabled, 'border-transparent': reportForm.disabled }"
 							[class.textarea-autosize-success]="description.value && description.valid"
 							[class.textarea-autosize-error]="description.touched && description.invalid"
 						>

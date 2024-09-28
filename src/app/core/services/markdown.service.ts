@@ -165,7 +165,7 @@ export class MarkdownService {
 				markdownIt.use(plugins[2].default);
 
 				markdownIt.renderer.rules.collapsible_open = (): string => {
-					return '<details class="collapse collapse-arrow bg-base-200 border border-base-content/20">';
+					return '<details class="collapse collapse-arrow bg-base-200 border border-base-300">';
 				};
 
 				markdownIt.renderer.rules.collapsible_summary = (tokenList: Token[], idx: number): string => {

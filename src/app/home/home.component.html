@@ -3,13 +3,13 @@
 <ng-container>
 	<section class="flex flex-col gap-4">
 		<header
-			class="rounded-box flex flex-col items-stretch justify-start gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+			class="rounded-box flex flex-col items-stretch justify-start gap-4 border border-base-300 bg-base-100 p-4 shadow-xl"
 		>
 			<div class="relative sm:divider sm:divider-start sm:mt-2">
 				<h1 class="text-3xl text-base-content font-bold" itemprop="name">The new posting platform</h1>
 			</div>
 			<div class="flex items-start justify-start gap-4">
-				<p class="text-base text-base-content/50" itemprop="description">
+				<p class="text-base text-base-content/60" itemprop="description">
 					<span class="inline">
 						Takabase is designed to provide you with an easy-to-use, lightweight app that is highly customizable to your
 						preferences.
@@ -80,15 +80,15 @@
 				</a>
 			</nav>
 		</header>
-		<ul class="rounded-box grid grid-cols-12 border border-base-content/20 bg-base-100 shadow-xl">
+		<ul class="rounded-box grid grid-cols-12 border border-base-300 bg-base-100 shadow-xl">
 			<li
-				class="flex flex-col col-span-12 lg:col-span-6 gap-2 border-b lg:border-b-0 lg:border-r border-base-content/20 p-4"
+				class="flex flex-col col-span-12 lg:col-span-6 gap-2 border-b lg:border-b-0 lg:border-r border-base-300 p-4"
 				itemscope
 				itemtype="http://schema.org/Thing"
 			>
 				<div class="flex items-center justify-between">
 					<h4 class="text-2xl font-bold text-base-content" itemprop="name">Insights</h4>
-					<span class="text-sm text-base-content/50">
+					<span class="text-sm text-base-content/60">
 						{{ appInsightListTime }}
 					</span>
 				</div>
@@ -107,7 +107,7 @@
 			</li>
 			@for (appInsight of appInsightList; track $index) {
 				<li
-					class="flex flex-col items-center justify-center gap-1 text-center col-span-4 lg:col-span-2 border-r last:border-0 border-base-content/20 p-4"
+					class="flex flex-col items-center justify-center gap-1 text-center col-span-4 lg:col-span-2 border-r last:border-0 border-base-300 p-4"
 				>
 					<h4 class="text-sm uppercase text-base-content">{{ appInsight.value }}</h4>
 					<div class="flex flex-col items-center justify-center gap-1">
@@ -136,9 +136,9 @@
 			}
 		</ul>
 		<main
-			class="rounded-box sm:rounded-none border sm:border-none border-base-content/20 w-full overflow-auto sm:overflow-visible"
+			class="rounded-box sm:rounded-none border sm:border-none border-base-300 w-full overflow-auto sm:overflow-visible"
 		>
-			<div class="flex items-center justify-between sm:hidden bg-base-100 border-b border-base-content/20 p-4">
+			<div class="flex items-center justify-between sm:hidden bg-base-100 border-b border-base-300 p-4">
 				<h4 class="text-2xl font-bold text-base-content">Highlights</h4>
 				<nav class="join">
 					@for (appHighlight of [1, 2, 3]; track $index) {
@@ -157,7 +157,7 @@
 			<ul class="grid grid-cols-1 sm:grid-cols-3 sm:gap-4" itemscope itemtype="http://schema.org/ItemList">
 				@for (appHighlight of appHighlightList; track appHighlight.id; let i = $index) {
 					<li
-						class="sm:rounded-box hidden sm:flex flex-col gap-2 col-span-1 border-t [&:nth-child(3n+1)]:border-t-0 sm:border border-base-content/20 bg-base-100 sm:shadow-xl p-4"
+						class="sm:rounded-box hidden sm:flex flex-col gap-2 col-span-1 border-t [&:nth-child(3n+1)]:border-t-0 sm:border border-base-300 bg-base-100 sm:shadow-xl p-4"
 						itemprop="itemListElement"
 						itemscope
 						itemtype="http://schema.org/ListItem"
@@ -174,7 +174,7 @@
 								{{ appHighlight.title }}
 							</span>
 						</div>
-						<p class="text-sm text-base-content/50" itemprop="description">
+						<p class="text-sm text-base-content/60" itemprop="description">
 							{{ appHighlight.description }}
 						</p>
 					</li>

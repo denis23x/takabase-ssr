@@ -5,7 +5,7 @@
 		<div class="flex w-full flex-col gap-4">
 			<ul class="flex flex-col items-start justify-start gap-4 w-full">
 				@for (providerData of currentUserProviderData | slice: 0 : 1; track providerData.providerId) {
-					<li class="flex flex-col gap-4 rounded-box border border-base-content/20 w-full p-4">
+					<li class="flex flex-col gap-4 rounded-box border border-base-300 w-full p-4">
 						<div class="flex items-center justify-between gap-4">
 							<button
 								class="btn-ghost btn-md btn-square btn fill-current text-base-content bg-base-200 hidden sm:flex"
@@ -18,7 +18,7 @@
 							></button>
 							<div class="flex flex-col items-start justify-start gap-2 w-full overflow-hidden">
 								<span class="truncate text-lg leading-6 font-bold text-base-content max-w-full"> Takabase </span>
-								<span class="truncate text-sm leading-4 text-base-content/50 max-w-full">
+								<span class="truncate text-sm leading-4 text-base-content/60 max-w-full">
 									Keep your account secure
 								</span>
 							</div>
@@ -34,7 +34,7 @@
 							</button>
 						</div>
 						@if (emailAuthProviderFormToggle) {
-							<hr class="w-full border-base-content/20" />
+							<hr class="w-full border-base-300" />
 							@if (providerData.linked) {
 								@if (currentUser.emailVerified) {
 									@if (currentUserPasswordFormFormToggle) {
@@ -512,9 +512,7 @@
 			</p>
 			<ul class="flex flex-col items-start justify-start w-full">
 				@for (providerData of currentUserProviderData | slice: 1; track providerData.providerId) {
-					<li
-						class="flex items-center justify-between w-full gap-4 first:border-t border-b border-base-content/20 py-4"
-					>
+					<li class="flex items-center justify-between w-full gap-4 first:border-t border-b border-base-300 py-4">
 						<div class="avatar">
 							<a
 								class="flex items-center justify-center rounded-btn h-12 w-12 relative overflow-hidden"
@@ -554,7 +552,7 @@
 							>
 								{{ providerData.providerLabel }}
 							</a>
-							<span class="truncate text-sm leading-4 text-base-content/50 max-w-full">
+							<span class="truncate text-sm leading-4 text-base-content/60 max-w-full">
 								{{ providerData.displayName || "Connect account" }}
 							</span>
 						</div>
@@ -610,7 +608,7 @@
 				</button>
 			</fieldset>
 		</div>
-		<hr class="w-full border-base-content/20" />
+		<hr class="w-full border-base-300" />
 		<div class="flex w-full flex-col gap-4">
 			<p class="alert" role="alert">
 				<i class="fill-current text-info" appSvgIcon [appSvgIconIcon]="'info-circle'" [appSvgIconSquare]="'1.5em'"></i>

@@ -1,6 +1,6 @@
 
 .input {
-  @apply truncate text-base-content;
+  @apply truncate text-base-content border-base-300;
 
   /* Hide native search icon */
 
@@ -36,10 +36,18 @@
 
   &.input-success {
     @apply caret-success;
+
+    &:not(.input-disabled, :disabled, [disabled]) {
+      @apply border-success;
+    }
   }
 
   &.input-error {
     @apply caret-error;
+
+    &:not(.input-disabled, :disabled, [disabled]) {
+      @apply border-error;
+    }
   }
 
   &:has(+ .btn-circle) {

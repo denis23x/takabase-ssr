@@ -1,7 +1,7 @@
 /* Update default behavior */
 
 .modal {
-  @apply backdrop-blur-sm backdrop-grayscale;
+  @apply backdrop-blur-md;
 
   &::backdrop {
     @apply bg-transparent;

@@ -17,6 +17,6 @@
   }
 
   &.menu-vertical {
-    @apply overflow-hidden text-base-content rounded-box border border-base-content/20 bg-base-100 shadow before:hidden;
+    @apply overflow-hidden text-base-content rounded-box border border-base-300 bg-base-100 shadow before:hidden;
   }
 }

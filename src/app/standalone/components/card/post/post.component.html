@@ -3,7 +3,7 @@
 <ng-container>
 	<!-- https://schema.org/Article -->
 	<article
-		class="rounded-box flex h-full w-full flex-col overflow-hidden border border-base-content/20 bg-base-100 shadow-xl"
+		class="rounded-box flex h-full w-full flex-col overflow-hidden border border-base-300 bg-base-100 shadow-xl"
 		itemprop="itemListElement"
 		itemscope
 		itemtype="http://schema.org/Article"
@@ -87,7 +87,7 @@
 			@switch (postType) {
 				<!--
 				@case ("test") {
-					<div class="flex items-center justify-between gap-2 text-base-content/50 w-full">
+					<div class="flex items-center justify-between gap-2 text-base-content/60 w-full">
 						<div class="flex items-center justify-start gap-2" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 							<div class="flex items-center justify-start gap-1">
 								<i class="fill-current" appSvgIcon [appSvgIconIcon]="'bookmark'" [appSvgIconSquare]="'0.75em'"></i>
@@ -100,7 +100,7 @@
 						</div>
 						<div class="flex items-center justify-end gap-2" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 							<time
-								class="text-xs text-base-content/50"
+								class="text-xs text-base-content/60"
 								appSkeleton
 								itemprop="dateCreated"
 								[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"
@@ -115,7 +115,7 @@
 				-->
 				@default {
 					<time
-						class="text-xs text-base-content/50"
+						class="text-xs text-base-content/60"
 						appSkeleton
 						itemprop="dateCreated"
 						[attr.datetime]="post.createdAt | dayjs: 'format' : 'YYYY-M-D'"

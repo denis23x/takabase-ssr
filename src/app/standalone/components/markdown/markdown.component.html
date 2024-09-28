@@ -2,7 +2,7 @@
 
 <ng-container>
 	<div
-		class="flex overflow-auto rounded-btn border border-base-content/20"
+		class="flex overflow-auto rounded-btn border border-base-300"
 		[ngClass]="{ 'cursor-not-allowed border-transparent': controlListDisabled }"
 	>
 		<ul
@@ -181,7 +181,7 @@
 							<ul class="m-0 grid h-full w-full grid-cols-5 grid-rows-5 p-0">
 								@for (cell of controlListTableCells; track $index) {
 									<li
-										class="col-span-1 row-span-1 h-full w-full bg-transparent opacity-100 p-0 border-4 border-base-100 outline outline-base-content/20 outline-1 -outline-offset-4 m-0"
+										class="col-span-1 row-span-1 h-full w-full bg-transparent opacity-100 p-0 border-4 border-base-100 outline outline-base-300 outline-1 -outline-offset-4 m-0"
 										[class.rounded-tl-lg]="cell === 0"
 										[class.rounded-tr-lg]="cell === 4"
 										[class.rounded-bl-lg]="cell === 20"

@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	appInsightListTime: string | undefined;
 	appInsightListChangeState: any = {
 		stasis: {
-			classList: 'text-base-content/50',
+			classList: 'text-base-content/60',
 			character: '='
 		},
 		positive: {

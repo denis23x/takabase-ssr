@@ -179,7 +179,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	postFormFullscreenId: string = 'postFormFullscreen';
 
 	fullscreenToggle: boolean = false;
-	fullscreenClassList: string[] = ['border', 'border-base-content/20', 'rounded-box', 'shadow-xl'];
+	fullscreenClassList: string[] = ['border', 'border-base-300', 'rounded-box', 'shadow-xl'];
 	fullscreenScrollSync: boolean = false;
 	fullscreenTextWrapping: boolean = false;
 	fullscreenMarkdown: boolean = false;
@@ -527,7 +527,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			this.fullscreenTextWrapping = false;
 			this.fullscreenMarkdown = false;
 			this.fullscreenRender = false;
-			this.fullscreenClassList = ['border', 'border-base-content/20', 'rounded-box', 'shadow-xl'];
+			this.fullscreenClassList = ['border', 'border-base-300', 'rounded-box', 'shadow-xl'];
 		}
 
 		// Force dispatch input event for re-render markdown in preview element

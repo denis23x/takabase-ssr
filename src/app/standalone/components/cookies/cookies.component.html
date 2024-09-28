@@ -3,7 +3,7 @@
 <ng-container>
 	@if (currentUserIsPopulatedToggle && !currentUser && !currentUserIsAcceptedCookies) {
 		<div class="fixed bottom-0 right-0 p-4 md:p-8 z-10" itemscope itemtype="http://schema.org/Action">
-			<div class="alert !items-center rounded-box border border-base-content/20 bg-base-100 shadow-xl" role="alert">
+			<div class="alert !items-center rounded-box border border-base-300 bg-base-100 shadow-xl" role="alert">
 				<i class="fill-current text-info" appSvgIcon [appSvgIconIcon]="'info-circle'" [appSvgIconSquare]="'1.5em'"></i>
 				<!-- prettier-ignore -->
 				<span class="block"> By using this website, you agree to <a class="link inline-block" target="_blank" itemprop="url" [routerLink]="['/terms/cookie-policy']"> use of cookies </a></span>

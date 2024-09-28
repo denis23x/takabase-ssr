@@ -3,7 +3,7 @@
 <ng-container>
 	<!-- https://schema.org/Person -->
 	<div
-		class="rounded-box flex h-full w-full flex-col gap-2 border border-base-content/20 bg-base-100 p-4 shadow-xl"
+		class="rounded-box flex h-full w-full flex-col gap-2 border border-base-300 bg-base-100 p-4 shadow-xl"
 		itemprop="itemListElement"
 		itemscope
 		itemtype="http://schema.org/Person"
@@ -41,7 +41,7 @@
 				}
 			</a>
 			@if (user._highlightResult?.description || user.description) {
-				<hr class="border-t border-base-content/20 w-full" />
+				<hr class="border-t border-base-300 w-full" />
 				<!-- prettier-ignore -->
 				<p class="text-base-content text-sm max-w-full" appSkeleton [appSkeletonToggle]="userSkeletonToggle">
 					@if (user._highlightResult?.description) {

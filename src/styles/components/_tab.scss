@@ -5,12 +5,11 @@
     @apply justify-start translate-y-px overflow-auto gap-1 w-full;
 
     .tab {
-      @apply border border-b border-solid bg-base-200 h-10;
-      @apply border-base-content/10 px-0 #{!important};
+      @apply border border-base-300 border-solid bg-base-200 h-10;
+      @apply px-0 #{!important};
 
       &.tab-active {
-        @apply border-b-0 before:invisible after:invisible h-12;
-        @apply border-base-content/20 #{!important};
+        @apply before:invisible after:invisible h-12;
       }
     }
   }

@@ -1,17 +1,17 @@
 <!-- @format -->
 
 <ng-container>
-	<section class="rounded-box flex flex-col gap-4 border border-base-content/20 bg-base-100 p-4 shadow-xl">
+	<section class="rounded-box flex flex-col gap-4 border border-base-300 bg-base-100 p-4 shadow-xl">
 		<header class="flex flex-col gap-4">
 			<h1 class="text-2xl font-bold" itemprop="name">Login</h1>
-			<hr class="border-t border-base-content/20" />
+			<hr class="border-t border-base-300" />
 			<!-- prettier-ignore -->
 			<nav
         class="block w-full"
         appSignIn
         (appSignInBusy)="$event ? loginForm.disable() : loginForm.enable()"
       ></nav>
-			<hr class="border-t border-base-content/20" />
+			<hr class="border-t border-base-300" />
 		</header>
 		<div class="flex flex-col gap-4">
 			<form
