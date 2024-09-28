@@ -5,7 +5,7 @@
 		class="modal"
 		#postExternalLinkDialogElement
 		(keydown.escape)="$event.preventDefault(); onTogglePostExternalLinkDialog(false)"
-		(click)="$event.target === $event.currentTarget ? onTogglePostExternalLinkDialog(false) : $event"
+		(mousedown)="$event.target === $event.currentTarget ? onTogglePostExternalLinkDialog(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-sm"

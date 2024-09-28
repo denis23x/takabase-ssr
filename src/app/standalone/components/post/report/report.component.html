@@ -5,7 +5,7 @@
 		class="modal"
 		#reportDialog
 		(keydown.escape)="$event.preventDefault(); onToggleReportDialog(false)"
-		(click)="$event.target === $event.currentTarget ? onToggleReportDialog(false) : $event"
+		(mousedown)="$event.target === $event.currentTarget ? onToggleReportDialog(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-lg"

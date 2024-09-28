@@ -5,7 +5,7 @@
 		class="modal"
 		#postPreviewDialogElement
 		(keydown.escape)="$event.preventDefault(); onTogglePostPreviewDialog(false)"
-		(click)="$event.target === $event.currentTarget ? onTogglePostPreviewDialog(false) : $event"
+		(mousedown)="$event.target === $event.currentTarget ? onTogglePostPreviewDialog(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-2xl"

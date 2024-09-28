@@ -5,7 +5,7 @@
 		class="modal"
 		#pwaDialogElement
 		(keydown.escape)="$event.preventDefault(); onTogglePWADialog(false)"
-		(click)="$event.target === $event.currentTarget ? onTogglePWADialog(false) : $event"
+		(mousedown)="$event.target === $event.currentTarget ? onTogglePWADialog(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-sm"

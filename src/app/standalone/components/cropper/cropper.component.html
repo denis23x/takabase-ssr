@@ -5,7 +5,7 @@
 		class="modal"
 		#cropperDialogElement
 		(keydown.escape)="$event.preventDefault(); onToggleCropperDialog(false)"
-		(click)="$event.target === $event.currentTarget ? onToggleCropperDialog(false) : $event"
+		(mousedown)="$event.target === $event.currentTarget ? onToggleCropperDialog(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-md"

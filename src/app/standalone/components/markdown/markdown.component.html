@@ -226,7 +226,7 @@
 		class="modal"
 		#urlFormDialog
 		(keydown.escape)="$event.preventDefault(); onToggleUrlForm(false)"
-		(click)="$event.target === $event.currentTarget ? onToggleUrlForm(false) : $event"
+		(mousedown)="$event.target === $event.currentTarget ? onToggleUrlForm(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-lg"

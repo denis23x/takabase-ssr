@@ -5,7 +5,7 @@
 		class="modal"
 		#postDraftDialogElement
 		(keydown.escape)="$event.preventDefault(); onTogglePostDraftDialog(false)"
-		(click)="$event.target === $event.currentTarget ? onTogglePostDraftDialog(false) : $event"
+		(mousedown)="$event.target === $event.currentTarget ? onTogglePostDraftDialog(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-lg"

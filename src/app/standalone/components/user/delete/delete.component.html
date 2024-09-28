@@ -5,7 +5,7 @@
 		class="modal"
 		#userDeleteDialogElement
 		(keydown.escape)="$event.preventDefault(); onToggleUserDeleteDialog(false)"
-		(click)="$event.target === $event.currentTarget ? onToggleUserDeleteDialog(false) : $event"
+		(mousedown)="$event.target === $event.currentTarget ? onToggleUserDeleteDialog(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-lg"

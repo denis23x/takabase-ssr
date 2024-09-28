@@ -5,7 +5,7 @@
 		class="modal"
 		#shortcutsDialog
 		(keydown.escape)="$event.preventDefault(); onToggleShortcutsDialog(false)"
-		(click)="$event.target === $event.currentTarget ? onToggleShortcutsDialog(false) : $event"
+		(mousedown)="$event.target === $event.currentTarget ? onToggleShortcutsDialog(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-sm"

@@ -5,7 +5,7 @@
 		class="modal"
 		#QRCodeDialog
 		(keydown.escape)="$event.preventDefault(); onToggleQRCodeDialog(false)"
-		(click)="$event.target === $event.currentTarget ? onToggleQRCodeDialog(false) : $event"
+		(mousedown)="$event.target === $event.currentTarget ? onToggleQRCodeDialog(false) : $event"
 	>
 		<div
 			class="flex items-center justify-center w-full max-w-xs"
