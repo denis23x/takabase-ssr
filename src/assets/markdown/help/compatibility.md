@@ -1,4 +1,4 @@
-## Compatibility
+### Compatibility
 
 In all cases, basic Markdown is a great tool for someone who wants to do common formatting, but most people in fairness want more to really express themselves and their imagination. Markdown implementation has been done which supports a plenitude of features including, but not limited to, advance attributes, embedding media, diagrams, and syntax highlighting.
 

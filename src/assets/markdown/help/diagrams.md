@@ -1,4 +1,4 @@
-## Diagrams
+### Diagrams
 
 Enhance your user experience with dynamic and interactive [Mermaid.js](https://mermaid.js.org) diagrams! Try an innovative feature that allows users to create and embed visually compelling diagrams directly within their content. Whether you need, you have a versatile and powerful solution for all your visual communication needs.
 

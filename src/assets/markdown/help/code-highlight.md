@@ -1,4 +1,4 @@
-## Code highlight
+### Code highlight
 
 A highlight syntax feature is available for talented IT developers to create tutorials and guides on various topics, encompassing programming languages, frameworks, and best practices. Syntax highlighting is supported for a diverse range of programming languages, spanning from HTML and CSS to Python and JavaScript.
 

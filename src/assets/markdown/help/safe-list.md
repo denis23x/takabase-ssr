@@ -1,4 +1,4 @@
-## Safe list
+### Safe list
 
 App bundle comes with a wide range of CSS classes that you can use to style your layout in any way you want. Additionally, bundle provide a comprehensive safe list of classes that you can use with confidence, ensuring that your layout looks great and functions perfectly.
 

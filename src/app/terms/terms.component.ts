@@ -41,6 +41,11 @@ export class TermsComponent implements OnInit {
 			id: 5,
 			path: 'user-data-deletion',
 			name: 'User data deletion'
+		},
+		{
+			id: 6,
+			path: 'content-moderation',
+			name: 'Content Moderation'
 		}
 	];
 

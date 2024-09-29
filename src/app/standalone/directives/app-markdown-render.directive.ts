@@ -72,5 +72,5 @@ export class MarkdownRenderDirective {
 		this.postType = postType;
 	}
 
-	postType: PostType = 'category';
+	postType: PostType | undefined;
 }

@@ -4,14 +4,8 @@ module.exports = {
   safelist: [
     /** IMPORTANT BY SOME CASE  */
 
-    "!my-0.5",
-    "!mt-0",
-    "!my-0",
-    "!mr-4",
     "!m-0",
-    "!rounded",
     "!bg-transparent",
-    "bg-success/25",
 
     /** ANIMATIONS  */
 
