@@ -56,7 +56,7 @@ export class MarkdownService {
 						},
 						attrs: {
 							target: '_blank',
-							rel: 'ugc noopener noreferrer'
+							rel: 'ugc nofollow noopener noreferrer'
 						}
 					}
 				])
@@ -127,8 +127,9 @@ export class MarkdownService {
 		} else {
 			const markdownIt: MarkdownIt = this.getMarkdownItServer();
 			const markdownItPlugins: any[] = [
-				import('../markdown/plugins/prism'),
 				import('../markdown/plugins/mermaid'),
+				import('../markdown/plugins/preview'),
+				import('../markdown/plugins/prism'),
 				import('markdown-it-collapsible'),
 				import('markdown-it-emoji'),
 				import('markdown-it-smartarrows'),
@@ -138,9 +139,7 @@ export class MarkdownService {
 			/** Lazy load */
 
 			return Promise.all(markdownItPlugins).then((plugins: any[]) => {
-				markdownIt.use(plugins[0].default);
-
-				markdownIt.use(plugins[1].default, {
+				markdownIt.use(plugins[0].default, {
 					theme: 'base',
 					themeVariables: {
 						darkMode: false,
@@ -162,7 +161,11 @@ export class MarkdownService {
 					}
 				});
 
+				markdownIt.use(plugins[1].default);
+
 				markdownIt.use(plugins[2].default);
+
+				markdownIt.use(plugins[3].default);
 
 				markdownIt.renderer.rules.collapsible_open = (): string => {
 					return '<details class="collapse collapse-arrow bg-base-200 border border-base-300">';
@@ -176,11 +179,11 @@ export class MarkdownService {
 					return '</div></details>';
 				};
 
-				markdownIt.use(plugins[3].full);
-
-				markdownIt.use(plugins[4].default);
+				markdownIt.use(plugins[4].full);
 
 				markdownIt.use(plugins[5].default);
+
+				markdownIt.use(plugins[6].default);
 
 				markdownIt.renderer.rules.video = (tokenList: Token[], idx: number): string => {
 					const iframeSrc: string = 'https://www.youtube-nocookie.com/embed/';
@@ -275,6 +278,7 @@ export class MarkdownService {
 			'but',
 			'by',
 			'can',
+			'com',
 			'do',
 			'does',
 			'else',

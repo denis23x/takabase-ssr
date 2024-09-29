@@ -123,6 +123,14 @@ module.exports = {
     "font-extrabold",
     "font-black",
 
+    // Floats
+
+    "float-start",
+    "float-end",
+    "float-right",
+    "float-left",
+    "float-none",
+
     // Alert
 
     "alert",

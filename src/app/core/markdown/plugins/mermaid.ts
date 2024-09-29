@@ -80,7 +80,18 @@ export default function MermaidPlugin(md: MarkdownIt, options: any): void {
 							tokenListRendered[idx] = token;
 							tokenListRendered[idx].meta = document.getElementById(tokenSelectorId);
 						})
-						.catch((error: any) => console.error(error));
+						.catch((error: any) => {
+							const alertIcon: string = `<i class="fill-current"><svg width="1.5em" height="1.5em" viewBox="0 0 16 16"><use xlink:href="#bug"></use></svg></i>`;
+							const alertTitle: string = `<span class="block font-bold first-letter:capitalize leading-6">Mermaid</span>`;
+							const alertDescription: string = `<p class="font-base first-letter:capitalize whitespace-normal text-ellipsis overflow-hidden !m-0">${error.message}</p>`;
+							const alertBody: string = `<div class="flex flex-col w-full">${alertTitle}${alertDescription}</div>`;
+
+							// prettier-ignore
+							document.getElementById(tokenSelectorId).outerHTML = `<div role="alert" class="alert alert-error grid-cols-alert">${alertIcon}${alertBody}</div>`;
+
+							tokenListRendered[idx] = token;
+							tokenListRendered[idx].meta = document.getElementById(tokenSelectorId);
+						});
 				});
 			}
 

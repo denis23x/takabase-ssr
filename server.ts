@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import { REQUEST, RESPONSE } from './src/app/core/tokens/express.tokens';
 import { environment } from './src/environments/environment';
+import { unfurl } from 'unfurl.js';
+import { Metadata } from 'unfurl.js/dist/types';
 import express from 'express';
 import bootstrap from './src/main.server';
 import expressStaticGzip from 'express-static-gzip';
@@ -39,6 +41,24 @@ export function app(): express.Express {
 
 	server.set('view engine', 'html');
 	server.set('views', browserDistFolder);
+
+	// API Endpoint for fetching metadata
+	server.use('/metadata/*', async (req, res) => {
+		await unfurl(req.query.url as string)
+			.then((metadata: Metadata) => {
+				res.status(200).send({
+					data: metadata,
+					statusCode: 200
+				});
+			})
+			.catch((error: any) => {
+				res.status(500).send({
+					error: 'Internal Server Error',
+					message: error.info.url,
+					statusCode: 500
+				});
+			});
+	});
 
 	// prettier-ignore
 	server.use(['/post-covers/*', '/post-images/*', '/post-password-covers/*', '/post-password-images/*', '/post-private-covers/*', '/post-private-images/*', '/user-avatars/*', '/seed/*', '/temp/*'], proxy('https://firebasestorage.googleapis.com', {

@@ -345,7 +345,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			/** Prepare theme colors */
 
 			const setThemeColor = (): void => {
-				const variablesCSSMap: string[] = ['--p', '--b1', '--bc'];
+				const variablesCSSMap: string[] = ['--p', '--b1', '--b3', '--bc'];
 
 				variablesCSSMap.forEach((variable: string) => {
 					const rgb: string = this.appearanceService.getCSSColor(variable, 'rgb');

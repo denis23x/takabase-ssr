@@ -66,6 +66,7 @@
     "qrcode": "^1.5.3",
     "rxjs": "~7.8.1",
     "tslib": "^2.6.2",
+    "unfurl.js": "^6.4.0",
     "zone.js": "~0.14.6"
   },
   "devDependencies": {
@@ -96,6 +97,7 @@
     "@types/markdown-it-link-attributes": "^3.0.5",
     "@types/nanoid-dictionary": "^4.2.3",
     "@types/node": "^20.12.12",
+    "@types/node-fetch": "^2.6.11",
     "@types/prismjs": "^1.26.4",
     "@types/prompts": "^2.4.9",
     "@types/qrcode": "^1.5.5",

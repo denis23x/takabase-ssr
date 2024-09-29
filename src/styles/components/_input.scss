@@ -37,7 +37,7 @@
   &.input-success {
     @apply caret-success;
 
-    &:not(.input-disabled, :disabled, [disabled]) {
+    &:not(.input-disabled, [disabled]):not(:disabled) {
       @apply border-success;
     }
   }
@@ -45,7 +45,7 @@
   &.input-error {
     @apply caret-error;
 
-    &:not(.input-disabled, :disabled, [disabled]) {
+    &:not(.input-disabled, [disabled]):not(:disabled) {
       @apply border-error;
     }
   }

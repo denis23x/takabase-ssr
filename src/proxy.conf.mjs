@@ -9,5 +9,10 @@ export default {
 
       req.url = encodeURIComponent(req.url.replace(filename, filenameUid).substring(1)) + '?alt=media';
     }
+  },
+  '/(metadata)/*': {
+    target: 'http://localhost:8080/api/v1/utilities',
+    secure: false,
+    changeOrigin: true
   }
 }
