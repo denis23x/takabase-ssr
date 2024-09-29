@@ -38,7 +38,7 @@
   }
 
   .ngx-ic-overlay {
-    @apply rounded-box border border-base-content/80;
+    @apply rounded-box border border-base-300;
   }
 
   .ngx-ic-move {
@@ -89,7 +89,7 @@
     @apply pointer-events-none;
 
     .ngx-ic-source-image {
-      @apply grayscale;
+      @apply opacity-25;
     }
 
     @include shared-styles-disabled-bounding-box();

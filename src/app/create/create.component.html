@@ -30,13 +30,14 @@
                 class="flex items-center justify-center border border-base-300 rounded-btn h-12 w-12 sm:h-36 sm:w-36 overflow-hidden"
                 [appSkeletonToggle]="postSkeletonToggle || postFormImageIsSubmitted()"
                 [appSkeletonClassListElementRef]="['border-transparent']"
-                [ngClass]="{ 'cursor-not-allowed border-transparent opacity-50 grayscale bg-base-200': postForm.disabled, 'border-success': cover.value }"
+                [ngClass]="{ 'cursor-not-allowed border-transparent bg-base-200': postForm.disabled, 'border-success': cover.value && postForm.enabled, 'cursor-pointer': postForm.enabled }"
               >
                 @if (cover.value) {
                   <div class="relative w-full h-full group">
                     <img
                       class="block bg-base-200 object-cover object-center"
                       loading="eager"
+                      [ngClass]="{ 'pointer-events-none !opacity-25': postForm.disabled }"
                       [src]="cover.value"
                       [alt]="'Cover'"
                     />

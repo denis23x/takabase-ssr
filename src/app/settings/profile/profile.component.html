@@ -10,26 +10,28 @@
 		>
 			<div class="flex flex-row w-full items-center justify-between gap-4">
 				<div class="flex items-center justify-start gap-4 overflow-auto w-full">
-					<div
-						class="avatar"
-						appSkeleton
-						[appSkeletonToggle]="profileFormUserSkeletonToggle || profileFormAvatarIsSubmitted()"
-					>
-						@if (profileForm.get("avatar"); as avatar) {
-							<!-- prettier-ignore -->
-							<figure
-                class="block rounded-btn relative h-12 w-12 overflow-hidden transition"
+					<!-- prettier-ignore -->
+					@if (profileForm.get("avatar"); as avatar) {
+            <div
+              class="avatar border border-base-300 rounded-btn h-12 w-12 overflow-hidden"
+              appSkeleton
+              [appSkeletonToggle]="profileFormUserSkeletonToggle || profileFormAvatarIsSubmitted()"
+              [appSkeletonClassListElementRef]="['border-transparent']"
+              [ngClass]="{ 'cursor-not-allowed border-transparent bg-base-200': profileForm.disabled, 'border-success': avatar.value && avatar.enabled, 'cursor-pointer': profileForm.enabled }"
+            >
+              <figure
+                class="relative w-full h-full"
                 appUserAvatar
+                [ngClass]="{ 'pointer-events-none !opacity-25': profileForm.disabled }"
                 [title]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
                 [attr.aria-label]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
-                [ngClass]="{ 'cursor-not-allowed border border-transparent opacity-50 grayscale bg-base-200': profileForm.disabled, 'cursor-pointer': profileForm.enabled, 'border border-success': avatar.value }"
                 [appUserAvatarPhotoUrl]="profileForm.value['avatar']"
                 [appUserAvatarName]="profileForm.value['name']"
                 (click)="onToggleCropperDialog()"
               ></figure>
-						}
-					</div>
-					<div class="flex flex-col gap-2 items-start w-full overflow-hidden">
+            </div>
+          }
+					<div class="flex flex-1 flex-col gap-2 items-start w-full overflow-hidden">
 						<h1
 							class="truncate text-xl leading-6 font-bold text-base-content max-w-full"
 							appSkeleton
