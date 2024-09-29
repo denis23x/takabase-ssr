@@ -1,5 +1,9 @@
 /** @format */
 
+Prism.manual = true;
+Prism.plugins.autoloader.languages_path = '/assets/grammars/';
+Prism.plugins.lineNumbers.assumeViewportIndependence = true;
+
 import Prism from 'prismjs';
 import 'prismjs/plugins/autolinker/prism-autolinker.min.js';
 import 'prismjs/plugins/autoloader/prism-autoloader.min.js';
@@ -11,12 +15,6 @@ import type { Token } from 'markdown-it';
 
 export default function PrismPlugin(md: MarkdownIt): void {
 	const tokenListRendered: Record<number, Partial<Token>> = {};
-
-	if (typeof window !== 'undefined') {
-		Prism.manual = true;
-		Prism.plugins.autoloader.languages_path = '/assets/grammars/';
-		Prism.plugins.lineNumbers.assumeViewportIndependence = true;
-	}
 
 	// Custom renderer for code blocks
 	md.renderer.rules.fence = (tokenList: Token[], idx: number): string => {
@@ -36,9 +34,9 @@ export default function PrismPlugin(md: MarkdownIt): void {
 			if (typeof window !== 'undefined') {
 				// Required timeout to run after return
 				setTimeout(() => {
-					const element: Element = document.getElementById(tokenSelectorId).querySelector('code');
+					const element: Element = document.getElementById(tokenSelectorId);
 
-					Prism.highlightElement(element, false, () => {
+					Prism.highlightElement(element.querySelector('code'), false, () => {
 						tokenListRendered[idx] = token;
 						tokenListRendered[idx].meta = document.getElementById(tokenSelectorId);
 					});

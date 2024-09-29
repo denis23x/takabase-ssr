@@ -55,6 +55,7 @@ import dayjs from 'dayjs/esm';
 interface UrlForm {
 	title?: FormControl<string>;
 	url?: FormControl<string>;
+	preview?: FormControl<boolean>;
 }
 
 @Component({
@@ -159,7 +160,8 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	fullscreenTextareaHeight: string | undefined;
 
 	urlForm: FormGroup = this.formBuilder.group<UrlForm>({});
-	urlForm$: Subscription | undefined;
+	urlFormUrl$: Subscription | undefined;
+	urlFormPreview$: Subscription | undefined;
 	urlFormControl: MarkdownControl | undefined;
 
 	ngAfterViewInit(): void {
@@ -303,7 +305,8 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 			this.textareaPasteFileImage$,
 			this.textareaShortcuts$,
 			this.scrollSync$,
-			this.urlForm$,
+			this.urlFormUrl$,
+			this.urlFormPreview$,
 			this.controlListEmojiMartColorScheme$,
 			this.fullscreenTextareaFocus$,
 			this.fullscreenTextareaBlur$
@@ -521,66 +524,87 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 	onToggleUrlForm(toggle: boolean, markdownControl?: MarkdownControl): void {
 		if (toggle) {
-			/** Build dynamic form */
+			if (markdownControl) {
+				// prettier-ignore
+				switch (markdownControl.key) {
+					case 'url-link': {
+						this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', [Validators.required]));
+						this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [
+							Validators.required,
+							Validators.pattern(this.helperService.getRegex('url'))
+						]));
+						this.urlForm.addControl('preview', this.formBuilder.nonNullable.control(false, []));
 
-			// prettier-ignore
-			switch (markdownControl.key) {
-				case 'url-link': {
-					this.urlForm.addControl('title', this.formBuilder.nonNullable.control('', [Validators.required]));
-					this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [
-						Validators.required,
-						Validators.pattern(this.helperService.getRegex('url'))
-					]));
+						const abstractControlTitle: AbstractControl = this.urlForm.get('title');
+						const abstractControlUrl: AbstractControl = this.urlForm.get('url');
+						const abstractControlPreview: AbstractControl = this.urlForm.get('preview');
 
-					const abstractControlTitle: AbstractControl = this.urlForm.get('title');
-					const abstractControlUrl: AbstractControl = this.urlForm.get('url');
+						let abstractControlTitleBackup: string = '';
 
-					this.urlForm$?.unsubscribe();
-					this.urlForm$ = abstractControlUrl.valueChanges
-						.pipe(filter(() => abstractControlTitle.untouched))
-						.subscribe((value: string) => abstractControlTitle.setValue(value));
+						this.urlFormUrl$?.unsubscribe();
+						this.urlFormUrl$ = abstractControlUrl.valueChanges
+							.pipe(filter(() => abstractControlUrl.valid && abstractControlTitle.untouched))
+							.subscribe((value: string) => abstractControlTitle.setValue(value));
 
-					break;
-				}
-				case 'url-youtube': {
-					this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [
-						Validators.required,
-						Validators.pattern(this.helperService.getRegex('youtube'))
-					]));
+						this.urlFormPreview$?.unsubscribe();
+						this.urlFormPreview$ = abstractControlPreview.valueChanges
+							.subscribe((value: boolean) => {
+								if (value) {
+									abstractControlTitleBackup = abstractControlTitle.value;
+									abstractControlTitle.setValue('@preview');
+									abstractControlTitle.markAsTouched();
+									abstractControlTitle.disable();
+								} else {
+									abstractControlTitle.setValue(abstractControlTitleBackup);
+									abstractControlTitle.enable();
+								}
+							});
 
-					break;
-				}
-				default: {
-					throw new Error('Invalid control key specified: ' + markdownControl.key);
-				}
-			}
-
-			/** Apply selection */
-
-			const markdownTextarea: MarkdownTextarea = this.getTextareaMarkdown(this.textarea);
-
-			if (markdownTextarea.selection) {
-				Object.keys(this.urlForm.controls).forEach((key: string) => {
-					const abstractControl: AbstractControl = this.urlForm.get(key);
-
-					abstractControl.setValue(markdownTextarea.selection);
-
-					if (abstractControl.valid) {
-						abstractControl.markAsTouched();
-					} else {
-						abstractControl.reset();
+						break;
 					}
-				});
-			}
+					case 'url-youtube': {
+						this.urlForm.addControl('url', this.formBuilder.nonNullable.control('', [
+							Validators.required,
+							Validators.pattern(this.helperService.getRegex('youtube'))
+						]));
 
-			this.urlFormControl = markdownControl;
-			this.urlFormDialog.nativeElement.showModal();
+						break;
+					}
+					default: {
+						throw new Error('Invalid control key specified: ' + markdownControl.key);
+					}
+				}
+
+				/** Apply selection */
+
+				// TODO: update this code
+				// const markdownTextarea: MarkdownTextarea = this.getTextareaMarkdown(this.textarea);
+				//
+				// if (markdownTextarea.selection) {
+				// 	Object.keys(this.urlForm.controls).forEach((key: string) => {
+				// 		const abstractControl: AbstractControl = this.urlForm.get(key);
+				//
+				// 		abstractControl.setValue(markdownTextarea.selection);
+				//
+				// 		if (abstractControl.valid) {
+				// 			abstractControl.markAsTouched();
+				// 		} else {
+				// 			abstractControl.reset();
+				// 		}
+				// 	});
+				// }
+
+				this.urlFormControl = markdownControl;
+				this.urlFormDialog.nativeElement.showModal();
+			}
 		} else {
 			Object.keys(this.urlForm.controls).forEach((key: string) => {
 				this.urlForm.removeControl(key);
 			});
 
-			this.urlForm$?.unsubscribe();
+			this.urlFormUrl$?.unsubscribe();
+			this.urlFormPreview$?.unsubscribe();
+
 			this.urlFormControl = undefined;
 			this.urlFormDialog.nativeElement.close();
 		}
@@ -590,17 +614,15 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 	onSubmitUrlForm(): void {
 		if (this.helperService.getFormValidation(this.urlForm)) {
-			/** Set value */
+			this.urlForm.disable({ emitEvent: false });
 
-			this.urlForm.disable();
+			/** Apply control  */
 
-			this.setTextareaValue(this.getTextareaValue(this.urlFormControl, this.urlForm.value));
+			this.setTextareaValue(this.getTextareaValue(this.urlFormControl, this.urlForm.getRawValue()));
 
-			/** Clear urlForm && emit modalToggle  */
+			/** Clear urlForm  */
 
-			this.urlForm.enable();
-
-			this.onToggleUrlForm(false);
+			setTimeout(() => this.onToggleUrlForm(false));
 		}
 	}
 }

@@ -278,9 +278,10 @@
 								class="input-bordered input input-md w-full"
 								id="urlFormTitle"
 								type="text"
-								aria-label="Type text"
+								title="Title"
+								aria-label="Title"
 								appInputTrimWhitespace
-								placeholder="Type text"
+								placeholder="Type link title"
 								[formControl]="$any(title)"
 								[class.input-success]="title.value && title.valid"
 								[class.input-error]="title.touched && title.invalid"
@@ -295,7 +296,7 @@
 									[class.btn-success]="title.valid"
 									[class.btn-error]="title.touched && title.invalid"
 									[class.btn-ghost]="title.untouched && title.invalid"
-									[disabled]="urlForm.disabled"
+									[disabled]="title.disabled"
 									[appSvgIconIcon]="'x'"
 									[appSvgIconSquare]="'2em'"
 									(click)="title.setValue('')"
@@ -319,6 +320,7 @@
 								class="input input-bordered input-md w-full"
 								id="urlFormUrl"
 								type="text"
+								title="URL"
 								aria-label="URL"
 								inputmode="none"
 								appInputOnlyPaste
@@ -338,13 +340,30 @@
 									[class.btn-success]="url.valid"
 									[class.btn-error]="url.touched && url.invalid"
 									[class.btn-ghost]="url.untouched && url.invalid"
-									[disabled]="urlForm.disabled"
+									[disabled]="url.disabled"
 									[appSvgIconIcon]="'x'"
 									[appSvgIconSquare]="'2em'"
 									(click)="url.setValue('')"
 								></button>
 							}
 						</div>
+					</fieldset>
+				}
+				@if (urlForm.get("preview"); as preview) {
+					<fieldset class="form-control">
+						<label class="label cursor-pointer justify-start w-fit gap-4" for="urlFormPreview">
+							<input
+								class="checkbox checkbox-md"
+								id="urlFormPreview"
+								type="checkbox"
+								title="Link Preview"
+								aria-label="Link Preview"
+								formControlName="preview"
+								[class.checkbox-success]="preview.valid && preview.value"
+								[class.checkbox-error]="preview.invalid"
+							/>
+							<span class="label-text inline"> Preview </span>
+						</label>
 					</fieldset>
 				}
 				<fieldset class="form-control">
