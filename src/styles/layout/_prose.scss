@@ -10,20 +10,6 @@
   }
 }
 
-/*
-@mixin shared-styles-pseudo-loader() {
-  @apply relative rounded-btn pointer-events-none;
-
-  &:before {
-    @apply content-[''] bg-base-100 absolute inset-0;
-  }
-
-  &:after {
-    @apply content-[''] bg-base-300 animate-pulse absolute inset-0;
-  }
-}
-*/
-
 /* Update prose */
 
 .prose {
@@ -32,7 +18,7 @@
   }
 
   hr {
-    @apply my-4;
+    @apply my-4 border-base-300;
   }
 
   iframe {
@@ -41,16 +27,6 @@
 
   img {
     @apply bg-base-200 m-0;
-
-    /*
-    &:not(.mask) {
-      @apply rounded-box;
-    }
-
-    &:not([width]):not([height]) {
-      @apply w-full;
-    }
-    */
   }
 
   /* https://stackoverflow.com/questions/5379752/css-style-external-links */
@@ -180,17 +156,25 @@
   }
 
   details {
-    @apply my-4;
+    @apply bg-base-200 border border-base-300 my-4;
 
-    .collapse-content {
-      @apply bg-base-100 p-4;
+    summary {
+      @apply flex items-center h-12 min-h-12;
 
-      @include shared-styles-nested-margin();
+      &:after {
+        @apply top-1/2 #{!important};
+      };
+
+      & + div {
+        @apply bg-base-100 p-4;
+
+        @include shared-styles-nested-margin();
+      }
     }
 
     details {
       summary {
-        @apply text-lg after:invisible;
+        @apply after:invisible;
       }
     }
   }

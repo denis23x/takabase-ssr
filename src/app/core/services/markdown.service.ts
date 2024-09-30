@@ -168,11 +168,11 @@ export class MarkdownService {
 				markdownIt.use(plugins[3].default);
 
 				markdownIt.renderer.rules.collapsible_open = (): string => {
-					return '<details class="collapse collapse-arrow bg-base-200 border border-base-300">';
+					return '<details class="collapse collapse-arrow">';
 				};
 
 				markdownIt.renderer.rules.collapsible_summary = (tokenList: Token[], idx: number): string => {
-					return `<summary class="collapse-title text-xl font-medium">${tokenList[idx].content}</summary><div class="collapse-content">`;
+					return `<summary class="collapse-title">${tokenList[idx].content}</summary><div class="collapse-content">`;
 				};
 
 				markdownIt.renderer.rules.collapsible_close = (): string => {

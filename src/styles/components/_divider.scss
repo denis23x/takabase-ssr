@@ -1,0 +1,8 @@
+/* Update default behavior */
+
+.divider {
+	&:after,
+	&:before {
+		@apply h-px bg-base-300;
+	}
+}
