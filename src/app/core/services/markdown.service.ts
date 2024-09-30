@@ -3,6 +3,7 @@
 import { inject, Injectable } from '@angular/core';
 import { AppearanceService } from './appearance.service';
 import { DOCUMENT } from '@angular/common';
+import { BusService } from './bus.service';
 import MarkdownIt from 'markdown-it';
 import attrs from 'markdown-it-attrs';
 import bracketedSpans from 'markdown-it-bracketed-spans';
@@ -15,13 +16,11 @@ import type { Token } from 'markdown-it';
 export class MarkdownService {
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly document: Document = inject(DOCUMENT);
-
-	markdownItServer: MarkdownIt | undefined;
-	markdownItBrowser: MarkdownIt | undefined;
+	private readonly busService: BusService = inject(BusService);
 
 	getMarkdownItServer(): MarkdownIt {
-		if (this.markdownItServer) {
-			return this.markdownItServer;
+		if (this.busService.markdownItServer) {
+			return this.busService.markdownItServer;
 		} else {
 			const markdownIt: MarkdownIt = new MarkdownIt({
 				html: false,
@@ -117,13 +116,13 @@ export class MarkdownService {
 				return `</table></div>`;
 			};
 
-			return (this.markdownItServer = markdownIt);
+			return (this.busService.markdownItServer = markdownIt);
 		}
 	}
 
 	async getMarkdownItBrowser(): Promise<MarkdownIt> {
-		if (this.markdownItBrowser) {
-			return this.markdownItBrowser;
+		if (this.busService.markdownItBrowser) {
+			return this.busService.markdownItBrowser;
 		} else {
 			const markdownIt: MarkdownIt = this.getMarkdownItServer();
 			const markdownItPlugins: any[] = [
@@ -207,7 +206,7 @@ export class MarkdownService {
 					return iframeElement.outerHTML;
 				};
 
-				return (this.markdownItBrowser = markdownIt);
+				return (this.busService.markdownItBrowser = markdownIt);
 			});
 		}
 	}
