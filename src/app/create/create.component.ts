@@ -352,6 +352,10 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 							});
 							this.postForm.markAllAsTouched();
 
+							// Force dispatch input event for re-render markdown in preview element
+
+							this.document.getElementById(this.postFormTextareaId)?.dispatchEvent(new Event('input'));
+
 							// Get postFormIsPristine
 
 							this.postFormIsPristine$?.unsubscribe();
@@ -529,10 +533,6 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			this.fullscreenRender = false;
 			this.fullscreenClassList = ['border', 'border-base-300', 'rounded-box', 'shadow-xl'];
 		}
-
-		// Force dispatch input event for re-render markdown in preview element
-
-		this.document.getElementById(this.postFormTextareaId)?.dispatchEvent(new Event('input'));
 	}
 
 	onFullscreenHide(view: string): void {
