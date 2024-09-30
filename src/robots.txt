@@ -1,4 +1,6 @@
 User-agent: *
+Disallow: /*?
+Disallow: /assets/*
 Disallow: /confirmation
 Disallow: /loading
 Disallow: /pwa
