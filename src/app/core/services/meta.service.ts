@@ -20,15 +20,15 @@ export class MetaService {
 		const urlCanonical: HTMLLinkElement = this.document.querySelector("link[rel='canonical']");
 		const urlCanonicalHref: string = url.href.replace(url.search, '');
 
-		if (url.pathname.startsWith('/search')) {
-			urlCanonical?.setAttribute('href', urlCanonicalHref.replace(url.pathname, '/search'));
-		} else {
-			urlCanonical?.setAttribute('href', urlCanonicalHref);
-		}
+		// Update canonical
+
+		urlCanonical?.setAttribute('href', urlCanonicalHref);
 	}
 
 	setMeta(metaOpenGraph: MetaOpenGraph, metaTwitter: MetaTwitter): void {
 		this.setCanonicalURL();
+
+		// Update tags
 
 		this.setMetaOpenGraph(metaOpenGraph);
 		this.setMetaTwitter(metaTwitter);
