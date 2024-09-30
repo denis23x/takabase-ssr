@@ -175,7 +175,7 @@
 								aria-label="Download Screenshot"
 								(click)="onClickDomToCanvas()"
 							>
-								@if (domToCanvasIsLoading) {
+								@if (domToCanvasIsLoading()) {
 									<span class="loading loading-spinner"></span>
 								} @else {
 									<i
@@ -218,18 +218,18 @@
 								<button
 									class="btn-ghost btn-md btn-square btn bg-base-200"
 									type="button"
-									[title]="(postBookmark ? 'Remove from' : 'Add to') + ' bookmarks'"
-									[attr.aria-label]="(postBookmark ? 'Remove from' : 'Add to') + ' bookmarks'"
-									[ngClass]="postBookmark && !postBookmarkIsLoading ? 'text-success' : 'text-base-content'"
+									[title]="(postBookmark() ? 'Remove from' : 'Add to') + ' bookmarks'"
+									[attr.aria-label]="(postBookmark() ? 'Remove from' : 'Add to') + ' bookmarks'"
+									[ngClass]="postBookmark() && !postBookmarkIsLoading() ? 'text-success' : 'text-base-content'"
 									(click)="onClickBookmark()"
 								>
-									@if (postBookmarkIsLoading) {
+									@if (postBookmarkIsLoading()) {
 										<span class="loading loading-spinner"></span>
 									} @else {
 										<i
 											class="block fill-current"
 											appSvgIcon
-											[appSvgIconIcon]="postBookmark ? 'bookmark-check-fill' : 'bookmark'"
+											[appSvgIconIcon]="postBookmark() ? 'bookmark-check-fill' : 'bookmark'"
 											[appSvgIconSquare]="'1.5em'"
 										></i>
 									}
@@ -251,20 +251,20 @@
 					</ul>
 				</nav>
 			}
-			<div
-				class="w-full"
-				appSkeleton
-				[ngClass]="{ 'border-t border-base-300 pt-4': postPreview }"
-				[appSkeletonToggle]="postSkeletonToggle"
-			>
-				<article
-					class="prose w-full max-w-full flex-1"
-					appMarkdownRender
-					itemprop="articleBody"
-					[appMarkdownRenderPostType]="postType"
-					[appMarkdownRenderValue]="post.markdown || 'Markdown'"
-					(appMarkdownRenderClickExternalLink)="onTogglePostExternalLinkDialog($event)"
-				></article>
+			<div class="w-full" [ngClass]="{ 'border-t border-base-300 pt-4': postPreview }">
+				@if (postSkeletonToggle) {
+					<!-- TODO: proper skeleton -->
+					<div appSkeleton [appSkeletonToggle]="postSkeletonToggle">Skeleton</div>
+				} @else {
+					<article
+						class="prose w-full max-w-full flex-1"
+						appMarkdownRender
+						itemprop="articleBody"
+						[appMarkdownRenderPostType]="postType"
+						[appMarkdownRenderValue]="post.markdown || 'Markdown'"
+						(appMarkdownRenderClickExternalLink)="onTogglePostExternalLinkDialog($event)"
+					></article>
+				}
 			</div>
 			<nav class="block empty:hidden">
 				<ul

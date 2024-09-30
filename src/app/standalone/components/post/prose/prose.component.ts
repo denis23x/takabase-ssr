@@ -1,6 +1,17 @@
 /** @format */
 
-import { Component, ComponentRef, inject, Input, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
+import {
+	ChangeDetectionStrategy,
+	Component,
+	ComponentRef,
+	inject,
+	Input,
+	OnDestroy,
+	OnInit,
+	signal,
+	ViewContainerRef,
+	WritableSignal
+} from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DayjsPipe } from '../../../pipes/dayjs.pipe';
@@ -43,7 +54,8 @@ import type { PostBookmarkGetOneDto } from '../../../../core/dto/post-bookmark/p
 	],
 	providers: [MarkdownService, PostBookmarkService],
 	selector: 'app-post-prose, [appPostProse]',
-	templateUrl: './prose.component.html'
+	templateUrl: './prose.component.html',
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostProseComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly document: Document = inject(DOCUMENT);
@@ -81,11 +93,11 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 
 	domToCanvas: typeof domToCanvas;
 	domToCanvasSelector: string = 'app-post section';
-	domToCanvasIsLoading: boolean = false;
+	domToCanvasIsLoading: WritableSignal<boolean> = signal(false);
 
-	postBookmark: PostBookmark | undefined;
+	postBookmark: WritableSignal<Post | PostBookmark | null> = signal(null);
 	postBookmarkRequest$: Subscription | undefined;
-	postBookmarkIsLoading: boolean = false;
+	postBookmarkIsLoading: WritableSignal<boolean> = signal(false);
 
 	// Lazy loading
 
@@ -114,33 +126,33 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 
 			this.postBookmarkRequest$?.unsubscribe();
 			this.postBookmarkRequest$ = this.postBookmarkService.getOne(postId, postBookmarkGetOneDto).subscribe({
-				next: (postBookmark: PostBookmark | Post | null) => (this.postBookmark = postBookmark as PostBookmark),
+				next: (postBookmark: PostBookmark | Post | null) => this.postBookmark.set(postBookmark),
 				error: (error: any) => console.error(error)
 			});
 		}
 	}
 
+	/** BOOKMARK */
+
 	onClickBookmark(): void {
 		if (this.currentUser) {
-			// Set loader
-
-			this.postBookmarkIsLoading = true;
+			this.postBookmarkIsLoading.set(true);
 
 			// Do request
 
-			if (this.postBookmark) {
+			if (this.postBookmark()) {
 				this.postBookmarkRequest$?.unsubscribe();
 				this.postBookmarkRequest$ = this.postBookmarkService.delete(this.post.id).subscribe({
 					next: () => {
-						this.postBookmark = undefined;
-						this.postBookmarkIsLoading = false;
+						this.postBookmark.set(undefined);
+						this.postBookmarkIsLoading.set(false);
 
 						this.snackbarService.warning('Oh.. ok', 'Removed from your bookmarks');
 					},
-					error: () => (this.postBookmarkIsLoading = false)
+					error: () => this.postBookmarkIsLoading.set(false)
 				});
 			} else {
-				this.postBookmarkIsLoading = true;
+				this.postBookmarkIsLoading.set(true);
 
 				const postBookmarkCreateDto: PostBookmarkCreateDto = {
 					postId: this.post.id
@@ -149,12 +161,12 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 				this.postBookmarkRequest$?.unsubscribe();
 				this.postBookmarkRequest$ = this.postBookmarkService.create(postBookmarkCreateDto).subscribe({
 					next: (postBookmark: PostBookmark) => {
-						this.postBookmark = postBookmark;
-						this.postBookmarkIsLoading = false;
+						this.postBookmark.set(postBookmark);
+						this.postBookmarkIsLoading.set(false);
 
 						this.snackbarService.success('Good choice!', 'Added to your bookmarks');
 					},
-					error: () => (this.postBookmarkIsLoading = false)
+					error: () => this.postBookmarkIsLoading.set(false)
 				});
 			}
 		} else {
@@ -181,7 +193,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 			}
 		};
 
-		this.domToCanvasIsLoading = true;
+		this.domToCanvasIsLoading.set(true);
 		this.domToCanvas(htmlElement, htmlElementOptions)
 			.then((canvas: HTMLCanvasElement) => {
 				const fileName: string = ['screenshot', this.post.id].join('-');
@@ -205,7 +217,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 				}
 			})
 			.catch((error: any) => error)
-			.finally(() => (this.domToCanvasIsLoading = false));
+			.finally(() => this.domToCanvasIsLoading.set(false));
 	}
 
 	async onToggleQRCodeDialog(): Promise<void> {
@@ -216,7 +228,6 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 		}
 
 		this.appPostQRCodeComponent.setInput('appPostQRCodeData', this.helperService.getURL().toString());
-
 		this.appPostQRCodeComponent.changeDetectorRef.detectChanges();
 		this.appPostQRCodeComponent.instance.onToggleQRCodeDialog(true);
 	}
@@ -230,7 +241,6 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 			}
 
 			this.appPostReportComponent.setInput('appPostReportPost', this.post);
-
 			this.appPostReportComponent.changeDetectorRef.detectChanges();
 			this.appPostReportComponent.instance.onToggleReportDialog(true);
 		} else {
@@ -247,7 +257,6 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 		}
 
 		this.appPostExternalLinkComponent.setInput('appPostExternalLinkValue', value);
-
 		this.appPostExternalLinkComponent.changeDetectorRef.detectChanges();
 		this.appPostExternalLinkComponent.instance.onTogglePostExternalLinkDialog(true);
 	}
