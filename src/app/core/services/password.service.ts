@@ -38,10 +38,8 @@ export class PasswordService {
 	onValidate(passwordValidateGetDto: PasswordValidateGetDto): Observable<UserCredential> {
 		const auth: Auth = this.firebaseService.getAuth();
 
-		const credentials: AuthCredential = EmailAuthProvider.credential(
-			auth.currentUser.email,
-			passwordValidateGetDto.password
-		);
+		// prettier-ignore
+		const credentials: AuthCredential = EmailAuthProvider.credential(auth.currentUser.email, passwordValidateGetDto.password);
 
 		return from(reauthenticateWithCredential(auth.currentUser, credentials)).pipe(
 			catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError))

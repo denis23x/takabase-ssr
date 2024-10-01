@@ -7,14 +7,12 @@ import {
 	EventEmitter,
 	inject,
 	Input,
-	OnInit,
 	Output,
 	ViewChild
 } from '@angular/core';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { PlatformService } from '../../../../core/services/platform.service';
-import { Location } from '@angular/common';
 
 @Component({
 	standalone: true,
@@ -23,9 +21,8 @@ import { Location } from '@angular/common';
 	templateUrl: './external-link.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PostExternalLinkComponent implements OnInit {
+export class PostExternalLinkComponent {
 	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly location: Location = inject(Location);
 
 	@ViewChild('postExternalLinkDialogElement') postExternalLinkDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
@@ -39,14 +36,6 @@ export class PostExternalLinkComponent implements OnInit {
 
 	postExternalLinkDialogToggle: boolean = false;
 	postExternalLinkValue: string | undefined;
-
-	ngOnInit(): void {
-		/** Extra toggle close when url change */
-
-		if (this.platformService.isBrowser()) {
-			this.location.onUrlChange(() => this.onTogglePostExternalLinkDialog(false));
-		}
-	}
 
 	onTogglePostExternalLinkDialog(toggle: boolean): void {
 		this.postExternalLinkDialogToggle = toggle;
@@ -62,14 +51,8 @@ export class PostExternalLinkComponent implements OnInit {
 
 	onSubmitPostExternalLink(): void {
 		if (this.platformService.isBrowser()) {
-			const window: Window = this.platformService.getWindow();
-
-			// Redirect
-
-			window.open(this.postExternalLinkValue, '_blank');
+			this.platformService.getWindow().open(this.postExternalLinkValue, '_blank');
 		}
-
-		/** Close */
 
 		this.onTogglePostExternalLinkDialog(false);
 	}

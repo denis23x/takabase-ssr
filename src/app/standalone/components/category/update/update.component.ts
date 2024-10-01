@@ -1,17 +1,7 @@
 /** @format */
 
-import {
-	Component,
-	ElementRef,
-	EventEmitter,
-	inject,
-	Input,
-	OnDestroy,
-	OnInit,
-	Output,
-	ViewChild
-} from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { Component, ElementRef, EventEmitter, inject, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
@@ -23,7 +13,6 @@ import { CategoryService } from '../../../../core/services/category.service';
 import { Subscription, switchMap } from 'rxjs';
 import { startWith, tap } from 'rxjs/operators';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
-import { PlatformService } from '../../../../core/services/platform.service';
 import { AIService } from '../../../../core/services/ai.service';
 import type { Category } from '../../../../core/models/category.model';
 import type { CategoryUpdateDto } from '../../../../core/dto/category/category-update.dto';
@@ -49,13 +38,11 @@ interface CategoryUpdateForm {
 	selector: 'app-category-update, [appCategoryUpdate]',
 	templateUrl: './update.component.html'
 })
-export class CategoryUpdateComponent implements OnInit, OnDestroy {
+export class CategoryUpdateComponent implements OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
-	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly location: Location = inject(Location);
 	private readonly aiService: AIService = inject(AIService);
 
 	@ViewChild('categoryUpdateDialogElement') categoryUpdateDialogElement: ElementRef<HTMLDialogElement> | undefined;
@@ -83,14 +70,6 @@ export class CategoryUpdateComponent implements OnInit, OnDestroy {
 
 	categoryUpdateFormIsPristine$: Subscription | undefined;
 	categoryUpdateFormIsPristine: boolean = false;
-
-	ngOnInit(): void {
-		/** Extra toggle close when url change */
-
-		if (this.platformService.isBrowser()) {
-			this.location.onUrlChange(() => this.onToggleCategoryUpdateDialog(false));
-		}
-	}
 
 	ngOnDestroy(): void {
 		// prettier-ignore

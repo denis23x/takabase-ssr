@@ -38,7 +38,7 @@ import { AIService } from '../../core/services/ai.service';
 import { FirebaseService } from '../../core/services/firebase.service';
 import { getValue, Value } from 'firebase/remote-config';
 import { SharpService } from '../../core/services/sharp.service';
-import { CurrentUserMixin } from '../../core/mixins/current-user.mixin';
+import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import type { User } from '../../core/models/user.model';
 import type { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import type { CropperComponent } from '../../standalone/components/cropper/cropper.component';
@@ -68,7 +68,7 @@ interface ProfileForm {
 	selector: 'app-settings-profile',
 	templateUrl: './profile.component.html'
 })
-export class SettingsProfileComponent extends CurrentUserMixin(class {}) implements OnInit, OnDestroy {
+export class SettingsProfileComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly userService: UserService = inject(UserService);

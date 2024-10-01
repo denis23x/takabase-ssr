@@ -1,7 +1,7 @@
 /** @format */
 
 import { Component, ElementRef, EventEmitter, inject, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
@@ -17,15 +17,13 @@ import {
 } from '@angular/forms';
 import { Observable, Subscription, switchMap, throwError } from 'rxjs';
 import { HelperService } from '../../../../core/services/helper.service';
-import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
-import { PlatformService } from '../../../../core/services/platform.service';
 import { UserService } from '../../../../core/services/user.service';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { PasswordService } from '../../../../core/services/password.service';
+import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import type { PasswordValidateGetDto } from '../../../../core/dto/password/password-validate-get.dto';
-import type { CurrentUser } from '../../../../core/models/current-user.model';
 import type { User } from '../../../../core/models/user.model';
 import type { UserInfo } from 'firebase/auth';
 import type { UserDeleteDto } from '../../../../core/dto/user/user-delete.dto';
@@ -49,13 +47,10 @@ interface UserDeleteForm {
 	selector: 'app-user-delete, [appUserDelete]',
 	templateUrl: './delete.component.html'
 })
-export class UserDeleteComponent implements OnInit, OnDestroy {
+export class UserDeleteComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
-	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly location: Location = inject(Location);
 	private readonly userService: UserService = inject(UserService);
 	private readonly router: Router = inject(Router);
 	private readonly passwordService: PasswordService = inject(PasswordService);
@@ -65,33 +60,23 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 	@Output() appUserDeleteSuccess: EventEmitter<void> = new EventEmitter<void>();
 	@Output() appUserDeleteToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	currentUser: CurrentUser | null;
-	currentUser$: Subscription | undefined;
-	currentUserSignOutRequest$: Subscription | undefined;
-
 	userDeleteForm: FormGroup = this.formBuilder.group<UserDeleteForm>({
 		name: this.formBuilder.nonNullable.control('', [])
 	});
 	userDeleteFormRequest$: Subscription | undefined;
 	userDeleteDialogToggle: boolean = false;
+	userDeleteSignOutRequest$: Subscription | undefined;
 
 	ngOnInit(): void {
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | null) => (this.currentUser = currentUser),
-			error: (error: any) => console.error(error)
-		});
-
-		/** Extra toggle close when url change */
-
-		if (this.platformService.isBrowser()) {
-			this.location.onUrlChange(() => this.onToggleUserDeleteDialog(false));
-		}
+		super.ngOnInit();
 	}
 
 	ngOnDestroy(): void {
-		// prettier-ignore
-		[this.currentUser$, this.currentUserSignOutRequest$, this.userDeleteFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		super.ngOnDestroy();
+
+		// ngOnDestroy
+
+		[this.userDeleteSignOutRequest$, this.userDeleteFormRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleUserDeleteDialog(toggle: boolean): void {
@@ -147,8 +132,8 @@ export class UserDeleteComponent implements OnInit, OnDestroy {
 
 			const userDeleteRequest$: Observable<User> = this.userService.delete(userUid, userDeleteDto).pipe(
 				catchError((httpErrorResponse: HttpErrorResponse) => {
-					this.currentUserSignOutRequest$?.unsubscribe();
-					this.currentUserSignOutRequest$ = this.authorizationService.getSignOut().subscribe({
+					this.userDeleteSignOutRequest$?.unsubscribe();
+					this.userDeleteSignOutRequest$ = this.authorizationService.getSignOut().subscribe({
 						next: () => {
 							this.router.navigateByUrl('/').then(() => {
 								this.snackbarService.warning(null, 'Something goes wrong');

@@ -11,7 +11,7 @@ import {
 	Output,
 	ViewChild
 } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
@@ -29,7 +29,6 @@ import { CategoryService } from '../../../../core/services/category.service';
 import { Subscription } from 'rxjs';
 import { HelperService } from '../../../../core/services/helper.service';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
-import { PlatformService } from '../../../../core/services/platform.service';
 import { UserStore } from '../../../../user/user.store';
 import type { Post } from '../../../../core/models/post.model';
 import type { CategoryDeleteDto } from '../../../../core/dto/category/category-delete.dto';
@@ -59,8 +58,6 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 	private readonly categoryService: CategoryService = inject(CategoryService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly location: Location = inject(Location);
 	private readonly userStore: UserStore = inject(UserStore);
 
 	@ViewChild('categoryDeleteDialogElement') categoryDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
@@ -97,12 +94,6 @@ export class CategoryDeleteComponent implements OnInit, OnDestroy {
 			next: (categoryList: Category[]) => (this.categoryList = categoryList),
 			error: (error: any) => console.error(error)
 		});
-
-		/** Extra toggle close when url change */
-
-		if (this.platformService.isBrowser()) {
-			this.location.onUrlChange(() => this.onToggleCategoryDeleteDialog(false));
-		}
 	}
 
 	ngOnDestroy(): void {

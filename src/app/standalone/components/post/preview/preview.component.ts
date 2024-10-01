@@ -4,7 +4,7 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, 
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { PostProseComponent } from '../prose/prose.component';
-import { CurrentUserMixin } from '../../../../core/mixins/current-user.mixin';
+import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import dayjs from 'dayjs/esm';
 import type { Category } from '../../../../core/models/category.model';
 import type { Post, PostType } from '../../../../core/models/post.model';
@@ -15,7 +15,7 @@ import type { Post, PostType } from '../../../../core/models/post.model';
 	selector: 'app-post-preview, [appPostPreview]',
 	templateUrl: './preview.component.html'
 })
-export class PostPreviewComponent extends CurrentUserMixin(class {}) implements OnInit, OnDestroy {
+export class PostPreviewComponent extends CU(class {}) implements OnInit, OnDestroy {
 	@ViewChild('postPreviewDialogElement') postPreviewDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
 	@Output() appPostPreviewToggle: EventEmitter<boolean> = new EventEmitter<boolean>();

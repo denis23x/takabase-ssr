@@ -477,12 +477,6 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 		}
 	}
 
-	onCreateCategory(categoryCreate: Category): void {
-		this.categoryList.unshift(categoryCreate);
-
-		this.onSelectCategory(categoryCreate);
-	}
-
 	onSelectCategory(categorySelect: Category): void {
 		this.category = categorySelect;
 
@@ -796,7 +790,11 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			await import('../standalone/components/category/create/create.component').then(m => {
 				this.appCategoryCreateComponent = this.viewContainerRef.createComponent(m.CategoryCreateComponent);
 				this.appCategoryCreateComponent.instance.appCategoryCreateSuccess.subscribe({
-					next: (category: Category) => this.onCreateCategory(category),
+					next: (category: Category) => {
+						this.categoryList.unshift(category);
+
+						this.onSelectCategory(category);
+					},
 					error: (error: any) => console.error(error)
 				});
 			});
@@ -824,7 +822,20 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	async onTogglePostDeleteDialog(): Promise<void> {
 		if (!this.appPostDeleteComponent) {
 			await import('../standalone/components/post/delete/delete.component')
-				.then(m => (this.appPostDeleteComponent = this.viewContainerRef.createComponent(m.PostDeleteComponent)))
+				.then(m => {
+					this.appPostDeleteComponent = this.viewContainerRef.createComponent(m.PostDeleteComponent);
+					this.appPostDeleteComponent.instance.appPostDeleteSuccess.subscribe({
+						next: () => {
+							// prettier-ignore
+							this.router
+								.navigate(['/', this.currentUser.displayName, this.postType, String('category' in this.post ? this.post.category.id : '')].filter((command: string) => !!command))
+								.catch((error: any) => {
+									this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error);
+								})
+						},
+						error: (error: any) => console.error(error)
+					});
+				})
 				.catch((error: any) => console.error(error));
 		}
 

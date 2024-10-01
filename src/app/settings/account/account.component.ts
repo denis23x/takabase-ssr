@@ -41,13 +41,14 @@ import {
 	User as FirebaseUser,
 	EmailAuthProvider,
 	EmailAuthCredential,
-	linkWithCredential
+	linkWithCredential,
+	Auth
 } from 'firebase/auth';
 import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SvgLogoComponent } from '../../standalone/components/svg-logo/svg-logo.component';
 import { ApiService } from '../../core/services/api.service';
-import { CurrentUserMixin } from '../../core/mixins/current-user.mixin';
+import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { FirebaseService } from '../../core/services/firebase.service';
 import type { PasswordValidateGetDto } from '../../core/dto/password/password-validate-get.dto';
 import type { PasswordUpdateDto } from '../../core/dto/password/password-update.dto';
@@ -94,7 +95,7 @@ interface NewPasswordForm {
 	selector: 'app-settings-account',
 	templateUrl: './account.component.html'
 })
-export class SettingsAccountComponent extends CurrentUserMixin(class {}) implements OnInit, OnDestroy {
+export class SettingsAccountComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
@@ -329,10 +330,11 @@ export class SettingsAccountComponent extends CurrentUserMixin(class {}) impleme
 			const email: string = this.emailAuthProviderForm.value.email;
 			const password: string = this.emailAuthProviderForm.value.password;
 
+			const emailAuth: Auth = this.firebaseService.getAuth();
 			const emailAuthCredential: EmailAuthCredential = EmailAuthProvider.credential(email, password);
 
 			this.emailAuthProviderFormRequest$?.unsubscribe();
-			this.emailAuthProviderFormRequest$ = from(linkWithCredential(this.currentUser, emailAuthCredential))
+			this.emailAuthProviderFormRequest$ = from(linkWithCredential(emailAuth.currentUser, emailAuthCredential))
 				.pipe(catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)))
 				.subscribe({
 					next: (userCredential: UserCredential) => {

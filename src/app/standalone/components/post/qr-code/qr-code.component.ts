@@ -1,6 +1,6 @@
 /** @format */
 
-import { AfterViewInit, Component, ElementRef, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Input, OnDestroy, ViewChild } from '@angular/core';
 import { WindowComponent } from '../../window/window.component';
 import { PlatformService } from '../../../../core/services/platform.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -8,7 +8,6 @@ import { AppearanceService } from '../../../../core/services/appearance.service'
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 import { HelperService } from '../../../../core/services/helper.service';
 import { filter, map, tap } from 'rxjs/operators';
-import { Location } from '@angular/common';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { CopyToClipboardDirective } from '../../../directives/app-copy-to-clipboard.directive';
@@ -25,13 +24,12 @@ interface QRCodeForm {
 	selector: 'app-post-qr-code, [appPostQRCode]',
 	templateUrl: './qr-code.component.html'
 })
-export class PostQRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PostQRCodeComponent implements AfterViewInit, OnDestroy {
 	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly appearanceService: AppearanceService = inject(AppearanceService);
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly helperService: HelperService = inject(HelperService);
-	private readonly location: Location = inject(Location);
 
 	@ViewChild('QRCodeDialog') QRCodeDialog: ElementRef<HTMLDialogElement> | undefined;
 	@ViewChild('QRCodeCanvas') QRCodeCanvas: ElementRef<HTMLCanvasElement> | undefined;
@@ -57,14 +55,6 @@ export class PostQRCodeComponent implements OnInit, AfterViewInit, OnDestroy {
 			light: '#ffffffff'
 		}
 	};
-
-	ngOnInit(): void {
-		/** Extra toggle close when url change */
-
-		if (this.platformService.isBrowser()) {
-			this.location.onUrlChange(() => this.onToggleQRCodeDialog(false));
-		}
-	}
 
 	ngAfterViewInit(): void {
 		this.postQRCodeData$ = this.postQRCodeDataSubject$

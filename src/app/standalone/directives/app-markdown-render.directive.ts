@@ -27,18 +27,32 @@ export class MarkdownRenderDirective {
 
 	@HostListener('click', ['$event'])
 	onClick(event: Event): void {
+		// prettier-ignore
 		if (this.postType === 'category') {
-			const target: HTMLAnchorElement = event.target as HTMLAnchorElement;
+			const target: HTMLElement = event.target as HTMLElement;
+			const targetLinkGetter = (): HTMLAnchorElement | null => {
+				if (target.tagName === 'A') {
+					return target as HTMLAnchorElement;
+				}
 
-			const url: URL = this.helperService.getURL();
+				if (target.parentElement.tagName === 'A') {
+					return target.parentElement as HTMLAnchorElement;
+				}
 
-			// Check if the clicked element is a link and it's external
-			if (target.tagName === 'A' && !target.href.startsWith(url.origin)) {
-				event.preventDefault();
+				return null;
+			};
+			const targetLink: HTMLAnchorElement | null = targetLinkGetter();
 
-				/** Emit to parent */
+			// Check if the clicked element is a link
+			if (targetLink) {
+				const url: URL = this.helperService.getURL();
 
-				this.appMarkdownRenderClickExternalLink.emit(target.href);
+				// ... and it's external
+				if (!targetLink.href.startsWith(url.origin)) {
+					event.preventDefault();
+
+					this.appMarkdownRenderClickExternalLink.emit(targetLink.href);
+				}
 			}
 		}
 	}

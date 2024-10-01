@@ -7,14 +7,11 @@ import {
 	EventEmitter,
 	inject,
 	OnDestroy,
-	OnInit,
 	Output,
 	ViewChild
 } from '@angular/core';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
-import { PlatformService } from '../../../../core/services/platform.service';
-import { Location } from '@angular/common';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -39,15 +36,13 @@ interface PostPasswordForm {
 	templateUrl: './password.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PostPasswordComponent implements OnInit, OnDestroy {
+export class PostPasswordComponent implements OnDestroy {
 	private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 	private readonly formBuilder: FormBuilder = inject(FormBuilder);
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly postPasswordService: PostPasswordService = inject(PostPasswordService);
-	private readonly platformService: PlatformService = inject(PlatformService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly cookiesService: CookiesService = inject(CookiesService);
-	private readonly location: Location = inject(Location);
 
 	@ViewChild('postPasswordDialogElement') postPasswordDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
@@ -64,14 +59,6 @@ export class PostPasswordComponent implements OnInit, OnDestroy {
 	});
 	postPasswordRequest$: Subscription | undefined;
 	postPasswordDialogToggle: boolean = true;
-
-	ngOnInit(): void {
-		/** Extra toggle close when url change */
-
-		if (this.platformService.isBrowser()) {
-			this.location.onUrlChange(() => this.onTogglePostPasswordDialog(false));
-		}
-	}
 
 	ngOnDestroy(): void {
 		[this.postPasswordRequest$].forEach(($: Subscription) => $?.unsubscribe());

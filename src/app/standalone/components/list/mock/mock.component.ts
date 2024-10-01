@@ -5,7 +5,7 @@ import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthenticatedComponent } from '../../authenticated/authenticated.component';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
-import { CurrentUserMixin } from '../../../../core/mixins/current-user.mixin';
+import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import { HelperService } from '../../../../core/services/helper.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
 
@@ -16,7 +16,7 @@ import { SnackbarService } from '../../../../core/services/snackbar.service';
 	templateUrl: './mock.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListMockComponent extends CurrentUserMixin(class {}) implements OnInit, OnDestroy {
+export class ListMockComponent extends CU(class {}) implements OnInit, OnDestroy {
 	public readonly helperService: HelperService = inject(HelperService);
 	public readonly snackbarService: SnackbarService = inject(SnackbarService);
 	public readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);

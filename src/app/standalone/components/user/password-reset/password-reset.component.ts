@@ -13,7 +13,7 @@ import {
 	ViewChild,
 	WritableSignal
 } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../svg-icon/svg-icon.component';
 import { WindowComponent } from '../../window/window.component';
 import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
@@ -22,11 +22,9 @@ import { Subscription, switchMap } from 'rxjs';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { Router } from '@angular/router';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
-import { AuthorizationService } from '../../../../core/services/authorization.service';
 import { PasswordService } from '../../../../core/services/password.service';
-import { PlatformService } from '../../../../core/services/platform.service';
 import { ApiService } from '../../../../core/services/api.service';
-import type { CurrentUser } from '../../../../core/models/current-user.model';
+import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import type { PasswordResetGetDto } from '../../../../core/dto/password/password-reset-get.dto';
 
 @Component({
@@ -44,13 +42,10 @@ import type { PasswordResetGetDto } from '../../../../core/dto/password/password
 	templateUrl: './password-reset.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserPasswordResetComponent implements OnInit, OnDestroy {
+export class UserPasswordResetComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
 	private readonly router: Router = inject(Router);
-	private readonly authorizationService: AuthorizationService = inject(AuthorizationService);
 	private readonly passwordService: PasswordService = inject(PasswordService);
-	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly location: Location = inject(Location);
 	private readonly apiService: ApiService = inject(ApiService);
 
 	// prettier-ignore
@@ -59,28 +54,11 @@ export class UserPasswordResetComponent implements OnInit, OnDestroy {
 	@Output() appUserPasswordResetSuccess: EventEmitter<void> = new EventEmitter<void>();
 	@Output() appUserPasswordResetToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	currentUser: CurrentUser | null;
-	currentUser$: Subscription | undefined;
-
 	userPasswordResetRequest$: Subscription | undefined;
 	userPasswordResetDialogIsSubmitted: WritableSignal<boolean> = signal(false);
 
-	ngOnInit(): void {
-		this.currentUser$?.unsubscribe();
-		this.currentUser$ = this.authorizationService.getCurrentUser().subscribe({
-			next: (currentUser: CurrentUser | null) => (this.currentUser = currentUser),
-			error: (error: any) => console.error(error)
-		});
-
-		/** Extra toggle close when url change */
-
-		if (this.platformService.isBrowser()) {
-			this.location.onUrlChange(() => this.onToggleUserPasswordResetDialog(false));
-		}
-	}
-
 	ngOnDestroy(): void {
-		[this.currentUser$, this.userPasswordResetRequest$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.userPasswordResetRequest$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	onToggleUserPasswordResetDialog(toggle: boolean): void {

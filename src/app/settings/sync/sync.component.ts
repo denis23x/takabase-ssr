@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 import { HelperService } from '../../core/services/helper.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { tap } from 'rxjs/operators';
-import { CurrentUserMixin } from '../../core/mixins/current-user.mixin';
+import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import { FirebaseService } from '../../core/services/firebase.service';
 import type { Auth } from 'firebase/auth';
 
@@ -33,7 +33,7 @@ interface SyncEndpoint {
 	selector: 'app-settings-sync',
 	templateUrl: './sync.component.html'
 })
-export class SettingsSyncComponent extends CurrentUserMixin(class {}) implements OnInit, OnDestroy {
+export class SettingsSyncComponent extends CU(class {}) implements OnInit, OnDestroy {
 	private readonly apiService: ApiService = inject(ApiService);
 	private readonly httpClient: HttpClient = inject(HttpClient);
 	private readonly helperService: HelperService = inject(HelperService);

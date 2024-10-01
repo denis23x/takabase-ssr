@@ -4,13 +4,15 @@ import {
 	ChangeDetectionStrategy,
 	Component,
 	ElementRef,
+	EventEmitter,
 	inject,
 	Input,
 	OnDestroy,
 	OnInit,
+	Output,
 	ViewChild
 } from '@angular/core';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { WindowComponent } from '../../window/window.component';
 import { Subscription } from 'rxjs';
 import { InputTrimWhitespaceDirective } from '../../../directives/app-input-trim-whitespace.directive';
@@ -24,7 +26,6 @@ import { ReportService } from '../../../../core/services/report.service';
 import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { RouterModule } from '@angular/router';
 import { SkeletonDirective } from '../../../directives/app-skeleton.directive';
-import { PlatformService } from '../../../../core/services/platform.service';
 import type { Post } from '../../../../core/models/post.model';
 import type { ReportCreateDto } from '../../../../core/dto/report/report-create.dto';
 
@@ -57,10 +58,11 @@ export class PostReportComponent implements OnInit, OnDestroy {
 	private readonly helperService: HelperService = inject(HelperService);
 	private readonly reportService: ReportService = inject(ReportService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
-	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly location: Location = inject(Location);
 
 	@ViewChild('reportDialog') reportDialog: ElementRef<HTMLDialogElement> | undefined;
+
+	@Output() appPostReportSuccess: EventEmitter<any> = new EventEmitter<any>();
+	@Output() appPostReportToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input({ required: true })
 	set appPostReportPost(post: Post) {
@@ -91,12 +93,6 @@ export class PostReportComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.reportSubjectUrl = this.helperService.getURL().toString();
 		this.reportSubjectName = this.reportPost.name;
-
-		/** Extra toggle close when url change */
-
-		if (this.platformService.isBrowser()) {
-			this.location.onUrlChange(() => this.onToggleReportDialog(false));
-		}
 	}
 
 	ngOnDestroy(): void {
@@ -112,7 +108,7 @@ export class PostReportComponent implements OnInit, OnDestroy {
 			this.reportDialog.nativeElement.close();
 		}
 
-		this.reportForm.reset();
+		this.appPostReportToggle.emit(toggle);
 	}
 
 	onSelectReportFormName(reportFormName: string): void {
@@ -136,7 +132,10 @@ export class PostReportComponent implements OnInit, OnDestroy {
 				next: () => {
 					this.snackbarService.success('Sent', 'Thanks for your report');
 
-					// Close dialog
+					this.appPostReportSuccess.emit();
+
+					this.reportForm.reset();
+					this.reportForm.enable();
 
 					this.onToggleReportDialog(false);
 				},

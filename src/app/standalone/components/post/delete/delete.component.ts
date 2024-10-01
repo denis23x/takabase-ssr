@@ -20,10 +20,7 @@ import { PostService } from '../../../../core/services/post.service';
 import { PostPasswordService } from '../../../../core/services/post-password.service';
 import { PostPrivateService } from '../../../../core/services/post-private.service';
 import { SnackbarService } from '../../../../core/services/snackbar.service';
-import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { PlatformService } from '../../../../core/services/platform.service';
-import { Location } from '@angular/common';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import type { Post, PostType } from '../../../../core/models/post.model';
 
@@ -36,17 +33,14 @@ import type { Post, PostType } from '../../../../core/models/post.model';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestroy {
-	private readonly router: Router = inject(Router);
 	private readonly postService: PostService = inject(PostService);
 	private readonly postPasswordService: PostPasswordService = inject(PostPasswordService);
 	private readonly postPrivateService: PostPrivateService = inject(PostPrivateService);
 	private readonly snackbarService: SnackbarService = inject(SnackbarService);
-	private readonly platformService: PlatformService = inject(PlatformService);
-	private readonly location: Location = inject(Location);
 
 	@ViewChild('postDeleteDialogElement') postDeleteDialogElement: ElementRef<HTMLDialogElement> | undefined;
 
-	@Output() appPostDeleteSuccess: EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() appPostDeleteSuccess: EventEmitter<Partial<Post>> = new EventEmitter<Partial<Post>>();
 	@Output() appPostDeleteToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	@Input({ required: true })
@@ -67,12 +61,6 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 
 	ngOnInit(): void {
 		super.ngOnInit();
-
-		/** Extra toggle close when url change */
-
-		if (this.platformService.isBrowser()) {
-			this.location.onUrlChange(() => this.onTogglePostDeleteDialog(false));
-		}
 	}
 
 	ngOnDestroy(): void {
@@ -109,11 +97,14 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 
 		this.postDeleteRequest$?.unsubscribe();
 		this.postDeleteRequest$ = postTypeMap[this.postType].subscribe({
-			next: () => {
-				// prettier-ignore
-				this.router
-					.navigate(['/', this.currentUser.displayName, this.postType, String(this.post.category?.id || '')].filter((command: string) => !!command))
-					.then(() => this.snackbarService.success('Sadly..', 'Post has been deleted'));
+			next: (post: Partial<Post>) => {
+				this.snackbarService.success('Sadly..', 'Post has been deleted');
+
+				this.appPostDeleteSuccess.emit(post);
+
+				this.postDeleteIsSubmitted.set(false);
+
+				this.onTogglePostDeleteDialog(false);
 			},
 			error: () => this.postDeleteIsSubmitted.set(false)
 		});
