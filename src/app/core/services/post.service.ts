@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import type { Post } from '../models/post.model';
 import type { PostCreateDto } from '../dto/post/post-create.dto';
-import type { PostDeleteDto } from '../dto/post/post-delete.dto';
 import type { PostGetAllDto } from '../dto/post/post-get-all.dto';
 import type { PostGetOneDto } from '../dto/post/post-get-one.dto';
 import type { PostUpdateDto } from '../dto/post/post-update.dto';
@@ -32,7 +31,7 @@ export class PostService {
 		return this.apiService.put('/api/v1/posts/' + postId, postUpdateDto);
 	}
 
-	delete(postId: number, postDeleteDto: PostDeleteDto): Observable<Partial<Post>> {
-		return this.apiService.delete('/api/v1/posts/' + postId, postDeleteDto);
+	delete(postId: number): Observable<Partial<Post>> {
+		return this.apiService.delete('/api/v1/posts/' + postId);
 	}
 }

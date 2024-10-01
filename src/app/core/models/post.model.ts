@@ -13,7 +13,12 @@ export interface Post {
 	cover: string | null;
 	user?: User;
 	category?: Category;
-	password?: string;
 	createdAt: string;
 	updatedAt: string;
 }
+
+export interface PostPassword extends Omit<Post, 'category'> {
+	password: string;
+}
+
+export interface PostPrivate extends Omit<Post, 'category'> {}

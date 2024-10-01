@@ -58,9 +58,8 @@ import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
 import type { Category } from '../core/models/category.model';
 import type { CategoryCreateComponent } from '../standalone/components/category/create/create.component';
 import type { CategoryGetAllDto } from '../core/dto/category/category-get-all.dto';
-import type { Post, PostType } from '../core/models/post.model';
+import type { Post, PostPassword, PostPrivate, PostType } from '../core/models/post.model';
 import type { PostCreateDto } from '../core/dto/post/post-create.dto';
-import type { PostDeleteDto } from '../core/dto/post/post-delete.dto';
 import type { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
 import type { PostUpdateDto } from '../core/dto/post/post-update.dto';
 import type { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
@@ -132,7 +131,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 	categoryListRequest$: Subscription | undefined;
 	categoryListSkeletonToggle: boolean = true;
 
-	post: Post | undefined;
+	post: Post | PostPassword | PostPrivate | undefined;
 	postRequest$: Subscription | undefined;
 	postSkeletonToggle: boolean = true;
 	postType: PostType = 'category';
@@ -312,7 +311,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 				const postGetOneDto: PostGetOneDto = {
 					userFirebaseUid
 				};
-				const postTypeMap: Record<PostType, Observable<Post>> = {
+				const postTypeMap: Record<PostType, Observable<Post | PostPassword | PostPrivate>> = {
 					category: this.postService.getOne(postId, postGetOneDto),
 					password: this.postPasswordService.getOne(postId),
 					private: this.postPrivateService.getOne(postId)
@@ -338,11 +337,11 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 						return from(redirect$).pipe(switchMap(() => throwError(() => httpErrorResponse)));
 					}))
 					.subscribe({
-						next: (post: Post) => {
+						next: (post: Post | PostPassword | PostPrivate) => {
 							this.post = post;
 							this.postSkeletonToggle = false;
 
-							this.category = this.post?.category || undefined;
+							this.category = 'category' in this.post ? this.post.category : undefined;
 							this.categorySkeletonToggle = false;
 
 							this.postForm.patchValue({
@@ -363,14 +362,17 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 								next: (value: any) => {
 									const postTypeIsPristine: boolean = this.postTypeOriginal === this.postType;
 									const postFormIsPristine: boolean = Object.keys(value).every((key: string) => {
-										switch (key) {
-											case 'categoryId':
-												return (value[key] || null) === this.post.category?.id;
-											case 'categoryName':
-												return (value[key] || null) === this.post.category?.name;
-											default:
-												return (value[key] || null) === this.post[key as keyof Post];
+										if ('category' in this.post) {
+											if (key === 'categoryId') {
+												return (value[key] || null) === this.post.category.id;
+											}
+
+											if (key === 'categoryName') {
+												return (value[key] || null) === this.post.category.name;
+											}
 										}
+
+										return (value[key] || null) === this.post[key as keyof (Post | PostPassword | PostPrivate)];
 									});
 
 									this.postFormIsPristine = this.post ? postTypeIsPristine && postFormIsPristine : postFormIsPristine;
@@ -595,20 +597,25 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 			const formControlsBackup = (): void => {
 				if (this.post) {
-					const postPassword: string = String(this.post.password || '');
-					const postCategoryId: number | null = this.post.category?.id || null;
-					const postCategoryName: string = String(this.post.category?.name || '');
-
 					if (this.postType === 'password') {
-						if (postPassword) {
-							this.postForm.get('password').setValue(postPassword);
+						if ('password' in this.post) {
+							const postPassword: string = String(this.post.password || '');
+
+							if (postPassword) {
+								this.postForm.get('password').setValue(postPassword);
+							}
 						}
 					}
 
 					if (this.postType === 'category') {
-						if (postCategoryId && postCategoryName) {
-							this.postForm.get('categoryId').setValue(postCategoryId);
-							this.postForm.get('categoryName').setValue(postCategoryName);
+						if ('category' in this.post) {
+							const postCategoryId: number | null = this.post.category.id || null;
+							const postCategoryName: string = String(this.post.category.name || '');
+
+							if (postCategoryId && postCategoryName) {
+								this.postForm.get('categoryId').setValue(postCategoryId);
+								this.postForm.get('categoryName').setValue(postCategoryName);
+							}
 						}
 					}
 				}
@@ -684,7 +691,6 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
 			const postTypeIsPristine: boolean = this.postTypeOriginal === this.postType;
-			const postDeleteDto: PostDeleteDto = {};
 			const postDto: PostCreateDto & PostUpdateDto = {
 				...this.postForm.value,
 				cover: this.postForm.value.cover || null,
@@ -693,7 +699,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 			// Maps
 
-			const postTypeMap = (): Observable<Partial<Post>> => {
+			const postTypeMap = (): Observable<Partial<Post | PostPassword | PostPrivate>> => {
 				const postService: Record<PostType, PostPasswordService | PostPrivateService | PostService> = {
 					category: this.postService,
 					password: this.postPasswordService,
@@ -704,9 +710,11 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 					if (postTypeIsPristine) {
 						return postService[this.postType].update(postId, postDto);
 					} else {
-						return postService[this.postType]
-							.create(postDto)
-							.pipe(switchMap(() => postService[this.postTypeOriginal].delete(postId, postDeleteDto)));
+						return postService[this.postType].create(postDto).pipe(
+							switchMap((post: Partial<Post | PostPassword | PostPrivate>) => {
+								return postService[this.postTypeOriginal].delete(postId).pipe(map(() => post));
+							})
+						);
 					}
 				} else {
 					return postService[this.postType].create(postDto);
@@ -721,10 +729,11 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 					switchMap(() => postTypeMap())
 				)
 				.subscribe({
-					next: () => {
-						this.snackbarService.success('Cheers!', 'Post has been ' + (postId ? 'updated' : 'saved'));
+					next: (post: Partial<Post | PostPassword | PostPrivate>) => {
+						// prettier-ignore
+						this.snackbarService.success('Cheers!', 'Post has been ' + (postId ? 'updated' : this.postType === 'category' ? 'published' : 'saved'));
 
-						// Start only if there is no post to update
+						// Only if there is no post to update
 
 						if (!this.post) {
 							if (this.platformService.isBrowser()) {
@@ -753,6 +762,9 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 						// Remove disable
 
 						this.postForm.enable();
+						this.postForm.patchValue({
+							markdown: post.markdown
+						});
 					},
 					error: () => {
 						this.postForm.enable();

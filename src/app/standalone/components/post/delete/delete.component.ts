@@ -26,7 +26,6 @@ import { PlatformService } from '../../../../core/services/platform.service';
 import { Location } from '@angular/common';
 import { CurrentUserMixin as CU } from '../../../../core/mixins/current-user.mixin';
 import type { Post, PostType } from '../../../../core/models/post.model';
-import type { PostDeleteDto } from '../../../../core/dto/post/post-delete.dto';
 
 @Component({
 	standalone: true,
@@ -102,12 +101,10 @@ export class PostDeleteComponent extends CU(class {}) implements OnInit, OnDestr
 		// Delete
 
 		const postId: number = this.post.id;
-		const postDeleteDto: PostDeleteDto = {};
-
 		const postTypeMap: Record<PostType, Observable<Partial<Post>>> = {
-			category: this.postService.delete(postId, postDeleteDto),
-			password: this.postPasswordService.delete(postId, postDeleteDto),
-			private: this.postPrivateService.delete(postId, postDeleteDto)
+			category: this.postService.delete(postId),
+			password: this.postPasswordService.delete(postId),
+			private: this.postPrivateService.delete(postId)
 		};
 
 		this.postDeleteRequest$?.unsubscribe();

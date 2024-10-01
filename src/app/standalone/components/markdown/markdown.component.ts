@@ -174,11 +174,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				.pipe(debounceTime(100))
 				.subscribe({
 					next: () => {
-						const hasValue: boolean = this.textarea.value !== '';
-						const hasPreview: boolean = this.preview.innerHTML !== '';
-
-						// Render
-
 						if (this.textareaValue !== this.textarea.value) {
 							const cloneElement: HTMLElement = this.preview.cloneNode(true) as HTMLElement;
 
@@ -190,12 +185,15 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 								.finally(() => (this.textareaValue = this.textarea.value));
 						}
 
-						// Scroll to top when initialize
-
-						if (hasValue && !hasPreview) {
-							this.textarea.scrollTop = 0;
-							this.preview.scrollTop = 0;
-						}
+						// // Scroll to top when initialize (useless trick because many others methods pathing textarea which cause scroll down again)
+						//
+						// const hasValue: boolean = this.textarea.value !== '';
+						// const hasPreview: boolean = this.preview.innerHTML !== '';
+						//
+						// if (hasValue && !hasPreview) {
+						// 	this.textarea.scrollTop = 0;
+						// 	this.preview.scrollTop = 0;
+						// }
 					},
 					error: (error: any) => console.error(error)
 				});

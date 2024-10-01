@@ -19,7 +19,7 @@
 			@if (!!syncList.length) {
 				@for (sync of syncList; track sync.id) {
 					<details class="collapse collapse-arrow bg-base-200 border border-base-300" open>
-						<summary class="collapse-title text-xl font-medium gap-4">{{ sync.name }}</summary>
+						<summary class="collapse-title !flex items-center after:!top-1/2 h-12 min-h-12">{{ sync.name }}</summary>
 						<div class="collapse-content bg-base-100 p-4">
 							<ul class="flex flex-col gap-2">
 								@for (endpoint of sync.endpointList; track endpoint.id) {
