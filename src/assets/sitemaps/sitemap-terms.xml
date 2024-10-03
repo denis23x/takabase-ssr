@@ -2,22 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://takabase.com/terms/terms-of-service</loc>
-    <lastmod>2024-07-09T14:11:59+01:00</lastmod>
-    <priority>0.8</priority>
+    <lastmod>2024-10-03T14:10:00+01:00</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://takabase.com/terms/cookie-policy</loc>
-    <lastmod>2024-07-09T14:11:59+01:00</lastmod>
-    <priority>0.8</priority>
+    <lastmod>2024-10-03T14:10:00+01:00</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://takabase.com/terms/privacy-policy</loc>
-    <lastmod>2024-07-09T14:12:05+01:00</lastmod>
-    <priority>0.8</priority>
+    <lastmod>2024-10-03T14:10:00+01:00</lastmod>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://takabase.com/terms/user-data-deletion</loc>
-    <lastmod>2024-07-09T14:12:05+01:00</lastmod>
-    <priority>0.8</priority>
+    <lastmod>2024-10-03T14:10:00+01:00</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://takabase.com/terms/content-moderation</loc>
+    <lastmod>2024-10-03T14:10:00+01:00</lastmod>
+    <priority>0.5</priority>
   </url>
 </urlset>

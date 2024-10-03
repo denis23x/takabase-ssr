@@ -7,7 +7,7 @@ import type { XMLElement } from 'xmlbuilder';
 // Create the root element 'sitemapindex' with the required namespace attribute
 const sitemap: XMLElement = xmlbuilder
 	.create('sitemapindex', { encoding: 'UTF-8' })
-	.att('xmlns', 'https://www.sitemaps.org/schemas/sitemap/0.9');
+	.att('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
 
 // List of sitemap URLs to be included in the sitemap index
 const sitemapList: string[] = [
