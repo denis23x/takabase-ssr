@@ -45,11 +45,9 @@
 					<ul class="flex flex-col items-start justify-start overflow-hidden gap-2">
 						<li
 							class="flex items-center justify-start gap-2 text-base-content max-w-full"
-							appSkeleton
 							itemprop="author"
 							itemscope
 							itemtype="http://schema.org/Person"
-							[appSkeletonToggle]="postSkeletonToggle"
 						>
 							<a
 								class="flex items-center justify-start gap-2 max-w-full"
@@ -61,18 +59,25 @@
 							>
 								<div
 									class="avatar"
+									appSkeleton
+									[appSkeletonToggle]="postSkeletonToggle"
 									[routerLink]="['/', post.user.name]"
 									[title]="post.user.name"
 									[attr.aria-label]="post.user.name"
 								>
 									<figure
-										class="h-5 w-5 rounded relative overflow-hidden"
+										class="h-5 w-5 rounded-btn relative overflow-hidden"
 										appUserAvatar
 										[appUserAvatarPhotoUrl]="post.user.avatar"
 										[appUserAvatarName]="post.user.name"
 									></figure>
 								</div>
-								<span class="link link-hover block text-sm font-bold truncate" itemprop="name">
+								<span
+									class="link link-hover block text-sm font-bold truncate"
+									itemprop="name"
+									appSkeleton
+									[appSkeletonToggle]="postSkeletonToggle"
+								>
 									{{ post.user.name }}
 								</span>
 							</a>

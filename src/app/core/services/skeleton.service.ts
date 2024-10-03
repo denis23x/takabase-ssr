@@ -65,8 +65,8 @@ export class SkeletonService {
 	getUser(): User {
 		return {
 			id: Number(customAlphabet(numbers, 8)()),
-			name: this.loremIpsum.generateWords(1),
-			description: this.loremIpsum.generateWords(3),
+			name: this.loremIpsum.generateWords(2),
+			description: this.loremIpsum.generateSentences(1),
 			avatar: +customAlphabet('01', 1)() ? './assets/images/placeholder-image.svg' : null,
 			categories: [],
 			posts: [],

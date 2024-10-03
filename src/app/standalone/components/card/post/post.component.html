@@ -71,17 +71,41 @@
 				[attr.aria-label]="post.name"
 			>
 				@if (post._highlightResult?.name) {
-					<span class="line-clamp-2 sm:line-clamp-none sm:overflow-hidden text-ellipsis" itemprop="headline" [innerHTML]="post._highlightResult.name.value"></span>
+					<span
+            class="sm:overflow-hidden text-ellipsis"
+            itemprop="headline"
+            [innerHTML]="post._highlightResult.name.value"
+            [ngClass]="postSkeletonToggle ? 'line-clamp-1' : 'line-clamp-2 sm:line-clamp-none'"
+          >
+          </span>
 				} @else {
-					<span class="line-clamp-2 sm:line-clamp-none sm:overflow-hidden text-ellipsis" itemprop="headline">{{ post.name }}</span>
+					<span
+            class="sm:overflow-hidden text-ellipsis"
+            itemprop="headline"
+            [ngClass]="postSkeletonToggle ? 'line-clamp-1' : 'line-clamp-2 sm:line-clamp-none'"
+          >
+            {{ post.name }}
+          </span>
 				}
 			</a>
 			<!-- prettier-ignore -->
 			<p class="text-base-content text-sm max-w-full" appSkeleton [appSkeletonToggle]="postSkeletonToggle">
 				@if (post._highlightResult?.description) {
-					<span class="line-clamp-3 sm:line-clamp-5 text-ellipsis" itemprop="description" [innerHTML]="post._highlightResult.description.value"></span>
+					<span
+            class="sm:overflow-hidden text-ellipsis"
+            itemprop="description"
+            [innerHTML]="post._highlightResult.description.value"
+            [ngClass]="postSkeletonToggle ? 'line-clamp-1' : 'line-clamp-3 sm:line-clamp-5'"
+          >
+          </span>
 				} @else if (post.description) {
-					<span class="line-clamp-3 sm:line-clamp-5 text-ellipsis" itemprop="description">{{ post.description }}</span>
+					<span
+            class="sm:overflow-hidden text-ellipsis"
+            itemprop="description"
+            [ngClass]="postSkeletonToggle ? 'line-clamp-1' : 'line-clamp-3 sm:line-clamp-5'"
+          >
+            {{ post.description }}
+          </span>
 				}
 			</p>
 			@switch (postType) {

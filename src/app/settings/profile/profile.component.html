@@ -153,7 +153,9 @@
 				data-pw="app-settings-profile-alert-change-name"
 				role="alert"
 				appSkeleton
+				[class.border-0]="profileFormUserSkeletonToggle"
 				[appSkeletonToggle]="profileFormUserSkeletonToggle"
+				[appSkeletonClassList]="['!rounded-box']"
 			>
 				<i class="fill-current text-info" appSvgIcon [appSvgIconIcon]="'info-circle'" [appSvgIconSquare]="'1.5em'"></i>
 				<!-- prettier-ignore -->

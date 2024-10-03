@@ -101,7 +101,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 	cropperImageFormStage: string = 'Submit';
 	cropperImageForm: FormGroup = this.formBuilder.group<CropperImageForm>({
-		scale: this.formBuilder.nonNullable.control(1, [Validators.required, Validators.min(1), Validators.max(5)]),
+		scale: this.formBuilder.nonNullable.control(1, [Validators.required, Validators.min(0), Validators.max(5)]),
 		rotate: this.formBuilder.nonNullable.control(0, [Validators.required, Validators.min(0), Validators.max(360)]),
 		flipV: this.formBuilder.nonNullable.control(false, [Validators.required]),
 		flipH: this.formBuilder.nonNullable.control(false, [Validators.required])

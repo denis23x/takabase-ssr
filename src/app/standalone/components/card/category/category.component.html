@@ -17,27 +17,32 @@
 			>
 				<a
 					class="flex items-center justify-start gap-2 text-base-content/60 w-full"
-					appSkeleton
 					itemprop="url"
 					[routerLink]="['/', category.user.name]"
 					[title]="'Go to ' + category.user.name"
 					[attr.aria-label]="'Go to ' + category.user.name"
-					[appSkeletonToggle]="categorySkeletonToggle"
 				>
 					<div
 						class="avatar"
+						appSkeleton
+						[appSkeletonToggle]="categorySkeletonToggle"
 						[routerLink]="['/', category.user.name]"
 						[title]="category.user.name"
 						[attr.aria-label]="category.user.name"
 					>
 						<figure
-							class="h-4 w-4 rounded relative overflow-hidden"
+							class="h-5 w-5 rounded-btn relative overflow-hidden"
 							appUserAvatar
 							[appUserAvatarPhotoUrl]="category.user.avatar"
 							[appUserAvatarName]="category.user.name"
 						></figure>
 					</div>
-					<span class="link link-hover text-sm truncate leading max-w-full" itemprop="name">
+					<span
+						class="link link-hover text-sm truncate leading max-w-full"
+						itemprop="name"
+						appSkeleton
+						[appSkeletonToggle]="categorySkeletonToggle"
+					>
 						{{ category.user.name }}
 					</span>
 				</a>
@@ -54,18 +59,42 @@
 			[attr.aria-label]="category.name"
 		>
 			@if (category._highlightResult?.name) {
-				<span class="block text-ellipsis overflow-hidden max-w-full" itemprop="headline" [innerHTML]="category._highlightResult.name.value"></span>
+				<span
+          class="overflow-hidden max-w-full"
+          itemprop="headline"
+          [innerHTML]="category._highlightResult.name.value"
+          [ngClass]="categorySkeletonToggle ? 'line-clamp-1' : 'block text-ellipsis'"
+        >
+        </span>
 			} @else {
-				<span class="block text-ellipsis overflow-hidden max-w-full" itemprop="headline">{{ category.name }}</span>
+				<span
+          class="overflow-hidden max-w-full"
+          itemprop="headline"
+          [ngClass]="categorySkeletonToggle ? 'line-clamp-1' : 'block text-ellipsis'"
+        >
+          {{ category.name }}
+        </span>
 			}
 		</a>
 		@if (category._highlightResult?.description || category.description) {
 			<!-- prettier-ignore -->
 			<p class="text-base-content text-sm max-w-full" appSkeleton [appSkeletonToggle]="categorySkeletonToggle">
 				@if (category._highlightResult?.description) {
-					<span class="block text-ellipsis overflow-hidden max-w-full" itemprop="description" [innerHTML]="category._highlightResult.description.value"></span>
+					<span
+            class="overflow-hidden max-w-full"
+            itemprop="description"
+            [innerHTML]="category._highlightResult.description.value"
+            [ngClass]="categorySkeletonToggle ? 'line-clamp-1' : 'block text-ellipsis'"
+          >
+          </span>
 				} @else {
-					<span class="block text-ellipsis overflow-hidden max-w-full" itemprop="description">{{ category.description }}</span>
+					<span
+            class="overflow-hidden max-w-full"
+            itemprop="description"
+            [ngClass]="categorySkeletonToggle ? 'line-clamp-1' : 'block text-ellipsis'"
+          >
+            {{ category.description }}
+          </span>
 				}
 			</p>
 		}
