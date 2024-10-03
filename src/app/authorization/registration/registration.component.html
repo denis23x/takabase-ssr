@@ -37,11 +37,7 @@
 			}
 			<hr class="border-t border-base-300" />
 			<!-- prettier-ignore -->
-			<nav
-				class="block w-full"
-				appSignIn
-				(appSignInBusy)="$event ? registrationForm.disable() : registrationForm.enable()"
-			></nav>
+			<nav class="block w-full" appSignIn (appSignInBusy)="$event ? registrationForm.disable() : registrationForm.enable()"></nav>
 			<hr class="border-t border-base-300" />
 		</header>
 		<div class="flex flex-col gap-4">

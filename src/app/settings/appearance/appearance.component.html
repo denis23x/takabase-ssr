@@ -443,14 +443,11 @@
 							<ul class="join join-horizontal">
 								@for (appearanceButtons of appearanceButtonsList; track $index) {
 									<li class="block">
+										<!-- prettier-ignore -->
 										<label
 											class="btn btn-success btn-sm join-item"
-											[class.btn-outline]="
-												windowButtonPosition.value !== appearanceButtons && windowButtonPosition.enabled
-											"
-											[class.btn-inline]="
-												windowButtonPosition.value === appearanceButtons && windowButtonPosition.disabled
-											"
+											[class.btn-outline]="windowButtonPosition.value !== appearanceButtons && windowButtonPosition.enabled"
+											[class.btn-inline]="windowButtonPosition.value === appearanceButtons && windowButtonPosition.disabled"
 											[class.btn-disabled]="windowButtonPosition.disabled"
 										>
 											<input

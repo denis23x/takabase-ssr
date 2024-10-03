@@ -49,12 +49,12 @@ const linkPreviewHtml = (metadata: Metadata, tokenUrl: string, tokenSelectorId: 
 		// Dynamic favicon (avoid broken images)
 
 		if (previewFavicon) {
-			const htmlCoverElement: HTMLImageElement = new Image();
-			const htmlCoverElementFavicon: HTMLElement = document.getElementById(previewFaviconUID);
+			const htmlImageElement: HTMLImageElement = new Image();
+			const htmlImageElementFavicon: HTMLElement = document.getElementById(previewFaviconUID);
 
-			htmlCoverElement.onload = () => htmlCoverElementFavicon ? htmlCoverElementFavicon.outerHTML = `<img class="block object-cover aspect-square w-4 h-4" loading="eager" width="16" height="16" src="${previewFavicon}" alt="${previewTitle}">` : false;
-			htmlCoverElement.onerror = () => htmlCoverElementFavicon?.remove();
-			htmlCoverElement.src = previewFavicon;
+			htmlImageElement.onload = () => htmlImageElementFavicon ? htmlImageElementFavicon.outerHTML = `<img class="block object-cover aspect-square w-4 h-4" loading="eager" width="16" height="16" src="${previewFavicon}" alt="${previewTitle}">` : false;
+			htmlImageElement.onerror = () => htmlImageElementFavicon?.remove();
+			htmlImageElement.src = previewFavicon;
 		}
 
 		// Template (avoid whitespace)
