@@ -15,7 +15,7 @@ const linkPreviewHtml = (metadata: Metadata, tokenUrl: string, tokenSelectorId: 
 	if (htmlElement) {
 		const previewUrl: URL = new URL(tokenUrl);
 		const previewHost: string | undefined = previewUrl.origin.endsWith('/') ? previewUrl.origin.substring(0, previewUrl.origin.length - 1) : previewUrl.origin;
-		const previewHostElement: string = previewHost ? `<span class="text-base-content text-xs underline mt-auto">${previewHost}</span>` : '';
+		const previewHostElement: string = previewHost ? `<span class="text-base-content text-xs truncate underline mt-auto">${previewHost}</span>` : '';
 
 		const previewTitle: string | undefined = metadata.title;
 		const previewTitleElement: string = previewTitle ? `<span class="text-base-content text-sm font-bold truncate">${previewTitle}</span>` : '';
@@ -34,7 +34,7 @@ const linkPreviewHtml = (metadata: Metadata, tokenUrl: string, tokenSelectorId: 
 		if (previewImage) {
 			const htmlImageElement: HTMLImageElement = new Image();
 
-			htmlImageElement.onload = () => document.getElementById(previewImageUID).outerHTML = `<img class="block object-cover aspect-square w-24 h-24" loading="eager" width="96" height="96" src="${previewImage.url}" alt="${previewTitle}">`;
+			htmlImageElement.onload = () => document.getElementById(previewImageUID).outerHTML = `<img class="block object-cover aspect-square pointer-events-none w-24 h-24" loading="eager" width="96" height="96" src="${previewImage.url}" alt="${previewTitle}">`;
 			htmlImageElement.onerror = () => document.getElementById(previewImageUID).remove();
 			htmlImageElement.src = previewImage.url;
 		}
@@ -58,7 +58,7 @@ const linkPreviewHtml = (metadata: Metadata, tokenUrl: string, tokenSelectorId: 
 		// Template (avoid whitespace)
 
 		const templateTitle: string = `<div class="flex items-center justify-start gap-2">${previewFaviconElement}${previewTitleElement}</div>`;
-		const templateDescription: string = `<div class="flex flex-col justify-stretch gap-1 h-full w-full overflow-hidden p-2">${templateTitle}${previewDescriptionElement}${previewHostElement}</div>`;
+		const templateDescription: string = `<div class="flex flex-col justify-stretch gap-1 h-full w-full overflow-hidden pointer-events-none p-2">${templateTitle}${previewDescriptionElement}${previewHostElement}</div>`;
 		const templateLink: string = `<a class="flex items-center justify-start not-prose w-full" href="${tokenUrl}" rel="ugc nofollow noopener noreferrer" target="_blank">${previewImageElement}${templateDescription}</a>`;
 
 		htmlElement.outerHTML = `<div class="flex border border-base-300 overflow-hidden rounded-xl w-full h-24 my-4" id="${tokenSelectorId}">${templateLink}</div>`;

@@ -759,6 +759,10 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 						this.postForm.patchValue({
 							markdown: post.markdown
 						});
+
+						// Force dispatch input event for re-render markdown in preview element
+
+						this.document.getElementById(this.postFormTextareaId)?.dispatchEvent(new Event('input'));
 					},
 					error: () => {
 						this.postForm.enable();
