@@ -33,10 +33,10 @@ const linkPreviewHtml = (metadata: Metadata, tokenUrl: string, tokenSelectorId: 
 
 		if (previewImage) {
 			const htmlImageElement: HTMLImageElement = new Image();
-			const htmlImageElementPreview: HTMLElement = document.getElementById(previewImageUID);
+			const htmlImageElementPreview = (): HTMLElement => document.getElementById(previewImageUID);
 
-			htmlImageElement.onload = () => htmlImageElementPreview ? htmlImageElementPreview.outerHTML = `<img class="block object-cover aspect-square pointer-events-none w-24 h-24" loading="eager" width="96" height="96" src="${previewImage.url}" alt="${previewTitle}">` : false;
-			htmlImageElement.onerror = () => htmlImageElementPreview?.remove();
+			htmlImageElement.onload = () => htmlImageElementPreview() ? htmlImageElementPreview().outerHTML = `<img class="block object-cover aspect-square pointer-events-none w-24 h-24" loading="eager" width="96" height="96" src="${previewImage.url}" alt="${previewTitle}">` : false;
+			htmlImageElement.onerror = () => htmlImageElementPreview()?.remove();
 			htmlImageElement.src = previewImage.url;
 		}
 
@@ -50,10 +50,10 @@ const linkPreviewHtml = (metadata: Metadata, tokenUrl: string, tokenSelectorId: 
 
 		if (previewFavicon) {
 			const htmlImageElement: HTMLImageElement = new Image();
-			const htmlImageElementFavicon: HTMLElement = document.getElementById(previewFaviconUID);
+			const htmlImageElementFavicon = (): HTMLElement => document.getElementById(previewFaviconUID);
 
-			htmlImageElement.onload = () => htmlImageElementFavicon ? htmlImageElementFavicon.outerHTML = `<img class="block object-cover aspect-square w-4 h-4" loading="eager" width="16" height="16" src="${previewFavicon}" alt="${previewTitle}">` : false;
-			htmlImageElement.onerror = () => htmlImageElementFavicon?.remove();
+			htmlImageElement.onload = () => htmlImageElementFavicon() ? htmlImageElementFavicon().outerHTML = `<img class="block object-cover aspect-square w-4 h-4" loading="eager" width="16" height="16" src="${previewFavicon}" alt="${previewTitle}">` : false;
+			htmlImageElement.onerror = () => htmlImageElementFavicon()?.remove();
 			htmlImageElement.src = previewFavicon;
 		}
 

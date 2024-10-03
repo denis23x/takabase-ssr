@@ -550,7 +550,6 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 								if (value) {
 									abstractControlTitleBackup = abstractControlTitle.value;
 									abstractControlTitle.setValue('@preview');
-									abstractControlTitle.markAsTouched();
 									abstractControlTitle.disable();
 								} else {
 									abstractControlTitle.setValue(abstractControlTitleBackup);
@@ -575,22 +574,15 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 				/** Apply selection */
 
-				// TODO: update this code
-				// const markdownTextarea: MarkdownTextarea = this.getTextareaMarkdown(this.textarea);
-				//
-				// if (markdownTextarea.selection) {
-				// 	Object.keys(this.urlForm.controls).forEach((key: string) => {
-				// 		const abstractControl: AbstractControl = this.urlForm.get(key);
-				//
-				// 		abstractControl.setValue(markdownTextarea.selection);
-				//
-				// 		if (abstractControl.valid) {
-				// 			abstractControl.markAsTouched();
-				// 		} else {
-				// 			abstractControl.reset();
-				// 		}
-				// 	});
-				// }
+				const markdownTextarea: MarkdownTextarea = this.getTextareaMarkdown(this.textarea);
+				const markdownTextareaIsValid: boolean = this.helperService.getRegex('url').test(markdownTextarea.selection);
+
+				if (markdownTextareaIsValid) {
+					const abstractControl: AbstractControl = this.urlForm.get('url');
+
+					abstractControl.setValue(markdownTextarea.selection);
+					abstractControl.markAsTouched();
+				}
 
 				this.urlFormControl = markdownControl;
 				this.urlFormDialog.nativeElement.showModal();
