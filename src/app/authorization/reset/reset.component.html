@@ -27,7 +27,7 @@
 					<fieldset class="form-control">
 						<label class="label" for="resetFormEmail">
 							<div class="indicator">
-								@if (email.touched && !!email.errors && resetForm.enabled) {
+								@if (email.touched && !!email.errors && email.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="email"></div>
 								}
 								<span class="label-text mr-2">Email</span>
@@ -59,7 +59,7 @@
 									[class.btn-success]="email.valid"
 									[class.btn-error]="email.touched && email.invalid"
 									[class.btn-ghost]="email.untouched && email.invalid"
-									[disabled]="resetForm.disabled"
+									[disabled]="email.disabled"
 									[appSvgIconIcon]="'x'"
 									[appSvgIconSquare]="'2em'"
 									(click)="email.setValue('')"

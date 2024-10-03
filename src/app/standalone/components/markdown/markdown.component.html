@@ -267,7 +267,7 @@
 					<fieldset class="form-control">
 						<label class="label" for="urlFormTitle">
 							<div class="indicator">
-								@if (urlFormControl?.key === "url-link" && title.touched && !!title.errors && urlForm.enabled) {
+								@if (urlFormControl?.key === "url-link" && title.touched && !!title.errors && title.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="title"></div>
 								}
 								<span class="label-text mr-2">Text</span>
@@ -309,7 +309,7 @@
 					<fieldset class="form-control">
 						<label class="label" for="urlFormUrl">
 							<div class="indicator">
-								@if (url.touched && !!url.errors && urlForm.enabled) {
+								@if (url.touched && !!url.errors && url.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="url"></div>
 								}
 								<span class="label-text mr-2">URL</span>

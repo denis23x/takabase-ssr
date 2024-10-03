@@ -34,7 +34,7 @@
 					<fieldset class="form-control">
 						<label class="label" for="userDeleteFormName">
 							<div class="indicator">
-								@if (name.touched && !!name.errors && userDeleteForm.enabled) {
+								@if (name.touched && !!name.errors && name.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
 								}
 								<span class="label-text mr-2"> Type the name to confirm </span>
@@ -64,7 +64,7 @@
 									[class.btn-success]="name.dirty && name.value"
 									[class.btn-error]="name.touched && name.invalid"
 									[class.btn-ghost]="name.untouched && name.dirty && name.invalid"
-									[disabled]="userDeleteForm.disabled"
+									[disabled]="name.disabled"
 									[appSvgIconIcon]="'x'"
 									[appSvgIconSquare]="'2em'"
 									(click)="name.setValue('')"
@@ -77,7 +77,7 @@
 					<fieldset class="form-control">
 						<label class="label" for="userDeleteFormPassword">
 							<div class="indicator">
-								@if (password.touched && !!password.errors && userDeleteForm.enabled) {
+								@if (password.touched && !!password.errors && password.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="password"></div>
 								}
 								<span class="label-text mr-2"> Type your current password </span>

@@ -6,11 +6,7 @@
 			<h1 class="text-2xl font-bold" itemprop="name">Login</h1>
 			<hr class="border-t border-base-300" />
 			<!-- prettier-ignore -->
-			<nav
-        class="block w-full"
-        appSignIn
-        (appSignInBusy)="$event ? loginForm.disable() : loginForm.enable()"
-      ></nav>
+			<nav class="block w-full" appSignIn (appSignInBusy)="$event ? loginForm.disable() : loginForm.enable()"></nav>
 			<hr class="border-t border-base-300" />
 		</header>
 		<div class="flex flex-col gap-4">
@@ -25,7 +21,7 @@
 					<fieldset class="form-control">
 						<label class="label" for="loginFormEmail">
 							<div class="indicator">
-								@if (email.touched && !!email.errors && loginForm.enabled) {
+								@if (email.touched && !!email.errors && email.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="email"></div>
 								}
 								<span class="label-text mr-2">Email</span>
@@ -56,7 +52,7 @@
 									[class.btn-success]="email.valid"
 									[class.btn-error]="email.touched && email.invalid"
 									[class.btn-ghost]="email.untouched && email.invalid"
-									[disabled]="loginForm.disabled"
+									[disabled]="email.disabled"
 									[appSvgIconIcon]="'x'"
 									[appSvgIconSquare]="'2em'"
 									(click)="email.setValue('')"
@@ -69,7 +65,7 @@
 					<fieldset class="form-control">
 						<label class="label" for="loginFormPassword">
 							<div class="indicator">
-								@if (password.touched && !!password.errors && loginForm.enabled) {
+								@if (password.touched && !!password.errors && password.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="password"></div>
 								}
 								<span class="label-text mr-2">Password</span>
@@ -98,7 +94,7 @@
 									title="Show password"
 									aria-label="Show password"
 									appSvgIcon
-									[disabled]="loginForm.disabled"
+									[disabled]="password.disabled"
 									[class.btn-success]="password.valid"
 									[class.btn-error]="password.touched && password.invalid"
 									[class.btn-ghost]="password.untouched && password.invalid"

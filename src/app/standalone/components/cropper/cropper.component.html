@@ -34,7 +34,7 @@
 						<fieldset class="form-control">
 							<label class="label" for="imageFormUrl">
 								<div class="indicator">
-									@if (url.dirty && !!url.errors && imageForm.enabled) {
+									@if (url.dirty && !!url.errors && url.enabled) {
 										<div class="block" appBadgeError [appBadgeErrorAbstractControl]="url"></div>
 									}
 									<span class="label-text mr-2">Image</span>
@@ -67,7 +67,7 @@
 											[class.btn-success]="url.valid"
 											[class.btn-error]="url.dirty && url.invalid"
 											[class.btn-ghost]="url.pristine && url.invalid"
-											[disabled]="imageForm.disabled"
+											[disabled]="url.disabled"
 											[appSvgIconIcon]="'x'"
 											[appSvgIconSquare]="'2em'"
 											(click)="url.setValue('')"
@@ -86,10 +86,10 @@
 									type="button"
 									title="Browse"
 									aria-label="Browse"
-									[disabled]="imageForm.disabled"
+									[disabled]="url.disabled"
 									(click)="imageFormFile.click()"
 								>
-									@if (imageForm.disabled && !cropperFile) {
+									@if (url.disabled) {
 										<span class="loading loading-spinner"></span>
 									} @else {
 										<i class="block" appSvgIcon [appSvgIconIcon]="'folder'" [appSvgIconSquare]="'1.75em'"> </i>
@@ -178,7 +178,7 @@
 											title="Mirror horizontal"
 											aria-label="Mirror horizontal"
 											appSvgIcon
-											[disabled]="cropperImageForm.disabled"
+											[disabled]="flipV.disabled"
 											[appSvgIconIcon]="'symmetry-vertical'"
 											[appSvgIconSquare]="'1.5725em'"
 											(click)="flipV.setValue(!flipV.value)"
@@ -193,7 +193,7 @@
 											title="Mirror vertical"
 											aria-label="Mirror vertical"
 											appSvgIcon
-											[disabled]="cropperImageForm.disabled"
+											[disabled]="flipH.disabled"
 											[appSvgIconIcon]="'symmetry-vertical'"
 											[appSvgIconSquare]="'1.5725em'"
 											(click)="flipH.setValue(!flipH.value)"

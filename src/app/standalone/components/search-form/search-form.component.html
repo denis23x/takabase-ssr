@@ -29,7 +29,7 @@
 							[class.btn-success]="query.valid"
 							[class.btn-error]="query.touched && query.invalid"
 							[class.btn-ghost]="query.untouched && query.invalid"
-							[disabled]="searchForm.disabled"
+							[disabled]="query.disabled"
 							[appSvgIconIcon]="'x'"
 							[appSvgIconSquare]="'2em'"
 							(click)="onClearQuery()"

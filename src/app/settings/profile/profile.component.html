@@ -17,12 +17,12 @@
               appSkeleton
               [appSkeletonToggle]="profileFormUserSkeletonToggle || profileFormAvatarIsSubmitted()"
               [appSkeletonClassListElementRef]="['border-transparent']"
-              [ngClass]="{ 'cursor-not-allowed border-transparent bg-base-200': profileForm.disabled, 'border-success': avatar.value && avatar.enabled, 'cursor-pointer': profileForm.enabled }"
+              [ngClass]="{ 'cursor-not-allowed border-transparent bg-base-200': avatar.disabled, 'border-success': avatar.value && avatar.enabled, 'cursor-pointer': avatar.enabled }"
             >
               <figure
                 class="relative w-full h-full"
                 appUserAvatar
-                [ngClass]="{ 'pointer-events-none !opacity-25': profileForm.disabled }"
+                [ngClass]="{ 'pointer-events-none !opacity-25': avatar.disabled }"
                 [title]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
                 [attr.aria-label]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
                 [appUserAvatarPhotoUrl]="profileForm.value['avatar']"
@@ -63,7 +63,7 @@
 							aria-label="Avatar menu"
 							appSvgIcon
 							slot="target"
-							[disabled]="profileForm.disabled"
+							[disabled]="avatar.disabled"
 							[appSvgIconIcon]="'three-dots-vertical'"
 							[appSvgIconSquare]="'1.5em'"
 						></button>
@@ -108,7 +108,7 @@
 							[appSkeletonToggle]="profileFormUserSkeletonToggle"
 							[appSkeletonClassListElementRef]="['!-mx-1']"
 						>
-							@if (name.touched && !!name.errors && profileForm.enabled) {
+							@if (name.touched && !!name.errors && name.enabled) {
 								<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
 							}
 							<span class="label-text mr-2">Name</span>
@@ -139,7 +139,7 @@
 								[class.btn-success]="name.touched && name.valid"
 								[class.btn-error]="name.touched && name.invalid"
 								[class.btn-ghost]="name.untouched"
-								[disabled]="profileForm.disabled"
+								[disabled]="name.disabled"
 								[appSvgIconIcon]="'x'"
 								[appSvgIconSquare]="'2em'"
 								(click)="name.setValue('')"
@@ -168,7 +168,7 @@
 							[appSkeletonToggle]="profileFormUserSkeletonToggle"
 							[appSkeletonClassListElementRef]="['!-mx-1']"
 						>
-							@if (!!description.value && !!description.errors && profileForm.enabled) {
+							@if (!!description.value && !!description.errors && description.enabled) {
 								<div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
 							}
 							@if (!description.errors && !profileFormUserSkeletonToggle) {
@@ -176,7 +176,7 @@
 									class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 									[class.badge-ghost]="!description.value"
 									[class.badge-success]="!!description.value && profileForm.enabled"
-									[class.opacity-25]="profileForm.disabled"
+									[class.opacity-25]="description.disabled"
 								>
 									Optional
 								</span>
@@ -186,9 +186,9 @@
 						@if (!profileFormUserSkeletonToggle) {
 							<span
 								class="label-text-alt"
-								[class.text-base-content]="profileForm.disabled"
-								[class.text-success]="profileForm.enabled && !!description.value && description.valid"
-								[class.text-error]="profileForm.enabled && !!description.value && description.invalid"
+								[class.text-base-content]="description.disabled"
+								[class.text-success]="description.enabled && !!description.value && description.valid"
+								[class.text-error]="description.enabled && !!description.value && description.invalid"
 							>
 								{{ description.value?.length || 0 }}/192
 							</span>
@@ -199,7 +199,7 @@
 						appSkeleton
 						[appSkeletonToggle]="profileFormUserSkeletonToggle"
 						[appSkeletonClassListElementRef]="['!border-0']"
-						[ngClass]="{ 'border-base-300': profileForm.enabled, 'border-transparent': profileForm.disabled }"
+						[ngClass]="{ 'border-base-300': description.enabled, 'border-transparent': description.disabled }"
 						[class.textarea-autosize-success]="description.value && description.valid"
 						[class.textarea-autosize-error]="description.value && description.invalid"
 					>

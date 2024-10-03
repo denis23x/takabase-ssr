@@ -34,7 +34,7 @@
 					<fieldset class="form-control">
 						<label class="label" for="categoryDeleteFormName">
 							<div class="indicator">
-								@if (name.touched && !!name.errors && categoryDeleteForm.enabled) {
+								@if (name.touched && !!name.errors && name.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
 								}
 								<span class="label-text mr-2"> Type the name to confirm </span>
@@ -64,7 +64,7 @@
 									[class.btn-success]="name.dirty && name.value"
 									[class.btn-error]="name.touched && name.invalid"
 									[class.btn-ghost]="name.untouched && name.dirty && name.invalid"
-									[disabled]="categoryDeleteForm.disabled"
+									[disabled]="name.disabled"
 									[appSvgIconIcon]="'x'"
 									[appSvgIconSquare]="'2em'"
 									(click)="name.setValue('')"
@@ -84,8 +84,8 @@
 											<span
 												class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 												[class.badge-ghost]="!categoryId.value"
-												[class.badge-success]="!!categoryId.value && categoryDeleteForm.enabled"
-												[class.opacity-25]="categoryDeleteForm.disabled"
+												[class.badge-success]="!!categoryId.value && categoryId.enabled"
+												[class.opacity-25]="categoryId.disabled"
 											>
 												Optional
 											</span>
@@ -94,25 +94,25 @@
 								</label>
 								<div
 									class="menu menu-vertical !shadow-none menu-md !bg-base-200 !border-0 mt-2 p-0"
-									[class.!border-success]="categoryId.value && categoryDeleteForm.enabled"
+									[class.!border-success]="categoryId.value && categoryId.enabled"
 								>
 									@if (category; as categoryActive) {
 										<ul
 											class="flex max-h-58 flex-col flex-nowrap overflow-y-auto w-full snap-mandatory snap-y p-2"
-											[class.cursor-not-allowed]="categoryDeleteForm.disabled"
+											[class.cursor-not-allowed]="categoryId.disabled"
 										>
 											@for (category of categoryList; track category.id) {
 												@if (category.id !== categoryActive.id) {
 													<!-- prettier-ignore -->
 													<li
                             class="flex w-full snap-start scroll-my-2"
-                            [ngClass]="{ 'disabled pointer-events-none': categoryDeleteForm.disabled }"
+                            [ngClass]="{ 'disabled pointer-events-none': categoryId.disabled }"
                           >
                             @if ({ value: categoryId.value === category.id }; as isActive) {
                               <button
                                 class="rounded-btn block w-full truncate text-left"
                                 type="button"
-                                [ngClass]="{ 'active': isActive.value && categoryDeleteForm.enabled, 'bg-base-content/10': isActive.value && categoryDeleteForm.disabled }"
+                                [ngClass]="{ 'active': isActive.value && categoryId.enabled, 'bg-base-content/10': isActive.value && categoryId.disabled }"
                                 [title]="category.name"
                                 [attr.aria-label]="category.name"
                                 (click)="isActive.value ? categoryId.reset() : categoryId.patchValue(category.id)"

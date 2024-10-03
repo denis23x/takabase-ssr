@@ -56,7 +56,7 @@
 					<fieldset class="form-control">
 						<label class="label" for="registrationFormName">
 							<div class="indicator">
-								@if (name.touched && !!name.errors && registrationForm.enabled) {
+								@if (name.touched && !!name.errors && name.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
 								}
 								<span class="label-text mr-2">Name</span>
@@ -86,7 +86,7 @@
 									[class.btn-success]="name.valid"
 									[class.btn-error]="name.touched && name.invalid"
 									[class.btn-ghost]="name.untouched && name.invalid"
-									[disabled]="registrationForm.disabled"
+									[disabled]="name.disabled"
 									[appSvgIconIcon]="'x'"
 									[appSvgIconSquare]="'2em'"
 									(click)="name.setValue('')"
@@ -99,7 +99,7 @@
 					<fieldset class="form-control">
 						<label class="label" for="registrationFormEmail">
 							<div class="indicator">
-								@if (email.touched && !!email.errors && registrationForm.enabled) {
+								@if (email.touched && !!email.errors && email.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="email"></div>
 								}
 								<span class="label-text mr-2">Email</span>
@@ -130,7 +130,7 @@
 									[class.btn-success]="email.valid"
 									[class.btn-error]="email.touched && email.invalid"
 									[class.btn-ghost]="email.untouched && email.invalid"
-									[disabled]="registrationForm.disabled"
+									[disabled]="email.disabled"
 									[appSvgIconIcon]="'x'"
 									[appSvgIconSquare]="'2em'"
 									(click)="email.setValue('')"
@@ -143,7 +143,7 @@
 					<fieldset class="form-control">
 						<label class="label" for="registrationFormPassword">
 							<div class="indicator">
-								@if (password.touched && !!password.errors && registrationForm.enabled) {
+								@if (password.touched && !!password.errors && password.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="password"></div>
 								}
 								<span class="label-text mr-2">Password</span>
@@ -175,7 +175,7 @@
 									[class.btn-success]="password.valid"
 									[class.btn-error]="password.touched && password.invalid"
 									[class.btn-ghost]="password.untouched && password.invalid"
-									[disabled]="registrationForm.disabled"
+									[disabled]="password.disabled"
                   [appSvgIconIcon]="registrationFormPasswordElement.type === 'text' ? 'eye-slash' : 'eye'"
 									[appSvgIconSquare]="'1.5em'"
                   (click)="registrationFormPasswordElement.type = registrationFormPasswordElement.type === 'text' ? 'password' : 'text'"

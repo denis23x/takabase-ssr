@@ -25,7 +25,7 @@
 					<fieldset class="form-control">
 						<label class="label" for="categoryUpdateFormName">
 							<div class="indicator">
-								@if (name.touched && !!name.errors && categoryUpdateForm.enabled) {
+								@if (name.touched && !!name.errors && name.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="name"></div>
 								}
 								<span class="label-text mr-2">Name</span>
@@ -54,7 +54,7 @@
 									[class.btn-success]="name.touched && name.valid"
 									[class.btn-error]="name.touched && name.invalid"
 									[class.btn-ghost]="name.untouched"
-									[disabled]="categoryUpdateForm.disabled"
+									[disabled]="name.disabled"
 									[appSvgIconIcon]="'x'"
 									[appSvgIconSquare]="'2em'"
 									(click)="name.setValue('')"
@@ -67,15 +67,15 @@
 					<fieldset class="form-control">
 						<label class="label" for="categoryUpdateFormDescription">
 							<div class="indicator">
-								@if (!!description.value && !!description.errors && categoryUpdateForm.enabled) {
+								@if (!!description.value && !!description.errors && description.enabled) {
 									<div class="block" appBadgeError [appBadgeErrorAbstractControl]="description"></div>
 								}
 								@if (!description.errors) {
 									<span
 										class="badge indicator-item w-max translate-x-full translate-y-0 text-xs"
 										[class.badge-ghost]="!description.value"
-										[class.badge-success]="!!description.value && categoryUpdateForm.enabled"
-										[class.opacity-25]="categoryUpdateForm.disabled"
+										[class.badge-success]="!!description.value && description.enabled"
+										[class.opacity-25]="description.disabled"
 									>
 										Optional
 									</span>
@@ -84,9 +84,9 @@
 							</div>
 							<span
 								class="label-text-alt"
-								[class.text-base-content]="categoryUpdateForm.disabled"
-								[class.text-success]="categoryUpdateForm.enabled && !!description.value && description.valid"
-								[class.text-error]="categoryUpdateForm.enabled && !!description.value && description.invalid"
+								[class.text-base-content]="description.disabled"
+								[class.text-success]="description.enabled && !!description.value && description.valid"
+								[class.text-error]="description.enabled && !!description.value && description.invalid"
 							>
 								{{ description.value?.length || 0 }}/192
 							</span>
@@ -94,7 +94,7 @@
 						<!-- prettier-ignore -->
 						<div
               class="textarea-autosize w-full"
-              [ngClass]="{ 'border-base-300': categoryUpdateForm.enabled, 'border-transparent': categoryUpdateForm.disabled }"
+              [ngClass]="{ 'border-base-300': description.enabled, 'border-transparent': description.disabled }"
               [class.textarea-autosize-success]="description.value && description.valid"
               [class.textarea-autosize-error]="description.value && description.invalid"
             >

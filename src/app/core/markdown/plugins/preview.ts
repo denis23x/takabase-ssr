@@ -33,9 +33,10 @@ const linkPreviewHtml = (metadata: Metadata, tokenUrl: string, tokenSelectorId: 
 
 		if (previewImage) {
 			const htmlImageElement: HTMLImageElement = new Image();
+			const htmlImageElementPreview: HTMLElement = document.getElementById(previewImageUID);
 
-			htmlImageElement.onload = () => document.getElementById(previewImageUID).outerHTML = `<img class="block object-cover aspect-square pointer-events-none w-24 h-24" loading="eager" width="96" height="96" src="${previewImage.url}" alt="${previewTitle}">`;
-			htmlImageElement.onerror = () => document.getElementById(previewImageUID).remove();
+			htmlImageElement.onload = () => htmlImageElementPreview ? htmlImageElementPreview.outerHTML = `<img class="block object-cover aspect-square pointer-events-none w-24 h-24" loading="eager" width="96" height="96" src="${previewImage.url}" alt="${previewTitle}">` : false;
+			htmlImageElement.onerror = () => htmlImageElementPreview?.remove();
 			htmlImageElement.src = previewImage.url;
 		}
 
@@ -49,9 +50,10 @@ const linkPreviewHtml = (metadata: Metadata, tokenUrl: string, tokenSelectorId: 
 
 		if (previewFavicon) {
 			const htmlCoverElement: HTMLImageElement = new Image();
+			const htmlCoverElementFavicon: HTMLElement = document.getElementById(previewFaviconUID);
 
-			htmlCoverElement.onload = () => document.getElementById(previewFaviconUID).outerHTML = `<img class="block object-cover aspect-square w-4 h-4" loading="eager" width="16" height="16" src="${previewFavicon}" alt="${previewTitle}">`;
-			htmlCoverElement.onerror = () => document.getElementById(previewFaviconUID).remove();
+			htmlCoverElement.onload = () => htmlCoverElementFavicon ? htmlCoverElementFavicon.outerHTML = `<img class="block object-cover aspect-square w-4 h-4" loading="eager" width="16" height="16" src="${previewFavicon}" alt="${previewTitle}">` : false;
+			htmlCoverElement.onerror = () => htmlCoverElementFavicon?.remove();
 			htmlCoverElement.src = previewFavicon;
 		}
 
