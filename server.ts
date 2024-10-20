@@ -42,6 +42,14 @@ export function app(): express.Express {
 	server.set('view engine', 'html');
 	server.set('views', browserDistFolder);
 
+	// prettier-ignore
+	server.use('/sitemaps/*', proxy(environment.apiUrl, {
+		filter: (req) => req.method === 'GET',
+		proxyReqPathResolver: (req) => {
+			return '/api/v1/' + req.originalUrl.replace('.xml', '').substring(1);
+		}
+	}));
+
 	// API Endpoint for fetching metadata
 	server.use('/metadata/*', async (req, res) => {
 		await unfurl(req.query.url as string)

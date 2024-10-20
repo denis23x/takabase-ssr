@@ -17,7 +17,7 @@ export const httpAuthorizationInterceptor: HttpInterceptorFn = (request: HttpReq
 	const isUrlMatch: boolean = request.url.startsWith(environment.apiUrl);
 
 	const isAuthenticatedArea: boolean = ['posts-bookmark', 'posts-password', 'posts-private'].some((url: string) => request.url.includes(url));
-	const isAdminFunctions: boolean = ['algolia', 'insights', 'sitemap'].some((url: string) => request.url.includes(url));
+	const isAdminFunctions: boolean = ['algolia', 'insights'].some((url: string) => request.url.includes(url));
 
 	if (platformService.isBrowser()) {
 		if ((isMethodMatch && isUrlMatch) || isAuthenticatedArea || isAdminFunctions) {

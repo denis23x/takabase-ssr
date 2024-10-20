@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../../standalone/components/svg-icon/svg-icon.component';
 import { ApiService } from '../../core/services/api.service';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { HelperService } from '../../core/services/helper.service';
 import { SnackbarService } from '../../core/services/snackbar.service';
 import { tap } from 'rxjs/operators';
@@ -84,31 +83,6 @@ export class SettingsSyncComponent extends CU(class {}) implements OnInit, OnDes
 					isLoading: false
 				}
 			]
-		},
-		{
-			id: 3,
-			name: 'Sitemap',
-			description: 'Download sitemaps',
-			endpointList: [
-				{
-					id: 1,
-					method: 'GET',
-					url: '/api/v1/sitemap/category',
-					isLoading: false
-				},
-				{
-					id: 2,
-					method: 'GET',
-					url: '/api/v1/sitemap/post',
-					isLoading: false
-				},
-				{
-					id: 3,
-					method: 'GET',
-					url: '/api/v1/sitemap/user',
-					isLoading: false
-				}
-			]
 		}
 	];
 
@@ -156,29 +130,6 @@ export class SettingsSyncComponent extends CU(class {}) implements OnInit, OnDes
 					.pipe(tap(() => this.snackbarService.success('Sync', 'Insights synced')))
 					.subscribe({
 						next: () => (syncEndpoint.isLoading = false),
-						error: () => (syncEndpoint.isLoading = false)
-					});
-
-				break;
-			}
-			case syncEndpoint.url.includes('/sitemap'): {
-				// prettier-ignore
-				this.httpClient
-					.get(environment.apiUrl + syncEndpoint.url, { responseType: 'blob' })
-					.pipe(tap(() => this.snackbarService.success('Sync', 'Sitemap generated successfully')))
-					.subscribe({
-						next: (blob: Blob) => {
-							const file: File = this.helperService.getFileFromBlob(blob);
-							const fileReader: FileReader = new FileReader();
-							const fileName: string = ['sitemap', syncEndpoint.url.split('/').pop()].join('-') + '.xml';
-
-							fileReader.addEventListener('load', () => this.helperService.setDownload(fileReader.result as string, fileName));
-							fileReader.readAsDataURL(file);
-
-							// Remove disable
-
-							syncEndpoint.isLoading = false;
-						},
 						error: () => (syncEndpoint.isLoading = false)
 					});
 

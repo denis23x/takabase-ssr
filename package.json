@@ -8,10 +8,8 @@
   "scripts": {
     "start:dev": "ng run takabase-ssr:serve:localhost",
     "start:deploy": "npx tsx deploy.ts",
-    "start:lint": "ng lint",
     "build:prod": "ng run takabase-ssr:build:production",
     "build:spite": "npx tsx sprite.ts",
-    "build:sitemap": "npx tsx sitemap.ts",
     "dist:analyze": "esbuild-visualizer --metadata ./dist/takabase-ssr/stats.json --filename ./dist/takabase-ssr/stats.html --open",
     "dist:start": "node dist/takabase-ssr/server/server.mjs"
   },
@@ -119,7 +117,6 @@
     "rxfire": "^6.0.5",
     "svg2sprite-cli": "^2.0.1",
     "tailwindcss": "^3.4.4",
-    "typescript": "~5.4.5",
-    "xmlbuilder": "^15.1.1"
+    "typescript": "~5.4.5"
   }
 }

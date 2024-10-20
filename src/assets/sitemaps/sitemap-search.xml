@@ -3,16 +3,19 @@
   <url>
     <loc>https://takabase.com/search/posts</loc>
     <lastmod>2024-07-09T14:12:03+01:00</lastmod>
-    <priority>0.8</priority>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://takabase.com/search/categories</loc>
     <lastmod>2024-07-09T14:12:03+01:00</lastmod>
-    <priority>0.8</priority>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://takabase.com/search/users</loc>
     <lastmod>2024-07-09T14:12:03+01:00</lastmod>
-    <priority>0.8</priority>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
   </url>
 </urlset>
