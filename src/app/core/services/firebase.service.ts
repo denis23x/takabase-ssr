@@ -48,7 +48,7 @@ export class FirebaseService {
 						appId: environment.firebase.appId
 					};
 
-					this.apiService.post('/api/v1/authorization/app-check', appCheckDto).subscribe({
+					this.apiService.post<AppCheckToken>('/api/v1/authorization/app-check', appCheckDto).subscribe({
 						next: (appCheckToken: AppCheckToken) => {
 							resolve({
 								...appCheckToken,

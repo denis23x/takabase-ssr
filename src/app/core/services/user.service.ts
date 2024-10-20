@@ -17,22 +17,22 @@ export class UserService {
 	/** REST */
 
 	create(userCreateDto?: UserCreateDto): Observable<User> {
-		return this.apiService.post('/api/v1/users', userCreateDto);
+		return this.apiService.post<User>('/api/v1/users', userCreateDto);
 	}
 
 	getAll(userGetAllDto?: UserGetAllDto): Observable<User[]> {
-		return this.apiService.get('/api/v1/users', userGetAllDto);
+		return this.apiService.get<User[]>('/api/v1/users', userGetAllDto);
 	}
 
 	getOne(userUid: string, userGetOneDto?: UserGetOneDto): Observable<User> {
-		return this.apiService.get('/api/v1/users/' + userUid, userGetOneDto);
+		return this.apiService.get<User>('/api/v1/users/' + userUid, userGetOneDto);
 	}
 
 	update(userUid: string, userUpdateDto: UserUpdateDto): Observable<User> {
-		return this.apiService.put('/api/v1/users/' + userUid, userUpdateDto);
+		return this.apiService.put<User>('/api/v1/users/' + userUid, userUpdateDto);
 	}
 
 	delete(userUid: string, userDeleteDto: UserDeleteDto): Observable<User> {
-		return this.apiService.delete('/api/v1/users/' + userUid, userDeleteDto);
+		return this.apiService.delete<User>('/api/v1/users/' + userUid, userDeleteDto);
 	}
 }

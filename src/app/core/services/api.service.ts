@@ -147,7 +147,7 @@ export class ApiService {
 
 	/** CRUD */
 
-	get(url: string, params?: any, options?: any): Observable<any> {
+	get<T>(url: string, params?: any, options?: any): Observable<T> {
 		return this.httpClient.get(this.setUrl(url), { ...options, params }).pipe(
 			map((response: any) => response.data),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
@@ -156,7 +156,7 @@ export class ApiService {
 		);
 	}
 
-	put(url: string, body?: any, options?: any): Observable<any> {
+	put<T>(url: string, body?: any, options?: any): Observable<T> {
 		return this.httpClient.put(this.setUrl(url), body, options).pipe(
 			map((response: any) => response.data),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
@@ -165,7 +165,7 @@ export class ApiService {
 		);
 	}
 
-	post(url: string, body?: any, options?: any): Observable<any> {
+	post<T>(url: string, body?: any, options?: any): Observable<T> {
 		return this.httpClient.post(this.setUrl(url), body, options).pipe(
 			map((response: any) => response.data),
 			catchError((httpErrorResponse: HttpErrorResponse) => {
@@ -174,7 +174,7 @@ export class ApiService {
 		);
 	}
 
-	delete(url: string, params?: any): Observable<any> {
+	delete<T>(url: string, params?: any): Observable<T> {
 		return this.httpClient.delete(this.setUrl(url), { params }).pipe(
 			map((response: any) => response.data),
 			catchError((httpErrorResponse: HttpErrorResponse) => {

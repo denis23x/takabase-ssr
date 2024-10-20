@@ -40,7 +40,7 @@
     <loc>https://takabase.com/post/210002</loc>
     <lastmod>2024-09-26T16:26:11.817Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>daily</changefreq>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://takabase.com/post/240001</loc>
@@ -74,7 +74,7 @@
     <loc>https://takabase.com/post/420001</loc>
     <lastmod>2024-10-03T04:45:46.452Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>hourly</changefreq>
+    <changefreq>daily</changefreq>
     <image:image>
       <image:loc>https://takabase.com/post-covers/b7NtZExAzwF6.webp</image:loc>
       <image:title>Emulation made easy on Steam Deck</image:title>
@@ -84,7 +84,7 @@
     <loc>https://takabase.com/post/450001</loc>
     <lastmod>2024-10-02T12:34:34.093Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>hourly</changefreq>
+    <changefreq>daily</changefreq>
     <image:image>
       <image:loc>https://takabase.com/post-covers/Vnqfvok7HMew.webp</image:loc>
       <image:title>RPCS3 - The PlayStation 3 emulator</image:title>
@@ -98,9 +98,9 @@
   </url>
   <url>
     <loc>https://takabase.com/post/510001</loc>
-    <lastmod>2024-09-19T05:57:12.704Z</lastmod>
+    <lastmod>2024-10-04T07:04:05.829Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>weekly</changefreq>
+    <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://takabase.com/post/540001</loc>
@@ -112,10 +112,20 @@
     <loc>https://takabase.com/post/570001</loc>
     <lastmod>2024-10-02T06:22:06.380Z</lastmod>
     <priority>0.50</priority>
-    <changefreq>hourly</changefreq>
+    <changefreq>daily</changefreq>
     <image:image>
       <image:loc>https://takabase.com/post-covers/kCGT6lIsE1Nr.webp</image:loc>
       <image:title>How to use SVG Sprite Icons for development</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://takabase.com/post/600001</loc>
+    <lastmod>2024-10-09T05:29:35.367Z</lastmod>
+    <priority>0.50</priority>
+    <changefreq>hourly</changefreq>
+    <image:image>
+      <image:loc>https://takabase.com/post-covers/ScBBpTRpS0m1.webp</image:loc>
+      <image:title>Git Workflows with Husky + Conventional Commits</image:title>
     </image:image>
   </url>
 </urlset>

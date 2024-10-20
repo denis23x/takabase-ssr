@@ -95,7 +95,7 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 	domToCanvasSelector: string = 'app-post section';
 	domToCanvasIsLoading: WritableSignal<boolean> = signal(false);
 
-	postBookmark: WritableSignal<Post | PostBookmark | null> = signal(null);
+	postBookmark: WritableSignal<PostBookmark | null> = signal(null);
 	postBookmarkRequest$: Subscription | undefined;
 	postBookmarkIsLoading: WritableSignal<boolean> = signal(false);
 
@@ -125,10 +125,12 @@ export class PostProseComponent extends CU(class {}) implements OnInit, OnDestro
 			};
 
 			this.postBookmarkRequest$?.unsubscribe();
-			this.postBookmarkRequest$ = this.postBookmarkService.getOne(postId, postBookmarkGetOneDto).subscribe({
-				next: (postBookmark: PostBookmark | Post | null) => this.postBookmark.set(postBookmark),
-				error: (error: any) => console.error(error)
-			});
+			this.postBookmarkRequest$ = this.postBookmarkService
+				.getOne<PostBookmark | null>(postId, postBookmarkGetOneDto)
+				.subscribe({
+					next: (postBookmark: PostBookmark | null) => this.postBookmark.set(postBookmark),
+					error: (error: any) => console.error(error)
+				});
 		}
 	}
 

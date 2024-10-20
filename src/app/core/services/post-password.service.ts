@@ -16,22 +16,22 @@ export class PostPasswordService {
 	/** REST */
 
 	create(postCreateDto: PostCreateDto): Observable<PostPassword> {
-		return this.apiService.post('/api/v1/posts-password', postCreateDto);
+		return this.apiService.post<PostPassword>('/api/v1/posts-password', postCreateDto);
 	}
 
 	getAll(postGetAllDto: PostGetAllDto): Observable<PostPassword[]> {
-		return this.apiService.get('/api/v1/posts-password', postGetAllDto);
+		return this.apiService.get<PostPassword[]>('/api/v1/posts-password', postGetAllDto);
 	}
 
 	getOne(postId: number, postGetOneDto?: PostGetOneDto): Observable<PostPassword> {
-		return this.apiService.get('/api/v1/posts-password/' + postId, postGetOneDto);
+		return this.apiService.get<PostPassword>('/api/v1/posts-password/' + postId, postGetOneDto);
 	}
 
 	update(postId: number, postUpdateDto: PostUpdateDto): Observable<PostPassword> {
-		return this.apiService.put('/api/v1/posts-password/' + postId, postUpdateDto);
+		return this.apiService.put<PostPassword>('/api/v1/posts-password/' + postId, postUpdateDto);
 	}
 
 	delete(postId: number): Observable<Partial<PostPassword>> {
-		return this.apiService.delete('/api/v1/posts-password/' + postId);
+		return this.apiService.delete<Partial<PostPassword>>('/api/v1/posts-password/' + postId);
 	}
 }

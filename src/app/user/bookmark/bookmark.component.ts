@@ -127,9 +127,9 @@ export class UserBookmarkComponent extends CU(M(SP(class {}))) implements OnInit
 		}
 
 		this.postBookmarkListRequest$?.unsubscribe();
-		this.postBookmarkListRequest$ = this.postBookmarkService.getAll(postBookmarkGetAllDto).subscribe({
-			next: (postList: (PostBookmark | Post)[]) => {
-				const postBookmarkList: Post[] = postList as Post[];
+		this.postBookmarkListRequest$ = this.postBookmarkService.getAll<Post[]>(postBookmarkGetAllDto).subscribe({
+			next: (postList: Post[]) => {
+				const postBookmarkList: Post[] = postList;
 
 				// prettier-ignore
 				this.postBookmarkList = postBookmarkGetAllDto.page > 1 ? this.postBookmarkList.concat(postBookmarkList) : postBookmarkList;

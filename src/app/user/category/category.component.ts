@@ -173,23 +173,6 @@ export class UserCategoryComponent extends CU(M(SP(class {}))) implements OnInit
 
 	/** Category */
 
-	onCreateCategory(category: Category): void {
-		const categoryList: Category[] = this.userStore.categoryList.getValue();
-
-		this.userStore.setCategoryList([category].concat(categoryList));
-		this.userStore.setCategory(category);
-
-		// Navigate
-
-		const navigationExtras: NavigationExtras = {
-			relativeTo: this.activatedRoute.parent
-		};
-
-		this.router
-			.navigate(['.', 'category', category.id], navigationExtras)
-			.catch((error: any) => this.helperService.setNavigationError(this.router.lastSuccessfulNavigation, error));
-	}
-
 	onUpdateCategory(categoryUpdate: Category): void {
 		const categoryList: Category[] = this.userStore.categoryList
 			.getValue()
