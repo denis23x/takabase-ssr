@@ -482,14 +482,14 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 					} else {
 						this.appCropperSubmit.emit(file);
 					}
+
+					this.cropperImageForm.enable();
+					this.cropperImageFormStage = 'Submit';
 				})
 			)
 			.subscribe({
 				next: () => this.onToggleCropperDialog(false),
-				error: () => {
-					this.cropperImageForm.enable();
-					this.cropperImageFormStage = 'Submit';
-				}
+				error: (error: any) => console.error(error)
 			});
 	}
 }
