@@ -1,6 +1,6 @@
 /* Update default DaisyUI styles */
 
-.menu {
+.menu:not(.not-prose) {
   &.menu-horizontal {
     @apply overflow-x-auto overflow-y-hidden text-base-content;
 

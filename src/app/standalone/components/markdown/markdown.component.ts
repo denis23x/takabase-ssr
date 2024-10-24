@@ -115,12 +115,12 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 		this.previewId = previewId;
 	}
 
-	@Input({ required: true })
+	@Input()
 	set appMarkdownFullscreenId(fullscreenId: string) {
 		this.fullscreenId = fullscreenId;
 	}
 
-	@Input({ required: true })
+	@Input()
 	set appMarkdownFullscreenToggle(fullscreenToggle: boolean) {
 		this.fullscreenToggle = fullscreenToggle;
 	}
@@ -434,32 +434,34 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 	}
 
 	setHandlerFullscreen(): void {
-		const fullscreenElement: HTMLElement = this.document.getElementById(this.fullscreenId);
+		const fullscreenElement: HTMLElement | null = this.document.getElementById(this.fullscreenId);
 
-		this.fullscreenTextareaFocus$?.unsubscribe();
-		this.fullscreenTextareaFocus$ = fromEvent(this.textarea, 'focus')
-			.pipe(filter(() => this.fullscreenToggle && this.platformService.isMobile()))
-			.subscribe({
-				next: () => {
-					if (!this.fullscreenTextareaHeight) {
-						const fullscreenDOMRect: DOMRect = this.textarea.getBoundingClientRect();
-						const fullscreenTextareaHeight: number = fullscreenDOMRect.height + fullscreenDOMRect.top * 2;
+		if (fullscreenElement) {
+			this.fullscreenTextareaFocus$?.unsubscribe();
+			this.fullscreenTextareaFocus$ = fromEvent(this.textarea, 'focus')
+				.pipe(filter(() => this.fullscreenToggle && this.platformService.isMobile()))
+				.subscribe({
+					next: () => {
+						if (!this.fullscreenTextareaHeight) {
+							const fullscreenDOMRect: DOMRect = this.textarea.getBoundingClientRect();
+							const fullscreenTextareaHeight: number = fullscreenDOMRect.height + fullscreenDOMRect.top * 2;
 
-						this.fullscreenTextareaHeight = fullscreenTextareaHeight + 'px';
-					}
+							this.fullscreenTextareaHeight = fullscreenTextareaHeight + 'px';
+						}
 
-					fullscreenElement.style.height = this.fullscreenTextareaHeight;
-				},
-				error: (error: any) => console.error(error)
-			});
+						fullscreenElement.style.height = this.fullscreenTextareaHeight;
+					},
+					error: (error: any) => console.error(error)
+				});
 
-		this.fullscreenTextareaBlur$?.unsubscribe();
-		this.fullscreenTextareaBlur$ = fromEvent(this.textarea, 'blur')
-			.pipe(filter(() => this.fullscreenToggle && this.platformService.isMobile()))
-			.subscribe({
-				next: () => fullscreenElement.style.removeProperty('height'),
-				error: (error: any) => console.error(error)
-			});
+			this.fullscreenTextareaBlur$?.unsubscribe();
+			this.fullscreenTextareaBlur$ = fromEvent(this.textarea, 'blur')
+				.pipe(filter(() => this.fullscreenToggle && this.platformService.isMobile()))
+				.subscribe({
+					next: () => fullscreenElement.style.removeProperty('height'),
+					error: (error: any) => console.error(error)
+				});
+		}
 	}
 
 	/** Textarea */

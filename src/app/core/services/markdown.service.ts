@@ -44,7 +44,7 @@ export class MarkdownService {
 				}
 			})
 				.use(attrs, {
-					allowedAttributes: ['class', 'style', 'width', 'height']
+					allowedAttributes: ['class', 'style', 'width', 'height', 'data-content']
 				})
 				.use(bracketedSpans)
 				.use(ins)
