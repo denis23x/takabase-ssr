@@ -7,13 +7,15 @@ import { MetaService } from '../core/services/meta.service';
 import { SvgLogoComponent } from '../standalone/components/svg-logo/svg-logo.component';
 import { TitleService } from '../core/services/title.service';
 import { ApiService } from '../core/services/api.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { SkeletonDirective } from '../standalone/directives/app-skeleton.directive';
 import { SkeletonService } from '../core/services/skeleton.service';
 import { PWAComponent } from '../standalone/components/pwa/pwa.component';
 import { MathPipe } from '../standalone/pipes/math.pipe';
 import { PlatformService } from '../core/services/platform.service';
+import { MarkdownComponent } from '../standalone/components/markdown/markdown.component';
+import { HttpClient } from '@angular/common/http';
 import homeHighlights from '../../assets/json/home-highlights.json';
 import dayjs from 'dayjs/esm';
 import type { MetaOpenGraph, MetaTwitter } from '../core/models/meta.model';
@@ -25,7 +27,16 @@ const insightResponse: StateKey<any> = makeStateKey<any>('insightResponse');
 
 @Component({
 	standalone: true,
-	imports: [CommonModule, RouterModule, SvgIconComponent, SvgLogoComponent, SkeletonDirective, PWAComponent, MathPipe],
+	imports: [
+		CommonModule,
+		RouterModule,
+		SvgIconComponent,
+		SvgLogoComponent,
+		SkeletonDirective,
+		PWAComponent,
+		MathPipe,
+		MarkdownComponent
+	],
 	selector: 'app-home',
 	templateUrl: './home.component.html'
 })
@@ -36,6 +47,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 	private readonly skeletonService: SkeletonService = inject(SkeletonService);
 	private readonly transferState: TransferState = inject(TransferState);
 	private readonly platformService: PlatformService = inject(PlatformService);
+	private readonly httpClient: HttpClient = inject(HttpClient);
+	private readonly document: Document = inject(DOCUMENT);
+
+	appEditorPreview: string = '';
+	appEditorPreview$: Subscription | undefined;
 
 	appInsightValue: number = 1;
 	appInsightUnit: ManipulateType = 'week';
@@ -62,10 +78,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 	appHighlightList: Record<string, string | number>[] = homeHighlights;
 	appHighlightListActive: number = 1;
 
+	appYear: string | undefined;
+
 	ngOnInit(): void {
+		const year: string = dayjs().format('YYYY');
 		const from: string = dayjs().subtract(this.appInsightValue, this.appInsightUnit).format('MMM D');
 		const to: string = dayjs().format('MMM D');
 
+		this.appYear = year;
 		this.appInsightListTime = from + ' - ' + to;
 
 		/** Apply Data */
@@ -81,6 +101,22 @@ export class HomeComponent implements OnInit, OnDestroy {
 			this.setResolver();
 		}
 
+		this.appEditorPreview$?.unsubscribe();
+		this.appEditorPreview$ = this.httpClient
+			.get('/assets/markdown/home/preview.md', {
+				responseType: 'text'
+			})
+			.subscribe({
+				next: (preview: string) => {
+					this.appEditorPreview = preview;
+
+					setTimeout(() => {
+						this.document.getElementById('markdownTextarea')?.dispatchEvent(new Event('input'));
+					});
+				},
+				error: (error: any) => console.error(error)
+			});
+
 		/** Apply SEO meta tags */
 
 		this.setMetaTags();
@@ -88,7 +124,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		[this.appInsightList$].forEach(($: Subscription) => $?.unsubscribe());
+		[this.appInsightList$, this.appEditorPreview$].forEach(($: Subscription) => $?.unsubscribe());
 	}
 
 	setSkeleton(): void {

@@ -4,13 +4,15 @@
 	<div class="navbar rounded-box border border-base-300 bg-base-100 shadow-xl !p-4">
 		<nav class="navbar-start">
 			<a
-				class="flex items-center justify-center w-12 h-12"
+				class="btn-ghost btn-square btn fill-current text-base-content"
 				title="Takabase"
 				aria-label="Takabase"
-				appSvgLogo
+				appSvgIcon
 				[routerLink]="['/']"
-				[appSvgLogoIcon]="'takabase'"
-				[appSvgLogoSquare]="'48'"
+				[routerLinkActive]="['btn-active']"
+				[routerLinkActiveOptions]="{ exact: true }"
+				[appSvgIconIcon]="'house'"
+				[appSvgIconSquare]="'1.5em'"
 			>
 			</a>
 		</nav>

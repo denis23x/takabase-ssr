@@ -7,50 +7,32 @@
   },
   {
     "id": 2,
-    "title": "Social Authorization",
-    "description": "Enjoy the convenience of seamless social authorization for quick access",
-    "icon": "door-open"
-  },
-  {
-    "id": 3,
-    "title": "Minimalistic UI",
-    "description": "Experience an intuitive interface that is not cluttered",
-    "icon": "grid-1x2"
-  },
-  {
-    "id": 4,
     "title": "Responsive Design",
     "description": "Experience seamless and intuitive browsing across a range of mobile devices",
     "icon": "phone"
   },
   {
+    "id": 3,
+    "title": "SEO Optimization",
+    "description": "Boost visibility with optimized meta tags, structured data, and keywords",
+    "icon": "search"
+  },
+  {
+    "id": 4,
+    "title": "Social Authorization",
+    "description": "Enjoy the convenience of seamless social authorization for quick access",
+    "icon": "door-open"
+  },
+  {
     "id": 5,
-    "title": "Touch-Friendly",
-    "description": "Touch devices interact with the website's interactive components",
-    "icon": "hand-index-thumb"
+    "title": "Minimalistic UI",
+    "description": "Experience an intuitive interface that is not cluttered",
+    "icon": "grid-1x2"
   },
   {
     "id": 6,
-    "title": "Media Optimization",
-    "description": "Visuals load quickly without compromising quality",
-    "icon": "play-circle"
-  },
-  {
-    "id": 7,
-    "title": "Live Preview",
-    "description": "Watch the magic as Live Preview rolls Markdown content into what you see",
-    "icon": "markdown"
-  },
-  {
-    "id": 8,
-    "title": "Syntax Highlighting",
-    "description": "Watch your code snippets come to life with Syntax Highlighting",
-    "icon": "code-slash"
-  },
-  {
-    "id": 9,
-    "title": "Arbitrary Styling",
-    "description": "Fine-tune your text and elements with varies of styles",
-    "icon": "paint-bucket"
+    "title": "Touch-Friendly",
+    "description": "Touch devices interact with the website's interactive components",
+    "icon": "hand-index-thumb"
   }
 ]

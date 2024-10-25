@@ -2,144 +2,83 @@
 
 <ng-container>
 	<section class="flex flex-col gap-4">
-		<header
-			class="rounded-box flex flex-col items-stretch justify-start gap-4 border border-base-300 bg-base-100 p-4 shadow-xl"
-		>
-			<div class="relative sm:divider sm:divider-start sm:mt-2">
-				<h1 class="text-3xl text-base-content font-bold" itemprop="name">The new posting platform</h1>
-			</div>
-			<div class="flex items-start justify-start gap-4">
-				<p class="text-base text-base-content/60" itemprop="description">
-					<span class="inline">
-						Takabase is designed to provide you with an easy-to-use, lightweight app that is highly customizable to your
-						preferences.
-					</span>
-					<span class="hidden sm:inline">
-						Whether you’re a writer, or developer, the platform is the perfect tool to bring your ideas to life.
-					</span>
+		<!-- Header -->
+		<header class="flex flex-col lg:flex-row gap-4 rounded-box border border-base-300 bg-base-100 p-4 shadow-xl">
+			<figure class="flex">
+				<i class="rounded-box" appSvgLogo itemprop="image" [appSvgLogoIcon]="'takabase'" [appSvgLogoSquare]="'48'"></i>
+			</figure>
+			<div class="flex flex-col">
+				<h1 class="text-lg text-base-content font-bold" itemprop="name">Your own Markdown storage</h1>
+				<p class="text-sm text-base-content/60" itemprop="description">
+					Takabase is designed to provide you with an easy-to-use, lightweight app that is highly customizable to your
+					preferences
 				</p>
-				<figure class="hidden sm:flex items-start justify-end">
-					<i
-						class="rounded-box"
-						appSvgLogo
-						itemprop="image"
-						[appSvgLogoIcon]="'takabase'"
-						[appSvgLogoSquare]="'64'"
-					></i>
-				</figure>
 			</div>
-			<nav
-				class="flex flex-wrap items-center justify-start gap-4"
-				itemscope
-				itemtype="http://schema.org/SiteNavigationElement"
-			>
-				<a
-					class="btn btn-outline btn-success btn-md flex-1"
-					title="Registration"
-					aria-label="Registration"
-					itemprop="url"
-					[routerLink]="'/registration'"
-				>
-					<span class="block" itemprop="name">Registration</span>
-				</a>
-				<a
-					class="btn btn-outline btn-info btn-md flex-1"
-					title="Search"
-					aria-label="Search"
-					itemprop="url"
-					[routerLink]="'/search'"
-				>
-					<span class="block" itemprop="name">Search</span>
-				</a>
-				<a
-					class="btn btn-outline btn-primary btn-md flex-1"
-					title="Markdown guide"
-					aria-label="Markdown guide"
-					itemprop="url"
-					[routerLink]="'/help/markdown'"
-				>
-					<span class="block" itemprop="name">Markdown</span>
-				</a>
-				<button
-					class="btn btn-outline btn-warning btn-md flex-1"
-					type="button"
-					title="Progressive Web Application"
-					aria-label="Progressive Web Application"
-					(click)="appPWAElement.onClick()"
-				>
-					<span class="block">PWA</span>
-				</button>
-				<a
-					class="btn btn-outline btn-error btn-md flex-1"
-					title="Work In Progress"
-					aria-label="Work In Progress"
-					itemprop="url"
-					[routerLink]="'/help/about'"
-				>
-					<span class="block" itemprop="name">WIP</span>
-				</a>
-			</nav>
 		</header>
-		<ul class="rounded-box grid grid-cols-12 border border-base-300 bg-base-100 shadow-xl">
-			<li
-				class="flex flex-col col-span-12 lg:col-span-6 gap-2 border-b lg:border-b-0 lg:border-r border-base-300 p-4"
-				itemscope
-				itemtype="http://schema.org/Thing"
-			>
-				<div class="flex items-center justify-between">
-					<h4 class="text-2xl font-bold text-base-content" itemprop="name">Insights</h4>
-					<span class="text-sm text-base-content/60">
-						{{ appInsightListTime }}
-					</span>
-				</div>
-				<div class="flex items-center justify-between gap-4">
-					<!-- prettier-ignore -->
-					<p class="text-base text-base-content" itemprop="description">
-						<strong class="inline font-bold">Current Activities</strong>: total numbers of public posts, users who contribute to them, and categories
-					</p>
-					<i
-						class="fill-current text-primary"
-						appSvgIcon
-						[appSvgIconIcon]="'sliders2-vertical'"
-						[appSvgIconSquare]="'2em'"
-					></i>
-				</div>
-			</li>
-			@for (appInsight of appInsightList; track $index) {
-				<li
-					class="flex flex-col items-center justify-center gap-1 text-center col-span-4 lg:col-span-2 border-r last:border-0 border-base-300 p-4"
+		<!-- Custom Editor -->
+		<div class="flex flex-col gap-4 rounded-box border border-base-300 bg-base-100 p-4 shadow-xl">
+			<div class="flex flex-col">
+				<h1 class="text-2xl text-base-content font-bold">Custom Editor</h1>
+				<!-- prettier-ignore -->
+				<span class="text-base text-base-content/60">Experience the power of <strong class="inline font-bold">atomic CSS</strong> and <strong class="inline font-bold">Markdown</strong>&nbsp;editing</span>
+			</div>
+			<div class="flex items-center justify-start gap-4">
+				<div
+					class="flex overflow-hidden"
+					appMarkdown
+					appSkeleton
+					[appSkeletonToggle]="false"
+					[appMarkdownTextareaId]="'markdownTextarea'"
+					[appMarkdownPreviewId]="'markdownPreview'"
+					[appMarkdownScrollSync]="true"
+				></div>
+				<a
+					class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
+					title="Basic Syntax"
+					aria-label="Basic Syntax"
+					itemprop="url"
+					appSvgIcon
+					[routerLink]="'/help/markdown'"
+					[appSvgIconIcon]="'markdown'"
+					[appSvgIconSquare]="'1.5em'"
 				>
-					<h4 class="text-sm uppercase text-base-content">{{ appInsight.value }}</h4>
-					<div class="flex flex-col items-center justify-center gap-1">
-						<span
-							class="text-3xl text-base-content font-bold"
-							appSkeleton
-							[ngClass]="{ 'w-9 h-9 rounded-full overflow-hidden': appInsightListSkeletonToggle }"
-							[appSkeletonToggle]="appInsightListSkeletonToggle"
-						>
-							{{ appInsight.countFollowing }}
-						</span>
-						<div
-							class="text-xs flex items-center justify-center gap-1"
-							appSkeleton
-							[appSkeletonToggle]="appInsightListSkeletonToggle"
-							[ngClass]="appInsightListChangeState[appInsight.changeState].classList"
-						>
-							<!-- prettier-ignore -->
-							<span class="block whitespace-nowrap">
-								{{ appInsightListChangeState[appInsight.changeState].character }} {{ appInsight.countPreceding - appInsight.countFollowing | math: "abs" }}
-							</span>
-							<span class="block">({{ appInsight.changePercent | number: "1.0-1" }}%)</span>
-						</div>
-					</div>
-				</li>
-			}
-		</ul>
-		<main
-			class="rounded-box sm:rounded-none border sm:border-none border-base-300 w-full overflow-auto sm:overflow-visible"
+				</a>
+				<a
+					class="btn-ghost btn-md btn-square btn bg-base-200 fill-current text-base-content"
+					title="Safe List"
+					aria-label="Safe List"
+					appSvgIcon
+					[routerLink]="'/help/safe-list'"
+					[appSvgIconIcon]="'exclamation-circle'"
+					[appSvgIconSquare]="'1.5em'"
+				>
+				</a>
+			</div>
+			<div class="textarea-autosize w-full h-64 border border-base-300 focus-within:outline-0 relative">
+				<textarea
+					class="textarea textarea-md whitespace-pre font-mono bg-base-200 w-full h-full p-4"
+					id="markdownTextarea"
+					[value]="appEditorPreview"
+				></textarea>
+			</div>
+			<div class="flex flex-col w-full rounded-btn border border-base-300">
+				<article class="prose h-64 overflow-auto max-w-none p-4" id="markdownPreview"></article>
+			</div>
+			<a
+				class="btn btn-outline btn-success btn-md"
+				title="Registration"
+				aria-label="Registration"
+				[routerLink]="'/registration'"
+			>
+				Sign Up
+			</a>
+		</div>
+		<!-- Features -->
+		<div
+			class="rounded-box md:rounded-none border md:border-none border-base-300 w-full overflow-auto md:overflow-visible"
 		>
-			<div class="flex items-center justify-between sm:hidden bg-base-100 border-b border-base-300 p-4">
-				<h4 class="text-2xl font-bold text-base-content">Highlights</h4>
+			<div class="flex items-center justify-between md:hidden bg-base-100 border-b border-base-300 p-4">
+				<span class="text-2xl text-base-content font-bold">Features</span>
 				<nav class="join">
 					@for (appHighlight of [1, 2, 3]; track $index) {
 						<button
@@ -154,18 +93,18 @@
 					}
 				</nav>
 			</div>
-			<ul class="grid grid-cols-1 sm:grid-cols-3 sm:gap-4" itemscope itemtype="http://schema.org/ItemList">
+			<ul class="grid grid-cols-1 md:grid-cols-3 md:gap-4" itemscope itemtype="http://schema.org/ItemList">
 				@for (appHighlight of appHighlightList; track appHighlight.id; let i = $index) {
 					<li
-						class="sm:rounded-box hidden sm:flex flex-col gap-2 col-span-1 border-t [&:nth-child(3n+1)]:border-t-0 sm:border border-base-300 bg-base-100 sm:shadow-xl p-4"
+						class="md:rounded-box hidden md:flex flex-col gap-2 col-span-1 border-t [&:nth-child(2n+1)]:border-t-0 md:border border-base-300 bg-base-100 md:shadow-xl p-4"
 						itemprop="itemListElement"
 						itemscope
 						itemtype="http://schema.org/ListItem"
-						[class.!flex]="i + 1 <= 3 * appHighlightListActive && i + 1 > 3 * appHighlightListActive - 3"
+						[class.!flex]="i + 1 <= 2 * appHighlightListActive && i + 1 > 2 * appHighlightListActive - 2"
 					>
 						<div class="flex items-center justify-start gap-4">
 							<i
-								class="fill-current text-secondary"
+								class="fill-current"
 								appSvgIcon
 								[appSvgIconIcon]="$any(appHighlight.icon)"
 								[appSvgIconSquare]="'1.25em'"
@@ -180,7 +119,177 @@
 					</li>
 				}
 			</ul>
-		</main>
+		</div>
+		<!-- For Developers -->
+		<div class="flex flex-col gap-4 rounded-box border border-base-300 bg-base-100 p-4 shadow-xl">
+			<span class="text-2xl text-base-content font-bold">For Developers</span>
+			<div class="rounded-btn grid grid-cols-1 lg:grid-cols-2 border border-base-300 bg-base-100">
+				<div
+					class="flex flex-col lg:flex-row lg:items-center gap-4 col-span-1 border-b lg:border-b-0 lg:border-r border-base-300 p-4"
+				>
+					<a
+						class="size-16"
+						title="Mermaid"
+						aria-label="Mermaid"
+						appSvgLogo
+						[routerLink]="['help', 'diagrams']"
+						[appSvgLogoIcon]="'mermaid'"
+						[appSvgLogoSquare]="'64'"
+					>
+					</a>
+					<!-- prettier-ignore -->
+					<div class="flex flex-col">
+            <p class="text-base text-base-content">Diagramming and charting tool to create and modify diagrams dynamically</p>
+            <a class="text-base-content/60 link" title="Read more" aria-label="Read more" [routerLink]="['help', 'diagrams']">
+              Read more
+            </a>
+          </div>
+				</div>
+				<div class="flex flex-col lg:flex-row lg:items-center gap-4 col-span-1 p-4">
+					<a
+						class="size-16"
+						title="Prism"
+						aria-label="Prism"
+						appSvgLogo
+						[routerLink]="['help', 'diagrams']"
+						[appSvgLogoIcon]="'prism'"
+						[appSvgLogoSquare]="'64'"
+					>
+					</a>
+					<!-- prettier-ignore -->
+					<div class="flex flex-col">
+            <p class="text-base text-base-content">Lightweight, extensible syntax highlighter, built with modern web standards in mind</p>
+						<a
+							class="text-base-content/60 link"
+							title="Read more"
+							aria-label="Read more"
+							[routerLink]="['help', 'code-highlight']"
+						>
+							Read more
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Advanced Search -->
+		<div class="flex flex-col gap-4 rounded-box border border-base-300 bg-base-100 p-4 shadow-xl">
+			<div class="flex items-center justify-between gap-4">
+				<span class="text-2xl text-base-content font-bold">Advanced Search</span>
+				<i class="logo-algolia" appSvgLogo [appSvgLogoIcon]="'algolia-mark'" [appSvgLogoSquare]="'32'"></i>
+			</div>
+			<p class="text-base text-base-content/60">
+				Takabase using <strong class="inline font-bold">Algolia</strong> to power search functionality, making it fast,
+				accurate, and user-friendly. Algolia’s features, such as typo tolerance and powerful filtering options, ensure
+				that users can find exactly what they’re looking for in seconds
+			</p>
+			<a class="btn btn-outline btn-success btn-md" title="Search" aria-label="Search" [routerLink]="'/search/posts'">
+				Start Searching
+			</a>
+		</div>
+		<!-- Control Access -->
+		<div class="flex flex-col gap-4 rounded-box border border-base-300 bg-base-100 p-4 shadow-xl">
+			<span class="text-2xl text-base-content font-bold">Control Access</span>
+			<div class="rounded-btn grid grid-cols-1 lg:grid-cols-3 border border-base-300 bg-base-100">
+				<div class="flex flex-col gap-2 col-span-1 border-b lg:border-b-0 lg:border-r border-base-300 p-4">
+					<strong class="text-base text-base-content">Category</strong>
+					<p class="flex items-center gap-4">
+						<span class="text-sm text-base-content/60 flex-1">
+							Posts visible to everyone without any restrictions or passwords
+						</span>
+						<i class="size-8 fill-current" appSvgIcon [appSvgIconIcon]="'folder'" [appSvgIconSquare]="'32'"> </i>
+					</p>
+				</div>
+				<div class="flex flex-col gap-2 col-span-1 border-b lg:border-b-0 lg:border-r border-base-300 p-4">
+					<strong class="text-base text-base-content">Private</strong>
+					<p class="flex items-center gap-4">
+						<span class="text-sm text-base-content/60 flex-1">
+							Private posts are available only to the author and hidden from others
+						</span>
+						<i class="size-8 fill-current" appSvgIcon [appSvgIconIcon]="'incognito'" [appSvgIconSquare]="'32'"> </i>
+					</p>
+				</div>
+				<div class="flex flex-col gap-2 col-span-1 p-4">
+					<strong class="text-base text-base-content">Password-protected</strong>
+					<p class="flex items-center gap-4">
+						<span class="text-sm text-base-content/60 flex-1">
+							Posts can be shared with anyone, as long as they have the password
+						</span>
+						<i class="size-8 fill-current" appSvgIcon [appSvgIconIcon]="'shield-lock'" [appSvgIconSquare]="'32'"> </i>
+					</p>
+				</div>
+			</div>
+		</div>
+		<!-- Insights -->
+		<div class="flex gap-4 rounded-box border border-base-300 bg-base-100 shadow-xl">
+			<ul class="grid grid-cols-12 w-full">
+				<li
+					class="flex flex-col col-span-12 lg:col-span-6 gap-2 border-b lg:border-b-0 lg:border-r border-base-300 p-4"
+					itemscope
+					itemtype="http://schema.org/Thing"
+				>
+					<div class="flex items-center justify-between">
+						<span class="text-2xl text-base-content font-bold" itemprop="name">Statistics</span>
+						<span class="text-sm text-base-content/60">
+							{{ appInsightListTime }}
+						</span>
+					</div>
+					<div class="flex items-center justify-between gap-4">
+						<!-- prettier-ignore -->
+						<p class="text-base text-base-content/60" itemprop="description">
+              Current Activities: total numbers of public posts, users who contribute to them, and categories
+            </p>
+						<i
+							class="fill-current text-primary"
+							appSvgIcon
+							[appSvgIconIcon]="'sliders2-vertical'"
+							[appSvgIconSquare]="'2em'"
+						></i>
+					</div>
+				</li>
+				@for (appInsight of appInsightList; track $index) {
+					<li
+						class="flex flex-col items-center justify-center gap-1 text-center col-span-4 lg:col-span-2 border-r last:border-0 border-base-300 p-4"
+					>
+						<span class="text-sm uppercase text-base-content">{{ appInsight.value }}</span>
+						<div class="flex flex-col items-center justify-center gap-1">
+							<span
+								class="text-3xl text-base-content font-bold"
+								appSkeleton
+								[ngClass]="{ 'w-9 h-9 rounded-full overflow-hidden': appInsightListSkeletonToggle }"
+								[appSkeletonToggle]="appInsightListSkeletonToggle"
+							>
+								{{ appInsight.countFollowing }}
+							</span>
+							<div
+								class="text-xs flex items-center justify-center gap-1"
+								appSkeleton
+								[appSkeletonToggle]="appInsightListSkeletonToggle"
+								[ngClass]="appInsightListChangeState[appInsight.changeState].classList"
+							>
+								<!-- prettier-ignore -->
+								<span class="block whitespace-nowrap">
+                  {{ appInsightListChangeState[appInsight.changeState].character }} {{ appInsight.countPreceding - appInsight.countFollowing | math: "abs" }}
+                </span>
+								<span class="block">({{ appInsight.changePercent | number: "1.0-1" }}%)</span>
+							</div>
+						</div>
+					</li>
+				}
+			</ul>
+		</div>
+		<!-- Footer -->
+		<footer class="flex justify-center gap-1">
+			<span class="text-sm text-base-content/60">© {{ appYear }} Takabase</span>
+			<button
+				class="text-sm text-base-content/60 p-0"
+				type="button"
+				title="Progressive Web Application"
+				aria-label="Progressive Web Application"
+				(click)="appPWAElement.onClick()"
+			>
+				<span class="block">PWA</span>
+			</button>
+		</footer>
 	</section>
 	<div appPWA #appPWAElement></div>
 </ng-container>
