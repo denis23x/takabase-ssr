@@ -185,7 +185,7 @@
     }
   }
 
-  .alert {
+  .alert:not(.grid-cols-alert) {
     &:before {
       @apply size-6 translate-y-0.5;
     }

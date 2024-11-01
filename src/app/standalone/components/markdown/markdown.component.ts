@@ -185,7 +185,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 								.finally(() => (this.textareaValue = this.textarea.value));
 						}
 
-						// // Scroll to top when initialize (useless trick because many others methods pathing textarea which cause scroll down again)
+						// Scroll to top when initialize (useless trick because many others methods pathing textarea which cause scroll down again)
 						//
 						// const hasValue: boolean = this.textarea.value !== '';
 						// const hasPreview: boolean = this.preview.innerHTML !== '';
@@ -202,11 +202,7 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 
 			this.textareaPaste$?.unsubscribe();
 			this.textareaPaste$ = fromEvent(this.textarea, 'paste')
-				.pipe(
-					filter((clipboardEventInit: ClipboardEventInit) => {
-						return !!clipboardEventInit.clipboardData.files.length;
-					})
-				)
+				.pipe(filter((clipboardEventInit: ClipboardEventInit) => !!clipboardEventInit.clipboardData.files.length))
 				.subscribe({
 					// prettier-ignore
 					next: (clipboardEventInit: ClipboardEventInit) => this.busService.markdownItTriggerClipboard.next(clipboardEventInit),
@@ -577,13 +573,18 @@ export class MarkdownComponent implements AfterViewInit, OnDestroy {
 				/** Apply selection */
 
 				const markdownTextarea: MarkdownTextarea = this.getTextareaMarkdown(this.textarea);
-				const markdownTextareaIsValid: boolean = this.helperService.getRegex('url').test(markdownTextarea.selection);
 
-				if (markdownTextareaIsValid) {
-					const abstractControl: AbstractControl = this.urlForm.get('url');
+				if (markdownTextarea.selection) {
+					const abstractControlUrl: AbstractControl = this.urlForm.get('url');
+					const abstractControlTitle: AbstractControl = this.urlForm.get('title');
 
-					abstractControl.setValue(markdownTextarea.selection);
-					abstractControl.markAsTouched();
+					if (this.helperService.getRegex('url').test(markdownTextarea.selection)) {
+						abstractControlUrl.setValue(markdownTextarea.selection);
+						abstractControlUrl.markAsTouched();
+					} else {
+						abstractControlTitle.setValue(markdownTextarea.selection);
+						abstractControlTitle.markAsTouched();
+					}
 				}
 
 				this.urlFormControl = markdownControl;
