@@ -16,7 +16,6 @@ import { AIService } from '../../../../core/services/ai.service';
 import { tap } from 'rxjs/operators';
 import type { Category } from '../../../../core/models/category.model';
 import type { CategoryCreateDto } from '../../../../core/dto/category/category-create.dto';
-import type { AIModerateTextDto } from '../../../../core/dto/ai/ai-moderate-text.dto';
 
 interface CategoryForm {
 	name: FormControl<string>;
@@ -92,16 +91,11 @@ export class CategoryCreateComponent implements OnDestroy {
 				description: this.categoryForm.value.description || null
 			};
 
-			const aiModerateTextDto: AIModerateTextDto = {
-				model: 'text-moderation-stable',
-				input: this.aiService.setInput(categoryCreateDto)
-			};
-
 			/** Moderate and create */
 
 			this.categoryFormRequest$?.unsubscribe();
 			this.categoryFormRequest$ = this.aiService
-				.moderateText(aiModerateTextDto)
+				.getModerationOpenAI(this.aiService.getModerationCreateTextDto(categoryCreateDto))
 				.pipe(
 					tap(() => (this.categoryFormStage = 'Saving')),
 					switchMap(() => this.categoryService.create(categoryCreateDto))

@@ -16,7 +16,6 @@ import { BadgeErrorComponent } from '../../badge-error/badge-error.component';
 import { AIService } from '../../../../core/services/ai.service';
 import type { Category } from '../../../../core/models/category.model';
 import type { CategoryUpdateDto } from '../../../../core/dto/category/category-update.dto';
-import type { AIModerateTextDto } from '../../../../core/dto/ai/ai-moderate-text.dto';
 
 interface CategoryUpdateForm {
 	name: FormControl<string>;
@@ -117,16 +116,11 @@ export class CategoryUpdateComponent implements OnDestroy {
 				description: this.categoryUpdateForm.value.description || null
 			};
 
-			const aiModerateTextDto: AIModerateTextDto = {
-				model: 'text-moderation-stable',
-				input: this.aiService.setInput(categoryUpdateDto)
-			};
-
 			/** Moderate and update */
 
 			this.categoryUpdateFormRequest$?.unsubscribe();
 			this.categoryUpdateFormRequest$ = this.aiService
-				.moderateText(aiModerateTextDto)
+				.getModerationOpenAI(this.aiService.getModerationCreateTextDto(categoryUpdateDto))
 				.pipe(
 					tap(() => (this.categoryUpdateFormStage = 'Saving')),
 					switchMap(() => this.categoryService.update(categoryId, categoryUpdateDto))

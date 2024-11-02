@@ -464,7 +464,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 
 		this.imageFormRequest$?.unsubscribe();
 		this.imageFormRequest$ = this.aiService
-			.moderateImage(formDataModeration)
+			.getModerationNSFW(formDataModeration)
 			.pipe(
 				tap(() => (this.cropperImageFormStage = 'Uploading')),
 				switchMap(() => {
@@ -489,7 +489,10 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 			)
 			.subscribe({
 				next: () => this.onToggleCropperDialog(false),
-				error: (error: any) => console.error(error)
+				error: () => {
+					this.cropperImageForm.enable();
+					this.cropperImageFormStage = 'Submit';
+				}
 			});
 	}
 }

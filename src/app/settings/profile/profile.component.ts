@@ -42,7 +42,6 @@ import { CurrentUserMixin as CU } from '../../core/mixins/current-user.mixin';
 import type { User } from '../../core/models/user.model';
 import type { UserUpdateDto } from '../../core/dto/user/user-update.dto';
 import type { CropperComponent } from '../../standalone/components/cropper/cropper.component';
-import type { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
 
 interface ProfileForm {
 	avatar: FormControl<string | null>;
@@ -203,16 +202,11 @@ export class SettingsProfileComponent extends CU(class {}) implements OnInit, On
 				description: this.profileForm.value.description || null
 			};
 
-			const aiModerateTextDto: AIModerateTextDto = {
-				model: 'text-moderation-stable',
-				input: this.aiService.setInput(userUpdateDto)
-			};
-
 			/** Moderate and update */
 
 			this.profileFormUpdateRequest$?.unsubscribe();
 			this.profileFormUpdateRequest$ = this.aiService
-				.moderateText(aiModerateTextDto)
+				.getModerationOpenAI(this.aiService.getModerationCreateTextDto(userUpdateDto))
 				.pipe(
 					tap(() => (this.profileFormStage = 'Saving')),
 					switchMap(() => this.userService.update(this.currentUser.uid, userUpdateDto))

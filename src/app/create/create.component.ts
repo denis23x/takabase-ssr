@@ -62,7 +62,6 @@ import type { Post, PostPassword, PostPrivate, PostType } from '../core/models/p
 import type { PostCreateDto } from '../core/dto/post/post-create.dto';
 import type { PostGetOneDto } from '../core/dto/post/post-get-one.dto';
 import type { PostUpdateDto } from '../core/dto/post/post-update.dto';
-import type { AIModerateTextDto } from '../core/dto/ai/ai-moderate-text.dto';
 import type { CropperComponent } from '../standalone/components/cropper/cropper.component';
 import type { PostPreviewComponent } from '../standalone/components/post/preview/preview.component';
 import type { PostDeleteComponent } from '../standalone/components/post/delete/delete.component';
@@ -676,11 +675,6 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 			this.postForm.disable();
 			this.postFormStage = 'Moderation';
 
-			const aiModerateTextDto: AIModerateTextDto = {
-				model: 'text-moderation-stable',
-				input: this.aiService.setInput(this.postForm.value)
-			};
-
 			// Dto
 
 			const postId: number = Number(this.activatedRoute.snapshot.paramMap.get('postId'));
@@ -717,7 +711,7 @@ export class CreateComponent extends CU(class {}) implements OnInit, AfterViewIn
 
 			this.postFormRequest$?.unsubscribe();
 			this.postFormRequest$ = this.aiService
-				.moderateText(aiModerateTextDto)
+				.getModerationOpenAI(this.aiService.getModerationCreateTextDto(this.postForm.value))
 				.pipe(
 					tap(() => (this.postFormStage = this.postType === 'category' ? 'Publication' : 'Saving')),
 					switchMap(() => postTypeMap())

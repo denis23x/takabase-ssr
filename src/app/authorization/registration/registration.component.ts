@@ -27,13 +27,12 @@ import { UserAvatarComponent } from '../../standalone/components/user/avatar/ava
 import { FirebaseService } from '../../core/services/firebase.service';
 import { PlatformService } from '../../core/services/platform.service';
 import { getValue, Value } from 'firebase/remote-config';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { createUserWithEmailAndPassword, UserCredential } from 'firebase/auth';
 import { ApiService } from '../../core/services/api.service';
 import type { UserGetAllDto } from '../../core/dto/user/user-get-all.dto';
 import type { User } from '../../core/models/user.model';
 import type { MetaOpenGraph, MetaTwitter } from '../../core/models/meta.model';
-import type { AIModerateTextDto } from '../../core/dto/ai/ai-moderate-text.dto';
 import type { UserCreateDto } from '../../core/dto/user/user-create.dto';
 import type { FirebaseError } from 'firebase/app';
 import type { CurrentUser } from '../../core/models/current-user.model';
@@ -93,6 +92,7 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 		]),
 		terms: this.formBuilder.nonNullable.control(true, [Validators.requiredTrue])
 	});
+	registrationFormStage: string = 'Registration';
 
 	invitedByUser: User | undefined;
 	invitedByUserRequest$: Subscription | undefined;
@@ -170,22 +170,19 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 		// prettier-ignore
 		if (this.helperService.getFormValidation(this.registrationForm)) {
 			this.registrationForm.disable();
+			this.registrationFormStage = 'Moderation';
 
 			const userCreateDto: UserCreateDto = {
 				...this.registrationForm.value
-			};
-
-			const aiModerateTextDto: AIModerateTextDto = {
-				model: 'text-moderation-stable',
-				input: userCreateDto.name
 			};
 
 			/** Moderate and registration */
 
 			this.registrationRequest$?.unsubscribe();
 			this.registrationRequest$ = this.aiService
-				.moderateText(aiModerateTextDto)
+				.getModerationOpenAI(this.aiService.getModerationCreateTextDto({ name: userCreateDto.name }))
 				.pipe(
+					tap(() => (this.registrationFormStage = 'Saving')),
 					switchMap(() => from(createUserWithEmailAndPassword(this.firebaseService.getAuth(), userCreateDto.email, userCreateDto.password))),
 					catchError((firebaseError: FirebaseError) => this.apiService.setFirebaseError(firebaseError)),
 					switchMap((userCredential: UserCredential) => {
@@ -201,7 +198,10 @@ export class AuthRegistrationComponent implements OnInit, OnDestroy {
 							.navigate(['/', currentUser.displayName])
 							.then(() => this.snackbarService.success('Success', 'Welcome aboard!'));
 					},
-					error: () => this.registrationForm.enable()
+					error: () => {
+						this.registrationForm.enable();
+						this.registrationFormStage = 'Registration';
+					}
 				});
 		}
 	}
