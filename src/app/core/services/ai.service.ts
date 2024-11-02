@@ -7,9 +7,10 @@ import { catchError, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { SnackbarService } from './snackbar.service';
-import type { AIModerateImageResult } from '../dto/ai/ai-moderate-image.dto';
-import type { AIModerateTextDto, AIModerateTextResult, AIModerateTextResultItem } from '../dto/ai/ai-moderate-text.dto';
 import type { HttpErrorResponse } from '@angular/common/http';
+import type { ModerationCreateDto } from '../dto/moderation/moderate-create.dto';
+import type { ModerationResult, ModerationResultItem } from '../models/moderation.dto';
+import type { NSFWResult } from '../models/nsfw.model';
 
 @Injectable()
 export class AIService {
@@ -21,44 +22,38 @@ export class AIService {
 		return environment.ai.url + url;
 	}
 
-	setInput(object: any): string[] {
-		return Object.values(object)
-			.filter((value: any) => Boolean(value))
-			.map((value: any) => String(value))
-			.map((value: string) => {
-				const regExp: RegExp = /(.|[\r\n\t]){1,2000}/g;
-
-				/** For higher accuracy, try splitting long pieces of text into smaller chunks each less than 2,000 characters */
-
-				if (value.length >= 2000) {
-					return value.match(regExp);
-				} else {
-					return value;
-				}
-			})
-			.flat();
+	getModerationCreateTextDto(object: any): ModerationCreateDto {
+		return {
+			model: 'omni-moderation-latest',
+			input: Object.values(object)
+				.filter((value: any) => Boolean(value))
+				.map((value: any) => ({
+					type: 'text',
+					text: String(value)
+				}))
+		};
 	}
 
 	/** Predictions */
 
-	getModeratedTextIsSafe(aiModerateTextResult: AIModerateTextResult): boolean {
-		return Object.values(aiModerateTextResult.results).every((aiModerateTextResultItem: AIModerateTextResultItem) => {
-			return aiModerateTextResultItem.flagged === false;
+	getIsSafeOpenAI(moderateTextResult: ModerationResult): boolean {
+		return Object.values(moderateTextResult.results).every((moderateTextResultItem: ModerationResultItem) => {
+			return moderateTextResultItem.flagged === false;
 		});
 	}
 
-	getModeratedImageIsSafe(aiModerateImageResultList: AIModerateImageResult[]): boolean {
+	getIsSafeNSFW(nsfwResult: NSFWResult[]): boolean {
 		const nsfwCategoryList: string[] = ['Porn', 'Sexy', 'Hentai'];
 
 		/** https://github.com/infinitered/nsfwjs */
 
 		// prettier-ignore
-		const nsfwCategoryListResult: AIModerateImageResult[] = aiModerateImageResultList.filter((aiModerateImage: AIModerateImageResult) => {
+		const nsfwCategoryListResult: NSFWResult[] = nsfwResult.filter((aiModerateImage: NSFWResult) => {
       return nsfwCategoryList.includes(aiModerateImage.className)
     });
 
 		// prettier-ignore
-		const nsfwProbability: number = nsfwCategoryListResult.reduce((accumulator: number, aiModerateImage: AIModerateImageResult) => accumulator + aiModerateImage.probability, 0);
+		const nsfwProbability: number = nsfwCategoryListResult.reduce((accumulator: number, aiModerateImage: NSFWResult) => accumulator + aiModerateImage.probability, 0);
 		const nsfwProbabilityMax: number = 0.5;
 
 		return nsfwProbability < nsfwProbabilityMax;
@@ -66,13 +61,12 @@ export class AIService {
 
 	/** AI function */
 
-	moderateText(aiModerateTextDto: AIModerateTextDto): Observable<boolean> {
-		// prettier-ignore
-		return this.httpClient.post(this.setUrl('/api/v1/moderation/text'), aiModerateTextDto).pipe(
+	getModerationOpenAI(moderationCreateDto: ModerationCreateDto): Observable<boolean> {
+		return this.httpClient.post(this.setUrl('/api/v1/moderation/openai'), moderationCreateDto).pipe(
 			catchError((httpErrorResponse: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpErrorResponse)),
 			map((response: any) => response.data),
-			switchMap((aiModerateTextResult: AIModerateTextResult) => {
-				if (this.getModeratedTextIsSafe(aiModerateTextResult)) {
+			switchMap((moderationResult: ModerationResult) => {
+				if (this.getIsSafeOpenAI(moderationResult)) {
 					return of(true);
 				} else {
 					this.snackbarService.warning('Moderation', 'Seems like your input is prohibited to submit', {
@@ -88,13 +82,12 @@ export class AIService {
 		);
 	}
 
-	moderateImage(formData: FormData): Observable<boolean> {
-		// prettier-ignore
-		return this.httpClient.post(this.setUrl('/api/v1/moderation/image'), formData).pipe(
+	getModerationNSFW(formData: FormData): Observable<boolean> {
+		return this.httpClient.post(this.setUrl('/api/v1/moderation/nsfw'), formData).pipe(
 			catchError((httpErrorResponse: HttpErrorResponse) => this.apiService.setHttpErrorResponse(httpErrorResponse)),
 			map((response: any) => response.data),
-			switchMap((aiModerateImageResult: AIModerateImageResult[]) => {
-				if (this.getModeratedImageIsSafe(aiModerateImageResult)) {
+			switchMap((nsfwResult: NSFWResult[]) => {
+				if (this.getIsSafeNSFW(nsfwResult)) {
 					return of(true);
 				} else {
 					this.snackbarService.warning('Moderation', 'The image contains prohibited content', {
