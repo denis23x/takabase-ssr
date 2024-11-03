@@ -25,8 +25,8 @@
                 [ngClass]="{ 'pointer-events-none !opacity-25': avatar.disabled }"
                 [title]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
                 [attr.aria-label]="(avatar.value ? 'Update' : 'Upload') + ' avatar'"
-                [appUserAvatarPhotoUrl]="profileForm.value['avatar']"
-                [appUserAvatarName]="profileForm.value['name']"
+                [appUserAvatarPhotoUrl]="profileFormUser?.avatar ? profileFormUser?.avatar : profileForm.value['avatar']"
+                [appUserAvatarName]="profileFormUser?.avatar ? profileFormUser?.avatar : profileForm.value['name']"
                 (click)="onToggleCropperDialog()"
               ></figure>
             </div>

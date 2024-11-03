@@ -466,7 +466,7 @@ export class CropperComponent implements AfterViewInit, OnDestroy {
 		this.imageFormRequest$ = this.aiService
 			.getModerationNSFW(formDataModeration)
 			.pipe(
-				tap(() => (this.cropperImageFormStage = 'Uploading')),
+				tap(() => (this.cropperImageFormStage = 'Upload')),
 				switchMap(() => {
 					const formDataOutput: FormData = new FormData();
 
